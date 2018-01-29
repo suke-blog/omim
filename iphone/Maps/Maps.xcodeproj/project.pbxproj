@@ -3862,7 +3862,7 @@
 				ORGANIZATIONNAME = MapsWithMe;
 				TargetAttributes = {
 					6741A93D1BF340DE002C974C = {
-						DevelopmentTeam = 3T6FSDE8C7;
+						DevelopmentTeam = MLFFD46468;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -4665,6 +4665,7 @@
 		6741AA571BF340DE002C974C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = MLFFD46468;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4678,6 +4679,7 @@
 		6741AA5A1BF340DE002C974C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = MLFFD46468;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4691,6 +4693,7 @@
 		6741AA5C1BF340DE002C974C /* Production Full */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = MLFFD46468;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
