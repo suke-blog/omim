@@ -175,3 +175,7 @@
 @shield: #FFFFFF;
 @shield_outline: #000000;
 /* blue - #2E89B0; #687E94; #598DBE; */
+
+/* Contour */
+@contour_line: #663300;
+
