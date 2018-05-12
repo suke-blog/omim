@@ -141,3 +141,4 @@
 @waterway_weir: #000044;
 @wetland_fill: #a0c3b8;
 @white: white;
+@contour_line: #663300;

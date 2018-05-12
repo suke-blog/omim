@@ -12,6 +12,8 @@
 @import("../include/base_piste.mapcss");
 @import("../include/base_publictransport.mapcss");
 @import("../include/base_other.mapcss");
+@import("../include/contour.mapcss");
+@import("../include/contour_label.mapcss");
 
 canvas
 {

@@ -1,0 +1,27 @@
+/* ~~~~ CONTENT OF CONTOUR ~~~~~
+ 
+1.Z-INDEX CONTOUR
+2.WORLD LEVEL CONTOUR 4-9 ZOOM
+3.CONTOUR 10-22 ZOOM
+ 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+ 
+/* 1.Z-INDEX CONTOUR */
+ 
+/*
+line[contour]
+{z-index: 3000;}
+*/
+ 
+/* 2.WORLD LAVEL CONTOUR 4-9 ZOOM */
+ 
+/* 3.CONTOUR 10-22 ZOOM */
+ 
+line|z13-15[contour][contour_ext=elevation_major]
+{text: name; text-color: @label_medium; text-position: line;font-size: 8; text-halo-opacity: 0.9;text-halo-radius: 1;text-halo-color: @label_halo_light;}
+ 
+line|z16-[contour][contour_ext=elevation_major],
+line|z16-[contour][contour_ext=elevation_medium]
+{text: name; text-color: @label_medium; text-position: line;font-size: 8; text-halo-opacity: 0.9;text-halo-radius: 1;text-halo-color: @label_halo_light;}
+

@@ -185,3 +185,7 @@
 @piste_intermadiate: #fc0e1b;
 @piste_expert: #220625;
 @piste_advanced: #0a0a0d;
+
+/* Contour */
+@contour_line: #663300;
+

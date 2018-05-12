@@ -10,6 +10,8 @@
 @import("../include/landuse.mapcss");
 @import("../include/other.mapcss");
 @import("../include/buildings.mapcss");
+@import("../include/contour.mapcss");
+@import("../include/contour_label.mapcss");
 
 canvas
 {
