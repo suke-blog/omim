@@ -511,15 +511,15 @@ line|z14[leisure=track]
   width: 1;
   z-index: 600;
 }
-line|z14[highway=track],
-line|z14[highway=path],
-line|z14[route=hiking]
+line|z12-14[highway=track],
+line|z12-14[highway=path],
+line|z12-14[route=hiking]
 {
 
   color: @track;
   opacity: 1;
-  dashes: 2.52,1.35;
-  width: 0.9;
+  dashes: 3.6,1.8;
+  width: 1.8;
   z-index: 600;
 }
 
@@ -694,8 +694,8 @@ line|z15[route=hiking]
 {
   color: @track;
   opacity: 1;
-  dashes: 2.7,1.26;
-  width: 1.1;
+  dashes: 4.5,1.8;
+  width: 1.2;
   z-index: 600;
 }
 
@@ -906,8 +906,8 @@ line|z16[route=hiking]
 {
   color: @track;
   opacity: 1;
-  dashes: 3.6,1.8;
-  width: 1.8;
+  dashes: 4.5,1.8;
+  width: 2;
   z-index: 600;
 }
 
