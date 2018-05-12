@@ -1098,7 +1098,7 @@ shop|wine
 tourism|chalet
 tourism|information|board
 tourism|information|map
-tourism|information|office
+tourism|information|office|bugfix
 traffic_calming|bump
 traffic_calming|hump
 shop|car_parts
@@ -1136,3 +1136,7 @@ olympics|stadium_main
 olympics|stadium
 olympics|water_sport
 olympics|bike_sport
+contour
+contour|contour_ext|elevation_major
+contour|contour_ext|elevation_medium
+contour|contour_ext|elevation_minor

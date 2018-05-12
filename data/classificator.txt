@@ -180,6 +180,13 @@ world  +
             underground  -
             {}
         {}
+    contour  +
+        contour_ext  +
+            elevation_major  -
+            elevation_medium  -
+            elevation_minor  -
+            {}
+        {}
     craft  +
         brewery  -
         carpenter  -
@@ -847,7 +854,9 @@ world  +
             board  -
             guidepost  -
             map  -
-            office  -
+            office  +
+                bugfix  -
+                {}
             {}
         motel  -
         museum  -
