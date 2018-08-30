@@ -1235,3 +1235,7 @@ historic|castle|defensive;[historic=castle][castle_type=defensive];;name;int_nam
 historic|castle|stately;[historic=castle][castle_type=stately];;name;int_name;1235;
 tourism|attraction|animal;[tourism=attraction][attraction=animal];;name;int_name;1236;
 tourism|attraction|specified;[tourism=attraction][attraction=specified];;name;int_name;1237;
+contour;1238;
+contour|contour_ext|elevation_major;[contour][contour_ext=elevation_major];;name;int_name;1239;
+contour|contour_ext|elevation_medium;[contour][contour_ext=elevation_medium];;name;int_name;1240;
+contour|contour_ext|elevation_minor;[contour][contour_ext=elevation_minor];;name;int_name;1241;
