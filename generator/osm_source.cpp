@@ -698,6 +698,8 @@ bool GenerateRaw(feature::GenerateInfo & info, std::unique_ptr<EmitterBase> emit
       return GenerateFeaturesImpl<cache::MapFilePointStorageReader>(info, *emitter, preEmit);
     case feature::GenerateInfo::NodeStorageType::Memory:
       return GenerateFeaturesImpl<cache::RawMemPointStorageReader>(info, *emitter, preEmit);
+    case feature::GenerateInfo::NodeStorageType::Sqlite:
+      return GenerateFeaturesImpl<cache::SqlitePointStorageReader>(info, *emitter, preEmit);
   }
   return false;
 }
@@ -778,6 +780,8 @@ bool GenerateIntermediateData(feature::GenerateInfo & info)
       return GenerateIntermediateDataImpl<cache::MapFilePointStorageWriter>(info);
     case feature::GenerateInfo::NodeStorageType::Memory:
       return GenerateIntermediateDataImpl<cache::RawMemPointStorageWriter>(info);
+    case feature::GenerateInfo::NodeStorageType::Sqlite:
+      return GenerateIntermediateDataImpl<cache::SqlitePointStorageWriter>(info);
   }
   return false;
 }

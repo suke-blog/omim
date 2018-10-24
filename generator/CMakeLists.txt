@@ -85,6 +85,10 @@ set(SRC
   sponsored_object_storage.hpp
   sponsored_scoring.cpp
   sponsored_scoring.hpp
+  sqlite_data.cpp
+  sqlite_data.hpp
+  sqlite_helper.cpp
+  sqlite_helper.hpp
   srtm_parser.cpp
   srtm_parser.hpp
   statistics.cpp
@@ -115,6 +119,8 @@ set(SRC
 )
 
 omim_add_library(${PROJECT_NAME} ${SRC})
+
+target_link_libraries(${PROJECT_NAME} sqlite3)
 
 omim_add_test_subdirectory(generator_tests_support)
 omim_add_test_subdirectory(generator_tests)

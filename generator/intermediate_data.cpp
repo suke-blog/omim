@@ -8,6 +8,8 @@
 
 #include "defines.hpp"
 
+#include "sqlite_helper.hpp"
+
 using namespace std;
 
 namespace
@@ -135,6 +137,55 @@ OSMElementCacheWriter::OSMElementCacheWriter(string const & name, bool preload)
 }
 
 void OSMElementCacheWriter::SaveOffsets() { m_offsets.WriteAll(); }
+
+// OSMElementSqliteCacheReader ---------------------------------------------------------------------------
+OSMElementSqliteCacheReader::OSMElementSqliteCacheReader(string const & name, bool preload)
+  : m_name(name), m_preload(preload)
+{
+  // open database connection
+  m_db = SqliteHelper::getInstance().getConnection(name + ".db");
+
+  // make preapred statement
+  sqlite3_prepare_v2(m_db, "SELECT data from cache_tbl WHERE id=?;", -1, &m_pStmt, nullptr);
+}
+
+OSMElementSqliteCacheReader::~OSMElementSqliteCacheReader()
+{
+  sqlite3_finalize(m_pStmt);
+  SqliteHelper::getInstance().close(m_db);
+}
+
+void OSMElementSqliteCacheReader::LoadOffsets() { return; }
+
+// OSMElementSqliteCacheWriter ---------------------------------------------------------------------------
+OSMElementSqliteCacheWriter::OSMElementSqliteCacheWriter(string const & name, bool preload)
+  : m_name(name), m_preload(preload)
+{
+  m_db = SqliteHelper::getInstance().getConnection(name + ".db");
+
+  // create table
+  sqlite3_exec(m_db, "CREATE TABLE cache_tbl(id INTEGER PRIMARY KEY, data BLOB);", nullptr, nullptr, nullptr);
+
+  // make prepared statement
+  sqlite3_prepare_v2(m_db, "INSERT INTO cache_tbl(id, data) VALUES(?, ?);", -1, &m_pStmt, nullptr);
+
+  // start transaction
+  sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, nullptr);
+}
+
+OSMElementSqliteCacheWriter::~OSMElementSqliteCacheWriter()
+{
+  // commit transaction
+  sqlite3_exec(m_db, "COMMIT", nullptr, nullptr, nullptr);
+
+  // finalize prepared statement
+  sqlite3_finalize(m_pStmt);
+
+  // close database connection
+  SqliteHelper::getInstance().close(m_db);
+}
+
+void OSMElementSqliteCacheWriter::SaveOffsets() { return; }
 
 // RawFilePointStorageMmapReader -------------------------------------------------------------------
 RawFilePointStorageMmapReader::RawFilePointStorageMmapReader(string const & name)
@@ -266,5 +317,101 @@ void MapFilePointStorageWriter::AddPoint(uint64_t id, double lat, double lon)
 
   ++m_numProcessedPoints;
 }
+
+// SqlitePointStorageReader -----------------------------------------------------------------------
+SqlitePointStorageReader::SqlitePointStorageReader(string const & name)
+{
+  LOG(LINFO, ("Nodes read from sqlite..."));
+
+  // get database connection
+  m_db = SqliteHelper::getInstance().getConnection(name + ".db");
+
+  // make prepared statement
+  sqlite3_prepare_v2(m_db, "SELECT lat, lon FROM nodes_tbl WHERE id=?;", -1, &m_pStmt, nullptr);
+
+  LOG(LINFO, ("ready."));
+}
+
+SqlitePointStorageReader::~SqlitePointStorageReader()
+{
+  // finalize prepared statement
+  sqlite3_finalize(m_pStmt);
+
+  // close database connection
+  SqliteHelper::getInstance().close(m_db);
+}
+
+bool SqlitePointStorageReader::GetPoint(uint64_t id, double & lat, double & lon) const
+{
+  bool result = false;
+
+  // bind id
+  sqlite3_bind_int64(m_pStmt, 1, id);
+
+  // exec query
+  while(sqlite3_step(m_pStmt) == SQLITE_ROW)
+  {
+    lat = sqlite3_column_double(m_pStmt, 0);
+    lon = sqlite3_column_double(m_pStmt, 1);
+    result = true;
+  }
+
+  // clear bind
+  sqlite3_reset(m_pStmt);
+  sqlite3_clear_bindings(m_pStmt);
+
+  if(!result)
+  {
+    LOG(LERROR, ("Inconsistent SqlitePointStorageReader. Node with id =", id,
+              "must exist but was not found"));
+  }
+
+  return result;
+}
+
+// SqlitePointStorageWriter -----------------------------------------------------------------------
+SqlitePointStorageWriter::SqlitePointStorageWriter(string const & name)
+{
+  // get database connection
+  m_db = SqliteHelper::getInstance().getConnection(name + ".db");
+
+  // create table
+  sqlite3_exec(m_db, "CREATE TABLE nodes_tbl(id INTEGER PRIMARY KEY, lat REAL, lon REAL);", nullptr, nullptr, nullptr);
+
+  // make prepared statement
+  sqlite3_prepare_v2(m_db, "INSERT INTO nodes_tbl(id, lat, lon) VALUES(?, ?, ?);", -1, &m_pStmt, nullptr);
+
+  // start transaction
+  sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, nullptr);
+}
+
+SqlitePointStorageWriter::~SqlitePointStorageWriter()
+{
+  // commit transaction
+  sqlite3_exec(m_db, "COMMIT", nullptr, nullptr, nullptr);
+
+  // finalize prepared statement
+  sqlite3_finalize(m_pStmt);
+
+  // close database connection
+  SqliteHelper::getInstance().close(m_db);
+}
+
+void SqlitePointStorageWriter::AddPoint(uint64_t id, double lat, double lon)
+{
+  // bind values
+  sqlite3_bind_int64(m_pStmt, 1, id);
+  sqlite3_bind_double(m_pStmt, 2, lat);
+  sqlite3_bind_double(m_pStmt, 3, lon);
+
+  // insert
+  while(sqlite3_step(m_pStmt) == SQLITE_BUSY);
+
+  sqlite3_clear_bindings(m_pStmt);
+  sqlite3_reset(m_pStmt);
+
+  ++m_numProcessedPoints;
+}
+
 }  // namespace cache
 }  // namespace generator
