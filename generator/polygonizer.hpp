@@ -161,9 +161,13 @@ namespace feature
         country->m_index = static_cast<int>(m_Buckets.size())-1;
       }
 
+#ifdef false
+      //大量にメモリを消費している。WorldCoasts.mwm.tmpに影響するようだが、各リージョン.mwm.tmpは問題なさそう。
+      //ひとまずコメントアウトしておく。
       if (!m_currentNames.empty())
         m_currentNames += ';';
       m_currentNames += country->m_name;
+#endif
 
       auto & bucket = *(m_Buckets[country->m_index]);
       bucket(fb);
