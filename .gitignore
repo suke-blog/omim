@@ -174,3 +174,6 @@ designer_version.h
 
 # Vim files
 tags
+
+# CMake
+build/*
