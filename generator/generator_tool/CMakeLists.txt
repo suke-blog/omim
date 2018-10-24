@@ -42,6 +42,7 @@ omim_link_libraries(
   gflags
   oauthcpp
   sqlite3
+  tcmalloc
   ${LIBZ}
 )
 
