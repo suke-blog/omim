@@ -20,7 +20,8 @@ struct GenerateInfo
   {
     Memory,
     Index,
-    File
+    File,
+    Sqlite
   };
 
   enum class OsmSourceType
@@ -84,6 +85,8 @@ struct GenerateInfo
       m_nodeStorageType = NodeStorageType::Index;
     else if (type == "mem")
       m_nodeStorageType = NodeStorageType::Memory;
+    else if (type == "sqlite")
+      m_nodeStorageType = NodeStorageType::Sqlite;
     else
       LOG(LCRITICAL, ("Incorrect node_storage type:", type));
   }
