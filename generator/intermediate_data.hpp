@@ -22,6 +22,8 @@
 #include <utility>
 #include <vector>
 
+#include <sqlite3.h>
+
 #include "defines.hpp"
 
 // Classes for reading and writing any data in file with map of offsets for
@@ -196,6 +198,88 @@ protected:
   bool m_preload = false;
 };
 
+class OSMElementSqliteCacheReader
+{
+public:
+  explicit OSMElementSqliteCacheReader(std::string const & name, bool preload = false);
+  ~OSMElementSqliteCacheReader();
+
+  template <class Value>
+  bool Read(Key id, Value & value)
+  {
+    bool result = false;
+
+    // bind id
+    sqlite3_bind_int64(m_pStmt, 1, id);
+
+    // select
+    while(sqlite3_step(m_pStmt) == SQLITE_ROW)
+    {
+      int valueSize = sqlite3_column_bytes(m_pStmt, 0);
+      const char *buf = (const char*)sqlite3_column_blob(m_pStmt, 0);
+
+      MemReader reader(buf, valueSize);
+      value.Read(reader);
+
+      result = true;
+    }
+
+    // clear bind
+    sqlite3_clear_bindings(m_pStmt);
+    sqlite3_reset(m_pStmt);
+
+    if (!result)
+      LOG_SHORT(LWARNING, ("Can't find offset in file", m_name + OFFSET_EXT, "by id", id));
+
+    return result;
+  }
+
+  void LoadOffsets();
+
+protected:
+  sqlite3* m_db;
+  sqlite3_stmt* m_pStmt;
+  std::string m_name;
+  std::vector<uint8_t> m_data;
+  bool m_preload = false;
+};
+
+class OSMElementSqliteCacheWriter
+{
+public:
+  explicit OSMElementSqliteCacheWriter(std::string const & name, bool preload = false);
+  ~OSMElementSqliteCacheWriter();
+
+  template <typename Value>
+  void Write(Key id, Value const & value)
+  {
+    m_data.clear();
+    MemWriter<decltype(m_data)> w(m_data);
+
+    value.Write(w);
+
+    // bind balues
+    sqlite3_bind_int64(m_pStmt, 1, id);
+    sqlite3_bind_blob(m_pStmt, 2, m_data.data(), m_data.size(), SQLITE_TRANSIENT);
+
+    // insert
+    while(sqlite3_step(m_pStmt) == SQLITE_BUSY);
+
+    // clear binds
+    sqlite3_reset(m_pStmt);
+    sqlite3_clear_bindings(m_pStmt);
+  }
+
+  void SaveOffsets();
+
+protected:
+  sqlite3* m_db;
+  sqlite3_stmt* m_pStmt;
+  std::string m_name;
+  std::vector<uint8_t> m_data;
+  bool m_preload = false;
+};
+
 class IntermediateDataReader
 {
 public:
@@ -227,7 +311,8 @@ public:
   }
 
 private:
-  using CacheReader = cache::OSMElementCacheReader;
+  // using CacheReader = cache::OSMElementCacheReader;
+  using CacheReader = cache::OSMElementSqliteCacheReader;
 
   template <typename Element, typename ToDo>
   class ElementProcessorBase
@@ -264,8 +349,8 @@ private:
   };
 
   std::shared_ptr<PointStorageReaderInterface> m_nodes;
-  cache::OSMElementCacheReader m_ways;
-  cache::OSMElementCacheReader m_relations;
+  cache::OSMElementSqliteCacheReader m_ways;
+  cache::OSMElementSqliteCacheReader m_relations;
   cache::IndexFileReader m_nodeToRelations;
   cache::IndexFileReader m_wayToRelations;
 };
@@ -296,8 +381,8 @@ private:
   }
 
   std::shared_ptr<PointStorageWriterInterface> m_nodes;
-  cache::OSMElementCacheWriter m_ways;
-  cache::OSMElementCacheWriter m_relations;
+  cache::OSMElementSqliteCacheWriter m_ways;
+  cache::OSMElementSqliteCacheWriter m_relations;
   cache::IndexFileWriter m_nodeToRelations;
   cache::IndexFileWriter m_wayToRelations;
 };
