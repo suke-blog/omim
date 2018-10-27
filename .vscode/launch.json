@@ -1,0 +1,119 @@
+{
+    // IntelliSense を使用して利用可能な属性を学べます。
+    // 既存の属性の説明をホバーして表示します。
+    // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(gdb) Launch step3.generate_intermediate",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/generator_tool",
+            "args": [
+                "--intermediate_data_path=/media/kiri/DATA/mwm/japan_kinki_test/intermediate_data/",
+                "--node_storage=sqlite",
+                "--osm_file_type=o5m",
+                "--osm_file_name=/media/kiri/DATA/pbf/kansai.osm.o5m",
+                "-preprocess"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "(gdb) Launch step4.generate_features",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/generator_tool",
+            "args": [
+                "--intermediate_data_path=/media/kiri/DATA/mwm/japan_kinki_test/intermediate_data/",
+                "--node_storage=sqlite",
+                "--osm_file_type=o5m",
+                "--osm_file_name=/media/kiri/DATA/pbf/kansai.osm.o5m",
+                "--data_path=/media/kiri/DATA/mwm/japan_kinki_test",
+                "--user_resource_path=/media/kiri/DATA/git/suke-blog/omim/data/",
+                "--dump_cities_boundaries",
+                "--cities_boundaries_data=/media/kiri/DATA/mwm/japan_kinki_test/intermediate_data/cities_boundaries.bin",
+                "-generate_features",
+                "-emit_coasts",
+                "-split_by_polygons"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "(gdb) Launch Step6-a.make_cross_mwm",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/generator_tool",
+            "args": [
+                "--data_path=/media/kiri/DATA/mwm/japan_kinki_test",
+                "--intermediate_data_path=/media/kiri/DATA/mwm/japan_kinki_test/intermediate_data/",
+                "--user_resource_path=/media/kiri/DATA/git/suke-blog/omim/data/",
+                "--make_cross_mwm",
+                "--disable_cross_mwm_progress",
+                "--generate_cameras",
+                "--make_routing_index",
+                "--generate_traffic_keys",
+                "--output=Japan_Kinki Region_Nara"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "(gdb) Launch Step6-b.make_transit_cross_mwm",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/generator_tool",
+            "args": [
+                "--data_path=/media/kiri/DATA/mwm/japan_kinki_test",
+                "--intermediate_data_path=/media/kiri/DATA/mwm/japan_kinki_test/intermediate_data/",
+                "--user_resource_path=/media/kiri/DATA/git/suke-blog/omim/data/",
+                "--make_transit_cross_mwm",
+                "--transit_path=/media/kiri/DATA/git/suke-blog/omim/data/",
+                "--output=Japan_Kinki Region_Nara"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}
