@@ -13,7 +13,7 @@ class SqliteHelper
         sqlite3* getConnection(string const &filepath);
         void close(sqlite3 *db);
     private:
-        SqliteHelper(){}
+        SqliteHelper();
         SqliteHelper(const SqliteHelper &other){}
         SqliteHelper &operator=(const SqliteHelper &other){}
 

@@ -6,6 +6,18 @@
 static SqliteHelper &instance = SqliteHelper::getInstance();
 static std::mutex m;
 
+// SQLite mmap buffer
+static const int64_t MMAP_BUFFER_DEFAULT = 256*1024*1024;   //256MByte
+static const int64_t MMAP_BUFFER_MAX = 1024*1024*1024;      //1024MByte
+
+
+SqliteHelper::SqliteHelper() {
+    // using mmap
+    sqlite3_config(SQLITE_CONFIG_MMAP_SIZE, MMAP_BUFFER_DEFAULT, MMAP_BUFFER_MAX);
+
+    // disable memory statistics
+    sqlite3_config(SQLITE_CONFIG_MEMSTATUS, false);
+}
 
 SqliteHelper& SqliteHelper::getInstance() {
     static SqliteHelper instance;
@@ -27,6 +39,21 @@ sqlite3* SqliteHelper::getConnection(string const &filepath) {
             cerr << "[ERR]:failed to open database. " << sqlite3_errmsg(dbpair.first) << endl;
             return nullptr;
         }
+
+        // PRAGMA temp_store=FILE|MEMORY
+        rtn = sqlite3_exec(dbpair.first, "PRAGMA temp_store=MEMORY", nullptr, nullptr, nullptr);
+        if(rtn != SQLITE_OK)
+            cerr << sqlite3_errmsg(dbpair.first) << endl;
+
+        // PRAGMA synchronous=EXTRA|FULL|NORMAL|OFF
+        rtn = sqlite3_exec(dbpair.first, "PRAGMA synchronous=OFF", nullptr, nullptr, nullptr);
+        if(rtn != SQLITE_OK)
+            cerr << sqlite3_errmsg(dbpair.first) << endl;
+
+        // PRAGMA journal_mode=DELETE|TRUNCATE|PERSIST|MEMORY|WAL|OFF
+        rtn = sqlite3_exec(dbpair.first, "PRAGMA journal_mode=OFF", nullptr, nullptr, nullptr);
+        if(rtn != SQLITE_OK)
+            cerr << sqlite3_errmsg(dbpair.first) << endl;
 
         // start transaction
         // sqlite3_exec(dbpair.first, "BEGIN", nullptr, nullptr, nullptr);
