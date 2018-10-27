@@ -26,7 +26,8 @@
 // #include <iostream>
 // #include <fstream>
 
-using namespace my;
+
+static std::mutex m;
 
 const char* SqliteData::queryCreateTable = "create table file_tbl (id integer, name text, primary key(id)); create table data_tbl (id integer, file_id integer, data blob, primary key(id));";
 const char* SqliteData::querySize = "select length(data) from data_tbl where file_id=? group by file_id;";
@@ -34,18 +35,19 @@ const char* SqliteData::queryInsertFile = "insert into file_tbl(id, name) values
 const char* SqliteData::queryInsertData = "insert into data_tbl(file_id, data) values(?, ?);";
 const char* SqliteData::querySelectData = "select data from data_tbl where file_id=? order by id;";
 
-static std::mutex m;
+SqliteData::SqliteData(SqliteData && rhs) :
+    m_DB(rhs.m_DB),
+    m_FilePath(rhs.m_FilePath),
+    m_FileID(rhs.m_FileID),
+    m_FileSize(rhs.m_FileSize), 
+    m_Op(rhs.m_Op), 
+    m_bTruncOnClose(rhs.m_bTruncOnClose),
+    m_pStmtInsertData(rhs.m_pStmtInsertData),
+    m_pStmtSize(rhs.m_pStmtSize)
+{}
 
-namespace my
-{
-
-SqliteData::SqliteData(string const & filePath)
-{
-  SqliteData(filePath, my::SqliteData::OP_WRITE_TRUNCATE);
-}
-
-SqliteData::SqliteData(string const & filePath, Op op)
-    : m_FilePath(filePath), m_Op(op), m_FileSize(0)
+SqliteData::SqliteData(string const & filePath, Op op, bool bTruncOnClose)
+    : m_FilePath(filePath), m_Op(op), m_FileSize(0), m_bTruncOnClose(bTruncOnClose)
 {
   int dir_index = filePath.find_last_of('/')+1;
   int ext_index = filePath.find_last_of('.');
@@ -88,8 +90,6 @@ SqliteData::SqliteData(string const & filePath, Op op)
   sqlite3_prepare_v2(m_DB, querySize, -1, &m_pStmtSize, nullptr);
 }
 
-
-
 SqliteData::~SqliteData()
 {
   if(m_DB){
@@ -98,43 +98,6 @@ SqliteData::~SqliteData()
     sqlite3_finalize(m_pStmtSize);
     SqliteHelper::getInstance().close(m_DB);
   }
-}
-
-int SqliteData::GetFileID()
-{
-  static int id = 0;
-
-  std::lock_guard<std::mutex> lg(m);
-  return ++id;
-}
-
-string SqliteData::GetErrorProlog() const
-{
-  return "SqliteDataError";
-}
-
-static int64_t const INVALID_POS = -1;
-
-uint64_t SqliteData::Size() const
-{
-  int64_t size = 0;
-
-  sqlite3_bind_int(m_pStmtSize, 1, m_FileID);
-  while(sqlite3_step(m_pStmtSize) == SQLITE_ROW){
-    size = sqlite3_column_int64(m_pStmtSize, 0);
-  }
-
-  //clear bind and state
-  sqlite3_reset(m_pStmtSize);
-  sqlite3_clear_bindings(m_pStmtSize);
-
-  // ASSERT_GREATER_OR_EQUAL(size, 0, ());
-  return static_cast<uint64_t>(size);
-}
-
-void SqliteData::Read(uint64_t pos, void * p, size_t size)
-{
-  return;
 }
 
 uint64_t SqliteData::Pos() const
@@ -151,6 +114,7 @@ void SqliteData::Write(void const * p, size_t size)
 {
   sqlite3_bind_int(m_pStmtInsertData, 1, m_FileID);
   sqlite3_bind_blob(m_pStmtInsertData, 2, p, size, SQLITE_TRANSIENT);
+
   while(sqlite3_step(m_pStmtInsertData) == SQLITE_BUSY);
   
   //clear bind and state
@@ -158,6 +122,23 @@ void SqliteData::Write(void const * p, size_t size)
   sqlite3_clear_bindings(m_pStmtInsertData);
 
   m_FileSize += size;
+}
+
+uint64_t SqliteData::Size() const
+{
+  int64_t size = 0;
+
+  sqlite3_bind_int(m_pStmtSize, 1, m_FileID);
+  while(sqlite3_step(m_pStmtSize) == SQLITE_ROW){
+    size = sqlite3_column_int64(m_pStmtSize, 0);
+  }
+
+  //clear bind and state
+  sqlite3_reset(m_pStmtSize);
+  sqlite3_clear_bindings(m_pStmtSize);
+
+  // ASSERT_GREATER_OR_EQUAL(size, 0, ());
+  return static_cast<uint64_t>(size);
 }
 
 void SqliteData::Flush()
@@ -186,56 +167,10 @@ void SqliteData::Flush()
   return;
 }
 
-void SqliteData::Truncate(uint64_t sz)
+uint32_t SqliteData::GetFileID()
 {
-  return;
-}
+  static uint32_t id = 0;
 
-// bool GetFileSize(string const & fName, uint64_t & sz)
-// {
-//   sz = 0;
-//   return false;
-// }
-
-// namespace
-// {
-// bool CheckFileOperationResult(int res, string const & fName)
-// {
-//   if (!res)
-//     return true;
-
-//   return false;
-// }
-// }  // namespace
-
-// bool DeleteFileX(string const & fName)
-// {
-//   int res;
-
-//   return CheckFileOperationResult(res, fName);
-// }
-
-// bool RenameFileX(string const & fOld, string const & fNew)
-// {
-//   int res;
-
-//   return CheckFileOperationResult(res, fOld);
-// }
-
-// bool WriteToTempAndRenameToFile(string const & dest, function<bool(string const &)> const & write,
-//                                 string const & tmp)
-// {
-//   return true;
-// }
-
-// bool CopyFileX(string const & fOld, string const & fNew)
-// {
-//   return false;
-// }
-
-// bool IsEqualFiles(string const & firstFile, string const & secondFile)
-// {
-//   return true;
-// }
-
+  std::lock_guard<std::mutex> lg(m);
+  return ++id;
 }

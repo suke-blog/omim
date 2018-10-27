@@ -49,6 +49,19 @@ uint32_t FeaturesCollector::GetFileSize(FileWriter const & f)
   return ret;
 }
 
+#ifdef FEATURE_OUTPUT_SQLITE
+uint32_t FeaturesCollector::GetFileSize(SqliteData const & f)
+{
+  // .dat file should be less than 4Gb
+  uint64_t const pos = f.Pos();
+  uint32_t const ret = static_cast<uint32_t>(pos);
+
+  CHECK_EQUAL(static_cast<uint64_t>(ret), pos, ("Feature offset is out of 32bit boundary!"));
+  return ret;
+}
+#endif
+
+
 template <typename ValueT, size_t ValueSizeT = sizeof(ValueT) + 1>
 pair<char[ValueSizeT], uint8_t> PackValue(ValueT v)
 {

@@ -8,6 +8,12 @@
 #include <string>
 #include <vector>
 
+//#define FEATURE_OUTPUT_SQLITE
+#ifdef FEATURE_OUTPUT_SQLITE
+#include "sqlite_data.hpp"
+#endif
+
+
 class FeatureBuilder1;
 
 namespace feature
@@ -22,7 +28,11 @@ class FeaturesCollector
 protected:
   static uint32_t constexpr kInvalidFeatureId = std::numeric_limits<uint32_t>::max();
 
+#ifdef FEATURE_OUTPUT_SQLITE
+  SqliteData m_datFile;
+#else
   FileWriter m_datFile;
+#endif
   m2::RectD m_bounds;
 
 private:
@@ -40,7 +50,11 @@ public:
   FeaturesCollector(std::string const & fName);
   virtual ~FeaturesCollector();
 
+
   static uint32_t GetFileSize(FileWriter const & f);
+#ifdef FEATURE_OUTPUT_SQLITE
+  static uint32_t GetFileSize(SqliteData const & f);
+#endif
   std::string const & GetFilePath() const { return m_datFile.GetName(); }
   /// \brief Serializes |f|.
   /// \returns feature id of serialized feature if |f| is serialized after the call

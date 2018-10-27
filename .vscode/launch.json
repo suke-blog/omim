@@ -59,6 +59,61 @@
                     "ignoreFailures": true
                 }
             ]
+        },
+        {
+            "name": "(gdb) Launch Step6-a.make_cross_mwm",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/generator_tool",
+            "args": [
+                "--data_path=/media/kiri/DATA/mwm/japan_kinki_test",
+                "--intermediate_data_path=/media/kiri/DATA/mwm/japan_kinki_test/intermediate_data/",
+                "--user_resource_path=/media/kiri/DATA/git/suke-blog/omim/data/",
+                "--make_cross_mwm",
+                "--disable_cross_mwm_progress",
+                "--generate_cameras",
+                "--make_routing_index",
+                "--generate_traffic_keys",
+                "--output=Japan_Kinki Region_Nara"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "(gdb) Launch Step6-b.make_transit_cross_mwm",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/generator_tool",
+            "args": [
+                "--data_path=/media/kiri/DATA/mwm/japan_kinki_test",
+                "--intermediate_data_path=/media/kiri/DATA/mwm/japan_kinki_test/intermediate_data/",
+                "--user_resource_path=/media/kiri/DATA/git/suke-blog/omim/data/",
+                "--make_transit_cross_mwm",
+                "--transit_path=/media/kiri/DATA/git/suke-blog/omim/data/",
+                "--output=Japan_Kinki Region_Nara"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
         }
     ]
 }
