@@ -778,8 +778,8 @@ node|z16-[landuse=forest],
 area|z16-[landuse=forest]
 {fill-color: @forest;icon-image: nparkf-m.svg;text-offset: 1;font-size: 12;text-halo-opacity: 0.9;}
 
-node|z14[natural=spring],
-area|z14[natural=spring]
+node|z12-[natural=spring],
+area|z12-[natural=spring]
 {icon-image: drinking-water-s.svg;text-offset:6;font-size: 10;icon-min-distance: 24;text-optional: true;}
 node|z15-[natural=spring],
 area|z15-[natural=spring]
@@ -792,6 +792,9 @@ node|z15-[natural=geyser],
 area|z15-[natural=geyser]
 {icon-image: geyser-m.svg;text-offset:8;font-size: 10;icon-min-distance: 24;text-optional: true;}
 
+node|z12-[amenity=drinking_water],
+area|z12-[amenity=drinking_water]
+{icon-image: drinking-water-s.svg;text-offset:6;font-size: 10;icon-min-distance: 24;text-optional: true;}
 node|z15-[amenity=water_point],
 area|z15-[amenity=water_point],
 node|z15-[amenity=drinking_water],
@@ -1319,37 +1322,60 @@ area|z16[amenity=community_centre]
 
 /* 4.2 Apartament */
 
-node|z16-[tourism=hotel],
-node|z16-[tourism=hostel],
-node|z16-[tourism=guest_house],
-area|z16-[tourism=guest_house],
-node|z16-[tourism=alpine_hut],
-area|z16-[tourism=alpine_hut],
-node|z16-[tourism=wilderness_hut],
-area|z16-[tourism=wilderness_hut],
-node|z16-[tourism=chalet],
-area|z16-[tourism=chalet],
+node|z14-[tourism=hotel],
+node|z14-[tourism=hostel],
+node|z14-[tourism=guest_house],
+area|z14-[tourism=guest_house],
+node|z14-[tourism=alpine_hut],
+area|z14-[tourism=alpine_hut],
+node|z14-[tourism=wilderness_hut],
+area|z14-[tourism=wilderness_hut],
+node|z14-[tourism=chalet],
+area|z14-[tourism=chalet],
 node|z16-[tourism=resort],
 area|z16-[tourism=resort],
-node|z16-[tourism=motel],
-area|z16-[tourism=motel],
+node|z14-[tourism=motel],
+area|z14-[tourism=motel],
 node|z16-[tourism=apartment],
 area|z16-[tourism=apartment]
 {text: name;text-offset: 1;font-size: 10;text-color: @poi_label;}
-node|z15-[tourism=camp_site],
-area|z15-[tourism=camp_site],
+node|z14-[tourism=camp_site],
+area|z14-[tourism=camp_site],
 node|z16-[tourism=picnic_site],
 area|z16-[tourism=picnic_site],
 node|z16-[leisure=picnic_table],
 area|z16-[leisure=picnic_table],
-node|z16-[amenity=shelter],
-area|z16-[amenity=shelter],
+node|z14-[amenity=shelter],
+area|z14-[amenity=shelter],
 node|z16-[highway=rest_area],
 area|z16-[highway=rest_area],
-node|z16-[tourism=caravan_site],
-area|z16-[tourism=caravan_site]
+node|z14-[tourism=caravan_site],
+area|z14-[tourism=caravan_site]
 {text: name;text-color: @poi_label;text-offset: 1;font-size: 10;}
 
+node|z12-[tourism=hotel],
+node|z12-[tourism=motel],
+area|z12-[tourism=motel]
+{icon-image: hotel-s.svg;icon-min-distance: 10;}
+node|z12-[tourism=guest_house],
+area|z12-[tourism=guest_house]
+{icon-image: apartment-s.svg;icon-min-distance: 10;text-halo-radius: 0;}
+node|z12-[tourism=alpine_hut],
+area|z12-[tourism=alpine_hut],
+node|z12-[tourism=wilderness_hut],
+area|z12-[tourism=wilderness_hut],
+node|z12-[tourism=chalet],
+area|z12-[tourism=chalet]
+{icon-image: alpine_hut-s.svg;icon-min-distance: 10;}
+node|z12-[tourism=camp_site],
+area|z12-[tourism=camp_site]
+{icon-image: campsite-s.svg;icon-min-distance: 10;}
+node|z12-[amenity=shelter],
+area|z12-[amenity=shelter]
+{icon-image: picnic-s.svg;icon-min-distance: 10;}
+node|z12-[tourism=caravan_site],
+area|z12-[tourism=caravan_site]
+{icon-image: caravan_site-s.svg;font-size: 11;icon-min-distance: 10;}
 
 node|z16[tourism=hotel],
 node|z16[tourism=resort],
@@ -1422,7 +1448,7 @@ area|z15[sponsored=booking][tourism=wilderness_hut][rating>=7]
 {icon-image:alpine_hut-m.svg;icon-min-distance: 24;text: name;text-offset: 1;font-size: 10;text-color: @poi_label;text-halo-color: @halo_park_label;text-halo-radius: 0.5;text-halo-opacity: 0.8;}
 node|z15[sponsored=booking][rating<7],
 area|z15[sponsored=booking][rating<7]
-{icon-image: zero-icon.svg;text: none;} 
+{icon-image: zero-icon.svg;text: none;}
 
 node|z16- [sponsored=booking][tourism=hotel],
 area|z16- [sponsored=booking][tourism=hotel],
@@ -2201,6 +2227,9 @@ node|z17-[shop=pawnbroker]
 node|z18-[amenity=fire_station],
 area|z18-[amenity=fire_station]
 {icon-image: fire_station-m.svg;font-size: 11;text-optional: true;}
+node|z12-17[amenity=toilets],
+area|z12-17[amenity=toilets]
+{icon-image: toilets-s.svg;font-size: 11;text-optional: true;}
 node|z18-[amenity=toilets],
 area|z18-[amenity=toilets]
 {icon-image: toilets-m.svg;font-size: 11;text-optional: true;}
@@ -2283,8 +2312,8 @@ area|z17-[amenity=marketplace]
 
 node|z15[shop=car_repair][service=tyres],
 area|z15[shop=car_repair][service=tyres],
-node|z15[highway=services],
-area|z15[highway=services]
+node|z12-[highway=services],
+area|z12-[highway=services]
 {icon-image: car-repair-s.svg;text-offset: 1;-x-me-text-priority:15500;icon-min-distance: 20;}
 node|z16-[shop=car_repair][service=tyres],
 area|z16-[shop=car_repair][service=tyres],
