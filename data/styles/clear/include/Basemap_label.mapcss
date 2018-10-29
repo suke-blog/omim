@@ -447,7 +447,8 @@ area|z14-[landuse=forest][!name]
 
 area|z15-[leisure=park][name],
 area|z15-[landuse=forest][name]
-{icon-image: park-m.svg;text-offset: 1;font-size: 11;}
+{text-offset: 1;font-size: 11;}
+/* {icon-image: park-m.svg;text-offset: 1;font-size: 11;} */
 area|z15-17[leisure=park][name]::int_name,
 area|z15-17[landuse=forest][name]::int_name,
 area|z16-17[landuse=forest][name]::int_name
@@ -458,7 +459,8 @@ area|z15[landuse=forest][!name]
 
 area|z16[leisure=park][name],
 area|z16[landuse=forest][name]
-{icon-image: park-m.svg;text-offset: 1;font-size: 11;}
+{text-offset: 1;font-size: 11;}
+/*{icon-image: park-m.svg;text-offset: 1;font-size: 11;}*/
 area|z16[leisure=garden][name]
 {icon-image: garden-m.svg;text-offset: 1;font-size: 11;}
 area|z16[leisure=park][!name],
@@ -471,7 +473,8 @@ area|z16[landuse=forest][!name]::int_name
 
 area|z17[leisure=park][name],
 area|z17[landuse=forest][name]
-{icon-image: park-m.svg;text-offset: 1;font-size: 12;}
+{text-offset: 1;font-size: 12;}
+/*{icon-image: park-m.svg;text-offset: 1;font-size: 12;}*/
 area|z17[leisure=garden][name]
 {icon-image: garden-m.svg;text-offset: 1;font-size: 12;}
 area|z17[leisure=park][!name],
@@ -484,7 +487,8 @@ area|z17[leisure=forest][!name]::int_name
 
 area|z18-[leisure=park],
 area|z18-[landuse=forest]
-{icon-image: park-m.svg;text-offset: 1;font-size: 13;}
+{text-offset: 1;font-size: 13;}
+/*{icon-image: park-m.svg;text-offset: 1;font-size: 13;}*/
 area|z18-[leisure=garden]
 {icon-image: garden-m.svg;text-offset: 1;font-size: 13;}
 area|z18-[leisure=park]::int_name,
