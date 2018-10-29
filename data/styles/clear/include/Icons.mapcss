@@ -2287,6 +2287,10 @@ node|z19-[man_made=survey_point]
 
 /* 6. SHOP */
 
+node|z12-[shop=convenience],
+area|z12-[shop=convenience]
+{icon-image: grocery-s.svg;}
+
 node|z14-[shop=mall],
 area|z14-[shop=mall],
 node|z16-[shop],
