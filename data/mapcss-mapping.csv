@@ -1325,3 +1325,4 @@ contour;1324;
 contour|contour_ext|elevation_major;[contour][contour_ext=elevation_major];;name;int_name;1325;
 contour|contour_ext|elevation_medium;[contour][contour_ext=elevation_medium];;name;int_name;1326;
 contour|contour_ext|elevation_minor;[contour][contour_ext=elevation_minor];;name;int_name;1327;
+amenity|public_bath;1328;

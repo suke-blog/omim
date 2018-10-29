@@ -215,7 +215,9 @@ area[amenity=atm],
 node[amenity=bureau_de_change],
 node[shop=pawnbroker],
 area[shop=pawnbroker],
-node[amenity=library]
+node[amenity=library],
+node[amenity=public_bath],
+area[amenity=public_bath]
 {z-index: 2500;}
 
 node[amenity=fuel],
@@ -1637,6 +1639,8 @@ node|z16-[leisure=water_park],
 area|z16-[leisure=water_park],
 node|z16-[man_made=windmill],
 area|z16-[man_made=windmill],
+node|z16-[amenity=public_bath],
+area|z16-[amenity=public_bath],
 node|z17-[amenity=pharmacy],
 area|z17-[amenity=pharmacy],
 node|z17-[amenity=clinic],
@@ -2033,6 +2037,14 @@ area|z18-[amenity=place_of_worship][religion=taoist]
 {icon-image: taoist-m.svg;text-optional: true;}
 
 /* 5.5 Others */
+
+node|z12-[amenity=public_bath],
+area|z12-[amenity=public_bath]
+{icon-image: public_bath-s.svg;}
+
+node|z16-[amenity=public_bath],
+area|z16-[amenity=public_bath]
+{icon-image: public_bath-m.svg;text-offset: 1;font-size: : 11;}
 
 node|z16-[amenity=nightclub],
 area|z16-[amenity=nightclub]
