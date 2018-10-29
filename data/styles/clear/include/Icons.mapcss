@@ -767,16 +767,20 @@ area|z12-[landuse=forest]
 {fill-color: @green2;text: name;text-color: @park_label;text-halo-opacity: 0.8;text-halo-color: @label_halo_light;text-halo-radius:0.5;}
 node|z13[landuse=forest],
 area|z13[landuse=forest]
-{fill-color: @green3;icon-image: nparkf-s.svg;text-offset: 1;font-size: 10;icon-min-distance: 12;}
+{fill-color: @green3;text-offset: 1;font-size: 10;icon-min-distance: 12;}
+/* {fill-color: @green3;icon-image: nparkf-s.svg;text-offset: 1;font-size: 10;icon-min-distance: 12;} */
 node|z14[landuse=forest],
 area|z14[landuse=forest]
-{fill-color: @green4;icon-image: nparkf-s.svg;text-offset: 1;font-size: 11;}
+{fill-color: @green4;text-offset: 1;font-size: 11;}
+/* {fill-color: @green4;icon-image: nparkf-s.svg;text-offset: 1;font-size: 11;} */
 node|z15[landuse=forest],
 area|z15[landuse=forest]
-{fill-color: @green5;icon-image: nparkf-m.svg;text-offset: 1;font-size: 12;text-halo-opacity: 0.9;}
+{fill-color: @green5;text-offset: 1;font-size: 12;text-halo-opacity: 0.9;}
+/* {fill-color: @green5;icon-image: nparkf-m.svg;text-offset: 1;font-size: 12;text-halo-opacity: 0.9;} */
 node|z16-[landuse=forest],
 area|z16-[landuse=forest]
-{fill-color: @forest;icon-image: nparkf-m.svg;text-offset: 1;font-size: 12;text-halo-opacity: 0.9;}
+{fill-color: @forest;text-offset: 1;font-size: 12;text-halo-opacity: 0.9;}
+/* {fill-color: @forest;icon-image: nparkf-m.svg;text-offset: 1;font-size: 12;text-halo-opacity: 0.9;} */
 
 node|z12-[natural=spring],
 area|z12-[natural=spring]
