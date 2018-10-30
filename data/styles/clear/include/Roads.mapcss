@@ -292,9 +292,10 @@ line|z9[highway=world_level]
 
 /* 3.TRUNK & MOTORWAY 7-22 ZOOM */
 
-line|z7-[highway=trunk],
 line|z7-[highway=motorway],
-line|z13-[highway=motorway_link],
+line|z13-[highway=motorway_link]
+{color: @motorway_purple_light;opacity: 1;}
+line|z7-[highway=trunk],
 line|z13-[highway=trunk_link]
 {color: @trunk_orange_light;opacity: 1;}
 line|z12-[highway=motorway][tunnel?],
@@ -324,14 +325,16 @@ line|z8[highway=motorway]
 line|z9[highway=trunk],
 line|z9[highway=motorway]
 {width: 1.2;}
-line|z10[highway=trunk],
 line|z10[highway=motorway]
+{color: @motorway_purple_medium; width: 1.5;}
+line|z10[highway=trunk]
 {color: @trunk_orange_medium; width: 1.5;}
 line|z11[highway=trunk],
 line|z11[highway=motorway]
 {width: 1.7;}
-line|z12[highway=trunk],
 line|z12[highway=motorway]
+{color: @motorway_purple_medium; width: 1.9;}
+line|z12[highway=trunk]
 {color: @trunk_orange_medium; width: 1.9;}
 line|z13[highway=trunk],
 line|z13[highway=motorway],

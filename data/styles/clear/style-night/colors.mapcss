@@ -88,14 +88,16 @@
 /* 5.ROADS */
 /* 5.1 All roads */
 
+@motorway_purple_medium: #340066;
+@motorway_purple_light: #340066;
 @trunk: #372400;
 @trunk_orange: #381F14;
 @trunk_orange_medium: #381F14;
 @trunk_orange_light: #381F11;
-@primary_orange:  #422518;
-@primary_orange_medium: #422518;
-@primary_orange_light: #422518;
-@secondary: #2B2827;
+@primary_orange:  #00520E;
+@primary_orange_medium: #00520E;
+@primary_orange_light: #00520E;
+@secondary: #5D4213;
 @residential: #2B2827;
 @unclassified: #2B2827;
 @pedestrian: #4D4744;
@@ -178,4 +180,3 @@
 
 /* contour */
 @contour_line: #663300;
-
