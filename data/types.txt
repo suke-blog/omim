@@ -1321,3 +1321,8 @@ cuisine|peruvian
 cuisine|fine_dining
 cuisine|tea
 natural|geyser
+contour
+contour|contour_ext|elevation_major
+contour|contour_ext|elevation_medium
+contour|contour_ext|elevation_minor
+amenity|public_bath
