@@ -47,7 +47,7 @@ class OsmIdCode:
 
 
 class MWM:
-    # coding/multilang_utf8_string.cpp
+    # coding/string_utf8_multilang.cpp
     languages = ["default",
                  "en", "ja", "fr", "ko_rm", "ar", "de", "int_name", "ru", "sv", "zh", "fi", "be", "ka", "ko",
                  "he", "nl", "ga", "ja_rm", "el", "it", "es", "zh_pinyin", "th", "cy", "sr", "uk", "ca", "hu",
@@ -62,7 +62,7 @@ class MWM:
                 "turn_lanes", "turn_lanes_forward", "turn_lanes_backward", "email", "postcode",
                 "wikipedia", "maxspeed", "flats", "height", "min_height",
                 "denomination", "building_levels", "test_id", "ref:sponsored", "price_rate",
-                "rating", "fuel", "routes"]
+                "rating", "banner_url", "level", "iata", "brand"]
 
     regiondata = ["languages", "driving", "timezone", "addr_fmt", "phone_fmt", "postcode_fmt", "holidays", "housenames"]
 

@@ -35,7 +35,7 @@ protocol BMCViewModel: AnyObject {
   func checkCategory(name: String) -> Bool
 
   typealias onPreparedToShareHandler = (BMCShareCategoryStatus) -> Void
-  func shareCategory(category: BMCCategory, handler: @escaping onPreparedToShareHandler)
+  func shareCategoryFile(category: BMCCategory, handler: @escaping onPreparedToShareHandler)
   func finishShareCategory()
 
   func pendingPermission(isPending: Bool)
@@ -52,4 +52,6 @@ protocol BMCViewModel: AnyObject {
   func requestRestoring()
   func applyRestoring()
   func cancelRestoring()
+  
+  func reloadData()
 }

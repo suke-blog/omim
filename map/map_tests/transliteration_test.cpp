@@ -1,6 +1,6 @@
 #include "testing/testing.hpp"
 
-#include "coding/multilang_utf8_string.hpp"
+#include "coding/string_utf8_multilang.hpp"
 #include "coding/transliteration.hpp"
 
 #include "platform/platform.hpp"
@@ -36,7 +36,6 @@ UNIT_TEST(Transliteration_CompareSamples)
   TestTransliteration(translit, "uk", "Українська", "Ukrayinska");
   TestTransliteration(translit, "fa", "فارسی", "farsy");
   TestTransliteration(translit, "hy", "Հայերէն", "Hayeren");
-  TestTransliteration(translit, "kn", "ಕನ್ನಡ", "kannada");
   TestTransliteration(translit, "am", "አማርኛ", "amarinya");
   TestTransliteration(translit, "ja_kana", "カタカナ", "katakana");
   TestTransliteration(translit, "bg", "Български", "Bulgarski");

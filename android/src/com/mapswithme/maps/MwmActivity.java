@@ -38,15 +38,16 @@ import com.mapswithme.maps.api.ParsedSearchRequest;
 import com.mapswithme.maps.api.ParsedUrlMwmRequest;
 import com.mapswithme.maps.api.RoutePoint;
 import com.mapswithme.maps.auth.PassportAuthDialogFragment;
+import com.mapswithme.maps.background.NotificationCandidate;
 import com.mapswithme.maps.background.Notifier;
 import com.mapswithme.maps.base.BaseMwmFragmentActivity;
 import com.mapswithme.maps.base.OnBackPressListener;
 import com.mapswithme.maps.bookmarks.BookmarkCategoriesActivity;
 import com.mapswithme.maps.bookmarks.BookmarksCatalogActivity;
-import com.mapswithme.maps.bookmarks.BookmarksDownloadManager;
 import com.mapswithme.maps.bookmarks.BookmarksPageFactory;
 import com.mapswithme.maps.bookmarks.data.BookmarkCategory;
 import com.mapswithme.maps.bookmarks.data.BookmarkManager;
+import com.mapswithme.maps.bookmarks.data.CatalogCustomProperty;
 import com.mapswithme.maps.bookmarks.data.CatalogTagsGroup;
 import com.mapswithme.maps.bookmarks.data.FeatureId;
 import com.mapswithme.maps.bookmarks.data.MapObject;
@@ -75,8 +76,9 @@ import com.mapswithme.maps.maplayer.traffic.OnTrafficLayerToggleListener;
 import com.mapswithme.maps.maplayer.traffic.TrafficManager;
 import com.mapswithme.maps.maplayer.traffic.widget.TrafficButton;
 import com.mapswithme.maps.purchase.AdsRemovalActivationCallback;
-import com.mapswithme.maps.purchase.AdsRemovalPurchaseCallback;
 import com.mapswithme.maps.purchase.AdsRemovalPurchaseControllerProvider;
+import com.mapswithme.maps.purchase.FailedPurchaseChecker;
+import com.mapswithme.maps.purchase.PurchaseCallback;
 import com.mapswithme.maps.purchase.PurchaseController;
 import com.mapswithme.maps.purchase.PurchaseFactory;
 import com.mapswithme.maps.routing.NavigationController;
@@ -102,6 +104,9 @@ import com.mapswithme.maps.sound.TtsPlayer;
 import com.mapswithme.maps.taxi.TaxiInfo;
 import com.mapswithme.maps.taxi.TaxiManager;
 import com.mapswithme.maps.tips.TipsApi;
+import com.mapswithme.maps.ugc.EditParams;
+import com.mapswithme.maps.ugc.UGC;
+import com.mapswithme.maps.ugc.UGCEditorActivity;
 import com.mapswithme.maps.widget.FadeView;
 import com.mapswithme.maps.widget.menu.BaseMenu;
 import com.mapswithme.maps.widget.menu.MainMenu;
@@ -123,11 +128,13 @@ import com.mapswithme.util.log.LoggerFactory;
 import com.mapswithme.util.permissions.PermissionsResult;
 import com.mapswithme.util.sharing.ShareOption;
 import com.mapswithme.util.sharing.SharingHelper;
+import com.mapswithme.util.sharing.TargetUtils;
 import com.mapswithme.util.statistics.AlohaHelper;
 import com.mapswithme.util.statistics.PlacePageTracker;
 import com.mapswithme.util.statistics.Statistics;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
 
@@ -238,7 +245,9 @@ public class MwmActivity extends BaseMwmFragmentActivity
   @Nullable
   private PlacePageTracker mPlacePageTracker;
   @Nullable
-  private PurchaseController<AdsRemovalPurchaseCallback> mAdsRemovalPurchaseController;
+  private PurchaseController<PurchaseCallback> mAdsRemovalPurchaseController;
+  @Nullable
+  private PurchaseController<FailedPurchaseChecker> mBookmarkPurchaseController;
   @NonNull
   private final OnClickListener mOnMyPositionClickListener = new CurrentPositionClickListener();
 
@@ -335,13 +344,23 @@ public class MwmActivity extends BaseMwmFragmentActivity
   }
 
   @NonNull
-  public static Intent createAuthenticateIntent()
+  public static Intent createAuthenticateIntent(@NonNull Context context)
   {
-    return new Intent(MwmApplication.get(), MwmActivity.class)
+    return new Intent(context, MwmActivity.class)
         .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         .putExtra(MwmActivity.EXTRA_TASK,
                   new MwmActivity.ShowDialogTask(PassportAuthDialogFragment.class.getName()));
+  }
+
+  @NonNull
+  public static Intent createLeaveReviewIntent(@NonNull Context context,
+                                               @NonNull NotificationCandidate.MapObject mapObject)
+  {
+    return new Intent(context, MwmActivity.class)
+      .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+      .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+      .putExtra(MwmActivity.EXTRA_TASK, new MwmActivity.ShowUGCEditorTask(mapObject));
   }
 
   @Override
@@ -557,8 +576,13 @@ public class MwmActivity extends BaseMwmFragmentActivity
 
     SharingHelper.INSTANCE.initialize();
 
-    mAdsRemovalPurchaseController = PurchaseFactory.createPurchaseController();
+    mAdsRemovalPurchaseController = PurchaseFactory.createAdsRemovalPurchaseController(this);
     mAdsRemovalPurchaseController.initialize(this);
+    mAdsRemovalPurchaseController.validateExistingPurchases();
+
+    mBookmarkPurchaseController = PurchaseFactory.createFailedBookmarkPurchaseController(this);
+    mBookmarkPurchaseController.initialize(this);
+    mBookmarkPurchaseController.validateExistingPurchases();
 
     boolean isConsumed = savedInstanceState == null && processIntent(getIntent());
     // If the map activity is launched by any incoming intent (deeplink, update maps event, etc)
@@ -1159,7 +1183,14 @@ public class MwmActivity extends BaseMwmFragmentActivity
   }
 
   @Override
-  public void onTagsReceived(boolean successful, @NonNull CatalogTagsGroup[] tagsGroups)
+  public void onTagsReceived(boolean successful, @NonNull List<CatalogTagsGroup> tagsGroups)
+  {
+    //TODO(@alexzatsepin): Implement me if necessary
+  }
+
+  @Override
+  public void onCustomPropertiesReceived(boolean successful,
+                                         @NonNull List<CatalogCustomProperty> properties)
   {
     //TODO(@alexzatsepin): Implement me if necessary
   }
@@ -1171,7 +1202,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
   }
 
   @Override
-  public void onUploadFinished(@BookmarkManager.UploadResult int uploadResult, @NonNull String description,
+  public void onUploadFinished(@NonNull BookmarkManager.UploadResult uploadResult, @NonNull String description,
                                long originCategoryId, long resultCategoryId)
   {
     //TODO(@alexzatsepin): Implement me if necessary
@@ -1348,6 +1379,10 @@ public class MwmActivity extends BaseMwmFragmentActivity
     super.onDestroy();
     if (mAdsRemovalPurchaseController != null)
       mAdsRemovalPurchaseController.destroy();
+    if (mBookmarkPurchaseController != null)
+      mBookmarkPurchaseController.destroy();
+    if (mNavigationController != null)
+      mNavigationController.destroy();
   }
 
   @Override
@@ -1686,16 +1721,8 @@ public class MwmActivity extends BaseMwmFragmentActivity
     @Override
     public boolean run(@NonNull MwmActivity target)
     {
-      try
-      {
-        BookmarksDownloadManager.from(target).enqueueRequest(mUrl);
-        BookmarkCategoriesActivity.startForResult(target, BookmarksPageFactory.CATALOG.ordinal());
-      }
-      catch (BookmarksDownloadManager.UnprocessedUrlException e)
-      {
-        LOGGER.e(TAG,"Failed to download catalogue by '" + mUrl + "'", e);
-      }
-      return false;
+      BookmarkCategoriesActivity.startForResult(target, BookmarksPageFactory.DOWNLOADED.ordinal(), mUrl);
+      return true;
     }
   }
 
@@ -1853,7 +1880,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
 
   @Override
   @Nullable
-  public PurchaseController<AdsRemovalPurchaseCallback> getAdsRemovalPurchaseController()
+  public PurchaseController<PurchaseCallback> getAdsRemovalPurchaseController()
   {
     return mAdsRemovalPurchaseController;
   }
@@ -2269,7 +2296,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
     if (mNavigationController != null)
       mNavigationController.update(Framework.nativeGetRouteFollowingInfo());
 
-    TtsPlayer.INSTANCE.playTurnNotifications();
+    TtsPlayer.INSTANCE.playTurnNotifications(getApplicationContext());
   }
 
   @Override
@@ -2287,14 +2314,9 @@ public class MwmActivity extends BaseMwmFragmentActivity
     if (mLocationErrorDialogAnnoying)
       return;
 
-    Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-    if (intent.resolveActivity(MwmApplication.get().getPackageManager()) == null)
-    {
-      intent = new Intent(android.provider.Settings.ACTION_SECURITY_SETTINGS);
-      if (intent.resolveActivity(MwmApplication.get().getPackageManager()) == null)
-        return;
-    }
-
+    Intent intent = TargetUtils.makeAppSettingsLocationIntent(getApplicationContext());
+    if (intent == null)
+      return;
     showLocationErrorDialog(intent);
   }
 
@@ -2651,6 +2673,33 @@ public class MwmActivity extends BaseMwmFragmentActivity
     public boolean run(@NonNull MwmActivity target)
     {
       RoutingController.get().restoreRoute();
+      return true;
+    }
+  }
+
+  public static class ShowUGCEditorTask implements MapTask
+  {
+    private static final long serialVersionUID = 1636712824900113568L;
+    @NonNull
+    private final NotificationCandidate.MapObject mMapObject;
+
+    ShowUGCEditorTask(@NonNull NotificationCandidate.MapObject mapObject)
+    {
+      mMapObject = mapObject;
+    }
+
+    @Override
+    public boolean run(@NonNull MwmActivity target)
+    {
+      MapObject mapObject = Framework.nativeGetMapObject(mMapObject);
+
+      if (mapObject == null)
+        return false;
+
+      EditParams.Builder builder = EditParams.Builder.fromMapObject(mapObject)
+                                                     .setDefaultRating(UGC.RATING_NONE)
+                                                     .setFromNotification(true);
+      UGCEditorActivity.start(target, builder.build());
       return true;
     }
   }

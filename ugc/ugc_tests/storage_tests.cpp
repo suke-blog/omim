@@ -126,7 +126,7 @@ public:
 
   FeatureID FeatureIdForCafeAtPoint(m2::PointD const & mercator)
   {
-    return FeatureIdForPoint(mercator, ftypes::IsFoodChecker::Instance());
+    return FeatureIdForPoint(mercator, ftypes::IsEatChecker::Instance());
   }
 
   FeatureID FeatureIdForRailwayAtPoint(m2::PointD const & mercator)
@@ -439,7 +439,7 @@ UNIT_CLASS_TEST(StorageTest, NumberOfUnsynchronized)
 
 UNIT_CLASS_TEST(StorageTest, GetNumberOfUnsentSeparately)
 {
-  TEST_EQUAL(lightweight::GetNumberOfUnsentUGC(), 0, ());
+  TEST_EQUAL(lightweight::impl::GetNumberOfUnsentUGC(), 0, ());
   auto & builder = MwmBuilder::Builder();
   m2::PointD const cafePoint(1.0, 1.0);
   builder.Build({TestCafe(cafePoint)});
@@ -454,7 +454,7 @@ UNIT_CLASS_TEST(StorageTest, GetNumberOfUnsentSeparately)
     TEST_EQUAL(storage.GetNumberOfUnsynchronized(), 1, ());
   }
 
-  TEST_EQUAL(lightweight::GetNumberOfUnsentUGC(), 1, ());
+  TEST_EQUAL(lightweight::impl::GetNumberOfUnsentUGC(), 1, ());
 
   {
     Storage storage(builder.GetDataSource());
@@ -464,7 +464,7 @@ UNIT_CLASS_TEST(StorageTest, GetNumberOfUnsentSeparately)
     storage.SaveIndex();
   }
 
-  TEST_EQUAL(lightweight::GetNumberOfUnsentUGC(), 0, ());
+  TEST_EQUAL(lightweight::impl::GetNumberOfUnsentUGC(), 0, ());
   TEST(DeleteIndexFile(), ());
 }
 
@@ -604,3 +604,20 @@ UNIT_TEST(UGC_TooOldDataVersionsForMigration)
   TEST(DeleteUGCFile(IndexVersion::V0), ());
 }
 
+UNIT_CLASS_TEST(StorageTest, UGC_HasUGCForPlace)
+{
+  auto & builder = MwmBuilder::Builder();
+  m2::PointD const point(1.0, 1.0);
+  builder.Build({TestCafe(point)});
+  auto const id = builder.FeatureIdForCafeAtPoint(point);
+  auto const original = MakeTestUGCUpdate(Time(chrono::hours(24 * 300)));
+  Storage storage(builder.GetDataSource());
+  storage.Load();
+  TEST_EQUAL(storage.SetUGCUpdate(id, original), Storage::SettingResult::Success, ());
+  auto const actual = storage.GetUGCUpdate(id);
+  TEST_EQUAL(original, actual, ());
+
+  auto const & c = classif();
+  auto const cafeType = c.GetTypeByReadableObjectName("amenity-cafe");
+  TEST(storage.HasUGCForPlace(cafeType, point), ());
+}

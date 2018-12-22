@@ -8,7 +8,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.2.0'
+    classpath 'com.android.tools.build:gradle:3.2.1'
     classpath 'io.fabric.tools:gradle:1.+'
   }
 }
@@ -31,6 +31,8 @@ repositories {
   maven {
     url 'https://s3.amazonaws.com/moat-sdk-builds'
   }
+  maven { url 'https://dl.bintray.com/google/flexbox-layout/' }
+  maven { url 'https://dl.bintray.com/google/exoplayer/' }
 }
 
 apply plugin: 'com.android.application'
@@ -114,6 +116,7 @@ dependencies {
   implementation 'com.android.billingclient:billing:1.1'
   implementation 'uk.co.samuelwall:material-tap-target-prompt:2.12.1'
   implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
+  implementation 'com.google.android:flexbox:1.0.0'
 }
 
 def getDate() {

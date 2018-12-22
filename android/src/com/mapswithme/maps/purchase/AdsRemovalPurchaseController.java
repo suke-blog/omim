@@ -2,12 +2,9 @@ package com.mapswithme.maps.purchase;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.SkuDetails;
 import com.mapswithme.maps.Framework;
 import com.mapswithme.maps.PrivateVariables;
 import com.mapswithme.util.ConnectionState;
@@ -15,28 +12,23 @@ import com.mapswithme.util.log.Logger;
 import com.mapswithme.util.log.LoggerFactory;
 import com.mapswithme.util.statistics.Statistics;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-class AdsRemovalPurchaseController extends AbstractPurchaseController<AdsRemovalValidationCallback,
-    PlayStoreBillingCallback, AdsRemovalPurchaseCallback>
+class AdsRemovalPurchaseController extends AbstractPurchaseController<ValidationCallback,
+    PlayStoreBillingCallback, PurchaseCallback>
 {
   private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(LoggerFactory.Type.BILLING);
   private static final String TAG = AdsRemovalPurchaseController.class.getSimpleName();
   @NonNull
-  private final AdsRemovalValidationCallback mValidationCallback = new AdValidationCallbackImpl();
+  private final ValidationCallback mValidationCallback = new AdValidationCallbackImpl();
   @NonNull
   private final PlayStoreBillingCallback mBillingCallback = new PlayStoreBillingCallbackImpl();
-  @NonNull
-  private final List<String> mProductIds;
 
-  AdsRemovalPurchaseController(@NonNull PurchaseValidator<AdsRemovalValidationCallback> validator,
+  AdsRemovalPurchaseController(@NonNull PurchaseValidator<ValidationCallback> validator,
                                @NonNull BillingManager<PlayStoreBillingCallback> billingManager,
                                @NonNull String... productIds)
   {
-    super(validator, billingManager);
-    mProductIds = Collections.unmodifiableList(Arrays.asList(productIds));
+    super(validator, billingManager, productIds);
   }
 
   @Override
@@ -44,7 +36,6 @@ class AdsRemovalPurchaseController extends AbstractPurchaseController<AdsRemoval
   {
     getValidator().addCallback(mValidationCallback);
     getBillingManager().addCallback(mBillingCallback);
-    getBillingManager().queryExistingPurchases();
   }
 
   @Override
@@ -54,83 +45,47 @@ class AdsRemovalPurchaseController extends AbstractPurchaseController<AdsRemoval
     getBillingManager().removeCallback(mBillingCallback);
   }
 
-  @Override
-  public void queryPurchaseDetails()
+  private class AdValidationCallbackImpl implements ValidationCallback
   {
-    getBillingManager().queryProductDetails(mProductIds);
-  }
-
-  private class AdValidationCallbackImpl implements AdsRemovalValidationCallback
-  {
-
     @Override
-    public void onValidate(@NonNull AdsRemovalValidationStatus status)
+    public void onValidate(@NonNull String purchaseData, @NonNull ValidationStatus status)
     {
       LOGGER.i(TAG, "Validation status of 'ads removal': " + status);
-      if (status == AdsRemovalValidationStatus.VERIFIED)
-        Statistics.INSTANCE.trackEvent(Statistics.EventName.INAPP_PURCHASE_VALIDATION_SUCCESS);
+      if (status == ValidationStatus.VERIFIED)
+        Statistics.INSTANCE.trackPurchaseEvent(Statistics.EventName
+                                                   .INAPP_PURCHASE_VALIDATION_SUCCESS,
+                                               PrivateVariables.adsRemovalServerId());
       else
-        Statistics.INSTANCE.trackPurchaseValidationError(status);
+        Statistics.INSTANCE.trackPurchaseValidationError(PrivateVariables.adsRemovalServerId(),
+                                                         status);
 
-      final boolean activateSubscription = status != AdsRemovalValidationStatus.NOT_VERIFIED;
+      final boolean shouldActivateSubscription = status != ValidationStatus.NOT_VERIFIED;
       final boolean hasActiveSubscription = Framework.nativeHasActiveRemoveAdsSubscription();
-      if (!hasActiveSubscription && activateSubscription)
+      if (!hasActiveSubscription && shouldActivateSubscription)
       {
         LOGGER.i(TAG, "Ads removal subscription activated");
-        Statistics.INSTANCE.trackPurchaseProductDelivered(PrivateVariables.adsRemovalVendor());
+        Statistics.INSTANCE.trackPurchaseProductDelivered(PrivateVariables.adsRemovalServerId(),
+                                                          PrivateVariables.adsRemovalVendor());
       }
-      else if (hasActiveSubscription && !activateSubscription)
+      else if (hasActiveSubscription && !shouldActivateSubscription)
       {
         LOGGER.i(TAG, "Ads removal subscription deactivated");
       }
 
-      Framework.nativeSetActiveRemoveAdsSubscription(activateSubscription);
+      Framework.nativeSetActiveRemoveAdsSubscription(shouldActivateSubscription);
 
       if (getUiCallback() != null)
-        getUiCallback().onValidationFinish(activateSubscription);
+        getUiCallback().onValidationFinish(shouldActivateSubscription);
     }
   }
 
-  private class PlayStoreBillingCallbackImpl implements PlayStoreBillingCallback
+  private class PlayStoreBillingCallbackImpl extends AbstractPlayStoreBillingCallback
   {
     @Override
-    public void onPurchaseDetailsLoaded(@NonNull List<SkuDetails> details)
+    void validate(@NonNull String purchaseData)
     {
-      if (getUiCallback() != null)
-        getUiCallback().onProductDetailsLoaded(details);
-    }
-
-    @Override
-    public void onPurchaseSuccessful(@NonNull List<Purchase> purchases)
-    {
-      for (Purchase purchase : purchases)
-      {
-        LOGGER.i(TAG, "Validating purchase '" + purchase.getSku() + "' on backend server...");
-        getValidator().validate(purchase.getOriginalJson());
-        if (getUiCallback() != null)
-          getUiCallback().onValidationStarted();
-      }
-    }
-
-    @Override
-    public void onPurchaseFailure(@BillingClient.BillingResponse int error)
-    {
-      if (getUiCallback() != null)
-        getUiCallback().onPaymentFailure(error);
-    }
-
-    @Override
-    public void onPurchaseDetailsFailure()
-    {
-      if (getUiCallback() != null)
-        getUiCallback().onProductDetailsFailure();
-    }
-
-    @Override
-    public void onStoreConnectionFailed()
-    {
-      if (getUiCallback() != null)
-        getUiCallback().onStoreConnectionFailed();
+      getValidator().validate(PrivateVariables.adsRemovalServerId(),
+                              PrivateVariables.adsRemovalVendor(), purchaseData);
     }
 
     @Override
@@ -163,19 +118,8 @@ class AdsRemovalPurchaseController extends AbstractPurchaseController<AdsRemoval
       }
 
       LOGGER.i(TAG, "Validating existing purchase data for '" + productId + "'...");
-      getValidator().validate(purchaseData);
-    }
-
-    @Nullable
-    private Purchase findTargetPurchase(@NonNull List<Purchase> purchases)
-    {
-      for (Purchase purchase: purchases)
-      {
-        if (mProductIds.contains(purchase.getSku()))
-          return purchase;
-      }
-
-      return null;
+      getValidator().validate(PrivateVariables.adsRemovalServerId(),
+                              PrivateVariables.adsRemovalVendor(), purchaseData);
     }
   }
 }

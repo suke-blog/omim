@@ -298,49 +298,58 @@
 /* Do search in current viewport only */
 "search_mode_viewport" = "On the Screen";
 
-/* Search Suggestion */
-"food" = "Alimentație";
+/* Search category for cafes, bars, restaurants */
+"eat" = "Unde să mănânci";
 
-/* Search Suggestion */
+/* Search category for grocery stores */
+"food" = "Produse";
+
+/* Search category */
 "transport" = "Transport";
 
-/* Search Suggestion */
+/* Search category */
 "fuel" = "Benzină";
 
-/* Search Suggestion */
+/* Search category */
 "parking" = "Parcare";
 
-/* Search Suggestion */
-"shop" = "Magazin";
+/* Search category for clothes/shoes/gifts/jewellery/sport shops */
+"shopping" = "Cumpărături";
 
-/* Search Suggestion */
+/* Search category */
 "hotel" = "Hotel";
 
-/* Search Suggestion */
+/* Search category */
 "tourism" = "Obiective turistice";
 
-/* Search Suggestion */
+/* Search category */
 "entertainment" = "Divertisment";
 
-/* Search Suggestion */
+/* Search category */
 "atm" = "Bancomat";
 
-/* Search Suggestion */
+/* Search category for nightclubs/bars */
+"nightlife" = "Viața nocturnă";
+
+/* Search category for water park/disneyland/playground/toys store */
+"children" = "Odihnă cu copii";
+
+/* Search category */
 "bank" = "Bancă";
 
-/* Search Suggestion */
+/* Search category */
 "pharmacy" = "Farmacie";
 
-/* Search Suggestion */
+/* Search category */
 "hospital" = "Spital";
 
-/* Search Suggestion */
+/* Search category */
 "toilet" = "Toaletă";
 
-/* Search Suggestion */
+/* Search category */
 "post" = "Poştă";
 
-/* Search Suggestion */
+/* Search category */
 "police" = "Poliție";
 
 /* String in search result list, when nothing found */
@@ -658,7 +667,7 @@
 /* Settings item title */
 "pref_calibration_title" = "Calibrare busolă";
 
-/* Search Suggestion */
+/* Search category */
 "wifi" = "WiFi";
 
 /* Update map suggestion */
@@ -2486,6 +2495,170 @@
 
 "taxi" = "Taxi";
 
+"sharing_options" = "Setările accesului";
+
+"export_file" = "Exportați fișierul";
+
+"list_settings" = "Elaborarea listei";
+
+"delete_list" = "Ștergerea listei";
+
+"hide_from_map" = "Ascundeți de pe hartă";
+
+"ugc_route_tags_screen_label" = "Alegeți tag-urile";
+
+"ugc_route_tags_progress_msg" = "Încărcăm tag-urile…";
+
+"ugc_route_tags_desc" = "Vă rugăm, alegeți tag-urile pentru a ajuta alți turiști să găsească ghidul dvs. Acest lucru este obligatoriu.";
+
+"public_access" = "Acces public";
+
+"limited_access" = "Acces privat";
+
+/* FIXME */
+"bookmarks_public_access" = "bookmarks_public_access";
+
+/* FIXME */
+"bookmarks_link_access" = "bookmarks_link_access";
+
+/* FIXME */
+"bookmarks_private_access" = "bookmarks_private_access";
+
+"upload_and_publish_desc" = "Acest ghid va fi încărcat în catalogul public MAPS.ME și va fi disponibil altor utilizatori";
+
+"upload_and_publish" = "Descărcați și publicați";
+
+"upload_and_get_direct_link" = "Descărcați și primiți linkul";
+
+"get_direct_link_desc" = "Ghidul dumneavoastră va fi disponibil printr-un link direct";
+
+"upload_and_publish_progress_text" = "Ghidul se publică…";
+
+"upload_and_publish_success" = "Ghidul a fost publicat";
+
+"ugc_routes_user_agreement" = "<b>ATRAGEȚI ATENȚIE:</b> continuând, dvs acceptați <a href=\"%s\">contractul de licență</a>";
+
+"ugc_route_edit_list_name" = "Denumirea ghidului";
+
+"ugc_route_edit_description_hint" = "Adăugați o descriere (text sau html)";
+
+"not_shared" = "Personal";
+
+"direct_link_progress_text" = "Încărcăm fișierul dumneavoastră…";
+
+"direct_link_success" = "Linkul a fost creat";
+
+"edit_guide_title" = "Redactați ghidul dvs online";
+
+"edit_guide_subtitle" = "Primiți linkul pentru editarea ghidului dvs prin intermediul aplicației web: adăugați descrierea locurilor, încărcați fotografii și conectați etichetele cu linii.";
+
+"send_a_link_btn" = "Trimiteți linkul";
+
+"upload_error_toast" = "În timpul încărcării fișierului s-a produs o eroare";
+
+"tags_loading_error_subtitle" = "În timpul încărcării tag-urilor s-a produs o eroare, vă rugăm să încercați încă odată";
+
+"unable_upload_errorr_title" = "Încărcarea fișierului nu s-a primit";
+
+"unable_upload_error_subtitle_edited" = "Fișierul a fost editat prin intermediul aplicației web";
+
+"unable_upload_error_subtitle_broken" = "Fișierul a fost deteriorat și nu poate fi încărcat. Vă rugăm, alegeți alt fișier.";
+
+"buy_btn" = "Cumpărați pentru %s";
+
+"download_guide_progress" = "Ghidul de călătorie se încarcă…";
+
+"price_error_title" = "Imposibil de aflat prețul";
+
+"price_error_subtitle" = "Vă rugăm să încercați încă odată peste câteva minute";
+
+"edit_your_guide_email_body" = "Redactați ghidul dvs pe calculator: adăugați descrierea locurilor, încărcați fotografii și conectați etichetele cu linii.";
+
+"edit_on_web" = "Editați online";
+
+"properties_loading_error_subtitle" = "În timpul încărcării opțiunilor s-a produs o eroare, vă rugăm încercați încă o dată";
+
+"custom_props_desc" = "Acest ghid l-ați făcut în calitate de";
+
+"custom_props_title" = "Localnic sau turist";
+
+"custom_props_local" = "localnic";
+
+"custom_props_traveler" = "turist";
+
+"select_properties" = "Alegeți opțiunile";
+
+"access_rules_p_to_p" = "Acces special";
+
+"access_rules_paid" = "Cumpărat";
+
+"failed_purchase_support_message" = "Se pare că aveți o achiziție nefinalizată. Vă rugăm să vă adresați la support, și noi vom rezolva problema.";
+
+"contact" = "Scrie";
+
+"check_price_button" = "Aflați prețul";
+
+"download_button" = "Descărcați";
+
+"speedcams_alert_title" = "Camere de supraveghere video a vitezei";
+
+"speedcams_alert_subtitle" = "Avertizați despre limitele de viteză";
+
+"speedcam_option_auto" = "Auto";
+
+"speedcam_option_always" = "Mereu";
+
+"speedcam_option_never" = "Niciodată";
+
+"bookmark_description_title" = "Descrierea semnului";
+
+"place_description_title" = "Descrierea locului";
+
+"ugc_routes_error_uploading_file_toast" = "Din păcate, în timpul încărcării etichetelor a intervenit o greșeală. Vă rugăm să încercați încă o dată.";
+
+"notification_channel_ugc" = "Conținutul utilizatorului";
+
+/* this text will be shown in application notification preferences opposite checkbox which enable/disable downloader notifications. Devices on Android 8+ are affected. */
+"notification_channel_downloader" = "Încărcarea hărților";
+
+"notification_leave_review_title" = "%s - cum vă place aici?";
+
+"notification_leave_review_content" = "Lăsați comentariile dvs. și ajutați alți călători!";
+
+"share_bookmarks_email_body_link" = "Bună ziua!\n\nEtichetele dvs. le puteți descărca de pe linki-ul: %s. Deschideți lista cu ajutorul MAPS.ME și primiți plăcere de la călătorie!\n\nDescărcați aplicația: http://maps.me/get?kmz";
+
+"warning_speedcams_title" = "Navigatorul o să avertizeze despre camerele video în cazul depășirii limitei de viteză cu %d km/h";
+
+"warning_speedcams_subtitle" = "Nu uitați să faceți cunoștință cu regulele de circulație în țara unde călătoriți.";
+
+"speedcams_notice_message" = "Auto - De avertizat despre camerele video de înregistrare a vitezei, dacă există riscul depășirii limitei de viteză\nMereu - De avertizat întotdeauna despre camerele video\nNiciodată - De nu avertizat niciodată despre camerele video";
+
+"whats_new_ugc_routes_title" = "Este ușor să vă împărtășiți impresiile";
+
+"whats_new_ugc_routes_subtitle" = "Salvați locurile memorabile, creați rute cu ajutorul marcajelor și distribuiți-le tuturor în catalogul MAPS.ME.";
+
+"whats_new_webeditor_title" = "Transformați-vă rutele în povești";
+
+"whats_new_ugc_routes_message2" = "Adăugați fotografii și povești detaliate în editorul web.";
+
+"whatsnew_standard_routes_title" = "Trasee standarte";
+
+"whatsnew_standard_routes_message" = "Setul principal de puncte, descrieri scurte, dar o mulțime de impresii!";
+
+"whatsnew_city_overview_title" = "Prezentarea orașului";
+
+"whatsnew_city_overview_message" = "Până la 200 de puncte pe harta orașului: toate cele mai utile și interesante pentru călător!";
+
+"whatsnew_pro_guides_title" = "Trasee profesionale";
+
+"whatsnew_pro_guides_message" = "Nivel înalt de detalii, descrieri detaliate ale locurilor și posibilitatea de a calcula distanța și timpul de mers pe jos";
+
+"whatsnew_paid_routes_title" = "Mai multe experiențe noi!";
+
+"whatsnew_paid_routes_message" = "Pe lângă rutele gratuite, în catalogul nostru am adăugat 3 categorii de rute plătite. Peste 700 de rute noi!";
+
+"whats_new_ugc_routes_title_android_only" = "Este ușor să vă împărtășiți impresiile";
+
 
 /**********  Partners  **********/
 
@@ -2800,7 +2973,7 @@
 
 "type.boundary.administrative.suburb" = "boundary-administrative-suburb";
 
-"type.boundary.national_park" = "boundary-national_park";
+"type.boundary.national_park" = "Parcul național";
 
 "type.building" = "Clădire";
 
@@ -3432,7 +3605,7 @@
 
 "type.leisure.marina" = "leisure-marina";
 
-"type.leisure.nature_reserve" = "leisure-nature_reserve";
+"type.leisure.nature_reserve" = "Rezervație naturală";
 
 "type.leisure.park" = "Parc";
 
@@ -3540,7 +3713,7 @@
 
 "type.natural.beach" = "Plajă";
 
-"type.natural.cape" = "natural-cape";
+"type.natural.cape" = "Mantie";
 
 "type.natural.cave_entrance" = "Intrare peșteră";
 
@@ -3548,9 +3721,9 @@
 
 "type.natural.coastline" = "natural-coastline";
 
-"type.natural.geyser" = "Geyser";
+"type.natural.geyser" = "Gheizer";
 
-"type.natural.glacier" = "natural-glacier";
+"type.natural.glacier" = "Ghețar";
 
 "type.natural.grassland" = "natural-grassland";
 
@@ -4148,13 +4321,13 @@
 
 "type.sponsored.partner17" = "sponsored-partner17";
 
-"type.sponsored.partner18" = "sponsored-partner18";
+"type.sponsored.partner18" = "MegaFon";
 
-"type.sponsored.partner19" = "sponsored-partner19";
+"type.sponsored.partner19" = "MegaFon";
 
 "type.sponsored.partner2" = "sponsored-partner2";
 
-"type.sponsored.partner20" = "sponsored-partner20";
+"type.sponsored.partner20" = "MegaFon";
 
 "type.sponsored.partner3" = "sponsored-partner3";
 
@@ -4333,3 +4506,312 @@
 "type.wheelchair.no" = "wheelchair-no";
 
 "type.wheelchair.yes" = "wheelchair-yes";
+
+
+/********** Brands **********/
+
+"brand.aiya" = "Aiya";
+
+"brand.anrakutei" = "Anrakutei";
+
+"brand.applebee_s" = "Applebee's";
+
+"brand.aroma" = "Aroma";
+
+"brand.bamiyan" = "Bamiyan";
+
+"brand.banana_leaf" = "Banana Leaf";
+
+"brand.baskin_robbins" = "Baskin-Robbins";
+
+"brand.big_boy" = "Big Boy";
+
+"brand.bikkuridonkey" = "Bikkuri-Donkey";
+
+"brand.blue_bottle_coffee" = "Blue Bottle Coffee";
+
+"brand.burger_king" = "Burger King";
+
+"brand.cafe_amazon" = "Café Amazon";
+
+"brand.cafe_coffee_day" = "Cafe Coffee Day";
+
+"brand.cafe_de_crie" = "Cafe de Crie";
+
+"brand.capricchosa" = "Capricchosa";
+
+"brand.carl_s_jr" = "Carl's Jr.";
+
+"brand.celentano" = "Celentano";
+
+"brand.chibo" = "Chibo";
+
+"brand.chick_fil_a" = "Chick-fil-A";
+
+"brand.chilis" = "Chili's";
+
+"brand.chipotle" = "Chipotle";
+
+"brand.chowking" = "Chowking";
+
+"brand.cinnabon" = "Cinnabon";
+
+"brand.coco" = "CoCo";
+
+"brand.coco_ichibanya" = "Coco Ichibanya";
+
+"brand.cocos" = "COCO'S";
+
+"brand.coffee_house" = "Coffee House";
+
+"brand.coffee_world" = "Coffee World";
+
+"brand.coffeeport" = "Coffeeport";
+
+"brand.coffeeshop_company" = "Coffeeshop Company";
+
+"brand.cofix" = "Cofix";
+
+"brand.comic_buster" = "Comic Buster";
+
+"brand.costa_coffee" = "Costa Coffee";
+
+"brand.dairy_queen" = "Dairy Queen";
+
+"brand.dennys" = "Denny's";
+
+"brand.doi_chaang" = "Doi Chaang";
+
+"brand.dominos_pizza" = "Domino's Pizza";
+
+"brand.double_b" = "Double B";
+
+"brand.doutor" = "Doutor";
+
+"brand.dunkin_donuts" = "Dunkin Donuts";
+
+"brand.espresso_house" = "Espresso House";
+
+"brand.excelsior_caffe" = "Excelsior Caffe";
+
+"brand.first_kitchen" = "First Kitchen";
+
+"brand.freshness_burger" = "Freshness Burger";
+
+"brand.fujisoba" = "Fujisoba";
+
+"brand.glowsubs" = "GlowSubs";
+
+"brand.grazie_gardens" = "Grazie Gardens";
+
+"brand.gusto" = "Gusto";
+
+"brand.gyukaku" = "Gyu-Kaku";
+
+"brand.haagen_dazs" = "Häagen-Dazs";
+
+"brand.hamazushi" = "Hamazushi";
+
+"brand.hanamaru" = "Hanamaru";
+
+"brand.hanaya_yohei" = "Hanaya Yohei";
+
+"brand.handaya" = "Handaya";
+
+"brand.hard_rock_cafe" = "Hard Rock Cafe";
+
+"brand.havanna" = "Havanna";
+
+"brand.hesburger" = "Hesburger";
+
+"brand.hokkahokka_tei" = "Hokka-Hokka Tei";
+
+"brand.honkekamadoya" = "Honkekamadoya";
+
+"brand.hottomotto" = "HottoMotto";
+
+"brand.ihop" = "IHOP";
+
+"brand.ikinari_steak" = "Ikinari Steak";
+
+"brand.il_patio" = "IL Patio";
+
+"brand.jack_in_the_box" = "Jack in the Box";
+
+"brand.jiyu_kukan" = "Jiyu Kukan";
+
+"brand.jollibee" = "Jollibee";
+
+"brand.jolly_pasta" = "Jolly Pasta";
+
+"brand.jonathans" = "Jonathan's";
+
+"brand.joyfull" = "Joyfull";
+
+"brand.kappazushi" = "Kappazushi";
+
+"brand.katsuya" = "Katsuya";
+
+"brand.kfc" = "KFC";
+
+"brand.kisoji" = "Kisoji";
+
+"brand.kobeya_restaurant" = "Kobeya Restaurant";
+
+"brand.kohikan" = "KO:HI:KAN";
+
+"brand.komeda" = "Komeda";
+
+"brand.komoro_soba" = "Komoro Soba";
+
+"brand.kourakuen" = "Kourakuen";
+
+"brand.kroshka_kartoshka" = "Kroshka Kartoshka";
+
+"brand.kurazushi" = "Kurazushi";
+
+"brand.little_caesars" = "Little Caesars";
+
+"brand.lotteria" = "Lotteria";
+
+"brand.maido_ohkini" = "Maido-Ohkini";
+
+"brand.marrybrown" = "Marrybrown";
+
+"brand.marugame_seimen" = "Marugame Seimen";
+
+"brand.matsunoya" = "Matsunoya";
+
+"brand.matsuya" = "Matsuya";
+
+"brand.mcdonalds" = "McDonald's";
+
+"brand.mister_donut" = "Mister Donut";
+
+"brand.miyakosoba" = "Miyakosoba";
+
+"brand.miyoshino" = "Miyoshino";
+
+"brand.mk_restaurants" = "MK Restaurants";
+
+"brand.mos_burger" = "MOS BURGER";
+
+"brand.mr_sub" = "Mr. Sub";
+
+"brand.mu_mu" = "Mu-Mu";
+
+"brand.nakau" = "Nakau";
+
+"brand.ohsho" = "Gyoza no Ohsho";
+
+"brand.onebuckscoffee" = "OneBucksCoffee";
+
+"brand.origin_bento" = "Origin Bento";
+
+"brand.osaka_ohsho" = "Osaka Ohsho";
+
+"brand.panda_express" = "Panda Express";
+
+"brand.panera_bread" = "Panera Bread";
+
+"brand.papa_johns" = "Papa John's";
+
+"brand.perkins" = "Perkins";
+
+"brand.pizza_hut" = "Pizza Hut";
+
+"brand.pizza_pizza" = "Pizza Pizza";
+
+"brand.popeyes" = "Popeyes";
+
+"brand.pronto" = "Pronto";
+
+"brand.quiznos" = "Quiznos";
+
+"brand.red_lobster" = "Red Lobster";
+
+"brand.ringer_hut" = "Ringer Hut";
+
+"brand.robin_sdobin" = "Robin Sdobin";
+
+"brand.royal_host" = "Royal Host";
+
+"brand.ruby_tuesday" = "Ruby Tuesday";
+
+"brand.saizeriya" = "Saizeriya";
+
+"brand.sato" = "Sato";
+
+"brand.segafredo" = "Segafredo";
+
+"brand.shake_shack" = "Shake Shack";
+
+"brand.shokoladnitsa" = "Shokoladnitsa";
+
+"brand.sizzler" = "Sizzler";
+
+"brand.skuratov" = "Skuratov";
+
+"brand.spur" = "Spur";
+
+"brand.starbucks" = "Starbucks";
+
+"brand.stardogs" = "Stardog!s";
+
+"brand.steak_n_shake" = "Steak'n Shake";
+
+"brand.stmarc_cafe" = "St. Marc Cafe";
+
+"brand.subway" = "Subway";
+
+"brand.sukiya" = "Sukiya";
+
+"brand.sushi_wok" = "Sushi Wok";
+
+"brand.sushiro" = "Sushiro";
+
+"brand.swensens" = "Swensen's";
+
+"brand.syabu_yo" = "Syabu-yo";
+
+"brand.taco_bell" = "Taco Bell";
+
+"brand.telepizza" = "Telepizza";
+
+"brand.tenkaippin" = "TenkaIppin";
+
+"brand.teremok" = "Teremok";
+
+"brand.tgi_fridays" = "TGI Friday's";
+
+"brand.the_pizza_company" = "The Pizza Company";
+
+"brand.tim_hortons" = "Tim Hortons";
+
+"brand.tonden" = "Tonden";
+
+"brand.tullys_coffee" = "Tully's Coffee";
+
+"brand.ueshima_coffee_ten" = "Ueshima Coffee Ten";
+
+"brand.uobei" = "Uobei";
+
+"brand.vapiano" = "Vapiano";
+
+"brand.victoria_station" = "Victoria Station";
+
+"brand.waffle_house" = "Waffle House";
+
+"brand.wendys" = "Wendy's";
+
+"brand.wokker" = "Wokker";
+
+"brand.yakitoria" = "Yakitoria";
+
+"brand.yomen_ya_goemon" = "Yomenya Goemon";
+
+"brand.yoshinoya" = "Yoshinoya";
+
+"brand.yudetaro" = "Yudetaro";
+
+"brand.yumean" = "Yumean";

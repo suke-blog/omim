@@ -298,49 +298,58 @@
 /* Do search in current viewport only */
 "search_mode_viewport" = "На экране";
 
-/* Search Suggestion */
-"food" = "Еда";
+/* Search category for cafes, bars, restaurants */
+"eat" = "Где поесть";
 
-/* Search Suggestion */
+/* Search category for grocery stores */
+"food" = "Продукты";
+
+/* Search category */
 "transport" = "Транспорт";
 
-/* Search Suggestion */
+/* Search category */
 "fuel" = "Заправка";
 
-/* Search Suggestion */
+/* Search category */
 "parking" = "Парковка";
 
-/* Search Suggestion */
-"shop" = "Магазин";
+/* Search category for clothes/shoes/gifts/jewellery/sport shops */
+"shopping" = "Шоппинг";
 
-/* Search Suggestion */
+/* Search category */
 "hotel" = "Гостиница";
 
-/* Search Suggestion */
+/* Search category */
 "tourism" = "Достопримечательность";
 
-/* Search Suggestion */
+/* Search category */
 "entertainment" = "Развлечения";
 
-/* Search Suggestion */
+/* Search category */
 "atm" = "Банкомат";
 
-/* Search Suggestion */
+/* Search category for nightclubs/bars */
+"nightlife" = "Ночная жизнь";
+
+/* Search category for water park/disneyland/playground/toys store */
+"children" = "Отдых с детьми";
+
+/* Search category */
 "bank" = "Банк";
 
-/* Search Suggestion */
+/* Search category */
 "pharmacy" = "Аптека";
 
-/* Search Suggestion */
+/* Search category */
 "hospital" = "Больница";
 
-/* Search Suggestion */
+/* Search category */
 "toilet" = "Туалет";
 
-/* Search Suggestion */
+/* Search category */
 "post" = "Почта";
 
-/* Search Suggestion */
+/* Search category */
 "police" = "Полиция";
 
 /* String in search result list, when nothing found */
@@ -658,7 +667,7 @@
 /* Settings item title */
 "pref_calibration_title" = "Калибровка компаса";
 
-/* Search Suggestion */
+/* Search category */
 "wifi" = "WiFi";
 
 /* Update map suggestion */
@@ -2486,6 +2495,170 @@
 
 "taxi" = "Такси";
 
+"sharing_options" = "Настройки доступа";
+
+"export_file" = "Экспортировать файл";
+
+"list_settings" = "Настройки списка";
+
+"delete_list" = "Удалить список";
+
+"hide_from_map" = "Скрыть с карты";
+
+"ugc_route_tags_screen_label" = "Выберите теги";
+
+"ugc_route_tags_progress_msg" = "Загружаем теги…";
+
+"ugc_route_tags_desc" = "Пожалуйста, выберите теги, чтобы помочь другим путешественникам найти ваш путеводитель. Это обязательно.";
+
+"public_access" = "Публичный доступ";
+
+"limited_access" = "Ограниченный доступ";
+
+/* FIXME */
+"bookmarks_public_access" = "bookmarks_public_access";
+
+/* FIXME */
+"bookmarks_link_access" = "bookmarks_link_access";
+
+/* FIXME */
+"bookmarks_private_access" = "bookmarks_private_access";
+
+"upload_and_publish_desc" = "Этот путеводитель будет загружен в публичный каталог MAPS.ME и будет доступен другим пользователям";
+
+"upload_and_publish" = "Загрузить и опубликовать";
+
+"upload_and_get_direct_link" = "Загрузить и получить ссылку";
+
+"get_direct_link_desc" = "Ваш путеводитель будет доступен по прямой ссылке";
+
+"upload_and_publish_progress_text" = "Путеводитель публикуется…";
+
+"upload_and_publish_success" = "Путеводитель опубликован";
+
+"ugc_routes_user_agreement" = "<b>ОБРАТИТЕ ВНИМАНИЕ:</b> продолжая, вы принимаете <a href=\"%s\">лицензионное соглашение</a>";
+
+"ugc_route_edit_list_name" = "Название путеводителя";
+
+"ugc_route_edit_description_hint" = "Добавьте описание (текст или html)";
+
+"not_shared" = "Личный";
+
+"direct_link_progress_text" = "Загружаем ваш файл…";
+
+"direct_link_success" = "Ссылка создана";
+
+"edit_guide_title" = "Редактируйте ваш путеводитель онлайн";
+
+"edit_guide_subtitle" = "Получите ссылку для редактирования вашего путеводителя через веб-приложение: добавляйте описания мест, загружайте фотографии и соединяйте метки линиями.";
+
+"send_a_link_btn" = "Отправить ссылку";
+
+"upload_error_toast" = "Во время загрузки файла произошла ошибка";
+
+"tags_loading_error_subtitle" = "Во время загрузки тегов произошла ошибка, пожалуйста, попробуйте еще раз";
+
+"unable_upload_errorr_title" = "Не удалось загрузить файл";
+
+"unable_upload_error_subtitle_edited" = "Файл был отредактирован через веб-приложение";
+
+"unable_upload_error_subtitle_broken" = "Файл поврежден и не может быть загружен. Пожалуйста, загрузите другой файл.";
+
+"buy_btn" = "Купить за %s";
+
+"download_guide_progress" = "Путеводитель загружается…";
+
+"price_error_title" = "Невозможно узнать стоимость";
+
+"price_error_subtitle" = "Пожалуйста, попробуйте еще раз через пару минут";
+
+"edit_your_guide_email_body" = "Редактируйте ваш путеводитель на компьютере: добавляйте описания мест, загружайте фотографии и соединяйте метки линиями.";
+
+"edit_on_web" = "Редактировать онлайн";
+
+"properties_loading_error_subtitle" = "Во время загрузки опций произошла ошибка, пожалуйста, попробуйте еще раз";
+
+"custom_props_desc" = "Этот путеводитель вы составили как";
+
+"custom_props_title" = "Местный или турист";
+
+"custom_props_local" = "местный";
+
+"custom_props_traveler" = "турист";
+
+"select_properties" = "Выбрать опции";
+
+"access_rules_p_to_p" = "Специальный доступ";
+
+"access_rules_paid" = "Купленный";
+
+"failed_purchase_support_message" = "Кажется, у вас есть незавершённая покупка. Пожалуйста, напишите в поддержку, и мы решим проблему.";
+
+"contact" = "Написать";
+
+"check_price_button" = "Узнать цену";
+
+"download_button" = "Скачать";
+
+"speedcams_alert_title" = "Камеры скорости";
+
+"speedcams_alert_subtitle" = "Предупреждать об ограничениях скорости";
+
+"speedcam_option_auto" = "Авто";
+
+"speedcam_option_always" = "Всегда";
+
+"speedcam_option_never" = "Никогда";
+
+"bookmark_description_title" = "Описание метки";
+
+"place_description_title" = "Описание места";
+
+"ugc_routes_error_uploading_file_toast" = "К сожалению, при загрузке меток произошла ошибка. Пожалуйста, попробуйте еще раз.";
+
+"notification_channel_ugc" = "Пользовательский контент";
+
+/* this text will be shown in application notification preferences opposite checkbox which enable/disable downloader notifications. Devices on Android 8+ are affected. */
+"notification_channel_downloader" = "Загрузка карт";
+
+"notification_leave_review_title" = "%s - как вам здесь?";
+
+"notification_leave_review_content" = "Оставьте отзыв и помогите путешественникам!";
+
+"share_bookmarks_email_body_link" = "Здравствуйте!\n\nМетки можно скачать по ссылке: %s. Открывайте список с помощью MAPS.ME и наслаждайтесь поездкой!\n\nСкачать приложение: http://maps.me/get?kmz";
+
+"warning_speedcams_title" = "Навигатор оповестит вас о камерах при превышении скоростного лимита на %d км/ч";
+
+"warning_speedcams_subtitle" = "Не забудьте ознакомиться с правилами дорожного движения в стране путешествия.";
+
+"speedcams_notice_message" = "Авто - Предупреждать о камерах скорости, если есть риск превышения скоростного лимита\nВсегда - Всегда предупреждать о камерах\nНикогда - Никогда не предупреждать о камерах";
+
+"whats_new_ugc_routes_title" = "Делиться впечатлениями просто";
+
+"whats_new_ugc_routes_subtitle" = "Сохраняй запомнившиеся места, создавай из меток маршруты и делись со всеми в каталоге MAPS.ME.";
+
+"whats_new_webeditor_title" = "Превращай маршруты в истории";
+
+"whats_new_ugc_routes_message2" = "Добавляй фото и подробные рассказы в веб-редакторе.";
+
+"whatsnew_standard_routes_title" = "Стандартные маршруты";
+
+"whatsnew_standard_routes_message" = "Основной набор точек, краткие описания, но много впечатлений!";
+
+"whatsnew_city_overview_title" = "Обзор города";
+
+"whatsnew_city_overview_message" = "До 200 точек на карте города: все самое полезное и интересное для путешественника!";
+
+"whatsnew_pro_guides_title" = "Профессиональные маршруты";
+
+"whatsnew_pro_guides_message" = "Высокий уровень детализации, подробные описания мест и возможность рассчитать расстояние и время прогулки";
+
+"whatsnew_paid_routes_title" = "Больше новых впечатлений!";
+
+"whatsnew_paid_routes_message" = "В дополнение к бесплатным маршрутам мы добавили в каталог 3 категории платных путеводителей. Более 700 новых маршрутов!";
+
+"whats_new_ugc_routes_title_android_only" = "Делиться впечатлениями просто";
+
 
 /**********  Partners  **********/
 
@@ -2800,7 +2973,7 @@
 
 "type.boundary.administrative.suburb" = "boundary-administrative-suburb";
 
-"type.boundary.national_park" = "boundary-national_park";
+"type.boundary.national_park" = "Национальный парк";
 
 "type.building" = "Здание";
 
@@ -3432,7 +3605,7 @@
 
 "type.leisure.marina" = "leisure-marina";
 
-"type.leisure.nature_reserve" = "leisure-nature_reserve";
+"type.leisure.nature_reserve" = "Заповедник";
 
 "type.leisure.park" = "Парк";
 
@@ -3540,7 +3713,7 @@
 
 "type.natural.beach" = "Пляж";
 
-"type.natural.cape" = "natural-cape";
+"type.natural.cape" = "Мыс";
 
 "type.natural.cave_entrance" = "Пещера";
 
@@ -3550,7 +3723,7 @@
 
 "type.natural.geyser" = "Гейзер";
 
-"type.natural.glacier" = "natural-glacier";
+"type.natural.glacier" = "Ледник";
 
 "type.natural.grassland" = "natural-grassland";
 
@@ -4148,13 +4321,13 @@
 
 "type.sponsored.partner17" = "sponsored-partner17";
 
-"type.sponsored.partner18" = "sponsored-partner18";
+"type.sponsored.partner18" = "МегаФон";
 
-"type.sponsored.partner19" = "sponsored-partner19";
+"type.sponsored.partner19" = "МегаФон";
 
 "type.sponsored.partner2" = "sponsored-partner2";
 
-"type.sponsored.partner20" = "sponsored-partner20";
+"type.sponsored.partner20" = "МегаФон";
 
 "type.sponsored.partner3" = "sponsored-partner3";
 
@@ -4333,3 +4506,312 @@
 "type.wheelchair.no" = "wheelchair-no";
 
 "type.wheelchair.yes" = "wheelchair-yes";
+
+
+/********** Brands **********/
+
+"brand.aiya" = "Aiya";
+
+"brand.anrakutei" = "Anrakutei";
+
+"brand.applebee_s" = "Applebee's";
+
+"brand.aroma" = "Aroma";
+
+"brand.bamiyan" = "Bamiyan";
+
+"brand.banana_leaf" = "Banana Leaf";
+
+"brand.baskin_robbins" = "Баскин Роббинс";
+
+"brand.big_boy" = "Big Boy";
+
+"brand.bikkuridonkey" = "Bikkuri-Donkey";
+
+"brand.blue_bottle_coffee" = "Blue Bottle Coffee";
+
+"brand.burger_king" = "Бургер Кинг";
+
+"brand.cafe_amazon" = "Café Amazon";
+
+"brand.cafe_coffee_day" = "Cafe Coffee Day";
+
+"brand.cafe_de_crie" = "Cafe de Crie";
+
+"brand.capricchosa" = "Capricchosa";
+
+"brand.carl_s_jr" = "Carl's Jr.";
+
+"brand.celentano" = "Челентано";
+
+"brand.chibo" = "Chibo";
+
+"brand.chick_fil_a" = "Chick-fil-A";
+
+"brand.chilis" = "Chili's";
+
+"brand.chipotle" = "Chipotle";
+
+"brand.chowking" = "Chowking";
+
+"brand.cinnabon" = "Cinnabon";
+
+"brand.coco" = "CoCo";
+
+"brand.coco_ichibanya" = "Coco Ichibanya";
+
+"brand.cocos" = "COCO'S";
+
+"brand.coffee_house" = "Кофе Хауз";
+
+"brand.coffee_world" = "Coffee World";
+
+"brand.coffeeport" = "Кофепорт";
+
+"brand.coffeeshop_company" = "Coffeeshop Company";
+
+"brand.cofix" = "Cofix";
+
+"brand.comic_buster" = "Comic Buster";
+
+"brand.costa_coffee" = "Costa Coffee";
+
+"brand.dairy_queen" = "Dairy Queen";
+
+"brand.dennys" = "Denny's";
+
+"brand.doi_chaang" = "Doi Chaang";
+
+"brand.dominos_pizza" = "Домино'с Пицца";
+
+"brand.double_b" = "Даблби";
+
+"brand.doutor" = "Doutor";
+
+"brand.dunkin_donuts" = "Данкин Донатс";
+
+"brand.espresso_house" = "Espresso House";
+
+"brand.excelsior_caffe" = "Excelsior Caffe";
+
+"brand.first_kitchen" = "First Kitchen";
+
+"brand.freshness_burger" = "Freshness Burger";
+
+"brand.fujisoba" = "Fujisoba";
+
+"brand.glowsubs" = "GlowSubs";
+
+"brand.grazie_gardens" = "Grazie Gardens";
+
+"brand.gusto" = "Gusto";
+
+"brand.gyukaku" = "Gyu-Kaku";
+
+"brand.haagen_dazs" = "Häagen-Dazs";
+
+"brand.hamazushi" = "Hamazushi";
+
+"brand.hanamaru" = "Hanamaru";
+
+"brand.hanaya_yohei" = "Hanaya Yohei";
+
+"brand.handaya" = "Handaya";
+
+"brand.hard_rock_cafe" = "Hard Rock Cafe";
+
+"brand.havanna" = "Havanna";
+
+"brand.hesburger" = "Hesburger";
+
+"brand.hokkahokka_tei" = "Hokka-Hokka Tei";
+
+"brand.honkekamadoya" = "Honkekamadoya";
+
+"brand.hottomotto" = "HottoMotto";
+
+"brand.ihop" = "IHOP";
+
+"brand.ikinari_steak" = "Ikinari Steak";
+
+"brand.il_patio" = "IL Патио";
+
+"brand.jack_in_the_box" = "Jack in the Box";
+
+"brand.jiyu_kukan" = "Jiyu Kukan";
+
+"brand.jollibee" = "Jollibee";
+
+"brand.jolly_pasta" = "Jolly Pasta";
+
+"brand.jonathans" = "Jonathan's";
+
+"brand.joyfull" = "Joyfull";
+
+"brand.kappazushi" = "Kappazushi";
+
+"brand.katsuya" = "Katsuya";
+
+"brand.kfc" = "KFC";
+
+"brand.kisoji" = "Kisoji";
+
+"brand.kobeya_restaurant" = "Kobeya Restaurant";
+
+"brand.kohikan" = "KO:HI:KAN";
+
+"brand.komeda" = "Komeda";
+
+"brand.komoro_soba" = "Komoro Soba";
+
+"brand.kourakuen" = "Kourakuen";
+
+"brand.kroshka_kartoshka" = "Крошка Картошка";
+
+"brand.kurazushi" = "Kurazushi";
+
+"brand.little_caesars" = "Little Caesars";
+
+"brand.lotteria" = "Lotteria";
+
+"brand.maido_ohkini" = "Maido-Ohkini";
+
+"brand.marrybrown" = "Marrybrown";
+
+"brand.marugame_seimen" = "Марукамэ";
+
+"brand.matsunoya" = "Matsunoya";
+
+"brand.matsuya" = "Matsuya";
+
+"brand.mcdonalds" = "Макдоналдс";
+
+"brand.mister_donut" = "Mister Donut";
+
+"brand.miyakosoba" = "Miyakosoba";
+
+"brand.miyoshino" = "Miyoshino";
+
+"brand.mk_restaurants" = "MK Restaurants";
+
+"brand.mos_burger" = "MOS BURGER";
+
+"brand.mr_sub" = "Mr. Sub";
+
+"brand.mu_mu" = "Му-Му";
+
+"brand.nakau" = "Nakau";
+
+"brand.ohsho" = "Gyoza no Ohsho";
+
+"brand.onebuckscoffee" = "OneBucksCoffee";
+
+"brand.origin_bento" = "Origin Bento";
+
+"brand.osaka_ohsho" = "Osaka Ohsho";
+
+"brand.panda_express" = "Panda Express";
+
+"brand.panera_bread" = "Panera Bread";
+
+"brand.papa_johns" = "Папа Джонс";
+
+"brand.perkins" = "Perkins";
+
+"brand.pizza_hut" = "Пицца Хат";
+
+"brand.pizza_pizza" = "Pizza Pizza";
+
+"brand.popeyes" = "Popeyes";
+
+"brand.pronto" = "Pronto";
+
+"brand.quiznos" = "Quiznos";
+
+"brand.red_lobster" = "Red Lobster";
+
+"brand.ringer_hut" = "Ringer Hut";
+
+"brand.robin_sdobin" = "Робин Сдобин";
+
+"brand.royal_host" = "Royal Host";
+
+"brand.ruby_tuesday" = "Ruby Tuesday";
+
+"brand.saizeriya" = "Saizeriya";
+
+"brand.sato" = "Sato";
+
+"brand.segafredo" = "Segafredo";
+
+"brand.shake_shack" = "Shake Shack";
+
+"brand.shokoladnitsa" = "Шоколадница";
+
+"brand.sizzler" = "Sizzler";
+
+"brand.skuratov" = "Skuratov";
+
+"brand.spur" = "Spur";
+
+"brand.starbucks" = "Старбакс";
+
+"brand.stardogs" = "Стардог!s";
+
+"brand.steak_n_shake" = "Steak'n Shake";
+
+"brand.stmarc_cafe" = "St. Marc Cafe";
+
+"brand.subway" = "Сабвэй";
+
+"brand.sukiya" = "Sukiya";
+
+"brand.sushi_wok" = "Суши Wok";
+
+"brand.sushiro" = "Sushiro";
+
+"brand.swensens" = "Swensen's";
+
+"brand.syabu_yo" = "Syabu-yo";
+
+"brand.taco_bell" = "Taco Bell";
+
+"brand.telepizza" = "Telepizza";
+
+"brand.tenkaippin" = "TenkaIppin";
+
+"brand.teremok" = "Теремок";
+
+"brand.tgi_fridays" = "TGI Friday's";
+
+"brand.the_pizza_company" = "The Pizza Company";
+
+"brand.tim_hortons" = "Tim Hortons";
+
+"brand.tonden" = "Tonden";
+
+"brand.tullys_coffee" = "Tully's Coffee";
+
+"brand.ueshima_coffee_ten" = "Ueshima Coffee Ten";
+
+"brand.uobei" = "Uobei";
+
+"brand.vapiano" = "Vapiano";
+
+"brand.victoria_station" = "Victoria Station";
+
+"brand.waffle_house" = "Waffle House";
+
+"brand.wendys" = "Wendy's";
+
+"brand.wokker" = "Воккер";
+
+"brand.yakitoria" = "Якитория";
+
+"brand.yomen_ya_goemon" = "Yomenya Goemon";
+
+"brand.yoshinoya" = "Yoshinoya";
+
+"brand.yudetaro" = "Yudetaro";
+
+"brand.yumean" = "Yumean";

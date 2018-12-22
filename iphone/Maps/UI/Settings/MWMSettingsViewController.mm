@@ -8,11 +8,16 @@
 
 #include "Framework.h"
 
+#include "routing/speed_camera_manager.hpp"
+
 #include "map/gps_tracker.hpp"
+#include "map/routing_manager.hpp"
+
+#include "base/assert.hpp"
 
 extern NSString * const kAlohalyticsTapEventKey;
 
-@interface MWMSettingsViewController ()<SettingsTableViewSwitchCellDelegate>
+@interface MWMSettingsViewController ()<SettingsTableViewSwitchCellDelegate, RemoveAdsViewControllerDelegate>
 
 @property(weak, nonatomic) IBOutlet SettingsTableViewLinkCell * profileCell;
 
@@ -97,7 +102,7 @@ extern NSString * const kAlohalyticsTapEventKey;
 
   [self.backupBookmarksCell configWithDelegate:self
                                          title:L(@"settings_backup_bookmarks")
-                                          isOn:[MWMBookmarksManager isCloudEnabled]];
+                                          isOn:[[MWMBookmarksManager sharedManager] isCloudEnabled]];
 
   NSString * mobileInternet = nil;
   switch (network_policy::GetStage())
@@ -141,9 +146,12 @@ extern NSString * const kAlohalyticsTapEventKey;
                                             title:L(@"pref_calibration_title")
                                              isOn:[MWMSettings compassCalibrationEnabled]];
 
+  auto & purchase = GetFramework().GetPurchase();
+  bool const hasSubscription = purchase && purchase->IsSubscriptionActive(SubscriptionType::RemoveAds);
   [self.showOffersCell configWithDelegate:self
                                     title:L(@"showcase_settings_title")
-                                     isOn:![MWMSettings adForbidden]];
+                                     isOn:!hasSubscription];
+  self.showOffersCell.isEnabled = !hasSubscription;
 
   [self.statisticsCell configWithDelegate:self
                                     title:L(@"allow_statistics")
@@ -169,34 +177,29 @@ extern NSString * const kAlohalyticsTapEventKey;
   [self.nightModeCell configWithTitle:L(@"pref_map_style_title") info:nightMode];
 
   bool _ = true, on = true;
-  GetFramework().Load3dMode(on, _);
+  auto & f = GetFramework();
+  f.Load3dMode(on, _);
   [self.perspectiveViewCell configWithDelegate:self title:L(@"pref_map_3d_title") isOn:on];
 
   [self.autoZoomCell configWithDelegate:self
                                   title:L(@"pref_map_auto_zoom")
                                    isOn:GetFramework().LoadAutoZoom()];
 
-  NSString * voiceInstructions = nil;
-  if ([MWMTextToSpeech isTTSEnabled])
-  {
-    NSString * savedLanguage = [MWMTextToSpeech savedLanguage];
-    if (savedLanguage.length != 0)
-    {
-      string const savedLanguageTwine = locale_translator::bcp47ToTwineLanguage(savedLanguage);
-      voiceInstructions = @(tts::translatedTwine(savedLanguageTwine).c_str());
-    }
-  }
-  else
-  {
-    voiceInstructions = L(@"duration_disabled");
-  }
-  [self.voiceInstructionsCell configWithTitle:L(@"pref_tts_language_title") info:voiceInstructions];
+  NSString * ttsEnabledString = [MWMTextToSpeech isTTSEnabled] ? L(@"on") : L(@"off");
+  [self.voiceInstructionsCell configWithTitle:L(@"pref_tts_enable_title") info:ttsEnabledString];
 }
 
 - (void)configInfoSection
 {
   [self.helpCell configWithTitle:L(@"help") info:nil];
   [self.aboutCell configWithTitle:L(@"about_menu_title") info:nil];
+}
+
+- (void)showRemoveAds
+{
+  auto removeAds = [[RemoveAdsViewController alloc] init];
+  removeAds.delegate = self;
+  [self.navigationController presentViewController:removeAds animated:YES completion:nil];
 }
 
 #pragma mark - SettingsTableViewSwitchCellDelegate
@@ -232,7 +235,7 @@ extern NSString * const kAlohalyticsTapEventKey;
           withParameters:@{
             kStatState: (value ? @1 : @0)
           }];
-    [MWMBookmarksManager setCloudEnabled:value];
+    [[MWMBookmarksManager sharedManager] setCloudEnabled:value];
   }
   else if (cell == self.fontScaleCell)
   {
@@ -254,9 +257,9 @@ extern NSString * const kAlohalyticsTapEventKey;
   }
   else if (cell == self.showOffersCell)
   {
+    [self showRemoveAds];
     [Statistics logEvent:kStatEventName(kStatSettings, kStatAd)
           withParameters:@{kStatAction : kStatAd, kStatValue : (value ? kStatOn : kStatOff)}];
-    [MWMSettings setAdForbidden:!value];
   }
   else if (cell == self.statisticsCell)
   {
@@ -402,6 +405,21 @@ extern NSString * const kAlohalyticsTapEventKey;
   case 1: return L(@"allow_statistics_hint");
   default: return nil;
   }
+}
+
+#pragma mark - RemoveAdsViewControllerDelegate
+
+- (void)didCompleteSubscribtion:(RemoveAdsViewController *)viewController
+{
+  [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+  self.showOffersCell.isEnabled = NO;
+}
+
+- (void)didCancelSubscribtion:(RemoveAdsViewController *)viewController
+{
+  [self.navigationController dismissViewControllerAnimated:YES completion:^{
+    self.showOffersCell.isOn = YES;
+  }];
 }
 
 @end

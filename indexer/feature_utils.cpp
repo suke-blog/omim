@@ -7,7 +7,7 @@
 
 #include "geometry/point2d.hpp"
 
-#include "coding/multilang_utf8_string.hpp"
+#include "coding/string_utf8_multilang.hpp"
 #include "coding/transliteration.hpp"
 
 #include "base/base.hpp"
@@ -15,7 +15,6 @@
 
 #include <unordered_map>
 #include <utility>
-#include <vector>
 
 using namespace std;
 
@@ -155,10 +154,8 @@ void GetReadableNameImpl(feature::RegionData const & regionData, StringUtf8Multi
 
 namespace feature
 {
-
 namespace impl
 {
-
 class FeatureEstimator
 {
   template <size_t N>
@@ -368,5 +365,11 @@ bool GetPreferredName(StringUtf8Multilang const & src, int8_t deviceLang, string
 {
   auto const priorityList = MakePrimaryNamePriorityList(deviceLang, true /* preferDefault */);
   return GetBestName(src, priorityList, out);
+}
+
+vector<int8_t> GetDescriptionLangPriority(RegionData const & regionData, int8_t const deviceLang)
+{
+  bool const preferDefault = IsNativeLang(regionData, deviceLang);
+  return MakePrimaryNamePriorityList(deviceLang, preferDefault);
 }
 } // namespace feature

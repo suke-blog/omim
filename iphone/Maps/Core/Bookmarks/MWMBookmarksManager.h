@@ -3,67 +3,83 @@
 #import "MWMCatalogCommon.h"
 
 @class MWMCatalogCategory;
+@class MWMTagGroup;
+@class MWMTag;
 
+typedef void (^LoadTagsCompletionBlock)(NSArray<MWMTagGroup *> * tags);
+
+NS_ASSUME_NONNULL_BEGIN
 @interface MWMBookmarksManager : NSObject
 
-+ (void)addObserver:(id<MWMBookmarksObserver>)observer;
-+ (void)removeObserver:(id<MWMBookmarksObserver>)observer;
++ (MWMBookmarksManager *)sharedManager;
 
-+ (BOOL)areBookmarksLoaded;
-+ (void)loadBookmarks;
+- (void)addObserver:(id<MWMBookmarksObserver>)observer;
+- (void)removeObserver:(id<MWMBookmarksObserver>)observer;
 
-+ (MWMGroupIDCollection)groupsIdList;
-+ (NSString *)getCategoryName:(MWMMarkGroupID)groupId;
-+ (uint64_t)getCategoryMarksCount:(MWMMarkGroupID)groupId;
-+ (uint64_t)getCategoryTracksCount:(MWMMarkGroupID)groupId;
+- (BOOL)areBookmarksLoaded;
+- (void)loadBookmarks;
 
-+ (MWMMarkGroupID)createCategoryWithName:(NSString *)name;
-+ (void)setCategory:(MWMMarkGroupID)groupId name:(NSString *)name;
-+ (BOOL)isCategoryVisible:(MWMMarkGroupID)groupId;
-+ (void)setCategory:(MWMMarkGroupID)groupId isVisible:(BOOL)isVisible;
-+ (void)setUserCategoriesVisible:(BOOL)isVisible;
-+ (void)setCatalogCategoriesVisible:(BOOL)isVisible;
-+ (void)deleteCategory:(MWMMarkGroupID)groupId;
+- (BOOL)isCategoryEditable:(MWMMarkGroupID)groupId;
+- (BOOL)isCategoryNotEmpty:(MWMMarkGroupID)groupId;
+- (MWMGroupIDCollection)groupsIdList;
+- (NSString *)getCategoryName:(MWMMarkGroupID)groupId;
+- (uint64_t)getCategoryMarksCount:(MWMMarkGroupID)groupId;
+- (uint64_t)getCategoryTracksCount:(MWMMarkGroupID)groupId;
+- (MWMCategoryAccessStatus)getCategoryAccessStatus:(MWMMarkGroupID)groupId;
+- (NSString *)getCategoryDescription:(MWMMarkGroupID)groupId;
 
-+ (void)deleteBookmark:(MWMMarkID)bookmarkId;
-+ (BOOL)checkCategoryName:(NSString *)name;
+- (MWMMarkGroupID)createCategoryWithName:(NSString *)name;
+- (void)setCategory:(MWMMarkGroupID)groupId name:(NSString *)name;
+- (void)setCategory:(MWMMarkGroupID)groupId description:(NSString *)name;
+- (BOOL)isCategoryVisible:(MWMMarkGroupID)groupId;
+- (void)setCategory:(MWMMarkGroupID)groupId isVisible:(BOOL)isVisible;
+- (void)setUserCategoriesVisible:(BOOL)isVisible;
+- (void)setCatalogCategoriesVisible:(BOOL)isVisible;
+- (void)deleteCategory:(MWMMarkGroupID)groupId;
 
-+ (void)shareCategory:(MWMMarkGroupID)groupId;
-+ (NSURL *)shareCategoryURL;
-+ (void)finishShareCategory;
+- (void)deleteBookmark:(MWMMarkID)bookmarkId;
+- (BOOL)checkCategoryName:(NSString *)name;
 
-+ (NSDate *)lastSynchronizationDate;
-+ (BOOL)isCloudEnabled;
-+ (void)setCloudEnabled:(BOOL)enabled;
+- (void)shareCategory:(MWMMarkGroupID)groupId;
+- (NSURL *)shareCategoryURL;
+- (void)finishShareCategory;
 
-+ (NSUInteger)filesCountForConversion;
-+ (void)convertAll;
+- (NSDate * _Nullable)lastSynchronizationDate;
+- (BOOL)isCloudEnabled;
+- (void)setCloudEnabled:(BOOL)enabled;
+- (void)requestRestoring;
+- (void)applyRestoring;
+- (void)cancelRestoring;
 
-+ (void)setNotificationsEnabled:(BOOL)enabled;
-+ (BOOL)areNotificationsEnabled;
+- (NSUInteger)filesCountForConversion;
+- (void)convertAll;
 
-+ (void)requestRestoring;
-+ (void)applyRestoring;
-+ (void)cancelRestoring;
+- (void)setNotificationsEnabled:(BOOL)enabled;
+- (BOOL)areNotificationsEnabled;
 
-+ (NSURL * _Nullable)catalogFrontendUrl;
-+ (NSURL * _Nullable)sharingUrlForCategoryId:(MWMMarkGroupID)groupId;
-+ (void)downloadItemWithId:(NSString * _Nonnull)itemId
-                      name:(NSString * _Nonnull)name
+- (NSURL * _Nullable)catalogFrontendUrl;
+- (NSURL * _Nullable)sharingUrlForCategoryId:(MWMMarkGroupID)groupId;
+- (void)downloadItemWithId:(NSString *)itemId
+                      name:(NSString *)name
                   progress:(_Nullable ProgressBlock)progress
-                completion:(_Nullable CompletionBlock)completion;
-+ (BOOL)isCategoryFromCatalog:(MWMMarkGroupID)groupId;
-+ (NSArray<MWMCatalogCategory *> * _Nonnull)categoriesFromCatalog;
-+ (NSInteger)getCatalogDownloadsCount;
-+ (BOOL)isCategoryDownloading:(NSString * _Nonnull)itemId;
-+ (BOOL)hasCategoryDownloaded:(NSString * _Nonnull)itemId;
+                completion:(_Nullable DownloadCompletionBlock)completion;
+- (BOOL)isCategoryFromCatalog:(MWMMarkGroupID)groupId;
+- (NSArray<MWMCatalogCategory *> *)categoriesFromCatalog;
+- (NSInteger)getCatalogDownloadsCount;
+- (BOOL)isCategoryDownloading:(NSString *)itemId;
+- (BOOL)hasCategoryDownloaded:(NSString *)itemId;
 
-- (instancetype)init __attribute__((unavailable("call +manager instead")));
-- (instancetype)copy __attribute__((unavailable("call +manager instead")));
-- (instancetype)copyWithZone:(NSZone *)zone __attribute__((unavailable("call +manager instead")));
-+ (instancetype)alloc __attribute__((unavailable("call +manager instead")));
-+ (instancetype)allocWithZone:(struct _NSZone *)zone
-    __attribute__((unavailable("call +manager instead")));
-+ (instancetype) new __attribute__((unavailable("call +manager instead")));
+- (void)loadTags:(LoadTagsCompletionBlock)completionBlock;
+- (void)setCategory:(MWMMarkGroupID)groupId tags:(NSArray<MWMTag *> *)tags;
+- (void)setCategory:(MWMMarkGroupID)groupId authorType:(MWMCategoryAuthorType)author;
+
+- (void)uploadAndGetDirectLinkCategoryWithId:(MWMMarkGroupID)itemId
+                                    progress:(ProgressBlock)progress
+                                  completion:(UploadCompletionBlock)completion;
+
+- (void)uploadAndPublishCategoryWithId:(MWMMarkGroupID)itemId
+                              progress:(ProgressBlock)progress
+                            completion:(UploadCompletionBlock)completion;
 
 @end
+NS_ASSUME_NONNULL_END

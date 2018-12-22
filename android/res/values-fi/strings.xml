@@ -182,35 +182,41 @@
 	<string name="measurement_units">Mittayksiköt</string>
 	<!-- Detailed description of Measurement Units settings button -->
 	<string name="measurement_units_summary">Valitse mailit tai kilometrit</string>
-	<!-- Search Suggestion -->
-	<string name="food">Ruoka</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for cafes, bars, restaurants -->
+	<string name="eat">Missä syödä</string>
+	<!-- Search category for grocery stores -->
+	<string name="food">Tuotteet</string>
+	<!-- Search category -->
 	<string name="transport">Liikenne</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="fuel">Huoltoasema</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="parking">Parkkipaikka</string>
-	<!-- Search Suggestion -->
-	<string name="shop">Kauppa</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for clothes/shoes/gifts/jewellery/sport shops -->
+	<string name="shopping">Ostokset</string>
+	<!-- Search category -->
 	<string name="hotel">Hotelli</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="tourism">Nähtävyydet</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="entertainment">Viihde</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="atm">Pankkiautomaatti</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for nightclubs/bars -->
+	<string name="nightlife">Yöelämä</string>
+	<!-- Search category for water park/disneyland/playground/toys store -->
+	<string name="children">Vapaa-aikaa lasten kanssa</string>
+	<!-- Search category -->
 	<string name="bank">Pankki</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="pharmacy">Apteekki</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="hospital">Sairaala</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="toilet">WC</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="post">Posti</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="police">Poliisi</string>
 	<!-- String in search result list, when nothing found -->
 	<string name="no_search_results_found">Tuloksia ei löytynyt</string>
@@ -402,7 +408,7 @@
 	<string name="email_error_title">Virhe lähetettäessä viestiä</string>
 	<!-- Settings item title -->
 	<string name="pref_calibration_title">Kompassin kalibrointi</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="wifi">WiFi</string>
 	<!-- Update map suggestion -->
 	<string name="routing_map_outdated">Päivitä kartta luodaksesi reitin</string>
@@ -1388,6 +1394,84 @@
 	<string name="subscription_terms">Maksu veloitetaan iTunes-tililtäsi maksuvahvistuksen yhteydessä. Tilauksesi uusitaan automaattisesti ellei automaattista uusintaa ole otettu pois käytöstä vähintään 24 tuntia ennen nykyisen tilausjakson päättymistä. Tilauksen uusinta veloitetaan tililtäsi 24 tunnin kuluessa ennen nykyisen tilausjakson päättymistä. Voit hallita tai ottaa tilausten automaattisen uusinnan pois käytöstä Apple ID -tilisi asetuksissa oston jälkeen.</string>
 	<string name="subscriptions_title">Tilaukset</string>
 	<string name="manage_subscription">Hallitse tilausta</string>
+	<string name="sharing_options">Käyttöasetukset</string>
+	<string name="export_file">Viedä tiedosto</string>
+	<string name="list_settings">Listan asetukset</string>
+	<string name="delete_list">Poista lista</string>
+	<string name="hide_from_map">Piilottaa kartalta</string>
+	<string name="ugc_route_tags_screen_label">Valitse tunnisteet</string>
+	<string name="ugc_route_tags_progress_msg">Lataamme tunnisteita…</string>
+	<string name="ugc_route_tags_desc">Ole hyvä, valitse tunnisteet, jotta muut matkustajat löytävät matkaoppaasi. Tämä on pakollista.</string>
+	<string name="public_access">Julkinen pääsy</string>
+	<string name="limited_access">Yksityinen pääsy</string>
+	<string name="upload_and_publish_desc">Tämä matkaopas lähetetään julkiseen hakemistoon MAPS.ME ja se on muiden käyttäjien käytettävissä</string>
+	<string name="upload_and_publish">Ladata ja julkaista</string>
+	<string name="upload_and_get_direct_link">Ladata ja saada linkki</string>
+	<string name="get_direct_link_desc">Matkaoppaanne on saatavana suoralla linkillä</string>
+	<string name="upload_and_publish_progress_text">Matkaopasta julkaistaan…</string>
+	<string name="upload_and_publish_success">Matkaopas on julkaistu</string>
+	<string name="ugc_routes_user_agreement">&lt;b>HUOMAA:&lt;/b> jatkamalla, te hyväksytte &lt;a href="%s">lisenssisopimuksen&lt;/a></string>
+	<string name="ugc_route_edit_list_name">Matkaopasnimi</string>
+	<string name="ugc_route_edit_description_hint">Lisää kuvaus (teksti tai html)</string>
+	<string name="not_shared">Henkilökohtainen</string>
+	<string name="direct_link_progress_text">Lataamme tiedostoanne…</string>
+	<string name="direct_link_success">Linkki on luotu</string>
+	<string name="edit_guide_title">Muokkaa matkaoppaasi verkossa</string>
+	<string name="edit_guide_subtitle">Hanki linkki muokataksesi oppaasi web-sovelluksen kautta: lisää paikkojen kuvauksia, lataa valokuvia ja yhdistä merkkejä viivoilla.</string>
+	<string name="send_a_link_btn">Lähetä linkki</string>
+	<string name="upload_error_toast">Tiedoston lataamisen aikana tapahtui virhe</string>
+	<string name="tags_loading_error_subtitle">Tunnisteiden lataamisen aikana tapahtui virhe, yritä uudelleen</string>
+	<string name="unable_upload_errorr_title">Tiedoston lataamisen epäonnistui</string>
+	<string name="unable_upload_error_subtitle_edited">Tiedosto muokattiin web-sovelluksen kautta</string>
+	<string name="unable_upload_error_subtitle_broken">Tiedosto on vioittunut eikä sitä voi ladata. Ole hyvä, lataa toinen tiedosto.</string>
+	<string name="buy_btn">Osta %s:sta</string>
+	<string name="download_guide_progress">Matkaopas latautuu…</string>
+	<string name="price_error_title">Hintaa ei voi selvittää</string>
+	<string name="price_error_subtitle">Yrittä uudelleen muutaman minuutin kuluttua</string>
+	<string name="edit_your_guide_email_body">Muokkaa matkaopastasi tietokoneella: lisää paikkojen kuvauksia, lataa valokuvia ja yhdistä merkkejä viivoilla.</string>
+	<string name="edit_on_web">Muokata verkossa</string>
+	<string name="properties_loading_error_subtitle">Vaihtoehtojen latauksen aikana tapahtui virhe, ole hyvä, yritä uudelleen</string>
+	<string name="custom_props_desc">Olet tehnyt tämä oppaan</string>
+	<string name="custom_props_title">Paikallisena tai matkailijana</string>
+	<string name="custom_props_local">paikallinen</string>
+	<string name="custom_props_traveler">matkailija</string>
+	<string name="select_properties">Valitse vaihtoehdot</string>
+	<string name="access_rules_p_to_p">Erikoispääsy</string>
+	<string name="access_rules_paid">Ostettu</string>
+	<string name="failed_purchase_support_message">Näyttää siltä, että sinulla on osto, jota et ole suorittanut loppuun. Ole hyvä, kirjoita asiakastuelle, ja me ratkaisemme ongelman.</string>
+	<string name="contact">Kirjoita</string>
+	<string name="check_price_button">Saada hinta</string>
+	<string name="download_button">Ladata</string>
+	<string name="speedcams_alert_title">Nopeuskamerat</string>
+	<string name="speedcams_alert_subtitle">Varoita nopeusrajoituksista</string>
+	<string name="speedcam_option_auto">Auto</string>
+	<string name="speedcam_option_always">Aina</string>
+	<string name="speedcam_option_never">Ei koskaan</string>
+	<string name="bookmark_description_title">Merkin kuvaus</string>
+	<string name="place_description_title">Paikan kuvaus</string>
+	<string name="ugc_routes_error_uploading_file_toast">Valitettavasti, merkkien lataamisen aikana tapahtui virhe. Yritä uudelleen.</string>
+	<string name="notification_channel_ugc">Käyttäjäsisältö</string>
+	<!-- this text will be shown in application notification preferences opposite checkbox which enable/disable downloader notifications. Devices on Android 8+ are affected. -->
+	<string name="notification_channel_downloader">Karttojen lataaminen</string>
+	<string name="notification_leave_review_title">%s - miten on täällä?</string>
+	<string name="notification_leave_review_content">Kirjoita arvostelu ja auta matkustajia!</string>
+	<string name="share_bookmarks_email_body_link">Hei!\n\nMerkkinne voi ladata linkistä: %s. Avaa luettelo MAPS.ME: llä ja nauti matkasta!\n\nLataa sovellus: http://maps.me/get?kmz</string>
+	<string name="warning_speedcams_title">Navigaattori ilmoittaa sinulle kameroista, kun nopeusraja ylittyy %d km/t</string>
+	<string name="warning_speedcams_subtitle">Muista tutustua matkustusmaan liikennesääntöihin.</string>
+	<string name="speedcams_notice_message">Auto - Varoita nopeuskameroista, jos tuntuu siltä, että nopeusrajan ylitys on mahdollista\nAina - Varoita kameroista aina\nEi koskaan - älä koskaan varoita kameroista</string>
+	<string name="whats_new_ugc_routes_title">Voit helposti jakaa kokemuksiasi</string>
+	<string name="whats_new_ugc_routes_subtitle">Tallenna ikimuistoiset paikat, luo reittejä kirjainmerkkien avulla ja jaa ne kaikkien kanssa MAPS.ME-luettelossa.</string>
+	<string name="whats_new_webeditor_title">Muuta reittisi tarinoiksi</string>
+	<string name="whats_new_ugc_routes_message2">Lisää verkkoeditorin avulla kuvia ja yksityiskohtaisia ​​tarinoita.</string>
+	<string name="whatsnew_standard_routes_title">Vakioreitit</string>
+	<string name="whatsnew_standard_routes_message">Pääpisteet, lyhyitä kuvauksia, mutta paljon vaikutelmia!</string>
+	<string name="whatsnew_city_overview_title">Kaupunkikuvaus</string>
+	<string name="whatsnew_city_overview_message">Jopa 200 pistettä kaupungin kartalla: kaikki, josta matkustaja hyötyy ja kiinnostuu!</string>
+	<string name="whatsnew_pro_guides_title">Ammattilaisen reitit</string>
+	<string name="whatsnew_pro_guides_message">Korkeat yksityiskohdat, yksityiskohtaiset paikkojen kuvaukset ja mahdollisuus laskea kävelymatkan pituus ja aika</string>
+	<string name="whatsnew_paid_routes_title">Enemmän uusia elämyksiä!</string>
+	<string name="whatsnew_paid_routes_message">Ilmaisten reittien lisäksi nyt 3 kategoriaa maksullisia matkaoppaita lisätty luetteloon. Yli 700 uusia reittejä!</string>
+	<string name="whats_new_ugc_routes_title_android_only">Voit helposti jakaa kokemuksiasi</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Köysirata-asema</string>
@@ -1489,6 +1573,7 @@
 	<string name="type.barrier.lift_gate">Puomi</string>
 	<string name="type.barrier.stile">Portaat</string>
 	<string name="type.barrier.toll_booth">Tietulliasema</string>
+	<string name="type.boundary.national_park">Kansallispuisto</string>
 	<string name="type.building">Rakennus</string>
 	<string name="type.building.address">Rakennus</string>
 	<string name="type.building.garage">Autotalli</string>
@@ -1726,6 +1811,7 @@
 	<string name="type.leisure.fitness_station">Kuntokeskus</string>
 	<string name="type.leisure.garden">Puutarha</string>
 	<string name="type.leisure.golf_course">Golf-rata</string>
+	<string name="type.leisure.nature_reserve">Luonnonsuojelualue</string>
 	<string name="type.leisure.park">Puisto</string>
 	<string name="type.leisure.park.no.access">Puisto</string>
 	<string name="type.leisure.park.permissive">Puisto</string>
@@ -1753,7 +1839,10 @@
 	<string name="type.military.bunker">Bunkkeri</string>
 	<string name="type.natural.bay">Lahti</string>
 	<string name="type.natural.beach">Ranta</string>
+	<string name="type.natural.cape">Niemeke</string>
 	<string name="type.natural.cave_entrance">Luolan sisäänkäynti</string>
+	<string name="type.natural.geyser">Geysir</string>
+	<string name="type.natural.glacier">Jäätikkö</string>
 	<string name="type.natural.lake">Järvi</string>
 	<string name="type.natural.peak">Huippu</string>
 	<string name="type.natural.pond">Lampi</string>

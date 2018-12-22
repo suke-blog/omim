@@ -26,6 +26,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.AndroidRuntimeException;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
@@ -45,6 +46,7 @@ import java.lang.ref.WeakReference;
 import java.net.NetworkInterface;
 import java.security.MessageDigest;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Currency;
 import java.util.List;
@@ -55,6 +57,8 @@ public class Utils
 {
   @StringRes
   public static final int INVALID_ID = 0;
+  public static final String UTF_8 = "utf-8";
+  public static final String TEXT_HTML = "text/html;";
   private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(LoggerFactory.Type.MISC);
   private static final String TAG = "Utils";
 
@@ -216,23 +220,35 @@ public class Utils
     activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.Url.TWITTER_MAPSME_HTTP)));
   }
 
-  public static void openUrl(@NonNull Context activity, @Nullable String url)
+  public static void openUrl(@NonNull Context context, @Nullable String url)
   {
     if (TextUtils.isEmpty(url))
       return;
 
+    final Intent intent = new Intent(Intent.ACTION_VIEW);
+    Uri uri = isHttpOrHttpsScheme(url)
+               ? Uri.parse(url)
+               : new Uri.Builder().scheme("http").appendEncodedPath(url).build();
+    intent.setData(uri);
     try
     {
-      final Intent intent = new Intent(Intent.ACTION_VIEW);
-      if (!url.startsWith("http://") && !url.startsWith("https://"))
-        url = "http://" + url;
-      intent.setData(Uri.parse(url));
-      activity.startActivity(intent);
+      context.startActivity(intent);
     }
     catch (ActivityNotFoundException e)
     {
       CrashlyticsUtils.logException(e);
     }
+    catch (AndroidRuntimeException e)
+    {
+      CrashlyticsUtils.logException(e);
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      context.startActivity(intent);
+    }
+  }
+
+  private static boolean isHttpOrHttpsScheme(@NonNull String url)
+  {
+    return url.startsWith("http://") || url.startsWith("https://");
   }
 
   @NonNull
@@ -648,7 +664,7 @@ public class Utils
           intent.putExtra(Intent.EXTRA_SUBJECT, "[" + BuildConfig.VERSION_NAME + "] " + mSubject);
           if (success)
           {
-            String logsZipFile = StorageUtils.getLogsZipPath();
+            String logsZipFile = StorageUtils.getLogsZipPath(activity.getApplication());
             if (!TextUtils.isEmpty(logsZipFile))
             {
               Uri uri = StorageUtils.getUriForFilePath(activity, logsZipFile);
@@ -668,6 +684,19 @@ public class Utils
         }
       });
     }
+  }
+
+  @NonNull
+  public static <T> T[] concatArrays(@Nullable T[] a, T... b)
+  {
+    if (a == null || a.length == 0)
+      return b;
+    if (b == null || b.length == 0)
+      return a;
+
+    T[] c = Arrays.copyOf(a, a.length + b.length);
+    System.arraycopy(b, 0, c, a.length, b.length);
+    return c;
   }
 
   public static void detachFragmentIfCoreNotInitialized(@NonNull Context context,
@@ -715,13 +744,8 @@ public class Utils
   }
 
   @NonNull
-  public static String getLocalizedFeatureType(@NonNull Context context, @Nullable String type)
+  private static String getLocalizedFeatureByKey(@NonNull Context context, @NonNull String key)
   {
-    if (TextUtils.isEmpty(type))
-      return "";
-
-    String key = "type." + type.replace('-', '.');
-
     @StringRes
     int id = getStringIdByKey(context, key);
 
@@ -731,10 +755,30 @@ public class Utils
     }
     catch (Resources.NotFoundException e)
     {
-      LOGGER.e(TAG, "Failed to get localized string for type '" + type + "'", e);
+      LOGGER.e(TAG, "Failed to get localized string for key '" + key + "'", e);
     }
 
-    return type;
+    return key;
+  }
+
+  @NonNull
+  public static String getLocalizedFeatureType(@NonNull Context context, @Nullable String type)
+  {
+    if (TextUtils.isEmpty(type))
+      return "";
+
+    String key = "type." + type.replace('-', '.');
+    return getLocalizedFeatureByKey(context, key);
+  }
+
+  @NonNull
+  public static String getLocalizedBrand(@NonNull Context context, @Nullable String brand)
+  {
+    if (TextUtils.isEmpty(brand))
+      return "";
+
+    String key = "brand." + brand;
+    return getLocalizedFeatureByKey(context, key);
   }
 
   // Called from JNI.

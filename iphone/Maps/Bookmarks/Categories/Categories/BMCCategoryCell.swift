@@ -4,29 +4,30 @@ protocol BMCCategoryCellDelegate {
 }
 
 final class BMCCategoryCell: MWMTableViewCell {
+  @IBOutlet private weak var accessImageView: UIImageView!
   @IBOutlet private weak var visibility: UIButton!
-  @IBOutlet private weak var title: UILabel! {
+  @IBOutlet private weak var titleLabel: UILabel! {
     didSet {
-      title.font = .regular16()
-      title.textColor = .blackPrimaryText()
+      titleLabel.font = .regular16()
+      titleLabel.textColor = .blackPrimaryText()
     }
   }
 
-  @IBOutlet private weak var count: UILabel! {
+  @IBOutlet private weak var subtitleLabel: UILabel! {
     didSet {
-      count.font = .regular14()
-      count.textColor = .blackSecondaryText()
+      subtitleLabel.font = .regular14()
+      subtitleLabel.textColor = .blackSecondaryText()
     }
   }
 
-  @IBOutlet private weak var more: UIButton! {
+  @IBOutlet private weak var moreButton: UIButton! {
     didSet {
-      more.tintColor = .blackSecondaryText()
-      more.setImage(#imageLiteral(resourceName: "ic24PxMore"), for: .normal)
+      moreButton.tintColor = .blackSecondaryText()
+      moreButton.setImage(#imageLiteral(resourceName: "ic24PxMore"), for: .normal)
     }
   }
 
-  private var category: BMCCategory! {
+  private var category: BMCCategory? {
     willSet {
       category?.removeObserver(self)
     }
@@ -36,7 +37,7 @@ final class BMCCategoryCell: MWMTableViewCell {
     }
   }
 
-  private var delegate: BMCCategoryCellDelegate!
+  private var delegate: BMCCategoryCellDelegate?
 
   func config(category: BMCCategory, delegate: BMCCategoryCellDelegate) -> UITableViewCell {
     self.category = category
@@ -45,18 +46,40 @@ final class BMCCategoryCell: MWMTableViewCell {
   }
 
   @IBAction private func visibilityAction() {
-    delegate.visibilityAction(category: category)
+    guard let category = category else { return }
+    delegate?.visibilityAction(category: category)
   }
 
   @IBAction private func moreAction() {
-    delegate.moreAction(category: category, anchor: more)
+    guard let category = category else { return }
+    delegate?.moreAction(category: category, anchor: moreButton)
   }
 }
 
 extension BMCCategoryCell: BMCCategoryObserver {
   func categoryUpdated() {
-    title.text = category.title
-    count.text = String(format: L("bookmarks_places"), category.count)
+    guard let category = category else { return }
+    titleLabel.text = category.title
+
+    let accessString: String
+    switch category.accessStatus {
+    case .local:
+      accessString = L("not_shared")
+      accessImageView.image = UIImage(named: "ic_category_private")
+    case .public:
+      accessString = L("public_access")
+      accessImageView.image = UIImage(named: "ic_category_public")
+   case .private:
+      accessString = L("limited_access")
+      accessImageView.image = UIImage(named: "ic_category_link")
+    case .other:
+      assert(false, "We don't expect category with .other status here")
+      accessImageView.image = nil
+      accessString = ""
+    }
+
+    let placesString = String(format: L("bookmarks_places"), category.count)
+    subtitleLabel.text = accessString.count > 0 ? "\(accessString) • \(placesString)" : placesString
 
     if category.isVisible {
       visibility.tintColor = .linkBlue()

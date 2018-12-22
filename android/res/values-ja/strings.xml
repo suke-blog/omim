@@ -183,35 +183,41 @@
 	<string name="search_mode_nearme">現在地周辺</string>
 	<!-- Do search in current viewport only -->
 	<string name="search_mode_viewport">マップ表示範囲</string>
-	<!-- Search Suggestion -->
-	<string name="food">飲食</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for cafes, bars, restaurants -->
+	<string name="eat">食事場所</string>
+	<!-- Search category for grocery stores -->
+	<string name="food">食料雑貨</string>
+	<!-- Search category -->
 	<string name="transport">交通機関</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="fuel">ガソリンスタンド</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="parking">駐車場</string>
-	<!-- Search Suggestion -->
-	<string name="shop">買い物</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for clothes/shoes/gifts/jewellery/sport shops -->
+	<string name="shopping">ショッピング</string>
+	<!-- Search category -->
 	<string name="hotel">ホテル</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="tourism">観光</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="entertainment">エンターテイメント</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="atm">ATM</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for nightclubs/bars -->
+	<string name="nightlife">ナイトライフ</string>
+	<!-- Search category for water park/disneyland/playground/toys store -->
+	<string name="children">家族の休日</string>
+	<!-- Search category -->
 	<string name="bank">銀行</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="pharmacy">薬局</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="hospital">病院</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="toilet">トイレ</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="post">郵便局</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="police">警察</string>
 	<!-- String in search result list, when nothing found -->
 	<string name="no_search_results_found">検索結果が見つかりませんでした</string>
@@ -401,7 +407,7 @@
 	<string name="email_error_title">メール送信エラー</string>
 	<!-- Settings item title -->
 	<string name="pref_calibration_title">コンパスの調整</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="wifi">無線LAN</string>
 	<!-- Update map suggestion -->
 	<string name="routing_map_outdated">ルートを作成するためにマップを更新してください。</string>
@@ -1386,6 +1392,84 @@
 	<string name="subscription_terms">ご購入確定時にお客様のiTunesアカウントにお支払いが請求されます。現在のご利用期間が終了する最低でも24時間前に自動更新が解除されなければ、サブスクリプションは自動的に更新されます。現在のご利用期間が終了する24時間以内に、ご利用プランの更新がアカウントに請求されます。ご購入期間中にApple IDアカウント設定より自動更新を管理または解除することができます。</string>
 	<string name="subscriptions_title">サブスクリプション</string>
 	<string name="manage_subscription">サブスクリプション管理</string>
+	<string name="sharing_options">オプションの共有</string>
+	<string name="export_file">ファイルのエクスポート</string>
+	<string name="list_settings">リスト設定</string>
+	<string name="delete_list">リスト削除</string>
+	<string name="hide_from_map">マップから隠す</string>
+	<string name="ugc_route_tags_screen_label">タグを選択</string>
+	<string name="ugc_route_tags_progress_msg">タグをロードしています…</string>
+	<string name="ugc_route_tags_desc">他の旅行者があなたのガイドを見つけられるようにタグを選択してください。これは必須です。</string>
+	<string name="public_access">パブリック・アクセス</string>
+	<string name="limited_access">制限されたアクセス</string>
+	<string name="upload_and_publish_desc">このガイドはパブリックのMAPS.MEカタログにアップロードされ、他のユーザーに対して利用可能になります</string>
+	<string name="upload_and_publish">アップロードおよび公開</string>
+	<string name="upload_and_get_direct_link">アップロードおよび直接リンクの取得</string>
+	<string name="get_direct_link_desc">あなたのガイドはリンクを持っているあらゆる人物に利用可能になります</string>
+	<string name="upload_and_publish_progress_text">あなたのガイドを公開しています…</string>
+	<string name="upload_and_publish_success">ガイドが公開されました</string>
+	<string name="ugc_routes_user_agreement">&lt;b>ご注意ください:&lt;/b> この先へ進む事で &lt;a href="%s">利用許諾&lt;/a>に同意する事になります</string>
+	<string name="ugc_route_edit_list_name">ガイド名</string>
+	<string name="ugc_route_edit_description_hint">説明(テキストまたはhtml)を記入してください</string>
+	<string name="not_shared">個人</string>
+	<string name="direct_link_progress_text">あなたのファイルをアップロードしています…</string>
+	<string name="direct_link_success">リンクが作成されました</string>
+	<string name="edit_guide_title">ガイドをウェブ上で編集</string>
+	<string name="edit_guide_subtitle">ウェブアプリを通じてガイドを編集するためにリンクを取得しましょう：説明を追加し、写真をアップロードし、線でブックマークを繋げましょう。</string>
+	<string name="send_a_link_btn">リンクを自分に送る</string>
+	<string name="upload_error_toast">ファイルのアップロード中にエラーが起きました</string>
+	<string name="tags_loading_error_subtitle">タグのロード中にエラーが起きました。もう一度やり直してください</string>
+	<string name="unable_upload_errorr_title">ファイルのアップロードができませんでした</string>
+	<string name="unable_upload_error_subtitle_edited">このファイルはウェブアプリで編集されました</string>
+	<string name="unable_upload_error_subtitle_broken">このファイルは損傷しており、アップロードできませんでした。別のファイルをアップロードしてください。</string>
+	<string name="buy_btn">%sで購入</string>
+	<string name="download_guide_progress">ガイドをダウンロードしています…</string>
+	<string name="price_error_title">価格を取得できませんでした</string>
+	<string name="price_error_subtitle">数分後にもう一度試してみてください</string>
+	<string name="edit_your_guide_email_body">パソコンを使って簡単にウェブ上でガイドを編集しましょう：説明を追加し、写真をアップロードし、線でブックマークを繋げましょう。</string>
+	<string name="edit_on_web">ウェブ上で編集</string>
+	<string name="properties_loading_error_subtitle">オプションのロード中にエラーが起きました。もう一度やり直してください</string>
+	<string name="custom_props_desc">このガイドでは以下の立場で場所を訪れました</string>
+	<string name="custom_props_title">現地人または旅行者</string>
+	<string name="custom_props_local">現地人</string>
+	<string name="custom_props_traveler">旅行者</string>
+	<string name="select_properties">オプションの選択</string>
+	<string name="access_rules_p_to_p">特別なアクセス</string>
+	<string name="access_rules_paid">購入済み</string>
+	<string name="failed_purchase_support_message">申し訳ございませが、完了していない購入があるようです。サポートまでご連絡いただければ当社が問題を解決いたします。</string>
+	<string name="contact">連絡</string>
+	<string name="check_price_button">価格チェック</string>
+	<string name="download_button">ダウンロード</string>
+	<string name="speedcams_alert_title">自動速度違反取締装置</string>
+	<string name="speedcams_alert_subtitle">速度制限警告</string>
+	<string name="speedcam_option_auto">自動</string>
+	<string name="speedcam_option_always">常時</string>
+	<string name="speedcam_option_never">無効</string>
+	<string name="bookmark_description_title">ブックマークの説明</string>
+	<string name="place_description_title">場所の説明</string>
+	<string name="ugc_routes_error_uploading_file_toast">残念ながらあなたのブックマークをアップロードしていいる最中にエラーが発生しました。もう一度お試しください。</string>
+	<string name="notification_channel_ugc">ソーシャルコンテンツ</string>
+	<!-- this text will be shown in application notification preferences opposite checkbox which enable/disable downloader notifications. Devices on Android 8+ are affected. -->
+	<string name="notification_channel_downloader">マップダウンローダー</string>
+	<string name="notification_leave_review_title">%s - はいかがでしたか?</string>
+	<string name="notification_leave_review_content">レビューを残して旅行者を助けましょう！</string>
+	<string name="share_bookmarks_email_body_link">こんにちは!\n\nこれはあなたのブックマークをダウンロードできるリンクです:%s。MAPS.MEを通じてリストを開いて旅をお楽しみください!\n\nアプリの入手: http://maps.me/get?kmz</string>
+	<string name="warning_speedcams_title">%d km/hの速度制限を超えているときナビゲーターが自動速度違反取締装置について警告します</string>
+	<string name="warning_speedcams_subtitle">旅行先の国の道路交通法を考慮してください。</string>
+	<string name="speedcams_notice_message">自動－速度制限超過の危険性がある場合には、自動速度違反取締装置について警告します\n常時－自動速度違反取締装置について常に警告します\n無効－自動速度違反取締装置を警告しません</string>
+	<string name="whats_new_ugc_routes_title">印象を共有するのは簡単です</string>
+	<string name="whats_new_ugc_routes_subtitle">記憶に残る場所を保存して、ブックマークでルートを作成し MAPS.MEカタログを利用するすべての人達と共有しましょう。</string>
+	<string name="whats_new_webeditor_title">ルートをストーリーに変えましょう</string>
+	<string name="whats_new_ugc_routes_message2">ウェブエディタで写真と詳細なストーリーを追加しましょう。</string>
+	<string name="whatsnew_standard_routes_title">標準的ルート</string>
+	<string name="whatsnew_standard_routes_message">基本的な一連の関心地点(POI)と簡潔な説明ですが、多くの体験があり余す！</string>
+	<string name="whatsnew_city_overview_title">街の概要</string>
+	<string name="whatsnew_city_overview_message">街の地図上の最大200の関心地点(POI)：すべて旅行者にとって有用で興味深いものです！</string>
+	<string name="whatsnew_pro_guides_title">プロフェッショナルルート</string>
+	<string name="whatsnew_pro_guides_message">非常に綿密で詳細な場所の説明と、移動距離および時間の計算能力</string>
+	<string name="whatsnew_paid_routes_title">さらなある新たな体験！</string>
+	<string name="whatsnew_paid_routes_message">無料のルートに加え、カタログに3つの有料のルートを追加しました。700を超える新たなルート！</string>
+	<string name="whats_new_ugc_routes_title_android_only">印象を共有するのは簡単です</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">ケーブルカー駅</string>
@@ -1488,6 +1572,7 @@
 	<string name="type.barrier.lift_gate">ブームバリア</string>
 	<string name="type.barrier.stile">回転扉</string>
 	<string name="type.barrier.toll_booth">料金所</string>
+	<string name="type.boundary.national_park">国立公園</string>
 	<string name="type.building">建物</string>
 	<string name="type.building.address">建物</string>
 	<string name="type.building.garage">車庫</string>
@@ -1727,6 +1812,7 @@
 	<string name="type.leisure.fitness_station">フィットネスステーション</string>
 	<string name="type.leisure.garden">庭園</string>
 	<string name="type.leisure.golf_course">ゴルフコース</string>
+	<string name="type.leisure.nature_reserve">自然保護区</string>
 	<string name="type.leisure.park">公園</string>
 	<string name="type.leisure.park.no.access">公園</string>
 	<string name="type.leisure.park.permissive">公園</string>
@@ -1755,7 +1841,10 @@
 	<string name="type.military.bunker">掩蔽壕</string>
 	<string name="type.natural.bay">港湾</string>
 	<string name="type.natural.beach">ビーチ</string>
+	<string name="type.natural.cape">岬</string>
 	<string name="type.natural.cave_entrance">洞穴入口</string>
+	<string name="type.natural.geyser">間欠泉</string>
+	<string name="type.natural.glacier">氷河</string>
 	<string name="type.natural.lake">湖</string>
 	<string name="type.natural.peak">山頂</string>
 	<string name="type.natural.pond">池</string>
@@ -1955,4 +2044,85 @@
 	<string name="type.waterway.stream.intermittent">河川</string>
 	<string name="type.waterway.stream.tunnel">河川</string>
 	<string name="type.waterway.waterfall">滝</string>
+
+	<!-- SECTION: Brands -->
+	<string name="brand.aiya">藍屋</string>
+	<string name="brand.anrakutei">安楽亭</string>
+	<string name="brand.bamiyan">バーミヤン</string>
+	<string name="brand.big_boy">ビッグボーイ</string>
+	<string name="brand.bikkuridonkey">びっくりドンキー</string>
+	<string name="brand.blue_bottle_coffee">ブルーボトルコーヒー</string>
+	<string name="brand.burger_king">バーガーキング</string>
+	<string name="brand.cafe_de_crie">カフェドクリエ</string>
+	<string name="brand.capricchosa">カプリチョーザ</string>
+	<string name="brand.chibo">千房</string>
+	<string name="brand.coco_ichibanya">ここいちばんや</string>
+	<string name="brand.cocos">ココス</string>
+	<string name="brand.dennys">デニーズ</string>
+	<string name="brand.dominos_pizza">ドミノ・ピザ</string>
+	<string name="brand.doutor">ドトールコーヒーショップ</string>
+	<string name="brand.excelsior_caffe">エクセルシオール カフェ</string>
+	<string name="brand.freshness_burger">フレッシュネスバーガー</string>
+	<string name="brand.fujisoba">富士そば</string>
+	<string name="brand.grazie_gardens">グラッチェガーデンズ</string>
+	<string name="brand.gusto">ガスト</string>
+	<string name="brand.gyukaku">牛角</string>
+	<string name="brand.hamazushi">はま寿司</string>
+	<string name="brand.hanamaru">はなまるうどん</string>
+	<string name="brand.hanaya_yohei">華屋与兵衛</string>
+	<string name="brand.handaya">半田屋</string>
+	<string name="brand.hokkahokka_tei">ほっかほっか亭</string>
+	<string name="brand.honkekamadoya">本家かまどや</string>
+	<string name="brand.hottomotto">ほっともっと</string>
+	<string name="brand.ikinari_steak">いきなりステーキ</string>
+	<string name="brand.jiyu_kukan">自遊空間</string>
+	<string name="brand.jolly_pasta">ジョリーパスタ</string>
+	<string name="brand.jonathans">ジョナサン</string>
+	<string name="brand.joyfull">ジョイフル</string>
+	<string name="brand.kappazushi">かっぱ寿司</string>
+	<string name="brand.katsuya">かつや</string>
+	<string name="brand.kfc">ケンタッキーフライドチキン</string>
+	<string name="brand.kisoji">木曽路</string>
+	<string name="brand.kobeya_restaurant">神戸屋レストラン</string>
+	<string name="brand.kohikan">珈琲館</string>
+	<string name="brand.komeda">コメダ珈琲店</string>
+	<string name="brand.komoro_soba">小諸そば</string>
+	<string name="brand.kourakuen">幸楽苑</string>
+	<string name="brand.kurazushi">くら寿司</string>
+	<string name="brand.lotteria">ロッテリア</string>
+	<string name="brand.maido_ohkini">まいどおおきに</string>
+	<string name="brand.marugame_seimen">丸亀製麺</string>
+	<string name="brand.matsunoya">松乃家</string>
+	<string name="brand.matsuya">まつや</string>
+	<string name="brand.mcdonalds">マクドナルド</string>
+	<string name="brand.mister_donut">ミスタードーナツ</string>
+	<string name="brand.miyakosoba">都そば</string>
+	<string name="brand.miyoshino">みよしの</string>
+	<string name="brand.mos_burger">モスバーガー</string>
+	<string name="brand.nakau">なか卯</string>
+	<string name="brand.ohsho">ぎょうざのおうしょう</string>
+	<string name="brand.origin_bento">オリジン弁当</string>
+	<string name="brand.osaka_ohsho">大阪王将</string>
+	<string name="brand.pizza_hut">ピザハット</string>
+	<string name="brand.pronto">Puronto</string>
+	<string name="brand.ringer_hut">リンガーハット</string>
+	<string name="brand.royal_host">ロイヤルホスト</string>
+	<string name="brand.saizeriya">サイゼリヤ</string>
+	<string name="brand.sato">和食さと</string>
+	<string name="brand.starbucks">スターバックス</string>
+	<string name="brand.stmarc_cafe">サンマルクカフェ</string>
+	<string name="brand.subway">サブウェイ</string>
+	<string name="brand.sukiya">すき家</string>
+	<string name="brand.sushiro">スシロー</string>
+	<string name="brand.syabu_yo">しゃぶ葉</string>
+	<string name="brand.tenkaippin">天下一品</string>
+	<string name="brand.tonden">とんでん</string>
+	<string name="brand.tullys_coffee">タリーズコーヒー</string>
+	<string name="brand.ueshima_coffee_ten">上島珈琲店</string>
+	<string name="brand.uobei">魚べい</string>
+	<string name="brand.victoria_station">ヴィクトリアステーション</string>
+	<string name="brand.yomen_ya_goemon">洋麺屋五右衛門</string>
+	<string name="brand.yoshinoya">吉野家</string>
+	<string name="brand.yudetaro">ゆで太郎</string>
+	<string name="brand.yumean">夢庵</string>
 </resources>

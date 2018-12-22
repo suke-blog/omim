@@ -4,13 +4,17 @@ import android.support.annotation.IntDef;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 
+import com.mapswithme.maps.PrivateVariables;
 import com.mapswithme.maps.R;
+import com.mapswithme.maps.metrics.UserActionsLogger;
 import com.mapswithme.util.statistics.Statistics;
 
 import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @MainThread
@@ -46,29 +50,6 @@ public enum BookmarkManager
   public static final int CLOUD_NOT_ENOUGH_DISK_SPACE = 2;
 
   public static final List<Icon> ICONS = new ArrayList<>();
-
-  @Retention(RetentionPolicy.SOURCE)
-  @IntDef({ ACCESS_RULES_LOCAL, ACCESS_RULES_PUBLIC, ACCESS_RULES_DIRECT_LINK,
-            ACCESS_RULES_P2P, ACCESS_RULES_PAID })
-  public @interface AccessRules {}
-  public static final int ACCESS_RULES_LOCAL = 0;
-  public static final int ACCESS_RULES_PUBLIC = 1;
-  public static final int ACCESS_RULES_DIRECT_LINK = 2;
-  public static final int ACCESS_RULES_P2P = 3;
-  public static final int ACCESS_RULES_PAID = 4;
-
-  @Retention(RetentionPolicy.SOURCE)
-  @IntDef({ UPLOAD_RESULT_SUCCESS, UPLOAD_RESULT_NETWORK_ERROR, UPLOAD_RESULT_SERVER_ERROR,
-            UPLOAD_RESULT_AUTH_ERROR, UPLOAD_RESULT_MALFORMED_DATA_ERROR,
-            UPLOAD_RESULT_ACCESS_ERROR, UPLOAD_RESULT_INVALID_CALL })
-  public @interface UploadResult {}
-  public static final int UPLOAD_RESULT_SUCCESS = 0;
-  public static final int UPLOAD_RESULT_NETWORK_ERROR = 1;
-  public static final int UPLOAD_RESULT_SERVER_ERROR = 2;
-  public static final int UPLOAD_RESULT_AUTH_ERROR = 3;
-  public static final int UPLOAD_RESULT_MALFORMED_DATA_ERROR = 4;
-  public static final int UPLOAD_RESULT_ACCESS_ERROR = 5;
-  public static final int UPLOAD_RESULT_INVALID_CALL = 6;
 
   @NonNull
   private final List<BookmarksLoadingListener> mListeners = new ArrayList<>();
@@ -118,6 +99,7 @@ public enum BookmarkManager
   public Bookmark addNewBookmark(double lat, double lon)
   {
     final Bookmark bookmark = nativeAddBookmarkToLastEditedCategory(lat, lon);
+    UserActionsLogger.logAddToBookmarkEvent();
     Statistics.INSTANCE.trackBookmarkCreated();
     return bookmark;
   }
@@ -279,6 +261,8 @@ public enum BookmarkManager
   @MainThread
   public void onImportFinished(@NonNull String id, long catId, boolean successful)
   {
+    if (successful)
+      Statistics.INSTANCE.trackPurchaseProductDelivered(id, PrivateVariables.bookmarksVendor());
     for (BookmarksCatalogListener listener : mCatalogListeners)
       listener.onImportFinished(id, catId, successful);
   }
@@ -288,8 +272,22 @@ public enum BookmarkManager
   @MainThread
   public void onTagsReceived(boolean successful, @NonNull CatalogTagsGroup[] tagsGroups)
   {
+    List<CatalogTagsGroup> unmodifiableData = Collections.unmodifiableList(Arrays.asList(tagsGroups));
     for (BookmarksCatalogListener listener : mCatalogListeners)
-      listener.onTagsReceived(successful, tagsGroups);
+    {
+      listener.onTagsReceived(successful, unmodifiableData);
+    }
+  }
+
+  // Called from JNI.
+  @SuppressWarnings("unused")
+  @MainThread
+  public void onCustomPropertiesReceived(boolean successful,
+                                         @NonNull CatalogCustomProperty[] properties)
+  {
+    List<CatalogCustomProperty> unmodifiableProperties = Collections.unmodifiableList(Arrays.asList(properties));
+    for (BookmarksCatalogListener listener : mCatalogListeners)
+      listener.onCustomPropertiesReceived(successful, unmodifiableProperties);
   }
 
   // Called from JNI.
@@ -304,11 +302,14 @@ public enum BookmarkManager
   // Called from JNI.
   @SuppressWarnings("unused")
   @MainThread
-  public void onUploadFinished(@UploadResult int uploadResult, @NonNull String description,
+  public void onUploadFinished(int index, @NonNull String description,
                                long originCategoryId, long resultCategoryId)
   {
+    UploadResult result = UploadResult.values()[index];
     for (BookmarksCatalogListener listener : mCatalogListeners)
-      listener.onUploadFinished(uploadResult, description, originCategoryId, resultCategoryId);
+    {
+      listener.onUploadFinished(result, description, originCategoryId, resultCategoryId);
+    }
   }
 
   public boolean isVisible(long catId)
@@ -330,6 +331,40 @@ public enum BookmarkManager
   public void setCategoryName(long catId, @NonNull String name)
   {
     nativeSetCategoryName(catId, name);
+  }
+
+  public void setCategoryDescription(long id, @NonNull String categoryDesc)
+  {
+    nativeSetCategoryDescription(id, categoryDesc);
+  }
+
+  public void setCategoryTags(@NonNull BookmarkCategory category, @NonNull List<CatalogTag> tags)
+  {
+    String[] ids = new String[tags.size()];
+    for (int i = 0; i < tags.size(); i++)
+    {
+      ids[i] = tags.get(i).getId();
+    }
+    nativeSetCategoryTags(category.getId(), ids);
+  }
+
+  public void setCategoryProperties(@NonNull BookmarkCategory category,
+                                    @NonNull List<CatalogPropertyOptionAndKey> properties)
+  {
+    for (CatalogPropertyOptionAndKey each : properties)
+    {
+      nativeSetCategoryCustomProperty(category.getId(), each.getKey(), each.getOption().getValue());
+    }
+  }
+
+  public void setAccessRules(long id, @NonNull BookmarkCategory.AccessRules rules)
+  {
+    nativeSetCategoryAccessRules(id, rules.ordinal());
+  }
+
+  public void uploadToCatalog(@NonNull BookmarkCategory.AccessRules rules, @NonNull BookmarkCategory category)
+  {
+    nativeUploadToCatalog(rules.ordinal(), category.getId());
   }
 
   /**
@@ -440,10 +475,10 @@ public enum BookmarkManager
   }
 
   @NonNull
-  public AbstractCategoriesSnapshot.Default getCatalogCategoriesSnapshot()
+  public AbstractCategoriesSnapshot.Default getDownloadedCategoriesSnapshot()
   {
     BookmarkCategory[] items = nativeGetBookmarkCategories();
-    return new AbstractCategoriesSnapshot.Default(items, new FilterStrategy.Catalog());
+    return new AbstractCategoriesSnapshot.Default(items, new FilterStrategy.Downloaded());
   }
 
   @NonNull
@@ -479,7 +514,7 @@ public enum BookmarkManager
 
   public boolean areAllCatalogCategoriesVisible()
   {
-    return areAllCategoriesVisible(BookmarkCategory.Type.CATALOG);
+    return areAllCategoriesVisible(BookmarkCategory.Type.DOWNLOADED);
   }
 
   public boolean areAllOwnedCategoriesVisible()
@@ -499,7 +534,7 @@ public enum BookmarkManager
 
   public boolean areAllCatalogCategoriesInvisible()
   {
-    return areAllCategoriesInvisible(BookmarkCategory.Type.CATALOG);
+    return areAllCategoriesInvisible(BookmarkCategory.Type.DOWNLOADED);
   }
 
   public boolean areAllOwnedCategoriesInvisible()
@@ -567,6 +602,11 @@ public enum BookmarkManager
     nativeImportFromCatalog(serverId, filePath);
   }
 
+  public void uploadRoutes(int accessRules, @NonNull BookmarkCategory bookmarkCategory)
+  {
+    nativeUploadToCatalog(accessRules, bookmarkCategory.getId());
+  }
+
   @NonNull
   public String getCatalogDeeplink(long catId)
   {
@@ -583,6 +623,16 @@ public enum BookmarkManager
   public String getCatalogFrontendUrl()
   {
     return nativeGetCatalogFrontendUrl();
+  }
+
+  public void requestRouteTags()
+  {
+    nativeRequestCatalogTags();
+  }
+
+  public void requestCustomProperties()
+  {
+    nativeRequestCatalogCustomProperties();
   }
 
   public boolean isCategoryFromCatalog(long catId)
@@ -627,15 +677,16 @@ public enum BookmarkManager
 
   private native void nativeSetCategoryName(long catId, @NonNull String n);
 
+  private native void nativeSetCategoryDescription(long catId, @NonNull String desc);
+
   private native void nativeSetCategoryTags(long catId, @NonNull String[] tagsIds);
 
-  private native void nativeSetCategoryAccessRules(long catId, @AccessRules int accessRules);
+  private native void nativeSetCategoryAccessRules(long catId, int accessRules);
+
+  private native void nativeSetCategoryCustomProperty(long catId, String key, String value);
 
   @NonNull
   private native String nativeGetCategoryAuthor(long catId);
-
-  @AccessRules
-  private native int nativeGetCategoryAccessRules(long catId);
 
   private static native void nativeLoadBookmarks();
 
@@ -705,7 +756,7 @@ public enum BookmarkManager
   private static native void nativeImportFromCatalog(@NonNull String serverId,
                                                      @NonNull String filePath);
 
-  private static native void nativeUploadToCatalog(@AccessRules int accessRules,
+  private static native void nativeUploadToCatalog(int accessRules,
                                                    long catId);
 
   @NonNull
@@ -720,6 +771,8 @@ public enum BookmarkManager
   private static native boolean nativeIsCategoryFromCatalog(long catId);
 
   private static native void nativeRequestCatalogTags();
+
+  private static native void nativeRequestCatalogCustomProperties();
 
   public interface BookmarksLoadingListener
   {
@@ -796,11 +849,18 @@ public enum BookmarkManager
 
     /**
      * The method is called when the tags were received from the server.
-     *
-     * @param successful is the result of the receiving.
+     *  @param successful is the result of the receiving.
      * @param tagsGroups is the tags collection.
      */
-    void onTagsReceived(boolean successful, @NonNull CatalogTagsGroup[] tagsGroups);
+    void onTagsReceived(boolean successful, @NonNull List<CatalogTagsGroup> tagsGroups);
+
+    /**
+     * The method is called when the custom properties were received from the server.
+     *  @param successful is the result of the receiving.
+     * @param properties is the properties collection.
+     */
+    void onCustomPropertiesReceived(boolean successful,
+                                    @NonNull List<CatalogCustomProperty> properties);
 
     /**
      * The method is called when the uploading to the catalog is started.
@@ -811,15 +871,13 @@ public enum BookmarkManager
 
     /**
      * The method is called when the uploading to the catalog is finished.
-     *
-     * @param uploadResult is result of the uploading.
+     *  @param uploadResult is result of the uploading.
      * @param description is detailed description of the uploading result.
      * @param originCategoryId is original identifier of the uploaded bookmarks category.
      * @param resultCategoryId is identifier of the uploaded category after finishing.
-     *                         In the case of bookmarks modification during uploading
-     *                         the identifier can be new.
+*                         In the case of bookmarks modification during uploading
      */
-    void onUploadFinished(@UploadResult int uploadResult, @NonNull String description,
+    void onUploadFinished(@NonNull UploadResult uploadResult, @NonNull String description,
                           long originCategoryId, long resultCategoryId);
   }
 
@@ -838,7 +896,14 @@ public enum BookmarkManager
     }
 
     @Override
-    public void onTagsReceived(boolean successful, @NonNull CatalogTagsGroup[] tagsGroups)
+    public void onTagsReceived(boolean successful, @NonNull List<CatalogTagsGroup> tagsGroups)
+    {
+      /* do noting by default */
+    }
+
+    @Override
+    public void onCustomPropertiesReceived(boolean successful,
+                                           @NonNull List<CatalogCustomProperty> properties)
     {
       /* do noting by default */
     }
@@ -850,10 +915,23 @@ public enum BookmarkManager
     }
 
     @Override
-    public void onUploadFinished(@UploadResult int uploadResult, @NonNull String description,
+    public void onUploadFinished(@NonNull UploadResult uploadResult, @NonNull String description,
                                  long originCategoryId, long resultCategoryId)
     {
       /* do noting by default */
     }
+  }
+
+  public enum UploadResult
+  {
+    UPLOAD_RESULT_SUCCESS,
+    UPLOAD_RESULT_NETWORK_ERROR,
+    UPLOAD_RESULT_SERVER_ERROR,
+    UPLOAD_RESULT_AUTH_ERROR,
+    /* Broken file */
+    UPLOAD_RESULT_MALFORMED_DATA_ERROR,
+    /* Edit on web */
+    UPLOAD_RESULT_ACCESS_ERROR,
+    UPLOAD_RESULT_INVALID_CALL;
   }
 }

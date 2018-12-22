@@ -8,8 +8,8 @@
 
 #include "coding/file_name_utils.hpp"
 #include "coding/file_writer.hpp"
-#include "coding/point_to_integer.hpp"
-#include "coding/pointd_to_pointu.hpp"
+#include "coding/point_coding.hpp"
+#include "coding/sha1.hpp"
 #include "coding/url_encode.hpp"
 #include "coding/write_to_sink.hpp"
 #include "coding/zlib.hpp"
@@ -128,6 +128,11 @@ local_ads::Timestamp GetMaxTimestamp(std::list<local_ads::Event> const & events,
   return maxTimestamp;
 }
 
+std::string GetClientIdHash()
+{
+  return coding::SHA1::CalculateBase64ForString(GetPlatform().UniqueClientId());
+}
+
 std::string GetPath(std::string const & fileName)
 {
   return base::JoinFoldersToPath({GetPlatform().SettingsDir(), kStatisticsFolderName}, fileName);
@@ -163,7 +168,7 @@ std::list<local_ads::Event> ReadEvents(std::string const & fileName)
     ReadPackedData(src, [&result](local_ads::Statistics::PackedData && data,
                                   std::string const & countryId, int64_t mwmVersion,
                                   local_ads::Timestamp const & baseTimestamp) {
-      auto const mercatorPt = Int64ToPointObsolete(data.m_mercator, POINT_COORD_BITS);
+      auto const mercatorPt = Int64ToPointObsolete(data.m_mercator, kPointCoordBits);
       result.emplace_back(static_cast<local_ads::EventType>(data.m_eventType), mwmVersion, countryId,
                           data.m_featureIndex, data.m_zoomLevel,
                           baseTimestamp + std::chrono::seconds(data.m_seconds),
@@ -239,7 +244,7 @@ bool CanUpload()
 namespace local_ads
 {
 Statistics::Statistics()
-  : m_userId(GetPlatform().UniqueClientId())
+  : m_userId(GetClientIdHash())
 {}
   
 void Statistics::Startup()
@@ -338,7 +343,7 @@ std::list<Event> Statistics::WriteEvents(std::list<Event> & events, std::string 
       data.m_zoomLevel = event.m_zoomLevel;
       data.m_eventType = static_cast<uint8_t>(event.m_type);
       auto const mercatorPt = MercatorBounds::FromLatLon(event.m_latitude, event.m_longitude);
-      data.m_mercator = PointToInt64Obsolete(mercatorPt, POINT_COORD_BITS);
+      data.m_mercator = PointToInt64Obsolete(mercatorPt, kPointCoordBits);
       data.m_accuracy = event.m_accuracyInMeters;
       WritePackedData(*writer, std::move(data));
     }

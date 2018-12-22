@@ -2,6 +2,9 @@
 
 #include "routing/road_graph.hpp"
 
+#include "routing_common/maxspeed_conversion.hpp"
+#include "routing_common/vehicle_model.hpp"
+
 namespace routing_test
 {
 
@@ -13,8 +16,9 @@ public:
   inline size_t GetRoadCount() const { return m_roads.size(); }
 
   // routing::IRoadGraph overrides:
-  RoadInfo GetRoadInfo(FeatureID const & featureId, bool inCity) const override;
-  double GetSpeedKMpH(FeatureID const & featureId, bool inCity) const override;
+  RoadInfo GetRoadInfo(FeatureID const & f, routing::SpeedParams const & speedParams) const override;
+  double GetSpeedKMpH(FeatureID const & featureId,
+                      routing::SpeedParams const & speedParams) const override;
   double GetMaxSpeedKMpH() const override;
   void ForEachFeatureClosestToCross(m2::PointD const & cross,
                                     ICrossEdgesLoader & edgeLoader) const override;

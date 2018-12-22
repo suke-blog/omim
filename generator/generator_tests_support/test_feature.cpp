@@ -13,7 +13,7 @@
 #include "indexer/ftypes_matcher.hpp"
 #include "indexer/mwm_set.hpp"
 
-#include "coding/multilang_utf8_string.hpp"
+#include "coding/string_utf8_multilang.hpp"
 
 #include "base/assert.hpp"
 #include "base/stl_helpers.hpp"
@@ -38,6 +38,12 @@ uint64_t GenUniqueId()
 }  // namespace
 
 // TestFeature -------------------------------------------------------------------------------------
+TestFeature::TestFeature()
+  : m_id(GenUniqueId()), m_center(0, 0), m_type(Type::Unknown), m_name(""), m_lang("")
+{
+  Init();
+}
+
 TestFeature::TestFeature(string const & name, string const & lang)
   : m_id(GenUniqueId()), m_center(0, 0), m_type(Type::Unknown), m_name(name), m_lang(lang)
 {
@@ -83,7 +89,7 @@ void TestFeature::Serialize(FeatureBuilder1 & fb) const
     if (m_metadata.Has(type))
     {
       auto const value = m_metadata.Get(type);
-      fb.GetMetadataForTesting().Set(type, value);
+      fb.GetMetadata().Set(type, value);
     }
   }
 

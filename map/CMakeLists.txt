@@ -55,6 +55,7 @@ set(
   feature_vec_model.hpp
   framework.cpp
   framework.hpp
+  framework_light.cpp
   framework_light.hpp
   ge0_parser.cpp
   ge0_parser.hpp
@@ -77,8 +78,17 @@ set(
   local_ads_supported_types.cpp
   mwm_url.cpp
   mwm_url.hpp
+  notifications/notification_manager.cpp
+  notifications/notification_manager.hpp
+  notifications/notification_queue.hpp
+  notifications/notification_queue_serdes.cpp
+  notifications/notification_queue_serdes.hpp
+  notifications/notification_queue_storage.cpp
+  notifications/notification_queue_storage.hpp
   place_page_info.cpp
   place_page_info.hpp
+  power_manager/power_manager.cpp
+  power_manager/power_manager.hpp
   purchase.cpp
   purchase.hpp
   reachable_by_taxi_checker.cpp
@@ -112,6 +122,8 @@ set(
   user_mark_layer.hpp
   user_mark.cpp
   user_mark.hpp
+  utils.cpp
+  utils.hpp
   viewport_search_params.hpp
   viewport_search_callback.cpp
   viewport_search_callback.hpp

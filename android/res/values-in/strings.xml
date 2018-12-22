@@ -182,35 +182,41 @@
 	<string name="measurement_units">Unit Pengukuran</string>
 	<!-- Detailed description of Measurement Units settings button -->
 	<string name="measurement_units_summary">Pilihlah antara mil dan kilometer</string>
-	<!-- Search Suggestion -->
-	<string name="food">Makanan</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for cafes, bars, restaurants -->
+	<string name="eat">Tempat makan</string>
+	<!-- Search category for grocery stores -->
+	<string name="food">Toserba</string>
+	<!-- Search category -->
 	<string name="transport">Transportasi</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="fuel">Bahan bakar</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="parking">Parkir</string>
-	<!-- Search Suggestion -->
-	<string name="shop">Toko</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for clothes/shoes/gifts/jewellery/sport shops -->
+	<string name="shopping">Berbelanja</string>
+	<!-- Search category -->
 	<string name="hotel">Hotel</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="tourism">Pemandangan</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="entertainment">Hiburan</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="atm">ATM</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for nightclubs/bars -->
+	<string name="nightlife">Kehidupan Malam</string>
+	<!-- Search category for water park/disneyland/playground/toys store -->
+	<string name="children">Liburan keluarga</string>
+	<!-- Search category -->
 	<string name="bank">Bank</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="pharmacy">Apotek</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="hospital">Rumah sakit</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="toilet">Toilet</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="post">Pos</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="police">Polisi</string>
 	<!-- String in search result list, when nothing found -->
 	<string name="no_search_results_found">Tidak ada hasil yang ditemukan</string>
@@ -402,7 +408,7 @@
 	<string name="email_error_title">Gangguan pengiriman surel</string>
 	<!-- Settings item title -->
 	<string name="pref_calibration_title">Kalibrasi kompas</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="wifi">WiFi</string>
 	<!-- Update map suggestion -->
 	<string name="routing_map_outdated">Mohon perbarui peta untuk membuat rute</string>
@@ -1387,6 +1393,84 @@
 	<string name="subscription_terms">Pembayaran akan dibebankan ke akun iTunes Anda pada konfirmasi pembelian. Langganan akan diperbarui secara otomatis kecuali jika langganan otomatis dinonaktifkan setidaknya 24 jam sebelum akhir periode berjalan. Akun Anda akan dikenakan biaya sesuai dengan paket langganan Anda untuk perpanjangan dalam 24 jam sebelum akhir periode berjalan. Anda dapat mengelola atau menonaktifkan perpanjangan otomatis pada pengaturan akun ID Apple Anda kapan saja dari pembelian Anda.</string>
 	<string name="subscriptions_title">Langganan</string>
 	<string name="manage_subscription">Kelola langganan</string>
+	<string name="sharing_options">Opsi berbagi</string>
+	<string name="export_file">File ekspor</string>
+	<string name="list_settings">Pengaturan Daftar</string>
+	<string name="delete_list">Hapus Daftar</string>
+	<string name="hide_from_map">Sembunyikan dari peta</string>
+	<string name="ugc_route_tags_screen_label">Pilih tag</string>
+	<string name="ugc_route_tags_progress_msg">Memuat tag…</string>
+	<string name="ugc_route_tags_desc">Silakan pilih tag untuk membantu pelancong lain menemukan panduan Anda. Ini wajib.</string>
+	<string name="public_access">Akses umum</string>
+	<string name="limited_access">Akses terbatas</string>
+	<string name="upload_and_publish_desc">Panduan ini akan diunggah ke katalog MAPS.ME umum dan akan tersedia untuk pengguna lain</string>
+	<string name="upload_and_publish">Unggah dan publikasikan</string>
+	<string name="upload_and_get_direct_link">Unggah dan dapatkan tautan langsung</string>
+	<string name="get_direct_link_desc">Panduan Anda akan tersedia untuk siapa pun yang memiliki tautan ini</string>
+	<string name="upload_and_publish_progress_text">Mempublikasikan panduan Anda…</string>
+	<string name="upload_and_publish_success">Panduan telah dipublikasikan</string>
+	<string name="ugc_routes_user_agreement">&lt;b>PERHATIAN:&lt;/b> dengan melanjutkan, Anda menerima &lt;a href="%s">perjanjian lisensi&lt;/a></string>
+	<string name="ugc_route_edit_list_name">Nama panduan</string>
+	<string name="ugc_route_edit_description_hint">Ketikkan deskripsi (teks atau html)</string>
+	<string name="not_shared">Pribadi</string>
+	<string name="direct_link_progress_text">Mengunggah file Anda…</string>
+	<string name="direct_link_success">Tautan telah dibuat</string>
+	<string name="edit_guide_title">Edit panduan Anda di web</string>
+	<string name="edit_guide_subtitle">Dapatkan tautan untuk mengedit panduan Anda melalui aplikasi web: menambahkan deskripsi, mengunggah foto, dan menyambungkan bookmark dengan garis.</string>
+	<string name="send_a_link_btn">Kirim tautan ke saya</string>
+	<string name="upload_error_toast">Kesalahan terjadi saat mengunggah file Anda</string>
+	<string name="tags_loading_error_subtitle">Kesalahan terjadi saat memuat tag, silakan coba lagi</string>
+	<string name="unable_upload_errorr_title">Gagal mengunggah file</string>
+	<string name="unable_upload_error_subtitle_edited">File telah diedit melalui aplikasi web</string>
+	<string name="unable_upload_error_subtitle_broken">File rusak dan tidak dapat diunggah. Silakan unggah file lain.</string>
+	<string name="buy_btn">Beli seharga %s</string>
+	<string name="download_guide_progress">Mengunduh panduan Anda…</string>
+	<string name="price_error_title">Tidak bisa mendapatkan harga</string>
+	<string name="price_error_subtitle">Silakan coba beberapa saat lagi</string>
+	<string name="edit_your_guide_email_body">Edit panduan Anda di web dengan mudah menggunakan komputer: menambahkan deskripsi, mengunggah foto, dan menyambungkan bookmark dengan garis.</string>
+	<string name="edit_on_web">Edit di web</string>
+	<string name="properties_loading_error_subtitle">Kesalahan terjadi saat memuat opsi, silakan coba lagi</string>
+	<string name="custom_props_desc">Di panduan ini Anda telah mengunjungi tempat sebagai</string>
+	<string name="custom_props_title">Warga lokal atau pelancong</string>
+	<string name="custom_props_local">warga lokal</string>
+	<string name="custom_props_traveler">pelancong</string>
+	<string name="select_properties">Pilih opsi</string>
+	<string name="access_rules_p_to_p">Akses khusus</string>
+	<string name="access_rules_paid">Telah dibeli</string>
+	<string name="failed_purchase_support_message">Maaf, Anda mungkin memiliki pembelian yang belum dilengkapi. Silakan hubungi dukungan dan kami akan memecahkan masalah Anda.</string>
+	<string name="contact">Kontak</string>
+	<string name="check_price_button">Cek harga</string>
+	<string name="download_button">Unduh</string>
+	<string name="speedcams_alert_title">Kamera cepat</string>
+	<string name="speedcams_alert_subtitle">Peringatan tentang batas kecepatan</string>
+	<string name="speedcam_option_auto">Auto</string>
+	<string name="speedcam_option_always">Selalu</string>
+	<string name="speedcam_option_never">Tidak pernah</string>
+	<string name="bookmark_description_title">Deskripsi Bookmark</string>
+	<string name="place_description_title">Deskripsi Tempat</string>
+	<string name="ugc_routes_error_uploading_file_toast">Sayang sekali, kesalahan terjadi saat mengunggah bookmark Anda. Silakan coba lagi.</string>
+	<string name="notification_channel_ugc">Konten sosial</string>
+	<!-- this text will be shown in application notification preferences opposite checkbox which enable/disable downloader notifications. Devices on Android 8+ are affected. -->
+	<string name="notification_channel_downloader">Pengunduh peta</string>
+	<string name="notification_leave_review_title">%s - bagaimana?</string>
+	<string name="notification_leave_review_content">Bantu para pelancong dengan meninggalkan ulasan!</string>
+	<string name="share_bookmarks_email_body_link">Halo!\n\nBerikut tautan untuk mengunduh bookmark Anda: %s. Buka daftar melalui MAPS.ME dan nikmati perjalanan Anda!\n\nDapatkan aplikasi: http://maps.me/get?kmz</string>
+	<string name="warning_speedcams_title">Navigator akan memberi Anda peringatan tentang adanya kamera saat Anda melebihi batas kecepatan %d km/jam</string>
+	<string name="warning_speedcams_subtitle">Harap perhatikan aturan berkendara di negara tempat Anda bepergian.</string>
+	<string name="speedcams_notice_message">Auto - Peringatkan tentang kamera kecepatan saat terdapat risiko melebihi batas kecepatan\nSelalu - Selalu peringatkan tentang kamera kecepatan\nTidak pernah - Jangan pernah peringatkan tentang kamera kecepatan</string>
+	<string name="whats_new_ugc_routes_title">Mudah untuk membagikan kesan Anda</string>
+	<string name="whats_new_ugc_routes_subtitle">Simpan tempat-tempat penuh kenangan, buat rute menggunakan markah dan bagikan kepada semua orang di katalog MAPS.ME.</string>
+	<string name="whats_new_webeditor_title">Ubah rute Anda menjadi cerita</string>
+	<string name="whats_new_ugc_routes_message2">Tambahkan foto dan kisah detail di editor web.</string>
+	<string name="whatsnew_standard_routes_title">Rute Standar</string>
+	<string name="whatsnew_standard_routes_message">Kumpulan dasar berisi lokasi-lokasi menarik berikut deskripsi singkat namun penuh dengan pengalaman!</string>
+	<string name="whatsnew_city_overview_title">Ringkasan Kota</string>
+	<string name="whatsnew_city_overview_message">Hingga 200 lokasi menarik dalam peta kota: semua yang diperlukan dan berguna bagi para wisatawan!</string>
+	<string name="whatsnew_pro_guides_title">Rute Profesional</string>
+	<string name="whatsnew_pro_guides_message">Sangat mendalam, disertai dengan deskripsi terperinci mengenai tempat dan memiliki kemampuan untuk menghitung jarak serta waktu perjalanan</string>
+	<string name="whatsnew_paid_routes_title">Lebih banyak pengalaman baru!</string>
+	<string name="whatsnew_paid_routes_message">Sebagai tambahan untuk rute-rute gratis, kami juga telah menambahkan 3 kategori rute berbayar ke dalam katalog kami. Lebih dari 700 rute baru!</string>
+	<string name="whats_new_ugc_routes_title_android_only">Mudah untuk membagikan kesan Anda</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Stasiun kereta gantung</string>
@@ -1484,6 +1568,7 @@
 	<string name="type.barrier.lift_gate">Polisi tidur</string>
 	<string name="type.barrier.stile">Undakan</string>
 	<string name="type.barrier.toll_booth">Gerbang tol</string>
+	<string name="type.boundary.national_park">Taman Nasional</string>
 	<string name="type.building">Gedung</string>
 	<string name="type.building.address">Gedung</string>
 	<string name="type.building.garage">Garasi</string>
@@ -1718,6 +1803,7 @@
 	<string name="type.leisure.fitness_station">Stasiun Kebugaran</string>
 	<string name="type.leisure.garden">Situs arkeologi</string>
 	<string name="type.leisure.golf_course">Lapangan golf</string>
+	<string name="type.leisure.nature_reserve">Cagar Alam</string>
 	<string name="type.leisure.park">Taman</string>
 	<string name="type.leisure.park.no.access">Taman</string>
 	<string name="type.leisure.park.permissive">Taman</string>
@@ -1744,7 +1830,10 @@
 	<string name="type.man_made.windmill">Kincir angin</string>
 	<string name="type.natural.bay">Teluk</string>
 	<string name="type.natural.beach">Pantai</string>
+	<string name="type.natural.cape">Tanjung</string>
 	<string name="type.natural.cave_entrance">Mulut gua</string>
+	<string name="type.natural.geyser">Geiser</string>
+	<string name="type.natural.glacier">Gletser</string>
 	<string name="type.natural.lake">Danau</string>
 	<string name="type.natural.peak">Puncak</string>
 	<string name="type.natural.pond">Kolam</string>

@@ -9,7 +9,10 @@
 #include "base/stl_helpers.hpp"
 #include "base/string_utils.hpp"
 
+#include <algorithm>
 #include <cmath>
+#include <functional>
+#include <iterator>
 #include <map>
 #include <sstream>
 #include <unordered_map>
@@ -130,8 +133,10 @@ bool BaseChecker::IsMatched(uint32_t type) const
 bool BaseChecker::operator()(feature::TypesHolder const & types) const
 {
   for (uint32_t t : types)
+  {
     if (IsMatched(t))
       return true;
+  }
 
   return false;
 }
@@ -143,11 +148,12 @@ bool BaseChecker::operator()(FeatureType & ft) const
 
 bool BaseChecker::operator()(vector<uint32_t> const & types) const
 {
-  for (size_t i = 0; i < types.size(); ++i)
+  for (uint32_t t : types)
   {
-    if (IsMatched(types[i]))
+    if (IsMatched(t))
       return true;
   }
+
   return false;
 }
 
@@ -274,6 +280,66 @@ IsBuildingChecker::IsBuildingChecker() : BaseChecker(1 /* level */)
   m_types.push_back(classif().GetTypeByPath({"building"}));
 }
 
+// static
+set<string> const IsPoiChecker::kPoiTypes = {
+  "amenity",
+  "shop",
+  "tourism",
+  "leisure",
+  "sport",
+  "craft",
+  "man_made",
+  "emergency",
+  "office",
+  "historic",
+  "railway",
+  "highway",
+  "aeroway"
+};
+
+IsPoiChecker::IsPoiChecker() : BaseChecker(1 /* level */)
+{
+  for (auto const & type : IsPoiChecker::kPoiTypes)
+    m_types.push_back(classif().GetTypeByPath({type}));
+}
+
+// static
+set<pair<string, string>> const WikiChecker::kTypesForWiki = {
+  {"amenity", "place_of_worship"},
+  {"historic", "archaeological_site"},
+  {"historic", "castle"},
+  {"historic", "memorial"},
+  {"historic", "monument"},
+  {"historic", "museum"},
+  {"historic", "ruins"},
+  {"historic", "ship"},
+  {"historic", "tomb"},
+  {"tourism", "artwork"},
+  {"tourism", "attraction"},
+  {"tourism", "museum"},
+  {"tourism", "gallery"},
+  {"tourism", "viewpoint"},
+  {"tourism", "zoo"},
+  {"tourism", "theme_park"},
+  {"leisure", "park"},
+  {"leisure", "water_park"},
+  {"highway", "pedestrian"},
+  {"man_made", "lighthouse"},
+  {"waterway", "waterfall"},
+  {"leisure", "garden"},
+};
+
+WikiChecker::WikiChecker() : BaseChecker(2 /* level */)
+{
+  for (auto const & t : kTypesForWiki)
+    m_types.push_back(classif().GetTypeByPath({t.first, t.second}));
+}
+
+IsPlaceChecker::IsPlaceChecker() : BaseChecker(1 /* level */)
+{
+  m_types.push_back(classif().GetTypeByPath({"place"}));
+}
+
 IsBridgeChecker::IsBridgeChecker() : BaseChecker(3 /* level */) {}
 
 bool IsBridgeChecker::IsMatched(uint32_t type) const
@@ -336,6 +402,56 @@ unsigned IsHotelChecker::GetHotelTypesMask(FeatureType & ft) const
   return mask;
 }
 
+IsPopularityPlaceChecker::IsPopularityPlaceChecker()
+{
+  vector<pair<string, string>> const popularityPlaceTypes = {
+    {"amenity", "bar"},
+    {"amenity", "biergarten"},
+    {"amenity", "cafe"},
+    {"amenity", "casino"},
+    {"amenity", "cinema"},
+    {"amenity", "fast_food"},
+    {"amenity", "fountain"},
+    {"amenity", "grave_yard"},
+    {"amenity", "marketplace"},
+    {"amenity", "nightclub"},
+    {"amenity", "place_of_worship"},
+    {"amenity", "pub"},
+    {"amenity", "restaurant"},
+    {"amenity", "theatre"},
+    {"amenity", "townhall"},
+    {"highway", "pedestrian"},
+    {"historic", "archaeological_site"},
+    {"historic", "castle"},
+    {"historic", "memorial"},
+    {"historic", "monument"},
+    {"historic", "museum"},
+    {"historic", "ruins"},
+    {"historic", "ship"},
+    {"historic", "tomb"},
+    {"landuse", "cemetery"},
+    {"leisure", "garden"},
+    {"leisure", "park"},
+    {"leisure", "water_park"},
+    {"man_made", "lighthouse"},
+    {"natural", "geyser"},
+    {"natural", "peak"},
+    {"shop", "bakery"},
+    {"tourism", "artwork"},
+    {"tourism", "attraction"},
+    {"tourism", "gallery"},
+    {"tourism", "museum"},
+    {"tourism", "theme_park"},
+    {"tourism", "viewpoint"},
+    {"tourism", "zoo"},
+    {"waterway", "waterfall"}
+  };
+
+  Classificator const & c = classif();
+  for (auto const & t : popularityPlaceTypes)
+    m_types.push_back(c.GetTypeByPath({t.first, t.second}));
+}
+
 boost::optional<IsHotelChecker::Type> IsHotelChecker::GetHotelType(FeatureType & ft) const
 {
   feature::TypesHolder types(ft);
@@ -371,7 +487,7 @@ char const * IsHotelChecker::GetHotelTypeTag(Type type)
   case Type::Resort: return "resort";
   case Type::Count: CHECK(false, ("Can't get hotel type tag")); return "";
   }
-  CHECK_SWITCH();
+  UNREACHABLE();
 }
 
 IsWifiChecker::IsWifiChecker()
@@ -379,18 +495,34 @@ IsWifiChecker::IsWifiChecker()
   m_types.push_back(classif().GetTypeByPath({"internet_access", "wlan"}));
 }
 
-IsFoodChecker:: IsFoodChecker()
+IsEatChecker::IsEatChecker()
 {
   Classificator const & c = classif();
-  char const * const paths[][2] = {
-    {"amenity", "cafe"},
-    {"amenity", "bar"},
-    {"amenity", "pub"},
-    {"amenity", "fast_food"},
-    {"amenity", "restaurant"}
-  };
-  for (auto const & path : paths)
-    m_types.push_back(c.GetTypeByPath({path[0], path[1]}));
+  map<Type, vector<string>> const descriptions = {{Type::Cafe,       {"amenity", "cafe"}},
+                                                  {Type::Bakery,     {"shop", "bakery"}},
+                                                  {Type::FastFood,   {"amenity", "fast_food"}},
+                                                  {Type::Restaurant, {"amenity", "restaurant"}},
+                                                  {Type::Bar,        {"amenity", "bar"}},
+                                                  {Type::Pub,        {"amenity", "pub"}},
+                                                  {Type::Biergarten, {"amenity", "biergarten"}}};
+
+  for (auto const & desc : descriptions)
+  {
+    auto const type = c.GetTypeByPath(desc.second);
+    m_types.push_back(type);
+    m_sortedTypes[static_cast<size_t>(desc.first)] = {type, desc.first};
+  }
+}
+
+IsEatChecker::Type IsEatChecker::GetType(uint32_t t) const
+{
+  for (auto type : m_sortedTypes)
+  {
+    if (type.first == t)
+      return type.second;
+  }
+
+  return IsEatChecker::Type::Count;
 }
 
 IsCuisineChecker::IsCuisineChecker() : BaseChecker(1 /* level */)

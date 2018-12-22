@@ -1,6 +1,7 @@
 #pragma once
 
 #include "geometry/latlon.hpp"
+#include "geometry/point2d.hpp"
 
 #include "base/exception.hpp"
 #include "base/scope_guard.hpp"
@@ -12,6 +13,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
+#include <deque>
 #include <memory>
 #include <type_traits>
 #include <unordered_set>
@@ -33,10 +35,22 @@ auto is_iterable_checker(int) -> decltype(
 
 template <typename T>
 std::false_type is_iterable_checker(...);
+
+template <typename T>
+auto is_dynamic_sequence_checker(int) -> decltype(
+  std::declval<T &>().resize(0),
+  std::declval<T &>()[0],
+  std::true_type {});
+
+template <typename T>
+std::false_type is_dynamic_sequence_checker(...);
 }  // namespace impl
 
 template <typename T>
 using is_iterable = decltype(impl::is_iterable_checker<T>(0));
+
+template <typename T>
+using is_dynamic_sequence = decltype(impl::is_dynamic_sequence_checker<T>(0));
 }  // namespace traits
 
 template <typename T>
@@ -50,6 +64,13 @@ using EnableIfEnum = std::enable_if_t<std::is_enum<T>::value>;
 
 template <typename T>
 using EnableIfNotEnum = std::enable_if_t<!std::is_enum<T>::value>;
+
+template <typename T>
+using EnableIfVectorOrDeque = std::enable_if_t<traits::is_dynamic_sequence<T>::value &&
+                                               !std::is_same<std::string, T>::value>;
+
+template <typename T>
+using EnableIfNotVectorOrDeque = std::enable_if_t<!traits::is_dynamic_sequence<T>::value>;
 
 template<typename Sink>
 class SerializerJson
@@ -133,6 +154,14 @@ public:
     (*this)(static_cast<std::underlying_type_t<T>>(t), name);
   }
 
+  void operator()(m2::PointD const & p, char const * name = nullptr)
+  {
+    NewScopeWith(base::NewJSONObject(), name, [this, &p] {
+      (*this)(p.x, "x");
+      (*this)(p.y, "y");
+    });
+  }
+
   void operator()(ms::LatLon const & ll, char const * name = nullptr)
   {
     NewScopeWith(base::NewJSONObject(), name, [this, &ll] {
@@ -209,20 +238,20 @@ public:
   void operator()(double & d, char const * name = nullptr) { FromJsonObjectOrValue(d, name); }
   void operator()(std::string & s, char const * name = nullptr) { FromJsonObjectOrValue(s, name); }
 
-  template <typename T>
-  void operator()(std::vector<T> & vs, char const * name = nullptr)
+  template <typename T, EnableIfVectorOrDeque<T> * = nullptr>
+  void operator()(T & dest, char const * name = nullptr)
   {
     json_t * outerContext = SaveContext(name);
 
     if (!json_is_array(m_json))
       MYTHROW(base::Json::Exception, ("The field", name, "must contain a json array."));
 
-    vs.resize(json_array_size(m_json));
-    for (size_t index = 0; index < vs.size(); ++index)
+    dest.resize(json_array_size(m_json));
+    for (size_t index = 0; index < dest.size(); ++index)
     {
       json_t * context = SaveContext();
       m_json = json_array_get(context, index);
-      (*this)(vs[index]);
+      (*this)(dest[index]);
       RestoreContext(context);
     }
 
@@ -278,7 +307,7 @@ public:
     RestoreContext(outerContext);
   }
 
-  template <typename R, EnableIfNotEnum<R> * = nullptr>
+  template <typename R, EnableIfNotEnum<R> * = nullptr, EnableIfNotVectorOrDeque<R> * = nullptr>
   void operator()(R & r, char const * name = nullptr)
   {
     json_t * context = SaveContext(name);
@@ -323,6 +352,14 @@ public:
     UnderlyingType res;
     FromJSONObject(m_json, name, res);
     t = static_cast<T>(res);
+  }
+
+  void operator()(m2::PointD & p, char const * name = nullptr)
+  {
+    json_t * outerContext = SaveContext(name);
+    (*this)(p.x, "x");
+    (*this)(p.y, "y");
+    RestoreContext(outerContext);
   }
 
   void operator()(ms::LatLon & ll, char const * name = nullptr)

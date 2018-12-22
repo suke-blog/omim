@@ -377,7 +377,7 @@ BOOL gIsFirstMyPositionMode = YES;
   });
 
   self.userTouchesAction = UserTouchesActionNone;
-  [MWMBookmarksManager loadBookmarks];
+  [[MWMBookmarksManager sharedManager] loadBookmarks];
   [MWMFrameworkListener addObserver:self];
 }
 
@@ -420,6 +420,15 @@ BOOL gIsFirstMyPositionMode = YES;
 - (void)openBookmarkEditorWithData:(MWMPlacePageData *)data
 {
   [self performSegueWithIdentifier:kPP2BookmarkEditingSegue sender:data];
+}
+
+- (void)openFullPlaceDescriptionWithHtml:(NSString *)htmlString
+{
+  [Statistics logEvent:kStatPlacePageDescriptionMore];
+  WebViewController * descriptionViewController =
+  [[PlacePageDescriptionViewController alloc] initWithHtml:htmlString baseUrl:nil title:L(@"place_description_title")];
+  descriptionViewController.openInSafari = YES;
+  [self.navigationController pushViewController:descriptionViewController animated:YES];
 }
 
 - (void)showUGCAuth

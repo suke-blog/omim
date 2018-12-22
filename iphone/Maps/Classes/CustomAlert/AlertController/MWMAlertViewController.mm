@@ -218,13 +218,11 @@ static NSString * const kAlertControllerNibIdentifier = @"MWMAlertViewController
 
 - (void)presentCreateBookmarkCategoryAlertWithMaxCharacterNum:(NSUInteger)max
                                               minCharacterNum:(NSUInteger)min
-                                                        isNewCategory:(BOOL)isNewCategory
                                                      callback:(nonnull MWMCheckStringBlock)callback
 {
   auto alert = static_cast<MWMBCCreateCategoryAlert *>([MWMAlert
                   createBookmarkCategoryAlertWithMaxCharacterNum:max
                                                  minCharacterNum:min
-                                                   isNewCategory:isNewCategory
                                                         callback:callback]);
   [self displayAlert:alert];
   dispatch_async(dispatch_get_main_queue(), ^{
@@ -255,6 +253,13 @@ static NSString * const kAlertControllerNibIdentifier = @"MWMAlertViewController
   [self displayAlert:[MWMAlert restoreBookmarkAlertWithMessage:message
                                              rightButtonAction:rightButton
                                               leftButtonAction:leftButton]];
+}
+
+- (void)presentTagsLoadingErrorAlertWithOkBlock:(nonnull MWMVoidBlock)okBlock
+                                    cancelBlock:(nonnull MWMVoidBlock)cancelBlock
+{
+  [self displayAlert:[MWMAlert tagsLoadingErrorAlertWithOkBlock:okBlock
+                                                    cancelBlock:cancelBlock]];
 }
 
 - (void)presentDefaultAlertWithTitle:(nonnull NSString *)title

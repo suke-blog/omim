@@ -11,6 +11,7 @@
 
 #include "editor/editable_data_source.hpp"
 
+#include "indexer/brands_holder.hpp"
 #include "indexer/data_source.hpp"
 #include "indexer/feature_algo.hpp"
 #include "indexer/ftypes_matcher.hpp"
@@ -18,7 +19,7 @@
 
 #include "platform/preferred_languages.hpp"
 
-#include "coding/multilang_utf8_string.hpp"
+#include "coding/string_utf8_multilang.hpp"
 
 #include "base/logging.hpp"
 #include "base/string_utils.hpp"
@@ -83,6 +84,19 @@ NameScores GetNameScores(FeatureType & ft, Geocoder::Params const & params,
     string const iata = ft.GetMetadata().Get(feature::Metadata::FMD_AIRPORT_IATA);
     if (!iata.empty())
       UpdateNameScores(iata, sliceNoCategories, bestScores);
+  }
+
+  string const op = ft.GetMetadata().Get(feature::Metadata::FMD_OPERATOR);
+  if (!op.empty())
+    UpdateNameScores(op, sliceNoCategories, bestScores);
+
+  string const brand = ft.GetMetadata().Get(feature::Metadata::FMD_BRAND);
+  if (!brand.empty())
+  {
+    auto const & brands = indexer::GetDefaultBrands();
+    brands.ForEachNameByKey(brand, [&](indexer::BrandsHolder::Brand::Name const & name) {
+      UpdateNameScores(name.m_name, sliceNoCategories, bestScores);
+    });
   }
 
   return bestScores;
@@ -154,7 +168,7 @@ ftypes::Type GetLocalityIndex(feature::TypesHolder const & types)
   case VILLAGE: return NONE;
   case LOCALITY_COUNT: return type;
   }
-  CHECK_SWITCH();
+  UNREACHABLE();
 }
 
 // TODO: Format street and house number according to local country's rules.
@@ -200,20 +214,38 @@ public:
   {
   }
 
-  ReverseGeocoder::Address const & GetAddress()
+  ReverseGeocoder::Address const & GetNearbyAddress()
   {
-    if (m_computed)
+    if (m_computedNearby)
       return m_address;
     m_reverseGeocoder.GetNearbyAddress(m_center, m_address);
-    m_computed = true;
+    m_computedNearby = true;
     return m_address;
+  }
+
+  bool GetExactAddress(ReverseGeocoder::Address & address)
+  {
+    if (m_computedExact)
+    {
+      address = m_address;
+      return true;
+    }
+    m_reverseGeocoder.GetNearbyAddress(m_center, 0.0, m_address);
+    if (m_address.IsValid())
+    {
+      m_computedExact = true;
+      m_computedNearby = true;
+      address = m_address;
+    }
+    return m_computedExact;
   }
 
 private:
   ReverseGeocoder const & m_reverseGeocoder;
   m2::PointD const m_center;
   ReverseGeocoder::Address m_address;
-  bool m_computed = false;
+  bool m_computedExact = false;
+  bool m_computedNearby = false;
 };
 }  // namespace
 
@@ -270,41 +302,48 @@ class RankerResultMaker
     info.m_popularity = preInfo.m_popularity;
     info.m_type = preInfo.m_type;
     info.m_allTokensUsed = preInfo.m_allTokensUsed;
+    info.m_categorialRequest = m_params.IsCategorialRequest();
+    info.m_hasName = ft.HasName();
 
-    auto const nameScores = GetNameScores(ft, m_params, preInfo.InnermostTokenRange(), info.m_type);
-
-    auto nameScore = nameScores.m_nameScore;
-    auto errorsMade = nameScores.m_errorsMade;
-
-    if (info.m_type != Model::TYPE_STREET &&
-        preInfo.m_geoParts.m_street != IntersectionResult::kInvalidId)
+    // We do not compare result name and request for categorial requests.
+    if (!m_params.IsCategorialRequest())
     {
-      auto const & mwmId = ft.GetID().m_mwmId;
-      FeatureType street;
-      if (LoadFeature(FeatureID(mwmId, preInfo.m_geoParts.m_street), street))
+      auto const nameScores =
+          GetNameScores(ft, m_params, preInfo.InnermostTokenRange(), info.m_type);
+
+      auto nameScore = nameScores.m_nameScore;
+      auto errorsMade = nameScores.m_errorsMade;
+
+      if (info.m_type != Model::TYPE_STREET &&
+          preInfo.m_geoParts.m_street != IntersectionResult::kInvalidId)
       {
-        auto const type = Model::TYPE_STREET;
-        auto const & range = preInfo.m_tokenRange[type];
-        auto const nameScores = GetNameScores(street, m_params, range, type);
+        auto const & mwmId = ft.GetID().m_mwmId;
+        FeatureType street;
+        if (LoadFeature(FeatureID(mwmId, preInfo.m_geoParts.m_street), street))
+        {
+          auto const type = Model::TYPE_STREET;
+          auto const & range = preInfo.m_tokenRange[type];
+          auto const nameScores = GetNameScores(street, m_params, range, type);
 
-        nameScore = min(nameScore, nameScores.m_nameScore);
-        errorsMade += nameScores.m_errorsMade;
+          nameScore = min(nameScore, nameScores.m_nameScore);
+          errorsMade += nameScores.m_errorsMade;
+        }
       }
-    }
 
-    if (!Model::IsLocalityType(info.m_type) && preInfo.m_cityId.IsValid())
-    {
-      FeatureType city;
-      if (LoadFeature(preInfo.m_cityId, city))
+      if (!Model::IsLocalityType(info.m_type) && preInfo.m_cityId.IsValid())
       {
-        auto const type = Model::TYPE_CITY;
-        auto const & range = preInfo.m_tokenRange[type];
-        errorsMade += GetErrorsMade(city, m_params, range, type);
+        FeatureType city;
+        if (LoadFeature(preInfo.m_cityId, city))
+        {
+          auto const type = Model::TYPE_CITY;
+          auto const & range = preInfo.m_tokenRange[type];
+          errorsMade += GetErrorsMade(city, m_params, range, type);
+        }
       }
-    }
 
-    info.m_nameScore = nameScore;
-    info.m_errorsMade = errorsMade;
+      info.m_nameScore = nameScore;
+      info.m_errorsMade = errorsMade;
+    }
 
     CategoriesInfo const categoriesInfo(feature::TypesHolder(ft),
                                         TokenSlice(m_params, preInfo.InnermostTokenRange()),
@@ -357,7 +396,7 @@ public:
     if (!LoadFeature(preRankerResult.GetId(), ft, center, name, country))
       return {};
 
-    RankerResult r(ft, center, m_ranker.m_params.m_position /* pivot */, name, country);
+    RankerResult r(ft, center, m_ranker.m_params.m_pivot, name, country);
 
     search::RankingInfo info;
     InitRankingInfo(ft, center, preRankerResult, info);
@@ -413,8 +452,8 @@ Result Ranker::MakeResult(RankerResult const & rankerResult, bool needAddress,
     // Insert exact address (street and house number) instead of empty result name.
     if (name.empty())
     {
-      auto const & addr = addressGetter.GetAddress();
-      if (addr.GetDistance() == 0)
+      ReverseGeocoder::Address addr;
+      if (addressGetter.GetExactAddress(addr))
         name = FormatStreetAndHouse(addr);
     }
 
@@ -422,7 +461,7 @@ Result Ranker::MakeResult(RankerResult const & rankerResult, bool needAddress,
 
     // Format full address only for suitable results.
     if (ftypes::IsAddressObjectChecker::Instance()(rankerResult.GetTypes()))
-      address = FormatFullAddress(addressGetter.GetAddress(), address);
+      address = FormatFullAddress(addressGetter.GetNearbyAddress(), address);
   }
 
   // todo(@m) Used because Result does not have a default constructor. Factor out?
@@ -438,7 +477,7 @@ Result Ranker::MakeResult(RankerResult const & rankerResult, bool needAddress,
     case RankerResult::Type::TYPE_LATLON: return Result(r.GetCenter(), name, address);
     }
     ASSERT(false, ("Bad RankerResult type:", static_cast<size_t>(r.GetResultType())));
-    CHECK_SWITCH();
+    UNREACHABLE();
   };
 
   auto res = mk(rankerResult);
@@ -501,11 +540,22 @@ void Ranker::UpdateResults(bool lastUpdate)
   size_t i = 0;
   for (; i < m_tentativeResults.size(); ++i)
   {
-    if (!lastUpdate && i >= m_params.m_batchSize && !m_params.m_viewportSearch)
+    if (!lastUpdate && count >= m_params.m_batchSize && !m_params.m_viewportSearch &&
+        !m_params.m_categorialRequest)
+    {
       break;
+    }
 
     if (!lastUpdate)
+    {
       BailIfCancelled();
+
+      // For categorial requests, it is usual that several batches arrive
+      // in the first call to UpdateResults(). Emit them as soon as they are available
+      // to improve responsiveness.
+      if (count % m_params.m_batchSize == 0)
+        m_emitter.Emit();
+    }
 
     auto const & rankerResult = m_tentativeResults[i];
 

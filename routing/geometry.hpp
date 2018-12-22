@@ -1,9 +1,11 @@
 #pragma once
 
 #include "routing/city_roads.hpp"
-#include "routing/road_point.hpp"
+#include "routing/maxspeeds.hpp"
 #include "routing/road_graph.hpp"
+#include "routing/road_point.hpp"
 
+#include "routing_common/maxspeed_conversion.hpp"
 #include "routing_common/vehicle_model.hpp"
 
 #include "indexer/feature_altitude.hpp"
@@ -30,10 +32,10 @@ public:
   RoadGeometry(bool oneWay, double weightSpeedKMpH, double etaSpeedKMpH, Points const & points);
 
   void Load(VehicleModelInterface const & vehicleModel, FeatureType & feature,
-            feature::TAltitudes const * altitudes, bool inCity);
+            feature::TAltitudes const * altitudes, bool inCity, Maxspeed const & maxspeed);
 
   bool IsOneWay() const { return m_isOneWay; }
-  VehicleModelInterface::SpeedKMpH const & GetSpeed() const { return m_speed; }
+  VehicleModelInterface::SpeedKMpH const & GetSpeed(bool forward) const;
   bool IsPassThroughAllowed() const { return m_isPassThroughAllowed; }
 
   Junction const & GetJunction(uint32_t junctionId) const
@@ -65,10 +67,22 @@ public:
 
 private:
   buffer_vector<Junction, 32> m_junctions;
-  VehicleModelInterface::SpeedKMpH m_speed;
+  VehicleModelInterface::SpeedKMpH m_forwardSpeed;
+  VehicleModelInterface::SpeedKMpH m_backwardSpeed;
   bool m_isOneWay = false;
   bool m_valid = false;
   bool m_isPassThroughAllowed = false;
+};
+
+struct AttrLoader
+{
+  AttrLoader(DataSource const & dataSource, MwmSet::MwmHandle const & handle)
+    : m_cityRoads(LoadCityRoads(dataSource, handle)), m_maxspeeds(LoadMaxspeeds(dataSource, handle))
+  {
+  }
+
+  std::unique_ptr<CityRoads> m_cityRoads;
+  std::unique_ptr<Maxspeeds> m_maxspeeds;
 };
 
 class GeometryLoader
@@ -82,7 +96,7 @@ public:
   static std::unique_ptr<GeometryLoader> Create(DataSource const & dataSource,
                                                 MwmSet::MwmHandle const & handle,
                                                 std::shared_ptr<VehicleModelInterface> vehicleModel,
-                                                std::unique_ptr<CityRoads> cityRoads,
+                                                AttrLoader && attrLoader,
                                                 bool loadAltitudes);
 
   /// This is for stand-alone work.
@@ -96,6 +110,9 @@ public:
 /// On the other hand methods GetRoad() and GetPoint() return geometry information by reference.
 /// The reference may be invalid after the next call of GetRoad() or GetPoint() because the cache
 /// item which is referred by returned reference may be evicted. It's done for performance reasons.
+/// \note The cache |m_featureIdToRoad| is used for road geometry for single-directional
+/// and bidirectional A*. According to tests it's faster to use one cache for both directions
+/// in bidirectional A* case than two separate caches, one for each direction (one for each A* wave).
 class Geometry final
 {
 public:

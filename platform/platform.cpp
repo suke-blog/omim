@@ -291,6 +291,35 @@ bool Platform::MkDirChecked(string const & dirName)
   }
 }
 
+// static
+bool Platform::MkDirRecursively(string const & dirName)
+{
+  auto const sep = base::GetNativeSeparator();
+  string path = strings::StartsWith(dirName, sep) ? sep : "";
+  auto const tokens = strings::Tokenize(dirName, sep.c_str());
+  for (auto const & t : tokens)
+  {
+    path = base::JoinPath(path, t);
+    if (!IsFileExistsByFullPath(path))
+    {
+      auto const ret = MkDir(path);
+      switch (ret)
+      {
+      case ERR_OK: break;
+      case ERR_FILE_ALREADY_EXISTS:
+      {
+        if (!IsDirectory(path))
+          return false;
+        break;
+      }
+      default: return false;
+      }
+    }
+  }
+
+  return true;
+}
+
 unsigned Platform::CpuCores() const
 {
   unsigned const cores = thread::hardware_concurrency();
@@ -335,7 +364,7 @@ string DebugPrint(Platform::EError err)
   case Platform::ERR_IO_ERROR: return "An I/O error occurred.";
   case Platform::ERR_UNKNOWN: return "Unknown";
   }
-  CHECK_SWITCH();
+  UNREACHABLE();
 }
 
 string DebugPrint(Platform::ChargingStatus status)
@@ -346,5 +375,5 @@ string DebugPrint(Platform::ChargingStatus status)
   case Platform::ChargingStatus::Plugged: return "Plugged";
   case Platform::ChargingStatus::Unplugged: return "Unplugged";
   }
-  CHECK_SWITCH();
+  UNREACHABLE();
 }

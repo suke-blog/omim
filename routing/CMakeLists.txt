@@ -63,6 +63,10 @@ set(
   joint_index.cpp
   joint_index.hpp
   loaded_path_segment.hpp
+  maxspeeds.cpp
+  maxspeeds.hpp
+  maxspeeds_serialization.cpp
+  maxspeeds_serialization.hpp
   nearest_edge_finder.cpp
   nearest_edge_finder.hpp
   online_absent_fetcher.cpp
@@ -109,6 +113,8 @@ set(
   single_vehicle_world_graph.hpp
   speed_camera.cpp
   speed_camera.hpp
+  speed_camera_manager.cpp
+  speed_camera_manager.hpp
   speed_camera_ser_des.cpp
   speed_camera_ser_des.hpp
   traffic_stash.cpp
@@ -120,7 +126,6 @@ set(
   transit_info.hpp
   transit_world_graph.cpp
   transit_world_graph.hpp
-  transition_points.hpp
   turn_candidate.hpp
   turns.cpp
   turns.hpp

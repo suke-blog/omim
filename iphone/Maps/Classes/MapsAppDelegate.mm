@@ -33,6 +33,7 @@
 
 #include "Framework.h"
 
+#include "map/framework_light.hpp"
 #include "map/gps_tracker.hpp"
 
 #include "platform/http_thread_apple.h"
@@ -130,6 +131,7 @@ using namespace osm_auth_ios;
 
 @property(nonatomic) NSInteger standbyCounter;
 @property(nonatomic) MWMBackgroundFetchScheduler * backgroundFetchScheduler;
+@property(nonatomic) id<IPendingTransactionsHandler> pendingTransactionHandler;
 
 @end
 
@@ -390,8 +392,17 @@ using namespace osm_auth_ios;
   if (@available(iOS 10, *))
     [UNUserNotificationCenter currentNotificationCenter].delegate = self;
 
-  if ([MWMFrameworkHelper canUseNetwork])
+  if ([MWMFrameworkHelper canUseNetwork]) {
     [[SubscriptionManager shared] validate];
+    self.pendingTransactionHandler = [InAppPurchase pendingTransactionsHandler];
+    __weak __typeof(self) ws = self;
+    [self.pendingTransactionHandler handlePendingTransactions:^(PendingTransactionsStatus) {
+      ws.pendingTransactionHandler = nil;
+    }];
+  }
+
+  if ([MoPubKit shouldShowConsentDialog])
+    [MoPubKit grantConsent];
   
   return YES;
 }
@@ -429,6 +440,25 @@ using namespace osm_auth_ios;
   {
     completionHandler(UIBackgroundFetchResultNewData);
     return;
+  }
+
+  lightweight::Framework const framework(lightweight::REQUEST_TYPE_NOTIFICATION);
+  auto const notificationCandidate = framework.GetNotification();
+  if (notificationCandidate)
+  {
+    auto const notification = notificationCandidate.get();
+    if (notification.m_type == notifications::NotificationCandidate::Type::UgcReview &&
+        notification.m_mapObject)
+    {
+      [LocalNotificationManager.sharedManager
+       showReviewNotificationForPlace:@(notification.m_mapObject->GetReadableName().c_str())
+       onTap:^{
+         [Statistics logEvent:kStatUGCReviewNotificationClicked];
+         place_page::Info info;
+         if (GetFramework().MakePlacePageInfo(*notification.m_mapObject, info))
+           [[MapViewController sharedController].controlsManager showPlacePageReview:info];
+     }];
+    }
   }
 
   auto tasks = @[
@@ -761,11 +791,14 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
   if (isFBURL)
     return YES;
 
-  if ([self checkLaunchURL:(url.host.length > 0 && [url.host rangeOfString:@"dlink.maps.me"].location != NSNotFound)
-       ? [self convertUniversalLink:url] : url])
+  for (auto host in @[@"dlink.maps.me", @"dlink.mapsme.devmail.ru"])
   {
-    [self handleURLs];
-    return YES;
+    if ([self checkLaunchURL:(url.host.length > 0 && [url.host rangeOfString:host].location != NSNotFound)
+         ? [self convertUniversalLink:url] : url])
+    {
+      [self handleURLs];
+      return YES;
+    }
   }
 
   return NO;

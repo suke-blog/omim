@@ -37,7 +37,6 @@
 + (MWMAlert *)infoAlert:(NSString *)title text:(NSString *)text;
 + (MWMAlert *)createBookmarkCategoryAlertWithMaxCharacterNum:(NSUInteger)max
                                              minCharacterNum:(NSUInteger)min
-                                               isNewCategory:(BOOL)isNewCategory
                                                     callback:(MWMCheckStringBlock)callback;
 + (MWMAlert *)convertBookmarksAlertWithCount:(NSUInteger)count block:(MWMVoidBlock)block;
 + (MWMAlert *)spinnerAlertWithTitle:(NSString *)title cancel:(MWMVoidBlock)cancel;
@@ -45,6 +44,7 @@
 + (MWMAlert *)restoreBookmarkAlertWithMessage:(NSString *)message
                             rightButtonAction:(MWMVoidBlock)rightButton
                              leftButtonAction:(MWMVoidBlock)leftButton;
++ (MWMAlert *)tagsLoadingErrorAlertWithOkBlock:okBlock cancelBlock:cancelBlock;
 
 + (MWMAlert *)defaultAlertWithTitle:(NSString *)title
                             message:(NSString *)message

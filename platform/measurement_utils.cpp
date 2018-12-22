@@ -52,6 +52,16 @@ bool FormatDistanceImpl(double m, string & res,
   return true;
 }
 
+double ToSpeedKmPH(double speed, measurement_utils::Units units)
+{
+  switch (units)
+  {
+  case Units::Imperial: return MphToKmph(speed);
+  case Units::Metric: return speed;
+  }
+  UNREACHABLE();
+}
+
 bool FormatDistance(double m, string & res)
 {
   auto units = Units::Metric;
@@ -63,7 +73,7 @@ bool FormatDistance(double m, string & res)
   case Units::Imperial: return FormatDistanceImpl(m, res, " mi", " ft", 1609.344, 0.3048);
   case Units::Metric: return FormatDistanceImpl(m, res, " km", " m", 1000.0, 1.0);
   }
-  CHECK_SWITCH();
+  UNREACHABLE();
 }
 
 
@@ -210,7 +220,7 @@ string FormatSpeedUnits(Units units)
   case Units::Imperial: return "mph";
   case Units::Metric: return "km/h";
   }
-  CHECK_SWITCH();
+  UNREACHABLE();
 }
 
 bool OSMDistanceToMeters(string const & osmRawValue, double & outMeters)

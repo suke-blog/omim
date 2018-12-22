@@ -11,21 +11,11 @@
 
 #include <boost/optional.hpp>
 
+#include <cstdint>
 #include <functional>
 #include <map>
 #include <string>
 #include <vector>
-
-enum class SearchMarkType
-{
-  Default = 0,
-  Booking,
-  LocalAds,
-  LocalAdsBooking,
-  UGC,
-  NotFound, // Service value used in developer tools.
-  Count
-};
 
 class BookmarkManager;
 
@@ -42,6 +32,7 @@ public:
   drape_ptr<SymbolNameZoomInfo> GetBadgeNames() const override;
   drape_ptr<SymbolOffsets> GetSymbolOffsets() const override;
   bool GetDepthTestEnabled() const override { return false; }
+  bool IsMarkAboveText() const override;
 
   FeatureID GetFeatureID() const override { return m_featureID; }
   void SetFoundFeature(FeatureID const & feature);
@@ -49,7 +40,10 @@ public:
   std::string const & GetMatchedName() const { return m_matchedName; }
   void SetMatchedName(std::string const & name);
 
-  void SetMarkType(SearchMarkType type);
+  void SetFromType(uint32_t type, bool hasLocalAds);
+  void SetBookingType(bool hasLocalAds);
+  void SetNotFoundType();
+
   void SetPreparing(bool isPreparing);
   void SetRating(float rating);
   void SetPricing(int pricing);
@@ -67,9 +61,11 @@ protected:
 
   bool IsBookingSpecialMark() const;
   bool IsUGCMark() const;
-  bool IsMarkWithRating() const;
+  std::string GetSymbolName() const;
+  std::string GetBadgeName() const;
 
-  SearchMarkType m_type = SearchMarkType::Default;
+  uint8_t m_type = 0;
+  bool m_hasLocalAds = false;
   FeatureID m_featureID;
   // Used to pass exact search result matched string into a place page.
   std::string m_matchedName;
@@ -78,6 +74,7 @@ protected:
   int m_pricing = 0;
   bool m_hasSale = false;
   dp::TitleDecl m_titleDecl;
+  dp::TitleDecl m_ugcTitleDecl;
 };
 
 class SearchMarks
@@ -96,7 +93,7 @@ public:
   // NOTE: Vector of features must be sorted.
   void SetSales(std::vector<FeatureID> const & features, bool hasSale);
 
-  static m2::PointD GetSize(SearchMarkType searchMarkType, ScreenBase const & modelView);
+  static bool HaveSizes() { return !m_searchMarksSizes.empty(); };
   static boost::optional<m2::PointD> GetSize(std::string const & symbolName);
 
 private:

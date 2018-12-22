@@ -20,8 +20,8 @@
 #include "coding/file_writer.hpp"
 #include "coding/hex.hpp"
 #include "coding/internal/file_data.hpp"
-#include "coding/multilang_utf8_string.hpp"
 #include "coding/sha1.hpp"
+#include "coding/string_utf8_multilang.hpp"
 #include "coding/zip_creator.hpp"
 #include "coding/zip_reader.hpp"
 
@@ -99,7 +99,7 @@ bool IsValidFilterType(BookmarkManager::CategoryFilterType const filter,
   case BookmarkManager::CategoryFilterType::Public: return fromCatalog;
   case BookmarkManager::CategoryFilterType::Private: return !fromCatalog;
   }
-  CHECK_SWITCH();
+  UNREACHABLE();
 }
 
 class FindMarkFunctor
@@ -803,6 +803,14 @@ std::string BookmarkManager::GetCategoryName(kml::MarkGroupId categoryId) const
   return category->GetName();
 }
 
+void BookmarkManager::SetCategoryDescription(kml::MarkGroupId categoryId, std::string const & desc)
+{
+  CHECK_THREAD_CHECKER(m_threadChecker, ());
+  auto category = GetBmCategory(categoryId);
+  CHECK(category != nullptr, ());
+  category->SetDescription(desc);
+}
+
 void BookmarkManager::SetCategoryName(kml::MarkGroupId categoryId, std::string const & name)
 {
   CHECK_THREAD_CHECKER(m_threadChecker, ());
@@ -825,6 +833,15 @@ void BookmarkManager::SetCategoryAccessRules(kml::MarkGroupId categoryId, kml::A
   auto category = GetBmCategory(categoryId);
   CHECK(category != nullptr, ());
   category->SetAccessRules(accessRules);
+}
+
+void BookmarkManager::SetCategoryCustomProperty(kml::MarkGroupId categoryId, std::string const & key,
+                                                std::string const & value)
+{
+  CHECK_THREAD_CHECKER(m_threadChecker, ());
+  auto category = GetBmCategory(categoryId);
+  CHECK(category != nullptr, ());
+  category->SetCustomProperty(key, value);
 }
 
 std::string BookmarkManager::GetCategoryFileName(kml::MarkGroupId categoryId) const
@@ -1012,9 +1029,9 @@ void BookmarkManager::LoadBookmarks()
     
     std::vector<std::string> cloudFilePaths;
     auto collection = LoadBookmarks(dir, filesExt, migrated ? KmlFileType::Binary : KmlFileType::Text,
-      [userId](kml::FileData const & kmlData)
+      [](kml::FileData const & kmlData)
     {
-      return ::IsMyCategory(userId, kmlData.m_categoryData) || !FromCatalog(kmlData);
+      return true;  // Allow to load any files from the bookmarks directory.
     }, cloudFilePaths);
     
     migration::FixUpHotelPlacemarks(collection, isMigrationCompleted);
@@ -1383,7 +1400,6 @@ kml::MarkGroupId BookmarkManager::CreateBookmarkCategory(std::string const & nam
   auto const groupId = UserMarkIdStorage::Instance().GetNextCategoryId();
   CHECK_EQUAL(m_categories.count(groupId), 0, ());
   m_categories[groupId] = std::make_unique<BookmarkCategory>(name, groupId, autoSave);
-  m_categories[groupId]->SetAuthor(m_user.GetUserName(), m_user.GetUserId());
   UpdateBmGroupIdList();
   m_changesTracker.OnAddGroup(groupId);
   return groupId;
@@ -1392,6 +1408,11 @@ kml::MarkGroupId BookmarkManager::CreateBookmarkCategory(std::string const & nam
 kml::MarkGroupId BookmarkManager::CheckAndCreateDefaultCategory()
 {
   CHECK_THREAD_CHECKER(m_threadChecker, ());
+  for (auto const & cat : m_categories)
+  {
+    if (IsEditableCategory(cat.first) && !IsCategoryFromCatalog(cat.first))
+      return cat.first;
+  }
   for (auto const & cat : m_categories)
   {
     if (IsEditableCategory(cat.first))
@@ -2152,7 +2173,7 @@ void BookmarkManager::ImportDownloadedFromCatalog(std::string const & id, std::s
     {
       bool const isMyCategory = ::IsMyCategory(userId, kmlData->m_categoryData);
       auto const p = base::JoinPath(isMyCategory ? GetBookmarksDirectory() : GetPrivateBookmarksDirectory(),
-                                  id, kKmbExtension);
+                                    id + kKmbExtension);
       auto collection = std::make_shared<KMLDataCollection>();
       collection->emplace_back(p, std::move(kmlData));
 
@@ -2163,16 +2184,17 @@ void BookmarkManager::ImportDownloadedFromCatalog(std::string const & id, std::s
         for (auto const & group : m_categories)
         {
           if (id == group.second->GetServerId())
-          {
-            ClearGroup(group.first);
             idsToDelete.push_back(group.first);
-          }
         }
         for (auto const & categoryId : idsToDelete)
         {
+          ClearGroup(categoryId);
           m_changesTracker.OnDeleteGroup(categoryId);
+          auto const it = m_categories.find(categoryId);
+          FileWriter::DeleteFileX(it->second->GetFileName());
           m_categories.erase(categoryId);
         }
+        UpdateBmGroupIdList();
 
         CreateCategories(std::move(*collection));
 
@@ -2268,19 +2290,20 @@ void BookmarkManager::UploadToCatalog(kml::MarkGroupId categoryId, kml::AccessRu
     CHECK(fileData != nullptr, ());
 
     auto cat = GetBmCategory(categoryId);
-    if (!originalFileExists || originalFileUnmodified ||
-        (cat != nullptr && cat->GetServerId() == fileData->m_serverId))
+
+    if (cat != nullptr && (!originalFileExists || originalFileUnmodified || cat->GetServerId() == fileData->m_serverId))
     {
-      // Update bookmarks category.
+      // Update just the bookmarks category properties in case when the category was unmodified or the category from the
+      // catalog was changed after the start of the uploading.
       {
         auto session = GetEditSession();
-        if (cat != nullptr)
-        {
-          cat->SetServerId(fileData->m_serverId);
-          cat->SetAccessRules(fileData->m_categoryData.m_accessRules);
-          cat->SetAuthor(fileData->m_categoryData.m_authorName, fileData->m_categoryData.m_authorId);
-        }
+        cat->SetServerId(fileData->m_serverId);
+        cat->SetAccessRules(fileData->m_categoryData.m_accessRules);
+        cat->SetAuthor(fileData->m_categoryData.m_authorName, fileData->m_categoryData.m_authorId);
       }
+
+      if (cat->GetID() == m_lastEditedGroupId)
+        SetLastEditedBmCategory(CheckAndCreateDefaultCategory());
 
       if (m_onCatalogUploadFinishedHandler)
         m_onCatalogUploadFinishedHandler(result, {}, categoryId, categoryId);
@@ -2296,16 +2319,17 @@ void BookmarkManager::UploadToCatalog(kml::MarkGroupId categoryId, kml::AccessRu
     auto fileDataPtr = std::make_unique<kml::FileData>();
     auto const serverId = fileData->m_serverId;
     *fileDataPtr = std::move(*fileData);
+    ResetIds(*fileDataPtr);
     KMLDataCollection collection;
     collection.emplace_back(std::make_pair("", std::move(fileDataPtr)));
     CreateCategories(std::move(collection), true /* autoSave */);
 
     kml::MarkGroupId newCategoryId = categoryId;
-    for (auto const & cat : m_categories)
+    for (auto const & category : m_categories)
     {
-      if (cat.second->GetServerId() == serverId)
+      if (category.second->GetServerId() == serverId)
       {
-        newCategoryId = cat.first;
+        newCategoryId = category.first;
         break;
       }
     }
@@ -2650,6 +2674,13 @@ void BookmarkManager::EditSession::SetCategoryName(kml::MarkGroupId categoryId, 
   m_bmManager.SetCategoryName(categoryId, name);
 }
 
+void BookmarkManager::EditSession::SetCategoryDescription(kml::MarkGroupId categoryId,
+                                                          std::string const & desc)
+{
+  CHECK(m_bmManager.IsEditableCategory(categoryId), ());
+  m_bmManager.SetCategoryDescription(categoryId, desc);
+}
+
 void BookmarkManager::EditSession::SetCategoryTags(kml::MarkGroupId categoryId, std::vector<std::string> const & tags)
 {
   CHECK(m_bmManager.IsEditableCategory(categoryId), ());
@@ -2660,6 +2691,13 @@ void BookmarkManager::EditSession::SetCategoryAccessRules(kml::MarkGroupId categ
 {
   CHECK(m_bmManager.IsEditableCategory(categoryId), ());
   m_bmManager.SetCategoryAccessRules(categoryId, accessRules);
+}
+
+void BookmarkManager::EditSession::SetCategoryCustomProperty(kml::MarkGroupId categoryId, std::string const & key,
+                                                             std::string const & value)
+{
+  CHECK(m_bmManager.IsEditableCategory(categoryId), ());
+  m_bmManager.SetCategoryCustomProperty(categoryId, key, value);
 }
 
 bool BookmarkManager::EditSession::DeleteBmCategory(kml::MarkGroupId groupId)
@@ -2674,8 +2712,11 @@ void BookmarkManager::EditSession::NotifyChanges()
 
 namespace lightweight
 {
+namespace impl
+{
 bool IsBookmarksCloudEnabled()
 {
   return Cloud::GetCloudState(kBookmarkCloudSettingsParam) == Cloud::State::Enabled;
 }
+}  // namespace impl
 }  // namespace lightweight

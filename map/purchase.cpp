@@ -59,7 +59,7 @@ std::string StartTransactionUrl()
 {
   if (kServerUrl.empty())
     return {};
-  return kServerUrl + "registrar/start_transaction";
+  return kServerUrl + "registrar/preorder";
 }
 
 struct ReceiptData
@@ -140,7 +140,7 @@ bool Purchase::IsSubscriptionActive(SubscriptionType type) const
   {
   case SubscriptionType::RemoveAds: return m_removeAdsSubscriptionData.m_isActive;
   }
-  CHECK_SWITCH();
+  UNREACHABLE();
 }
 
 void Purchase::SetSubscriptionEnabled(SubscriptionType type, bool isEnabled)
@@ -240,6 +240,10 @@ void Purchase::ValidateImpl(std::string const & url, ValidationInfo const & vali
     {
       code = ValidationCode::Verified;
     }
+    else if (resultCode == 403)
+    {
+      code = ValidationCode::AuthError;
+    }
     else if (resultCode >= 400 && resultCode < 500)
     {
       code = ValidationCode::NotVerified;
@@ -250,8 +254,10 @@ void Purchase::ValidateImpl(std::string const & url, ValidationInfo const & vali
         coding::DeserializerJson deserializer(request.ServerResponse());
         deserializer(result);
       }
-      catch(coding::DeserializerJson::Exception const &) {}
-
+      catch(std::exception const & e)
+      {
+        LOG(LWARNING, ("Bad server response. Code =", resultCode, ". Reason =", e.what()));
+      }
       if (!result.m_reason.empty())
         LOG(LWARNING, ("Validation error:", result.m_reason));
     }

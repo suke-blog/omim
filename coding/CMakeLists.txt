@@ -54,13 +54,9 @@ set(
   memory_region.hpp
   mmap_reader.cpp
   mmap_reader.hpp
-  multilang_utf8_string.cpp
-  multilang_utf8_string.hpp
   parse_xml.hpp
-  point_to_integer.cpp
-  point_to_integer.hpp
-  pointd_to_pointu.cpp
-  pointd_to_pointu.hpp
+  point_coding.cpp
+  point_coding.hpp
   polymorph_reader.hpp
   read_write_utils.hpp
   reader.cpp
@@ -73,13 +69,15 @@ set(
   reader_writer_ops.hpp
   serdes_binary_header.hpp
   serdes_json.hpp
-  simple_dense_coding.cpp
-  simple_dense_coding.hpp
   sha1.cpp
   sha1.hpp
+  simple_dense_coding.cpp
+  simple_dense_coding.hpp
   streams.hpp
   streams_common.hpp
   streams_sink.hpp
+  string_utf8_multilang.cpp
+  string_utf8_multilang.hpp
   succinct_mapper.hpp
   tesselator_decl.hpp
   text_storage.hpp

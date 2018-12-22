@@ -73,6 +73,24 @@ TCountryTreeNode const & LeafNodeFromCountryId(TCountryTree const & root,
   CHECK(node, ("Node with id =", countryId, "not found in country tree as a leaf."));
   return *node;
 }
+
+bool ValidateIntegrity(TLocalFilePtr mapLocalFile, string const & countryId, string const & source)
+{
+  int64_t const version = mapLocalFile->GetVersion();
+
+  int64_t constexpr kMinSupportedVersion = 181030;
+  if (version < kMinSupportedVersion)
+    return true;
+
+  if (mapLocalFile->ValidateIntegrity())
+    return true;
+
+  alohalytics::LogEvent("$MapIntegrityFailure",
+                        alohalytics::TStringMap({{"mwm", countryId},
+                                                 {"version", strings::to_string(version)},
+                                                 {"source", source}}));
+  return false;
+}
 }  // namespace
 
 void GetQueuedCountries(Storage::TQueue const & queue, TCountriesSet & resultCountries)
@@ -961,6 +979,14 @@ void Storage::RegisterDownloadedFiles(TCountryId const & countryId, MapOptions o
     return;
   }
 
+  static string const kSourceKey = "map";
+  if (m_integrityValidationEnabled && !ValidateIntegrity(localFile, countryId, kSourceKey))
+  {
+    base::DeleteFileX(localFile->GetPath(MapOptions::Map));
+    fn(false /* isSuccess */);
+    return;
+  }
+
   RegisterCountryFiles(localFile);
   fn(true);
 }
@@ -1139,6 +1165,11 @@ void Storage::SetDownloaderForTesting(unique_ptr<MapFilesDownloader> && download
 {
   m_downloader = move(downloader);
   LoadServerListForTesting();
+}
+
+void Storage::SetEnabledIntegrityValidationForTesting(bool enabled)
+{
+  m_integrityValidationEnabled = enabled;
 }
 
 void Storage::SetCurrentDataVersionForTesting(int64_t currentVersion)
@@ -1531,14 +1562,23 @@ void Storage::ApplyDiff(TCountryId const & countryId, function<void(bool isSucce
 
   m_diffManager.ApplyDiff(move(params), [this, fn, diffFile] (bool const result)
   {
-    GetPlatform().RunTask(Platform::Thread::Gui, [this, fn, diffFile, result]
+    bool applyResult = result;
+    static string const kSourceKey = "diff";
+    if (result && m_integrityValidationEnabled &&
+        !ValidateIntegrity(diffFile, diffFile->GetCountryName(), kSourceKey))
     {
-      if (result)
+      base::DeleteFileX(diffFile->GetPath(MapOptions::Map));
+      applyResult = false;
+    }
+
+    GetPlatform().RunTask(Platform::Thread::Gui, [this, fn, diffFile, applyResult]
+    {
+      if (applyResult)
       {
         RegisterCountryFiles(diffFile);
         Platform::DisableBackupForFile(diffFile->GetPath(MapOptions::Map));
       }
-      fn(result);
+      fn(applyResult);
     });
   });
 }

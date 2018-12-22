@@ -70,6 +70,8 @@ NSString * const kUserDefaultsLatLonAsDMSKey = @"UserDefaultsLatLonAsDMS";
   return self;
 }
 
+- (place_page::Info const &)getRawData { return m_info; }
+
 #pragma mark - Filling sections
 
 - (void)fillSections
@@ -87,6 +89,9 @@ NSString * const kUserDefaultsLatLonAsDMSKey = @"UserDefaultsLatLonAsDMS";
   m_sections.push_back(Sections::Preview);
   [self fillPreviewSection];
 
+  if ([[self placeDescription] length] && ![[self bookmarkDescription] length])
+    m_sections.push_back(Sections::Description);
+  
   // It's bookmark.
   if (m_info.IsBookmark())
     m_sections.push_back(Sections::Bookmark);
@@ -248,8 +253,7 @@ NSString * const kUserDefaultsLatLonAsDMSKey = @"UserDefaultsLatLonAsDMS";
   m_previewRows.push_back(PreviewRows::Space);
   NSAssert(!m_previewRows.empty(), @"Preview row's can't be empty!");
 
-  if (network_policy::CanUseNetwork() && ![MWMSettings adForbidden] && m_info.HasBanner() &&
-      ![self isViator])
+  if (network_policy::CanUseNetwork() && m_info.HasBanner() && ![self isViator])
   {
     __weak auto wSelf = self;
     [[MWMBannersCache cache]
@@ -519,7 +523,7 @@ NSString * const kUserDefaultsLatLonAsDMSKey = @"UserDefaultsLatLonAsDMS";
     if (bookmark)
     {
       f.ResetBookmarkInfo(*bookmark, m_info);
-      [MWMBookmarksManager deleteBookmark:bookmarkId];
+      [[MWMBookmarksManager sharedManager] deleteBookmark:bookmarkId];
     }
 
     m_sections.erase(remove(m_sections.begin(), m_sections.end(), Sections::Bookmark));
@@ -544,6 +548,15 @@ NSString * const kUserDefaultsLatLonAsDMSKey = @"UserDefaultsLatLonAsDMS";
 - (FeatureID const &)featureId { return m_info.GetID(); }
 - (NSString *)title { return @(m_info.GetTitle().c_str()); }
 - (NSString *)subtitle { return @(m_info.GetSubtitle().c_str()); }
+- (NSString *)placeDescription
+{
+  NSString * descr = @(m_info.GetDescription().c_str());
+  if (descr.length > 0)
+    descr = [NSString stringWithFormat:@"<html><body>%@</body></html>", descr];
+
+  return descr;
+}
+
 - (place_page::OpeningHours)schedule;
 {
   using type = place_page::OpeningHours;
@@ -749,7 +762,7 @@ NSString * const kUserDefaultsLatLonAsDMSKey = @"UserDefaultsLatLonAsDMS";
 
 - (BOOL)isBookmarkFromCatalog
 {
-  return self.isBookmark && [MWMBookmarksManager isCategoryFromCatalog:self.bookmarkCategoryId];
+  return self.isBookmark && [[MWMBookmarksManager sharedManager] isCategoryFromCatalog:self.bookmarkCategoryId];
 }
 
 #pragma mark - Local Ads

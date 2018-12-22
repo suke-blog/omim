@@ -9,7 +9,7 @@
 #include "indexer/classificator.hpp"
 #include "indexer/scales.hpp"
 
-#include "coding/pointd_to_pointu.hpp"
+#include "coding/point_coding.hpp"
 
 #include "geometry/polygon.hpp"
 #include "geometry/region2d.hpp"
@@ -254,9 +254,9 @@ class WorldMapGenerator
 
 public:
   explicit WorldMapGenerator(feature::GenerateInfo const & info)
-      : m_worldBucket(info),
-        m_merger(POINT_COORD_BITS - (scales::GetUpperScale() - scales::GetUpperWorldScale()) / 2),
-        m_boundaryChecker(info)
+    : m_worldBucket(info)
+    , m_merger(kPointCoordBits - (scales::GetUpperScale() - scales::GetUpperWorldScale()) / 2)
+    , m_boundaryChecker(info)
   {
     // Do not strip last types for given tags,
     // for example, do not cut 'admin_level' in  'boundary-administrative-XXX'.
@@ -368,7 +368,7 @@ private:
       return false;
 
     // todo(@t.yan): adjust
-    uint8_t const kPopularityThreshold = 40;
+    uint8_t const kPopularityThreshold = 11;
     if (it->second < kPopularityThreshold)
       return false;
 

@@ -5,8 +5,7 @@
 
 #include "coding/file_container.hpp"
 #include "coding/file_writer.hpp"
-#include "coding/point_to_integer.hpp"
-#include "coding/pointd_to_pointu.hpp"
+#include "coding/point_coding.hpp"
 #include "coding/varint.hpp"
 #include "coding/write_to_sink.hpp"
 
@@ -144,7 +143,7 @@ namespace feature
   {
     ReaderSource<ModelReaderPtr> src(r);
     int64_t const base = ReadPrimitiveFromSource<int64_t>(src);
-    m_codingParams = serial::GeometryCodingParams(POINT_COORD_BITS, base);
+    m_codingParams = serial::GeometryCodingParams(kPointCoordBits, base);
 
     m_bounds.first = ReadVarInt<int64_t>(src) + base;
     m_bounds.second = ReadVarInt<int64_t>(src) + base;

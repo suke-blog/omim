@@ -23,6 +23,7 @@
 #include "Framework.h"
 
 #include "map/bookmark.hpp"
+#include "map/utils.hpp"
 
 #include "geometry/distance_on_sphere.hpp"
 
@@ -65,7 +66,18 @@ void logSponsoredEvent(MWMPlacePageData * data, NSString * eventName)
   }
 
   [Statistics logEvent:eventName withParameters:stat atLocation:[MWMLocationManager lastLocation]];
+}
+
+void RegisterEventIfPossible(eye::MapObject::Event::Type const type, place_page::Info const & info)
+{
+  auto const userPos = GetFramework().GetCurrentPosition();
+  if (userPos)
+  {
+    auto const mapObject = utils::MakeEyeMapObject(info);
+    if (!mapObject.IsEmpty())
+      eye::Eye::Event::MapObjectEvent(mapObject, type, userPos.get());
   }
+}
 }  // namespace
 
 @interface MWMPlacePageManager ()<MWMFrameworkStorageObserver, MWMPlacePageLayoutDelegate,
@@ -82,6 +94,13 @@ void logSponsoredEvent(MWMPlacePageData * data, NSString * eventName)
 @end
 
 @implementation MWMPlacePageManager
+
+- (void)showReview:(place_page::Info const &)info
+{
+  [self show:info];
+  [self showUGCAddReview:MWMRatingSummaryViewValueTypeNoValue
+              fromSource:MWMUGCReviewSourceNotification];
+}
 
 - (void)show:(place_page::Info const &)info
 {
@@ -100,7 +119,7 @@ void logSponsoredEvent(MWMPlacePageData * data, NSString * eventName)
   }
 
   [MWMLocationManager addObserver:self];
-  [MWMBookmarksManager addObserver:self];
+  [[MWMBookmarksManager sharedManager] addObserver:self];
 
   [self setupSpeedAndDistance];
 
@@ -114,14 +133,12 @@ void logSponsoredEvent(MWMPlacePageData * data, NSString * eventName)
 {
   [self.layout close];
   self.data = nil;
-  [MWMBookmarksManager removeObserver:self];
+  [[MWMBookmarksManager sharedManager] removeObserver:self];
   [MWMLocationManager removeObserver:self];
   [MWMFrameworkListener removeObserver:self];
 }
 
 #pragma mark - MWMBookmarksObserver
-
-- (void)onConversionFinish:(BOOL)success {}
 
 - (void)onBookmarkDeleted:(MWMMarkID)bookmarkId
 {
@@ -436,6 +453,7 @@ void logSponsoredEvent(MWMPlacePageData * data, NSString * eventName)
   auto data = self.data;
   if (!data)
     return;
+  RegisterEventIfPossible(eye::MapObject::Event::Type::AddToBookmark, data.getRawData);
   [Statistics logEvent:kStatBookmarkCreated];
   [data updateBookmarkStatus:YES];
   [self.layout reloadBookmarkSection:YES];
@@ -457,6 +475,11 @@ void logSponsoredEvent(MWMPlacePageData * data, NSString * eventName)
   auto data = self.data;
   if (data)
     [self.ownerViewController openBookmarkEditorWithData:data];
+}
+
+- (void)showPlaceDescription:(NSString *)htmlString
+{
+  [self.ownerViewController openFullPlaceDescriptionWithHtml:htmlString];
 }
 
 - (void)book:(BOOL)isDescription
@@ -578,7 +601,7 @@ void logSponsoredEvent(MWMPlacePageData * data, NSString * eventName)
   [[MapViewController sharedController].navigationController pushViewController:galleryVc animated:YES];
 }
 
-- (void)showUGCAddReview:(MWMRatingSummaryViewValueType)value fromPreview:(BOOL)fromPreview
+- (void)showUGCAddReview:(MWMRatingSummaryViewValueType)value fromSource:(MWMUGCReviewSource)source
 {
   auto data = self.data;
   if (!data)
@@ -591,13 +614,26 @@ void logSponsoredEvent(MWMPlacePageData * data, NSString * eventName)
                                                        maxValue:5.0f]];
   auto title = data.title;
 
+  RegisterEventIfPossible(eye::MapObject::Event::Type::UgcEditorOpened, data.getRawData);
+  NSString * sourceString;
+  switch (source) {
+    case MWMUGCReviewSourcePlacePage:
+      sourceString = kStatPlacePage;
+      break;
+    case MWMUGCReviewSourcePlacePagePreview:
+      sourceString = kStatPlacePagePreview;
+      break;
+    case MWMUGCReviewSourceNotification:
+      sourceString = kStatNotification;
+      break;
+  }
   [Statistics logEvent:kStatUGCReviewStart
         withParameters:@{
           kStatIsAuthenticated: @([MWMAuthorizationViewModel isAuthenticated]),
           kStatIsOnline:
               @(GetPlatform().ConnectionStatus() != Platform::EConnectionType::CONNECTION_NONE),
           kStatMode: kStatAdd,
-          kStatFrom: fromPreview ? kStatPlacePagePreview : kStatPlacePage
+          kStatFrom: sourceString
         }];
   auto ugcReviewModel =
       [[MWMUGCReviewModel alloc] initWithReviewValue:value ratings:ratings title:title text:@""];
@@ -609,6 +645,9 @@ void logSponsoredEvent(MWMPlacePageData * data, NSString * eventName)
                                                          NSAssert(false, @"");
                                                          return;
                                                        }
+                                                       RegisterEventIfPossible(
+                                                           eye::MapObject::Event::Type::UgcSaved,
+                                                           data.getRawData);
                                                        [data setUGCUpdateFrom:model];
                                                      }];
   [[MapViewController sharedController].navigationController pushViewController:ugcVC animated:YES];

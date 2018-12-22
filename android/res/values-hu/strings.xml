@@ -183,35 +183,41 @@
 	<string name="search_mode_nearme">A közelben</string>
 	<!-- Do search in current viewport only -->
 	<string name="search_mode_viewport">A képernyőn</string>
-	<!-- Search Suggestion -->
-	<string name="food">Élelmiszer</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for cafes, bars, restaurants -->
+	<string name="eat">Hol lehet enni valamit</string>
+	<!-- Search category for grocery stores -->
+	<string name="food">Termékek</string>
+	<!-- Search category -->
 	<string name="transport">Közlekedés</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="fuel">Benzinkút</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="parking">Parkoló</string>
-	<!-- Search Suggestion -->
-	<string name="shop">Bolt</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for clothes/shoes/gifts/jewellery/sport shops -->
+	<string name="shopping">Bevásárlás</string>
+	<!-- Search category -->
 	<string name="hotel">Szálloda</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="tourism">Látnivaló</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="entertainment">Szórakozás</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="atm">Pénzautomata</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for nightclubs/bars -->
+	<string name="nightlife">Éjjeli élet</string>
+	<!-- Search category for water park/disneyland/playground/toys store -->
+	<string name="children">Pihenés a gyerekekkel</string>
+	<!-- Search category -->
 	<string name="bank">Bank</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="pharmacy">Gyógyszertár</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="hospital">Kórház</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="toilet">Mosdó</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="post">Posta</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="police">Rendőrség</string>
 	<!-- String in search result list, when nothing found -->
 	<string name="no_search_results_found">Nincs keresési találat</string>
@@ -403,7 +409,7 @@
 	<string name="email_error_title">Hiba az email küldése során</string>
 	<!-- Settings item title -->
 	<string name="pref_calibration_title">Iránytű kalibrálás</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="wifi">WiFi</string>
 	<!-- Update map suggestion -->
 	<string name="routing_map_outdated">Kérjük, útvonal létrehozásához frissítsd a térképet.</string>
@@ -1388,6 +1394,84 @@
 	<string name="subscription_terms">A vásárlás megerősítésekor az összeg az iTunes számládra lesz terhelve. Az előfizetés automatikusan megújul, ha csak az automatikus megújítást 24 órával a jelenlegi időszak vége előtt ki nem kapcsolod. A számlád az előfizetésednek megfelelően a jelenlegi időszak lejárta előtti 24 órában lesz megterhelve. Az automatikus megújítást az Apple ID fiókod beállításaidban az előfizetés bármely szakaszában kikapcsolhatod.</string>
 	<string name="subscriptions_title">Előfizetések</string>
 	<string name="manage_subscription">Előfizetés kezelése</string>
+	<string name="sharing_options">A hozzáférés beállításai</string>
+	<string name="export_file">Fájl exportálása</string>
+	<string name="list_settings">Lista beállításai</string>
+	<string name="delete_list">Törölni a listát</string>
+	<string name="hide_from_map">Lefedés a térképen</string>
+	<string name="ugc_route_tags_screen_label">A tag-ek kiválasztása</string>
+	<string name="ugc_route_tags_progress_msg">Tag-ek betöltése…</string>
+	<string name="ugc_route_tags_desc">Kérjük, válassza ki a tag-ket, hogy segítsen a többi utazónak megtalálni az Ön útikalauzát. Ez kötelező.</string>
+	<string name="public_access">Nyílt hozzáférés</string>
+	<string name="limited_access">Személyes hozzáférés</string>
+	<string name="upload_and_publish_desc">Ez az útikalauz a MAPS.ME nyitott katalógusba lesz feltöltve, és mindenki számára elérhető lesz</string>
+	<string name="upload_and_publish">Feltöltés és megjelenítés</string>
+	<string name="upload_and_get_direct_link">Feltöltés és hivatkozás elérése</string>
+	<string name="get_direct_link_desc">Az Ön útikalauza egyenes hivatkozásban lesz elérhető</string>
+	<string name="upload_and_publish_progress_text">Az útikalauz megjelenítődik…</string>
+	<string name="upload_and_publish_success">Az útikalauz meg van jelenítve</string>
+	<string name="ugc_routes_user_agreement">&lt;b>FIGYELEM:&lt;/b> folytatva, Ön elfogadja &lt;a href="%s">licensz szerződést&lt;/a></string>
+	<string name="ugc_route_edit_list_name">Az útikalauz megnevezése</string>
+	<string name="ugc_route_edit_description_hint">Leírás hozzáadása (szöveg vagy html)</string>
+	<string name="not_shared">Privát</string>
+	<string name="direct_link_progress_text">Betöltjük az Ön fájlát…</string>
+	<string name="direct_link_success">A hivatkozás létre van hozva</string>
+	<string name="edit_guide_title">Szerkessze az útikalauzát online</string>
+	<string name="edit_guide_subtitle">A web alkalmazáson keresztül kapjon hivatkozást az útikalauzának szerkesztésére: adjon hozzá helyek ismertetését, töltsön fel fényképeket és kösse össze a jeleket vonalakkal.</string>
+	<string name="send_a_link_btn">Hivatkozás küldése</string>
+	<string name="upload_error_toast">A fájl feltöltésekor hiba történt</string>
+	<string name="tags_loading_error_subtitle">A tag-ek feltöltésekor hiba történt, kérjük próbálja meg még egyszer</string>
+	<string name="unable_upload_errorr_title">Nem sikerült a fájl feltöltése</string>
+	<string name="unable_upload_error_subtitle_edited">A fájl a web alkalmazáson keresztül volt újraszerkesztve</string>
+	<string name="unable_upload_error_subtitle_broken">A fájl sérült és nem lehet feltölteni. Kérjük, más fájlt töltsön fel.</string>
+	<string name="buy_btn">%s- ért vásárolni</string>
+	<string name="download_guide_progress">Az útikalauz töltődik…</string>
+	<string name="price_error_title">Lehetetlen megtudni az értékét</string>
+	<string name="price_error_subtitle">Kérem egy néhány perc múlva próbálkozzon újra</string>
+	<string name="edit_your_guide_email_body">Szerkessze az Ön útikalauzát a számítógépen: adjon hozzá helyek ismertetését, töltsön fel fényképeket és kösse össze a jeleket vonalakkal.</string>
+	<string name="edit_on_web">Online szerkesztés</string>
+	<string name="properties_loading_error_subtitle">Az opciók feltöltésekor hiba történt, kérjük, próbálja meg még egyszer</string>
+	<string name="custom_props_desc">Ezt az útikalauzt Ön úgy állította össze, mint</string>
+	<string name="custom_props_title">Helyi lakos vagy turista</string>
+	<string name="custom_props_local">helyi lakos</string>
+	<string name="custom_props_traveler">turista</string>
+	<string name="select_properties">Opció kiválasztása</string>
+	<string name="access_rules_p_to_p">Speciális hozzáférés</string>
+	<string name="access_rules_paid">Megvásárolt</string>
+	<string name="failed_purchase_support_message">Úgy látszik, hogy Önnek van egy be nem fejezett vásárlása. Kérjük, írjon a támogatásba, és mi megoldjuk az Ön problémáját.</string>
+	<string name="contact">Írás</string>
+	<string name="check_price_button">Az ár tudakolozása</string>
+	<string name="download_button">Letöltés</string>
+	<string name="speedcams_alert_title">Sebességmérő kamerák</string>
+	<string name="speedcams_alert_subtitle">Figyelmeztetés a sebessség korlátozására</string>
+	<string name="speedcam_option_auto">Autó</string>
+	<string name="speedcam_option_always">Mindig</string>
+	<string name="speedcam_option_never">Soha</string>
+	<string name="bookmark_description_title">A jel ismertetése</string>
+	<string name="place_description_title">A hely ismertetése</string>
+	<string name="ugc_routes_error_uploading_file_toast">Sajnálatos módon, a jelek letöltésénél hiba történt. Kérem, próbálja meg még egyszer.</string>
+	<string name="notification_channel_ugc">Felhasználói tartalom</string>
+	<!-- this text will be shown in application notification preferences opposite checkbox which enable/disable downloader notifications. Devices on Android 8+ are affected. -->
+	<string name="notification_channel_downloader">Kártyák letöltése</string>
+	<string name="notification_leave_review_title">%s - hogy érzi itt magát?</string>
+	<string name="notification_leave_review_content">Írja meg a véleményét és segítsen a kirándulóknak!</string>
+	<string name="share_bookmarks_email_body_link">Üdvözlöm!\n\nA jeleit le lehet tölteni ezzel a linkkel: %s. Nyíssa meg a listát MAPS.ME segítségével és élvezze az utazását!\n\nAlkalmazás letöltése: http://maps.me/get?kmz</string>
+	<string name="warning_speedcams_title">Navigátor értesít a kamerákról sebességkorlátozás megsértésénél %d km/óra-ra</string>
+	<string name="warning_speedcams_subtitle">Ne felejtse el megismerkedni a cél ország közlekedési szabályaival.</string>
+	<string name="speedcams_notice_message">Autó - Figyelmeztetés a sebesség kamerákról, ha van kockázat a sebesség korlátozás megsértéséről\nMindig - Mindig figyelmeztet a kamerákról\nSoha - Soha ne figyelmezet a kamerákról</string>
+	<string name="whats_new_ugc_routes_title">Könnyű megosztani a benyomásaidat</string>
+	<string name="whats_new_ugc_routes_subtitle">Ments el emlékezetes helyeket, hozz létre útvonalakat könyvjelzők segítségével és oszd meg őket mindenkivel a MAPS.ME katalógusban.</string>
+	<string name="whats_new_webeditor_title">Alakítsd át az útvonalaidat történetekké</string>
+	<string name="whats_new_ugc_routes_message2">Adj hozzá fényképeket és részletes történeteket a webes szerkesztőben.</string>
+	<string name="whatsnew_standard_routes_title">Normál útvonalak</string>
+	<string name="whatsnew_standard_routes_message">A látnivalók alapvető gyűjteménye és rövid leírásuk, de sok-sok tapasztalat!</string>
+	<string name="whatsnew_city_overview_title">Város áttekintése</string>
+	<string name="whatsnew_city_overview_message">Akár 200 érdekesség a város térképén: minden, amit az utazók hasznosnak vagy érdekesnek találhatnak!</string>
+	<string name="whatsnew_pro_guides_title">Profi útvonalak</string>
+	<string name="whatsnew_pro_guides_message">A helyek nagyon alapos és részletes leírása és lehetőség az utazás távolságának és idejének kiszámítására</string>
+	<string name="whatsnew_paid_routes_title">Új tapasztalatok!</string>
+	<string name="whatsnew_paid_routes_message">Az ingyenes útvonalakon felül 3 fizetős útvonalkategóriát is hozzáadtunk a katalógusunkhoz. Több mint 700 új útvonal!</string>
+	<string name="whats_new_ugc_routes_title_android_only">Könnyű megosztani a benyomásaidat</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Felvonóállomás</string>
@@ -1489,6 +1573,7 @@
 	<string name="type.barrier.lift_gate">Sorompó</string>
 	<string name="type.barrier.stile">Átjáró</string>
 	<string name="type.barrier.toll_booth">Díjfizető kapu</string>
+	<string name="type.boundary.national_park">Nemzeti park</string>
 	<string name="type.building">Épület</string>
 	<string name="type.building.address">Épület</string>
 	<string name="type.building.garage">Garázs</string>
@@ -1724,6 +1809,7 @@
 	<string name="type.leisure.fitness_station">Fitness állomás</string>
 	<string name="type.leisure.garden">Kert</string>
 	<string name="type.leisure.golf_course">Golfpálya</string>
+	<string name="type.leisure.nature_reserve">Védett terület</string>
 	<string name="type.leisure.pitch">Sportpálya</string>
 	<string name="type.leisure.pitch.tennis">Sportpálya</string>
 	<string name="type.leisure.playground">Játszótér</string>
@@ -1747,7 +1833,10 @@
 	<string name="type.man_made.windmill">Szélmalom</string>
 	<string name="type.natural.bay">Öböl</string>
 	<string name="type.natural.beach">Strand</string>
+	<string name="type.natural.cape">Hegytető</string>
 	<string name="type.natural.cave_entrance">Barlangbejárat</string>
+	<string name="type.natural.geyser">Gejzír</string>
+	<string name="type.natural.glacier">Gleccser</string>
 	<string name="type.natural.lake">Tó</string>
 	<string name="type.natural.peak">Csúcs</string>
 	<string name="type.natural.pond">Tavacska</string>

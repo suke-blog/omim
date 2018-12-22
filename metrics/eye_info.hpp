@@ -1,18 +1,19 @@
 #pragma once
 
-#include "storage/index.hpp"
+#include "coding/point_coding.hpp"
 
-#include "geometry/latlon.hpp"
+#include "geometry/mercator.hpp"
 #include "geometry/point2d.hpp"
+#include "geometry/tree4d.hpp"
 
 #include "base/visitor.hpp"
 
 #include <array>
 #include <chrono>
 #include <cstdint>
+#include <deque>
 #include <string>
 #include <type_traits>
-#include <unordered_map>
 #include <vector>
 
 namespace eye
@@ -46,6 +47,7 @@ class Counters<T, R, EnableIfIsEnumWithCount<T>>
 public:
   void Increment(T const key)
   {
+    CHECK_NOT_EQUAL(key, T::Count, ());
     ++m_counters[static_cast<size_t>(key)];
   }
 
@@ -67,19 +69,28 @@ enum class Version : int8_t
   Latest = V0
 };
 
+inline std::string DebugPrint(Version const & version)
+{
+  switch (version)
+  {
+    case Version::Unknown: return "Unknown";
+    case Version::V0: return "V0";
+  }
+}
+
 using Clock = std::chrono::system_clock;
 using Time = Clock::time_point;
 
 struct Booking
 {
-  DECLARE_VISITOR(visitor(m_lastFilterUsedTime, "last_filter_used_time"))
+  DECLARE_VISITOR_AND_DEBUG_PRINT(Booking, visitor(m_lastFilterUsedTime, "last_filter_used_time"))
 
   Time m_lastFilterUsedTime;
 };
 
 struct Bookmarks
 {
-  DECLARE_VISITOR(visitor(m_lastOpenedTime, "last_use_time"))
+  DECLARE_VISITOR_AND_DEBUG_PRINT(Bookmarks, visitor(m_lastOpenedTime, "last_use_time"))
 
   Time m_lastOpenedTime;
 };
@@ -101,9 +112,9 @@ struct Discovery
     Count
   };
 
-  DECLARE_VISITOR(visitor(m_eventCounters, "event_counters"),
-                  visitor(m_lastOpenedTime, "last_opened_time"),
-                  visitor(m_lastClickedTime, "last_clicked_time"))
+  DECLARE_VISITOR_AND_DEBUG_PRINT(Discovery, visitor(m_eventCounters, "event_counters"),
+                                  visitor(m_lastOpenedTime, "last_opened_time"),
+                                  visitor(m_lastClickedTime, "last_clicked_time"))
 
   Counters<Event, uint32_t> m_eventCounters;
   Time m_lastOpenedTime;
@@ -118,8 +129,8 @@ struct Layer
     PublicTransport
   };
 
-  DECLARE_VISITOR(visitor(m_type, "type"), visitor(m_useCount, "use_count"),
-                  visitor(m_lastTimeUsed, "last_time_used"))
+  DECLARE_VISITOR_AND_DEBUG_PRINT(Layer, visitor(m_type, "type"), visitor(m_useCount, "use_count"),
+                                  visitor(m_lastTimeUsed, "last_time_used"))
 
   Type m_type;
   uint64_t m_useCount = 0;
@@ -150,8 +161,9 @@ struct Tip
     Count
   };
 
-  DECLARE_VISITOR(visitor(m_type, "type"), visitor(m_eventCounters, "event_counters"),
-                  visitor(m_lastShownTime, "last_shown_time"))
+  DECLARE_VISITOR_AND_DEBUG_PRINT(Tip, visitor(m_type, "type"),
+                                  visitor(m_eventCounters, "event_counters"),
+                                  visitor(m_lastShownTime, "last_shown_time"))
 
   Type m_type;
   Counters<Event, uint32_t> m_eventCounters;
@@ -160,8 +172,9 @@ struct Tip
 
 using Tips = std::vector<Tip>;
 
-struct MapObject
+class MapObject
 {
+public:
   struct Event
   {
     enum class Type : uint8_t
@@ -177,36 +190,92 @@ struct MapObject
                     visitor(m_eventTime, "event_time"));
 
     Type m_type;
-    ms::LatLon m_userPos;
+    m2::PointD m_userPos;
     Time m_eventTime;
   };
 
-  struct Hash
+  using Events = std::deque<Event>;
+
+  MapObject() = default;
+
+  MapObject(std::string const & bestType, m2::PointD const & pos, std::string const & readableName)
+    : m_bestType(bestType)
+    , m_pos(pos)
+    , m_readableName(readableName)
+    , m_limitRect(MercatorBounds::ClampX(pos.x - kMwmPointAccuracy),
+                  MercatorBounds::ClampY(pos.y - kMwmPointAccuracy),
+                  MercatorBounds::ClampX(pos.x + kMwmPointAccuracy),
+                  MercatorBounds::ClampY(pos.y + kMwmPointAccuracy))
   {
-    size_t operator()(MapObject const & p) const
-    {
-      return base::Hash(base::Hash(p.m_pos.lat, p.m_pos.lon),
-                        base::Hash(p.m_bestType, p.m_bestType));
-    }
-  };
+  }
 
   bool operator==(MapObject const & rhs) const
   {
-    return m_pos == rhs.m_pos && m_bestType == rhs.m_bestType;
+    return GetPos() == rhs.GetPos() && GetBestType() == rhs.GetBestType() &&
+           GetDefaultName() == rhs.GetDefaultName();
   }
 
+  bool operator!=(MapObject const & rhs) const { return !((*this) == rhs); }
+
+  bool AlmostEquals(MapObject const & rhs) const
+  {
+    return GetPos().EqualDxDy(rhs.GetPos(), kMwmPointAccuracy) &&
+           GetBestType() == rhs.GetBestType() && GetDefaultName() == rhs.GetDefaultName();
+  }
+
+  std::string const & GetBestType() const { return m_bestType; }
+
+  void SetBestType(std::string const & bestType) { m_bestType = bestType; }
+
+  m2::PointD const & GetPos() const { return m_pos; }
+
+  void SetPos(m2::PointD const & pos)
+  {
+    m_pos = pos;
+    m_limitRect = MercatorBounds::RectByCenterXYAndOffset(pos, kMwmPointAccuracy);
+  }
+
+  std::string const & GetDefaultName() const { return m_defaultName; }
+
+  void SetDefaultName(std::string const & defaultName) { m_defaultName = defaultName; }
+
+  std::string const & GetReadableName() const { return m_readableName; }
+
+  void SetReadableName(std::string const & readableName) { m_readableName = readableName; }
+
+  MapObject::Events & GetEditableEvents() const { return m_events; }
+
+  MapObject::Events const & GetEvents() const { return m_events; }
+
+  m2::RectD GetLimitRect() const { return m_limitRect; }
+
+  bool IsEmpty() const { return m_bestType.empty(); }
+
+  DECLARE_VISITOR(visitor(m_bestType, "type"), visitor(m_pos, "pos"),
+                  visitor(m_readableName, "readable_name"), visitor(m_defaultName, "default_name"),
+                  visitor(m_events, "events"));
+
+private:
   std::string m_bestType;
-  ms::LatLon m_pos;
+  m2::PointD m_pos;
+  std::string m_defaultName;
+  std::string m_readableName;
+  // Mutable because of interface of the m4::Tree provides constant references in ForEach methods,
+  // but we need to add events into existing objects to avoid some overhead (copy + change +
+  // remove + insert operations). The other solution is to use const_cast in ForEach methods.
+  mutable MapObject::Events m_events;
+  m2::RectD m_limitRect;
 };
 
-using MapObjects = std::unordered_map<MapObject, std::vector<MapObject::Event>, MapObject::Hash>;
+using MapObjects = m4::Tree<MapObject>;
 
 struct InfoV0
 {
   static Version GetVersion() { return Version::V0; }
-  DECLARE_VISITOR(visitor(m_booking, "booking"), visitor(m_bookmarks, "bookmarks"),
-                  visitor(m_discovery, "discovery"), visitor(m_layers, "layers"),
-                  visitor(m_tips, "tips"))
+  DECLARE_VISITOR_AND_DEBUG_PRINT(InfoV0, visitor(m_booking, "booking"),
+                                  visitor(m_bookmarks, "bookmarks"),
+                                  visitor(m_discovery, "discovery"), visitor(m_layers, "layers"),
+                                  visitor(m_tips, "tips"))
 
   Booking m_booking;
   Bookmarks m_bookmarks;
@@ -246,6 +315,22 @@ inline std::string DebugPrint(Layer::Type const & type)
   {
   case Layer::Type::TrafficJams: return "TrafficJams";
   case Layer::Type::PublicTransport: return "PublicTransport";
+  }
+}
+
+inline std::string DebugPrint(Discovery::Event const & event)
+{
+  switch (event)
+  {
+    case Discovery::Event::HotelsClicked: return "HotelsClicked";
+    case Discovery::Event::AttractionsClicked: return "AttractionsClicked";
+    case Discovery::Event::CafesClicked: return "CafesClicked";
+    case Discovery::Event::LocalsClicked: return "LocalsClicked";
+    case Discovery::Event::MoreHotelsClicked: return "MoreHotelsClicked";
+    case Discovery::Event::MoreAttractionsClicked: return "MoreAttractionsClicked";
+    case Discovery::Event::MoreCafesClicked: return "MoreCafesClicked";
+    case Discovery::Event::MoreLocalsClicked: return "MoreLocalsClicked";
+    case Discovery::Event::Count: return "Count";
   }
 }
 

@@ -71,4 +71,17 @@ void EyeForTesting::AppendLayer(Layer::Type type)
 {
   Eye::Instance().RegisterLayerShown(type);
 }
+
+// static
+void EyeForTesting::TrimExpiredMapObjectEvents()
+{
+  Eye::Instance().TrimExpiredMapObjectEvents();
+}
+
+// static
+void EyeForTesting::RegisterMapObjectEvent(MapObject const & mapObject, MapObject::Event::Type type,
+                                           m2::PointD const & userPos)
+{
+  Eye::Instance().RegisterMapObjectEvent(mapObject, type, userPos);
+}
 }  // namespace eye

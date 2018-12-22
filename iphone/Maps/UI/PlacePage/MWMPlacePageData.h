@@ -41,6 +41,7 @@ enum class Sections
 {
   Preview,
   Bookmark,
+  Description,
   HotelPhotos,
   HotelDescription,
   HotelFacilities,
@@ -159,6 +160,8 @@ using NewSectionsAreReady = void (^)(NSRange const & range, MWMPlacePageData * d
 // ready callback will be called from main queue.
 - (instancetype)initWithPlacePageInfo:(place_page::Info const &)info;
 
+- (place_page::Info const &)getRawData;
+
 - (void)fillSections;
 
 - (void)updateBookmarkStatus:(BOOL)isBookmark;
@@ -170,6 +173,7 @@ using NewSectionsAreReady = void (^)(NSRange const & range, MWMPlacePageData * d
 // Regular
 - (NSString *)title;
 - (NSString *)subtitle;
+- (NSString *)placeDescription;
 - (place_page::OpeningHours)schedule;
 - (NSString *)address;
 

@@ -12,6 +12,7 @@
 #include "routing/online_absent_fetcher.hpp"
 #include "routing/route.hpp"
 #include "routing/routing_helpers.hpp"
+#include "routing/speed_camera.hpp"
 
 #include "routing_common/num_mwm_id.hpp"
 
@@ -26,7 +27,7 @@
 
 #include "coding/file_reader.hpp"
 #include "coding/file_writer.hpp"
-#include "coding/multilang_utf8_string.hpp"
+#include "coding/string_utf8_multilang.hpp"
 
 #include "platform/country_file.hpp"
 #include "platform/mwm_traits.hpp"
@@ -34,6 +35,7 @@
 #include "platform/socket.hpp"
 
 #include "base/scope_guard.hpp"
+#include "base/string_utils.hpp"
 
 #include "3party/Alohalytics/src/alohalytics.h"
 #include "3party/jansson/myjansson.hpp"
@@ -205,7 +207,7 @@ VehicleType GetVehicleType(RouterType routerType)
   case RouterType::Transit: return VehicleType::Transit;
   case RouterType::Count: CHECK(false, ("Invalid type", routerType)); return VehicleType::Count;
   }
-  CHECK_SWITCH();
+  UNREACHABLE();
 }
 }  // namespace
 
@@ -268,6 +270,37 @@ RoutingManager::RoutingManager(Callbacks && callbacks, Delegate & delegate)
         OnRoutePointPassed(RouteMarkType::Finish, 0);
       else
         OnRoutePointPassed(RouteMarkType::Intermediate, passedCheckpointIdx - 1);
+    });
+  });
+
+  m_routingSession.SetSpeedCamShowCallback([this](m2::PointD const & point, double cameraSpeedKmPH)
+  {
+    GetPlatform().RunTask(Platform::Thread::Gui, [this, point, cameraSpeedKmPH]()
+    {
+      auto editSession = m_bmManager->GetEditSession();
+      auto mark = editSession.CreateUserMark<SpeedCameraMark>(point);
+
+      mark->SetIndex(0);
+      if (cameraSpeedKmPH == SpeedCameraOnRoute::kNoSpeedInfo)
+        return;
+
+      double speed = cameraSpeedKmPH;
+      measurement_utils::Units units = measurement_utils::Units::Metric;
+      if (!settings::Get(settings::kMeasurementUnits, units))
+        units = measurement_utils::Units::Metric;
+
+      if (units == measurement_utils::Units::Imperial)
+        speed = measurement_utils::KmphToMph(cameraSpeedKmPH);
+
+      mark->SetTitle(strings::to_string(static_cast<int>(speed + 0.5)));
+    });
+  });
+
+  m_routingSession.SetSpeedCamClearCallback([this]()
+  {
+    GetPlatform().RunTask(Platform::Thread::Gui, [this]()
+    {
+      m_bmManager->GetEditSession().ClearGroup(UserMark::Type::SPEED_CAM);
     });
   });
 }
@@ -424,6 +457,7 @@ void RoutingManager::RemoveRoute(bool deactivateFollowing)
   GetPlatform().RunTask(Platform::Thread::Gui, [this, deactivateFollowing]()
   {
     m_bmManager->GetEditSession().ClearGroup(UserMark::Type::TRANSIT);
+    m_bmManager->GetEditSession().ClearGroup(UserMark::Type::SPEED_CAM);
 
     if (deactivateFollowing)
       SetPointsFollowingMode(false /* enabled */);
@@ -868,6 +902,8 @@ void RoutingManager::BuildRoute(uint32_t timeoutSec)
     GetPlatform().GetMarketingService().SendPushWooshTag(tag);
   }
 
+  CallRouteBuildStart(routePoints);
+
   if (IsRoutingActive())
     CloseRouting(false /* remove route points */);
 
@@ -937,6 +973,11 @@ void RoutingManager::CallRouteBuilded(RouterResultCode code,
                                       storage::TCountriesVec const & absentCountries)
 {
   m_routingBuildingCallback(code, absentCountries);
+}
+
+void RoutingManager::CallRouteBuildStart(std::vector<RouteMarkData> const & points)
+{
+  m_routingStartBuildCallback(points);
 }
 
 void RoutingManager::MatchLocationToRoute(location::GpsInfo & location,
@@ -1348,4 +1389,9 @@ void RoutingManager::SetSubroutesVisibility(bool visible)
   lock_guard<mutex> lockSubroutes(m_drapeSubroutesMutex);
   for (auto const & subrouteId : m_drapeSubroutes)
     lock.Get()->SetSubrouteVisibility(subrouteId, visible);
+}
+
+bool RoutingManager::IsSpeedLimitExceeded() const
+{
+  return m_routingSession.IsSpeedLimitExceeded();
 }

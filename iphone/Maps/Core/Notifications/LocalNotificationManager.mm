@@ -3,6 +3,7 @@
 #import "MWMStorage.h"
 #import "MapViewController.h"
 #import "Statistics.h"
+#import "SwiftBridge.h"
 #import "3party/Alohalytics/src/alohalytics_objc.h"
 
 #include "Framework.h"
@@ -18,6 +19,7 @@ namespace
 {
 NSString * const kLocalNotificationNameKey = @"LocalNotificationName";
 NSString * const kUGCNotificationValue = @"UGC";
+NSString * const kReviewNotificationValue = @"ReviewNotification";
 NSString * const kDownloadNotificationValue = @"Download";
 NSString * const kDownloadMapActionKey = @"DownloadMapActionKey";
 NSString * const kDownloadMapActionName = @"DownloadMapActionName";
@@ -38,6 +40,7 @@ using namespace storage;
 @property(copy, nonatomic) CompletionHandler downloadMapCompletionHandler;
 @property(weak, nonatomic) NSTimer * timer;
 @property(copy, nonatomic) MWMVoidBlock onTap;
+@property(copy, nonatomic) MWMVoidBlock onReviewNotification;
 
 @end
 
@@ -79,7 +82,7 @@ using namespace storage;
 
   using namespace lightweight;
   lightweight::Framework const f(REQUEST_TYPE_NUMBER_OF_UNSENT_UGC | REQUEST_TYPE_USER_AUTH_STATUS);
-  if (f.Get<REQUEST_TYPE_USER_AUTH_STATUS>() || f.Get<REQUEST_TYPE_NUMBER_OF_UNSENT_UGC>() < 2)
+  if (f.IsUserAuthenticated() || f.GetNumberOfUnsentUGC() < 2)
     return NO;
 
   return YES;
@@ -123,9 +126,29 @@ using namespace storage;
 
    [Statistics logEvent:@"UGC_UnsentNotification_clicked"];
   }
+  else if ([userInfo[kLocalNotificationNameKey] isEqualToString:kReviewNotificationValue])
+  {
+    if (self.onReviewNotification)
+      self.onReviewNotification();
+  }
 }
 
 #pragma mark - Location Notifications
+
+- (void)showReviewNotificationForPlace:(NSString *)place onTap:(MWMVoidBlock)onReviewNotification {
+  [Statistics logEvent:kStatUGCReviewNotificationShown];
+  self.onReviewNotification = onReviewNotification;
+
+  UILocalNotification * notification = [[UILocalNotification alloc] init];
+  notification.alertTitle = [NSString stringWithCoreFormat:L(@"notification_leave_review_title")
+                                                 arguments:@[place]];
+  notification.alertBody = L(@"notification_leave_review_content");
+  notification.alertAction = L(@"leave_a_review");
+  notification.soundName = UILocalNotificationDefaultSoundName;
+  notification.userInfo = @{kLocalNotificationNameKey : kReviewNotificationValue};
+
+  [UIApplication.sharedApplication presentLocalNotificationNow:notification];
+}
 
 - (BOOL)showUGCNotificationIfNeeded:(MWMVoidBlock)onTap
 {

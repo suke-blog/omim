@@ -1,87 +1,25 @@
 #include "generator/camera_node_processor.hpp"
 
+#include "generator/maxspeeds_parser.hpp"
+
+#include "routing_common/maxspeed_conversion.hpp"
+
+#include "platform/measurement_utils.hpp"
+
 #include "base/assert.hpp"
 #include "base/control_flow.hpp"
 #include "base/logging.hpp"
+#include "base/string_utils.hpp"
 
 #include <array>
 
 namespace generator
 {
-// Look to https://wiki.openstreetmap.org/wiki/Speed_limits
-// Remember about updating this table! Last update: 21.08.18
-std::unordered_map<std::string, std::string> const kRoadTypeToSpeedKMpH = {
-  {"AT:urban",          "50"},
-  {"AT:rural",          "100"},
-  {"AT:trunk",          "100"},
-  {"AT:motorway",       "130"},
-  {"BE:urban",          "50"},
-  {"BE:zone",           "30"},
-  {"BE:motorway",       "120"},
-  {"BE:zone30",         "30"},
-  {"BE:rural",          "70"},
-  {"BE:school",         "30"},
-  {"CZ:motorway",       "130"},
-  {"CZ:trunk",          "110"},
-  {"CZ:rural",          "90"},
-  {"CZ:urban_motorway", "80"},
-  {"CZ:urban_trunk",    "80"},
-  {"CZ:urban",          "50"},
-  {"DE:rural",          "100"},
-  {"DE:urban",          "50"},
-  {"DE:bicycle_road",   "30"},
-  {"FR:motorway",       "130"},
-  {"FR:rural",          "80"},
-  {"FR:urban",          "50"},
-  {"HU:living_street",  "20"},
-  {"HU:motorway",       "130"},
-  {"HU:rural",          "90"},
-  {"HU:trunk",          "110"},
-  {"HU:urban",          "50"},
-  {"IT:rural",          "90"},
-  {"IT:motorway",       "130"},
-  {"IT:urban",          "50"},
-  {"JP:nsl",            "60"},
-  {"JP:express",        "100"},
-  {"LT:rural",          "90"},
-  {"LT:urban",          "50"},
-  {"NO:rural",          "80"},
-  {"NO:urban",          "50"},
-  {"ON:urban",          "50"},
-  {"ON:rural",          "80"},
-  {"PT:motorway",       "120"},
-  {"PT:rural",          "90"},
-  {"PT:trunk",          "100"},
-  {"PT:urban",          "50"},
-  {"RO:motorway",       "130"},
-  {"RO:rural",          "90"},
-  {"RO:trunk",          "100"},
-  {"RO:urban",          "50"},
-  {"RU:living_street",  "20"},
-  {"RU:urban",          "60"},
-  {"RU:rural",          "90"},
-  {"RU:motorway",       "110"},
-
-  {"GB:motorway",       "112"},  // 70 mph = 112.65408 kmph
-  {"GB:nsl_dual",       "112"},  // 70 mph = 112.65408 kmph
-  {"GB:nsl_single",     "96"},   // 60 mph = 96.56064 kmph
-
-  {"UK:motorway",       "112"},  // 70 mph
-  {"UK:nsl_dual",       "112"},  // 70 mph
-  {"UK:nsl_single",     "96"},   // 60 mph
-
-  {"UZ:living_street",  "30"},
-  {"UZ:urban",          "70"},
-  {"UZ:rural",          "100"},
-  {"UZ:motorway",       "110"},
-};
-
 size_t const CameraNodeIntermediateDataProcessor::kMaxSpeedSpeedStringLength = 32;
 }  // namespace generator
 
 namespace routing
 {
-
 void CameraNodeProcessor::Open(std::string const & writerFile, std::string const & readerFile,
                                std::string const & speedFile)
 {
@@ -128,10 +66,12 @@ void CameraNodeProcessor::Process(OsmElement & p, FeatureParams const & params,
 
   CHECK_GREATER_OR_EQUAL(maxSpeedKmPH, 0, ());
 
-  uint32_t const lat = DoubleToUint32(p.lat, ms::LatLon::kMinLat, ms::LatLon::kMaxLat, POINT_COORD_BITS);
+  uint32_t const lat =
+      DoubleToUint32(p.lat, ms::LatLon::kMinLat, ms::LatLon::kMaxLat, kPointCoordBits);
   WriteToSink(*m_fileWriter, lat);
 
-  uint32_t const lon = DoubleToUint32(p.lon, ms::LatLon::kMinLon, ms::LatLon::kMaxLon, POINT_COORD_BITS);
+  uint32_t const lon =
+      DoubleToUint32(p.lon, ms::LatLon::kMinLon, ms::LatLon::kMaxLon, kPointCoordBits);
   WriteToSink(*m_fileWriter, lon);
 
   WriteToSink(*m_fileWriter, static_cast<uint32_t>(maxSpeedKmPH));
@@ -176,38 +116,11 @@ void CameraNodeIntermediateDataProcessor::ProcessWay(uint64_t id, WayElement con
 
 std::string CameraNodeIntermediateDataProcessor::ValidateMaxSpeedString(std::string const & maxSpeedString)
 {
-  auto const it = kRoadTypeToSpeedKMpH.find(maxSpeedString);
-  if (it != kRoadTypeToSpeedKMpH.cend())
-    return it->second;
+  routing::SpeedInUnits speed;
+  if (!ParseMaxspeedTag(maxSpeedString, speed) || !speed.IsNumeric())
+    return std::string();
 
-  // strings::to_int doesn't work here because of bad errno.
-  std::string result;
-  size_t i;
-  for (i = 0; i < maxSpeedString.size(); ++i)
-  {
-    if (!isdigit(maxSpeedString[i]))
-      break;
-
-    result += maxSpeedString[i];
-  }
-
-  while (i < maxSpeedString.size() && isspace(maxSpeedString[i]))
-    ++i;
-
-  if (strings::StartsWith(string(maxSpeedString.begin() + i, maxSpeedString.end()), "kmh"))
-    return result;
-
-  if (strings::StartsWith(string(maxSpeedString.begin() + i, maxSpeedString.end()), "mph"))
-  {
-    int32_t mph = 0;
-    if (!strings::to_int(result.c_str(), mph))
-      return string();
-
-    auto const kmh = static_cast<int32_t>(routing::MilesPH2KMPH(mph));
-    return strings::to_string(kmh);
-  }
-
-  return result;
+  return strings::to_string(measurement_utils::ToSpeedKmPH(speed.GetSpeed(), speed.GetUnits()));
 }
 
 void CameraNodeIntermediateDataProcessor::ProcessNode(OsmElement & em)

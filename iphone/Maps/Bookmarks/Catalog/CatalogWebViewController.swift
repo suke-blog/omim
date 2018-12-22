@@ -1,18 +1,37 @@
+struct CatalogCategoryInfo {
+  var id: String
+  var name: String
+  var author: String?
+  var productId: String?
+  var imageUrl: String?
+
+  init?(_ components: [String : String]) {
+    guard let id = components["id"],
+      let name = components["name"] else { return nil }
+    self.id = id
+    self.name = name
+    author = components["author_name"]
+    productId = components["tier"]
+    imageUrl = components["img"]
+  }
+}
+
 @objc(MWMCatalogWebViewController)
 final class CatalogWebViewController: WebViewController {
-
   let progressView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
   let progressImageView = UIImageView(image: #imageLiteral(resourceName: "ic_24px_spinner"))
   let numberOfTasksLabel = UILabel()
   let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+  let pendingTransactionsHandler = InAppPurchase.pendingTransactionsHandler()
   var deeplink: URL?
+  var categoryInfo: CatalogCategoryInfo?
   var statSent = false
   var backButton: UIBarButtonItem!
   var fwdButton: UIBarButtonItem!
   var toolbar = UIToolbar()
 
   @objc init() {
-    super.init(url: MWMBookmarksManager.catalogFrontendUrl()!, title: L("guides"))!
+    super.init(url: MWMBookmarksManager.shared().catalogFrontendUrl()!, title: L("guides"))!
     backButton = UIBarButtonItem(image: #imageLiteral(resourceName: "ic_catalog_back"), style: .plain, target: self, action: #selector(onBack))
     fwdButton = UIBarButtonItem(image: #imageLiteral(resourceName: "ic_catalog_fwd"), style: .plain, target: self, action: #selector(onFwd))
     backButton.tintColor = .blackSecondaryText()
@@ -71,7 +90,6 @@ final class CatalogWebViewController: WebViewController {
       progressView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8).isActive = true
     }
 
-
     rotateProgress()
     updateProgress()
     navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "ic_catalog_close"), style: .plain, target: self, action: #selector(goBack))
@@ -91,12 +109,21 @@ final class CatalogWebViewController: WebViewController {
     }
   }
 
+  override func willLoadUrl(_ decisionHandler: @escaping (Bool) -> Void) {
+    handlePendingTransactions { decisionHandler($0) }
+  }
+
+  override func shouldAddAccessToken() -> Bool {
+    return true
+  }
+
   override func webView(_ webView: WKWebView,
                         decidePolicyFor navigationAction: WKNavigationAction,
                         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-    guard let url = navigationAction.request.url, url.scheme == "mapsme" else {
-      super.webView(webView, decidePolicyFor: navigationAction, decisionHandler: decisionHandler)
-      return
+    guard let url = navigationAction.request.url,
+      url.scheme == "mapsme" || url.path == "/mobilefront/buy_kml" else {
+        super.webView(webView, decidePolicyFor: navigationAction, decisionHandler: decisionHandler)
+        return
     }
 
     processDeeplink(url)
@@ -127,20 +154,62 @@ final class CatalogWebViewController: WebViewController {
     loadingIndicator.stopAnimating()
   }
 
-  func processDeeplink(_ url: URL) {
-    let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
-    var id = ""
-    var name = ""
-    components?.queryItems?.forEach {
-      if $0.name == "name" {
-        name = $0.value ?? ""
-      }
-      if $0.name == "id" {
-        id = $0.value ?? ""
+  private func handlePendingTransactions(completion: @escaping (Bool) -> Void) {
+    pendingTransactionsHandler.handlePendingTransactions { [weak self] (status) in
+      switch status {
+      case .none:
+        fallthrough
+      case .success:
+        completion(true)
+      case .error:
+        MWMAlertViewController.activeAlert().presentInfoAlert(L("title_error_downloading_bookmarks"),
+                                                              text: L("failed_purchase_support_message"))
+        completion(false)
+        self?.loadingIndicator.stopAnimating()
+      case .needAuth:
+        if let s = self {
+          s.signup(anchor: s.toolbar, onComplete: {
+            if $0 {
+              s.handlePendingTransactions(completion: completion)
+            } else {
+              MWMAlertViewController.activeAlert().presentInfoAlert(L("title_error_downloading_bookmarks"),
+                                                                    text: L("failed_purchase_support_message"))
+              completion(false)
+              s.loadingIndicator.stopAnimating()
+            }
+          })
+        }
+        break;
       }
     }
+  }
 
-    if MWMBookmarksManager.isCategoryDownloading(id) || MWMBookmarksManager.hasCategoryDownloaded(id) {
+  private func parseUrl(_ url: URL) -> CatalogCategoryInfo? {
+    guard let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return nil }
+    guard let components = urlComponents.queryItems?.reduce(into: [:], { $0[$1.name] = $1.value })
+      else { return nil }
+
+    return CatalogCategoryInfo(components)
+  }
+
+  func processDeeplink(_ url: URL) {
+    guard let categoryInfo = parseUrl(url) else {
+      MWMAlertViewController.activeAlert().presentInfoAlert(L("title_error_downloading_bookmarks"),
+                                                            text: L("subtitle_error_downloading_guide"))
+      return
+    }
+    self.categoryInfo = categoryInfo
+
+    download()
+  }
+
+  private func download() {
+    guard let categoryInfo = self.categoryInfo else {
+      assert(false)
+      return
+    }
+
+    if MWMBookmarksManager.shared().isCategoryDownloading(categoryInfo.id) || MWMBookmarksManager.shared().hasCategoryDownloaded(categoryInfo.id) {
       MWMAlertViewController.activeAlert().presentDefaultAlert(withTitle: L("error_already_downloaded_guide"),
                                                                message: nil,
                                                                rightButtonTitle: L("ok"),
@@ -149,7 +218,7 @@ final class CatalogWebViewController: WebViewController {
       return
     }
 
-    MWMBookmarksManager.downloadItem(withId: id, name: name, progress: { [weak self] (progress) in
+    MWMBookmarksManager.shared().downloadItem(withId: categoryInfo.id, name: categoryInfo.name, progress: { [weak self] (progress) in
       self?.updateProgress()
     }) { [weak self] (categoryId, error) in
       if let error = error as NSError? {
@@ -163,10 +232,18 @@ final class CatalogWebViewController: WebViewController {
             return
           }
           switch (status) {
-          case .forbidden:
-            fallthrough
+          case .needAuth:
+            if let s = self {
+              s.signup(anchor: s.toolbar) {
+                if $0 { s.download() }
+              }
+            }
+            break
+          case .needPayment:
+            self?.showPaymentScreen(categoryInfo)
+            break
           case .notFound:
-            self?.showServerError(url)
+            self?.showServerError()
             break
           case .networkError:
             self?.showNetworkError()
@@ -179,12 +256,34 @@ final class CatalogWebViewController: WebViewController {
           self?.showImportError()
         }
       } else {
-        if MWMBookmarksManager.getCatalogDownloadsCount() == 0 {
+        if MWMBookmarksManager.shared().getCatalogDownloadsCount() == 0 {
+          Statistics.logEvent(kStatInappProductDelivered, withParameters: [kStatVendor: BOOKMARKS_VENDOR,
+                                                                           kStatPurchase: categoryInfo.id])
           MapViewController.shared().showBookmarksLoadedAlert(categoryId)
         }
       }
       self?.updateProgress()
     }
+  }
+
+  private func showPaymentScreen(_ productInfo: CatalogCategoryInfo) {
+    guard let productId = productInfo.productId else {
+      MWMAlertViewController.activeAlert().presentInfoAlert(L("title_error_downloading_bookmarks"),
+                                                            text: L("subtitle_error_downloading_guide"))
+      return
+    }
+
+    let purchase = InAppPurchase.paidRoutePurchase(serverId: productInfo.id,
+                                                   productId: productId)
+    let stats = InAppPurchase.paidRouteStatistics(serverId: productInfo.id, productId: productId)
+    let paymentVC = PaidRouteViewController(name: productInfo.name,
+                                            author: productInfo.author,
+                                            imageUrl: URL(string: productInfo.imageUrl ?? ""),
+                                            purchase: purchase,
+                                            statistics: stats)
+    paymentVC.delegate = self
+    paymentVC.modalTransitionStyle = .coverVertical
+    self.navigationController?.present(paymentVC, animated: true)
   }
 
   private func showDiskError() {
@@ -195,12 +294,12 @@ final class CatalogWebViewController: WebViewController {
     MWMAlertViewController.activeAlert().presentNoConnectionAlert();
   }
 
-  private func showServerError(_ url: URL) {
+  private func showServerError() {
     MWMAlertViewController.activeAlert().presentDefaultAlert(withTitle: L("error_server_title"),
                                                              message: L("error_server_message"),
                                                              rightButtonTitle: L("try_again"),
                                                              leftButtonTitle: L("cancel")) {
-                                                              self.processDeeplink(url)
+                                                              self.download()
     }
   }
 
@@ -210,7 +309,7 @@ final class CatalogWebViewController: WebViewController {
   }
 
   private func updateProgress() {
-    let numberOfTasks = MWMBookmarksManager.getCatalogDownloadsCount()
+    let numberOfTasks = MWMBookmarksManager.shared().getCatalogDownloadsCount()
     numberOfTasksLabel.text = "\(numberOfTasks)"
     progressView.isHidden = numberOfTasks == 0
   }
@@ -231,5 +330,16 @@ final class CatalogWebViewController: WebViewController {
 
   @objc private func onFwd() {
     forward()
+  }
+}
+
+extension CatalogWebViewController: PaidRouteViewControllerDelegate {
+  func didCompletePurchase(_ viewController: PaidRouteViewController) {
+    dismiss(animated: true)
+    download()
+  }
+
+  func didCancelPurchase(_ viewController: PaidRouteViewController) {
+    dismiss(animated: true)
   }
 }

@@ -9,6 +9,7 @@
 #include "coding/file_name_utils.hpp"
 #include "coding/serdes_json.hpp"
 #include "coding/sha1.hpp"
+#include "coding/zip_creator.hpp"
 
 #include "base/assert.hpp"
 #include "base/logging.hpp"
@@ -41,11 +42,18 @@ std::string BuildTagsUrl(std::string const & language)
   return kCatalogEditorServer + "editor/tags/?lang=" + language;
 }
 
+std::string BuildCustomPropertiesUrl(std::string const & language)
+{
+  if (kCatalogEditorServer.empty())
+    return {};
+  return kCatalogEditorServer + "editor/properties/?lang=" + language;
+}
+
 std::string BuildHashUrl()
 {
   if (kCatalogFrontendServer.empty())
     return {};
-  return kCatalogFrontendServer + "kml/create";
+  return kCatalogFrontendServer + "storage/create_hash";
 }
 
 std::string BuildUploadUrl()
@@ -69,7 +77,7 @@ struct TagData
 {
   std::string m_name;
   std::vector<SubtagData> m_subtags;
-  DECLARE_VISITOR(visitor(m_name, "name"),
+  DECLARE_VISITOR(visitor(m_name, "translation"),
                   visitor(m_subtags, "subtags"))
 };
 
@@ -93,6 +101,33 @@ BookmarkCatalog::Tag::Color ExtractColor(std::string const & c)
   return result;
 }
 
+struct CustomPropertyOptionData
+{
+  std::string m_value;
+  std::string m_name;
+  DECLARE_VISITOR(visitor(m_value, "value"),
+                  visitor(m_name, "name"))
+};
+
+struct CustomPropertyData
+{
+  std::string m_key;
+  std::string m_name;
+  bool m_isRequired;
+  std::vector<CustomPropertyOptionData> m_options;
+  DECLARE_VISITOR(visitor(m_key, "key"),
+                  visitor(m_name, "name"),
+                  visitor(m_isRequired, "required"),
+                  visitor(m_options, "options"))
+};
+
+struct CustomPropertiesData
+{
+  std::vector<CustomPropertyData> m_properties;
+
+  DECLARE_VISITOR(visitor(m_properties))
+};
+
 struct HashResponseData
 {
   std::string m_hash;
@@ -111,6 +146,7 @@ int RequestNewServerId(std::string const & accessToken,
   request.SetRawHeader("Accept", "application/json");
   request.SetRawHeader("User-Agent", GetPlatform().GetAppUserAgent());
   request.SetRawHeader("Authorization", "Bearer " + accessToken);
+  request.SetHttpMethod("POST");
   if (request.RunHttpRequest())
   {
     auto const resultCode = request.ErrorCode();
@@ -234,7 +270,7 @@ std::string BookmarkCatalog::GetDownloadUrl(std::string const & serverId) const
 
 std::string BookmarkCatalog::GetFrontendUrl() const
 {
-  return kCatalogFrontendServer + languages::GetCurrentNorm() + "/mobilefront/";
+  return kCatalogFrontendServer + languages::GetCurrentNorm() + "/v2/mobilefront/";
 }
 
 void BookmarkCatalog::RequestTagGroups(std::string const & language,
@@ -295,8 +331,74 @@ void BookmarkCatalog::RequestTagGroups(std::string const & language,
       }
       else
       {
-        LOG(LWARNING, ("Tags request error. Code =", resultCode,
-                       "Response =", request.ServerResponse()));
+        LOG(LWARNING, ("Tags request error. Code =", resultCode));
+      }
+    }
+    if (callback)
+      callback(false /* success */, {});
+  });
+}
+
+void BookmarkCatalog::RequestCustomProperties(std::string const & language,
+                                              CustomPropertiesCallback && callback) const
+{
+  auto const url = BuildCustomPropertiesUrl(language);
+  if (url.empty())
+  {
+    if (callback)
+      callback(false /* success */, {});
+    return;
+  }
+
+  GetPlatform().RunTask(Platform::Thread::Network, [url, callback = std::move(callback)]()
+  {
+    platform::HttpClient request(url);
+    request.SetRawHeader("Accept", "application/json");
+    request.SetRawHeader("User-Agent", GetPlatform().GetAppUserAgent());
+    if (request.RunHttpRequest())
+    {
+      auto const resultCode = request.ErrorCode();
+      if (resultCode >= 200 && resultCode < 300)  // Ok.
+      {
+        CustomPropertiesData responseData;
+        try
+        {
+          coding::DeserializerJson des(request.ServerResponse());
+          des(responseData);
+        }
+        catch (coding::DeserializerJson::Exception const & ex)
+        {
+          LOG(LWARNING, ("Custom properties request deserialization error:", ex.Msg()));
+          if (callback)
+            callback(false /* success */, {});
+          return;
+        }
+
+        CustomProperties result;
+        result.reserve(responseData.m_properties.size());
+        for (auto const & p : responseData.m_properties)
+        {
+          CustomProperty prop;
+          prop.m_key = p.m_key;
+          prop.m_name = p.m_name;
+          prop.m_isRequired = p.m_isRequired;
+          prop.m_options.reserve(p.m_options.size());
+          for (auto const & o : p.m_options)
+          {
+            CustomProperty::Option option;
+            option.m_value = o.m_value;
+            option.m_name = o.m_name;
+            prop.m_options.push_back(std::move(option));
+          }
+          result.push_back(std::move(prop));
+        }
+        if (callback)
+          callback(true /* success */, result);
+        return;
+      }
+      else
+      {
+        LOG(LWARNING, ("Custom properties request error. Code =", resultCode));
       }
     }
     if (callback)
@@ -388,7 +490,8 @@ void BookmarkCatalog::Upload(UploadData uploadData, std::string const & accessTo
       fileData->m_categoryData.m_authorName = uploadData.m_userName;
       fileData->m_categoryData.m_authorId = uploadData.m_userId;
 
-      auto const filePath = base::JoinPath(GetPlatform().TmpDir(), uploadData.m_serverId);
+      // Save KML.
+      auto const filePath = base::JoinPath(GetPlatform().TmpDir(), uploadData.m_serverId + kKmlExtension);
       if (!SaveKmlFile(*fileData, filePath, KmlFileType::Text))
       {
         if (uploadErrorCallback)
@@ -396,11 +499,27 @@ void BookmarkCatalog::Upload(UploadData uploadData, std::string const & accessTo
         return;
       }
 
+      // Zip KML.
+      auto const zippedFilePath = base::JoinPath(GetPlatform().TmpDir(), uploadData.m_serverId + kKmzExtension);
+      if (!CreateZipFromPathDeflatedAndDefaultCompression(filePath, zippedFilePath))
+      {
+        FileWriter::DeleteFileX(filePath);
+        if (uploadErrorCallback)
+          uploadErrorCallback(UploadResult::InvalidCall, "Could not zip the uploading file.");
+        return;
+      }
+      FileWriter::DeleteFileX(filePath);
+
+      // Upload zipped KML.
       platform::HttpUploader request;
       request.SetUrl(BuildUploadUrl());
       request.SetHeaders({{"Authorization", "Bearer " + accessToken},
                           {"User-Agent", GetPlatform().GetAppUserAgent()}});
-      request.SetFilePath(filePath);
+      request.SetParam("author_id", uploadData.m_userId);
+      request.SetParam("bundle_hash", uploadData.m_serverId);
+      request.SetParam("locale", languages::GetCurrentOrig());
+      request.SetFileKey("file_contents");
+      request.SetFilePath(zippedFilePath);
       auto const uploadCode = request.Upload();
       if (uploadCode.m_httpCode >= 200 && uploadCode.m_httpCode < 300)
       {
@@ -445,6 +564,7 @@ void BookmarkCatalog::Upload(UploadData uploadData, std::string const & accessTo
         if (uploadErrorCallback)
           uploadErrorCallback(UploadResult::NetworkError, uploadCode.m_description);
       }
+      FileWriter::DeleteFileX(zippedFilePath);
     });
   });
 }

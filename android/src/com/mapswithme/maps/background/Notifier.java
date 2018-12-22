@@ -27,6 +27,7 @@ public final class Notifier
   public static final int ID_NONE = 0;
   public static final int ID_DOWNLOAD_FAILED = 1;
   public static final int ID_IS_NOT_AUTHENTICATED = 2;
+  public static final int ID_LEAVE_REVIEW = 3;
   @NonNull
   private final Application mContext;
 
@@ -56,9 +57,9 @@ public final class Notifier
     Statistics.INSTANCE.trackEvent(Statistics.EventName.DOWNLOAD_COUNTRY_NOTIFICATION_SHOWN);
   }
 
-  public void notifyAuthentication()
+  void notifyAuthentication()
   {
-    Intent authIntent = MwmActivity.createAuthenticateIntent();
+    Intent authIntent = MwmActivity.createAuthenticateIntent(mContext);
     authIntent.putExtra(EXTRA_CANCEL_NOTIFICATION, Notifier.ID_IS_NOT_AUTHENTICATED);
     authIntent.putExtra(EXTRA_NOTIFICATION_CLICKED,
                         Statistics.EventName.UGC_NOT_AUTH_NOTIFICATION_CLICKED);
@@ -66,7 +67,7 @@ public final class Notifier
     PendingIntent pi = PendingIntent.getActivity(mContext, 0, authIntent,
                                                  PendingIntent.FLAG_UPDATE_CURRENT);
 
-    String channel = NotificationChannelFactory.createProvider(mContext).getAuthChannel();
+    String channel = NotificationChannelFactory.createProvider(mContext).getUGCChannel();
     NotificationCompat.Builder builder =
         getBuilder(mContext.getString(R.string.notification_unsent_reviews_title),
                    mContext.getString(R.string.notification_unsent_reviews_message),
@@ -77,6 +78,31 @@ public final class Notifier
     getNotificationManager().notify(ID_IS_NOT_AUTHENTICATED, builder.build());
 
     Statistics.INSTANCE.trackEvent(Statistics.EventName.UGC_NOT_AUTH_NOTIFICATION_SHOWN);
+  }
+
+  void notifyLeaveReview(@NonNull NotificationCandidate.MapObject mapObject)
+  {
+    Intent reviewIntent = MwmActivity.createLeaveReviewIntent(mContext, mapObject);
+    reviewIntent.putExtra(EXTRA_CANCEL_NOTIFICATION, Notifier.ID_LEAVE_REVIEW);
+    reviewIntent.putExtra(EXTRA_NOTIFICATION_CLICKED,
+                          Statistics.EventName.UGC_REVIEW_NOTIFICATION_CLICKED);
+
+    PendingIntent pi =
+        PendingIntent.getActivity(mContext, 0, reviewIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    String channel = NotificationChannelFactory.createProvider(mContext).getUGCChannel();
+    NotificationCompat.Builder builder =
+        getBuilder(mContext.getString(R.string.notification_leave_review_title,
+                                      mapObject.getReadableName()),
+                   mContext.getString(R.string.notification_leave_review_content,
+                                      mapObject.getReadableName()),
+                   pi, channel);
+
+    builder.addAction(0, mContext.getString(R.string.leave_a_review), pi);
+
+    getNotificationManager().notify(ID_LEAVE_REVIEW, builder.build());
+
+    Statistics.INSTANCE.trackEvent(Statistics.EventName.UGC_REVIEW_NOTIFICATION_SHOWN);
   }
 
   public void cancelNotification(@NotificationId int id)

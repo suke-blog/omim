@@ -17994,49 +17994,25 @@ cont {
   element {
     scale: 15
     symbol {
-      name: "monument-m"
+      name: "zero-icon"
       priority: 16790
       min_distance: 24
-    }
-    caption {
-      primary {
-        height: 10
-        color: 4473924
-        offset_y: 1
-      }
-      priority: 15790
     }
   }
   element {
     scale: 16
     symbol {
-      name: "monument-m"
+      name: "zero-icon"
       priority: 16790
       min_distance: 12
-    }
-    caption {
-      primary {
-        height: 10
-        color: 4473924
-        offset_y: 1
-      }
-      priority: 15790
     }
   }
   element {
     scale: 17
     symbol {
-      name: "monument-m"
+      name: "zero-icon"
       priority: 16790
       min_distance: 12
-    }
-    caption {
-      primary {
-        height: 10
-        color: 4473924
-        offset_y: 1
-      }
-      priority: 15790
     }
   }
   element {
@@ -18046,14 +18022,6 @@ cont {
       priority: 16790
       min_distance: 12
     }
-    caption {
-      primary {
-        height: 10
-        color: 4473924
-        offset_y: 1
-      }
-      priority: 15790
-    }
   }
   element {
     scale: 19
@@ -18061,14 +18029,6 @@ cont {
       name: "monument-m"
       priority: 16790
       min_distance: 12
-    }
-    caption {
-      primary {
-        height: 10
-        color: 4473924
-        offset_y: 1
-      }
-      priority: 15790
     }
   }
 }
@@ -42577,10 +42537,6 @@ cont {
 }
 colors {
   value {
-    name: "TrafficOutline"
-    color: 15790320
-  }
-  value {
     name: "RoadShieldWhiteText"
     color: 16777215
   }
@@ -42694,12 +42650,20 @@ colors {
     color: 9682745
   }
   value {
+    name: "SpeedCameraMarkBg"
+    color: 16064048
+  }
+  value {
     name: "RatingExcellent"
     color: 3968060
   }
   value {
     name: "BookmarkCyan"
     color: 113876
+  }
+  value {
+    name: "SpeedCameraMarkText"
+    color: 16777215
   }
   value {
     name: "TransitBackground"
@@ -42712,6 +42676,9 @@ colors {
   value {
     name: "BookmarkGray"
     color: 7697781
+  }
+  value {
+    name: "UGCRatingText"
   }
   value {
     name: "RouteMarkSecondaryText"
@@ -42811,6 +42778,10 @@ colors {
     name: "RoadShieldBlackText"
   }
   value {
+    name: "SpeedCameraMarkOutline"
+    color: 16777215
+  }
+  value {
     name: "TransitMarkPrimaryTextOutline"
     color: 16777215
   }
@@ -42865,6 +42836,10 @@ colors {
     color: 1728053247
   }
   value {
+    name: "RoadShieldGreenBackground"
+    color: 3183362
+  }
+  value {
     name: "BookmarkBrown"
     color: 7951688
   }
@@ -42908,7 +42883,7 @@ colors {
     color: 14951168
   }
   value {
-    name: "RoadShieldGreenBackground"
-    color: 3183362
+    name: "TrafficOutline"
+    color: 15790320
   }
 }

@@ -167,9 +167,8 @@ bool FeatureBuilder1::RemoveInvalidTypes()
   if (!m_params.FinishAddingTypes())
     return false;
 
-  return feature::RemoveNoDrawableTypes(m_params.m_types,
-                                        m_params.GetGeomType(),
-                                        m_params.IsEmptyNames());
+  return feature::RemoveUselessTypes(m_params.m_types, m_params.GetGeomType(),
+                                     m_params.IsEmptyNames());
 }
 
 bool FeatureBuilder1::FormatFullAddress(string & res) const
@@ -192,12 +191,12 @@ namespace
 {
 bool IsEqual(double d1, double d2)
 {
-  return base::AlmostEqualAbs(d1, d2, MercatorBounds::GetCellID2PointAbsEpsilon());
+  return base::AlmostEqualAbs(d1, d2, kMwmPointAccuracy);
 }
 
 bool IsEqual(m2::PointD const & p1, m2::PointD const & p2)
 {
-  return p1.EqualDxDy(p2, MercatorBounds::GetCellID2PointAbsEpsilon());
+  return p1.EqualDxDy(p2, kMwmPointAccuracy);
 }
 
 bool IsEqual(m2::RectD const & r1, m2::RectD const & r2)
@@ -339,8 +338,10 @@ bool FeatureBuilder1::operator==(FeatureBuilder1 const & fb) const
     return false;
 
   for (auto i = m_polygons.cbegin(), j = fb.m_polygons.cbegin(); i != m_polygons.cend(); ++i, ++j)
+  {
     if (!IsEqual(*i, *j))
       return false;
+  }
 
   return true;
 }

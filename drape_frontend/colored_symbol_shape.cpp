@@ -293,7 +293,7 @@ void ColoredSymbolShape::Draw(ref_ptr<dp::GraphicsContext> context, ref_ptr<dp::
     }
 
     if (m_params.m_specialDisplacement == SpecialDisplacement::UserMark ||
-        m_params.m_specialDisplacement == SpecialDisplacement::TransitScheme)
+        m_params.m_specialDisplacement == SpecialDisplacement::SpecialModeUserMark)
     {
       handle->SetSpecialLayerOverlay(true);
     }
@@ -313,11 +313,11 @@ void ColoredSymbolShape::Draw(ref_ptr<dp::GraphicsContext> context, ref_ptr<dp::
 uint64_t ColoredSymbolShape::GetOverlayPriority() const
 {
   // Special displacement mode.
-  if (m_params.m_specialDisplacement == SpecialDisplacement::SpecialMode ||
-      m_params.m_specialDisplacement == SpecialDisplacement::TransitScheme)
-  {
+  if (m_params.m_specialDisplacement == SpecialDisplacement::SpecialMode)
     return dp::CalculateSpecialModePriority(m_params.m_specialPriority);
-  }
+
+  if (m_params.m_specialDisplacement == SpecialDisplacement::SpecialModeUserMark)
+    return dp::CalculateSpecialModeUserMarkPriority(m_params.m_specialPriority);
 
   if (m_params.m_specialDisplacement == SpecialDisplacement::UserMark)
     return dp::CalculateUserMarkPriority(m_params.m_minVisibleScale, m_params.m_specialPriority);

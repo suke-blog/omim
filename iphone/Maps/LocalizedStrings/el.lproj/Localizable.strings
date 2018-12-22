@@ -298,49 +298,58 @@
 /* Do search in current viewport only */
 "search_mode_viewport" = "On the Screen";
 
-/* Search Suggestion */
-"food" = "Φαγητό";
+/* Search category for cafes, bars, restaurants */
+"eat" = "Πού να φάμε";
 
-/* Search Suggestion */
+/* Search category for grocery stores */
+"food" = "Παντοπωλεία";
+
+/* Search category */
 "transport" = "Συγκοινωνία";
 
-/* Search Suggestion */
+/* Search category */
 "fuel" = "Βενζίνη";
 
-/* Search Suggestion */
+/* Search category */
 "parking" = "Χώρος στάθμευσης";
 
-/* Search Suggestion */
-"shop" = "Κατάστημα";
+/* Search category for clothes/shoes/gifts/jewellery/sport shops */
+"shopping" = "Ψώνια";
 
-/* Search Suggestion */
+/* Search category */
 "hotel" = "Ξενοδοχείο";
 
-/* Search Suggestion */
+/* Search category */
 "tourism" = "Αξιοθέατα";
 
-/* Search Suggestion */
+/* Search category */
 "entertainment" = "Ψυχαγωγία";
 
-/* Search Suggestion */
+/* Search category */
 "atm" = "ATM";
 
-/* Search Suggestion */
+/* Search category for nightclubs/bars */
+"nightlife" = "Νυχτερινή Ζωή";
+
+/* Search category for water park/disneyland/playground/toys store */
+"children" = "Οικογενειακές Διακοπές";
+
+/* Search category */
 "bank" = "Τράπεζα";
 
-/* Search Suggestion */
+/* Search category */
 "pharmacy" = "Φαρμακείο";
 
-/* Search Suggestion */
+/* Search category */
 "hospital" = "Νοσοκομείο";
 
-/* Search Suggestion */
+/* Search category */
 "toilet" = "Τουαλέτα";
 
-/* Search Suggestion */
+/* Search category */
 "post" = "Ταχυδρομείο";
 
-/* Search Suggestion */
+/* Search category */
 "police" = "Αστυνομία";
 
 /* String in search result list, when nothing found */
@@ -658,7 +667,7 @@
 /* Settings item title */
 "pref_calibration_title" = "Βαθμονόμηση πυξίδας";
 
-/* Search Suggestion */
+/* Search category */
 "wifi" = "WiFi";
 
 /* Update map suggestion */
@@ -2486,6 +2495,170 @@
 
 "taxi" = "Taxi";
 
+"sharing_options" = "Επιλογές κοινοποίησης";
+
+"export_file" = "Αρχείο Εξαγωγής";
+
+"list_settings" = "Ρυθμίσεις Λίστας";
+
+"delete_list" = "Διαγραφή λίστας";
+
+"hide_from_map" = "Κρύψε από τον χάρτη";
+
+"ugc_route_tags_screen_label" = "Επιλέξτε ετικέτες";
+
+"ugc_route_tags_progress_msg" = "Φόρτωση ετικετών…";
+
+"ugc_route_tags_desc" = "Παρακαλώ επιλέξτε ετικέτες για να βοηθήσετε άλλους ταξιδιώτες να βρουν τον οδηγό σας. Αυτό είναι υποχρεωτικό.";
+
+"public_access" = "Δημόσια πρόσβαση";
+
+"limited_access" = "Περιορισμένη πρόσβαση";
+
+/* FIXME */
+"bookmarks_public_access" = "bookmarks_public_access";
+
+/* FIXME */
+"bookmarks_link_access" = "bookmarks_link_access";
+
+/* FIXME */
+"bookmarks_private_access" = "bookmarks_private_access";
+
+"upload_and_publish_desc" = "Αυτός ο οδηγός θα ανέβει στο δημόσιο κατάλογο MAPS.ME και θα είναι διαθέσιμος για άλλους χρήστες";
+
+"upload_and_publish" = "Ανέβασμα και δημοσίευση";
+
+"upload_and_get_direct_link" = "Ανέβασμα και πάρτε έναν απευθείας σύνδεσμο";
+
+"get_direct_link_desc" = "Ο οδηγός σας θα είναι διαθέσιμος σε οποιονδήποτε έχει το σύνδεσμο";
+
+"upload_and_publish_progress_text" = "Δημοσιεύοντας τον οδηγό σας…";
+
+"upload_and_publish_success" = "Ο οδηγός δημοσιεύτηκε";
+
+"ugc_routes_user_agreement" = "<b>ΣΗΜΕΙΩΣΗ:</b> συνεχίζοντας, δέχεστε <a href=\"%s\">τη συμφωνία άδειας</a>";
+
+"ugc_route_edit_list_name" = "Όνομα οδηγού";
+
+"ugc_route_edit_description_hint" = "Πληκτρολογήστε μια περιγραφή (κείμενο ή html)";
+
+"not_shared" = "Προσωπικός";
+
+"direct_link_progress_text" = "Ανεβάζουμε το αρχείο σας…";
+
+"direct_link_success" = "Ο σύνδεσμος δημιουργήθηκε";
+
+"edit_guide_title" = "Επεξεργαστείτε τον οδηγό σας στο δίκτυο";
+
+"edit_guide_subtitle" = "Πάρτε ένα σύνδεσμο να επεξεργαστείτε τον οδηγό σας μέσω της εφαρμογής: προσθέστε περιγραφές, ανεβάστε φωτογραφίες και συνδέστε σελιδοδείκτες με γραμμές.";
+
+"send_a_link_btn" = "Στείλε μου έναν σύνδεσμο";
+
+"upload_error_toast" = "Ένα σφάλμα συνέβη στο ανέβασμα του αρχείου σας";
+
+"tags_loading_error_subtitle" = "Ένα σφάλμα συνέβη στο φόρτωμα των ετικετών, παρακαλώ ξαναπροσπαθήστε";
+
+"unable_upload_errorr_title" = "Το ανέβασμα του αρχείου απέτυχε";
+
+"unable_upload_error_subtitle_edited" = "Το αρχείο επεξεργάστηκε μέσω της εφαρμογής";
+
+"unable_upload_error_subtitle_broken" = "Το αρχείο είναι κατεστραμμένο και δεν μπόρεσε να ανέβει. Παρακαλώ ανεβάστε ένα άλλο αρχείο.";
+
+"buy_btn" = "Αγοράστε για %s";
+
+"download_guide_progress" = "Κατεβάζοντας τον οδηγό σας…";
+
+"price_error_title" = "Δεν μπορέσαμε να βρούμε τιμή";
+
+"price_error_subtitle" = "Δοκιμάστε ξανά σε μερικά λεπτά παρακαλώ";
+
+"edit_your_guide_email_body" = "Επεξεργαστείτε τον οδηγό σας στο δίκτυο εύκολα χρησιμοποιώντας τον υπολογιστή σας: προσθέστε περιγραφές, ανεβάστε φωτογραφίες και συνδέστε σελιδοδείκτες με γραμμές.";
+
+"edit_on_web" = "Επεξεργαστείτε στο δίκτυο";
+
+"properties_loading_error_subtitle" = "Ένα σφάλμα συνέβη στο φόρτωμα των επιλογών, παρακαλώ ξαναπροσπαθήστε";
+
+"custom_props_desc" = "Σε αυτόν τον οδηγό επισκεφθήκατε μέρη σαν";
+
+"custom_props_title" = "Ντόπιος ή ταξιδιώτης";
+
+"custom_props_local" = "local";
+
+"custom_props_traveler" = "traveller";
+
+"select_properties" = "Διαλέξτε επιλογές";
+
+"access_rules_p_to_p" = "Ειδική πρόσβαση";
+
+"access_rules_paid" = "Αγοράσθηκε";
+
+"failed_purchase_support_message" = "Λυπάμαι, αλλά μάλλον έχετε μια ανολοκλήρωτη αγορά. Παρακαλώ επικοινωνήστε με την υποστήριξη και θα λύσουμε το πρόβλημα.";
+
+"contact" = "Επικοινωνία";
+
+"check_price_button" = "Έλεγχος τιμής";
+
+"download_button" = "Κατέβασμα";
+
+"speedcams_alert_title" = "Κάμερες Ταχύτητας";
+
+"speedcams_alert_subtitle" = "Ειδοποίηση για όρια ταχύτητας";
+
+"speedcam_option_auto" = "Αυτόματο";
+
+"speedcam_option_always" = "Πάντα";
+
+"speedcam_option_never" = "Ποτέ";
+
+"bookmark_description_title" = "Περιγραφή Σελιδοδείκτη";
+
+"place_description_title" = "Περιγραφή μέρους";
+
+"ugc_routes_error_uploading_file_toast" = "Δυστυχώς, συνέβη κάποιο σφάλμα ενώ φορτώνονταν οι σελιδοδείκτες σας. Παρακαλώ ξαναπροσπαθήστε.";
+
+"notification_channel_ugc" = "Κοινωνικό περιεχόμενο";
+
+/* this text will be shown in application notification preferences opposite checkbox which enable/disable downloader notifications. Devices on Android 8+ are affected. */
+"notification_channel_downloader" = "Κατέβασμα χαρτών";
+
+"notification_leave_review_title" = "%s- πώς ήταν?";
+
+"notification_leave_review_content" = "Βοηθήστε ταξιδιώτες αφήνοντας μια κριτική!";
+
+"share_bookmarks_email_body_link" = "Γεια!\n\nΕδώ είναι ο σύνδεσμος που μπορείς να κατεβάσεις τους σελιδοδείκτες σου: %s. Ανοίξτε τη λίστα μέσω MAPS.ME και απολαύστε το ταξίδι σας!\n\nΚατεβάστε την εφαρμογή: http://maps.me/get?kmz";
+
+"warning_speedcams_title" = "Ο πλοηγός θα σας ειδοποιεί για κάμερες όταν υπερβαίνετε το όριο ταχύτητας των %d km/h";
+
+"warning_speedcams_subtitle" = "Παρακαλώ να προσέχετε τους κανόνες οδήγησης της χώρας στην οποία ταξιδεύετε.";
+
+"speedcams_notice_message" = "Αυτόματο- Να ειδοποιούμαι για κάμερες αν υπάρχει κίνδυνος να υπερβώ το όριο ταχύτητας\nΠάντα- Πάντα να ειδοποιούμαι για κάμερες\nΠοτέ- Ποτέ να μην ειδοποιούμαι για κάμερες";
+
+"whats_new_ugc_routes_title" = "Easy to share your impressions";
+
+"whats_new_ugc_routes_subtitle" = "Save memorable places, create routes from bookmarks and share them with everyone using MAPS.ME catalogue.";
+
+"whats_new_webeditor_title" = "Turn your routes into stories";
+
+"whats_new_ugc_routes_message2" = "Add photos and detailed stories in the web-editor.";
+
+"whatsnew_standard_routes_title" = "Τυπικές διαδρομές";
+
+"whatsnew_standard_routes_message" = "Ένα βασικό σύνολο των σημείων, σύντομες περιγραφές, αλλά πολλές εντυπώσεις!";
+
+"whatsnew_city_overview_title" = "Περιήγηση στα αξιοθέατα της πόλης";
+
+"whatsnew_city_overview_message" = "Μέχρι 200 σημεία στον χάρτη της πόλης: ότι πιο χρήσιμο και ενδιαφέρον για τον ταξιδιώτη!";
+
+"whatsnew_pro_guides_title" = "Επαγγελματικές διαδρομές";
+
+"whatsnew_pro_guides_message" = "Υψηλό επίπεδο λεπτομέρειας, αναλυτικές περιγραφές τοποθεσιών και δυνατότητα υπολογισμού της απόστασης και του χρόνου της βόλτας";
+
+"whatsnew_paid_routes_title" = "Περισσότερες νέες εμπειρίες!";
+
+"whatsnew_paid_routes_message" = "Εκτός από τις δωρεάν διαδρομές έχουμε προσθέσει στον κατάλογο και 3 κατηγορίες ταξιδιωτικών οδηγών επί πληρωμή. Περισσότερες από 700 νέες διαδρομές!";
+
+"whats_new_ugc_routes_title_android_only" = "Easy to share your impressions";
+
 
 /**********  Partners  **********/
 
@@ -2800,7 +2973,7 @@
 
 "type.boundary.administrative.suburb" = "boundary-administrative-suburb";
 
-"type.boundary.national_park" = "boundary-national_park";
+"type.boundary.national_park" = "Εθνικό πάρκο";
 
 "type.building" = "Κτίριο";
 
@@ -3432,7 +3605,7 @@
 
 "type.leisure.marina" = "leisure-marina";
 
-"type.leisure.nature_reserve" = "leisure-nature_reserve";
+"type.leisure.nature_reserve" = "Φυσικό απόθεμα";
 
 "type.leisure.park" = "Πάρκο";
 
@@ -3540,7 +3713,7 @@
 
 "type.natural.beach" = "Παραλία";
 
-"type.natural.cape" = "natural-cape";
+"type.natural.cape" = "Ακρωτήρι";
 
 "type.natural.cave_entrance" = "Είσοδος σπηλαίου";
 
@@ -3548,9 +3721,9 @@
 
 "type.natural.coastline" = "natural-coastline";
 
-"type.natural.geyser" = "Geyser";
+"type.natural.geyser" = "Θερμοπίδακας";
 
-"type.natural.glacier" = "natural-glacier";
+"type.natural.glacier" = "Παγετώνας";
 
 "type.natural.grassland" = "natural-grassland";
 
@@ -4148,13 +4321,13 @@
 
 "type.sponsored.partner17" = "sponsored-partner17";
 
-"type.sponsored.partner18" = "sponsored-partner18";
+"type.sponsored.partner18" = "MegaFon";
 
-"type.sponsored.partner19" = "sponsored-partner19";
+"type.sponsored.partner19" = "MegaFon";
 
 "type.sponsored.partner2" = "sponsored-partner2";
 
-"type.sponsored.partner20" = "sponsored-partner20";
+"type.sponsored.partner20" = "MegaFon";
 
 "type.sponsored.partner3" = "sponsored-partner3";
 
@@ -4333,3 +4506,312 @@
 "type.wheelchair.no" = "wheelchair-no";
 
 "type.wheelchair.yes" = "wheelchair-yes";
+
+
+/********** Brands **********/
+
+"brand.aiya" = "Aiya";
+
+"brand.anrakutei" = "Anrakutei";
+
+"brand.applebee_s" = "Applebee's";
+
+"brand.aroma" = "Aroma";
+
+"brand.bamiyan" = "Bamiyan";
+
+"brand.banana_leaf" = "Banana Leaf";
+
+"brand.baskin_robbins" = "Baskin-Robbins";
+
+"brand.big_boy" = "Big Boy";
+
+"brand.bikkuridonkey" = "Bikkuri-Donkey";
+
+"brand.blue_bottle_coffee" = "Blue Bottle Coffee";
+
+"brand.burger_king" = "Burger King";
+
+"brand.cafe_amazon" = "Café Amazon";
+
+"brand.cafe_coffee_day" = "Cafe Coffee Day";
+
+"brand.cafe_de_crie" = "Cafe de Crie";
+
+"brand.capricchosa" = "Capricchosa";
+
+"brand.carl_s_jr" = "Carl's Jr.";
+
+"brand.celentano" = "Celentano";
+
+"brand.chibo" = "Chibo";
+
+"brand.chick_fil_a" = "Chick-fil-A";
+
+"brand.chilis" = "Chili's";
+
+"brand.chipotle" = "Chipotle";
+
+"brand.chowking" = "Chowking";
+
+"brand.cinnabon" = "Cinnabon";
+
+"brand.coco" = "CoCo";
+
+"brand.coco_ichibanya" = "Coco Ichibanya";
+
+"brand.cocos" = "COCO'S";
+
+"brand.coffee_house" = "Coffee House";
+
+"brand.coffee_world" = "Coffee World";
+
+"brand.coffeeport" = "Coffeeport";
+
+"brand.coffeeshop_company" = "Coffeeshop Company";
+
+"brand.cofix" = "Cofix";
+
+"brand.comic_buster" = "Comic Buster";
+
+"brand.costa_coffee" = "Costa Coffee";
+
+"brand.dairy_queen" = "Dairy Queen";
+
+"brand.dennys" = "Denny's";
+
+"brand.doi_chaang" = "Doi Chaang";
+
+"brand.dominos_pizza" = "Domino's Pizza";
+
+"brand.double_b" = "Double B";
+
+"brand.doutor" = "Doutor";
+
+"brand.dunkin_donuts" = "Dunkin Donuts";
+
+"brand.espresso_house" = "Espresso House";
+
+"brand.excelsior_caffe" = "Excelsior Caffe";
+
+"brand.first_kitchen" = "First Kitchen";
+
+"brand.freshness_burger" = "Freshness Burger";
+
+"brand.fujisoba" = "Fujisoba";
+
+"brand.glowsubs" = "GlowSubs";
+
+"brand.grazie_gardens" = "Grazie Gardens";
+
+"brand.gusto" = "Gusto";
+
+"brand.gyukaku" = "Gyu-Kaku";
+
+"brand.haagen_dazs" = "Häagen-Dazs";
+
+"brand.hamazushi" = "Hamazushi";
+
+"brand.hanamaru" = "Hanamaru";
+
+"brand.hanaya_yohei" = "Hanaya Yohei";
+
+"brand.handaya" = "Handaya";
+
+"brand.hard_rock_cafe" = "Hard Rock Cafe";
+
+"brand.havanna" = "Havanna";
+
+"brand.hesburger" = "Hesburger";
+
+"brand.hokkahokka_tei" = "Hokka-Hokka Tei";
+
+"brand.honkekamadoya" = "Honkekamadoya";
+
+"brand.hottomotto" = "HottoMotto";
+
+"brand.ihop" = "IHOP";
+
+"brand.ikinari_steak" = "Ikinari Steak";
+
+"brand.il_patio" = "IL Patio";
+
+"brand.jack_in_the_box" = "Jack in the Box";
+
+"brand.jiyu_kukan" = "Jiyu Kukan";
+
+"brand.jollibee" = "Jollibee";
+
+"brand.jolly_pasta" = "Jolly Pasta";
+
+"brand.jonathans" = "Jonathan's";
+
+"brand.joyfull" = "Joyfull";
+
+"brand.kappazushi" = "Kappazushi";
+
+"brand.katsuya" = "Katsuya";
+
+"brand.kfc" = "KFC";
+
+"brand.kisoji" = "Kisoji";
+
+"brand.kobeya_restaurant" = "Kobeya Restaurant";
+
+"brand.kohikan" = "KO:HI:KAN";
+
+"brand.komeda" = "Komeda";
+
+"brand.komoro_soba" = "Komoro Soba";
+
+"brand.kourakuen" = "Kourakuen";
+
+"brand.kroshka_kartoshka" = "Kroshka Kartoshka";
+
+"brand.kurazushi" = "Kurazushi";
+
+"brand.little_caesars" = "Little Caesars";
+
+"brand.lotteria" = "Lotteria";
+
+"brand.maido_ohkini" = "Maido-Ohkini";
+
+"brand.marrybrown" = "Marrybrown";
+
+"brand.marugame_seimen" = "Marugame Seimen";
+
+"brand.matsunoya" = "Matsunoya";
+
+"brand.matsuya" = "Matsuya";
+
+"brand.mcdonalds" = "McDonald's";
+
+"brand.mister_donut" = "Mister Donut";
+
+"brand.miyakosoba" = "Miyakosoba";
+
+"brand.miyoshino" = "Miyoshino";
+
+"brand.mk_restaurants" = "MK Restaurants";
+
+"brand.mos_burger" = "MOS BURGER";
+
+"brand.mr_sub" = "Mr. Sub";
+
+"brand.mu_mu" = "Mu-Mu";
+
+"brand.nakau" = "Nakau";
+
+"brand.ohsho" = "Gyoza no Ohsho";
+
+"brand.onebuckscoffee" = "OneBucksCoffee";
+
+"brand.origin_bento" = "Origin Bento";
+
+"brand.osaka_ohsho" = "Osaka Ohsho";
+
+"brand.panda_express" = "Panda Express";
+
+"brand.panera_bread" = "Panera Bread";
+
+"brand.papa_johns" = "Papa John's";
+
+"brand.perkins" = "Perkins";
+
+"brand.pizza_hut" = "Pizza Hut";
+
+"brand.pizza_pizza" = "Pizza Pizza";
+
+"brand.popeyes" = "Popeyes";
+
+"brand.pronto" = "Pronto";
+
+"brand.quiznos" = "Quiznos";
+
+"brand.red_lobster" = "Red Lobster";
+
+"brand.ringer_hut" = "Ringer Hut";
+
+"brand.robin_sdobin" = "Robin Sdobin";
+
+"brand.royal_host" = "Royal Host";
+
+"brand.ruby_tuesday" = "Ruby Tuesday";
+
+"brand.saizeriya" = "Saizeriya";
+
+"brand.sato" = "Sato";
+
+"brand.segafredo" = "Segafredo";
+
+"brand.shake_shack" = "Shake Shack";
+
+"brand.shokoladnitsa" = "Shokoladnitsa";
+
+"brand.sizzler" = "Sizzler";
+
+"brand.skuratov" = "Skuratov";
+
+"brand.spur" = "Spur";
+
+"brand.starbucks" = "Starbucks";
+
+"brand.stardogs" = "Stardog!s";
+
+"brand.steak_n_shake" = "Steak'n Shake";
+
+"brand.stmarc_cafe" = "St. Marc Cafe";
+
+"brand.subway" = "Subway";
+
+"brand.sukiya" = "Sukiya";
+
+"brand.sushi_wok" = "Sushi Wok";
+
+"brand.sushiro" = "Sushiro";
+
+"brand.swensens" = "Swensen's";
+
+"brand.syabu_yo" = "Syabu-yo";
+
+"brand.taco_bell" = "Taco Bell";
+
+"brand.telepizza" = "Telepizza";
+
+"brand.tenkaippin" = "TenkaIppin";
+
+"brand.teremok" = "Teremok";
+
+"brand.tgi_fridays" = "TGI Friday's";
+
+"brand.the_pizza_company" = "The Pizza Company";
+
+"brand.tim_hortons" = "Tim Hortons";
+
+"brand.tonden" = "Tonden";
+
+"brand.tullys_coffee" = "Tully's Coffee";
+
+"brand.ueshima_coffee_ten" = "Ueshima Coffee Ten";
+
+"brand.uobei" = "Uobei";
+
+"brand.vapiano" = "Vapiano";
+
+"brand.victoria_station" = "Victoria Station";
+
+"brand.waffle_house" = "Waffle House";
+
+"brand.wendys" = "Wendy's";
+
+"brand.wokker" = "Wokker";
+
+"brand.yakitoria" = "Yakitoria";
+
+"brand.yomen_ya_goemon" = "Yomenya Goemon";
+
+"brand.yoshinoya" = "Yoshinoya";
+
+"brand.yudetaro" = "Yudetaro";
+
+"brand.yumean" = "Yumean";

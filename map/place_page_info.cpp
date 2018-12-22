@@ -2,6 +2,8 @@
 #include "map/bookmark_helpers.hpp"
 #include "map/reachable_by_taxi_checker.hpp"
 
+#include "descriptions/loader.hpp"
+
 #include "partners_api/ads_engine.hpp"
 #include "partners_api/banner.hpp"
 #include "partners_api/partners.hpp"
@@ -54,6 +56,7 @@ void Info::SetFromFeatureType(FeatureType & ft)
   GetPrefferedNames(primaryName, secondaryName);
   m_sortedTypes = m_types;
   m_sortedTypes.SortBySpec();
+  m_primaryFeatureName = primaryName;
   if (IsBookmark())
   {
     m_uiTitle = GetBookmarkName();

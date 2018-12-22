@@ -16,6 +16,7 @@ set(
   index_graph_test.cpp
   index_graph_tools.cpp
   index_graph_tools.hpp
+  maxspeeds_tests.cpp
   nearest_edge_finder_tests.cpp
   online_cross_fetcher_test.cpp
   restriction_test.cpp
@@ -39,29 +40,29 @@ omim_add_test(${PROJECT_NAME} ${SRC})
 
 omim_link_libraries(
   ${PROJECT_NAME}
+  map
   routing
   platform_tests_support
   traffic
   routing_common
   transit
   kml
-  editor
+  descriptions
   indexer
   platform
-  oauthcpp
   geometry
   coding
   base
-  protobuf
-  succinct
-  opening_hours
+  agg
   jansson
-  stats_client
-  map
+  oauthcpp
+  opening_hours
+  protobuf
   pugixml
+  succinct
   stats_client
   icu
-  agg
+
   ${LIBZ}
 )
 

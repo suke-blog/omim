@@ -23,13 +23,14 @@ import com.mapswithme.maps.ads.MwmNativeAd;
 import com.mapswithme.maps.ads.NativeAdError;
 import com.mapswithme.maps.analytics.ExternalLibrariesMediator;
 import com.mapswithme.maps.api.ParsedMwmRequest;
+import com.mapswithme.maps.bookmarks.data.BookmarkCategory;
 import com.mapswithme.maps.bookmarks.data.BookmarkManager;
 import com.mapswithme.maps.bookmarks.data.MapObject;
 import com.mapswithme.maps.downloader.MapManager;
 import com.mapswithme.maps.editor.Editor;
 import com.mapswithme.maps.editor.OsmOAuth;
 import com.mapswithme.maps.location.LocationHelper;
-import com.mapswithme.maps.purchase.AdsRemovalValidationStatus;
+import com.mapswithme.maps.purchase.ValidationStatus;
 import com.mapswithme.maps.routing.RoutePointInfo;
 import com.mapswithme.maps.taxi.TaxiInfoError;
 import com.mapswithme.maps.taxi.TaxiManager;
@@ -118,6 +119,7 @@ import static com.mapswithme.util.statistics.Statistics.EventParam.OBJECT_LON;
 import static com.mapswithme.util.statistics.Statistics.EventParam.PLACEMENT;
 import static com.mapswithme.util.statistics.Statistics.EventParam.PRODUCT;
 import static com.mapswithme.util.statistics.Statistics.EventParam.PROVIDER;
+import static com.mapswithme.util.statistics.Statistics.EventParam.PURCHASE;
 import static com.mapswithme.util.statistics.Statistics.EventParam.RESTAURANT;
 import static com.mapswithme.util.statistics.Statistics.EventParam.RESTAURANT_LAT;
 import static com.mapswithme.util.statistics.Statistics.EventParam.RESTAURANT_LON;
@@ -150,6 +152,70 @@ public enum Statistics
 {
   INSTANCE;
 
+  public void trackCategoryDescChanged()
+  {
+    trackEditSettingsScreenOptionClick(ParamValue.ADD_DESC);
+  }
+
+  public void trackSharingOptionsClick(@NonNull String value)
+  {
+    ParameterBuilder builder = new ParameterBuilder().add(EventParam.OPTION, value);
+    trackEvent(EventName.BM_SHARING_OPTIONS_CLICK, builder);
+  }
+
+  public void trackSharingOptionsError(@NonNull String error,
+                                              @NonNull NetworkErrorType value)
+  {
+    trackSharingOptionsError(error, value.ordinal());
+  }
+
+  public void trackSharingOptionsError(@NonNull String error, int value)
+  {
+    ParameterBuilder builder = new ParameterBuilder().add(EventParam.ERROR, value);
+    trackEvent(error, builder);
+  }
+
+  public void trackSharingOptionsUploadSuccess(@NonNull BookmarkCategory category)
+  {
+    ParameterBuilder builder = new ParameterBuilder().add(EventParam.TRACKS, category.getTracksCount())
+                                                     .add(EventParam.POINTS, category.getBookmarksCount());
+    trackEvent(EventName.BM_SHARING_OPTIONS_UPLOAD_SUCCESS, builder);
+  }
+
+  public void trackBookmarkListSettingsClick(@NonNull Analytics analytics)
+  {
+    ParameterBuilder builder = ParameterBuilder.from(EventParam.OPTION, analytics);
+    trackEvent(EventName.BM_BOOKMARKS_LIST_SETTINGS_CLICK, builder);
+  }
+
+  private void trackEditSettingsScreenOptionClick(@NonNull String value)
+  {
+    ParameterBuilder builder = new ParameterBuilder().add(EventParam.OPTION, value);
+    trackEvent(EventName.BM_EDIT_SETTINGS_CLICK, builder);
+  }
+
+  public void trackEditSettingsCancel()
+  {
+    trackEvent(EventName.BM_EDIT_SETTINGS_CANCEL);
+  }
+
+  public void trackEditSettingsConfirm()
+  {
+    trackEvent(EventName.BM_EDIT_SETTINGS_CONFIRM);
+  }
+
+  public void trackEditSettingsSharingOptionsClick()
+  {
+    trackEditSettingsScreenOptionClick(Statistics.ParamValue.SHARING_OPTIONS);
+  }
+
+  public void trackBookmarkListSharingOptions()
+  {
+    trackEvent(Statistics.EventName.BM_BOOKMARKS_LIST_ITEM_SETTINGS,
+               new Statistics.ParameterBuilder().add(Statistics.EventParam.OPTION,
+                                                     Statistics.ParamValue.SHARING_OPTIONS));
+  }
+
   @Retention(RetentionPolicy.SOURCE)
   @IntDef({PP_BANNER_STATE_PREVIEW, PP_BANNER_STATE_DETAILS})
   public @interface BannerState {}
@@ -180,9 +246,21 @@ public enum Statistics
 
     public static final String SETTINGS_TRACKING_DETAILS = "Settings_Tracking_details";
     public static final String SETTINGS_TRACKING_TOGGLE = "Settings_Tracking_toggle";
+    public static final String PLACEPAGE_DESCRIPTION_MORE = "Placepage_Description_more";
+    public static final String PLACEPAGE_DESCRIPTION_OUTBOUND_CLICK = "Placepage_Description_Outbound_click";
+    public static final String SETTINGS_SPEED_CAMS = "Settings. Speed_cameras";
     static final String DOWNLOADER_DIALOG_ERROR = "Downloader_OnStartScreen_error";
 
     // bookmarks
+    private static final String BM_SHARING_OPTIONS_UPLOAD_SUCCESS = "Bookmarks_SharingOptions_upload_success";
+    public static final String BM_SHARING_OPTIONS_UPLOAD_ERROR = "Bookmarks_SharingOptions_upload_error";
+    public static final String BM_SHARING_OPTIONS_ERROR = "Bookmarks_SharingOptions_error";
+    public static final String BM_SHARING_OPTIONS_CLICK = "Bookmarks_SharingOptions_click";
+    public static final String BM_EDIT_SETTINGS_CLICK = "Bookmarks_Bookmark_Settings_click";
+    public static final String BM_EDIT_SETTINGS_CANCEL = "Bookmarks_Bookmark_Settings_cancel";
+    public static final String BM_EDIT_SETTINGS_CONFIRM = "Bookmarks_Bookmark_Settings_confirm";
+    public static final String BM_BOOKMARKS_LIST_SETTINGS_CLICK = "Bookmarks_BookmarksList_settings_click";
+    public static final String BM_BOOKMARKS_LIST_ITEM_SETTINGS = "Bookmarks_BookmarksListItem_settings";
     public static final String BM_GROUP_CREATED = "Bookmark. Group created";
     public static final String BM_GROUP_CHANGED = "Bookmark. Group changed";
     public static final String BM_COLOR_CHANGED = "Bookmark. Color changed";
@@ -195,6 +273,7 @@ public enum Statistics
     public static final String BM_SYNC_STARTED = "Bookmarks_sync_started";
     public static final String BM_SYNC_ERROR = "Bookmarks_sync_error";
     public static final String BM_SYNC_SUCCESS = "Bookmarks_sync_success";
+    public static final String BM_EDIT_ON_WEB_CLICK = "Bookmarks_EditOnWeb_click";
     static final String BM_RESTORE_PROPOSAL_CLICK = "Bookmarks_RestoreProposal_click";
     public static final String BM_RESTORE_PROPOSAL_CANCEL = "Bookmarks_RestoreProposal_cancel";
     public static final String BM_RESTORE_PROPOSAL_SUCCESS = "Bookmarks_RestoreProposal_success";
@@ -272,6 +351,8 @@ public enum Statistics
     public static final String TTS_FAILURE_LOCATION = "TTS failure location";
     public static final String UGC_NOT_AUTH_NOTIFICATION_SHOWN = "UGC_UnsentNotification_shown";
     public static final String UGC_NOT_AUTH_NOTIFICATION_CLICKED = "UGC_UnsentNotification_clicked";
+    public static final String UGC_REVIEW_NOTIFICATION_SHOWN = "UGC_ReviewNotification_shown";
+    public static final String UGC_REVIEW_NOTIFICATION_CLICKED = "UGC_ReviewNotification_clicked";
 
     // routing
     public static final String ROUTING_BUILD = "Routing. Build";
@@ -328,15 +409,15 @@ public enum Statistics
     public static final String MAP_LAYERS_ACTIVATE = "Map_Layers_activate";
 
     // Purchases.
-    public static final String INAPP_PURCHASE_PREVIEW_SHOW = "InAppPurchase_Preview_show";
-    public static final String INAPP_PURCHASE_PREVIEW_SELECT = "InAppPurchase_Preview_select";
+    static final String INAPP_PURCHASE_PREVIEW_SHOW = "InAppPurchase_Preview_show";
+    static final String INAPP_PURCHASE_PREVIEW_SELECT = "InAppPurchase_Preview_select";
     public static final String INAPP_PURCHASE_PREVIEW_PAY = "InAppPurchase_Preview_pay";
     public static final String INAPP_PURCHASE_PREVIEW_CANCEL = "InAppPurchase_Preview_cancel";
     public static final String INAPP_PURCHASE_STORE_SUCCESS  = "InAppPurchase_Store_success";
-    public static final String INAPP_PURCHASE_STORE_ERROR  = "InAppPurchase_Store_error";
+    static final String INAPP_PURCHASE_STORE_ERROR  = "InAppPurchase_Store_error";
     public static final String INAPP_PURCHASE_VALIDATION_SUCCESS  = "InAppPurchase_Validation_success";
-    public static final String INAPP_PURCHASE_VALIDATION_ERROR  = "InAppPurchase_Validation_error";
-    public static final String INAPP_PURCHASE_PRODUCT_DELIVERED  = "InAppPurchase_Product_delivered";
+    static final String INAPP_PURCHASE_VALIDATION_ERROR  = "InAppPurchase_Validation_error";
+    static final String INAPP_PURCHASE_PRODUCT_DELIVERED  = "InAppPurchase_Product_delivered";
 
     public static class Settings
     {
@@ -367,6 +448,10 @@ public enum Statistics
   {
     public static final String FROM = "from";
     public static final String TO = "to";
+    public static final String OPTION = "option";
+    public static final String TRACKS = "tracks";
+    public static final String POINTS = "points";
+    public static final String URL = "url";
     static final String CATEGORY = "category";
     public static final String TAB = "tab";
     static final String COUNT = "Count";
@@ -412,7 +497,7 @@ public enum Statistics
     static final String BATTERY = "battery";
     static final String CHARGING = "charging";
     static final String NETWORK = "network";
-    static final String VALUE = "value";
+    public static final String VALUE = "value";
     static final String METHOD = "method";
     static final String MODE = "mode";
     static final String OBJECT_LAT = "object_lat";
@@ -428,6 +513,7 @@ public enum Statistics
     static final String BUTTON = "button";
     static final String VENDOR = "vendor";
     static final String PRODUCT = "product";
+    static final String PURCHASE = "purchase";
 
     private EventParam() {}
   }
@@ -440,6 +526,11 @@ public enum Statistics
     public static final String OFF = "off";
     public static final String CRASH_REPORTS = "crash_reports";
     public static final String PERSONAL_ADS = "personal_ads";
+    public static final String SHARING_OPTIONS = "sharing_options";
+    public static final String EDIT_ON_WEB = "edit_on_web";
+    public static final String PUBLIC = "public";
+    public static final String PRIVATE = "private";
+    public static final String COPY_LINK = "copy_link";
     static final String SEARCH_BOOKING_COM = "Search.Booking.Com";
     static final String OPENTABLE = "OpenTable";
     static final String VIATOR = "Viator.Com";
@@ -453,6 +544,7 @@ public enum Statistics
     static final String AFTER_SAVE = "after_save";
     static final String PLACEPAGE_PREVIEW = "placepage_preview";
     static final String PLACEPAGE = "placepage";
+    static final String NOTIFICATION = "notification";
     public static final String FACEBOOK = "facebook";
     public static final String CHECKIN = "check_in";
     public static final String CHECKOUT = "check_out";
@@ -485,6 +577,11 @@ public enum Statistics
     public final static String VIEW_ON_MAP = "view on map";
     public final static String NOT_NOW = "not now";
     public final static String CLICK_OUTSIDE = "click outside pop-up";
+    public static final String ADD_DESC = "add_description";
+    public static final String SEND_AS_FILE = "send_as_file";
+    public static final String MAKE_INVISIBLE_ON_MAP = "make_invisible_on_map";
+    public static final String LIST_SETTINGS = "list_settings";
+    public static final String DELETE_GROUP = "delete_group";
   }
 
   // Initialized once in constructor and does not change until the process restarts.
@@ -1119,14 +1216,15 @@ public enum Statistics
     }
   }
 
-  public void trackUGCStart(boolean isEdit, boolean isPPPreview)
+  public void trackUGCStart(boolean isEdit, boolean isPPPreview, boolean isFromNotification)
   {
     trackEvent(UGC_REVIEW_START,
                params()
                    .add(EventParam.IS_AUTHENTICATED, Framework.nativeIsUserAuthenticated())
                    .add(EventParam.IS_ONLINE, ConnectionState.isConnected())
                    .add(EventParam.MODE, isEdit ? ParamValue.EDIT : ParamValue.ADD)
-                   .add(EventParam.FROM, isPPPreview ? ParamValue.PLACEPAGE_PREVIEW : ParamValue.PLACEPAGE)
+                   .add(EventParam.FROM, isPPPreview ? ParamValue.PLACEPAGE_PREVIEW :
+                                         isFromNotification ? ParamValue.NOTIFICATION : ParamValue.PLACEPAGE)
                    .get());
   }
 
@@ -1315,41 +1413,53 @@ public enum Statistics
                                         .add(BUTTON, isCross ? 0 : 1));
   }
 
-  public void trackPurchasePreviewShow(@NonNull String vendor, @NonNull String productId)
+  public void trackPurchasePreviewShow(@NonNull String purchaseId, @NonNull String vendor,
+                                       @NonNull String productId)
   {
     trackEvent(INAPP_PURCHASE_PREVIEW_SHOW, params().add(VENDOR, vendor)
-                                                    .add(PRODUCT, productId));
+                                                    .add(PRODUCT, productId)
+                                                    .add(PURCHASE, purchaseId));
   }
 
-  public void trackPurchasePreviewSelect(@NonNull String productId)
+  public void trackPurchaseEvent(@NonNull String event, @NonNull String purchaseId)
   {
-    trackEvent(INAPP_PURCHASE_PREVIEW_SELECT, params().add(PRODUCT, productId));
+    trackEvent(event, params().add(PURCHASE, purchaseId));
   }
 
-  public void trackPurchaseStoreError(@BillingClient.BillingResponse int error)
+  public void trackPurchasePreviewSelect(@NonNull String purchaseId, @NonNull String productId)
   {
-    trackEvent(INAPP_PURCHASE_STORE_ERROR, params().add(ERROR, "Billing error: " + error));
+    trackEvent(INAPP_PURCHASE_PREVIEW_SELECT, params().add(PRODUCT, productId)
+                                                      .add(PURCHASE, productId));
   }
 
-  public void trackPurchaseValidationError(@NonNull AdsRemovalValidationStatus status)
+  public void trackPurchaseStoreError(@NonNull String purchaseId,
+                                      @BillingClient.BillingResponse int error)
   {
-    if (status == AdsRemovalValidationStatus.VERIFIED)
+    trackEvent(INAPP_PURCHASE_STORE_ERROR, params().add(ERROR, "Billing error: " + error)
+                                                   .add(PURCHASE, purchaseId));
+  }
+
+  public void trackPurchaseValidationError(@NonNull String purchaseId, @NonNull ValidationStatus status)
+  {
+    if (status == ValidationStatus.VERIFIED)
       return;
 
     int errorCode;
-    if (status == AdsRemovalValidationStatus.NOT_VERIFIED)
+    if (status == ValidationStatus.NOT_VERIFIED)
       errorCode = 0;
-    else if (status == AdsRemovalValidationStatus.SERVER_ERROR)
+    else if (status == ValidationStatus.SERVER_ERROR)
       errorCode = 2;
     else
       return;
 
-    trackEvent(INAPP_PURCHASE_VALIDATION_ERROR, params().add(ERROR_CODE, errorCode));
+    trackEvent(INAPP_PURCHASE_VALIDATION_ERROR, params().add(ERROR_CODE, errorCode)
+                                                        .add(PURCHASE, purchaseId));
   }
 
-  public void trackPurchaseProductDelivered(@NonNull String vendor)
+  public void trackPurchaseProductDelivered(@NonNull String purchaseId, @NonNull String vendor)
   {
-    trackEvent(INAPP_PURCHASE_PRODUCT_DELIVERED, params().add(VENDOR, vendor));
+    trackEvent(INAPP_PURCHASE_PRODUCT_DELIVERED, params().add(VENDOR, vendor)
+                                                         .add(PURCHASE, purchaseId));
   }
 
   public static ParameterBuilder params()
@@ -1366,6 +1476,12 @@ public enum Statistics
   public static class ParameterBuilder
   {
     private final Map<String, String> mParams = new HashMap<>();
+
+    @NonNull
+    public static ParameterBuilder from(@NonNull String key, @NonNull Analytics analytics)
+    {
+      return new ParameterBuilder().add(key, analytics.getName());
+    }
 
     public ParameterBuilder add(String key, String value)
     {
@@ -1407,5 +1523,11 @@ public enum Statistics
   {
     return MapObject.isOfType(MapObject.MY_POSITION, point) ? Statistics.EventParam.MY_POSITION
                                                             : Statistics.EventParam.POINT;
+  }
+  
+  public enum NetworkErrorType 
+  {
+    NO_NETWORK,
+    AUTH_FAILED;
   }
 }

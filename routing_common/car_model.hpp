@@ -11,7 +11,7 @@ public:
   CarModel();
   CarModel(VehicleModel::LimitsInitList const & roadLimits);
 
-  // VehicleModelInterface overrides
+  // VehicleModelInterface overrides:
   double GetOffroadSpeed() const override;
 
   static CarModel const & AllLimitsInstance();

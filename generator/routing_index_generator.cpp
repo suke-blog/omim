@@ -27,8 +27,7 @@
 #include "coding/file_container.hpp"
 #include "coding/file_name_utils.hpp"
 #include "coding/geometry_coding.hpp"
-#include "coding/point_to_integer.hpp"
-#include "coding/pointd_to_pointu.hpp"
+#include "coding/point_coding.hpp"
 #include "coding/reader.hpp"
 
 #include "geometry/point2d.hpp"
@@ -142,7 +141,7 @@ private:
 
     for (size_t i = 0; i < f.GetPointsCount(); ++i)
     {
-      uint64_t const locationKey = PointToInt64Obsolete(f.GetPoint(i), POINT_COORD_BITS);
+      uint64_t const locationKey = PointToInt64Obsolete(f.GetPoint(i), kPointCoordBits);
       m_posToJoint[locationKey].AddPoint(RoadPoint(id, base::checked_cast<uint32_t>(i)));
     }
   }

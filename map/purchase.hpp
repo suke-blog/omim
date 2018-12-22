@@ -34,6 +34,7 @@ public:
     Verified,    // Purchase is verified.
     NotVerified, // Purchase is not verified.
     ServerError, // Server error during validation.
+    AuthError,   // Authentication error during validation.
   };
 
   struct ValidationInfo
@@ -42,7 +43,8 @@ public:
     std::string m_vendorId;
     std::string m_receiptData;
 
-    bool IsValid() const { return !m_serverId.empty() && !m_vendorId.empty() && !m_receiptData.empty(); }
+    // We do not check serverId here, because it can be empty in some cases.
+    bool IsValid() const { return !m_vendorId.empty() && !m_receiptData.empty(); }
   };
 
   using ValidationCallback = std::function<void(ValidationCode, ValidationInfo const &)>;
