@@ -54,6 +54,8 @@
 #define TRANSIT_FILE_TAG "transit"
 #define UGC_FILE_TAG "ugc"
 #define CITY_ROADS_FILE_TAG "city_roads"
+#define DESCRIPTIONS_FILE_TAG "descriptions"
+#define MAXSPEEDS_FILE_TAG "maxspeeds"
 
 #define LOCALITY_DATA_FILE_TAG "locdata"
 #define GEO_OBJECTS_INDEX_FILE_TAG "locidx"
@@ -89,6 +91,7 @@
 
 #define SEARCH_CATEGORIES_FILE_NAME "categories.txt"
 #define SEARCH_CUISINE_CATEGORIES_FILE_NAME "categories_cuisines.txt"
+#define SEARCH_BRAND_CATEGORIES_FILE_NAME "categories_brands.txt"
 
 #define PACKED_POLYGONS_INFO_TAG "info"
 #define PACKED_POLYGONS_FILE "packed_polygons.bin"
@@ -101,6 +104,7 @@
 #define ROAD_ACCESS_FILENAME "road_access.csv"
 #define METALINES_FILENAME "metalines.bin"
 #define CAMERAS_TO_WAYS_FILENAME "cameras_to_ways.bin"
+#define MAXSPEEDS_FILENAME "maxspeeds.csv"
 
 #define TRAFFIC_FILE_EXTENSION ".traffic"
 

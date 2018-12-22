@@ -182,35 +182,41 @@
 	<string name="measurement_units">Đơn vị đo</string>
 	<!-- Detailed description of Measurement Units settings button -->
 	<string name="measurement_units_summary">Chọn giữa dặm và kilômét</string>
-	<!-- Search Suggestion -->
-	<string name="food">ẩm thực</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for cafes, bars, restaurants -->
+	<string name="eat">Ăn ở đâu</string>
+	<!-- Search category for grocery stores -->
+	<string name="food">Cửa hàng tạp hóa</string>
+	<!-- Search category -->
 	<string name="transport">Giao thông</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="fuel">Khí đốt</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="parking">đỗ xe</string>
-	<!-- Search Suggestion -->
-	<string name="shop">Cửa hàng</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for clothes/shoes/gifts/jewellery/sport shops -->
+	<string name="shopping">Đi mua sắm</string>
+	<!-- Search category -->
 	<string name="hotel">Khách sạn</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="tourism">Diểm tham quan</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="entertainment">Giải trí</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="atm">ATM</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for nightclubs/bars -->
+	<string name="nightlife">Cuộc sống về đêm</string>
+	<!-- Search category for water park/disneyland/playground/toys store -->
+	<string name="children">Kỳ nghỉ gia đình</string>
+	<!-- Search category -->
 	<string name="bank">Ngân hàng</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="pharmacy">Hiệu thuốc</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="hospital">Bệnh viện</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="toilet">Nhà vệ sinh</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="post">Bưu điện</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="police">Cảnh sát</string>
 	<!-- String in search result list, when nothing found -->
 	<string name="no_search_results_found">Không tìm thấy kết quả nào</string>
@@ -402,7 +408,7 @@
 	<string name="email_error_title">Lỗi gửi thư</string>
 	<!-- Settings item title -->
 	<string name="pref_calibration_title">Chuẩn hóa la bàn</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="wifi">WiFi</string>
 	<!-- Update map suggestion -->
 	<string name="routing_map_outdated">Vui lòng cập nhật bản đồ để tạo tuyến đường</string>
@@ -1384,6 +1390,84 @@
 	<string name="subscription_terms">Thanh toán sẽ được tính vào tài khoản iTunes của bạn khi xác nhận mua. Đăng ký sẽ tự động gia hạn trừ khi tính năng tự động gia hạn được tắt ít nhất 24 giờ trước khi kết thúc kỳ đăng ký hiện tại. Tài khoản của bạn sẽ được tính phí theo gói gia hạn trong vòng 24 giờ trước khi kết thúc kỳ đăng ký hiện tại. Bạn có thể quản lý hoặc tắt tính năng tự động gia hạn trong cài đặt tài khoản Apple ID của mình bất kỳ lúc nào sau khi mua.</string>
 	<string name="subscriptions_title">Đăng ký</string>
 	<string name="manage_subscription">Quản lý đăng ký</string>
+	<string name="sharing_options">Chia sẻ lựa chọn</string>
+	<string name="export_file">Xuất tập tin</string>
+	<string name="list_settings">Cài đặt danh sách</string>
+	<string name="delete_list">Xóa danh sách</string>
+	<string name="hide_from_map">Ẩn từ bản đồ</string>
+	<string name="ugc_route_tags_screen_label">Chọn thẻ</string>
+	<string name="ugc_route_tags_progress_msg">Đang tải thẻ…</string>
+	<string name="ugc_route_tags_desc">Vui lòng chọn thẻ để giúp những khách du lịch khác tìm thấy hướng dẫn của bạn. Điều này là bắt buộc.</string>
+	<string name="public_access">Truy cập công khai</string>
+	<string name="limited_access">Truy cập hạn chế</string>
+	<string name="upload_and_publish_desc">Hướng dẫn này sẽ được tải lên danh mục MAPS.ME công khai và sẽ có sẵn cho những người dùng khác</string>
+	<string name="upload_and_publish">Tải lên và phát hành</string>
+	<string name="upload_and_get_direct_link">Tải lên và nhận liên kết trực tiếp</string>
+	<string name="get_direct_link_desc">Hướng dẫn của bạn sẽ có sẵn cho bất kỳ ai có liên kết</string>
+	<string name="upload_and_publish_progress_text">Phát hành hướng dẫn của bạn…</string>
+	<string name="upload_and_publish_success">Hướng dẫn đã được phát hành</string>
+	<string name="ugc_routes_user_agreement">&lt;b>VUI LÒNG LƯU Ý:&lt;/b> với việc bắt đầu, bạn đã đồng ý với &lt;a href="%s">thỏa thuận cấp phép&lt;/a></string>
+	<string name="ugc_route_edit_list_name">Hướng dẫn tên</string>
+	<string name="ugc_route_edit_description_hint">Đánh vào một mô tả (văn bản hoặc html)</string>
+	<string name="not_shared">Riêng tư</string>
+	<string name="direct_link_progress_text">Đang tải tập tin của bạn…</string>
+	<string name="direct_link_success">Liên kết đã được tạo</string>
+	<string name="edit_guide_title">Chỉnh sửa hướng dẫn của bạn trên trang web</string>
+	<string name="edit_guide_subtitle">Nhận liên kết để chỉnh sửa hướng dẫn của bạn qua ứng dụng web: thêm mô tả, tải ảnh lên và kết nối dấu trang với các dòng.</string>
+	<string name="send_a_link_btn">Gửi cho tôi liên kết</string>
+	<string name="upload_error_toast">Đã xảy ra lỗi trong khi tải lên tập tin của bạn</string>
+	<string name="tags_loading_error_subtitle">Đã xảy ra lỗi khi tải thẻ, vui lòng thử lại</string>
+	<string name="unable_upload_errorr_title">Tải tập tin lên không thành công</string>
+	<string name="unable_upload_error_subtitle_edited">Tập tin này đã được chỉnh sửa qua ứng dụng web</string>
+	<string name="unable_upload_error_subtitle_broken">Tập tin này bị hỏng và không thể tải lên được. Vui lòng tải lên một tập tin khác.</string>
+	<string name="buy_btn">Mua với %s</string>
+	<string name="download_guide_progress">Đang tải xuống hướng dẫn của bạn…</string>
+	<string name="price_error_title">Không thể có được giá</string>
+	<string name="price_error_subtitle">Vui lòng thử lại trong vài phút</string>
+	<string name="edit_your_guide_email_body">Chỉnh sửa hướng dẫn của bạn trên web dễ dàng bằng máy tính của bạn: thêm mô tả, tải ảnh lên và kết nối dấu trang với các dòng.</string>
+	<string name="edit_on_web">Chỉnh sửa trên web</string>
+	<string name="properties_loading_error_subtitle">Đã xảy ra lỗi khi tải tùy chọn, vui lòng thử lại</string>
+	<string name="custom_props_desc">Trong hướng dẫn này, bạn đã ghé thăm các địa điểm như</string>
+	<string name="custom_props_title">Người địa phương hay du khách</string>
+	<string name="custom_props_local">người địa phương</string>
+	<string name="custom_props_traveler">du khách</string>
+	<string name="select_properties">Chọn tùy chọn</string>
+	<string name="access_rules_p_to_p">Kết nối đặc biệt</string>
+	<string name="access_rules_paid">Đã mua</string>
+	<string name="failed_purchase_support_message">Xin lỗi, nhưng có thể bạn chưa hoàn thành việc mua hàng. Vui lòng liên hệ với bộ phận hỗ trợ và chúng tôi sẽ giải quyết vấn đề.</string>
+	<string name="contact">Liên hệ</string>
+	<string name="check_price_button">Kiểm tra giá</string>
+	<string name="download_button">Tải</string>
+	<string name="speedcams_alert_title">Tăn tốc độ máy ảnh</string>
+	<string name="speedcams_alert_subtitle">Cảnh báo về giới hạn tốc độ</string>
+	<string name="speedcam_option_auto">Tự động</string>
+	<string name="speedcam_option_always">Luôn luôn</string>
+	<string name="speedcam_option_never">Không bao giờ</string>
+	<string name="bookmark_description_title">Mô tả dấu trang</string>
+	<string name="place_description_title">Mô tả Địa điểm</string>
+	<string name="ugc_routes_error_uploading_file_toast">Rất tiếc, đã xảy ra lỗi khi tải lên dấu trang của bạn. Vui lòng thử lại.</string>
+	<string name="notification_channel_ugc">Nội dung xã hội</string>
+	<!-- this text will be shown in application notification preferences opposite checkbox which enable/disable downloader notifications. Devices on Android 8+ are affected. -->
+	<string name="notification_channel_downloader">Trình tải xuống bản đồ</string>
+	<string name="notification_leave_review_title">%s - nó như thế nào?</string>
+	<string name="notification_leave_review_content">Giúp khách du lịch bằng cách để lại đánh giá!</string>
+	<string name="share_bookmarks_email_body_link">Xin chào!\n\nĐây là liên kết nơi bạn có thể tải xuống dấu trang của mình: %s. Mở danh sách qua MAPS.ME và tận hưởng chuyến đi của bạn!\n\nNhận đơn đăng ký: http://maps.me/get?kmz</string>
+	<string name="warning_speedcams_title">Thanh điều hướng sẽ cảnh báo bạn về máy ảnh khi bạn vượt quá giới hạn tốc độ %d km/h</string>
+	<string name="warning_speedcams_subtitle">Hãy nhớ lái xe quy định của đất nước bạn đang đi du lịch đến.</string>
+	<string name="speedcams_notice_message">Tự động - Cảnh báo về speedcam nếu có nguy cơ vượt quá giới hạn tốc độ\nLuôn luôn - Luôn cảnh báo về speedcams\nKhông bao giờ - Không bao giờ cảnh báo về speedcams</string>
+	<string name="whats_new_ugc_routes_title">Rất dễ để chia sẻ những sự ấn tượng của bạn</string>
+	<string name="whats_new_ugc_routes_subtitle">Lưu các địa điểm đáng nhớ, tạo tuyến đường bằng cách sử dụng chỉ mục và chia sẻ chúng với mọi người trong danh mục MAPS.ME.</string>
+	<string name="whats_new_webeditor_title">Biến tuyến đường của bạn thành câu chuyện</string>
+	<string name="whats_new_ugc_routes_message2">Thêm ảnh và câu chuyện chi tiết trong trình chỉnh sửa web.</string>
+	<string name="whatsnew_standard_routes_title">Các tuyến đường chuẩn</string>
+	<string name="whatsnew_standard_routes_message">Các điểm ưa thích cơ bản và mô tả ngắn gọn nhưng rất nhiều trải nghiệm!</string>
+	<string name="whatsnew_city_overview_title">Tổng quan thành phố</string>
+	<string name="whatsnew_city_overview_message">Lên đến 200 điểm ưa thích trên bản đồ thành phố: mọi thứ du khách có thể sẽ cảm giác hữu ích và thú vị!</string>
+	<string name="whatsnew_pro_guides_title">Các tuyến đườn Chuyên nghiệp</string>
+	<string name="whatsnew_pro_guides_message">Rất kỹ lưỡng, với các mô tả chi tiết về địa điểm và khả năng tính toán khoảng cách và thời gian chuyến đi</string>
+	<string name="whatsnew_paid_routes_title">Thêm nhiều trải nghiệm mới!</string>
+	<string name="whatsnew_paid_routes_message">Ngoài các tuyến đường miễn phí, chúng tôi đã thêm 3 danh mục tuyến đường có trả tiền vào danh mục của mình. Hơn 700 tuyến đường mới!</string>
+	<string name="whats_new_ugc_routes_title_android_only">Rất dễ để chia sẻ những sự ấn tượng của bạn</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Trạm Cáp Treo</string>
@@ -1485,6 +1569,7 @@
 	<string name="type.barrier.lift_gate">Thanh Chắn</string>
 	<string name="type.barrier.stile">Trụ chắn</string>
 	<string name="type.barrier.toll_booth">Quầy Soát Vé</string>
+	<string name="type.boundary.national_park">Công viên quốc gia</string>
 	<string name="type.building">Tòa nhà</string>
 	<string name="type.building.address">Tòa nhà</string>
 	<string name="type.building.garage">Gara</string>
@@ -1720,6 +1805,7 @@
 	<string name="type.leisure.fitness_station">Trạm tập thể hình</string>
 	<string name="type.leisure.garden">Điểm khảo cổ</string>
 	<string name="type.leisure.golf_course">Sân gôn</string>
+	<string name="type.leisure.nature_reserve">Giữ chỗ</string>
 	<string name="type.leisure.park">Công viên</string>
 	<string name="type.leisure.park.no.access">Công viên</string>
 	<string name="type.leisure.park.permissive">Công viên</string>
@@ -1748,7 +1834,10 @@
 	<string name="type.military.bunker">Boongke</string>
 	<string name="type.natural.bay">Vịnh</string>
 	<string name="type.natural.beach">Bãi biển</string>
+	<string name="type.natural.cape">Áo choàng</string>
 	<string name="type.natural.cave_entrance">Cửa Hang</string>
+	<string name="type.natural.geyser">Suối nước nóng</string>
+	<string name="type.natural.glacier">Sông băng</string>
 	<string name="type.natural.lake">Hồ</string>
 	<string name="type.natural.peak">Đỉnh</string>
 	<string name="type.natural.pond">Ao</string>

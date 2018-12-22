@@ -29,6 +29,8 @@
 
 #include "indexer/feature_altitude.hpp"
 
+#include "routing/speed_camera_manager.hpp"
+
 #include "platform/country_file.hpp"
 #include "platform/local_country_file.hpp"
 #include "platform/local_country_file_utils.hpp"
@@ -39,10 +41,12 @@
 #include "platform/preferred_languages.hpp"
 #include "platform/settings.hpp"
 
+#include "base/assert.hpp"
 #include "base/logging.hpp"
 #include "base/math.hpp"
 #include "base/sunrise_sunset.hpp"
 
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <utility>
@@ -99,6 +103,7 @@ Framework::Framework()
 {
   m_work.GetTrafficManager().SetStateListener(bind(&Framework::TrafficStateChanged, this, _1));
   m_work.GetTransitManager().SetStateListener(bind(&Framework::TransitSchemeStateChanged, this, _1));
+  m_work.GetPowerManager().Subscribe(this);
 }
 
 void Framework::OnLocationError(int errorCode)
@@ -589,6 +594,12 @@ void Framework::EnableDownloadOn3g()
 {
   m_work.GetDownloadingPolicy().EnableCellularDownload(true);
 }
+
+void Framework::DisableAdProvider(ads::Banner::Type const type, ads::Banner::Place const place)
+{
+  m_work.DisableAdProvider(type, place);
+}
+
 uint64_t Framework::RequestTaxiProducts(JNIEnv * env, jobject policy, ms::LatLon const & from,
                                         ms::LatLon const & to,
                                         taxi::SuccessCallback const & onSuccess,
@@ -670,9 +681,16 @@ void Framework::LogLocalAdsEvent(local_ads::EventType type, double lat, double l
   m_work.GetLocalAdsManager().GetStatistics().RegisterEvent(std::move(event));
 }
 
-void Framework::DisableAdProvider(ads::Banner::Type const type, ads::Banner::Place const place)
+void Framework::OnPowerFacilityChanged(PowerManager::Facility const facility, bool enabled)
 {
-  m_work.DisableAdProvider(type, place);
+  // Dummy
+  // TODO: provide information for UI Properties.
+}
+
+void Framework::OnPowerSchemeChanged(PowerManager::Scheme const actualScheme)
+{
+  // Dummy
+  // TODO: provide information for UI Properties.
 }
 }  // namespace android
 
@@ -1100,6 +1118,19 @@ Java_com_mapswithme_maps_Framework_nativeGenerateNotifications(JNIEnv * env, jcl
   return jni::ToJavaStringArray(env, notifications);
 }
 
+JNIEXPORT void JNICALL
+Java_com_mapswithme_maps_Framework_nativeSetSpeedCamManagerMode(JNIEnv * env, jclass, jint mode)
+{
+  frm()->GetRoutingManager().GetSpeedCamManager().SetMode(
+    static_cast<routing::SpeedCameraManagerMode>(mode));
+}
+
+JNIEXPORT jint JNICALL
+Java_com_mapswithme_maps_Framework_nativeGetSpeedCamManagerMode(JNIEnv * env, jclass)
+{
+  return static_cast<jint>(frm()->GetRoutingManager().GetSpeedCamManager().GetMode());
+}
+
 JNIEXPORT jobject JNICALL
 Java_com_mapswithme_maps_Framework_nativeGetRouteFollowingInfo(JNIEnv * env, jclass)
 {
@@ -1120,7 +1151,7 @@ Java_com_mapswithme_maps_Framework_nativeGetRouteFollowingInfo(JNIEnv * env, jcl
                                                "(Ljava/lang/String;Ljava/lang/String;"
                                                "Ljava/lang/String;Ljava/lang/String;"
                                                "Ljava/lang/String;Ljava/lang/String;DIIIDDII"
-                                               "[Lcom/mapswithme/maps/routing/SingleLaneInfo;)V");
+                                               "[Lcom/mapswithme/maps/routing/SingleLaneInfo;ZZ)V");
 
   vector<location::FollowingInfo::SingleLaneInfoClient> const & lanes = info.m_lanes;
   jobjectArray jLanes = nullptr;
@@ -1145,12 +1176,16 @@ Java_com_mapswithme_maps_Framework_nativeGetRouteFollowingInfo(JNIEnv * env, jcl
     }
   }
 
+  auto const & rm = frm()->GetRoutingManager();
+  auto const isSpeedLimitExceeded = rm.IsRoutingActive() ? rm.IsSpeedLimitExceeded() : false;
+  auto const shouldPlaySignal = frm()->GetRoutingManager().GetSpeedCamManager().ShouldPlayBeepSignal();
   jobject const result = env->NewObject(
       klass, ctorRouteInfoID, jni::ToJavaString(env, info.m_distToTarget),
       jni::ToJavaString(env, info.m_targetUnitsSuffix), jni::ToJavaString(env, info.m_distToTurn),
       jni::ToJavaString(env, info.m_turnUnitsSuffix), jni::ToJavaString(env, info.m_sourceName),
       jni::ToJavaString(env, info.m_displayedStreetName), info.m_completionPercent, info.m_turn, info.m_nextTurn, info.m_pedestrianTurn,
-      info.m_pedestrianDirectionPos.lat, info.m_pedestrianDirectionPos.lon, info.m_exitNum, info.m_time, jLanes);
+      info.m_pedestrianDirectionPos.lat, info.m_pedestrianDirectionPos.lon, info.m_exitNum, info.m_time, jLanes,
+      static_cast<jboolean>(isSpeedLimitExceeded), static_cast<jboolean>(shouldPlaySignal));
   ASSERT(result, (jni::DescribeException()));
   return result;
 }
@@ -1888,5 +1923,70 @@ Java_com_mapswithme_maps_Framework_nativeBindUser(JNIEnv * env, jclass, jobject 
     jmethodID const callback = jni::GetMethodID(e, *listenerRef, "onUserBound", "(Z)V");
     e->CallVoidMethod(*listenerRef, callback, static_cast<jboolean>(success));
   });
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_mapswithme_maps_Framework_nativeGetAccessToken(JNIEnv * env, jclass)
+{
+  auto & user = frm()->GetUser();
+  return jni::ToJavaString(env, user.GetAccessToken());
+}
+
+JNIEXPORT jobject JNICALL
+Java_com_mapswithme_maps_Framework_nativeGetMapObject(JNIEnv * env, jclass,
+                                                      jobject notificationMapObject)
+{
+  eye::MapObject mapObject;
+  auto const getBestTypeId =
+      jni::GetMethodID(env, notificationMapObject, "getBestType", "()Ljava/lang/String;");
+  auto const bestType =
+      static_cast<jstring>(env->CallObjectMethod(notificationMapObject, getBestTypeId));
+  mapObject.SetBestType(jni::ToNativeString(env, bestType));
+
+  auto const getMercatorPosXId =
+      jni::GetMethodID(env, notificationMapObject, "getMercatorPosX", "()D");
+  auto const getMercatorPosYId =
+      jni::GetMethodID(env, notificationMapObject, "getMercatorPosY", "()D");
+
+  auto const posX =
+      static_cast<double>(env->CallDoubleMethod(notificationMapObject, getMercatorPosXId));
+  auto const posY =
+      static_cast<double>(env->CallDoubleMethod(notificationMapObject, getMercatorPosYId));
+  mapObject.SetPos({posX, posY});
+
+  auto const getDefaultNameId =
+      jni::GetMethodID(env, notificationMapObject, "getDefaultName", "()Ljava/lang/String;");
+  auto const defaultName =
+      static_cast<jstring>(env->CallObjectMethod(notificationMapObject, getDefaultNameId));
+  mapObject.SetDefaultName(jni::ToNativeString(env, defaultName));
+
+  place_page::Info info;
+  if (frm()->MakePlacePageInfo(mapObject, info))
+    return usermark_helper::CreateMapObject(env, info);
+
+  return nullptr;
+}
+
+JNIEXPORT void JNICALL
+Java_com_mapswithme_maps_Framework_nativeOnBatteryLevelChanged(JNIEnv *, jclass, jint level)
+{
+  CHECK_GREATER_OR_EQUAL(level, 0, ());
+  CHECK_LESS_OR_EQUAL(level, 100, ());
+
+  frm()->GetPowerManager().OnBatteryLevelChanged(static_cast<uint8_t>(level));
+}
+
+JNIEXPORT void JNICALL
+Java_com_mapswithme_maps_Framework_nativeSetPowerManagerFacility(JNIEnv *, jclass,
+                                                                 jint facilityType, jboolean state)
+{
+  frm()->GetPowerManager().SetFacility(static_cast<PowerManager::Facility>(facilityType),
+                                       static_cast<bool>(state));
+}
+
+JNIEXPORT void JNICALL
+Java_com_mapswithme_maps_Framework_nativeSetPowerManagerScheme(JNIEnv *, jclass, jint schemeType)
+{
+  frm()->GetPowerManager().SetScheme(static_cast<PowerManager::Scheme>(schemeType));
 }
 }  // extern "C"

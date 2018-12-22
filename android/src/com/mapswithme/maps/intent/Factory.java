@@ -336,6 +336,7 @@ public class Factory
   {
     static final String SCHEME_HTTPS = "https";
     static final String HOST = "dlink.maps.me";
+    static final String HOST_DEV = "dlink.mapsme.devmail.ru";
 
     @Override
     public final boolean isSupported(@NonNull Intent intent)
@@ -348,7 +349,8 @@ public class Factory
       String scheme = intent.getScheme();
       String host = data.getHost();
 
-      return SCHEME_HTTPS.equals(scheme) && HOST.equals(host) && isLinkSupported(data);
+      return SCHEME_HTTPS.equals(scheme) && (HOST.equals(host) || HOST_DEV.equals(host)) &&
+          isLinkSupported(data);
     }
 
     abstract boolean isLinkSupported(@NonNull Uri data);
@@ -423,7 +425,8 @@ public class Factory
           final String ext = getExtensionFromMime(resolver.getType(mData));
           if (ext != null)
           {
-            final String filePath = StorageUtils.getTempPath() + "Attachment" + ext;
+            final String filePath = StorageUtils.getTempPath(mActivity.getApplication())
+                                    + "Attachment" + ext;
 
             File tmpFile = new File(filePath);
             output = new FileOutputStream(tmpFile);

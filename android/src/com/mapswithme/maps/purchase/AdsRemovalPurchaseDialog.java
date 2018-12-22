@@ -6,6 +6,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +19,11 @@ import android.widget.TextView;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.SkuDetails;
+import com.mapswithme.maps.PrivateVariables;
 import com.mapswithme.maps.R;
 import com.mapswithme.maps.base.BaseMwmDialogFragment;
 import com.mapswithme.maps.dialog.AlertDialogCallback;
-import com.mapswithme.maps.dialog.Detachable;
+import com.mapswithme.util.CrashlyticsUtils;
 import com.mapswithme.util.Graphics;
 import com.mapswithme.util.UiUtils;
 import com.mapswithme.util.Utils;
@@ -29,7 +35,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class AdsRemovalPurchaseDialog extends BaseMwmDialogFragment implements AlertDialogCallback
+public class AdsRemovalPurchaseDialog extends BaseMwmDialogFragment
+    implements AlertDialogCallback, PurchaseStateActivator<AdsRemovalPaymentState>
 {
   private final static Logger LOGGER = LoggerFactory.INSTANCE.getLogger(LoggerFactory.Type.BILLING);
   private final static String TAG = AdsRemovalPurchaseDialog.class.getSimpleName();
@@ -50,7 +57,7 @@ public class AdsRemovalPurchaseDialog extends BaseMwmDialogFragment implements A
   @Nullable
   private AdsRemovalPurchaseControllerProvider mControllerProvider;
   @NonNull
-  private PurchaseCallback mPurchaseCallback = new PurchaseCallback();
+  private AdsRemovalPurchaseCallback mPurchaseCallback = new AdsRemovalPurchaseCallback();
   @NonNull
   private List<AdsRemovalActivationCallback> mActivationCallbacks = new ArrayList<>();
   @SuppressWarnings("NullableProblems")
@@ -66,6 +73,22 @@ public class AdsRemovalPurchaseDialog extends BaseMwmDialogFragment implements A
   @NonNull
   private CompoundButton mOptionsButton;
 
+  public static void show(@NonNull FragmentActivity context)
+  {
+    show(context.getSupportFragmentManager());
+  }
+
+  public static void show(@NonNull Fragment parent)
+  {
+    show(parent.getChildFragmentManager());
+  }
+
+  private static void show(@NonNull FragmentManager manager)
+  {
+    DialogFragment fragment = new AdsRemovalPurchaseDialog();
+    fragment.show(manager, AdsRemovalPurchaseDialog.class.getName());
+  }
+
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState)
   {
@@ -78,7 +101,10 @@ public class AdsRemovalPurchaseDialog extends BaseMwmDialogFragment implements A
   {
     super.onAttach(context);
     LOGGER.d(TAG, "onAttach");
-    mControllerProvider = (AdsRemovalPurchaseControllerProvider) context;
+    if (context instanceof AdsRemovalPurchaseControllerProvider)
+      mControllerProvider = (AdsRemovalPurchaseControllerProvider) context;
+    if (getParentFragment() instanceof  AdsRemovalPurchaseControllerProvider)
+      mControllerProvider = (AdsRemovalPurchaseControllerProvider) getParentFragment();
     if (context instanceof AdsRemovalActivationCallback)
       mActivationCallbacks.add((AdsRemovalActivationCallback) context);
     if (getParentFragment() instanceof AdsRemovalActivationCallback)
@@ -184,8 +210,11 @@ public class AdsRemovalPurchaseDialog extends BaseMwmDialogFragment implements A
   {
     ProductDetails details = getProductDetailsForPeriod(period);
     getControllerOrThrow().launchPurchaseFlow(details.getProductId());
-    Statistics.INSTANCE.trackPurchasePreviewSelect(details.getProductId());
-    Statistics.INSTANCE.trackEvent(Statistics.EventName.INAPP_PURCHASE_PREVIEW_PAY);
+    String purchaseId = PrivateVariables.adsRemovalServerId();
+    Statistics.INSTANCE.trackPurchasePreviewSelect(PrivateVariables.adsRemovalServerId(),
+                                                   details.getProductId());
+    Statistics.INSTANCE.trackPurchaseEvent(Statistics.EventName.INAPP_PURCHASE_PREVIEW_PAY,
+                                           purchaseId);
   }
 
   void onExplanationClick()
@@ -193,7 +222,8 @@ public class AdsRemovalPurchaseDialog extends BaseMwmDialogFragment implements A
     activateState(AdsRemovalPaymentState.EXPLANATION);
   }
 
-  private void activateState(@NonNull AdsRemovalPaymentState state)
+  @Override
+  public void activateState(@NonNull AdsRemovalPaymentState state)
   {
     if (state == mState)
       return;
@@ -204,12 +234,12 @@ public class AdsRemovalPurchaseDialog extends BaseMwmDialogFragment implements A
   }
 
   @NonNull
-  private PurchaseController<AdsRemovalPurchaseCallback> getControllerOrThrow()
+  private PurchaseController<PurchaseCallback> getControllerOrThrow()
   {
     if (mControllerProvider == null)
       throw new IllegalStateException("Controller provider must be non-null at this point!");
 
-    PurchaseController<AdsRemovalPurchaseCallback> controller
+    PurchaseController<PurchaseCallback> controller
         = mControllerProvider.getAdsRemovalPurchaseController();
     if (controller == null)
       throw new IllegalStateException("Controller must be non-null at this point!");
@@ -231,7 +261,8 @@ public class AdsRemovalPurchaseDialog extends BaseMwmDialogFragment implements A
   public void onCancel(DialogInterface dialog)
   {
     super.onCancel(dialog);
-    Statistics.INSTANCE.trackEvent(Statistics.EventName.INAPP_PURCHASE_PREVIEW_CANCEL);
+    Statistics.INSTANCE.trackPurchaseEvent(Statistics.EventName.INAPP_PURCHASE_PREVIEW_CANCEL,
+                                           PrivateVariables.adsRemovalServerId());
   }
 
   @Override
@@ -310,9 +341,15 @@ public class AdsRemovalPurchaseDialog extends BaseMwmDialogFragment implements A
   }
 
   @Override
-  public void onAlertDialogClick(int requestCode, int which)
+  public void onAlertDialogPositiveClick(int requestCode, int which)
   {
     handleErrorDialogEvent(requestCode);
+  }
+
+  @Override
+  public void onAlertDialogNegativeClick(int requestCode, int which)
+  {
+     // Do nothing by default.
   }
 
   @Override
@@ -340,10 +377,8 @@ public class AdsRemovalPurchaseDialog extends BaseMwmDialogFragment implements A
     mProductDetails = new ProductDetails[Period.values().length];
     for (SkuDetails sku: details)
     {
-      float price = sku.getPriceAmountMicros() / 1000000;
-      String currencyCode = sku.getPriceCurrencyCode();
       Period period = Period.valueOf(sku.getSubscriptionPeriod());
-      mProductDetails[period.ordinal()] = new ProductDetails(sku.getSku(), price, currencyCode);
+      mProductDetails[period.ordinal()] = PurchaseUtils.toProductDetails(sku);
     }
   }
 
@@ -352,31 +387,49 @@ public class AdsRemovalPurchaseDialog extends BaseMwmDialogFragment implements A
     mActivationResult = result;
   }
 
-  private static class PurchaseCallback implements AdsRemovalPurchaseCallback,
-                                                   Detachable<AdsRemovalPurchaseDialog>
+  private static class AdsRemovalPurchaseCallback
+      extends StatefulPurchaseCallback<AdsRemovalPaymentState, AdsRemovalPurchaseDialog>
+      implements PurchaseCallback
   {
     @Nullable
-    private AdsRemovalPurchaseDialog mDialog;
-    @Nullable
     private List<SkuDetails> mPendingDetails;
-    @Nullable
-    private AdsRemovalPaymentState mPendingState;
     private Boolean mPendingActivationResult;
 
     @Override
     public void onProductDetailsLoaded(@NonNull List<SkuDetails> details)
     {
-      if (mDialog == null)
+      if (hasIncorrectSkuDetails(details))
+      {
+        activateStateSafely(AdsRemovalPaymentState.PRODUCT_DETAILS_FAILURE);
+        return;
+      }
+
+      if (getUiObject() == null)
         mPendingDetails = Collections.unmodifiableList(details);
       else
-        mDialog.handleProductDetails(details);
+        getUiObject().handleProductDetails(details);
       activateStateSafely(AdsRemovalPaymentState.PRICE_SELECTION);
+    }
+
+    private static boolean hasIncorrectSkuDetails(@NonNull List<SkuDetails> skuDetails)
+    {
+      for (SkuDetails each : skuDetails)
+      {
+        if (AdsRemovalPurchaseDialog.Period.getInstance(each.getSubscriptionPeriod()) == null)
+        {
+          String msg = "Unsupported subscription period: '" + each.getSubscriptionPeriod() + "'";
+          CrashlyticsUtils.logException(new IllegalStateException(msg));
+          LOGGER.e(TAG, msg);
+          return true;
+        }
+      }
+      return false;
     }
 
     @Override
     public void onPaymentFailure(@BillingClient.BillingResponse int error)
     {
-      Statistics.INSTANCE.trackPurchaseStoreError(error);
+      Statistics.INSTANCE.trackPurchaseStoreError(PrivateVariables.adsRemovalServerId(), error);
       activateStateSafely(AdsRemovalPaymentState.PAYMENT_FAILURE);
     }
 
@@ -395,59 +448,36 @@ public class AdsRemovalPurchaseDialog extends BaseMwmDialogFragment implements A
     @Override
     public void onValidationStarted()
     {
-      Statistics.INSTANCE.trackEvent(Statistics.EventName.INAPP_PURCHASE_STORE_SUCCESS);
+      Statistics.INSTANCE.trackPurchaseEvent(Statistics.EventName.INAPP_PURCHASE_STORE_SUCCESS,
+                                             PrivateVariables.adsRemovalServerId());
       activateStateSafely(AdsRemovalPaymentState.VALIDATION);
     }
 
     @Override
     public void onValidationFinish(boolean success)
     {
-      if (mDialog == null)
+      if (getUiObject() == null)
         mPendingActivationResult = success;
       else
-        mDialog.handleActivationResult(success);
+        getUiObject().handleActivationResult(success);
 
       activateStateSafely(AdsRemovalPaymentState.VALIDATION_FINISH);
     }
 
-    void activateStateSafely(@NonNull AdsRemovalPaymentState state)
-    {
-      if (mDialog == null)
-      {
-        mPendingState = state;
-        return;
-      }
-
-      mDialog.activateState(state);
-    }
-
     @Override
-    public void attach(@NonNull AdsRemovalPurchaseDialog object)
+    void onAttach(@NonNull AdsRemovalPurchaseDialog uiObject)
     {
-      mDialog = object;
       if (mPendingDetails != null)
       {
-        mDialog.handleProductDetails(mPendingDetails);
+        uiObject.handleProductDetails(mPendingDetails);
         mPendingDetails = null;
       }
 
       if (mPendingActivationResult != null)
       {
-        mDialog.handleActivationResult(mPendingActivationResult);
+        uiObject.handleActivationResult(mPendingActivationResult);
         mPendingActivationResult = null;
       }
-
-      if (mPendingState != null)
-      {
-        mDialog.activateState(mPendingState);
-        mPendingState = null;
-      }
-    }
-
-    @Override
-    public void detach()
-    {
-      mDialog = null;
     }
   }
 
@@ -456,6 +486,17 @@ public class AdsRemovalPurchaseDialog extends BaseMwmDialogFragment implements A
     // Order is important.
     P1Y,
     P1M,
-    P1W
+    P1W;
+
+    @Nullable
+    static Period getInstance(@Nullable String subscriptionPeriod)
+    {
+      for (Period each : values())
+      {
+        if (TextUtils.equals(each.name(), subscriptionPeriod))
+          return each;
+      }
+      return null;
+    }
   }
 }

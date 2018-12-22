@@ -23,6 +23,8 @@ import com.mapswithme.util.PermissionsUtils;
 import com.mapswithme.util.ThemeUtils;
 import com.mapswithme.util.UiUtils;
 import com.mapswithme.util.Utils;
+import com.mapswithme.util.log.Logger;
+import com.mapswithme.util.log.LoggerFactory;
 
 public abstract class BaseMwmFragmentActivity extends AppCompatActivity
                                   implements BaseActivity
@@ -245,15 +247,25 @@ public abstract class BaseMwmFragmentActivity extends AppCompatActivity
     }
 
     if (onBackPressedInternal(fragment))
-    {
       return;
-    }
+
     super.onBackPressed();
   }
 
-  protected boolean onBackPressedInternal(@NonNull Fragment currentFragment)
+  private boolean onBackPressedInternal(@NonNull Fragment currentFragment)
   {
-    return false;
+    try
+    {
+      OnBackPressListener listener = (OnBackPressListener) currentFragment;
+      return listener.onBackPressed();
+    }
+    catch (ClassCastException e)
+    {
+      Logger logger = LoggerFactory.INSTANCE.getLogger(LoggerFactory.Type.MISC);
+      String tag = this.getClass().getSimpleName();
+      logger.i(tag, "Fragment '" + currentFragment + "' doesn't handle back press by itself.");
+      return false;
+    }
   }
 
   /**
@@ -282,13 +294,17 @@ public abstract class BaseMwmFragmentActivity extends AppCompatActivity
       throw new IllegalStateException("Fragment can't be added, since getFragmentContentResId() isn't implemented or returns wrong resourceId.");
 
     String name = fragmentClass.getName();
-    final Fragment fragment = Fragment.instantiate(this, name, args);
-    getSupportFragmentManager().beginTransaction()
-                               .replace(resId, fragment, name)
-                               .commitAllowingStateLoss();
-    getSupportFragmentManager().executePendingTransactions();
-    if (completionListener != null)
-      completionListener.run();
+    Fragment potentialInstance = getSupportFragmentManager().findFragmentByTag(name);
+    if (potentialInstance == null)
+    {
+      final Fragment fragment = Fragment.instantiate(this, name, args);
+      getSupportFragmentManager().beginTransaction()
+                                 .replace(resId, fragment, name)
+                                 .commitAllowingStateLoss();
+      getSupportFragmentManager().executePendingTransactions();
+      if (completionListener != null)
+        completionListener.run();
+    }
   }
 
   /**

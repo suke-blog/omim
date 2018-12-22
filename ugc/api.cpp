@@ -1,5 +1,7 @@
 #include "ugc/api.hpp"
 
+#include "indexer/feature_data.hpp"
+
 #include "base/assert.hpp"
 
 #include <utility>
@@ -36,6 +38,15 @@ void Api::SetUGCUpdate(FeatureID const & id, UGCUpdate const & ugc,
 void Api::GetUGCToSend(UGCJsonToSendCallback const & callback)
 {
   m_thread.Push([callback, this] { GetUGCToSendImpl(callback); });
+}
+
+void Api::HasUGCForPlace(uint32_t bestType, m2::PointD const & point,
+                         HasUGCForPlaceCallback const & callback)
+{
+  m_thread.Push([=]() mutable
+  {
+    HasUGCForPlaceImpl(bestType, point, callback);
+  });
 }
 
 void Api::SendingCompleted()
@@ -78,6 +89,12 @@ void Api::GetUGCToSendImpl(UGCJsonToSendCallback const & callback)
   CHECK(callback, ());
   auto json = m_storage.GetUGCToSend();
   callback(move(json), m_storage.GetNumberOfUnsynchronized());
+}
+
+void Api::HasUGCForPlaceImpl(uint32_t bestType, m2::PointD const & point,
+                             HasUGCForPlaceCallback const & callback) const
+{
+  callback(m_storage.HasUGCForPlace(bestType, point));
 }
 
 void Api::SendingCompletedImpl()

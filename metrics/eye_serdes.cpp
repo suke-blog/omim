@@ -1,10 +1,11 @@
 #include "metrics/eye_serdes.hpp"
-#include "metrics/eye_info.hpp"
 
 #include "coding/reader.hpp"
 #include "coding/serdes_json.hpp"
 #include "coding/write_to_sink.hpp"
 #include "coding/writer.hpp"
+
+#include "geometry/point2d.hpp"
 
 #include "base/logging.hpp"
 
@@ -17,10 +18,13 @@ namespace
 struct MapObjectEvent
 {
   DECLARE_VISITOR(visitor(m_bestPoiType, "best_type"), visitor(m_poiPos, "pos"),
+                  visitor(m_readableName, "readable_name"), visitor(m_defaultName, "default_name"),
                   visitor(m_event, "event"));
 
   std::string m_bestPoiType;
-  ms::LatLon m_poiPos;
+  m2::PointD m_poiPos;
+  std::string m_defaultName;
+  std::string m_readableName;
   eye::MapObject::Event m_event;
 };
 }  // namespace
@@ -78,21 +82,23 @@ void Serdes::SerializeMapObjects(MapObjects const & mapObjects, std::vector<int8
   std::string const nextLine = "\n";
   MapObjectEvent event;
 
-  for (auto const & poi : mapObjects)
+  mapObjects.ForEach([&writer, &event, &nextLine](MapObject const & item)
   {
-    for (auto const & poiEvent : poi.second)
+    for (auto const & poiEvent : item.GetEvents())
     {
       // Additional scope is added because of the coding::SerializerJson dumps result at destruction.
       {
         coding::SerializerJson<Sink> ser(writer);
-        event.m_bestPoiType = poi.first.m_bestType;
-        event.m_poiPos = poi.first.m_pos;
+        event.m_bestPoiType = item.GetBestType();
+        event.m_poiPos = item.GetPos();
+        event.m_defaultName = item.GetDefaultName();
+        event.m_readableName = item.GetReadableName();
         event.m_event = poiEvent;
         ser(event);
       }
       writer.Write(nextLine.data(), nextLine.size());
     }
-  }
+  });
 }
 
 // static
@@ -117,18 +123,27 @@ void Serdes::DeserializeMapObjects(std::vector<int8_t> const & bytes, MapObjects
 
       coding::DeserializerJson des(eventString);
       des(event);
-      poi.m_bestType = event.m_bestPoiType;
-      poi.m_pos = event.m_poiPos;
+      poi.SetBestType(event.m_bestPoiType);
+      poi.SetPos(event.m_poiPos);
+      poi.SetDefaultName(event.m_defaultName);
+      poi.SetReadableName(event.m_readableName);
 
-      auto it = result.find(poi);
-      if (it == result.end())
+      bool found = false;
+      result.ForEachInRect(poi.GetLimitRect(), [&found, &poi, &event](MapObject const & item)
       {
-        std::vector<MapObject::Event> events = {event.m_event};
-        result.emplace(poi, std::move(events));
-      }
-      else
+        if (item != poi)
+          return;
+
+        if (!found)
+          found = true;
+
+        item.GetEditableEvents().push_back(event.m_event);
+      });
+
+      if (!found)
       {
-        it->second.emplace_back(event.m_event);
+        poi.GetEditableEvents().push_back(event.m_event);
+        result.Add(poi);
       }
     }
   }
@@ -152,8 +167,10 @@ void Serdes::SerializeMapObjectEvent(MapObject const & poi, MapObject::Event con
   std::string const nextLine = "\n";
 
   MapObjectEvent event;
-  event.m_bestPoiType = poi.m_bestType;
-  event.m_poiPos = poi.m_pos;
+  event.m_bestPoiType = poi.GetBestType();
+  event.m_poiPos = poi.GetPos();
+  event.m_defaultName = poi.GetDefaultName();
+  event.m_readableName = poi.GetReadableName();
   event.m_event = poiEvent;
   ser(event);
   writer.Write(nextLine.data(), nextLine.size());

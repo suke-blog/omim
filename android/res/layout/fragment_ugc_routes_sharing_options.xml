@@ -2,6 +2,7 @@
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
@@ -38,10 +39,7 @@
           android:paddingRight="@dimen/margin_base"
           android:paddingEnd="@dimen/margin_base"
           android:paddingLeft="@dimen/margin_base"/>
-        <View
-          android:background="?android:attr/listDivider"
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/divider_height"/>
+        <include layout="@layout/list_divider"/>
         <RelativeLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -53,13 +51,14 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:tint="?colorAccent"
-            android:src="@drawable/ic_globe"
-            android:layout_marginTop="@dimen/margin_half_plus"
-            android:layout_marginBottom="@dimen/margin_half_plus"
+            app:tint="?accentColorSelector"
+            app:srcCompat="@drawable/ic_globe"
+            android:layout_marginTop="@dimen/margin_half_double_plus"
+            android:layout_marginBottom="@dimen/margin_half_double_plus"
             android:layout_marginStart="@dimen/margin_base"
             android:layout_marginLeft="@dimen/margin_base"/>
           <LinearLayout
+            android:id="@+id/upload_and_publish_desc_container"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,7 +69,7 @@
             <TextView
               android:id="@+id/upload_and_publish_text"
               android:text="@string/upload_and_publish"
-              android:textAppearance="?android:attr/textAppearanceSmall"
+              android:textAppearance="?android:attr/textAppearance"
               android:background="?selectableItemBackground"
               android:textColor="?colorAccent"
               android:textAllCaps="true"
@@ -80,19 +79,40 @@
               android:gravity="center_vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              tools:ignore="RtlSymmetry"/>
-            <include
-              android:visibility="gone"
-              android:id="@+id/upload_and_publish_progress_container"
-              android:layout_marginRight="@dimen/margin_base"
-              android:layout_marginEnd="@dimen/margin_base"
+              tools:ignore="RtlSymmetry"
+              android:fontFamily="@string/robotoMedium"
+              tools:targetApi="jelly_bean"/>
+            <LinearLayout
+              android:orientation="horizontal"
+              android:minHeight="@dimen/height_block_base"
+              android:paddingRight="@dimen/margin_base"
+              android:paddingEnd="@dimen/margin_base"
+              android:gravity="center_vertical"
+              android:id="@+id/publishing_completed_status_container"
+              tools:ignore="RtlSymmetry"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              layout="@layout/ugc_routes_progress_container"/>
-            <View
-              android:background="?android:attr/listDivider"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/divider_height"/>
+              android:layout_height="wrap_content">
+              <TextView
+                android:text="@string/upload_and_publish_success"
+                android:textAppearance="?android:attr/textAppearance"
+                android:fontFamily="@string/robotoMedium"
+                android:textColor="?iconTintDisabled"
+                android:textAllCaps="true"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                tools:ignore="RtlSymmetry"
+                tools:targetApi="jelly_bean"/>
+              <ImageView
+                android:id="@+id/share_published_category_btn"
+                android:src="@drawable/ic_share"
+                android:background="?selectableItemBackgroundBorderless"
+                android:tint="?colorAccent"
+                android:layout_width="@dimen/rating_view_height_small"
+                android:layout_height="@dimen/rating_view_height_small"/>
+            </LinearLayout>
+            <include layout="@layout/list_divider"/>
             <TextView
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -101,10 +121,7 @@
               android:text="@string/upload_and_publish_desc"
               android:paddingTop="@dimen/margin_half_double_plus"
               android:paddingBottom="@dimen/margin_half_double_plus"/>
-            <View
-              android:background="?android:attr/listDivider"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/divider_height"/>
+            <include layout="@layout/list_divider"/>
             <TextView
               android:id="@+id/license_agreement_message"
               android:minHeight="@dimen/downloader_status_size"
@@ -115,12 +132,51 @@
               android:layout_marginRight="@dimen/margin_base"
               android:layout_marginEnd="@dimen/margin_base"/>
           </LinearLayout>
+          <LinearLayout
+            android:id="@+id/edit_on_web_btn"
+            android:orientation="vertical"
+            android:layout_below="@id/upload_and_publish_desc_container"
+            android:background="?selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include
+              android:id="@+id/upload_and_publish_desc_container_divider"
+              android:layout_height="@dimen/divider_height"
+              android:layout_width="match_parent"
+              layout="@layout/list_divider"/>
+            <LinearLayout
+              android:orientation="horizontal"
+              android:gravity="center_vertical"
+              android:minHeight="@dimen/height_block_base"
+              android:paddingTop="@dimen/margin_half_plus"
+              android:paddingBottom="@dimen/margin_half_plus"
+              android:layout_marginStart="@dimen/margin_base"
+              android:layout_marginLeft="@dimen/margin_base"
+              android:layout_marginEnd="@dimen/margin_base"
+              android:layout_marginRight="@dimen/margin_base"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+              <ImageView
+                android:layout_width="@dimen/sharing_options_img_size"
+                android:layout_height="@dimen/sharing_options_img_size"
+                android:tint="?colorAccent"
+                android:src="@drawable/ic_edit"/>
+              <TextView
+                android:text="@string/edit_on_web"
+                android:textAppearance="?android:attr/textAppearance"
+                android:layout_marginLeft="@dimen/margin_double_plus"
+                android:layout_marginStart="@dimen/margin_double_plus"
+                android:textColor="?colorAccent"
+                android:textAllCaps="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@string/robotoMedium"
+                tools:targetApi="jelly_bean"/>
+            </LinearLayout>
+          </LinearLayout>
         </RelativeLayout>
       </LinearLayout>
-      <View
-        android:background="?android:attr/listDivider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_height"/>
+      <include layout="@layout/list_divider"/>
       <LinearLayout
         android:id="@+id/get_direct_link_container"
         android:orientation="vertical"
@@ -136,26 +192,23 @@
           android:paddingRight="@dimen/margin_base"
           android:paddingEnd="@dimen/margin_base"
           android:paddingLeft="@dimen/margin_base"/>
-        <View
-          android:background="?android:attr/listDivider"
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/divider_height"/>
+        <include layout="@layout/list_divider"/>
         <RelativeLayout
           xmlns:android="http://schemas.android.com/apk/res/android"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:background="?attr/cardBackground">
-          <ImageView
+          <android.support.v7.widget.AppCompatImageView
             android:id="@+id/get_direct_link_image"
             android:layout_width="@dimen/sharing_options_img_size"
             android:layout_height="@dimen/sharing_options_img_size"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:tint="?colorAccent"
-            android:src="@drawable/ic_link"
-            android:layout_marginTop="@dimen/margin_half_plus"
-            android:layout_marginBottom="@dimen/margin_half_plus"
+            app:tint="?accentColorSelector"
+            app:srcCompat="@drawable/ic_link"
+            android:layout_marginTop="@dimen/margin_half_double_plus"
+            android:layout_marginBottom="@dimen/margin_half_double_plus"
             android:layout_marginStart="@dimen/margin_base"
             android:layout_marginLeft="@dimen/margin_base"/>
           <LinearLayout
@@ -171,7 +224,10 @@
               android:minHeight="@dimen/height_block_base"
               android:text="@string/upload_and_get_direct_link"
               android:background="?selectableItemBackground"
-              android:textAppearance="?android:attr/textAppearanceSmall"
+              android:textAppearance="?android:attr/textAppearance"
+              android:fontFamily="@string/robotoMedium"
+              android:textStyle="normal"
+              android:lineSpacingExtra="6sp"
               android:textColor="?colorAccent"
               android:textAllCaps="true"
               android:gravity="center_vertical"
@@ -179,19 +235,39 @@
               android:layout_height="wrap_content"
               android:paddingRight="@dimen/margin_base"
               android:paddingEnd="@dimen/margin_base"
-              tools:ignore="RtlSymmetry"/>
-            <include
-              android:visibility="gone"
-              android:layout_marginRight="@dimen/margin_base"
-              android:layout_marginEnd="@dimen/margin_base"
+              tools:ignore="RtlSymmetry"
+              tools:targetApi="jelly_bean"/>
+            <LinearLayout
+              android:orientation="horizontal"
+              android:minHeight="@dimen/height_block_base"
+              android:paddingRight="@dimen/margin_base"
+              android:paddingEnd="@dimen/margin_base"
+              android:gravity="center_vertical"
+              android:id="@+id/get_direct_link_completed_status_container"
+              tools:ignore="RtlSymmetry"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:id="@+id/get_direct_link_progress_container"
-              layout="@layout/ugc_routes_progress_container"/>
-            <View
-              android:background="?android:attr/listDivider"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/divider_height"/>
+              android:layout_height="wrap_content">
+              <TextView
+                android:text="@string/direct_link_success"
+                android:textAppearance="?android:attr/textAppearance"
+                android:fontFamily="@string/robotoMedium"
+                android:textColor="?iconTintDisabled"
+                android:textAllCaps="true"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                tools:ignore="RtlSymmetry"
+                tools:targetApi="jelly_bean"/>
+              <ImageView
+                android:id="@+id/share_direct_link_btn"
+                android:src="@drawable/ic_share"
+                android:tint="?colorAccent"
+                android:background="?selectableItemBackgroundBorderless"
+                android:layout_width="@dimen/rating_view_height_small"
+                android:layout_height="@dimen/rating_view_height_small"/>
+            </LinearLayout>
+            <include layout="@layout/list_divider"/>
             <TextView
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -202,11 +278,8 @@
               android:paddingBottom="@dimen/margin_half_double_plus"/>
           </LinearLayout>
         </RelativeLayout>
+        <include layout="@layout/list_divider"/>
       </LinearLayout>
-      <View
-        android:background="?android:attr/listDivider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_height"/>
     </LinearLayout>
   </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

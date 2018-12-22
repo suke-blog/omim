@@ -572,7 +572,7 @@ CreatePointStorageReader(feature::GenerateInfo::NodeStorageType type, string con
   case feature::GenerateInfo::NodeStorageType::Sqlite:
     return make_shared<SqlitePointStorageReader>(name);
   }
-  CHECK_SWITCH();
+  UNREACHABLE();
 }
 
 shared_ptr<PointStorageWriterInterface>
@@ -589,7 +589,7 @@ CreatePointStorageWriter(feature::GenerateInfo::NodeStorageType type, string con
   case feature::GenerateInfo::NodeStorageType::Sqlite:
     return make_shared<SqlitePointStorageWriter>(name);
   }
-  CHECK_SWITCH();
+  UNREACHABLE();
 }
 
 

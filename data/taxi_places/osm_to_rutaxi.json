@@ -245,6 +245,51 @@
     "currency": "RUB"
   },
   {
+    "osm": "Mytishchi",
+    "rutaxi": "moscow",
+    "currency": "RUB"
+  },
+  {
+    "osm": "Reutov",
+    "rutaxi": "moscow",
+    "currency": "RUB"
+  },
+  {
+    "osm": "Kotelniki",
+    "rutaxi": "moscow",
+    "currency": "RUB"
+  },
+  {
+    "osm": "Dzerzhinsky",
+    "rutaxi": "moscow",
+    "currency": "RUB"
+  },
+  {
+    "osm": "Vidnoye",
+    "rutaxi": "moscow",
+    "currency": "RUB"
+  },
+  {
+    "osm": "Odintsovo",
+    "rutaxi": "moscow",
+    "currency": "RUB"
+  },
+  {
+    "osm": "Krasnogorsk",
+    "rutaxi": "moscow",
+    "currency": "RUB"
+  },
+  {
+    "osm": "Dolgoprudny",
+    "rutaxi": "moscow",
+    "currency": "RUB"
+  },
+  {
+    "osm": "Khimki",
+    "rutaxi": "moscow",
+    "currency": "RUB"
+  },
+  {
     "osm": "Murmansk",
     "rutaxi": "murmansk",
     "currency": "RUB"
@@ -375,6 +420,26 @@
     "currency": "RUB"
   },
   {
+    "osm": "Sestroretsk",
+    "rutaxi": "spb",
+    "currency": "RUB"
+  },
+  {
+    "osm": "Murino",
+    "rutaxi": "spb",
+    "currency": "RUB"
+  },
+  {
+    "osm": "Shushary",
+    "rutaxi": "spb",
+    "currency": "RUB"
+  },
+  {
+    "osm": "Kolpino",
+    "rutaxi": "spb",
+    "currency": "RUB"
+  },
+  {
     "osm": "Saransk",
     "rutaxi": "saransk",
     "currency": "RUB"
@@ -440,7 +505,7 @@
     "currency": "RUB"
   },
   {
-    "osm": "Togliatti",
+    "osm": "Tolyatti",
     "rutaxi": "tolyatti",
     "currency": "RUB"
   },

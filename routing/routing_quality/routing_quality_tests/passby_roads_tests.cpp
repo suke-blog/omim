@@ -40,7 +40,7 @@ UNIT_TEST(RoutingQuality_BelarusBobruisk)
        ());
 }
 
-UNIT_TEST(RoutingQuality_RussiaStPiterburg)
+UNIT_TEST(RoutingQuality_RussiaStPetersburg)
 {
   TEST(CheckCarRoute({60.08634, 30.10277} /* start */, {59.94584, 30.57703} /* finish */,
                      {{{60.03478, 30.44084}}} /* reference point */),
@@ -51,6 +51,13 @@ UNIT_TEST(RoutingQuality_BelarusMinsk)
 {
   TEST(CheckCarRoute({53.75958, 28.005} /* start */, {54.03957, 26.83097} /* finish */,
                      {{{53.70668, 27.4487}}} /* reference point */),
+       ());
+}
+
+UNIT_TEST(RoutingQuality_BelarusMinskMKAD)
+{
+  TEST(CheckCarRoute({53.81784, 27.76789} /* start */, {53.94655, 27.36398} /* finish */,
+                     {{{53.95037, 27.65361}}} /* reference point */),
        ());
 }
 
@@ -93,6 +100,41 @@ UNIT_TEST(RoutingQuality_ItalyParma)
 {
   TEST(CheckCarRoute({44.81937, 10.2403} /* start */, {44.78228, 10.38824} /* finish */,
                      {{{44.81625, 10.34545}}} /* reference point */),
+       ());
+}
+
+UNIT_TEST(RoutingQuality_SlovenijaLjubljana)
+{
+  TEST(CheckCarRoute({45.99272, 14.59186} /* start */, {46.10318, 14.46829} /* finish */,
+                     {{{46.04449, 14.44669}}} /* reference point */),
+       ());
+}
+
+UNIT_TEST(RoutingQuality_FrancePoitiers)
+{
+  TEST(CheckCarRoute({46.63612, 0.35762} /* start */, {46.49, 0.36787} /* finish */,
+                     {{{46.58706, 0.39232}}} /* reference point */),
+       ());
+}
+
+UNIT_TEST(RoutingQuality_FranceLoudun)
+{
+  TEST(CheckCarRoute({47.03437, 0.04437} /* start */, {46.97887, 0.09692} /* finish */,
+                     {{{47.00307, 0.06713}}} /* reference point */),
+       ());
+}
+
+UNIT_TEST(RoutingQuality_FranceDoueIaFontaine)
+{
+  TEST(CheckCarRoute({47.22972, -0.30962} /* start */, {47.17023, -0.2185} /* finish */,
+                     {{{47.19117, -0.31334}}} /* reference point */),
+       ());
+}
+
+UNIT_TEST(RoutingQuality_BelgiumBrussel)
+{
+  TEST(CheckCarRoute({50.88374, 4.2195} /* start */, {50.91494, 4.38122} /* finish */,
+                     {{{50.91727, 4.36858}}} /* reference point */),
        ());
 }
 }  // namespace

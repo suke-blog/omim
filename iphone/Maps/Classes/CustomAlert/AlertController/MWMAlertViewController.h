@@ -46,7 +46,6 @@
 - (void)presentInfoAlert:(nonnull NSString *)title text:(nonnull NSString *)text;
 - (void)presentCreateBookmarkCategoryAlertWithMaxCharacterNum:(NSUInteger)max
                                               minCharacterNum:(NSUInteger)min
-                                                isNewCategory:(BOOL)isNewCategory
                                                      callback:(nonnull MWMCheckStringBlock)callback;
 
 - (void)presentConvertBookmarksAlertWithCount:(NSUInteger)count block:(nonnull MWMVoidBlock)block;
@@ -57,6 +56,9 @@
 - (void)presentRestoreBookmarkAlertWithMessage:(nonnull NSString *)message
                              rightButtonAction:(nonnull MWMVoidBlock)rightButton
                               leftButtonAction:(nonnull MWMVoidBlock)leftButton;
+
+- (void)presentTagsLoadingErrorAlertWithOkBlock:(nonnull MWMVoidBlock)okBlock
+                                    cancelBlock:(nonnull MWMVoidBlock)cancelBlock;
 
 - (void)presentDefaultAlertWithTitle:(nonnull NSString *)title
                              message:(nullable NSString *)message

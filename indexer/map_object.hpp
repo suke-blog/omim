@@ -8,7 +8,7 @@
 #include "geometry/latlon.hpp"
 #include "geometry/mercator.hpp"
 
-#include "coding/multilang_utf8_string.hpp"
+#include "coding/string_utf8_multilang.hpp"
 
 #include "base/stl_helpers.hpp"
 
@@ -156,6 +156,7 @@ std::vector<Props> MetadataToProps(std::vector<T> const & metadata)
     case Metadata::FMD_RATING:
     case Metadata::FMD_BANNER_URL:
     case Metadata::FMD_AIRPORT_IATA:
+    case Metadata::FMD_BRAND:
     case Metadata::FMD_COUNT:
       break;
       // Please add new cases when compiler issues an "unhandled switch case" warning here.

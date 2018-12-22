@@ -27,6 +27,9 @@ import com.mapswithme.maps.bookmarks.data.BookmarkManager;
 import com.mapswithme.maps.bookmarks.data.BookmarkSharingResult;
 import com.mapswithme.maps.bookmarks.data.CategoryDataSource;
 import com.mapswithme.maps.bookmarks.data.Track;
+import com.mapswithme.maps.ugc.routes.BaseUgcRouteActivity;
+import com.mapswithme.maps.ugc.routes.UgcRouteEditSettingsActivity;
+import com.mapswithme.maps.ugc.routes.UgcRouteSharingOptionsActivity;
 import com.mapswithme.maps.widget.placepage.EditBookmarkFragment;
 import com.mapswithme.maps.widget.placepage.Sponsored;
 import com.mapswithme.maps.widget.recycler.ItemDecoratorFactory;
@@ -36,6 +39,7 @@ import com.mapswithme.util.BottomSheetHelper;
 import com.mapswithme.util.UiUtils;
 import com.mapswithme.util.sharing.ShareOption;
 import com.mapswithme.util.sharing.SharingHelper;
+import com.mapswithme.util.statistics.Statistics;
 
 public class BookmarksListFragment extends BaseMwmRecyclerFragment<BookmarkListAdapter>
     implements RecyclerLongClickListener, RecyclerClickListener,
@@ -152,7 +156,7 @@ public class BookmarksListFragment extends BaseMwmRecyclerFragment<BookmarkListA
     BookmarkListAdapter adapter = getAdapter();
     adapter.registerAdapterDataObserver(mCategoryDataSource);
     adapter.setOnClickListener(this);
-    adapter.setOnLongClickListener(isCatalogCategory() ? null : this);
+    adapter.setOnLongClickListener(isDownloadedCategory() ? null : this);
   }
 
   @Override
@@ -200,7 +204,8 @@ public class BookmarksListFragment extends BaseMwmRecyclerFragment<BookmarkListA
 
       case BookmarkListAdapter.TYPE_BOOKMARK:
         final Bookmark bookmark = (Bookmark) adapter.getItem(mSelectedPosition);
-        int menuResId = isCatalogCategory() ? R.menu.menu_bookmarks_catalog : R.menu.menu_bookmarks;
+        int menuResId = isDownloadedCategory() ? R.menu.menu_bookmarks_catalog
+                                               : R.menu.menu_bookmarks;
         BottomSheet bs = BottomSheetHelper.create(getActivity(), bookmark.getTitle())
                                           .sheet(menuResId)
                                           .listener(this)
@@ -245,26 +250,27 @@ public class BookmarksListFragment extends BaseMwmRecyclerFragment<BookmarkListA
 
     switch (menuItem.getItemId())
     {
-    case R.id.share:
-      ShareOption.ANY.shareMapObject(getActivity(), item, Sponsored.nativeGetCurrent());
-      break;
+      case R.id.share:
+        ShareOption.ANY.shareMapObject(getActivity(), item, Sponsored.nativeGetCurrent());
+        break;
 
-    case R.id.edit:
-      EditBookmarkFragment.editBookmark(item.getCategoryId(), item.getBookmarkId(), getActivity(),
-                                        getChildFragmentManager(), new EditBookmarkFragment.EditBookmarkListener()
-          {
-            @Override
-            public void onBookmarkSaved(long bookmarkId)
-            {
-              adapter.notifyDataSetChanged();
-            }
-          });
-      break;
+      case R.id.edit:
+        EditBookmarkFragment.editBookmark(item.getCategoryId(), item.getBookmarkId(), getActivity(),
+                                          getChildFragmentManager(),
+                                          bookmarkId -> adapter.notifyDataSetChanged());
+        break;
 
-    case R.id.delete:
-      BookmarkManager.INSTANCE.deleteBookmark(item.getBookmarkId());
-      adapter.notifyDataSetChanged();
-      break;
+      case R.id.delete:
+        BookmarkManager.INSTANCE.deleteBookmark(item.getBookmarkId());
+        adapter.notifyDataSetChanged();
+        break;
+
+      case R.id.settings:
+        Intent intent = new Intent(getContext(), UgcRouteEditSettingsActivity.class).putExtra(
+                                       BaseUgcRouteActivity.EXTRA_BOOKMARK_CATEGORY,
+                                       getCategoryOrThrow());
+        startActivityForResult(intent, UgcRouteEditSettingsActivity.REQUEST_CODE);
+        break;
     }
     return false;
   }
@@ -272,26 +278,50 @@ public class BookmarksListFragment extends BaseMwmRecyclerFragment<BookmarkListA
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
   {
-    if (isCatalogCategory())
+    if (isDownloadedCategory())
       return;
     inflater.inflate(R.menu.option_menu_bookmarks, menu);
+    MenuItem item = menu.findItem(R.id.share);
+    item.setVisible(getCategoryOrThrow().isSharingOptionsAllowed());
   }
 
-  private boolean isCatalogCategory()
+
+  @SuppressWarnings("ConstantConditions")
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data)
   {
-    return mCategoryDataSource.getData().getType() == BookmarkCategory.Type.CATALOG;
+    super.onActivityResult(requestCode, resultCode, data);
+    getAdapter().notifyDataSetChanged();
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    actionBar.setTitle(mCategoryDataSource.getData().getName());
+  }
+
+  private boolean isDownloadedCategory()
+  {
+    BookmarkCategory category = mCategoryDataSource.getData();
+    return category.getType() == BookmarkCategory.Type.DOWNLOADED;
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item)
   {
-    if (item.getItemId() == R.id.set_share)
+    if (item.getItemId() == R.id.share)
     {
-      SharingHelper.INSTANCE.prepareBookmarkCategoryForSharing(getActivity(),
-                                                               mCategoryDataSource.getData().getId());
+      openSharingOptionsScreen();
+      trackBookmarkListSharingOptions();
       return true;
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  private void trackBookmarkListSharingOptions()
+  {
+    Statistics.INSTANCE.trackBookmarkListSharingOptions();
+  }
+
+  private void openSharingOptionsScreen()
+  {
+    UgcRouteSharingOptionsActivity.startForResult(getActivity(), mCategoryDataSource.getData());
   }
 }

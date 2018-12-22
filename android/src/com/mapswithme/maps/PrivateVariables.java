@@ -31,6 +31,10 @@ public class PrivateVariables
   public static native String adsRemovalMonthlyProductId();
   @NonNull
   public static native String adsRemovalWeeklyProductId();
+  @NonNull
+  public static native String[] adsRemovalNotUsedList();
+  @NonNull
+  public static native String bookmarksVendor();
   /**
    * @return interval in seconds
    */

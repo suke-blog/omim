@@ -855,12 +855,14 @@ drape_ptr<UserMarkRenderParams> DrapeEngine::GenerateMarkRenderInfo(UserPointMar
   renderInfo->m_symbolSizes = mark->GetSymbolSizes();
   renderInfo->m_symbolOffsets = mark->GetSymbolOffsets();
   renderInfo->m_color = mark->GetColorConstant();
-  renderInfo->m_hasSymbolPriority = mark->HasSymbolPriority();
+  renderInfo->m_hasSymbolShapes = mark->HasSymbolShapes();
   renderInfo->m_hasTitlePriority = mark->HasTitlePriority();
   renderInfo->m_priority = mark->GetPriority();
+  renderInfo->m_displacement = mark->GetDisplacement();
   renderInfo->m_index = mark->GetIndex();
   renderInfo->m_featureId = mark->GetFeatureID();
   renderInfo->m_hasCreationAnimation = mark->HasCreationAnimation();
+  renderInfo->m_isMarkAboveText = mark->IsMarkAboveText();
   return renderInfo;
 }
 

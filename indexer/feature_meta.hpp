@@ -1,7 +1,7 @@
 #pragma once
 
-#include "coding/multilang_utf8_string.hpp"
 #include "coding/reader.hpp"
+#include "coding/string_utf8_multilang.hpp"
 
 #include <algorithm>
 #include <map>
@@ -96,7 +96,7 @@ class Metadata : public MetadataBase
 public:
   /// @note! Do not change values here.
   /// Add new types to the end of list, before FMD_COUNT.
-  /// Please also modify MetadataTagProcessor::TypeFromString().
+  /// For types parsed from OSM get corresponding OSM tag to MetadataTagProcessor::TypeFromString().
   enum EType : int8_t
   {
     FMD_CUISINE = 1,
@@ -128,6 +128,7 @@ public:
     FMD_BANNER_URL = 27,
     FMD_LEVEL = 28,
     FMD_AIRPORT_IATA = 29,
+    FMD_BRAND = 30,
     FMD_COUNT
   };
 

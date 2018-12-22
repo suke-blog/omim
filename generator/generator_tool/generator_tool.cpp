@@ -6,6 +6,7 @@
 #include "generator/check_model.hpp"
 #include "generator/cities_boundaries_builder.hpp"
 #include "generator/city_roads_generator.hpp"
+#include "generator/descriptions_section_builder.hpp"
 #include "generator/dumper.hpp"
 #include "generator/emitter_factory.hpp"
 #include "generator/feature_generator.hpp"
@@ -13,9 +14,12 @@
 #include "generator/generate_info.hpp"
 #include "generator/geo_objects/geo_objects.hpp"
 #include "generator/locality_sorter.hpp"
+#include "generator/maxspeeds_builder.hpp"
 #include "generator/metalines_builder.hpp"
 #include "generator/osm_source.hpp"
+#include "generator/platform_helpers.hpp"
 #include "generator/popular_places_section_builder.hpp"
+#include "generator/popularity.hpp"
 #include "generator/regions/collector_region_info.hpp"
 #include "generator/regions/regions.hpp"
 #include "generator/restriction_generator.hpp"
@@ -27,6 +31,7 @@
 #include "generator/transit_generator.hpp"
 #include "generator/ugc_section_builder.hpp"
 #include "generator/unpack_mwm.hpp"
+#include "generator/wiki_url_dumper.hpp"
 
 #include "routing/cross_mwm_ids.hpp"
 
@@ -52,8 +57,10 @@
 #include "base/timer.hpp"
 
 #include <cstdlib>
+#include <fstream>
 #include <memory>
 #include <string>
+#include <thread>
 
 #include "defines.hpp"
 
@@ -137,6 +144,7 @@ DEFINE_bool(generate_cameras, false, "Generate section with speed cameras info."
 DEFINE_bool(
     make_city_roads, false,
     "Calculates which roads lie inside cities and makes a section with ids of these roads.");
+DEFINE_bool(generate_maxspeed, false, "Generate section with maxspeed of road features.");
 
 // Sponsored-related.
 DEFINE_string(booking_data, "", "Path to booking data in .tsv format.");
@@ -145,11 +153,18 @@ DEFINE_string(viator_data, "", "Path to viator data in .tsv format.");
 
 DEFINE_string(ugc_data, "", "Input UGC source database file name.");
 
+DEFINE_string(wikipedia_pages, "", "Input dir with wikipedia pages.");
+DEFINE_string(dump_wikipedia_urls, "", "Output file with wikipedia urls.");
+
 DEFINE_bool(generate_popular_places, false, "Generate popular places section.");
 DEFINE_string(popular_places_data, "",
               "Input Popular Places source file name. Needed both for World intermediate features "
               "generation (2nd pass for World) and popular places section generation (5th pass for "
               "countries).");
+DEFINE_string(brands_data, "",
+              "Path to json with OSM objects to brand ID map.");
+DEFINE_string(brands_translations_data, "",
+              "Path to json with brands translations and synonyms.");
 
 // Printing stuff.
 DEFINE_bool(calc_statistics, false, "Calculate feature statistics for specified mwm bucket files.");
@@ -179,12 +194,14 @@ DEFINE_string(geo_objects_key_value, "", "Output geo objects key-value file.");
 
 DEFINE_string(regions_features, "", "Input tmp.mwm file with regions.");
 
+DEFINE_string(popularity_csv, "", "Output csv for popularity.");
+
 // Common.
 DEFINE_bool(verbose, false, "Provide more detailed output.");
 
 using namespace generator;
 
-int main(int argc, char ** argv)
+int GeneratorToolMain(int argc, char ** argv)
 {
   CHECK(IsLittleEndian(), ("Only little-endian architectures are supported."));
 
@@ -192,6 +209,10 @@ int main(int argc, char ** argv)
         "Takes OSM XML data from stdin and creates data and index files in several passes.");
 
   google::ParseCommandLineFlags(&argc, &argv, true);
+
+  auto threadsCount = std::thread::hardware_concurrency();
+  if (threadsCount == 0)
+    threadsCount = 1;
 
   Platform & pl = GetPlatform();
 
@@ -230,6 +251,8 @@ int main(int argc, char ** argv)
   genInfo.m_opentableDatafileName = FLAGS_opentable_data;
   genInfo.m_viatorDatafileName = FLAGS_viator_data;
   genInfo.m_popularPlacesFilename = FLAGS_popular_places_data;
+  genInfo.m_brandsFilename = FLAGS_brands_data;
+  genInfo.m_brandsTranslationsFilename = FLAGS_brands_translations_data;
   genInfo.m_boundariesTable = make_shared<generator::OsmIdToBoundariesTable>();
 
   genInfo.m_versionDate = static_cast<uint32_t>(FLAGS_planet_version);
@@ -259,9 +282,10 @@ int main(int argc, char ** argv)
       FLAGS_calc_statistics || FLAGS_type_statistics || FLAGS_dump_types || FLAGS_dump_prefixes ||
       FLAGS_dump_feature_names != "" || FLAGS_check_mwm || FLAGS_srtm_path != "" ||
       FLAGS_make_routing_index || FLAGS_make_cross_mwm || FLAGS_make_transit_cross_mwm ||
-      FLAGS_make_city_roads || FLAGS_generate_traffic_keys || FLAGS_transit_path != "" ||
-      FLAGS_ugc_data != "" || FLAGS_popular_places_data != "" || FLAGS_generate_geo_objects_features ||
-      FLAGS_geo_objects_key_value != "")
+      FLAGS_make_city_roads || FLAGS_generate_maxspeed || FLAGS_generate_traffic_keys ||
+      FLAGS_transit_path != "" || FLAGS_ugc_data != "" || FLAGS_popular_places_data != "" ||
+      FLAGS_generate_geo_objects_features || FLAGS_geo_objects_key_value != "" ||
+      FLAGS_dump_wikipedia_urls != "" || FLAGS_wikipedia_pages != "" || FLAGS_popularity_csv != "")
   {
     classificator::Load();
   }
@@ -406,6 +430,19 @@ int main(int argc, char ** argv)
     }
   }
 
+  if (!FLAGS_popularity_csv.empty())
+  {
+    popularity::BuildPopularitySrcFromAllData(genInfo.m_tmpDir, FLAGS_popularity_csv, threadsCount);
+  }
+
+  if (!FLAGS_dump_wikipedia_urls.empty())
+  {
+    auto const tmpPath = base::JoinPath(genInfo.m_intermediateDir, "tmp");
+    auto const datFiles = platform_helpers::GetFullDataTmpFilePaths(tmpPath);
+    WikiUrlDumper wikiUrlDumper(FLAGS_dump_wikipedia_urls, datFiles);
+    wikiUrlDumper.Dump();
+  }
+
   // Enumerate over all dat files that were created.
   size_t const count = genInfo.m_bucketNames.size();
   for (size_t i = 0; i < count; ++i)
@@ -526,6 +563,13 @@ int main(int argc, char ** argv)
         LOG(LCRITICAL, ("Generating city roads error."));
     }
 
+    if (FLAGS_generate_maxspeed)
+    {
+      LOG(LINFO, ("Generating maxspeeds section for", datFile));
+      string const maxspeedsFilename = genInfo.GetIntermediateFileName(MAXSPEEDS_FILENAME);
+      routing::BuildMaxspeedsSection(datFile, osmToFeatureFilename, maxspeedsFilename);
+    }
+
     if (FLAGS_make_cross_mwm || FLAGS_make_transit_cross_mwm)
     {
       if (!countryParentGetter)
@@ -553,6 +597,9 @@ int main(int argc, char ** argv)
         LOG(LCRITICAL, ("Error generating UGC mwm section."));
       }
     }
+
+    if (!FLAGS_wikipedia_pages.empty())
+      BuildDescriptionsSection(FLAGS_wikipedia_pages, datFile);
 
     if (FLAGS_generate_popular_places)
     {
@@ -621,4 +668,23 @@ int main(int argc, char ** argv)
     check_model::ReadFeatures(datFile);
 
   return 0;
+}
+
+
+int main(int argc, char ** argv)
+{
+  try
+  {
+    return GeneratorToolMain(argc, argv);
+  }
+  catch (std::fstream::failure const & e)
+  {
+    LOG(LERROR, ("Unhandled exception:", e.what()));
+    return EXIT_FAILURE;
+  }
+  catch (...)
+  {
+    LOG(LERROR, ("Unhandled unknown exception."));
+    return EXIT_FAILURE;
+  }
 }

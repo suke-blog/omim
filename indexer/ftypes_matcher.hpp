@@ -10,6 +10,7 @@
 #include <cstdint>
 #include <functional>
 #include <initializer_list>
+#include <set>
 #include <string>
 #include <type_traits>
 #include <utility>
@@ -41,6 +42,7 @@ public:
   bool operator()(feature::TypesHolder const & types) const;
   bool operator()(FeatureType & ft) const;
   bool operator()(std::vector<uint32_t> const & types) const;
+  bool operator()(uint32_t type) const { return IsMatched(type); }
 
   static uint32_t PrepareToMatch(uint32_t type, uint8_t level);
 
@@ -152,6 +154,42 @@ public:
   DECLARE_CHECKER_INSTANCE(IsBuildingChecker);
 };
 
+class IsPoiChecker : public BaseChecker
+{
+  IsPoiChecker();
+public:
+  static std::set<std::string> const kPoiTypes;
+
+  DECLARE_CHECKER_INSTANCE(IsPoiChecker);
+};
+
+class WikiChecker : public BaseChecker
+{
+  WikiChecker();
+public:
+   static std::set<std::pair<std::string, std::string>> const kTypesForWiki;
+
+   DECLARE_CHECKER_INSTANCE(WikiChecker);
+
+   template <typename Ft>
+   bool NeedFeature(Ft & feature) const
+   {
+     bool need = true;
+     feature.ForEachType([&](uint32_t type) {
+       if (need && !IsMatched(type))
+         need = false;
+     });
+     return need;
+   }
+};
+
+class IsPlaceChecker : public BaseChecker
+{
+  IsPlaceChecker();
+public:
+  DECLARE_CHECKER_INSTANCE(IsPlaceChecker);
+};
+
 class IsBridgeChecker : public BaseChecker
 {
   virtual bool IsMatched(uint32_t type) const override;
@@ -168,6 +206,13 @@ class IsTunnelChecker : public BaseChecker
   IsTunnelChecker();
 public:
   DECLARE_CHECKER_INSTANCE(IsTunnelChecker);
+};
+
+class IsPopularityPlaceChecker : public BaseChecker
+{
+  IsPopularityPlaceChecker();
+public:
+  DECLARE_CHECKER_INSTANCE(IsPopularityPlaceChecker);
 };
 
 class IsHotelChecker : public BaseChecker
@@ -214,13 +259,31 @@ public:
   DECLARE_CHECKER_INSTANCE(IsWifiChecker);
 };
 
-class IsFoodChecker : public BaseChecker
+class IsEatChecker : public BaseChecker
 {
-  IsFoodChecker();
 public:
-  DECLARE_CHECKER_INSTANCE(IsFoodChecker);
+  enum class Type
+  {
+    Cafe,
+    Bakery,
+    FastFood,
+    Restaurant,
+    Bar,
+    Pub,
+    Biergarten,
+
+    Count
+  };
+
+  DECLARE_CHECKER_INSTANCE(IsEatChecker);
 
   std::vector<uint32_t> const & GetTypes() const { return m_types; }
+  Type GetType(uint32_t t) const;
+
+private:
+  IsEatChecker();
+
+  std::array<std::pair<uint32_t, Type>, base::Key(Type::Count)> m_sortedTypes;
 };
 
 class IsCuisineChecker : public BaseChecker

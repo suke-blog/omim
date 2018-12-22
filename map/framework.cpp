@@ -8,6 +8,7 @@
 #include "map/gps_tracker.hpp"
 #include "map/taxi_delegate.hpp"
 #include "map/user_mark.hpp"
+#include "map/utils.hpp"
 #include "map/viewport_search_params.hpp"
 
 #include "defines.hpp"
@@ -44,6 +45,8 @@
 
 #include "editor/editable_data_source.hpp"
 
+#include "descriptions/loader.hpp"
+
 #include "indexer/categories_holder.hpp"
 #include "indexer/classificator.hpp"
 #include "indexer/classificator_loader.hpp"
@@ -72,7 +75,8 @@
 
 #include "coding/endianness.hpp"
 #include "coding/file_name_utils.hpp"
-#include "coding/multilang_utf8_string.hpp"
+#include "coding/point_coding.hpp"
+#include "coding/string_utf8_multilang.hpp"
 #include "coding/transliteration.hpp"
 #include "coding/url_encode.hpp"
 #include "coding/zip_reader.hpp"
@@ -184,6 +188,37 @@ string MakeSearchBookingUrl(booking::Api const & bookingApi, search::CityFinder 
   string city = cityFinder.GetCityName(feature::GetCenter(ft), lang);
 
   return bookingApi.GetSearchUrl(city, name);
+}
+
+void OnRouteStartBuild(DataSource const & dataSource,
+                       std::vector<RouteMarkData> const & routePoints, m2::PointD const & userPos)
+{
+  using eye::MapObject;
+
+  if (routePoints.size() < 2)
+    return;
+
+  for (auto const & pt : routePoints)
+  {
+    if (pt.m_isMyPosition || pt.m_pointType == RouteMarkType::Start)
+      continue;
+
+    m2::RectD rect = MercatorBounds::RectByCenterXYAndOffset(pt.m_position, kMwmPointAccuracy);
+    bool found = false;
+    dataSource.ForEachInRect([&userPos, &pt, &found](FeatureType & ft)
+    {
+      if (found || !feature::GetCenter(ft).EqualDxDy(pt.m_position, kMwmPointAccuracy))
+        return;
+
+      auto const mapObject = utils::MakeEyeMapObject(ft);
+      if (!mapObject.IsEmpty())
+      {
+        eye::Eye::Event::MapObjectEvent(mapObject, MapObject::Event::Type::RouteToCreated, userPos);
+        found = true;
+      }
+    },
+    rect, scales::GetUpperScale());
+  }
 }
 }  // namespace
 
@@ -393,8 +428,10 @@ Framework::Framework(FrameworkParams const & params)
   })
   , m_lastReportedCountry(kInvalidCountryId)
   , m_popularityLoader(m_model.GetDataSource())
+  , m_descriptionsLoader(std::make_unique<descriptions::Loader>(m_model.GetDataSource()))
   , m_purchase(std::make_unique<Purchase>())
   , m_tipsApi(static_cast<TipsApi::Delegate &>(*this))
+  , m_notificationManager(static_cast<notifications::NotificationManager::Delegate &>(*this))
 {
   CHECK(IsLittleEndian(), ("Only little-endian architectures are supported."));
 
@@ -457,6 +494,12 @@ Framework::Framework(FrameworkParams const & params)
   m_user.AddSubscriber(m_bmManager->GetUserSubscriber());
 
   m_routingManager.SetTransitManager(&m_transitManager);
+  m_routingManager.SetRouteStartBuildListener([this](std::vector<RouteMarkData> const & points)
+  {
+    auto const userPos = GetCurrentPosition();
+    if (userPos)
+      OnRouteStartBuild(m_model.GetDataSource(), points, userPos.get());
+  });
 
   InitCityFinder();
   InitDiscoveryManager();
@@ -510,10 +553,20 @@ Framework::Framework(FrameworkParams const & params)
 
   InitTransliteration();
   LOG(LDEBUG, ("Transliterators initialized"));
+
+  m_notificationManager.Load();
+  m_notificationManager.TrimExpired();
+  eye::Eye::Instance().TrimExpired();
+  eye::Eye::Instance().Subscribe(&m_notificationManager);
+
+  GetPowerManager().Subscribe(this);
 }
 
 Framework::~Framework()
 {
+  eye::Eye::Instance().UnsubscribeAll();
+  GetPowerManager().UnsubscribeAll();
+
   m_threadRunner.reset();
 
   // Must be destroyed implicitly at the start of destruction,
@@ -533,7 +586,6 @@ Framework::~Framework()
   m_user.ClearSubscribers();
   // Must be destroyed implicitly, since it stores reference to m_user.
   m_bmManager.reset();
-  eye::Eye::Instance().UnsubscribeAll();
 }
 
 booking::Api * Framework::GetBookingApi(platform::NetworkPolicy const & policy)
@@ -833,13 +885,6 @@ void Framework::FillInfoFromFeatureType(FeatureType & ft, place_page::Info & inf
   ASSERT_NOT_EQUAL(featureStatus, FeatureStatus::Deleted,
                    ("Deleted features cannot be selected from UI."));
   info.SetFeatureStatus(featureStatus);
-
-  ASSERT(m_cityFinder, ());
-  auto const city =
-      m_cityFinder->GetCityName(feature::GetCenter(ft), StringUtf8Multilang::kEnglishCode);
-  feature::TypesHolder buildingHolder;
-  buildingHolder.Assign(classif().GetTypeByPath({"building"}));
-
   info.SetLocalizedWifiString(m_stringsBundle.GetString("wifi"));
 
   if (ftypes::IsAddressObjectChecker::Instance()(ft))
@@ -880,6 +925,7 @@ void Framework::FillInfoFromFeatureType(FeatureType & ft, place_page::Info & inf
   }
   else if (ftypes::IsHotelChecker::Instance()(ft))
   {
+    ASSERT(m_cityFinder, ());
     auto const url = MakeSearchBookingUrl(*m_bookingApi, *m_cityFinder, ft);
     info.SetBookingSearchUrl(url);
     LOG(LINFO, (url));
@@ -907,6 +953,7 @@ void Framework::FillInfoFromFeatureType(FeatureType & ft, place_page::Info & inf
   }
 
   FillLocalExperts(ft, info);
+  FillDescription(ft, info);
 
   auto const mwmInfo = ft.GetID().m_mwmId.GetInfo();
   bool const isMapVersionEditable = mwmInfo && mwmInfo->m_version.IsEditableMap();
@@ -1662,24 +1709,17 @@ void Framework::FillSearchResultsMarks(search::Results::ConstIter begin,
 
     if (r.m_metadata.m_isSponsoredHotel)
     {
-      mark->SetMarkType(SearchMarkType::Booking);
+      mark->SetBookingType(isFeature && m_localAdsManager.Contains(r.GetFeatureID()) /* hasLocalAds */);
       mark->SetRating(r.m_metadata.m_hotelRating);
       mark->SetPricing(r.m_metadata.m_hotelPricing);
     }
     else if (isFeature)
     {
       auto product = GetProductInfo(r);
+      auto const type = r.GetFeatureType();
+      mark->SetFromType(type, m_localAdsManager.Contains(r.GetFeatureID()));
       if (product.m_ugcRating != search::ProductInfo::kInvalidRating)
-      {
-        mark->SetMarkType(SearchMarkType::UGC);
         mark->SetRating(product.m_ugcRating);
-      }
-    }
-
-    if (isFeature && m_localAdsManager.Contains(r.GetFeatureID()))
-    {
-      mark->SetMarkType(r.m_metadata.m_isSponsoredHotel ? SearchMarkType::LocalAdsBooking
-                                                        : SearchMarkType::LocalAds);
     }
 
     if (fn)
@@ -2401,6 +2441,18 @@ df::SelectionShape::ESelectedObject Framework::OnTapEventImpl(TapEvent const & t
   if (showMapSelection)
   {
     GetBookmarkManager().SelectionMark().SetPtOrg(outInfo.GetMercator());
+
+    auto const userPos = GetCurrentPosition();
+    if (userPos)
+    {
+      auto const mapObject = utils::MakeEyeMapObject(outInfo);
+      if (!mapObject.IsEmpty())
+      {
+        eye::Eye::Event::MapObjectEvent(mapObject, eye::MapObject::Event::Type::Open,
+                                        userPos.get());
+      }
+    }
+
     return df::SelectionShape::OBJECT_POI;
   }
 
@@ -2433,7 +2485,7 @@ void Framework::PredictLocation(double & lat, double & lon, double accuracy,
   double offsetInM = speed * elapsedSeconds;
   double angle = base::DegToRad(90.0 - bearing);
 
-  m2::PointD mercatorPt = MercatorBounds::MetresToXY(lon, lat, accuracy).Center();
+  m2::PointD mercatorPt = MercatorBounds::MetersToXY(lon, lat, accuracy).Center();
   mercatorPt = MercatorBounds::GetSmPoint(mercatorPt, offsetInM * cos(angle), offsetInM * sin(angle));
   lon = MercatorBounds::XToLon(mercatorPt.x);
   lat = MercatorBounds::YToLat(mercatorPt.y);
@@ -2504,7 +2556,7 @@ bool Framework::LoadMetalAllowed()
   bool allowed;
   if (settings::Get(kMetalAllowed, allowed))
     return allowed;
-  return false;
+  return true;
 }
 
 void Framework::SaveMetalAllowed(bool allowed)
@@ -2843,11 +2895,14 @@ bool Framework::ParseEditorDebugCommand(search::SearchParams const & params)
 
 bool Framework::ParseRoutingDebugCommand(search::SearchParams const & params)
 {
-  if (params.m_query == "?speedcams")
-  {
-    GetRoutingManager().RoutingSession().ToggleSpeedCameras(true /* enable */);
-    return true;
-  }
+  // This is an example.
+  /*
+    if (params.m_query == "?speedcams")
+    {
+      GetRoutingManager().RoutingSession().EnableMyFeature();
+      return true;
+    }
+  */
   return false;
 }
 
@@ -2902,15 +2957,6 @@ void SetStreet(search::ReverseGeocoder const & coder, DataSource const & dataSou
                FeatureType & ft, osm::EditableMapObject & emo)
 {
   auto const & editor = osm::Editor::Instance();
-
-  if (editor.GetFeatureStatus(emo.GetID()) == FeatureStatus::Created)
-  {
-    string street;
-    VERIFY(editor.GetEditedFeatureStreet(emo.GetID(), street), ("Feature is in editor."));
-    emo.SetStreet({street, ""});
-    return;
-  }
-
   // Get exact feature's street address (if any) from mwm,
   // together with all nearby streets.
   auto const streets = coder.GetNearbyFeatureStreets(ft);
@@ -2941,7 +2987,7 @@ void SetStreet(search::ReverseGeocoder const & coder, DataSource const & dataSou
 
       emo.SetStreet(ls);
 
-      // A street that a feature belongs to should alwas be in the first place in the list.
+      // A street that a feature belongs to should always be in the first place in the list.
       auto it =
           find_if(begin(localizedStreets), end(localizedStreets), [&ls](osm::LocalizedStreet const & rs)
                   {
@@ -3637,6 +3683,19 @@ void Framework::FillLocalExperts(FeatureType & ft, place_page::Info & info) cons
   info.SetLocalsPageUrl(locals::Api::GetLocalsPageUrl());
 }
 
+void Framework::FillDescription(FeatureType & ft, place_page::Info & info) const
+{
+  if (!ft.GetID().m_mwmId.IsAlive())
+    return;
+  auto const & regionData = ft.GetID().m_mwmId.GetInfo()->GetRegionData();
+  auto const deviceLang = StringUtf8Multilang::GetLangIndex(languages::GetCurrentNorm());
+  auto const langPriority = feature::GetDescriptionLangPriority(regionData, deviceLang);
+
+  std::string description;
+  if (m_descriptionsLoader->GetDescription(ft.GetID(), langPriority, description))
+    info.SetDescription(std::move(description));
+}
+
 void Framework::UploadUGC(User::CompleteUploadingHandler const & onCompleteUploading)
 {
   if (GetPlatform().ConnectionStatus() == Platform::EConnectionType::CONNECTION_NONE ||
@@ -3769,6 +3828,12 @@ booking::AvailabilityParams Framework::GetLastBookingAvailabilityParams() const
   return m_bookingAvailabilityParams;
 }
 
+void Framework::OnPowerFacilityChanged(PowerManager::Facility const facility, bool enabled)
+{
+  // Dummy.
+  // TODO: process facilities which do not have switch in UI.
+}
+
 TipsApi const & Framework::GetTipsApi() const
 {
   return m_tipsApi;
@@ -3790,4 +3855,26 @@ bool Framework::HaveTransit(m2::PointD const & pt) const
 double Framework::GetLastBackgroundTime() const
 {
   return m_startBackgroundTime;
+}
+
+bool Framework::MakePlacePageInfo(eye::MapObject const & mapObject, place_page::Info & info) const
+{
+  m2::RectD rect = MercatorBounds::RectByCenterXYAndOffset(mapObject.GetPos(), kMwmPointAccuracy);
+  bool found = false;
+
+  m_model.GetDataSource().ForEachInRect([this, &info, &mapObject, &found](FeatureType & ft)
+  {
+   if (found || !feature::GetCenter(ft).EqualDxDy(mapObject.GetPos(), kMwmPointAccuracy))
+     return;
+
+   auto const foundMapObject = utils::MakeEyeMapObject(ft);
+   if (!foundMapObject.IsEmpty() && mapObject.AlmostEquals(foundMapObject))
+   {
+     FillInfoFromFeatureType(ft, info);
+     found = true;
+   }
+  },
+  rect, scales::GetUpperScale());
+
+  return found;
 }

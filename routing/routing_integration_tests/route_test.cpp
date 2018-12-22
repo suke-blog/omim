@@ -207,16 +207,17 @@ namespace
         MercatorBounds::FromLatLon(48.397416, 16.515289), {0.0, 0.0},
         MercatorBounds::FromLatLon(59.437214, 24.745355), 1650000.);
   }
-  
+
   // Strange map edits in Africa borders. Routing not linked now.
   /*
   UNIT_TEST(RussiaMoscowLenigradskiy39RepublicOfSouthAfricaCapeTownCenterRouteTest)
   {
-    //@todo put down a correct route length when router is fixed
     integration::CalculateRouteAndTestRouteLength(
-        integration::GetVehicleComponents<VehicleType::Car>(), {37.53754, 67.53622}, {0., 0.},
-        {18.54269, -36.09501}, 17873000.);
-  }*/
+        integration::GetVehicleComponents<VehicleType::Car>(),
+        MercatorBounds::FromLatLon(55.79721, 37.53786), {0., 0.},
+              MercatorBounds::FromLatLon(-33.9286, 18.41837), 13701400.0);
+  }
+  */
 
   UNIT_TEST(MoroccoToSahrawiCrossMwmTest)
   {
@@ -280,12 +281,12 @@ namespace
     integration::CalculateRouteAndTestRouteLength(
         integration::GetVehicleComponents<VehicleType::Car>(),
         MercatorBounds::FromLatLon(49.85015, 2.24296), {0., 0.},
-        MercatorBounds::FromLatLon(48.85860, 2.34784), 126000.);
+        MercatorBounds::FromLatLon(48.85458, 2.36291), 127162.0);
     // And backward case
     integration::CalculateRouteAndTestRouteLength(
         integration::GetVehicleComponents<VehicleType::Car>(),
-        MercatorBounds::FromLatLon(48.85860, 2.34784), {0., 0.},
-        MercatorBounds::FromLatLon(49.85015, 2.24296), 126000.);
+        MercatorBounds::FromLatLon(48.85458, 2.36291), {0., 0.},
+        MercatorBounds::FromLatLon(49.85015, 2.24296), 137009.0);
   }
 
   UNIT_TEST(RussiaSmolenskRussiaMoscowTimeTest)
@@ -300,7 +301,7 @@ namespace
 
     CHECK(routeResult.first, ());
     Route const & route = *routeResult.first;
-    integration::TestRouteTime(route, 15001.2);
+    integration::TestRouteTime(route, 16594.5);
   }
 
   UNIT_TEST(RussiaMoscowLenigradskiy39GeroevPanfilovtsev22TimeTest)
@@ -314,7 +315,7 @@ namespace
 
     CHECK(routeResult.first, ());
     Route const & route = *routeResult.first;
-    integration::TestRouteTime(route, 945.4);
+    integration::TestRouteTime(route, 955.5);
   }
 
   UNIT_TEST(RussiaMoscowLenigradskiy39GeroevPanfilovtsev22SubrouteTest)

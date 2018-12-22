@@ -74,6 +74,7 @@ public:
 
   void SetIsVisible(bool isVisible) override;
   void SetName(std::string const & name);
+  void SetDescription(std::string const & desc);
   void SetFileName(std::string const & fileName) { m_file = fileName; }
   std::string GetName() const;
   std::string const & GetFileName() const { return m_file; }
@@ -92,6 +93,7 @@ public:
   void SetAuthor(std::string const & name, std::string const & id);
   void SetAccessRules(kml::AccessRules accessRules);
   void SetTags(std::vector<std::string> const & tags);
+  void SetCustomProperty(std::string const & key, std::string const & value);
 
 private:
   void SetDirty() override;

@@ -27,9 +27,10 @@ struct UserMarkRenderParams
   drape_ptr<UserPointMark::SymbolOffsets> m_symbolOffsets;
   drape_ptr<UserPointMark::SymbolNameZoomInfo> m_badgeNames;
   df::ColorConstant m_color;
-  bool m_hasSymbolPriority = false;
+  bool m_hasSymbolShapes = false;
   bool m_hasTitlePriority = false;
   uint16_t m_priority = 0;
+  SpecialDisplacement m_displacement = SpecialDisplacement::UserMark;
   uint32_t m_index = 0;
   bool m_depthTestEnabled = true;
   float m_depth = 0.0;
@@ -38,6 +39,7 @@ struct UserMarkRenderParams
   bool m_justCreated = false;
   bool m_isVisible = true;
   FeatureID m_featureId;
+  bool m_isMarkAboveText = false;
 };
 
 struct LineLayer

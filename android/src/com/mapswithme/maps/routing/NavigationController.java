@@ -1,8 +1,11 @@
 package com.mapswithme.maps.routing;
 
 import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,8 +20,8 @@ import android.widget.TextView;
 import com.mapswithme.maps.Framework;
 import com.mapswithme.maps.MwmActivity;
 import com.mapswithme.maps.R;
+import com.mapswithme.maps.base.MediaPlayerWrapper;
 import com.mapswithme.maps.bookmarks.BookmarkCategoriesActivity;
-import com.mapswithme.maps.bookmarks.BookmarksPageFactory;
 import com.mapswithme.maps.bookmarks.data.DistanceAndAzimut;
 import com.mapswithme.maps.location.LocationHelper;
 import com.mapswithme.maps.maplayer.traffic.TrafficManager;
@@ -74,10 +77,15 @@ public class NavigationController implements TrafficManager.TrafficCallback, Vie
 
   @NonNull
   private final SearchWheel mSearchWheel;
+  @NonNull
+  private final View mSpeedViewContainer;
 
   private boolean mShowTimeLeft = true;
 
   private double mNorth;
+
+  @NonNull
+  private final MediaPlayer.OnCompletionListener mSpeedCamSignalCompletionListener;
 
   public NavigationController(Activity activity)
   {
@@ -113,6 +121,7 @@ public class NavigationController implements TrafficManager.TrafficCallback, Vie
     UiUtils.extendViewMarginWithStatusBar(turnFrame);
 
     // Bottom frame
+    mSpeedViewContainer = mBottomFrame.findViewById(R.id.speed_view_container);
     mSpeedValue = (TextView) mBottomFrame.findViewById(R.id.speed_value);
     mSpeedUnits = (TextView) mBottomFrame.findViewById(R.id.speed_dimen);
     mTimeHourValue = (TextView) mBottomFrame.findViewById(R.id.time_hour_value);
@@ -132,6 +141,8 @@ public class NavigationController implements TrafficManager.TrafficCallback, Vie
     bookmarkButton.setImageDrawable(Graphics.tint(bookmarkButton.getContext(),
                                                   R.drawable.ic_menu_bookmarks));
     bookmarkButton.setOnClickListener(this);
+    Application app = (Application) bookmarkButton.getContext().getApplicationContext();
+    mSpeedCamSignalCompletionListener = new CameraWarningSignalCompletionListener(app);
   }
 
   public void onResume()
@@ -242,22 +253,44 @@ public class NavigationController implements TrafficManager.TrafficCallback, Vie
     else
       updateVehicle(info);
 
-    boolean hasStreet = !TextUtils.isEmpty(info.nextStreet);
-    UiUtils.showIf(hasStreet, mStreetFrame);
-    if (!TextUtils.isEmpty(info.nextStreet))
-      mNextStreet.setText(info.nextStreet);
-
-    final Location last = LocationHelper.INSTANCE.getLastKnownLocation();
-    if (last != null)
-    {
-      Pair<String, String> speedAndUnits = StringUtils.nativeFormatSpeedAndUnits(last.getSpeed());
-      mSpeedValue.setText(speedAndUnits.first);
-      mSpeedUnits.setText(speedAndUnits.second);
-    }
+    updateStreetView(info);
+    updateSpeedView(info);
     updateTime(info.totalTimeInSeconds);
     mDistanceValue.setText(info.distToTarget);
     mDistanceUnits.setText(info.targetUnits);
     mRouteProgress.setProgress((int) info.completionPercent);
+    playbackSpeedCamWarning(info);
+  }
+
+  private void updateStreetView(@NonNull RoutingInfo info)
+  {
+    boolean hasStreet = !TextUtils.isEmpty(info.nextStreet);
+    UiUtils.showIf(hasStreet, mStreetFrame);
+    if (!TextUtils.isEmpty(info.nextStreet))
+      mNextStreet.setText(info.nextStreet);
+  }
+
+  private void updateSpeedView(@NonNull RoutingInfo info)
+  {
+    final Location last = LocationHelper.INSTANCE.getLastKnownLocation();
+    if (last == null)
+      return;
+
+    Pair<String, String> speedAndUnits = StringUtils.nativeFormatSpeedAndUnits(last.getSpeed());
+
+    mSpeedUnits.setText(speedAndUnits.second);
+    mSpeedValue.setText(speedAndUnits.first);
+    mSpeedViewContainer.setActivated(info.isSpeedLimitExceeded());
+  }
+
+  private void playbackSpeedCamWarning(@NonNull RoutingInfo info)
+  {
+    if (!info.shouldPlayWarningSignal() || TtsPlayer.INSTANCE.isSpeaking())
+      return;
+
+    Context context = mBottomFrame.getContext();
+    MediaPlayerWrapper player = MediaPlayerWrapper.from(context);
+    player.playback(R.raw.speed_cams_beep, mSpeedCamSignalCompletionListener);
   }
 
   private void updateTime(int seconds)
@@ -424,10 +457,32 @@ public class NavigationController implements TrafficManager.TrafficCallback, Vie
     switch (v.getId())
     {
       case R.id.btn_bookmarks:
-        BookmarkCategoriesActivity.start(mFrame.getContext(), BookmarksPageFactory.PRIVATE.ordinal());
+        BookmarkCategoriesActivity.start(mFrame.getContext());
         Statistics.INSTANCE.trackRoutingEvent(ROUTING_BOOKMARKS_CLICK,
                                               RoutingController.get().isPlanning());
         break;
+    }
+  }
+
+  public void destroy()
+  {
+    MediaPlayerWrapper.from(mBottomFrame.getContext()).release();
+  }
+
+  private static class CameraWarningSignalCompletionListener implements MediaPlayer.OnCompletionListener
+  {
+    @NonNull
+    private final Application mApp;
+
+    CameraWarningSignalCompletionListener(@NonNull Application app)
+    {
+      mApp = app;
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp)
+    {
+      TtsPlayer.INSTANCE.playTurnNotifications(mApp);
     }
   }
 }

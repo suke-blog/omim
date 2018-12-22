@@ -31,15 +31,20 @@
   self = [super initWithNibName:nil bundle:nil];
   if (self)
   {
-    auto html = [htmlText stringByReplacingOccurrencesOfString:@"<body>"
-                                                    withString:@"<body><font face=\"helvetica\">"];
-    html = [html stringByReplacingOccurrencesOfString:@"</body>" withString:@"</font></body>"];
-    _m_htmlText = html;
+    _m_htmlText = [self configuredHtmlWithText:htmlText];
     _m_url = url;
     if (title)
       self.navigationItem.title = title;
   }
   return self;
+}
+
+- (NSString *)configuredHtmlWithText:(NSString *)htmlText
+{
+  auto html = [htmlText stringByReplacingOccurrencesOfString:@"<body>"
+                                                  withString:@"<body><font face=\"helvetica\" size=\"14pt\">"];
+  html = [htmlText stringByReplacingOccurrencesOfString:@"</body>" withString:@"</font></body>"];
+  return html;
 }
 
 - (instancetype)initWithAuthURL:(NSURL *)url onSuccessAuth:(MWMStringBlock)success
@@ -86,17 +91,40 @@
   [self.webView.trailingAnchor constraintEqualToAnchor:trailingAnchor].active = YES;
 
   self.webView.backgroundColor = UIColor.whiteColor;
+  self.webView.allowsLinkPreview = NO;
 
-  if (self.m_htmlText)
-  {
-    [self.webView loadHTMLString:self.m_htmlText baseURL:self.m_url];
-  }
-  else
-  {
-    auto request = [NSMutableURLRequest requestWithURL:self.m_url];
-    [request setValue:@(GetPlatform().GetAppUserAgent().Get().c_str()) forHTTPHeaderField:@"User-Agent"];
-    [self.webView loadRequest:request];
-  }
+  __weak __typeof(self) ws = self;
+  [self willLoadUrl:^(BOOL load) {
+    __typeof(self) self = ws;
+    if (load) {
+      if (self.m_htmlText)
+      {
+        [self.webView loadHTMLString:self.m_htmlText baseURL:self.m_url];
+      }
+      else
+      {
+        auto request = [NSMutableURLRequest requestWithURL:self.m_url];
+        [request setValue:@(GetPlatform().GetAppUserAgent().Get().c_str()) forHTTPHeaderField:@"User-Agent"];
+        if (self.shouldAddAccessToken)
+        {
+          auto authHeader = [NSString stringWithFormat:@"Bearer %@",
+                             @(GetFramework().GetUser().GetAccessToken().c_str())];
+          [request setValue:authHeader forHTTPHeaderField:@"Authorization"];
+        }
+        [self.webView loadRequest:request];
+      }
+    }
+  }];
+}
+
+- (void)willLoadUrl:(MWMBoolBlock)decisionHandler
+{
+  decisionHandler(YES);
+}
+
+- (BOOL)shouldAddAccessToken
+{
+  return NO;
 }
 
 - (void)viewDidDisappear:(BOOL)animated

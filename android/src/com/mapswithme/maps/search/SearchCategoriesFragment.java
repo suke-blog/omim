@@ -3,7 +3,6 @@ package com.mapswithme.maps.search;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.mapswithme.maps.R;
@@ -50,17 +49,14 @@ public class SearchCategoriesFragment extends BaseMwmRecyclerFragment<Categories
   @Override
   public void onPromoCategorySelected(@NonNull PromoCategory promo)
   {
-    PromoCategoryProcessor processor = promo.createProcessor(getContext().getApplicationContext());
+    PromoCategoryProcessor processor = promo.createProcessor(getActivity());
     processor.process();
   }
 
   @Override
   public void onAdsRemovalSelected()
   {
-    AdsRemovalPurchaseDialog fragment
-        = (AdsRemovalPurchaseDialog) Fragment.instantiate(getActivity(),
-                                                          AdsRemovalPurchaseDialog.class.getName());
-    fragment.show(getChildFragmentManager(), null);
+    AdsRemovalPurchaseDialog.show(this);
   }
 
   private static boolean passCategory(Object listener, String category)

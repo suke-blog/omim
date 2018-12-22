@@ -32,6 +32,16 @@
            @(ADS_REMOVAL_YEARLY_PRODUCT_ID)];
 }
 
++ (NSArray *)legacyProductIds
+{
+  auto pidVec = std::vector<std::string>(ADS_REMOVAL_NOT_USED_LIST);
+  NSMutableArray *result = [NSMutableArray array];
+  for (auto const & s : pidVec)
+    [result addObject:@(s.c_str())];
+  
+  return [result copy];
+}
+
 + (MWMPurchaseManager *)sharedManager
 {
   static MWMPurchaseManager *instance;
@@ -83,6 +93,7 @@
       [self invalidReceipt];
       break;
     case Purchase::ValidationCode::ServerError:
+    case Purchase::ValidationCode::AuthError:
       [self serverError];
       break;
     }
@@ -93,6 +104,18 @@
   vi.m_vendorId = ADS_REMOVAL_VENDOR;
   auto const accessToken = GetFramework().GetUser().GetAccessToken();
   GetFramework().GetPurchase()->Validate(vi, accessToken);
+}
+
+- (void)startTransaction:(NSString *)serverId callback:(StartTransactionCallback)callback {
+  GetFramework().GetPurchase()->SetStartTransactionCallback([callback](bool success,
+                                                                       std::string const & serverId,
+                                                                       std::string const & vendorId)
+  {
+    callback(success, @(serverId.c_str()));
+  });
+  GetFramework().GetPurchase()->StartTransaction(serverId.UTF8String,
+                                                 BOOKMARKS_VENDOR,
+                                                 GetFramework().GetUser().GetAccessToken());
 }
 
 - (void)validReceipt

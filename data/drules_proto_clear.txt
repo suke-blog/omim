@@ -29948,7 +29948,119 @@ cont {
   }
 }
 cont {
+  name: "historic-memorial"
+  element {
+    scale: 15
+    symbol {
+      name: "monument-m"
+      priority: 16556
+      min_distance: 24
+    }
+    caption {
+      primary {
+        height: 10
+        color: 4473924
+        offset_y: 1
+        is_optional: true
+      }
+      priority: 15556
+    }
+  }
+  element {
+    scale: 16
+    symbol {
+      name: "monument-m"
+      priority: 16556
+      min_distance: 12
+    }
+    caption {
+      primary {
+        height: 10
+        color: 4473924
+        offset_y: 1
+        is_optional: true
+      }
+      priority: 15556
+    }
+  }
+  element {
+    scale: 17
+    symbol {
+      name: "monument-m"
+      priority: 16556
+      min_distance: 12
+    }
+    caption {
+      primary {
+        height: 10
+        color: 4473924
+        offset_y: 1
+        is_optional: true
+      }
+      priority: 15556
+    }
+  }
+  element {
+    scale: 18
+    symbol {
+      name: "monument-m"
+      priority: 16556
+      min_distance: 12
+    }
+    caption {
+      primary {
+        height: 10
+        color: 4473924
+        offset_y: 1
+        is_optional: true
+      }
+      priority: 15556
+    }
+  }
+  element {
+    scale: 19
+    symbol {
+      name: "monument-m"
+      priority: 16556
+      min_distance: 12
+    }
+    caption {
+      primary {
+        height: 10
+        color: 4473924
+        offset_y: 1
+        is_optional: true
+      }
+      priority: 15556
+    }
+  }
+}
+cont {
   name: "historic-memorial-plaque"
+  element {
+    scale: 15
+    symbol {
+      name: "zero-icon"
+      priority: 16556
+      min_distance: 24
+    }
+  }
+  element {
+    scale: 16
+    symbol {
+      name: "zero-icon"
+      priority: 16556
+      min_distance: 12
+    }
+  }
+  element {
+    scale: 17
+    symbol {
+      name: "zero-icon"
+      priority: 16556
+      min_distance: 12
+    }
+  }
   element {
     scale: 18
     symbol {
@@ -69187,10 +69299,6 @@ cont {
 }
 colors {
   value {
-    name: "TrafficOutline"
-    color: 15263452
-  }
-  value {
     name: "RoadShieldWhiteText"
     color: 16777215
   }
@@ -69304,12 +69412,20 @@ colors {
     color: 9682745
   }
   value {
+    name: "SpeedCameraMarkBg"
+    color: 16064048
+  }
+  value {
     name: "RatingExcellent"
     color: 3968060
   }
   value {
     name: "BookmarkCyan"
     color: 113876
+  }
+  value {
+    name: "SpeedCameraMarkText"
+    color: 16777215
   }
   value {
     name: "TransitBackground"
@@ -69322,6 +69438,9 @@ colors {
   value {
     name: "BookmarkGray"
     color: 7697781
+  }
+  value {
+    name: "UGCRatingText"
   }
   value {
     name: "RouteMarkSecondaryText"
@@ -69421,6 +69540,10 @@ colors {
     name: "RoadShieldBlackText"
   }
   value {
+    name: "SpeedCameraMarkOutline"
+    color: 16777215
+  }
+  value {
     name: "TransitMarkPrimaryTextOutline"
     color: 16777215
   }
@@ -69475,6 +69598,10 @@ colors {
     color: 1728053247
   }
   value {
+    name: "RoadShieldGreenBackground"
+    color: 3183362
+  }
+  value {
     name: "BookmarkBrown"
     color: 7951688
   }
@@ -69518,7 +69645,7 @@ colors {
     color: 14951168
   }
   value {
-    name: "RoadShieldGreenBackground"
-    color: 3183362
+    name: "TrafficOutline"
+    color: 15263452
   }
 }

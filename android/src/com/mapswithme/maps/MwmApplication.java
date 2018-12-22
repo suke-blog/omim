@@ -19,10 +19,13 @@ import com.mapswithme.maps.bookmarks.data.BookmarkManager;
 import com.mapswithme.maps.downloader.CountryItem;
 import com.mapswithme.maps.downloader.MapManager;
 import com.mapswithme.maps.editor.Editor;
+import com.mapswithme.maps.geofence.GeofenceRegistry;
+import com.mapswithme.maps.geofence.GeofenceRegistryImpl;
 import com.mapswithme.maps.location.LocationHelper;
 import com.mapswithme.maps.location.TrackRecorder;
 import com.mapswithme.maps.maplayer.subway.SubwayManager;
 import com.mapswithme.maps.maplayer.traffic.TrafficManager;
+import com.mapswithme.maps.base.MediaPlayerWrapper;
 import com.mapswithme.maps.routing.RoutingController;
 import com.mapswithme.maps.scheduling.ConnectivityJobScheduler;
 import com.mapswithme.maps.scheduling.ConnectivityListener;
@@ -66,12 +69,21 @@ public class MwmApplication extends Application
   private ConnectivityListener mConnectivityListener;
   @NonNull
   private final MapManager.StorageCallback mStorageCallbacks = new StorageCallbackImpl();
+  @SuppressWarnings("NullableProblems")
   @NonNull
-  private final AppBackgroundTracker.OnTransitionListener mBackgroundListener = new TransitionListener();
-
+  private AppBackgroundTracker.OnTransitionListener mBackgroundListener;
   @SuppressWarnings("NullableProblems")
   @NonNull
   private ExternalLibrariesMediator mMediator;
+  @SuppressWarnings("NullableProblems")
+  @NonNull
+  private PurchaseOperationObservable mPurchaseOperationObservable;
+  @SuppressWarnings("NullableProblems")
+  @NonNull
+  private MediaPlayerWrapper mPlayer;
+  @SuppressWarnings("NullableProblems")
+  @NonNull
+  private GeofenceRegistry mGeofenceRegistry;
 
   @NonNull
   public SubwayManager getSubwayManager()
@@ -85,14 +97,26 @@ public class MwmApplication extends Application
     sSelf = this;
   }
 
+  @Deprecated
   public static MwmApplication get()
   {
     return sSelf;
   }
 
+  /**
+   *
+   * Use {@link #backgroundTracker(Context)} instead.
+   */
+  @Deprecated
   public static AppBackgroundTracker backgroundTracker()
   {
     return sSelf.mBackgroundTracker;
+  }
+
+  @NonNull
+  public static AppBackgroundTracker backgroundTracker(@NonNull Context context)
+  {
+    return ((MwmApplication) context.getApplicationContext()).getBackgroundTracker();
   }
 
   /**
@@ -127,6 +151,8 @@ public class MwmApplication extends Application
   public void onCreate()
   {
     super.onCreate();
+    mBackgroundListener = new TransitionListener(this);
+    LoggerFactory.INSTANCE.initialize(this);
     mLogger = LoggerFactory.INSTANCE.getLogger(LoggerFactory.Type.MISC);
     mLogger.d(TAG, "Application is created");
     mMainLoopHandler = new Handler(getMainLooper());
@@ -143,12 +169,16 @@ public class MwmApplication extends Application
     mSubwayManager = new SubwayManager(this);
     mConnectivityListener = new ConnectivityJobScheduler(this);
     mConnectivityListener.listen();
+
+    mPurchaseOperationObservable = new PurchaseOperationObservable();
+    mPlayer = new MediaPlayerWrapper(this);
+    mGeofenceRegistry = new GeofenceRegistryImpl(this);
   }
 
   private void initNotificationChannels()
   {
     NotificationChannelProvider channelProvider = NotificationChannelFactory.createProvider(this);
-    channelProvider.setAuthChannel();
+    channelProvider.setUGCChannel();
     channelProvider.setDownloadingChannel();
   }
 
@@ -177,9 +207,9 @@ public class MwmApplication extends Application
 
     final String settingsPath = StorageUtils.getSettingsPath();
     mLogger.d(TAG, "onCreate(), setting path = " + settingsPath);
-    final String filesPath = StorageUtils.getFilesPath();
+    final String filesPath = StorageUtils.getFilesPath(this);
     mLogger.d(TAG, "onCreate(), files path = " + filesPath);
-    final String tempPath = StorageUtils.getTempPath();
+    final String tempPath = StorageUtils.getTempPath(this);
     mLogger.d(TAG, "onCreate(), temp path = " + tempPath);
 
     // If platform directories are not created it means that native part of app will not be able
@@ -189,7 +219,7 @@ public class MwmApplication extends Application
       return;
 
     // First we need initialize paths and platform to have access to settings and other components.
-    nativeInitPlatform(StorageUtils.getApkPath(), StorageUtils.getStoragePath(settingsPath),
+    nativeInitPlatform(StorageUtils.getApkPath(this), StorageUtils.getStoragePath(settingsPath),
                        filesPath, tempPath, StorageUtils.getObbGooglePath(), BuildConfig.FLAVOR,
                        BuildConfig.BUILD_TYPE, UiUtils.isTablet());
 
@@ -236,6 +266,7 @@ public class MwmApplication extends Application
     RoutingController.get().initialize();
     TrafficManager.INSTANCE.initialize();
     SubwayManager.from(this).initialize();
+    mPurchaseOperationObservable.initialize();
     mFrameworkInitialized = true;
   }
 
@@ -252,6 +283,12 @@ public class MwmApplication extends Application
   public boolean arePlatformAndCoreInitialized()
   {
     return mFrameworkInitialized && mPlatformInitialized;
+  }
+
+  @NonNull
+  public AppBackgroundTracker getBackgroundTracker()
+  {
+    return mBackgroundTracker;
   }
 
   static
@@ -280,6 +317,12 @@ public class MwmApplication extends Application
     return mMediator;
   }
 
+  @NonNull
+  PurchaseOperationObservable getPurchaseOperationObservable()
+  {
+    return mPurchaseOperationObservable;
+  }
+
   public static void onUpgrade()
   {
     Counters.resetAppSessionCounters();
@@ -304,6 +347,18 @@ public class MwmApplication extends Application
   public ConnectivityListener getConnectivityListener()
   {
     return mConnectivityListener;
+  }
+
+  @NonNull
+  public MediaPlayerWrapper getMediaPlayer()
+  {
+    return mPlayer;
+  }
+
+  @NonNull
+  public GeofenceRegistry getGeofenceRegistry()
+  {
+    return mGeofenceRegistry;
   }
 
   private native void nativeInitPlatform(String apkPath, String storagePath, String privatePath,
@@ -347,6 +402,14 @@ public class MwmApplication extends Application
 
   private static class TransitionListener implements AppBackgroundTracker.OnTransitionListener
   {
+    @NonNull
+    private final MwmApplication mApplication;
+
+    TransitionListener(@NonNull MwmApplication application)
+    {
+      mApplication = application;
+    }
+
     @Override
     public void onTransit(boolean foreground)
     {

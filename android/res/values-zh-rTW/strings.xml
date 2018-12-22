@@ -184,35 +184,41 @@
 	<string name="search_mode_nearme">我的附近</string>
 	<!-- Do search in current viewport only -->
 	<string name="search_mode_viewport">畫面中</string>
-	<!-- Search Suggestion -->
-	<string name="food">飲食</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for cafes, bars, restaurants -->
+	<string name="eat">在哪兒吃</string>
+	<!-- Search category for grocery stores -->
+	<string name="food">食物</string>
+	<!-- Search category -->
 	<string name="transport">運輸</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="fuel">加油站</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="parking">停車場</string>
-	<!-- Search Suggestion -->
-	<string name="shop">購物</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for clothes/shoes/gifts/jewellery/sport shops -->
+	<string name="shopping">購物</string>
+	<!-- Search category -->
 	<string name="hotel">飯店</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="tourism">旅遊景點</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="entertainment">娛樂</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="atm">自動櫃員機</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for nightclubs/bars -->
+	<string name="nightlife">夜生活</string>
+	<!-- Search category for water park/disneyland/playground/toys store -->
+	<string name="children">親子休閒</string>
+	<!-- Search category -->
 	<string name="bank">銀行</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="pharmacy">藥局</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="hospital">醫院</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="toilet">廁所</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="post">郵局</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="police">警察局</string>
 	<!-- String in search result list, when nothing found -->
 	<string name="no_search_results_found">找不到搜尋結果</string>
@@ -412,7 +418,7 @@
 	<string name="email_error_title">電子郵件發送錯誤</string>
 	<!-- Settings item title -->
 	<string name="pref_calibration_title">指南針校準</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="wifi">無線網路</string>
 	<!-- Update map suggestion -->
 	<string name="routing_map_outdated">請更新地圖以建立一條路線。</string>
@@ -1396,6 +1402,84 @@
 	<string name="subscription_terms">確認購買後將向您的iTunes賬戶收費。除非在當前周期結束前至少24小時關閉自動續訂，訂購會自動延續。在當前周期結束前24小時內，我們會根據您的方案向您的賬戶收費。您能在購買後在Apple ID賬戶設置中隨時管理或關閉自動續訂。</string>
 	<string name="subscriptions_title">訂購</string>
 	<string name="manage_subscription">管理訂購</string>
+	<string name="sharing_options">登錄設置</string>
+	<string name="export_file">導出文件</string>
+	<string name="list_settings">列表設置</string>
+	<string name="delete_list">刪除列表</string>
+	<string name="hide_from_map">從卡中隱藏</string>
+	<string name="ugc_route_tags_screen_label">請選擇標籤</string>
+	<string name="ugc_route_tags_progress_msg">正在加載標籤......</string>
+	<string name="ugc_route_tags_desc">請選擇標籤以幫助其他旅行者找到您的旅行指南。此為必填項。</string>
+	<string name="public_access">公共訪問</string>
+	<string name="limited_access">私人訪問</string>
+	<string name="upload_and_publish_desc">本指南將上傳到MAPS.ME公共目錄，並可供其他用戶使用</string>
+	<string name="upload_and_publish">加載並發布</string>
+	<string name="upload_and_get_direct_link">加載並獲取鏈接</string>
+	<string name="get_direct_link_desc">您的指南將通過直接鏈接提供</string>
+	<string name="upload_and_publish_progress_text">該指南正在發布......</string>
+	<string name="upload_and_publish_success">該指南已發布</string>
+	<string name="ugc_routes_user_agreement">&lt;b>請注意:&lt;/b>繼續，即表示您接受&lt;a href="%s">許可協議&lt;/a></string>
+	<string name="ugc_route_edit_list_name">指南名稱</string>
+	<string name="ugc_route_edit_description_hint">添加說明(文字或html)</string>
+	<string name="not_shared">個人</string>
+	<string name="direct_link_progress_text">正在上傳您的文件......</string>
+	<string name="direct_link_success">鏈接已創建</string>
+	<string name="edit_guide_title">請在線編輯旅行指南</string>
+	<string name="edit_guide_subtitle">請通過網絡應用獲取編輯指南的鏈接：請添加地點描述，上傳照片和用線條連接標籤。</string>
+	<string name="send_a_link_btn">發送鏈接</string>
+	<string name="upload_error_toast">加載文件時出錯</string>
+	<string name="tags_loading_error_subtitle">加載代碼時出錯，請重試</string>
+	<string name="unable_upload_errorr_title">無法上傳文件</string>
+	<string name="unable_upload_error_subtitle_edited">文件是通過Web應用程序編輯的</string>
+	<string name="unable_upload_error_subtitle_broken">該文件已損壞，無法上傳。請上傳其他文件。</string>
+	<string name="buy_btn">購買%s</string>
+	<string name="download_guide_progress">指南正在加載......</string>
+	<string name="price_error_title">無法得知價格</string>
+	<string name="price_error_subtitle">請在幾分鐘之後再試一次</string>
+	<string name="edit_your_guide_email_body">在計算機上編輯您的旅行指南：請添加地點描述，上傳照片和用線條連接標籤。</string>
+	<string name="edit_on_web">在線編輯</string>
+	<string name="properties_loading_error_subtitle">加載選項時出錯，請重試</string>
+	<string name="custom_props_desc">本指南您編制為</string>
+	<string name="custom_props_title">當地貨遊客</string>
+	<string name="custom_props_local">當地</string>
+	<string name="custom_props_traveler">遊客</string>
+	<string name="select_properties">選擇選項</string>
+	<string name="access_rules_p_to_p">特殊訪問</string>
+	<string name="access_rules_paid">已購買</string>
+	<string name="failed_purchase_support_message">您似乎還有待定購買。請寫支持，我們將解決問題。</string>
+	<string name="contact">寫</string>
+	<string name="check_price_button">了解價格</string>
+	<string name="download_button">下載</string>
+	<string name="speedcams_alert_title">高速相機</string>
+	<string name="speedcams_alert_subtitle">警告速度限制</string>
+	<string name="speedcam_option_auto">自動</string>
+	<string name="speedcam_option_always">總是</string>
+	<string name="speedcam_option_never">從不</string>
+	<string name="bookmark_description_title">標籤說明</string>
+	<string name="place_description_title">地點說明</string>
+	<string name="ugc_routes_error_uploading_file_toast">抱歉，加載代碼時出錯。請再試一次。</string>
+	<string name="notification_channel_ugc">用戶內容</string>
+	<!-- this text will be shown in application notification preferences opposite checkbox which enable/disable downloader notifications. Devices on Android 8+ are affected. -->
+	<string name="notification_channel_downloader">加載地圖</string>
+	<string name="notification_leave_review_title">%s - 您在這裡怎麼樣?</string>
+	<string name="notification_leave_review_content">請發表評論並幫助旅客！</string>
+	<string name="share_bookmarks_email_body_link">您好！\n\n您的標籤可以從鏈接下載：%s.使用MAPS.ME打開列表並享受旅行!\n\n下載應用程序：http://maps.me/get?kmz</string>
+	<string name="warning_speedcams_title">當速度限制超過%d km / h時，導航會通知您的攝像機</string>
+	<string name="warning_speedcams_subtitle">請不要忘記閱讀旅行國的道路規則。</string>
+	<string name="speedcams_notice_message">自動 - 如果存在超出速度限制的風險，則對速度攝像頭髮出警告\n總是 - 始終提醒攝像頭\n從不 - 永遠不會對攝像頭發出警告</string>
+	<string name="whats_new_ugc_routes_title">分享您的印象很容易</string>
+	<string name="whats_new_ugc_routes_subtitle">保存有印象的地点、用书签创建路线，并在MAPS.ME目录中和大家分享。</string>
+	<string name="whats_new_webeditor_title">把路线变成故事</string>
+	<string name="whats_new_ugc_routes_message2">在网页编辑工具里添加照片和详细的故事。</string>
+	<string name="whatsnew_standard_routes_title">標準路線</string>
+	<string name="whatsnew_standard_routes_message">主要景點組合，簡要描述，感觸滿滿！</string>
+	<string name="whatsnew_city_overview_title">環城旅遊</string>
+	<string name="whatsnew_city_overview_message">城市地圖上最多200個點：對旅行者來說最有用也是最有趣的！</string>
+	<string name="whatsnew_pro_guides_title">專業路線</string>
+	<string name="whatsnew_pro_guides_message">高水平的細節，地點的詳細描述以及計算步行距離和時間的能力</string>
+	<string name="whatsnew_paid_routes_title">更多新體驗！</string>
+	<string name="whatsnew_paid_routes_message">除了免費路線，我們還為目錄添加了3類付費指南。超過700條新路線！</string>
+	<string name="whats_new_ugc_routes_title_android_only">分享您的印象很容易</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">纜車站</string>
@@ -1499,6 +1583,7 @@
 	<string name="type.barrier.lift_gate">遮斷機</string>
 	<string name="type.barrier.stile">梯磴</string>
 	<string name="type.barrier.toll_booth">收費站</string>
+	<string name="type.boundary.national_park">國家公園</string>
 	<string name="type.building">建築物</string>
 	<string name="type.building.address">建築物</string>
 	<string name="type.building.garage">車庫</string>
@@ -1736,6 +1821,7 @@
 	<string name="type.leisure.fitness_station">健身房</string>
 	<string name="type.leisure.garden">花園</string>
 	<string name="type.leisure.golf_course">高爾夫球場</string>
+	<string name="type.leisure.nature_reserve">自然保護區</string>
 	<string name="type.leisure.park">公園</string>
 	<string name="type.leisure.park.no.access">公園</string>
 	<string name="type.leisure.park.permissive">公園</string>
@@ -1764,7 +1850,10 @@
 	<string name="type.military.bunker">地堡</string>
 	<string name="type.natural.bay">海灣</string>
 	<string name="type.natural.beach">海灘</string>
+	<string name="type.natural.cape">海角</string>
 	<string name="type.natural.cave_entrance">洞穴入口</string>
+	<string name="type.natural.geyser">間歇泉</string>
+	<string name="type.natural.glacier">冰川</string>
 	<string name="type.natural.lake">湖泊</string>
 	<string name="type.natural.peak">山峰</string>
 	<string name="type.natural.pond">潭</string>

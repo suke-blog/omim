@@ -165,7 +165,7 @@ drape_ptr<dp::OverlayHandle> PoiSymbolShape::CreateOverlayHandle(m2::PointF cons
   handle->SetPivotZ(m_params.m_posZ);
   handle->SetExtendingSize(m_params.m_extendingSize);
   if (m_params.m_specialDisplacement == SpecialDisplacement::UserMark ||
-      m_params.m_specialDisplacement == SpecialDisplacement::TransitScheme)
+      m_params.m_specialDisplacement == SpecialDisplacement::SpecialModeUserMark)
   {
     handle->SetSpecialLayerOverlay(true);
   }
@@ -180,11 +180,11 @@ uint64_t PoiSymbolShape::GetOverlayPriority() const
     return dp::kPriorityMaskAll;
 
   // Special displacement mode.
-  if (m_params.m_specialDisplacement == SpecialDisplacement::SpecialMode ||
-      m_params.m_specialDisplacement == SpecialDisplacement::TransitScheme)
-  {
+  if (m_params.m_specialDisplacement == SpecialDisplacement::SpecialMode)
     return dp::CalculateSpecialModePriority(m_params.m_specialPriority);
-  }
+
+  if (m_params.m_specialDisplacement == SpecialDisplacement::SpecialModeUserMark)
+    return dp::CalculateSpecialModeUserMarkPriority(m_params.m_specialPriority);
 
   if (m_params.m_specialDisplacement == SpecialDisplacement::UserMark)
     return dp::CalculateUserMarkPriority(m_params.m_minVisibleScale, m_params.m_specialPriority);

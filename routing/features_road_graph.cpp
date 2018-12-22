@@ -4,9 +4,8 @@
 
 #include "routing_common/vehicle_model.hpp"
 
-#include "editor/editable_data_source.hpp"
-
 #include "indexer/classificator.hpp"
+#include "indexer/data_source.hpp"
 #include "indexer/ftypes_matcher.hpp"
 #include "indexer/scales.hpp"
 
@@ -50,9 +49,9 @@ FeaturesRoadGraph::CrossCountryVehicleModel::CrossCountryVehicleModel(
 }
 
 VehicleModelInterface::SpeedKMpH FeaturesRoadGraph::CrossCountryVehicleModel::GetSpeed(
-    FeatureType & f, bool inCity) const
+    FeatureType & f, SpeedParams const & speedParams) const
 {
-  return GetVehicleModel(f.GetID())->GetSpeed(f, inCity);
+  return GetVehicleModel(f.GetID())->GetSpeed(f, speedParams);
 }
 
 double FeaturesRoadGraph::CrossCountryVehicleModel::GetOffroadSpeed() const
@@ -143,16 +142,17 @@ private:
   IRoadGraph::ICrossEdgesLoader & m_edgesLoader;
 };
 
-IRoadGraph::RoadInfo FeaturesRoadGraph::GetRoadInfo(FeatureID const & featureId, bool inCity) const
+IRoadGraph::RoadInfo FeaturesRoadGraph::GetRoadInfo(FeatureID const & featureId,
+                                                    SpeedParams const & speedParams) const
 {
-  RoadInfo const & ri = GetCachedRoadInfo(featureId, inCity);
+  RoadInfo const & ri = GetCachedRoadInfo(featureId, speedParams);
   ASSERT_GREATER(ri.m_speedKMPH, 0.0, ());
   return ri;
 }
 
-double FeaturesRoadGraph::GetSpeedKMpH(FeatureID const & featureId, bool inCity) const
+double FeaturesRoadGraph::GetSpeedKMpH(FeatureID const & featureId, SpeedParams const & speedParams) const
 {
-  double const speedKMPH = GetCachedRoadInfo(featureId, inCity).m_speedKMPH;
+  double const speedKMPH = GetCachedRoadInfo(featureId, speedParams).m_speedKMPH;
   ASSERT_GREATER(speedKMPH, 0.0, ());
   return speedKMPH;
 }
@@ -245,9 +245,9 @@ bool FeaturesRoadGraph::IsRoad(FeatureType & ft) const { return m_vehicleModel.I
 
 bool FeaturesRoadGraph::IsOneWay(FeatureType & ft) const { return m_vehicleModel.IsOneWay(ft); }
 
-double FeaturesRoadGraph::GetSpeedKMpHFromFt(FeatureType & ft, bool inCity) const
+double FeaturesRoadGraph::GetSpeedKMpHFromFt(FeatureType & ft, SpeedParams const & speedParams) const
 {
-  return m_vehicleModel.GetSpeed(ft, inCity).m_weight;
+  return m_vehicleModel.GetSpeed(ft, speedParams).m_weight;
 }
 
 void FeaturesRoadGraph::ExtractRoadInfo(FeatureID const & featureId, FeatureType & ft,
@@ -284,7 +284,7 @@ void FeaturesRoadGraph::ExtractRoadInfo(FeatureID const & featureId, FeatureType
 }
 
 IRoadGraph::RoadInfo const & FeaturesRoadGraph::GetCachedRoadInfo(FeatureID const & featureId,
-                                                                  bool inCity) const
+                                                                  SpeedParams const & speedParams) const
 {
   bool found = false;
   RoadInfo & ri = m_cache.Find(featureId, found);
@@ -301,7 +301,7 @@ IRoadGraph::RoadInfo const & FeaturesRoadGraph::GetCachedRoadInfo(FeatureID cons
 
   ASSERT_EQUAL(ft.GetFeatureType(), feature::GEOM_LINE, ());
 
-  ExtractRoadInfo(featureId, ft, GetSpeedKMpHFromFt(ft, inCity), ri);
+  ExtractRoadInfo(featureId, ft, GetSpeedKMpHFromFt(ft, speedParams), ri);
   return ri;
 }
 

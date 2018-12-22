@@ -4,7 +4,7 @@
 #include "generator/feature_generator.hpp"
 #include "generator/feature_helpers.hpp"
 
-#include "coding/pointd_to_pointu.hpp"
+#include "coding/point_coding.hpp"
 
 #include "geometry/cellid.hpp"
 #include "geometry/mercator.hpp"
@@ -22,7 +22,7 @@ using namespace std;
 
 namespace
 {
-m2::PointU D2I(double x, double y) { return PointDToPointU(m2::PointD(x, y), POINT_COORD_BITS); }
+m2::PointU D2I(double x, double y) { return PointDToPointU(m2::PointD(x, y), kPointCoordBits); }
 
 class ProcessCoastsBase
 {

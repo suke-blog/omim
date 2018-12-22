@@ -6,16 +6,20 @@
 #include "generator/generate_info.hpp"
 #include "generator/generator_tests_support/routing_helpers.hpp"
 #include "generator/generator_tests_support/test_mwm_builder.hpp"
+#include "generator/maxspeeds_parser.hpp"
 #include "generator/metalines_builder.hpp"
 #include "generator/osm_source.hpp"
 
 #include "routing/speed_camera_ser_des.hpp"
+
+#include "routing_common/maxspeed_conversion.hpp"
 
 #include "indexer/classificator_loader.hpp"
 #include "indexer/index_builder.hpp"
 #include "indexer/map_style_reader.hpp"
 
 #include "platform/local_country_file.hpp"
+#include "platform/measurement_utils.hpp"
 #include "platform/platform.hpp"
 #include "platform/platform_tests_support/scoped_dir.hpp"
 #include "platform/platform_tests_support/scoped_file.hpp"
@@ -42,6 +46,7 @@
 
 using namespace feature;
 using namespace generator;
+using namespace measurement_utils;
 using namespace platform::tests_support;
 using namespace platform;
 using namespace routing;
@@ -451,5 +456,24 @@ UNIT_TEST(SpeedCameraGenerationTest_CameraIsNearFeature_2)
     {SegmentCoord(0, 0), std::vector<RouteSegment::SpeedCamera>{{0.2289881, 100}}}
   };
   TestSpeedCameraSectionBuilding(osmContent, answer);
+}
+
+UNIT_TEST(RoadCategoryToSpeedTest)
+{
+  SpeedInUnits speed;
+
+  TEST(RoadCategoryToSpeed("RU:rural", speed), ());
+  TEST_EQUAL(speed, SpeedInUnits(90, Units::Metric), ());
+  TEST(speed.IsNumeric(), ());
+
+  TEST(RoadCategoryToSpeed("DE:motorway", speed), ());
+  TEST_EQUAL(speed, SpeedInUnits(kNoneMaxSpeed, Units::Metric), ());
+  TEST(!speed.IsNumeric(), ());
+
+  TEST(RoadCategoryToSpeed("UK:motorway", speed), ());
+  TEST_EQUAL(speed, SpeedInUnits(70, Units::Imperial), ());
+  TEST(speed.IsNumeric(), ());
+
+  TEST(!RoadCategoryToSpeed("UNKNOWN:unknown", speed), ());
 }
 }  // namespace

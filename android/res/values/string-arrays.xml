@@ -24,6 +24,18 @@
     <item>@string/theme_auto</item>
   </string-array>
 
+  <string-array name="speed_cameras">
+    <item>@string/speedcam_option_auto</item>
+    <item>@string/speedcam_option_always</item>
+    <item>@string/speedcam_option_never</item>
+  </string-array>
+
+  <string-array name="speed_cameras_values" translatable="false">
+    <item>@string/auto_enum_value</item>
+    <item>@string/always_enum_value</item>
+    <item>@string/never_enum_value</item>
+  </string-array>
+
   <string-array name="track_length">
     <item>@string/duration_disabled</item>
     <item>@string/duration_1_hour</item>

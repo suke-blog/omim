@@ -62,9 +62,11 @@ UniString MakeLowerCase(UniString const & s);
 
 /// Performs NFKD - Compatibility decomposition for Unicode according
 /// to rules in ftp://ftp.unicode.org/Public/UNIDATA/UnicodeData.txt
-/// For implementation @see base/normilize_unicode.cpp
+/// For implementation @see base/normalize_unicode.cpp
 void NormalizeInplace(UniString & s);
+
 UniString Normalize(UniString const & s);
+std::string Normalize(std::string const & s);
 
 /// Replaces "full width" unicode digits with ascii ones.
 void NormalizeDigits(std::string & utf8);
@@ -82,6 +84,12 @@ void AsciiToLower(std::string & s);
 void Trim(std::string & s);
 /// Remove any characters that contain in "anyOf" on left and right side of string s
 void Trim(std::string & s, char const * anyOf);
+
+// Replace the first match of the search substring in the input with the format string.
+// str - An input string
+// from - A substring to be searched for
+// to - A substitute string
+bool ReplaceFirst(std::string & str, std::string const & from, std::string const & to);
 
 void MakeLowerCaseInplace(std::string & s);
 std::string MakeLowerCase(std::string const & s);

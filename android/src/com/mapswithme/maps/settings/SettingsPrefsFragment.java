@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -19,7 +20,9 @@ import android.support.v7.preference.TwoStatePreference;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -32,6 +35,12 @@ import com.mapswithme.maps.downloader.OnmapDownloader;
 import com.mapswithme.maps.editor.ProfileActivity;
 import com.mapswithme.maps.location.LocationHelper;
 import com.mapswithme.maps.location.TrackRecorder;
+import com.mapswithme.maps.purchase.AdsRemovalActivationCallback;
+import com.mapswithme.maps.purchase.AdsRemovalPurchaseControllerProvider;
+import com.mapswithme.maps.purchase.AdsRemovalPurchaseDialog;
+import com.mapswithme.maps.purchase.PurchaseCallback;
+import com.mapswithme.maps.purchase.PurchaseController;
+import com.mapswithme.maps.purchase.PurchaseFactory;
 import com.mapswithme.maps.sound.LanguageData;
 import com.mapswithme.maps.sound.TtsPlayer;
 import com.mapswithme.util.Config;
@@ -42,7 +51,6 @@ import com.mapswithme.util.UiUtils;
 import com.mapswithme.util.concurrency.UiThread;
 import com.mapswithme.util.log.LoggerFactory;
 import com.mapswithme.util.statistics.AlohaHelper;
-import com.mapswithme.util.statistics.MytargetHelper;
 import com.mapswithme.util.statistics.Statistics;
 
 import java.util.HashMap;
@@ -50,6 +58,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SettingsPrefsFragment extends BaseXmlSettingsFragment
+    implements AdsRemovalActivationCallback, AdsRemovalPurchaseControllerProvider
 {
   private static final int REQUEST_INSTALL_DATA = 1;
   private static final String TTS_SCREEN_KEY = MwmApplication.get()
@@ -76,6 +85,8 @@ public class SettingsPrefsFragment extends BaseXmlSettingsFragment
   private final Map<String, LanguageData> mLanguages = new HashMap<>();
   private LanguageData mCurrentLanguage;
   private String mSelectedLanguage;
+  @Nullable
+  private PurchaseController<PurchaseCallback> mAdsRemovalPurchaseController;
 
   private boolean singleStorageOnly()
   {
@@ -274,11 +285,32 @@ public class SettingsPrefsFragment extends BaseXmlSettingsFragment
     return R.xml.prefs_main;
   }
 
-  @Override
-  public void onCreate(Bundle savedInstanceState)
+  private boolean onToggleOptOut(Object newValue)
   {
-    super.onCreate(savedInstanceState);
+    boolean isEnabled = (boolean) newValue;
+    Statistics.INSTANCE.trackSettingsToggle(isEnabled);
+    return true;
+  }
 
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+  {
+    mAdsRemovalPurchaseController = PurchaseFactory.createAdsRemovalPurchaseController(getContext());
+    mAdsRemovalPurchaseController.initialize(getActivity());
+    return super.onCreateView(inflater, container, savedInstanceState);
+  }
+
+  @Override
+  public void onDestroyView()
+  {
+    mAdsRemovalPurchaseController.destroy();
+    super.onDestroyView();
+  }
+
+  @Override
+  public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+  {
+    super.onViewCreated(view, savedInstanceState);
     mPreferenceScreen = getPreferenceScreen();
     mStoragePref = findPreference(getString(R.string.pref_storage));
     mPrefEnabled = (TwoStatePreference) findPreference(getString(R.string.pref_tts_enabled));
@@ -291,6 +323,7 @@ public class SettingsPrefsFragment extends BaseXmlSettingsFragment
     initMeasureUnitsPrefsCallbacks();
     initZoomPrefsCallbacks();
     initMapStylePrefsCallbacks();
+    initSpeedCamerasPrefs();
     initAutoDownloadPrefsCallbacks();
     initBackupBookmarksPrefsCallbacks();
     initLargeFontSizePrefsCallbacks();
@@ -309,11 +342,40 @@ public class SettingsPrefsFragment extends BaseXmlSettingsFragment
     updateTts();
   }
 
-  private boolean onToggleOptOut(Object newValue)
+  private void initSpeedCamerasPrefs()
   {
-    boolean isEnabled = (boolean) newValue;
-    Statistics.INSTANCE.trackSettingsToggle(isEnabled);
+    String key = getString(R.string.pref_speed_cameras);
+    final ListPreference pref = (ListPreference) findPreference(key);
+    if (pref == null)
+      return;
+    pref.setSummary(pref.getEntry());
+    pref.setOnPreferenceChangeListener(this::onSpeedCamerasPrefSelected);
+  }
+
+  private boolean onSpeedCamerasPrefSelected(@NonNull Preference preference,
+                                             @NonNull Object newValue)
+  {
+    String speedCamModeValue = (String) newValue;
+    ListPreference speedCamModeList = (ListPreference) preference;
+    SpeedCameraMode newCamMode = SpeedCameraMode.valueOf(speedCamModeValue);
+    CharSequence summary = speedCamModeList.getEntries()[newCamMode.ordinal()];
+    speedCamModeList.setSummary(summary);
+    if (speedCamModeList.getValue().equals(newValue))
+      return true;
+
+    SpeedCameraMode oldCamMode = SpeedCameraMode.valueOf(speedCamModeList.getValue());
+    onSpeedCamerasPrefChanged(oldCamMode, newCamMode);
     return true;
+  }
+
+  private void onSpeedCamerasPrefChanged(@NonNull SpeedCameraMode oldCamMode,
+                                         @NonNull SpeedCameraMode newCamMode)
+  {
+    Statistics.ParameterBuilder params = new Statistics
+        .ParameterBuilder()
+        .add(Statistics.EventParam.VALUE, newCamMode.name().toLowerCase());
+    Statistics.INSTANCE.trackEvent(Statistics.EventName.SETTINGS_SPEED_CAMS, params);
+    Framework.setSpeedCamerasMode(newCamMode);
   }
 
   @Override
@@ -364,14 +426,20 @@ public class SettingsPrefsFragment extends BaseXmlSettingsFragment
 
   private void initDisplayShowcasePrefs()
   {
-    if (MytargetHelper.isShowcaseSwitchedOnServer())
-      return;
-
     Preference pref = findPreference(getString(R.string.pref_showcase_switched_on));
     if (pref == null)
       return;
 
-    removePreference(getString(R.string.pref_settings_general), pref);
+    if (Framework.nativeHasActiveRemoveAdsSubscription())
+    {
+      removePreference(getString(R.string.pref_settings_general), pref);
+      return;
+    }
+
+    pref.setOnPreferenceClickListener(preference -> {
+      AdsRemovalPurchaseDialog.show(SettingsPrefsFragment.this);
+      return true;
+    });
   }
 
   private void initLangInfoLink()
@@ -749,31 +817,24 @@ public class SettingsPrefsFragment extends BaseXmlSettingsFragment
     String curTheme = Config.getUiThemeSettings();
     pref.setValue(curTheme);
     pref.setSummary(pref.getEntry());
-    pref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
-    {
-      @Override
-      public boolean onPreferenceChange(Preference preference, Object newValue)
-      {
-        String themeName = (String)newValue;
-        if (!Config.setUiThemeSettings(themeName))
-          return true;
+    pref.setOnPreferenceChangeListener(this::onMapStylePrefChanged);
+  }
 
-        ThemeSwitcher.restart(false);
-        Statistics.INSTANCE.trackEvent(Statistics.EventName.Settings.MAP_STYLE,
-                                       Statistics.params().add(Statistics.EventParam.NAME, themeName));
+  private boolean onMapStylePrefChanged(@NonNull Preference pref, @NonNull Object newValue)
+  {
+    String themeName = (String) newValue;
+    if (!Config.setUiThemeSettings(themeName))
+      return true;
 
-        UiThread.runLater(new Runnable()
-        {
-          @Override
-          public void run()
-          {
-            pref.setSummary(pref.getEntry());
-          }
-        });
+    ThemeSwitcher.restart(false);
+    Statistics.INSTANCE.trackEvent(Statistics.EventName.Settings.MAP_STYLE,
+                                   Statistics.params().add(Statistics.EventParam.NAME, themeName));
+    ListPreference mapStyleModeList = (ListPreference) pref;
 
-        return true;
-      }
-    });
+    ThemeMode mode = ThemeMode.getInstance(getContext().getApplicationContext(), themeName);
+    CharSequence summary = mapStyleModeList.getEntries()[mode.ordinal()];
+    mapStyleModeList.setSummary(summary);
+    return true;
   }
 
   private void initZoomPrefsCallbacks()
@@ -882,5 +943,50 @@ public class SettingsPrefsFragment extends BaseXmlSettingsFragment
   {
     super.onDetach();
     mPathManager.stopExternalStorageWatching();
+  }
+
+  @Override
+  public void onAdsRemovalActivation()
+  {
+    initDisplayShowcasePrefs();
+  }
+
+  @Nullable
+  @Override
+  public PurchaseController<PurchaseCallback> getAdsRemovalPurchaseController()
+  {
+    return mAdsRemovalPurchaseController;
+  }
+
+  enum ThemeMode
+  {
+    DEFAULT(R.string.theme_default),
+    NIGHT(R.string.theme_night),
+    AUTO(R.string.theme_auto);
+
+    private final int mModeStringId;
+
+    ThemeMode(@StringRes int modeStringId)
+    {
+      mModeStringId = modeStringId;
+    }
+
+    @NonNull
+    public static ThemeMode getInstance(@NonNull Context context, @NonNull String src)
+    {
+      for (ThemeMode each : values())
+      {
+        if (context.getResources().getString(each.mModeStringId).equals(src))
+          return each;
+      }
+      return AUTO;
+    }
+  }
+
+  public enum SpeedCameraMode
+  {
+    AUTO,
+    ALWAYS,
+    NEVER
   }
 }

@@ -2,6 +2,7 @@
 
 #include "map/bookmark_manager.hpp"
 #include "map/local_ads_manager.hpp"
+#include "map/notifications/notification_manager.hpp"
 #include "map/user.hpp"
 
 #include "ugc/storage.hpp"
@@ -12,7 +13,12 @@
 
 #include "base/assert.hpp"
 
+#include <cstdint>
 #include <memory>
+#include <string>
+#include <vector>
+
+#include <boost/optional.hpp>
 
 namespace lightweight
 {
@@ -31,6 +37,7 @@ enum RequestType
   REQUEST_TYPE_LOCATION = 1u << 4,
   REQUEST_TYPE_LOCAL_ADS_FEATURES = 1u << 5,
   REQUEST_TYPE_LOCAL_ADS_STATISTICS = 1u << 6,
+  REQUEST_TYPE_NOTIFICATION = 1u << 7,
 };
 
 using RequestTypeMask = unsigned;
@@ -44,66 +51,17 @@ class Framework
 public:
   friend struct LightFrameworkTest;
 
-  explicit Framework(RequestTypeMask request) : m_request(request)
-  {
-    CHECK_NOT_EQUAL(request, REQUEST_TYPE_EMPTY, ("Mask is empty"));
+  explicit Framework(RequestTypeMask request);
 
-    if (request & REQUEST_TYPE_NUMBER_OF_UNSENT_UGC)
-    {
-      m_numberOfUnsentUGC = GetNumberOfUnsentUGC();
-      request ^= REQUEST_TYPE_NUMBER_OF_UNSENT_UGC;
-    }
-
-    if (request & REQUEST_TYPE_USER_AUTH_STATUS)
-    {
-      m_userAuthStatus = IsUserAuthenticated();
-      request ^= REQUEST_TYPE_USER_AUTH_STATUS;
-    }
-
-    if (request & REQUEST_TYPE_NUMBER_OF_UNSENT_EDITS)
-    {
-      // TODO: Hasn't implemented yet.
-      request ^= REQUEST_TYPE_NUMBER_OF_UNSENT_EDITS;
-    }
-
-    if (request & REQUEST_TYPE_BOOKMARKS_CLOUD_ENABLED)
-    {
-      m_bookmarksCloudEnabled = IsBookmarksCloudEnabled();
-      request ^= REQUEST_TYPE_BOOKMARKS_CLOUD_ENABLED;
-    }
-
-    if (request & REQUEST_TYPE_LOCATION)
-    {
-      m_countryInfoReader = std::make_unique<CountryInfoReader>();
-      request ^= REQUEST_TYPE_LOCATION;
-    }
-
-    if (request & REQUEST_TYPE_LOCAL_ADS_FEATURES)
-    {
-      m_localAdsFeaturesReader = std::make_unique<LocalAdsFeaturesReader>();
-      request ^= REQUEST_TYPE_LOCAL_ADS_FEATURES;
-    }
-
-    if (request & REQUEST_TYPE_LOCAL_ADS_STATISTICS)
-    {
-      m_localAdsStatistics = std::make_unique<Statistics>();
-      request ^= REQUEST_TYPE_LOCAL_ADS_STATISTICS;
-    }
-
-    CHECK_EQUAL(request, REQUEST_TYPE_EMPTY, ("Incorrect mask type:", request));
-  }
-
-  template <RequestTypeMask Type>
-  auto Get() const;
-
-  template <RequestTypeMask Type>
-  auto Get(m2::PointD const & pt) const;
-
-  template <RequestTypeMask Type>
-  auto GetNonConst(double lat, double lon, double radiusInMeters, uint32_t maxCount);
-
-  template <RequestTypeMask Type>
-  auto GetNonConst();
+  bool IsUserAuthenticated() const;
+  size_t GetNumberOfUnsentUGC() const;
+  size_t GetNumberOfUnsentEdits() const;
+  bool IsBookmarksCloudEnabled() const;
+  CountryInfoReader::Info GetLocation(m2::PointD const & pt) const;
+  std::vector<CampaignFeature> GetLocalAdsFeatures(double lat, double lon, double radiusInMeters,
+                                                   uint32_t maxCount);
+  Statistics * GetLocalAdsStatistics();
+  boost::optional<notifications::NotificationCandidate> GetNotification() const;
 
 private:
   RequestTypeMask m_request;
@@ -114,64 +72,11 @@ private:
   std::unique_ptr<CountryInfoReader> m_countryInfoReader;
   std::unique_ptr<LocalAdsFeaturesReader> m_localAdsFeaturesReader;
   std::unique_ptr<Statistics> m_localAdsStatistics;
+  std::unique_ptr<lightweight::NotificationManager> m_notificationManager;
 };
 
-template<>
-auto Framework::Get<REQUEST_TYPE_USER_AUTH_STATUS>() const
-{
-  ASSERT(m_request & REQUEST_TYPE_USER_AUTH_STATUS, (m_request));
-  return m_userAuthStatus;
-}
+std::string FeatureParamsToString(int64_t mwmVersion, std::string const & countryId, uint32_t featureIndex);
 
-template<>
-auto Framework::Get<REQUEST_TYPE_NUMBER_OF_UNSENT_UGC>() const
-{
-  ASSERT(m_request & REQUEST_TYPE_NUMBER_OF_UNSENT_UGC, (m_request));
-  return m_numberOfUnsentUGC;
-}
-
-template<>
-auto Framework::Get<REQUEST_TYPE_NUMBER_OF_UNSENT_EDITS>() const
-{
-  ASSERT(m_request & REQUEST_TYPE_NUMBER_OF_UNSENT_EDITS, (m_request));
-  return m_numberOfUnsentEdits;
-}
-
-template<>
-auto Framework::Get<REQUEST_TYPE_BOOKMARKS_CLOUD_ENABLED>() const
-{
-  ASSERT(m_request & REQUEST_TYPE_BOOKMARKS_CLOUD_ENABLED, (m_request));
-  return m_bookmarksCloudEnabled;
-}
-
-template <>
-auto Framework::Get<REQUEST_TYPE_LOCATION>(m2::PointD const & pt) const
-{
-  ASSERT(m_request & REQUEST_TYPE_LOCATION, (m_request));
-
-  CHECK(m_countryInfoReader, ());
-
-  return m_countryInfoReader->GetMwmInfo(pt);
-}
-
-template <>
-auto Framework::GetNonConst<REQUEST_TYPE_LOCAL_ADS_FEATURES>(double lat, double lon,
-                                                             double radiusInMeters, uint32_t maxCount)
-{
-  ASSERT(m_request & REQUEST_TYPE_LOCAL_ADS_FEATURES, (m_request));
-
-  CHECK(m_localAdsFeaturesReader, ());
-
-  return m_localAdsFeaturesReader->GetCampaignFeatures(lat, lon, radiusInMeters, maxCount);
-}
-
-template <>
-auto Framework::GetNonConst<REQUEST_TYPE_LOCAL_ADS_STATISTICS>()
-{
-  ASSERT(m_request & REQUEST_TYPE_LOCAL_ADS_STATISTICS, (m_request));
-
-  CHECK(m_localAdsStatistics, ());
-
-  return m_localAdsStatistics.get();
-}
+bool FeatureParamsFromString(std::string const & str, int64_t & mwmVersion, std::string & countryId,
+                             uint32_t & featureIndex);
 }  // namespace lightweight

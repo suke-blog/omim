@@ -290,9 +290,11 @@ void IRoadGraph::AddIngoingFakeEdge(Edge const & e)
   AddEdge(e.GetEndJunction(), e, m_fakeIngoingEdges);
 }
 
-double IRoadGraph::GetSpeedKMpH(Edge const & edge, bool inCity) const
+double IRoadGraph::GetSpeedKMpH(Edge const & edge, SpeedParams const & speedParams) const
 {
-  double const speedKMpH = (edge.IsFake() ? GetMaxSpeedKMpH() : GetSpeedKMpH(edge.GetFeatureId(), inCity));
+  double const speedKMpH =
+      (edge.IsFake() ? GetMaxSpeedKMpH()
+                     : GetSpeedKMpH(edge.GetFeatureId(), speedParams));
   ASSERT_LESS_OR_EQUAL(speedKMpH, GetMaxSpeedKMpH(), ());
   return speedKMpH;
 }
@@ -312,7 +314,7 @@ string DebugPrint(IRoadGraph::Mode mode)
     case IRoadGraph::Mode::ObeyOnewayTag: return "ObeyOnewayTag";
     case IRoadGraph::Mode::IgnoreOnewayTag: return "IgnoreOnewayTag";
   }
-  CHECK_SWITCH();
+  UNREACHABLE();
 }
 
 IRoadGraph::RoadInfo MakeRoadInfoForTesting(bool bidirectional, double speedKMPH,

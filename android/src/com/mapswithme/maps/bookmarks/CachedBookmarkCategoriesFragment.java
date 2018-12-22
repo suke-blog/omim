@@ -14,11 +14,14 @@ import com.cocosw.bottomsheet.BottomSheet;
 import com.mapswithme.maps.R;
 import com.mapswithme.maps.bookmarks.data.BookmarkCategory;
 import com.mapswithme.maps.bookmarks.data.BookmarkManager;
+import com.mapswithme.maps.bookmarks.data.CatalogCustomProperty;
 import com.mapswithme.maps.bookmarks.data.CatalogTagsGroup;
 import com.mapswithme.util.SharedPropertiesUtils;
 import com.mapswithme.util.UiUtils;
 import com.mapswithme.util.sharing.TargetUtils;
 import com.mapswithme.util.statistics.Statistics;
+
+import java.util.List;
 
 public class CachedBookmarkCategoriesFragment extends BaseBookmarkCategoriesFragment
 {
@@ -160,8 +163,8 @@ public class CachedBookmarkCategoriesFragment extends BaseBookmarkCategoriesFrag
   @Override
   protected void prepareBottomMenuItems(@NonNull BottomSheet bottomSheet)
   {
-    setEnableForMenuItem(R.id.delete_list, bottomSheet, true);
-    setEnableForMenuItem(R.id.share_list, bottomSheet, false);
+    setEnableForMenuItem(R.id.delete, bottomSheet, true);
+    setEnableForMenuItem(R.id.share, bottomSheet, false);
   }
 
   private class CloseHeaderClickListener implements View.OnClickListener
@@ -212,7 +215,14 @@ public class CachedBookmarkCategoriesFragment extends BaseBookmarkCategoriesFrag
     }
 
     @Override
-    public void onTagsReceived(boolean successful, @NonNull CatalogTagsGroup[] tagsGroups)
+    public void onTagsReceived(boolean successful, @NonNull List<CatalogTagsGroup> tagsGroups)
+    {
+      //TODO(@alexzatsepin): Implement me if necessary
+    }
+
+    @Override
+    public void onCustomPropertiesReceived(boolean successful,
+                                           @NonNull List<CatalogCustomProperty> properties)
     {
       //TODO(@alexzatsepin): Implement me if necessary
     }
@@ -224,7 +234,7 @@ public class CachedBookmarkCategoriesFragment extends BaseBookmarkCategoriesFrag
     }
 
     @Override
-    public void onUploadFinished(@BookmarkManager.UploadResult int uploadResult,
+    public void onUploadFinished(@NonNull BookmarkManager.UploadResult uploadResult,
                                  @NonNull String description, long originCategoryId,
                                  long resultCategoryId)
     {

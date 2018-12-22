@@ -8,21 +8,28 @@
 
 struct MercatorBounds
 {
-  static double minX;
-  static double maxX;
-  static double minY;
-  static double maxY;
+  static double constexpr kMinX = -180.0;
+  static double constexpr kMaxX = 180.0;
+  static double constexpr kMinY = -180.0;
+  static double constexpr kMaxY = 180.0;
+  static double constexpr kRangeX = kMaxX - kMinX;
+  static double constexpr kRangeY = kMaxY - kMinY;
 
-  static m2::RectD FullRect() { return m2::RectD(minX, minY, maxX, maxY); }
+  // The denominator is the Earth circumference at the Equator in meters.
+  // The value is a bit off for some reason; 40075160 seems to be correct.
+  static double constexpr kDegreesInMeter = 360.0 / 40008245.0;
+  static double constexpr kMetersInDegree = 40008245.0 / 360.0;
+
+  static m2::RectD FullRect() { return m2::RectD(kMinX, kMinY, kMaxX, kMaxY); }
 
   static bool ValidLon(double d) { return base::between_s(-180.0, 180.0, d); }
   static bool ValidLat(double d) { return base::between_s(-90.0, 90.0, d); }
 
-  static bool ValidX(double d) { return base::between_s(minX, maxX, d); }
-  static bool ValidY(double d) { return base::between_s(minY, maxY, d); }
+  static bool ValidX(double d) { return base::between_s(kMinX, kMaxX, d); }
+  static bool ValidY(double d) { return base::between_s(kMinY, kMaxY, d); }
 
-  static double ClampX(double d) { return base::clamp(d, minX, maxX); }
-  static double ClampY(double d) { return base::clamp(d, minY, maxY); }
+  static double ClampX(double d) { return base::clamp(d, kMinX, kMaxX); }
+  static double ClampY(double d) { return base::clamp(d, kMinY, kMaxY); }
 
   static double YToLat(double y) { return base::RadToDeg(2.0 * atan(tanh(0.5 * base::DegToRad(y)))); }
 
@@ -37,16 +44,17 @@ struct MercatorBounds
 
   static double LonToX(double lon) { return lon; }
 
-  static double constexpr degreeInMetres = 360.0 / 40008245;
+  static double MetersToMercator(double meters) { return meters * kDegreesInMeter; }
+  static double MercatorToMeters(double mercator) { return mercator * kMetersInDegree; }
 
   /// @name Get rect for center point (lon, lat) and dimensions in metres.
   //@{
   /// @return mercator rect.
-  static m2::RectD MetresToXY(double lon, double lat, double lonMetresR, double latMetresR);
+  static m2::RectD MetersToXY(double lon, double lat, double lonMetersR, double latMetersR);
 
-  static m2::RectD MetresToXY(double lon, double lat, double metresR)
+  static m2::RectD MetersToXY(double lon, double lat, double metresR)
   {
-    return MetresToXY(lon, lat, metresR, metresR);
+    return MetersToXY(lon, lat, metresR, metresR);
   }
   //@}
 
@@ -56,7 +64,7 @@ struct MercatorBounds
     ASSERT_GREATER_OR_EQUAL(sizeX, 0, ());
     ASSERT_GREATER_OR_EQUAL(sizeY, 0, ());
 
-    return MetresToXY(XToLon(centerX), YToLat(centerY), sizeX, sizeY);
+    return MetersToXY(XToLon(centerX), YToLat(centerY), sizeX, sizeY);
   }
 
   static m2::RectD RectByCenterXYAndSizeInMeters(m2::PointD const & center, double size)
@@ -64,9 +72,13 @@ struct MercatorBounds
     return RectByCenterXYAndSizeInMeters(center.x, center.y, size, size);
   }
 
-  static m2::PointD GetSmPoint(m2::PointD const & pt, double lonMetresR, double latMetresR);
+  static m2::RectD RectByCenterXYAndOffset(m2::PointD const & center, double offset)
+  {
+    return {ClampX(center.x - offset), ClampY(center.y - offset),
+            ClampX(center.x + offset), ClampY(center.y + offset)};
+  }
 
-  static double constexpr GetCellID2PointAbsEpsilon() { return 1.0E-4; }
+  static m2::PointD GetSmPoint(m2::PointD const & pt, double lonMetersR, double latMetersR);
 
   static m2::PointD FromLatLon(double lat, double lon)
   {

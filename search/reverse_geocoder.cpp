@@ -4,6 +4,7 @@
 
 #include "indexer/data_source.hpp"
 
+#include "indexer/fake_feature_ids.hpp"
 #include "indexer/feature.hpp"
 #include "indexer/feature_algo.hpp"
 #include "indexer/ftypes_matcher.hpp"
@@ -176,8 +177,14 @@ ReverseGeocoder::GetNearbyOriginalFeatureStreets(FeatureType & ft) const
 
 void ReverseGeocoder::GetNearbyAddress(m2::PointD const & center, Address & addr) const
 {
+  return GetNearbyAddress(center, kLookupRadiusM, addr);
+}
+
+void ReverseGeocoder::GetNearbyAddress(m2::PointD const & center, double maxDistanceM,
+                                       Address & addr) const
+{
   vector<Building> buildings;
-  GetNearbyBuildings(center, buildings);
+  GetNearbyBuildings(center, maxDistanceM, buildings);
 
   HouseTable table(m_dataSource);
   size_t triesCount = 0;
@@ -229,17 +236,18 @@ bool ReverseGeocoder::GetNearbyAddress(HouseTable & table, Building const & bld,
   }
 }
 
-void ReverseGeocoder::GetNearbyBuildings(m2::PointD const & center, vector<Building> & buildings) const
+void ReverseGeocoder::GetNearbyBuildings(m2::PointD const & center, double radius,
+                                         vector<Building> & buildings) const
 {
-  m2::RectD const rect = GetLookupRect(center, kLookupRadiusM);
-
-  auto const addBuilding = [&](FeatureType & ft)
-  {
-    if (!ft.GetHouseNumber().empty())
-      buildings.push_back(FromFeature(ft, feature::GetMinDistanceMeters(ft, center)));
+  auto const addBuilding = [&](FeatureType & ft) {
+    auto const distance = feature::GetMinDistanceMeters(ft, center);
+    if (!ft.GetHouseNumber().empty() && distance <= radius)
+      buildings.push_back(FromFeature(ft, distance));
   };
 
-  m_dataSource.ForEachInRect(addBuilding, rect, kQueryScale);
+  auto const stop = [&]() { return buildings.size() >= kMaxNumTriesToApproxAddress; };
+
+  m_dataSource.ForClosestToPoint(addBuilding, stop, center, radius, kQueryScale);
   sort(buildings.begin(), buildings.end(), base::LessBy(&Building::m_distanceMeters));
 }
 
@@ -251,6 +259,9 @@ ReverseGeocoder::Building ReverseGeocoder::FromFeature(FeatureType & ft, double 
 
 bool ReverseGeocoder::HouseTable::Get(FeatureID const & fid, uint32_t & streetIndex)
 {
+  if (feature::FakeFeatureIds::IsEditorCreatedFeature(fid.m_index))
+    return false;
+
   if (!m_table || m_handle.GetId() != fid.m_mwmId)
   {
     m_handle = m_dataSource.GetMwmHandleById(fid.m_mwmId);

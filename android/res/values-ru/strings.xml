@@ -188,35 +188,41 @@
 	<string name="search_mode_nearme">Возле меня</string>
 	<!-- Do search in current viewport only -->
 	<string name="search_mode_viewport">На экране</string>
-	<!-- Search Suggestion -->
-	<string name="food">Еда</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for cafes, bars, restaurants -->
+	<string name="eat">Где поесть</string>
+	<!-- Search category for grocery stores -->
+	<string name="food">Продукты</string>
+	<!-- Search category -->
 	<string name="transport">Транспорт</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="fuel">Заправка</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="parking">Парковка</string>
-	<!-- Search Suggestion -->
-	<string name="shop">Магазин</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for clothes/shoes/gifts/jewellery/sport shops -->
+	<string name="shopping">Шоппинг</string>
+	<!-- Search category -->
 	<string name="hotel">Гостиница</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="tourism">Достопримечательность</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="entertainment">Развлечения</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="atm">Банкомат</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for nightclubs/bars -->
+	<string name="nightlife">Ночная жизнь</string>
+	<!-- Search category for water park/disneyland/playground/toys store -->
+	<string name="children">Отдых с детьми</string>
+	<!-- Search category -->
 	<string name="bank">Банк</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="pharmacy">Аптека</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="hospital">Больница</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="toilet">Туалет</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="post">Почта</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="police">Полиция</string>
 	<!-- String in search result list, when nothing found -->
 	<string name="no_search_results_found">Нет результатов поиска</string>
@@ -421,7 +427,7 @@
 	<string name="email_error_title">Ошибка при отправлении письма</string>
 	<!-- Settings item title -->
 	<string name="pref_calibration_title">Калибровка компаса</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="wifi">WiFi</string>
 	<!-- Update map suggestion -->
 	<string name="routing_map_outdated">Пожалуйста, обновите карту для того, чтобы проложить маршрут.</string>
@@ -1439,6 +1445,84 @@
 	<string name="subscriptions_title">Подписки</string>
 	<string name="manage_subscription">Управление подпиской</string>
 	<string name="taxi">Такси</string>
+	<string name="sharing_options">Настройки доступа</string>
+	<string name="export_file">Экспортировать файл</string>
+	<string name="list_settings">Настройки списка</string>
+	<string name="delete_list">Удалить список</string>
+	<string name="hide_from_map">Скрыть с карты</string>
+	<string name="ugc_route_tags_screen_label">Выберите теги</string>
+	<string name="ugc_route_tags_progress_msg">Загружаем теги…</string>
+	<string name="ugc_route_tags_desc">Пожалуйста, выберите теги, чтобы помочь другим путешественникам найти ваш путеводитель. Это обязательно.</string>
+	<string name="public_access">Публичный доступ</string>
+	<string name="limited_access">Ограниченный доступ</string>
+	<string name="upload_and_publish_desc">Этот путеводитель будет загружен в публичный каталог MAPS.ME и будет доступен другим пользователям</string>
+	<string name="upload_and_publish">Загрузить и опубликовать</string>
+	<string name="upload_and_get_direct_link">Загрузить и получить ссылку</string>
+	<string name="get_direct_link_desc">Ваш путеводитель будет доступен по прямой ссылке</string>
+	<string name="upload_and_publish_progress_text">Путеводитель публикуется…</string>
+	<string name="upload_and_publish_success">Путеводитель опубликован</string>
+	<string name="ugc_routes_user_agreement">&lt;b>ОБРАТИТЕ ВНИМАНИЕ:&lt;/b> продолжая, вы принимаете &lt;a href="%s">лицензионное соглашение&lt;/a></string>
+	<string name="ugc_route_edit_list_name">Название путеводителя</string>
+	<string name="ugc_route_edit_description_hint">Добавьте описание (текст или html)</string>
+	<string name="not_shared">Личный</string>
+	<string name="direct_link_progress_text">Загружаем ваш файл…</string>
+	<string name="direct_link_success">Ссылка создана</string>
+	<string name="edit_guide_title">Редактируйте ваш путеводитель онлайн</string>
+	<string name="edit_guide_subtitle">Получите ссылку для редактирования вашего путеводителя через веб-приложение: добавляйте описания мест, загружайте фотографии и соединяйте метки линиями.</string>
+	<string name="send_a_link_btn">Отправить ссылку</string>
+	<string name="upload_error_toast">Во время загрузки файла произошла ошибка</string>
+	<string name="tags_loading_error_subtitle">Во время загрузки тегов произошла ошибка, пожалуйста, попробуйте еще раз</string>
+	<string name="unable_upload_errorr_title">Не удалось загрузить файл</string>
+	<string name="unable_upload_error_subtitle_edited">Файл был отредактирован через веб-приложение</string>
+	<string name="unable_upload_error_subtitle_broken">Файл поврежден и не может быть загружен. Пожалуйста, загрузите другой файл.</string>
+	<string name="buy_btn">Купить за %s</string>
+	<string name="download_guide_progress">Путеводитель загружается…</string>
+	<string name="price_error_title">Невозможно узнать стоимость</string>
+	<string name="price_error_subtitle">Пожалуйста, попробуйте еще раз через пару минут</string>
+	<string name="edit_your_guide_email_body">Редактируйте ваш путеводитель на компьютере: добавляйте описания мест, загружайте фотографии и соединяйте метки линиями.</string>
+	<string name="edit_on_web">Редактировать онлайн</string>
+	<string name="properties_loading_error_subtitle">Во время загрузки опций произошла ошибка, пожалуйста, попробуйте еще раз</string>
+	<string name="custom_props_desc">Этот путеводитель вы составили как</string>
+	<string name="custom_props_title">Местный или турист</string>
+	<string name="custom_props_local">местный</string>
+	<string name="custom_props_traveler">турист</string>
+	<string name="select_properties">Выбрать опции</string>
+	<string name="access_rules_p_to_p">Специальный доступ</string>
+	<string name="access_rules_paid">Купленный</string>
+	<string name="failed_purchase_support_message">Кажется, у вас есть незавершённая покупка. Пожалуйста, напишите в поддержку, и мы решим проблему.</string>
+	<string name="contact">Написать</string>
+	<string name="check_price_button">Узнать цену</string>
+	<string name="download_button">Скачать</string>
+	<string name="speedcams_alert_title">Камеры скорости</string>
+	<string name="speedcams_alert_subtitle">Предупреждать об ограничениях скорости</string>
+	<string name="speedcam_option_auto">Авто</string>
+	<string name="speedcam_option_always">Всегда</string>
+	<string name="speedcam_option_never">Никогда</string>
+	<string name="bookmark_description_title">Описание метки</string>
+	<string name="place_description_title">Описание места</string>
+	<string name="ugc_routes_error_uploading_file_toast">К сожалению, при загрузке меток произошла ошибка. Пожалуйста, попробуйте еще раз.</string>
+	<string name="notification_channel_ugc">Пользовательский контент</string>
+	<!-- this text will be shown in application notification preferences opposite checkbox which enable/disable downloader notifications. Devices on Android 8+ are affected. -->
+	<string name="notification_channel_downloader">Загрузка карт</string>
+	<string name="notification_leave_review_title">%s - как вам здесь?</string>
+	<string name="notification_leave_review_content">Оставьте отзыв и помогите путешественникам!</string>
+	<string name="share_bookmarks_email_body_link">Здравствуйте!\n\nМетки можно скачать по ссылке: %s. Открывайте список с помощью MAPS.ME и наслаждайтесь поездкой!\n\nСкачать приложение: http://maps.me/get?kmz</string>
+	<string name="warning_speedcams_title">Навигатор оповестит вас о камерах при превышении скоростного лимита на %d км/ч</string>
+	<string name="warning_speedcams_subtitle">Не забудьте ознакомиться с правилами дорожного движения в стране путешествия.</string>
+	<string name="speedcams_notice_message">Авто - Предупреждать о камерах скорости, если есть риск превышения скоростного лимита\nВсегда - Всегда предупреждать о камерах\nНикогда - Никогда не предупреждать о камерах</string>
+	<string name="whats_new_ugc_routes_title">Делиться впечатлениями просто</string>
+	<string name="whats_new_ugc_routes_subtitle">Сохраняй запомнившиеся места, создавай из меток маршруты и делись со всеми в каталоге MAPS.ME.</string>
+	<string name="whats_new_webeditor_title">Превращай маршруты в истории</string>
+	<string name="whats_new_ugc_routes_message2">Добавляй фото и подробные рассказы в веб-редакторе.</string>
+	<string name="whatsnew_standard_routes_title">Стандартные маршруты</string>
+	<string name="whatsnew_standard_routes_message">Основной набор точек, краткие описания, но много впечатлений!</string>
+	<string name="whatsnew_city_overview_title">Обзор города</string>
+	<string name="whatsnew_city_overview_message">До 200 точек на карте города: все самое полезное и интересное для путешественника!</string>
+	<string name="whatsnew_pro_guides_title">Профессиональные маршруты</string>
+	<string name="whatsnew_pro_guides_message">Высокий уровень детализации, подробные описания мест и возможность рассчитать расстояние и время прогулки</string>
+	<string name="whatsnew_paid_routes_title">Больше новых впечатлений!</string>
+	<string name="whatsnew_paid_routes_message">В дополнение к бесплатным маршрутам мы добавили в каталог 3 категории платных путеводителей. Более 700 новых маршрутов!</string>
+	<string name="whats_new_ugc_routes_title_android_only">Делиться впечатлениями просто</string>
 
 	<!-- SECTION:  Partners  -->
 	<string name="sponsored_partner1_action">Аутлеты</string>
@@ -1549,6 +1633,7 @@
 	<string name="type.barrier.lift_gate">Шлагбаум</string>
 	<string name="type.barrier.stile">Перелаз</string>
 	<string name="type.barrier.toll_booth">Пункт оплаты</string>
+	<string name="type.boundary.national_park">Национальный парк</string>
 	<string name="type.building">Здание</string>
 	<string name="type.building.address">Здание</string>
 	<string name="type.building.garage">Гараж</string>
@@ -1788,6 +1873,7 @@
 	<string name="type.leisure.fitness_station">Спортивные снаряды</string>
 	<string name="type.leisure.garden">Сад</string>
 	<string name="type.leisure.golf_course">Площадка для гольфа</string>
+	<string name="type.leisure.nature_reserve">Заповедник</string>
 	<string name="type.leisure.park">Парк</string>
 	<string name="type.leisure.park.no.access">Парк</string>
 	<string name="type.leisure.park.permissive">Парк</string>
@@ -1816,8 +1902,10 @@
 	<string name="type.military.bunker">Бункер</string>
 	<string name="type.natural.bay">Залив</string>
 	<string name="type.natural.beach">Пляж</string>
+	<string name="type.natural.cape">Мыс</string>
 	<string name="type.natural.cave_entrance">Пещера</string>
 	<string name="type.natural.geyser">Гейзер</string>
+	<string name="type.natural.glacier">Ледник</string>
 	<string name="type.natural.lake">Озеро</string>
 	<string name="type.natural.peak">Гора</string>
 	<string name="type.natural.pond">Пруд</string>
@@ -1978,6 +2066,9 @@
 	<string name="type.shop.video">Магазин</string>
 	<string name="type.shop.wine">Винный магазин</string>
 	<string name="type.sponsored.holiday">Празднование Рождества или Нового года</string>
+	<string name="type.sponsored.partner18">МегаФон</string>
+	<string name="type.sponsored.partner19">МегаФон</string>
+	<string name="type.sponsored.partner20">МегаФон</string>
 	<string name="type.sport.athletics">Лёгкая атлетика</string>
 	<string name="type.sport.basketball">Баскетбол</string>
 	<string name="type.sport.equestrian">Конный спорт</string>
@@ -2022,4 +2113,30 @@
 	<string name="type.waterway.stream.intermittent">Река</string>
 	<string name="type.waterway.stream.tunnel">Река</string>
 	<string name="type.waterway.waterfall">Водопад</string>
+
+	<!-- SECTION: Brands -->
+	<string name="brand.baskin_robbins">Баскин Роббинс</string>
+	<string name="brand.burger_king">Бургер Кинг</string>
+	<string name="brand.celentano">Челентано</string>
+	<string name="brand.coffee_house">Кофе Хауз</string>
+	<string name="brand.coffeeport">Кофепорт</string>
+	<string name="brand.dominos_pizza">Домино\'с Пицца</string>
+	<string name="brand.double_b">Даблби</string>
+	<string name="brand.dunkin_donuts">Данкин Донатс</string>
+	<string name="brand.il_patio">IL Патио</string>
+	<string name="brand.kroshka_kartoshka">Крошка Картошка</string>
+	<string name="brand.marugame_seimen">Марукамэ</string>
+	<string name="brand.mcdonalds">Макдоналдс</string>
+	<string name="brand.mu_mu">Му-Му</string>
+	<string name="brand.papa_johns">Папа Джонс</string>
+	<string name="brand.pizza_hut">Пицца Хат</string>
+	<string name="brand.robin_sdobin">Робин Сдобин</string>
+	<string name="brand.shokoladnitsa">Шоколадница</string>
+	<string name="brand.starbucks">Старбакс</string>
+	<string name="brand.stardogs">Стардог!s</string>
+	<string name="brand.subway">Сабвэй</string>
+	<string name="brand.sushi_wok">Суши Wok</string>
+	<string name="brand.teremok">Теремок</string>
+	<string name="brand.wokker">Воккер</string>
+	<string name="brand.yakitoria">Якитория</string>
 </resources>

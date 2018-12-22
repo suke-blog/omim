@@ -5,8 +5,12 @@
 
 #include <sstream>
 
+#include "private.h"
+
 namespace
 {
+std::string const kDeepLinkUrl = DLINK_URL;
+
 std::string GetBookmarkIconType(kml::BookmarkIcon const & icon)
 {
   switch (icon)
@@ -36,7 +40,7 @@ std::string GetBookmarkIconType(kml::BookmarkIcon const & icon)
     ASSERT(false, ("Invalid bookmark icon type"));
     return {};
   }
-  CHECK_SWITCH();
+  UNREACHABLE();
 }
 }  // namespace
 
@@ -106,7 +110,7 @@ df::ColorConstant Bookmark::GetColorConstant() const
     case kml::PredefinedColor::Count:
       return "BookmarkRed";
   }
-  CHECK_SWITCH();
+  UNREACHABLE();
 }
 
 bool Bookmark::HasCreationAnimation() const
@@ -240,6 +244,12 @@ void BookmarkCategory::SetName(std::string const & name)
   kml::SetDefaultStr(m_data.m_name, name);
 }
 
+void BookmarkCategory::SetDescription(std::string const & desc)
+{
+  SetDirty();
+  kml::SetDefaultStr(m_data.m_description, desc);
+}
+
 void BookmarkCategory::SetServerId(std::string const & serverId)
 {
   if (m_serverId == serverId)
@@ -258,6 +268,16 @@ void BookmarkCategory::SetTags(std::vector<std::string> const & tags)
   m_data.m_tags = tags;
 }
 
+void BookmarkCategory::SetCustomProperty(std::string const & key, std::string const & value)
+{
+  auto it = m_data.m_properties.find(key);
+  if (it != m_data.m_properties.end() && it->second == value)
+    return;
+
+  SetDirty();
+  m_data.m_properties[key] = value;
+}
+
 std::string BookmarkCategory::GetName() const
 {
   return GetPreferredBookmarkStr(m_data.m_name);
@@ -270,8 +290,11 @@ bool BookmarkCategory::IsCategoryFromCatalog() const
 
 std::string BookmarkCategory::GetCatalogDeeplink() const
 {
+  if (kDeepLinkUrl.empty())
+    return {};
+
   std::ostringstream ss;
-  ss << "https://dlink.maps.me/catalogue?id=" << m_serverId << "&name=" << UrlEncode(GetName());
+  ss << kDeepLinkUrl << "catalogue?id=" << m_serverId << "&name=" << UrlEncode(GetName());
   return ss.str();
 }
 

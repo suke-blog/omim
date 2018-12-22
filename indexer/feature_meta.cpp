@@ -86,12 +86,6 @@ bool Metadata::TypeFromString(string const & k, Metadata::EType & outType)
     outType = Metadata::FMD_BUILDING_LEVELS;
   else if (k == "denomination")
     outType = Metadata::FMD_DENOMINATION;
-  else if (k == "ref:sponsored")
-    outType = Metadata::FMD_SPONSORED_ID;
-  else if (k == "price_rate")
-    outType = Metadata::FMD_PRICE_RATE;
-  else if (k == "rating:sponsored")
-    outType = Metadata::FMD_RATING;
   else if (k == "banner_url")
     outType = Metadata::FMD_BANNER_URL;
   else if (k == "level")
@@ -198,6 +192,7 @@ string ToString(feature::Metadata::EType type)
   case Metadata::FMD_BANNER_URL: return "banner_url";
   case Metadata::FMD_LEVEL: return "level";
   case Metadata::FMD_AIRPORT_IATA: return "iata";
+  case Metadata::FMD_BRAND: return "brand";
   case Metadata::FMD_COUNT: CHECK(false, ("FMD_COUNT can not be used as a type."));
   };
 

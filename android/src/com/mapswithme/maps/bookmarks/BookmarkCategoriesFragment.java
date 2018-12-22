@@ -69,6 +69,8 @@ public class BookmarkCategoriesFragment extends BaseBookmarkCategoriesFragment
   protected void prepareBottomMenuItems(@NonNull BottomSheet bottomSheet)
   {
     boolean isMultipleItems = getAdapter().getBookmarkCategories().size() > 1;
-    setEnableForMenuItem(R.id.set_delete, bottomSheet, isMultipleItems);
+    setEnableForMenuItem(R.id.delete, bottomSheet, isMultipleItems);
+    setEnableForMenuItem(R.id.sharing_options, bottomSheet,
+                         getSelectedCategory().isSharingOptionsAllowed());
   }
 }

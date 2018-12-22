@@ -188,35 +188,41 @@
 	<string name="search_mode_nearme">Yakınlarımda</string>
 	<!-- Do search in current viewport only -->
 	<string name="search_mode_viewport">Ekranda</string>
-	<!-- Search Suggestion -->
-	<string name="food">Yemek</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for cafes, bars, restaurants -->
+	<string name="eat">Nerede yenir</string>
+	<!-- Search category for grocery stores -->
+	<string name="food">Bakkaliye</string>
+	<!-- Search category -->
 	<string name="transport">Ulaşım</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="fuel">Benzin</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="parking">Otopark</string>
-	<!-- Search Suggestion -->
-	<string name="shop">Mağaza</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for clothes/shoes/gifts/jewellery/sport shops -->
+	<string name="shopping">Alışveriş</string>
+	<!-- Search category -->
 	<string name="hotel">Otel</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="tourism">Görülecek yerler</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="entertainment">Eğlence</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="atm">Bankamatik</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for nightclubs/bars -->
+	<string name="nightlife">Gece hayatı</string>
+	<!-- Search category for water park/disneyland/playground/toys store -->
+	<string name="children">Aile tatili</string>
+	<!-- Search category -->
 	<string name="bank">Banka</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="pharmacy">Eczane</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="hospital">Hastane</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="toilet">Tuvalet</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="post">Posta</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="police">Polis</string>
 	<!-- String in search result list, when nothing found -->
 	<string name="no_search_results_found">Sonuç bulunamadı</string>
@@ -408,7 +414,7 @@
 	<string name="email_error_title">Posta gönderme hatası</string>
 	<!-- Settings item title -->
 	<string name="pref_calibration_title">Pusula kalibrasyonu</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="wifi">WiFi</string>
 	<!-- Update map suggestion -->
 	<string name="routing_map_outdated">Yeni bir rota oluşturmak için lütfen haritayı güncelleyin.</string>
@@ -1393,6 +1399,84 @@
 	<string name="subscription_terms">Ödeme, satın alma onayında iTunes hesabınızdan alınacaktır. Otomatik yenileme geçerli dönemin sona ermesinden en az 24 saat önce kapatılmadıkça abonelik otomatik olarak yenilenecektir. Hesabınızdan, geçerli dönemin sona ermesinden önce 24 saat içinde planınıza göre yenileme için ücret alınacaktır. Otomatik yenilemeyi satın alma işleminizde dilediğiniz zaman Apple ID hesap ayarlarınızda yönetebilir veya kapatabilirsiniz.</string>
 	<string name="subscriptions_title">Abonelikler</string>
 	<string name="manage_subscription">Aboneliği yönet</string>
+	<string name="sharing_options">Paylaşma seçenekleri</string>
+	<string name="export_file">Dosyayı dışa aktar</string>
+	<string name="list_settings">Liste Ayarları</string>
+	<string name="delete_list">Listeyi sil</string>
+	<string name="hide_from_map">Haritadan gizle</string>
+	<string name="ugc_route_tags_screen_label">Etiketleri seç</string>
+	<string name="ugc_route_tags_progress_msg">Etiketler yükleniyor…</string>
+	<string name="ugc_route_tags_desc">Diğer gezginlerin kılavuzunuzu bulmasına yardımcı olmak için lütfen etiketleri seçin. Bu zorunludur.</string>
+	<string name="public_access">Genel erişim</string>
+	<string name="limited_access">Sınırlı erişim</string>
+	<string name="upload_and_publish_desc">Bu kılavuz, herkese açık MAPS.ME kataloğuna yüklenecek ve diğer kullanıcılara sunulacaktır</string>
+	<string name="upload_and_publish">Yükle ve yayınla</string>
+	<string name="upload_and_get_direct_link">Yükle ve direkt bağlantı al</string>
+	<string name="get_direct_link_desc">Kılavuzunuz, bağlantıya sahip olan herkese açık olacak</string>
+	<string name="upload_and_publish_progress_text">Kılavuzunuz yayınlanıyor…</string>
+	<string name="upload_and_publish_success">Kılavuz yayınlandı</string>
+	<string name="ugc_routes_user_agreement">&lt;b>LÜTFEN DİKKATE:&lt;/b> devam ederek &lt;a href="%s">lisans sözleşmesini&lt;/a> kabul edersiniz</string>
+	<string name="ugc_route_edit_list_name">Kılavuz adı</string>
+	<string name="ugc_route_edit_description_hint">Bir açıklama yazın (metin veya html)</string>
+	<string name="not_shared">Şahsi</string>
+	<string name="direct_link_progress_text">Dosyanız yükleniyor…</string>
+	<string name="direct_link_success">Bağlantı oluşturuldu</string>
+	<string name="edit_guide_title">Kılavuzunuzu web üzerinde düzenleyin</string>
+	<string name="edit_guide_subtitle">Web uygulaması aracılığıyla rehberinizi düzenlemek için bir bağlantı edinin: açıklama ekleyin, fotoğraf yükleyin ve yer imlerini satırlarla bağlayın.</string>
+	<string name="send_a_link_btn">Bana bir bağlantı gönder</string>
+	<string name="upload_error_toast">Dosyanızı yüklerken bir hata oluştu</string>
+	<string name="tags_loading_error_subtitle">Etiketler yüklenirken bir hata oluştu, lütfen tekrar deneyin</string>
+	<string name="unable_upload_errorr_title">Dosya yükleme başarısız</string>
+	<string name="unable_upload_error_subtitle_edited">Bu dosya web uygulamasıyla düzenlendi</string>
+	<string name="unable_upload_error_subtitle_broken">Bu dosya bozuk olduğundan yüklenemedi. Lütfen başka bir dosya yükleyin.</string>
+	<string name="buy_btn">%s \'ye satın alın</string>
+	<string name="download_guide_progress">Kılavuzunuz indiriliyor…</string>
+	<string name="price_error_title">Fiyat alınamadı</string>
+	<string name="price_error_subtitle">Lütfen birkaç dakika içinde tekrar deneyin</string>
+	<string name="edit_your_guide_email_body">Bilgisayarınızı kullanarak kılavuzunuzu web üzerinde kolayca düzenleyin: açıklama ekleyin, fotoğraf yükleyin ve yer imlerini satırlarla bağlayın.</string>
+	<string name="edit_on_web">Web üzerinde düzenle</string>
+	<string name="properties_loading_error_subtitle">Seçenekler yüklenirken bir hata oluştu, lütfen tekrar deneyin</string>
+	<string name="custom_props_desc">Bu kılavuzda etrafı şu şekilde gezdiniz</string>
+	<string name="custom_props_title">Yerli veya gezgin</string>
+	<string name="custom_props_local">yerli</string>
+	<string name="custom_props_traveler">gezgin</string>
+	<string name="select_properties">Seçenekleri belirle</string>
+	<string name="access_rules_p_to_p">Özel erişim</string>
+	<string name="access_rules_paid">Satın alındı</string>
+	<string name="failed_purchase_support_message">Üzgünüz, ancak muhtemelen tamamlanmamış bir satın alma işleminiz var. Lütfen desteğe başvurun. Sorunu çözeceğiz.</string>
+	<string name="contact">İletişim</string>
+	<string name="check_price_button">Fiyatı kontrol et</string>
+	<string name="download_button">İndir</string>
+	<string name="speedcams_alert_title">Hız kameraları</string>
+	<string name="speedcams_alert_subtitle">Hız limitleri hakkında uyar</string>
+	<string name="speedcam_option_auto">Otomatik</string>
+	<string name="speedcam_option_always">Her zaman</string>
+	<string name="speedcam_option_never">Asla</string>
+	<string name="bookmark_description_title">Yer İmi Açıklaması</string>
+	<string name="place_description_title">Yer Açıklaması</string>
+	<string name="ugc_routes_error_uploading_file_toast">Maalesef yer işaretlerinizi yüklerken bir hata oluştu. Lütfen tekrar deneyin.</string>
+	<string name="notification_channel_ugc">Sosyal içerik</string>
+	<!-- this text will be shown in application notification preferences opposite checkbox which enable/disable downloader notifications. Devices on Android 8+ are affected. -->
+	<string name="notification_channel_downloader">Harita indiricisi</string>
+	<string name="notification_leave_review_title">%s - nasıldı?</string>
+	<string name="notification_leave_review_content">Yorum bırakarak gezginlere yardım edin!</string>
+	<string name="share_bookmarks_email_body_link">Merhaba!\n\nİşte yer işaretlerinizi indirebileceğiniz bağlantı: %s. MAPS.ME ile listeyi açın ve yolculuğunuzun tadını çıkarın!\n\nUygulamayı indir: http://maps.me/get?kmz</string>
+	<string name="warning_speedcams_title">%d km/sa hız limitini aştığınızda navigasyon, kameralar hakkında sizi uyaracak</string>
+	<string name="warning_speedcams_subtitle">Lütfen bulunduğunuz ülkenin trafik kurallarına dikkat edin.</string>
+	<string name="speedcams_notice_message">Otomatik - Hız sınırını aşma riski varsa hız kameraları hakkında uyar\nHer zaman - Hız kameraları hakkında her zaman uyar\nAsla - Hız kameraları hakkında hiçbir zaman uyarma</string>
+	<string name="whats_new_ugc_routes_title">İzlenimlerinizi paylaşmak çok kolay</string>
+	<string name="whats_new_ugc_routes_subtitle">nutulmaz mekanları kaydedin, sayfa işaretleri kullanarak rotalar oluşturun ve bunları MAPS.ME kataloğundaki herkesle paylaşın.</string>
+	<string name="whats_new_webeditor_title">Rotalarınızı hikayelere dönüştürün</string>
+	<string name="whats_new_ugc_routes_message2">Web editöre fotoğraflar ve detaylı hikayeler ekleyin.</string>
+	<string name="whatsnew_standard_routes_title">Standart rotalar</string>
+	<string name="whatsnew_standard_routes_message">Temel ilgi noktaları ve kısa açıklamalar kümesi fakat fazla deneyim!</string>
+	<string name="whatsnew_city_overview_title">Şehre genel bakış</string>
+	<string name="whatsnew_city_overview_message">Şehir haritasında 200\'e kadar ilgi noktası: Gezginlerin yararlı ve ilginç bulabileceği her şey var!</string>
+	<string name="whatsnew_pro_guides_title">Profesyonel rotalar</string>
+	<string name="whatsnew_pro_guides_message">Yerlerin ayrıntılı açıklamaları ve yolculuk mesafesini ve zamanını hesaplama becerisi ile çok ayrıntılı</string>
+	<string name="whatsnew_paid_routes_title">Daha fazla yeni deneyimler!</string>
+	<string name="whatsnew_paid_routes_message">Ücretsiz rotalara ek olarak, kataloğumuza 3 ücretli rota kategorisi ekledik. 700\'den fazla yeni rota!</string>
+	<string name="whats_new_ugc_routes_title_android_only">İzlenimlerinizi paylaşmak çok kolay</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Remontées mécaniques</string>
@@ -1492,6 +1576,7 @@
 	<string name="type.barrier.lift_gate">Barrière levante</string>
 	<string name="type.barrier.stile">Échalier</string>
 	<string name="type.barrier.toll_booth">Poste de péage</string>
+	<string name="type.boundary.national_park">Ulusal park</string>
 	<string name="type.building">Bina</string>
 	<string name="type.building.address">Bina</string>
 	<string name="type.building.has_parts">Bina</string>
@@ -1726,6 +1811,7 @@
 	<string name="type.leisure.fitness_station">Fitness Salonu</string>
 	<string name="type.leisure.garden">Bahçe</string>
 	<string name="type.leisure.golf_course">Golf sahası</string>
+	<string name="type.leisure.nature_reserve">Doğal koruma alanı</string>
 	<string name="type.leisure.pitch">Spor sahası</string>
 	<string name="type.leisure.pitch.tennis">Spor sahası</string>
 	<string name="type.leisure.playground">Oyun alanı</string>
@@ -1748,7 +1834,10 @@
 	<string name="type.man_made.windmill">Moulin</string>
 	<string name="type.natural.bay">Koy</string>
 	<string name="type.natural.beach">Plaj</string>
+	<string name="type.natural.cape">Burun</string>
 	<string name="type.natural.cave_entrance">Entrée de la cave</string>
+	<string name="type.natural.geyser">Gayzer</string>
+	<string name="type.natural.glacier">Buzul</string>
 	<string name="type.natural.lake">Göl</string>
 	<string name="type.natural.peak">Zirve</string>
 	<string name="type.natural.pond">Gölet</string>

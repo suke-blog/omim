@@ -298,49 +298,58 @@
 /* Do search in current viewport only */
 "search_mode_viewport" = "Na obrazovke";
 
-/* Search Suggestion */
-"food" = "Jedlo";
+/* Search category for cafes, bars, restaurants */
+"eat" = "Kde sa najesť";
 
-/* Search Suggestion */
+/* Search category for grocery stores */
+"food" = "Potraviny";
+
+/* Search category */
 "transport" = "Doprava";
 
-/* Search Suggestion */
+/* Search category */
 "fuel" = "Čerpacia stanica";
 
-/* Search Suggestion */
+/* Search category */
 "parking" = "Parkovisko";
 
-/* Search Suggestion */
-"shop" = "Obchod";
+/* Search category for clothes/shoes/gifts/jewellery/sport shops */
+"shopping" = "Nakupovanie";
 
-/* Search Suggestion */
+/* Search category */
 "hotel" = "Hotel";
 
-/* Search Suggestion */
+/* Search category */
 "tourism" = "Pamätihodnosť";
 
-/* Search Suggestion */
+/* Search category */
 "entertainment" = "Zábava";
 
-/* Search Suggestion */
+/* Search category */
 "atm" = "Bankomat";
 
-/* Search Suggestion */
+/* Search category for nightclubs/bars */
+"nightlife" = "Nočný život";
+
+/* Search category for water park/disneyland/playground/toys store */
+"children" = "Rodinná dovolenka";
+
+/* Search category */
 "bank" = "Banka";
 
-/* Search Suggestion */
+/* Search category */
 "pharmacy" = "Lekáreň";
 
-/* Search Suggestion */
+/* Search category */
 "hospital" = "Nemocnica";
 
-/* Search Suggestion */
+/* Search category */
 "toilet" = "Záchody";
 
-/* Search Suggestion */
+/* Search category */
 "post" = "Pošta";
 
-/* Search Suggestion */
+/* Search category */
 "police" = "Polícia";
 
 /* String in search result list, when nothing found */
@@ -658,7 +667,7 @@
 /* Settings item title */
 "pref_calibration_title" = "Compass kalibrácia";
 
-/* Search Suggestion */
+/* Search category */
 "wifi" = "WiFi";
 
 /* Update map suggestion */
@@ -2486,6 +2495,170 @@
 
 "taxi" = "Taxi";
 
+"sharing_options" = "Možnosti zdieľania";
+
+"export_file" = "Exportovať súbor";
+
+"list_settings" = "Nastavenie zoznamu";
+
+"delete_list" = "Vymazať zoznam";
+
+"hide_from_map" = "Skryť z mapy";
+
+"ugc_route_tags_screen_label" = "Vyberte značky";
+
+"ugc_route_tags_progress_msg" = "Načítavanie značiek…";
+
+"ugc_route_tags_desc" = "Vyberte značky, ktoré pomáhajú ostatným cestovateľom nájsť vášho sprievodcu. Toto je povinné.";
+
+"public_access" = "Verejný prístup";
+
+"limited_access" = "Obmedzený prístup";
+
+/* FIXME */
+"bookmarks_public_access" = "bookmarks_public_access";
+
+/* FIXME */
+"bookmarks_link_access" = "bookmarks_link_access";
+
+/* FIXME */
+"bookmarks_private_access" = "bookmarks_private_access";
+
+"upload_and_publish_desc" = "Táto príručka bude nahraná do verejného katalógu MAPS.ME a bude dostupná ostatným používateľom";
+
+"upload_and_publish" = "Nahrať a publikovať";
+
+"upload_and_get_direct_link" = "Nahrať a získať priamy odkaz";
+
+"get_direct_link_desc" = "Váš sprievodca bude dostupný každému, kto má odkaz";
+
+"upload_and_publish_progress_text" = "Publikovanie vášho sprievodcu…";
+
+"upload_and_publish_success" = "Sprievodca bol publikovaný";
+
+"ugc_routes_user_agreement" = "<b>POZNÁMKA:</b> pokračovaním akceptujte <a href=\"%s\">licenčnú zmluvu</a>";
+
+"ugc_route_edit_list_name" = "Názov sprievodcu";
+
+"ugc_route_edit_description_hint" = "Zadajte popis (text alebo html)";
+
+"not_shared" = "Súkromné";
+
+"direct_link_progress_text" = "Nahrávanie váľho súboru…";
+
+"direct_link_success" = "Odkaz bol vytvorený";
+
+"edit_guide_title" = "Upravte vášho sprievodcu na webe";
+
+"edit_guide_subtitle" = "Získajte odkaz na úpravu sprievodcu prostredníctvom webovej aplikácie: pridajte popisy, odovzdajte fotografie a prepojte záložky s riadkami.";
+
+"send_a_link_btn" = "Poslať mi odkaz";
+
+"upload_error_toast" = "Počas nahrávania súboru sa vyskytla chyba";
+
+"tags_loading_error_subtitle" = "Počas načítavania značiek sa vyskytla chyba, skúste to znova";
+
+"unable_upload_errorr_title" = "Nahrávanie súboru zlyhalo";
+
+"unable_upload_error_subtitle_edited" = "Tento súbor bol upravený prostredníctvom webovej aplikácie";
+
+"unable_upload_error_subtitle_broken" = "Tento súbor je poškodený a nedá sa nahrať. Prosím nahrajte iný súbor.";
+
+"buy_btn" = "Kúpiť za %s";
+
+"download_guide_progress" = "Sťahovanie vášho sprievodcu…";
+
+"price_error_title" = "Nebolo možné získať cenu";
+
+"price_error_subtitle" = "Prosím skúste to znovu o pár minút";
+
+"edit_your_guide_email_body" = "Upravte svojho sprievodcu na webe jednoducho pomocou počítača: pridajte popisy, odovzdajte fotografie a prepojte záložky s riadkami.";
+
+"edit_on_web" = "Upraviť na webe";
+
+"properties_loading_error_subtitle" = "Pri načítavaní možností sa vyskytla chyba, skúste to znova";
+
+"custom_props_desc" = "V tomto sprievodcovi ste navštívili miesta ako";
+
+"custom_props_title" = "Miestny alebo cestovateľ";
+
+"custom_props_local" = "miestny";
+
+"custom_props_traveler" = "cestovateľ";
+
+"select_properties" = "Vyberte možnosti";
+
+"access_rules_p_to_p" = "Špeciálny prístup";
+
+"access_rules_paid" = "Zakúpené";
+
+"failed_purchase_support_message" = "Je nám ľúto, ale pravdepodobne máte nedokončený nákup. Obráťte sa na podporu a my problém vyriešime.";
+
+"contact" = "Kontakt";
+
+"check_price_button" = "Skontrolovať cenu";
+
+"download_button" = "Stiahnuť";
+
+"speedcams_alert_title" = "Rýchlostné kamery";
+
+"speedcams_alert_subtitle" = "Upozornenie na rýchlostné obmedzenia";
+
+"speedcam_option_auto" = "Automaticky";
+
+"speedcam_option_always" = "Vždy";
+
+"speedcam_option_never" = "Nikdy";
+
+"bookmark_description_title" = "Popis záložiek";
+
+"place_description_title" = "Popis miesta";
+
+"ugc_routes_error_uploading_file_toast" = "Bohužiaľ, počas nahrávania záložiek sa vyskytla chyba. Prosím skúste znova.";
+
+"notification_channel_ugc" = "Sociálny obsah";
+
+/* this text will be shown in application notification preferences opposite checkbox which enable/disable downloader notifications. Devices on Android 8+ are affected. */
+"notification_channel_downloader" = "Sťahovač máp";
+
+"notification_leave_review_title" = "%s - aké to bolo?";
+
+"notification_leave_review_content" = "Pomôžte cestujúcim tým, že zanecháte recenziu!";
+
+"share_bookmarks_email_body_link" = "Dobrý deň!\n\nTu je odkaz, kde si môžete stiahnuť svoje záložky: %s. Otvorte zoznam prostredníctvom služby MAPS.ME a užite si výlet!\n\nZískajte aplikáciu: http://maps.me/get?kmz";
+
+"warning_speedcams_title" = "Navigátor vás upozorní na kamery, keď prekročíte rýchlostný limit %d km/h";
+
+"warning_speedcams_subtitle" = "Dodržujte pravidlá cestnej premávky v krajine, do ktorej cestujete.";
+
+"speedcams_notice_message" = "Automaticky - Upozornenie na rýchlostné kamery, ak existuje riziko prekročenia rýchlostného limitu\nVždy - Vždy upozorniť na rýchlostné kamery\nNikdy - Nikdy neupozorňovať na rýchlostné kamery";
+
+"whats_new_ugc_routes_title" = "Je ľahké podeliť sa o vaše dojmy";
+
+"whats_new_ugc_routes_subtitle" = "Uložte si nezabudnuteľné miesta, vytvorte trasy pomocou záložiek a zdieľajte ich so všetkými v katalógu MAPS.ME.";
+
+"whats_new_webeditor_title" = "Premeňte svoje trasy na príbehy";
+
+"whats_new_ugc_routes_message2" = "Pridajte fotografie a podrobné príbehy do webového editora.";
+
+"whatsnew_standard_routes_title" = "Štandardné trasy";
+
+"whatsnew_standard_routes_message" = "Základný súbor bodov záujmu a stručné popisy, ale veľa zážitkov!";
+
+"whatsnew_city_overview_title" = "Prehľad mesta";
+
+"whatsnew_city_overview_message" = "Až 200 bodov záujmu na mape mesta: všetko, čo cestujúci môžu považovať za užitočné a zaujímavé!";
+
+"whatsnew_pro_guides_title" = "Profesionálne trasy";
+
+"whatsnew_pro_guides_message" = "Veľmi dôkladné, s podrobnými popismi miest a s možnosťou vypočítať vzdialenosť a čas cesty";
+
+"whatsnew_paid_routes_title" = "Viac nových zážitkov!";
+
+"whatsnew_paid_routes_message" = "Okrem bezplatných trás sme do nášho katalógu pridali tri platené kategórie trás. Viac ako 700 nových trás!";
+
+"whats_new_ugc_routes_title_android_only" = "Je ľahké podeliť sa o vaše dojmy";
+
 
 /**********  Partners  **********/
 
@@ -2800,7 +2973,7 @@
 
 "type.boundary.administrative.suburb" = "boundary-administrative-suburb";
 
-"type.boundary.national_park" = "boundary-national_park";
+"type.boundary.national_park" = "Národný park";
 
 "type.building" = "Budova";
 
@@ -3432,7 +3605,7 @@
 
 "type.leisure.marina" = "leisure-marina";
 
-"type.leisure.nature_reserve" = "leisure-nature_reserve";
+"type.leisure.nature_reserve" = "Rezervácia";
 
 "type.leisure.park" = "Park";
 
@@ -3540,7 +3713,7 @@
 
 "type.natural.beach" = "Beach";
 
-"type.natural.cape" = "natural-cape";
+"type.natural.cape" = "Mys";
 
 "type.natural.cave_entrance" = "Vstup do jaskyne";
 
@@ -3548,9 +3721,9 @@
 
 "type.natural.coastline" = "natural-coastline";
 
-"type.natural.geyser" = "Geyser";
+"type.natural.geyser" = "Gejzír";
 
-"type.natural.glacier" = "natural-glacier";
+"type.natural.glacier" = "Ľadovec";
 
 "type.natural.grassland" = "natural-grassland";
 
@@ -4148,13 +4321,13 @@
 
 "type.sponsored.partner17" = "sponsored-partner17";
 
-"type.sponsored.partner18" = "sponsored-partner18";
+"type.sponsored.partner18" = "MegaFon";
 
-"type.sponsored.partner19" = "sponsored-partner19";
+"type.sponsored.partner19" = "MegaFon";
 
 "type.sponsored.partner2" = "sponsored-partner2";
 
-"type.sponsored.partner20" = "sponsored-partner20";
+"type.sponsored.partner20" = "MegaFon";
 
 "type.sponsored.partner3" = "sponsored-partner3";
 
@@ -4333,3 +4506,312 @@
 "type.wheelchair.no" = "wheelchair-no";
 
 "type.wheelchair.yes" = "wheelchair-yes";
+
+
+/********** Brands **********/
+
+"brand.aiya" = "Aiya";
+
+"brand.anrakutei" = "Anrakutei";
+
+"brand.applebee_s" = "Applebee's";
+
+"brand.aroma" = "Aroma";
+
+"brand.bamiyan" = "Bamiyan";
+
+"brand.banana_leaf" = "Banana Leaf";
+
+"brand.baskin_robbins" = "Baskin-Robbins";
+
+"brand.big_boy" = "Big Boy";
+
+"brand.bikkuridonkey" = "Bikkuri-Donkey";
+
+"brand.blue_bottle_coffee" = "Blue Bottle Coffee";
+
+"brand.burger_king" = "Burger King";
+
+"brand.cafe_amazon" = "Café Amazon";
+
+"brand.cafe_coffee_day" = "Cafe Coffee Day";
+
+"brand.cafe_de_crie" = "Cafe de Crie";
+
+"brand.capricchosa" = "Capricchosa";
+
+"brand.carl_s_jr" = "Carl's Jr.";
+
+"brand.celentano" = "Celentano";
+
+"brand.chibo" = "Chibo";
+
+"brand.chick_fil_a" = "Chick-fil-A";
+
+"brand.chilis" = "Chili's";
+
+"brand.chipotle" = "Chipotle";
+
+"brand.chowking" = "Chowking";
+
+"brand.cinnabon" = "Cinnabon";
+
+"brand.coco" = "CoCo";
+
+"brand.coco_ichibanya" = "Coco Ichibanya";
+
+"brand.cocos" = "COCO'S";
+
+"brand.coffee_house" = "Coffee House";
+
+"brand.coffee_world" = "Coffee World";
+
+"brand.coffeeport" = "Coffeeport";
+
+"brand.coffeeshop_company" = "Coffeeshop Company";
+
+"brand.cofix" = "Cofix";
+
+"brand.comic_buster" = "Comic Buster";
+
+"brand.costa_coffee" = "Costa Coffee";
+
+"brand.dairy_queen" = "Dairy Queen";
+
+"brand.dennys" = "Denny's";
+
+"brand.doi_chaang" = "Doi Chaang";
+
+"brand.dominos_pizza" = "Domino's Pizza";
+
+"brand.double_b" = "Double B";
+
+"brand.doutor" = "Doutor";
+
+"brand.dunkin_donuts" = "Dunkin Donuts";
+
+"brand.espresso_house" = "Espresso House";
+
+"brand.excelsior_caffe" = "Excelsior Caffe";
+
+"brand.first_kitchen" = "First Kitchen";
+
+"brand.freshness_burger" = "Freshness Burger";
+
+"brand.fujisoba" = "Fujisoba";
+
+"brand.glowsubs" = "GlowSubs";
+
+"brand.grazie_gardens" = "Grazie Gardens";
+
+"brand.gusto" = "Gusto";
+
+"brand.gyukaku" = "Gyu-Kaku";
+
+"brand.haagen_dazs" = "Häagen-Dazs";
+
+"brand.hamazushi" = "Hamazushi";
+
+"brand.hanamaru" = "Hanamaru";
+
+"brand.hanaya_yohei" = "Hanaya Yohei";
+
+"brand.handaya" = "Handaya";
+
+"brand.hard_rock_cafe" = "Hard Rock Cafe";
+
+"brand.havanna" = "Havanna";
+
+"brand.hesburger" = "Hesburger";
+
+"brand.hokkahokka_tei" = "Hokka-Hokka Tei";
+
+"brand.honkekamadoya" = "Honkekamadoya";
+
+"brand.hottomotto" = "HottoMotto";
+
+"brand.ihop" = "IHOP";
+
+"brand.ikinari_steak" = "Ikinari Steak";
+
+"brand.il_patio" = "IL Patio";
+
+"brand.jack_in_the_box" = "Jack in the Box";
+
+"brand.jiyu_kukan" = "Jiyu Kukan";
+
+"brand.jollibee" = "Jollibee";
+
+"brand.jolly_pasta" = "Jolly Pasta";
+
+"brand.jonathans" = "Jonathan's";
+
+"brand.joyfull" = "Joyfull";
+
+"brand.kappazushi" = "Kappazushi";
+
+"brand.katsuya" = "Katsuya";
+
+"brand.kfc" = "KFC";
+
+"brand.kisoji" = "Kisoji";
+
+"brand.kobeya_restaurant" = "Kobeya Restaurant";
+
+"brand.kohikan" = "KO:HI:KAN";
+
+"brand.komeda" = "Komeda";
+
+"brand.komoro_soba" = "Komoro Soba";
+
+"brand.kourakuen" = "Kourakuen";
+
+"brand.kroshka_kartoshka" = "Kroshka Kartoshka";
+
+"brand.kurazushi" = "Kurazushi";
+
+"brand.little_caesars" = "Little Caesars";
+
+"brand.lotteria" = "Lotteria";
+
+"brand.maido_ohkini" = "Maido-Ohkini";
+
+"brand.marrybrown" = "Marrybrown";
+
+"brand.marugame_seimen" = "Marugame Seimen";
+
+"brand.matsunoya" = "Matsunoya";
+
+"brand.matsuya" = "Matsuya";
+
+"brand.mcdonalds" = "McDonald's";
+
+"brand.mister_donut" = "Mister Donut";
+
+"brand.miyakosoba" = "Miyakosoba";
+
+"brand.miyoshino" = "Miyoshino";
+
+"brand.mk_restaurants" = "MK Restaurants";
+
+"brand.mos_burger" = "MOS BURGER";
+
+"brand.mr_sub" = "Mr. Sub";
+
+"brand.mu_mu" = "Mu-Mu";
+
+"brand.nakau" = "Nakau";
+
+"brand.ohsho" = "Gyoza no Ohsho";
+
+"brand.onebuckscoffee" = "OneBucksCoffee";
+
+"brand.origin_bento" = "Origin Bento";
+
+"brand.osaka_ohsho" = "Osaka Ohsho";
+
+"brand.panda_express" = "Panda Express";
+
+"brand.panera_bread" = "Panera Bread";
+
+"brand.papa_johns" = "Papa John's";
+
+"brand.perkins" = "Perkins";
+
+"brand.pizza_hut" = "Pizza Hut";
+
+"brand.pizza_pizza" = "Pizza Pizza";
+
+"brand.popeyes" = "Popeyes";
+
+"brand.pronto" = "Pronto";
+
+"brand.quiznos" = "Quiznos";
+
+"brand.red_lobster" = "Red Lobster";
+
+"brand.ringer_hut" = "Ringer Hut";
+
+"brand.robin_sdobin" = "Robin Sdobin";
+
+"brand.royal_host" = "Royal Host";
+
+"brand.ruby_tuesday" = "Ruby Tuesday";
+
+"brand.saizeriya" = "Saizeriya";
+
+"brand.sato" = "Sato";
+
+"brand.segafredo" = "Segafredo";
+
+"brand.shake_shack" = "Shake Shack";
+
+"brand.shokoladnitsa" = "Shokoladnitsa";
+
+"brand.sizzler" = "Sizzler";
+
+"brand.skuratov" = "Skuratov";
+
+"brand.spur" = "Spur";
+
+"brand.starbucks" = "Starbucks";
+
+"brand.stardogs" = "Stardog!s";
+
+"brand.steak_n_shake" = "Steak'n Shake";
+
+"brand.stmarc_cafe" = "St. Marc Cafe";
+
+"brand.subway" = "Subway";
+
+"brand.sukiya" = "Sukiya";
+
+"brand.sushi_wok" = "Sushi Wok";
+
+"brand.sushiro" = "Sushiro";
+
+"brand.swensens" = "Swensen's";
+
+"brand.syabu_yo" = "Syabu-yo";
+
+"brand.taco_bell" = "Taco Bell";
+
+"brand.telepizza" = "Telepizza";
+
+"brand.tenkaippin" = "TenkaIppin";
+
+"brand.teremok" = "Teremok";
+
+"brand.tgi_fridays" = "TGI Friday's";
+
+"brand.the_pizza_company" = "The Pizza Company";
+
+"brand.tim_hortons" = "Tim Hortons";
+
+"brand.tonden" = "Tonden";
+
+"brand.tullys_coffee" = "Tully's Coffee";
+
+"brand.ueshima_coffee_ten" = "Ueshima Coffee Ten";
+
+"brand.uobei" = "Uobei";
+
+"brand.vapiano" = "Vapiano";
+
+"brand.victoria_station" = "Victoria Station";
+
+"brand.waffle_house" = "Waffle House";
+
+"brand.wendys" = "Wendy's";
+
+"brand.wokker" = "Wokker";
+
+"brand.yakitoria" = "Yakitoria";
+
+"brand.yomen_ya_goemon" = "Yomenya Goemon";
+
+"brand.yoshinoya" = "Yoshinoya";
+
+"brand.yudetaro" = "Yudetaro";
+
+"brand.yumean" = "Yumean";

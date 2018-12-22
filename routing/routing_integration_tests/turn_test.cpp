@@ -28,6 +28,7 @@ UNIT_TEST(RussiaMoscowNagatinoUturnTurnTest)
   integration::TestRouteLength(route, 248.0);
 }
 
+// Secondary should be preferred against residential.
 UNIT_TEST(StPetersburgSideRoadPenaltyTest)
 {
   TRouteResult const routeResult =
@@ -197,9 +198,8 @@ UNIT_TEST(RussiaMoscowTTKVarshavskoeShosseOutTurnTest)
   RouterResultCode const result = routeResult.second;
 
   TEST_EQUAL(result, RouterResultCode::NoError, ());
-  integration::TestTurnCount(route, 2 /* expectedTurnCount */);
+  integration::TestTurnCount(route, 1 /* expectedTurnCount */);
   integration::GetNthTurn(route, 0).TestValid().TestDirection(CarDirection::ExitHighwayToRight);
-  integration::GetNthTurn(route, 1).TestValid().TestDirection(CarDirection::GoStraight);
 }
 
 UNIT_TEST(RussiaMoscowTTKUTurnTest)
@@ -213,12 +213,11 @@ UNIT_TEST(RussiaMoscowTTKUTurnTest)
   RouterResultCode const result = routeResult.second;
 
   TEST_EQUAL(result, RouterResultCode::NoError, ());
-  integration::TestTurnCount(route, 4 /* expectedTurnCount */);
+  integration::TestTurnCount(route, 3 /* expectedTurnCount */);
   integration::GetNthTurn(route, 0).TestValid().TestOneOfDirections(
       {CarDirection::TurnSlightRight, CarDirection::TurnRight});
-  integration::GetNthTurn(route, 1).TestValid().TestDirection(CarDirection::GoStraight);
-  integration::GetNthTurn(route, 2).TestValid().TestDirection(CarDirection::UTurnLeft);
-  integration::GetNthTurn(route, 3).TestValid().TestDirection(CarDirection::TurnSlightLeft);
+  integration::GetNthTurn(route, 1).TestValid().TestDirection(CarDirection::UTurnLeft);
+  integration::GetNthTurn(route, 2).TestValid().TestDirection(CarDirection::TurnSlightLeft);
 }
 
 UNIT_TEST(RussiaMoscowParallelResidentalUTurnAvoiding)
@@ -372,7 +371,7 @@ UNIT_TEST(BelarusMKADShosseinai)
 
 // Test case: a route goes straight along a big road when joined small road.
 // An end user shall not be informed about such manoeuvres.
-// But at the and of the route an end user shall be informed about junction of two big roads.
+// But at the end of the route an end user shall be informed about junction of two big roads.
 UNIT_TEST(ThailandPhuketNearPrabarameeRoad)
 {
   TRouteResult const routeResult =
@@ -385,7 +384,7 @@ UNIT_TEST(ThailandPhuketNearPrabarameeRoad)
 
   TEST_EQUAL(result, RouterResultCode::NoError, ());
   integration::TestTurnCount(route, 1 /* expectedTurnCount */);
-  integration::GetNthTurn(route, 0).TestValid().TestDirection(CarDirection::GoStraight);
+  integration::GetNthTurn(route, 0).TestValid().TestDirection(CarDirection::ExitHighwayToLeft);
 }
 
 // Test case: a route goes in Moscow from Varshavskoe shosse (from the city center direction)
@@ -543,7 +542,7 @@ UNIT_TEST(RussiaMoscowSvobodaStTest)
 
   TEST_EQUAL(result, RouterResultCode::NoError, ());
   integration::TestTurnCount(route, 1 /* expectedTurnCount */);
-  integration::GetNthTurn(route, 0).TestValid().TestDirection(CarDirection::GoStraight);
+  integration::GetNthTurn(route, 0).TestValid().TestDirection(CarDirection::TurnSlightLeft);
 }
 
 UNIT_TEST(RussiaTiinskTest)
@@ -706,7 +705,8 @@ UNIT_TEST(AustriaBrixentalStrasseTest)
   RouterResultCode const result = routeResult.second;
 
   TEST_EQUAL(result, RouterResultCode::NoError, ());
-  integration::TestTurnCount(route, 0 /* expectedTurnCount */);
+  integration::TestTurnCount(route, 1 /* expectedTurnCount */);
+  integration::GetNthTurn(route, 0).TestValid().TestDirection(CarDirection::TurnSlightRight);
 }
 
 UNIT_TEST(RussiaMoscowLeningradkaToMKADTest)
@@ -766,7 +766,7 @@ UNIT_TEST(NetherlandsBarneveldTest)
 
   TEST_EQUAL(result, RouterResultCode::NoError, ());
   integration::TestTurnCount(route, 1 /* expectedTurnCount */);
-  integration::GetNthTurn(route, 0).TestValid().TestDirection(CarDirection::GoStraight);
+  integration::GetNthTurn(route, 0).TestValid().TestDirection(CarDirection::TurnSlightRight);
 }
 
 UNIT_TEST(GermanyRaunheimAirportTest)
@@ -995,4 +995,34 @@ UNIT_TEST(RussiaMoscowKomsomolskyTurnTest)
   TEST_EQUAL(result, RouterResultCode::NoError, ());
   integration::TestTurnCount(route, 1 /* expectedTurnCount */);
   integration::GetNthTurn(route, 0).TestValid().TestDirection(CarDirection::TurnRight);
+}
+
+// Test on no go straight direction in case of a route along a big road and pass smaller ones.
+UNIT_TEST(RussiaMoscowTTKNoGoStraightTurnTest)
+{
+  TRouteResult const routeResult =
+      integration::CalculateRoute(integration::GetVehicleComponents<VehicleType::Car>(),
+                                  MercatorBounds::FromLatLon(55.78949, 37.5711), {0., 0.},
+                                  MercatorBounds::FromLatLon(55.78673, 37.56726));
+
+  Route const & route = *routeResult.first;
+  RouterResultCode const result = routeResult.second;
+
+  TEST_EQUAL(result, RouterResultCode::NoError, ());
+  integration::TestTurnCount(route, 0 /* expectedTurnCount */);
+}
+
+UNIT_TEST(RussiaMoscowLeninskyProsp2Test)
+{
+  TRouteResult const routeResult =
+      integration::CalculateRoute(integration::GetVehicleComponents<VehicleType::Car>(),
+                                  MercatorBounds::FromLatLon(55.80376, 37.52048), {0., 0.},
+                                  MercatorBounds::FromLatLon(55.80442, 37.51802));
+
+  Route const & route = *routeResult.first;
+  RouterResultCode const result = routeResult.second;
+
+  TEST_EQUAL(result, RouterResultCode::NoError, ());
+  integration::TestTurnCount(route, 1 /* expectedTurnCount */);
+  integration::GetNthTurn(route, 0).TestValid().TestDirection(CarDirection::TurnSlightRight);
 }

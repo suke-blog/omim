@@ -183,35 +183,41 @@
 	<string name="search_mode_nearme">Perto de mim</string>
 	<!-- Do search in current viewport only -->
 	<string name="search_mode_viewport">No ecrã</string>
-	<!-- Search Suggestion -->
-	<string name="food">Alimentação</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for cafes, bars, restaurants -->
+	<string name="eat">Onde lanchar</string>
+	<!-- Search category for grocery stores -->
+	<string name="food">Alimentos</string>
+	<!-- Search category -->
 	<string name="transport">Transporte</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="fuel">Combustível</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="parking">Estacionamento</string>
-	<!-- Search Suggestion -->
-	<string name="shop">Compras</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for clothes/shoes/gifts/jewellery/sport shops -->
+	<string name="shopping">Compras</string>
+	<!-- Search category -->
 	<string name="hotel">Hotel</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="tourism">Vistas</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="entertainment">Entretenimento</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="atm">Multibanco</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for nightclubs/bars -->
+	<string name="nightlife">Convívio à noite</string>
+	<!-- Search category for water park/disneyland/playground/toys store -->
+	<string name="children">Descanso com crianças</string>
+	<!-- Search category -->
 	<string name="bank">Banco</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="pharmacy">Farmácia</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="hospital">Hospital</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="toilet">WC</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="post">Correios</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="police">Polícia</string>
 	<!-- String in search result list, when nothing found -->
 	<string name="no_search_results_found">Não foram encontrados resultados</string>
@@ -403,7 +409,7 @@
 	<string name="email_error_title">Erro de envio de email</string>
 	<!-- Settings item title -->
 	<string name="pref_calibration_title">Calibração de bússola</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="wifi">WiFi</string>
 	<!-- Update map suggestion -->
 	<string name="routing_map_outdated">Por favor, atualize o mapa para criar uma rota.</string>
@@ -1391,6 +1397,84 @@
 	<string name="subscription_terms">O pagamento será cobrado na sua conta do iTunes na confirmação da compra. A subscrição será automaticamente renovada, exceto se a renovação automática for desativada, pelo menos, 24 horas antes do fim do período atual. A sua conta será cobrada de acordo com o seu plano de renovação no prazo de 24 horas antes do fim do período atual. Pode gerir ou desativar a renovação automática nas definições da sua conta de ID da Apple, a qualquer momento, após a sua compra.</string>
 	<string name="subscriptions_title">Subscrições</string>
 	<string name="manage_subscription">Gerir a subscrição</string>
+	<string name="sharing_options">Definições de acesso</string>
+	<string name="export_file">Exportar o arquivo</string>
+	<string name="list_settings">Lista de configurações</string>
+	<string name="delete_list">Apagar lista</string>
+	<string name="hide_from_map">Remover do mapa</string>
+	<string name="ugc_route_tags_screen_label">Selecione tags</string>
+	<string name="ugc_route_tags_progress_msg">A carregar tags…</string>
+	<string name="ugc_route_tags_desc">Por favor, selecione tags para ajudar aos outros viajantes encontrar o seu guia. É obrigatório.</string>
+	<string name="public_access">Acesso público</string>
+	<string name="limited_access">Acesso privado</string>
+	<string name="upload_and_publish_desc">Esse guia será carregado para catalogo público de MAPS.ME e estará disponível para outros usuários</string>
+	<string name="upload_and_publish">Carregar e publicar</string>
+	<string name="upload_and_get_direct_link">Carregar e receber o link</string>
+	<string name="get_direct_link_desc">O seu guia será disponível pelo link direto</string>
+	<string name="upload_and_publish_progress_text">A publicar guia…</string>
+	<string name="upload_and_publish_success">Guia publicado</string>
+	<string name="ugc_routes_user_agreement">&lt;b>PRESTE ATENÇÃO:&lt;/b> a continuar você aceita &lt;a href="%s">o contrato de licença&lt;/a></string>
+	<string name="ugc_route_edit_list_name">Nome de guia</string>
+	<string name="ugc_route_edit_description_hint">Adicionar uma descrição (texto ou html)</string>
+	<string name="not_shared">Personal</string>
+	<string name="direct_link_progress_text">A carregar o seu arquivo…</string>
+	<string name="direct_link_success">Link criado</string>
+	<string name="edit_guide_title">Edite seu guia de viagens on-line</string>
+	<string name="edit_guide_subtitle">Recebe o link para editar seu guia de viagens através da uma aplicação web: adicione descrição de lugares, carregue fotografias e junte as marcas com linhas.</string>
+	<string name="send_a_link_btn">Enviar link</string>
+	<string name="upload_error_toast">Ocorreu um erro ao carregar o arquivo</string>
+	<string name="tags_loading_error_subtitle">Ocorreu um erro ao carregar tags, por favor tente de novo</string>
+	<string name="unable_upload_errorr_title">Não foi possível carregar arquivo</string>
+	<string name="unable_upload_error_subtitle_edited">O arquivo foi editado através da uma aplicação web</string>
+	<string name="unable_upload_error_subtitle_broken">Arquivo corrompido e não pode ser carregado. Por favor, carregue outro arquivo.</string>
+	<string name="buy_btn">Comprar por %s</string>
+	<string name="download_guide_progress">A carregar guia…</string>
+	<string name="price_error_title">Impossível saber o custo</string>
+	<string name="price_error_subtitle">Por favor, tente de novo mais tarde</string>
+	<string name="edit_your_guide_email_body">Edite o seu arquivo no computador: adicione descrição de lugares, carregue fotografias e junte as marcas com linhas.</string>
+	<string name="edit_on_web">Editar online</string>
+	<string name="properties_loading_error_subtitle">Ocorreu um erro ao carregar opções, por favor tente de novo</string>
+	<string name="custom_props_desc">Você formou esse guia como</string>
+	<string name="custom_props_title">Local ou turista</string>
+	<string name="custom_props_local">local</string>
+	<string name="custom_props_traveler">turista</string>
+	<string name="select_properties">Selecionar opções</string>
+	<string name="access_rules_p_to_p">Acesso especial</string>
+	<string name="access_rules_paid">Comprado</string>
+	<string name="failed_purchase_support_message">Parece que tem uma compra inacabada. Por favor, entre em contato com suporte e nos vamos resolver o seu problema.</string>
+	<string name="contact">Escrever</string>
+	<string name="check_price_button">Saber o custo</string>
+	<string name="download_button">Baixar</string>
+	<string name="speedcams_alert_title">Câmeras de velocidade</string>
+	<string name="speedcams_alert_subtitle">Avisar sobre limites de velocidade</string>
+	<string name="speedcam_option_auto">Auto</string>
+	<string name="speedcam_option_always">Sempre</string>
+	<string name="speedcam_option_never">Nunca</string>
+	<string name="bookmark_description_title">Descrição da marca</string>
+	<string name="place_description_title">Descrição do local</string>
+	<string name="ugc_routes_error_uploading_file_toast">Infelizmente, ocorreu um erro ao carregar os marcas. Por favor, tente novamente.</string>
+	<string name="notification_channel_ugc">Conteúdo</string>
+	<!-- this text will be shown in application notification preferences opposite checkbox which enable/disable downloader notifications. Devices on Android 8+ are affected. -->
+	<string name="notification_channel_downloader">A carregar mapas</string>
+	<string name="notification_leave_review_title">%s - como está aqui?</string>
+	<string name="notification_leave_review_content">Deixe um comentário e ajude os viajantes!</string>
+	<string name="share_bookmarks_email_body_link">Olá!\n\nSeus rótulos podem ser baixado aqui: %s. Abra a lista usando MAPS.ME e desfrute do passeio!\n\nBaixar aplicação: http://maps.me/get?kmz</string>
+	<string name="warning_speedcams_title">O navegador irá notificá-lo sobre as câmeras quando o limite de velocidade for excedido em %d km/h</string>
+	<string name="warning_speedcams_subtitle">Não esqueça de ler as regras da estrada no país de viagem.</string>
+	<string name="speedcams_notice_message">Auto - Avisa sobre radares de velocidade se houver risco de exceder o limite de velocidade\nSempre - Sempre alerta sobre câmeras\nNunca - nunca avisar sobre câmeras</string>
+	<string name="whats_new_ugc_routes_title">É fácil compartilhar as impressões</string>
+	<string name="whats_new_ugc_routes_subtitle">Salve locais preferidos, crie percursos a partir de tags e compartilhe-os com todos no diretório de MAPS.ME.</string>
+	<string name="whats_new_webeditor_title">Transforma os percursos em história</string>
+	<string name="whats_new_ugc_routes_message2">Adicione fotos e descrições detalhadas no editor da web.</string>
+	<string name="whatsnew_standard_routes_title">Percursos gerais</string>
+	<string name="whatsnew_standard_routes_message">O conjunto principal de pontos, descrições são breves, mas impressões completas!</string>
+	<string name="whatsnew_city_overview_title">Visão total da cidade</string>
+	<string name="whatsnew_city_overview_message">Até 200 pontos no mapa da cidade: tudo o mais útil e interessante para um viajante!</string>
+	<string name="whatsnew_pro_guides_title">Percursos profissionais</string>
+	<string name="whatsnew_pro_guides_message">Detalhamento de alto nível, descrições completas de locais e a possibilidade de calcular a distância e o tempo do passeio</string>
+	<string name="whatsnew_paid_routes_title">Mais impressões novas!</string>
+	<string name="whatsnew_paid_routes_message">Adicionamos no catálogo 3 categorias das guias de viagem pagos além dos percursos gratuitos. Mais de 700 percursos novos!</string>
+	<string name="whats_new_ugc_routes_title_android_only">É fácil compartilhar as impressões</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Estação de teleférico</string>
@@ -1490,6 +1574,7 @@
 	<string name="type.barrier.lift_gate">Cancela</string>
 	<string name="type.barrier.stile">Travessia em cerca ou muro</string>
 	<string name="type.barrier.toll_booth">Cabine de pedágio</string>
+	<string name="type.boundary.national_park">Parque nacional</string>
 	<string name="type.building">Edifício</string>
 	<string name="type.building.address">Edifício</string>
 	<string name="type.building.garage">Garagem</string>
@@ -1721,6 +1806,7 @@
 	<string name="type.leisure.fitness_station">Estação de fitness</string>
 	<string name="type.leisure.garden">Jardim</string>
 	<string name="type.leisure.golf_course">Campo de golfe</string>
+	<string name="type.leisure.nature_reserve">Reserva natural</string>
 	<string name="type.leisure.park">Parque</string>
 	<string name="type.leisure.park.no.access">Parque</string>
 	<string name="type.leisure.park.permissive">Parque</string>
@@ -1747,7 +1833,10 @@
 	<string name="type.man_made.windmill">Moinho de vento</string>
 	<string name="type.natural.bay">Baía</string>
 	<string name="type.natural.beach">Praia</string>
+	<string name="type.natural.cape">Cabo</string>
 	<string name="type.natural.cave_entrance">Entrada de caverna</string>
+	<string name="type.natural.geyser">Geiser</string>
+	<string name="type.natural.glacier">Glaciar</string>
 	<string name="type.natural.lake">Lago</string>
 	<string name="type.natural.peak">Pico</string>
 	<string name="type.natural.pond">Lagoa</string>

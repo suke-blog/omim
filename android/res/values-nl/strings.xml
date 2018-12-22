@@ -182,35 +182,41 @@
 	<string name="search_mode_nearme">Dichtbij mij</string>
 	<!-- Do search in current viewport only -->
 	<string name="search_mode_viewport">Op het scherm</string>
-	<!-- Search Suggestion -->
-	<string name="food">Eten</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for cafes, bars, restaurants -->
+	<string name="eat">Waar iets gaan eten</string>
+	<!-- Search category for grocery stores -->
+	<string name="food">Kruidenierswinkels</string>
+	<!-- Search category -->
 	<string name="transport">Transport</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="fuel">Benzine</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="parking">Parkeerplaats</string>
-	<!-- Search Suggestion -->
-	<string name="shop">Winkel</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for clothes/shoes/gifts/jewellery/sport shops -->
+	<string name="shopping">Winkelen</string>
+	<!-- Search category -->
 	<string name="hotel">Hotel</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="tourism">Toerisme</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="entertainment">Uitgaan</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="atm">Geldautomaat</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for nightclubs/bars -->
+	<string name="nightlife">Nachtleven</string>
+	<!-- Search category for water park/disneyland/playground/toys store -->
+	<string name="children">Gezinsvakantie</string>
+	<!-- Search category -->
 	<string name="bank">Bank</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="pharmacy">Apotheek</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="hospital">Ziekenhuis</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="toilet">Toilet</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="post">Post</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="police">Politie</string>
 	<!-- String in search result list, when nothing found -->
 	<string name="no_search_results_found">Geen resultaten gevonden</string>
@@ -402,7 +408,7 @@
 	<string name="email_error_title">Email verzendfout</string>
 	<!-- Settings item title -->
 	<string name="pref_calibration_title">Kompascalibratie</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="wifi">WiFi</string>
 	<!-- Update map suggestion -->
 	<string name="routing_map_outdated">Werk de kaart bij om een route te maken.</string>
@@ -1388,6 +1394,84 @@
 	<string name="subscription_terms">Payment will be charged to your iTunes account at confirmation of purchase. The subscription will automatically renew unless auto-renew is turned off at least 24 hours before the end of the current period. Your account will be charged according to your plan for renewal within 24 hours prior to the end of the current period. You can manage or turn off auto-renew in your Apple ID account settings at any time of your purchase.</string>
 	<string name="subscriptions_title">Subscriptions</string>
 	<string name="manage_subscription">Manage subscription</string>
+	<string name="sharing_options">Opties voor delen</string>
+	<string name="export_file">Bestand exporteren</string>
+	<string name="list_settings">Lijst Instellingen</string>
+	<string name="delete_list">Lijst verwijderen</string>
+	<string name="hide_from_map">Van de kaart verbergen</string>
+	<string name="ugc_route_tags_screen_label">Selecteer tags</string>
+	<string name="ugc_route_tags_progress_msg">Tags aan het laden…</string>
+	<string name="ugc_route_tags_desc">Gelieve tags te kiezen om andere reizigers te helpen uw gids te vinden. Dit is verplicht.</string>
+	<string name="public_access">Publiek toegang</string>
+	<string name="limited_access">Beperkte toegang</string>
+	<string name="upload_and_publish_desc">Deze gids zal worden geüpload naar de openbare MAPS.ME catalogus en zal voor andere gebruikers beschikbaar zijn</string>
+	<string name="upload_and_publish">Upload en publiceer</string>
+	<string name="upload_and_get_direct_link">Upload en krijg een rechtstreekse link</string>
+	<string name="get_direct_link_desc">Uw gids zal beschikbaar zijn voor iedereen die de link heeft</string>
+	<string name="upload_and_publish_progress_text">Uw gids aan het publiceren…</string>
+	<string name="upload_and_publish_success">De gids is gepubliceerd</string>
+	<string name="ugc_routes_user_agreement">&lt;b>GELIEVE TE NOTEREN:&lt;/b> door verder te gaan, accepteert u de &lt;a href="%s">licentieovereenkomst&lt;/a></string>
+	<string name="ugc_route_edit_list_name">Naam van de gids</string>
+	<string name="ugc_route_edit_description_hint">Maak een beschrijving aan (tekst of html)</string>
+	<string name="not_shared">Privé</string>
+	<string name="direct_link_progress_text">Uw bestand aan het uploaden…</string>
+	<string name="direct_link_success">De link is aangemaakt</string>
+	<string name="edit_guide_title">Bewerk uw gids op internet</string>
+	<string name="edit_guide_subtitle">Ontvang een link om uw gids te bewerken via een web-app: beschrijvingen toevoegen, foto\'s uploaden en bladwijzers verbinden met lijnen.</string>
+	<string name="send_a_link_btn">Stuur mij een link</string>
+	<string name="upload_error_toast">Er is een fout opgetreden tijdens het uploaden van uw bestand</string>
+	<string name="tags_loading_error_subtitle">Er is een fout opgetreden tijdens het laden van tags, probeer het opnieuw</string>
+	<string name="unable_upload_errorr_title">Bestand uploaden mislukt</string>
+	<string name="unable_upload_error_subtitle_edited">Dit bestand is bewerkt via de web app</string>
+	<string name="unable_upload_error_subtitle_broken">Dit bestand is beschadigd en kon niet worden geüpload. Gelieve een ander bestand te uploaden.</string>
+	<string name="buy_btn">Kopen voor %s</string>
+	<string name="download_guide_progress">Uw gids aan het downloaden…</string>
+	<string name="price_error_title">Kon geen prijs krijgen</string>
+	<string name="price_error_subtitle">Gelieve in een paar minuten opnieuw te proberen</string>
+	<string name="edit_your_guide_email_body">Bewerk gemakkelijk uw handleiding op internet met behulp van uw computer: beschrijvingen toevoegen, foto\'s uploaden en bladwijzers verbinden met lijnen.</string>
+	<string name="edit_on_web">Bewerk op internet</string>
+	<string name="properties_loading_error_subtitle">Er is een fout opgetreden tijdens het laden van de opties, probeer het opnieuw</string>
+	<string name="custom_props_desc">In deze gids heeft u plaatsen bezocht zoals</string>
+	<string name="custom_props_title">Lokaal of reiziger</string>
+	<string name="custom_props_local">local</string>
+	<string name="custom_props_traveler">reiziger</string>
+	<string name="select_properties">Selecteer opties</string>
+	<string name="access_rules_p_to_p">Speciale toegang</string>
+	<string name="access_rules_paid">Gekocht</string>
+	<string name="failed_purchase_support_message">Sorry, maar u heeft waarschijnlijk een onvoltooide aankoop. Neem contact op met de support en wij zullen het probleem oplossen.</string>
+	<string name="contact">Contact</string>
+	<string name="check_price_button">Controleer prijs</string>
+	<string name="download_button">Downloaden</string>
+	<string name="speedcams_alert_title">Snelheidscamera\'s</string>
+	<string name="speedcams_alert_subtitle">Waarschuw voor snelheidsbeperkingen</string>
+	<string name="speedcam_option_auto">Auto</string>
+	<string name="speedcam_option_always">Altijd</string>
+	<string name="speedcam_option_never">Nooit</string>
+	<string name="bookmark_description_title">Bladwijzer Beschrijving</string>
+	<string name="place_description_title">Plaats Beschrijving</string>
+	<string name="ugc_routes_error_uploading_file_toast">Spijtig genoeg is er een fout opgetreden tijdens het uploaden van uw bladwijzers. Probeer het opnieuw.</string>
+	<string name="notification_channel_ugc">Sociale inhoud</string>
+	<!-- this text will be shown in application notification preferences opposite checkbox which enable/disable downloader notifications. Devices on Android 8+ are affected. -->
+	<string name="notification_channel_downloader">Kaart downloader</string>
+	<string name="notification_leave_review_title">%s - hoe vond u het?</string>
+	<string name="notification_leave_review_content">Help reizigers door een beoordeling achter te laten!</string>
+	<string name="share_bookmarks_email_body_link">Hello!\n\nHier is de link waar u uw bladwijzers kunt downloaden: %s. Open de lijst via MAPS.ME en geniet van uw reis!\n\nHaal de applicatie op: http://maps.me/get?kmz</string>
+	<string name="warning_speedcams_title">Navigator waarschuwt u over camera\'s wanneer u de maximumsnelheid van %d km/h overschrijdt</string>
+	<string name="warning_speedcams_subtitle">Let op de rijvoorschriften van het land waar u naartoe reist.</string>
+	<string name="speedcams_notice_message">Auto - Waarschuw voor speedcams als er een risico bestaat dat de snelheidslimiet wordt overschreden\nAltijd - Waarschuw altijd voor flitspalen\nNooit - Waarschuw nooit over flitspalen</string>
+	<string name="whats_new_ugc_routes_title">Het is eenvoudig om je indrukken te delen</string>
+	<string name="whats_new_ugc_routes_subtitle">Bewaar gedenkwaardige plaatsen, maak routes met behulp van bladwijzers en deel ze met iedereen in de MAPS.ME-catalogus.</string>
+	<string name="whats_new_webeditor_title">Maak verhalen van je routes</string>
+	<string name="whats_new_ugc_routes_message2">Voeg foto\'s en gedetailleerde verhalen toe in de webbewerker.</string>
+	<string name="whatsnew_standard_routes_title">Standaard routes</string>
+	<string name="whatsnew_standard_routes_message">Basisset van interessante punten en korte beschrijvingen, maar veel ervaringen!</string>
+	<string name="whatsnew_city_overview_title">Stadsoverzicht</string>
+	<string name="whatsnew_city_overview_message">Tot 200 bezienswaardigheden op de stadsmap: alles wat reizigers nuttig en interessant kunnen vinden!</string>
+	<string name="whatsnew_pro_guides_title">Professionele routes</string>
+	<string name="whatsnew_pro_guides_message">Zeer grondig, met gedetailleerde beschrijvingen van plaatsen en de mogelijkheid om reisafstand en -tijd te berekenen</string>
+	<string name="whatsnew_paid_routes_title">Nog nieuwe ervaringen!</string>
+	<string name="whatsnew_paid_routes_message">Bovenop de gratis routes, hebben we 3 betalende routes toegevoegd aan onze catalogus. Meer dan 700 routes!</string>
+	<string name="whats_new_ugc_routes_title_android_only">Het is eenvoudig om je indrukken te delen</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Kabelwagenstation</string>
@@ -1482,6 +1566,7 @@
 	<string name="type.barrier.lift_gate">Slagboom</string>
 	<string name="type.barrier.stile">Tourniquet</string>
 	<string name="type.barrier.toll_booth">Tolhokje</string>
+	<string name="type.boundary.national_park">Nationaal park</string>
 	<string name="type.building">Gebouw</string>
 	<string name="type.building.address">Gebouw</string>
 	<string name="type.building.has_parts">Gebouw</string>
@@ -1712,6 +1797,7 @@
 	<string name="type.leisure.fitness_station">Fitness-Station</string>
 	<string name="type.leisure.garden">Tuin</string>
 	<string name="type.leisure.golf_course">Golfbaan</string>
+	<string name="type.leisure.nature_reserve">Reserve</string>
 	<string name="type.leisure.pitch">Sportveld</string>
 	<string name="type.leisure.pitch.tennis">Sportveld</string>
 	<string name="type.leisure.playground">Speeltuin</string>
@@ -1733,7 +1819,10 @@
 	<string name="type.man_made.windmill">Windmolen</string>
 	<string name="type.natural.bay">Baai</string>
 	<string name="type.natural.beach">Strand</string>
+	<string name="type.natural.cape">Kaap</string>
 	<string name="type.natural.cave_entrance">Grotingang</string>
+	<string name="type.natural.geyser">Geiser</string>
+	<string name="type.natural.glacier">Gletsjer</string>
 	<string name="type.natural.lake">Meer</string>
 	<string name="type.natural.peak">Top</string>
 	<string name="type.natural.pond">Plas</string>

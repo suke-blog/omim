@@ -101,7 +101,6 @@ public:
   }
 
   RouteWeight CalcSegmentWeight(Segment const & segment) const;
-  RouteWeight CalcRouteSegmentWeight(std::vector<Segment> const & route, size_t segmentIndex) const;
   double CalcSegmentETA(Segment const & segment) const;
 
 private:
@@ -157,6 +156,6 @@ private:
   // Finish segment id
   Ending m_finish;
   double m_startToFinishDistanceM;
-  FakeGraph<Segment, FakeVertex, Segment> m_fake;
+  FakeGraph<Segment, FakeVertex> m_fake;
 };
 }  // namespace routing

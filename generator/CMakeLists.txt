@@ -11,10 +11,13 @@ set(SRC
   booking_dataset.cpp
   booking_dataset.hpp
   booking_scoring.cpp
+  boost_helpers.hpp
   borders_generator.cpp
   borders_generator.hpp
   borders_loader.cpp
   borders_loader.hpp
+  brands_loader.cpp
+  brands_loader.hpp
   camera_info_collector.cpp
   camera_info_collector.hpp
   camera_node_processor.cpp
@@ -32,6 +35,8 @@ set(SRC
   coastlines_generator.cpp
   coastlines_generator.hpp
   collector_interface.hpp
+  descriptions_section_builder.cpp
+  descriptions_section_builder.hpp
   dumper.cpp
   dumper.hpp
   emitter_booking.hpp
@@ -69,6 +74,12 @@ set(SRC
   intermediate_elements.hpp
   locality_sorter.cpp
   locality_sorter.hpp
+  maxspeeds_builder.cpp
+  maxspeeds_builder.hpp
+  maxspeeds_collector.cpp
+  maxspeeds_collector.hpp
+  maxspeeds_parser.cpp
+  maxspeeds_parser.hpp
   metalines_builder.cpp
   metalines_builder.hpp
   node_mixer.cpp
@@ -88,10 +99,15 @@ set(SRC
   osm_source.cpp
   osm_xml_source.hpp
   polygonizer.hpp
+  popularity.cpp
+  popularity.hpp
   popular_places_section_builder.cpp
   popular_places_section_builder.hpp
   place.hpp
   place.cpp
+  place_node.hpp
+  platform_helpers.cpp
+  platform_helpers.hpp
   relation_tags.cpp
   relation_tags.hpp
   region_meta.cpp
@@ -172,6 +188,8 @@ set(SRC
   viator_dataset.hpp
   ways_merger.hpp
   ways_merger.cpp
+  wiki_url_dumper.cpp
+  wiki_url_dumper.hpp
   world_map_generator.hpp
 )
 

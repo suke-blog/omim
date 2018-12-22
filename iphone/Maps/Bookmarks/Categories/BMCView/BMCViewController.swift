@@ -32,8 +32,14 @@ final class BMCViewController: MWMViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     viewModel = BMCDefaultViewModel()
+    tableView.separatorColor = UIColor.blackDividers()
   }
 
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    viewModel.reloadData()
+  }
+  
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     // Disable all notifications in BM on appearance of this view.
@@ -51,20 +57,13 @@ final class BMCViewController: MWMViewController {
     viewModel.removeFromObserverList()
   }
 
-  private func updateCategoryName(category: BMCCategory?) {
-    let isNewCategory = (category == nil)
+  private func createNewCategory() {
     alertController.presentCreateBookmarkCategoryAlert(withMaxCharacterNum: viewModel.maxCategoryNameLength,
-                                                       minCharacterNum: viewModel.minCategoryNameLength,
-                                                       isNewCategory: isNewCategory)
+                                                       minCharacterNum: viewModel.minCategoryNameLength)
     { [weak viewModel] (name: String!) -> Bool in
       guard let model = viewModel else { return false }
       if model.checkCategory(name: name) {
-        if isNewCategory {
-          model.addCategory(name: name)
-        } else {
-          model.renameCategory(category: category!, name: name)
-        }
-
+        model.addCategory(name: name)
         return true
       }
 
@@ -72,16 +71,47 @@ final class BMCViewController: MWMViewController {
     }
   }
 
+  private func shareCategoryFile(category: BMCCategory, anchor: UIView) {
+    viewModel.shareCategoryFile(category: category) {
+      switch $0 {
+      case let .success(url):
+        let shareController = MWMActivityViewController.share(for: url,
+                                                              message: L("share_bookmarks_email_body"))
+        { [weak self] _, _, _, _ in
+          self?.viewModel?.finishShareCategory()
+        }
+        shareController?.present(inParentViewController: self, anchorView: anchor)
+      case let .error(title, text):
+        MWMAlertViewController.activeAlert().presentInfoAlert(title, text: text)
+      }
+    }
+  }
+
+
   private func shareCategory(category: BMCCategory, anchor: UIView) {
     let storyboard = UIStoryboard.instance(.sharing)
     let shareController = storyboard.instantiateInitialViewController() as! BookmarksSharingViewController
+    shareController.categoryId = category.identifier
     
     MapViewController.topViewController().navigationController?.pushViewController(shareController,
+                                                                                   animated: true)
+  }
+  
+  private func openCategorySettings(category: BMCCategory) {
+    let storyboard = UIStoryboard.instance(.categorySettings)
+    let settingsController = storyboard.instantiateInitialViewController() as! CategorySettingsViewController
+    settingsController.categoryId = category.identifier
+    settingsController.maxCategoryNameLength = viewModel.maxCategoryNameLength
+    settingsController.minCategoryNameLength = viewModel.minCategoryNameLength
+    settingsController.delegate = self
+    
+    MapViewController.topViewController().navigationController?.pushViewController(settingsController,
                                                                                    animated: true)
   }
 
   private func openCategory(category: BMCCategory) {
     let bmViewController = BookmarksVC(category: category.identifier)!
+    bmViewController.delegate = self
     MapViewController.topViewController().navigationController?.pushViewController(bmViewController,
                                                                                    animated: true)
   }
@@ -93,25 +123,41 @@ final class BMCViewController: MWMViewController {
       ppc.sourceRect = anchor.bounds
     }
 
-    let rename = L("rename").capitalized
-    actionSheet.addAction(UIAlertAction(title: rename, style: .default, handler: { _ in
-      self.updateCategoryName(category: category)
+    let settings = L("list_settings")
+    actionSheet.addAction(UIAlertAction(title: settings, style: .default, handler: { _ in
+      self.openCategorySettings(category: category)
+      Statistics.logEvent(kStatBookmarksListSettingsClick,
+                          withParameters: [kStatOption : kStatListSettings])
     }))
-    let showHide = L(category.isVisible ? "hide" : "show").capitalized
+    let showHide = L(category.isVisible ? "hide_from_map" : "zoom_to_country")
     actionSheet.addAction(UIAlertAction(title: showHide, style: .default, handler: { _ in
       self.visibilityAction(category: category)
+      Statistics.logEvent(kStatBookmarksListSettingsClick,
+                          withParameters: [kStatOption : kStatMakeInvisibleOnMap])
     }))
-    let share = L("share").capitalized
-    actionSheet.addAction(UIAlertAction(title: share, style: .default, handler: { _ in
+    let exportFile = L("export_file")
+    actionSheet.addAction(UIAlertAction(title: exportFile, style: .default, handler: { _ in
+      self.shareCategoryFile(category: category, anchor: anchor)
+      Statistics.logEvent(kStatBookmarksListSettingsClick,
+                          withParameters: [kStatOption : kStatSendAsFile])
+    }))
+    let share = L("sharing_options")
+    let shareAction = UIAlertAction(title: share, style: .default, handler: { _ in
       self.shareCategory(category: category, anchor: anchor)
-    }))
-    let delete = L("delete").capitalized
+      Statistics.logEvent(kStatBookmarksListSettingsClick,
+                          withParameters: [kStatOption : kStatSharingOptions])
+    })
+    shareAction.isEnabled = MWMBookmarksManager.shared().isCategoryNotEmpty(category.identifier)
+    actionSheet.addAction(shareAction)
+    let delete = L("delete_list")
     let deleteAction = UIAlertAction(title: delete, style: .destructive, handler: { [viewModel] _ in
       viewModel!.deleteCategory(category: category)
+      Statistics.logEvent(kStatBookmarksListSettingsClick,
+                          withParameters: [kStatOption : kStatDeleteGroup])
     })
     deleteAction.isEnabled = (viewModel.numberOfRows(section: .categories) > 1)
     actionSheet.addAction(deleteAction)
-    let cancel = L("cancel").capitalized
+    let cancel = L("cancel")
     actionSheet.addAction(UIAlertAction(title: cancel, style: .cancel, handler: nil))
 
     present(actionSheet, animated: true, completion: nil)
@@ -237,7 +283,7 @@ extension BMCViewController: UITableViewDelegate {
       openCategory(category: category)
     case let action as BMCAction:
       switch action {
-      case .create: updateCategoryName(category: nil)
+      case .create: createNewCategory()
       }
     default:
       assertionFailure()
@@ -295,5 +341,27 @@ extension BMCViewController: BMCCategoriesHeaderDelegate {
   func visibilityAction(_ categoriesHeader: BMCCategoriesHeader) {
     viewModel.updateAllCategoriesVisibility(isShowAll: categoriesHeader.isShowAll)
     categoriesHeader.isShowAll = viewModel.areAllCategoriesHidden()
+  }
+}
+
+extension BMCViewController: CategorySettingsViewControllerDelegate {
+  func categorySettingsController(_ viewController: CategorySettingsViewController,
+                                  didEndEditing categoryId: MWMMarkGroupID) {
+    navigationController?.popViewController(animated: true)
+  }
+  
+  func categorySettingsController(_ viewController: CategorySettingsViewController,
+                                  didDelete categoryId: MWMMarkGroupID) {
+    navigationController?.popViewController(animated: true)
+  }
+}
+
+extension BMCViewController: BookmarksVCDelegate {
+  func bookmarksVCdidUpdateCategory(_ viewController: BookmarksVC!) {
+    // for now we did necessary interface update in -viewWillAppear
+  }
+
+  func bookmarksVCdidDeleteCategory(_ viewController: BookmarksVC!) {
+    navigationController?.popViewController(animated: true)
   }
 }

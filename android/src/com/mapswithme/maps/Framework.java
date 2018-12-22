@@ -16,6 +16,7 @@ import com.mapswithme.maps.api.ParsedRoutingData;
 import com.mapswithme.maps.api.ParsedSearchRequest;
 import com.mapswithme.maps.api.ParsedUrlMwmRequest;
 import com.mapswithme.maps.auth.AuthorizationListener;
+import com.mapswithme.maps.background.NotificationCandidate;
 import com.mapswithme.maps.bookmarks.data.DistanceAndAzimut;
 import com.mapswithme.maps.bookmarks.data.MapObject;
 import com.mapswithme.maps.gdpr.UserBindingListener;
@@ -25,6 +26,7 @@ import com.mapswithme.maps.routing.RoutePointInfo;
 import com.mapswithme.maps.routing.RoutingInfo;
 import com.mapswithme.maps.routing.TransitRouteInfo;
 import com.mapswithme.maps.search.FilterUtils;
+import com.mapswithme.maps.settings.SettingsPrefsFragment;
 import com.mapswithme.util.Constants;
 import com.mapswithme.util.log.Logger;
 import com.mapswithme.util.log.LoggerFactory;
@@ -103,12 +105,14 @@ public class Framework
   public static final int TOKEN_MAPSME = 3;
 
   @Retention(RetentionPolicy.SOURCE)
-  @IntDef({ PURCHASE_VERIFIED, PURCHASE_NOT_VERIFIED, PURCHASE_VALIDATION_SERVER_ERROR })
+  @IntDef({ PURCHASE_VERIFIED, PURCHASE_NOT_VERIFIED,
+            PURCHASE_VALIDATION_SERVER_ERROR, PURCHASE_VALIDATION_AUTH_ERROR })
   public @interface PurchaseValidationCode {}
 
   public static final int PURCHASE_VERIFIED = 0;
   public static final int PURCHASE_NOT_VERIFIED = 1;
   public static final int PURCHASE_VALIDATION_SERVER_ERROR = 2;
+  public static final int PURCHASE_VALIDATION_AUTH_ERROR = 3;
 
   @SuppressWarnings("unused")
   public interface MapObjectListener
@@ -148,7 +152,7 @@ public class Framework
   public interface PurchaseValidationListener
   {
     void onValidatePurchase(@PurchaseValidationCode int code, @NonNull String serverId,
-                            @NonNull String vendorId, @NonNull String purchaseToken);
+                            @NonNull String vendorId, @NonNull String encodedPurchaseData);
   }
 
   @SuppressWarnings("unused")
@@ -235,6 +239,11 @@ public class Framework
   public static void disableAdProvider(@NonNull Banner.Type type)
   {
     nativeDisableAdProvider(type.ordinal(), Banner.Place.DEFAULT.ordinal());
+  }
+
+  public static void setSpeedCamerasMode(@NonNull SettingsPrefsFragment.SpeedCameraMode mode)
+  {
+    nativeSetSpeedCamManagerMode(mode.ordinal());
   }
 
   public static native void nativeShowTrackRect(long track);
@@ -337,6 +346,8 @@ public class Framework
   // nativeGenerateTurnNotifications shall be called by the client when a new position is available.
   @Nullable
   public static native String[] nativeGenerateNotifications();
+
+  private static native void nativeSetSpeedCamManagerMode(int mode);
 
   public static native void nativeSetRoutingListener(RoutingListener listener);
 
@@ -502,9 +513,18 @@ public class Framework
 
   public static native int nativeGetCurrentTipsApi();
 
-  private static native void nativeTipsShown(int tipType, int event);
-
   private static native void nativeDisableAdProvider(int provider, int bannerPlace);
 
   public static native void nativeBindUser(@NonNull UserBindingListener listener);
+
+  @Nullable
+  public static native String nativeGetAccessToken();
+
+  @Nullable
+  public static native MapObject nativeGetMapObject(
+      @NonNull NotificationCandidate.MapObject mapObject);
+
+  public static native void nativeOnBatteryLevelChanged(int level);
+  public static native void nativeSetPowerManagerFacility(int facilityType, boolean state);
+  public static native void nativeSetPowerManagerScheme(int schemeType);
 }

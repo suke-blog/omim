@@ -1,5 +1,7 @@
 #pragma once
 
+#include "routing_common/maxspeed_conversion.hpp"
+
 #include <array>
 #include <functional>
 #include <initializer_list>
@@ -7,6 +9,7 @@
 #include <sstream>
 #include <string>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 class Classificator;
@@ -16,6 +19,19 @@ namespace feature { class TypesHolder; }
 
 namespace routing
 {
+/// \brief Params for calculation of an approximate speed on a feature.
+struct SpeedParams
+{
+  SpeedParams(bool forward, bool inCity, Maxspeed maxspeed)
+    : m_forward(forward), m_inCity(inCity), m_maxspeed(std::move(maxspeed))
+  {
+  }
+
+  bool m_forward;
+  // |m_inCity| == true if a corresponding feature lies inside a city of a town.
+  bool m_inCity;
+  Maxspeed m_maxspeed;
+};
 
 class VehicleModelInterface
 {
@@ -30,33 +46,52 @@ public:
   /// Speeds which are used for edge weight and ETA estimations.
   struct SpeedKMpH
   {
-    SpeedKMpH() = default;
-    explicit SpeedKMpH(double weight) noexcept : m_weight(weight), m_eta(weight) {}
-    SpeedKMpH(double weight, double eta) noexcept : m_weight(weight), m_eta(eta) {}
+    constexpr SpeedKMpH() = default;
+    constexpr explicit SpeedKMpH(double weight) noexcept : m_weight(weight), m_eta(weight) {}
+    constexpr SpeedKMpH(double weight, double eta) noexcept : m_weight(weight), m_eta(eta) {}
 
     bool operator==(SpeedKMpH const & rhs) const
     {
       return m_weight == rhs.m_weight && m_eta == rhs.m_eta;
     }
 
+    bool IsValid() const { return m_weight >= 0 && m_eta >= 0; }
+
     double m_weight = 0.0; // KMpH
     double m_eta = 0.0;    // KMpH
   };
 
+  /// \brief Factors which reduce weight and ETA speed on feature regarding maxspeed tag value
+  /// if the tag is set for the feature.
+  /// Both should be in range [0.0, 1.0].
+  struct MaxspeedFactor
+  {
+    constexpr explicit MaxspeedFactor(double weight) noexcept : m_weight(weight), m_eta(weight) {}
+    constexpr explicit MaxspeedFactor(double weight, double eta) noexcept : m_weight(weight), m_eta(eta) {}
+
+    bool operator==(MaxspeedFactor const & rhs) const { return m_weight == rhs.m_weight && m_eta == rhs.m_eta; }
+
+    double m_weight;
+    double m_eta;
+  };
+
   struct InOutCitySpeedKMpH
   {
-    InOutCitySpeedKMpH(SpeedKMpH const & inCity, SpeedKMpH const & outCity) noexcept
-      : m_inCity(inCity), m_outCity(outCity)
+    constexpr InOutCitySpeedKMpH(SpeedKMpH const & inCity, SpeedKMpH const & outCity,
+                                 MaxspeedFactor const & maxspeedFactor) noexcept
+      : m_inCity(inCity), m_outCity(outCity), m_maxspeedFactor(maxspeedFactor)
     {
     }
 
     bool operator==(InOutCitySpeedKMpH const & rhs) const
     {
-      return m_inCity == rhs.m_inCity && m_outCity == rhs.m_outCity;
+      return m_inCity == rhs.m_inCity && m_outCity == rhs.m_outCity && m_maxspeedFactor == rhs.m_maxspeedFactor;
     }
 
     SpeedKMpH m_inCity;
     SpeedKMpH m_outCity;
+    // If maxspeed is available it should be multiplied by |m_maxspeedFactor|.
+    MaxspeedFactor m_maxspeedFactor;
   };
 
   /// Factors which reduce weight and ETA speed on feature in case of bad pavement.
@@ -72,7 +107,7 @@ public:
   /// @return Allowed weight and ETA speed in KMpH.
   /// 0 means that it's forbidden to move on this feature or it's not a road at all.
   /// @param inCity is true if |f| lies in a city of town.
-  virtual SpeedKMpH GetSpeed(FeatureType & f, bool inCity) const = 0;
+  virtual SpeedKMpH GetSpeed(FeatureType & f, SpeedParams const & speedParams) const = 0;
 
   virtual double GetMaxWeightSpeed() const = 0;
 
@@ -142,12 +177,12 @@ public:
     AdditionalRoadTags() = default;
 
     AdditionalRoadTags(std::initializer_list<char const *> const & hwtag,
-                       InOutCitySpeedKMpH const & speed) noexcept
-      : m_hwtag(hwtag), m_speed(speed)
+                       InOutCitySpeedKMpH const & speed)
+      : m_hwtag(hwtag.begin(), hwtag.end()), m_speed(speed)
     {
     }
 
-    std::initializer_list<char const *> m_hwtag;
+    std::vector<std::string> m_hwtag;
     InOutCitySpeedKMpH m_speed;
   };
 
@@ -158,7 +193,7 @@ public:
                SurfaceInitList const & featureTypeSurface);
 
   /// VehicleModelInterface overrides:
-  SpeedKMpH GetSpeed(FeatureType & f, bool inCity) const override;
+  SpeedKMpH GetSpeed(FeatureType & f, SpeedParams const & speedParams) const override;
   double GetMaxWeightSpeed() const override;
   bool IsOneWay(FeatureType & f) const override;
   bool IsRoad(FeatureType & f) const override;
@@ -202,9 +237,13 @@ protected:
 
   bool HasPassThroughType(feature::TypesHolder const & types) const;
 
-  SpeedKMpH GetMinTypeSpeed(feature::TypesHolder const & types, bool inCity) const;
+  SpeedKMpH GetTypeSpeed(feature::TypesHolder const & types, SpeedParams const & speedParams) const;
 
-  InOutCitySpeedKMpH m_maxSpeed;
+  SpeedKMpH GetSpeedWihtoutMaxspeed(FeatureType & f, SpeedParams const & speedParams) const;
+
+  /// \brief maximum within all the speed limits set in a model (car model, bicycle modle and so on).
+  /// It shouldn't be mixed with maxspeed value tag which defines maximum legal speed on a feature.
+  InOutCitySpeedKMpH m_modelMaxSpeed;
 
 private:
   struct AdditionalRoadType final
@@ -223,6 +262,7 @@ private:
     RoadLimits(InOutCitySpeedKMpH const & speed, bool isPassThroughAllowed);
 
     SpeedKMpH const & GetSpeed(bool inCity) const { return inCity ? m_speed.m_inCity : m_speed.m_outCity; };
+    MaxspeedFactor const & GetMaxspeedFactor() const { return m_speed.m_maxspeedFactor; }
     bool IsPassThroughAllowed() const { return m_isPassThroughAllowed; };
     bool operator==(RoadLimits const & rhs) const
     {

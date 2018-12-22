@@ -5,17 +5,22 @@
 #include "routing/fake_feature_ids.hpp"
 #include "routing/routing_exceptions.hpp"
 #include "routing/segment.hpp"
-#include "routing/transition_points.hpp"
 #include "routing/vehicle_mask.hpp"
 
 #include "routing_common/num_mwm_id.hpp"
 #include "routing_common/vehicle_model.hpp"
 
+#include "geometry/point2d.hpp"
+
 #include "coding/file_container.hpp"
+#include "coding/point_coding.hpp"
 #include "coding/reader.hpp"
 
 #include "indexer/data_source.hpp"
 
+#include "base/logging.hpp"
+
+#include <cstdint>
 #include <map>
 #include <memory>
 #include <vector>
@@ -110,7 +115,15 @@ public:
         continue;
 
       CHECK_NOT_EQUAL(twinSeg->GetMwmId(), s.GetMwmId(), ());
-      twins.push_back(*twinSeg);
+
+      // Checks twins for equality.
+      // There are same in common, but in case of different version of mwms
+      // their's geometry can differ from each other. Because of this we can not
+      // build the route, because we fail in astar_algorithm.hpp CHECK(invariant) sometimes.
+      if (s.IsRealSegment() || SegmentsAreEqualByGeometry(s, *twinSeg))
+        twins.push_back(*twinSeg);
+      else
+        LOG(LINFO, ("Bad cross mwm feature, differ in geometry. Current:", s, ", twin:", *twinSeg));
     }
   }
 
@@ -121,14 +134,6 @@ public:
   }
 
   void Clear() { m_connectors.clear(); }
-
-  TransitionPoints GetTransitionPoints(Segment const & s, bool isOutgoing)
-  {
-    auto const & connector = GetCrossMwmConnectorWithTransitions(s.GetMwmId());
-    // In case of transition segments of index graph cross-mwm section the front point of segment
-    // is used as a point which corresponds to the segment.
-    return TransitionPoints({connector.GetPoint(s, true /* front */)});
-  }
 
   bool InCache(NumMwmId numMwmId) const { return m_connectors.count(numMwmId) != 0; }
 
@@ -155,6 +160,49 @@ public:
   }
 
 private:
+  std::vector<m2::PointD> GetFeaturePointsBySegment(Segment const & segment)
+  {
+    std::vector<m2::PointD> geometry;
+
+    auto const & handle = m_dataSource.GetMwmHandleByCountryFile(m_numMwmIds->GetFile(segment.GetMwmId()));
+    if (!handle.IsAlive())
+      return geometry;
+
+    auto const & mwmId = handle.GetId();
+
+    auto const & featureId = FeatureID(mwmId, segment.GetFeatureId());
+
+    auto const fillGeometry = [&geometry](FeatureType & ftype)
+    {
+      ftype.ParseGeometry(FeatureType::BEST_GEOMETRY);
+      geometry.reserve(ftype.GetPointsCount());
+      for (uint32_t i = 0; i < ftype.GetPointsCount(); ++i)
+        geometry.emplace_back(ftype.GetPoint(i));
+    };
+
+    m_dataSource.ReadFeature(fillGeometry, featureId);
+
+    return geometry;
+  }
+
+  /// \brief Checks segment for equality point by point.
+   bool SegmentsAreEqualByGeometry(Segment const & one, Segment const & two)
+  {
+    std::vector<m2::PointD> geometryOne = GetFeaturePointsBySegment(one);
+    std::vector<m2::PointD> geometryTwo = GetFeaturePointsBySegment(two);
+
+    if (geometryOne.size() != geometryTwo.size())
+      return false;
+
+    for (uint32_t i = 0; i < geometryOne.size(); ++i)
+    {
+      if (!base::AlmostEqualAbs(geometryOne[i], geometryTwo[i], kMwmPointAccuracy))
+        return false;
+    }
+
+    return true;
+  }
+
   CrossMwmConnector<CrossMwmId> const & GetCrossMwmConnectorWithWeights(NumMwmId numMwmId)
   {
     auto const & c = GetCrossMwmConnectorWithTransitions(numMwmId);

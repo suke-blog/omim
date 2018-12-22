@@ -20,6 +20,8 @@ set(
   gps_track_test.cpp
   kmz_unarchive_test.cpp
   mwm_url_tests.cpp
+  notification_tests.cpp
+  power_manager_tests.cpp
   search_api_tests.cpp
   tips_tests.cpp
   transliteration_test.cpp
@@ -30,6 +32,7 @@ omim_add_test(${PROJECT_NAME} ${SRC})
 
 omim_link_libraries(
   ${PROJECT_NAME}
+  platform_tests_support
   metrics_tests_support
   search_tests_support
   editor_tests_support
@@ -49,6 +52,7 @@ omim_link_libraries(
   metrics
   mwm_diff
   bsdiff
+  descriptions
   ugc
   partners_api
   local_ads

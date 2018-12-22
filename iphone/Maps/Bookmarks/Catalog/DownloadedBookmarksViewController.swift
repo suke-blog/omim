@@ -27,7 +27,7 @@ class DownloadedBookmarksViewController: MWMViewController {
     super.viewDidLoad()
     tableView.backgroundColor = UIColor.pressBackground()
     tableView.separatorColor = UIColor.blackDividers()
-    tableView.tableFooterView = bottomView
+    tableView.tableHeaderView = bottomView
     tableView.registerNib(cell: CatalogCategoryCell.self)
     tableView.registerNibForHeaderFooterView(BMCCategoriesHeader.self)
     if #available(iOS 11, *) { return } // workaround for https://jira.mail.ru/browse/MAPSME-8101
@@ -74,17 +74,6 @@ class DownloadedBookmarksViewController: MWMViewController {
     if let categoriesHeader = tableView.headerView(forSection: 0) as? BMCCategoriesHeader {
       categoriesHeader.isShowAll = dataSource.allCategoriesHidden
     }
-  }
-
-  private func shareCategory(at index: Int) {
-    let category = dataSource.category(at: index)
-    guard let url = MWMBookmarksManager.sharingUrl(forCategoryId: category.categoryId) else {
-      assertionFailure()
-      return
-    }
-    let message = L("share_bookmarks_email_body")
-    let shareController = MWMActivityViewController.share(for: url, message: message)
-    shareController?.present(inParentViewController: self, anchorView: nil)
   }
 
   private func deleteCategory(at index: Int) {
@@ -159,12 +148,6 @@ extension DownloadedBookmarksViewController: CatalogCategoryCellDelegate {
         self.setCategoryVisible(!category.visible, at: indexPath.row)
         self.tableView.reloadRows(at: [indexPath], with: .none)
       }))
-
-      // TODO: uncomment once the correct deeplink generation is implemented
-//      let share = L("share").capitalized
-//      actionSheet.addAction(UIAlertAction(title: share, style: .default, handler: { _ in
-//        self.shareCategory(at: indexPath.row)
-//      }))
 
       let delete = L("delete").capitalized
       let deleteAction = UIAlertAction(title: delete, style: .destructive, handler: { _ in

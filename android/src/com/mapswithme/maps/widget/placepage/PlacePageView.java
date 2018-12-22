@@ -3,6 +3,7 @@ package com.mapswithme.maps.widget.placepage;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -18,6 +19,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -46,6 +48,8 @@ import com.mapswithme.maps.ads.CompoundNativeAdLoader;
 import com.mapswithme.maps.ads.DefaultAdTracker;
 import com.mapswithme.maps.ads.LocalAdInfo;
 import com.mapswithme.maps.api.ParsedMwmRequest;
+import com.mapswithme.maps.bookmarks.PlaceDescriptionActivity;
+import com.mapswithme.maps.bookmarks.PlaceDescriptionFragment;
 import com.mapswithme.maps.bookmarks.data.Bookmark;
 import com.mapswithme.maps.bookmarks.data.BookmarkManager;
 import com.mapswithme.maps.bookmarks.data.DistanceAndAzimut;
@@ -108,6 +112,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import static com.mapswithme.maps.widget.placepage.PlacePageButtons.Item.BOOKING;
 import static com.mapswithme.util.statistics.Destination.EXTERNAL;
@@ -213,6 +218,18 @@ public class PlacePageView extends RelativeLayout
   private ImageView mIvSponsoredLogo;
   @Nullable
   private View mBookmarkButtonFrame;
+
+  @SuppressWarnings("NullableProblems")
+  @NonNull
+  private View mPlaceDescriptionContainer;
+
+  @SuppressWarnings("NullableProblems")
+  @NonNull
+  private TextView mPlaceDescriptionView;
+
+  @SuppressWarnings("NullableProblems")
+  @NonNull
+  private View mPlaceDescriptionMoreBtn;
 
   @SuppressWarnings("NullableProblems")
   @NonNull
@@ -683,6 +700,25 @@ public class PlacePageView extends RelativeLayout
     Sponsored.setPriceListener(this);
     Sponsored.setInfoListener(this);
     Viator.setViatorListener(this);
+    initPlaceDescriptionView();
+  }
+
+  private void initPlaceDescriptionView()
+  {
+    mPlaceDescriptionContainer = findViewById(R.id.poi_description_container);
+    mPlaceDescriptionView = findViewById(R.id.poi_description);
+    mPlaceDescriptionMoreBtn = findViewById(R.id.more_btn);
+    mPlaceDescriptionMoreBtn.setOnClickListener(v -> showDescriptionScreen());
+  }
+
+  private void showDescriptionScreen()
+  {
+    Statistics.INSTANCE.trackEvent(Statistics.EventName.PLACEPAGE_DESCRIPTION_MORE);
+    Context context = mPlaceDescriptionContainer.getContext();
+    String description = Objects.requireNonNull(mMapObject).getDescription();
+    Intent intent = new Intent(context, PlaceDescriptionActivity.class)
+        .putExtra(PlaceDescriptionFragment.EXTRA_DESCRIPTION, description);
+    context.startActivity(intent);
   }
 
   private void initEditMapObjectBtn()
@@ -945,11 +981,6 @@ public class PlacePageView extends RelativeLayout
   private void updateGallerySponsoredTitle(@Sponsored.SponsoredType int type)
   {
     mTvSponsoredTitle.setText(R.string.place_page_viator_title);
-  }
-
-  private void hideSponsoredGalleryViews()
-  {
-    UiUtils.hide(mSponsoredGalleryView);
   }
 
   private void clearSponsoredGalleryViews()
@@ -1336,7 +1367,6 @@ public class PlacePageView extends RelativeLayout
     refreshDetails(mapObject);
 
     final Location loc = LocationHelper.INSTANCE.getSavedLocation();
-
     switch (mapObject.getMapObjectType())
     {
       case MapObject.BOOKMARK:
@@ -1350,6 +1380,7 @@ public class PlacePageView extends RelativeLayout
         refreshDistanceToObject(mapObject, loc);
         hideBookmarkDetails();
         setButtons(mapObject, false, true);
+        setPlaceDescription(mapObject);
         break;
       case MapObject.API_POINT:
         refreshDistanceToObject(mapObject, loc);
@@ -1372,6 +1403,13 @@ public class PlacePageView extends RelativeLayout
         mPreview.requestLayout();
       }
     });
+  }
+
+  private void setPlaceDescription(@NonNull MapObject mapObject)
+  {
+    boolean isDescriptionAbsent = TextUtils.isEmpty(mapObject.getDescription());
+    UiUtils.hideIf(isDescriptionAbsent, mPlaceDescriptionContainer);
+    mPlaceDescriptionView.setText(Html.fromHtml(mapObject.getDescription()));
   }
 
   private void colorizeSubtitle()
@@ -1420,10 +1458,10 @@ public class PlacePageView extends RelativeLayout
     UiUtils.showIf(sponsored, mPreviewRatingInfo, mHotelDiscount);
     UiUtils.showIf(mapObject.getHotelType() != null, mPreview, R.id.search_hotels_btn);
     if (sponsored)
-      initSponsoredViews(priceInfo);
+      refreshSponsoredViews(priceInfo);
   }
 
-  private void initSponsoredViews(@Nullable HotelPriceInfo priceInfo)
+  private void refreshSponsoredViews(@Nullable HotelPriceInfo priceInfo)
   {
     boolean isPriceEmpty = TextUtils.isEmpty(mSponsoredPrice);
     @SuppressWarnings("ConstantConditions")
@@ -1432,7 +1470,7 @@ public class PlacePageView extends RelativeLayout
     mRatingView.setRating(impress, mSponsored.getRating());
     UiUtils.showIf(!isRatingEmpty, mRatingView);
     mTvSponsoredPrice.setText(mSponsoredPrice);
-    UiUtils.showIf(!isPriceEmpty, mTvSponsoredPrice);
+    UiUtils.showIf(!isPriceEmpty && ConnectionState.isConnected(), mTvSponsoredPrice);
     boolean isBookingInfoExist = (!isRatingEmpty || !isPriceEmpty) &&
                                  mSponsored.getType() == Sponsored.TYPE_BOOKING;
     UiUtils.showIf(isBookingInfoExist, mPreviewRatingInfo);
@@ -1466,24 +1504,7 @@ public class PlacePageView extends RelativeLayout
   {
     refreshLatLon(mapObject);
 
-    mGalleryAdapter.setItems(new ArrayList<Image>());
-    if (mSponsored == null)
-    {
-      hideHotelViews();
-      hideSponsoredGalleryViews();
-    }
-    else
-    {
-      if (mSponsored.getType() == Sponsored.TYPE_BOOKING)
-      {
-        UiUtils.hide(mWebsite);
-        UiUtils.show(mHotelMore);
-      }
-      if (mSponsored.getType() != Sponsored.TYPE_BOOKING)
-        hideHotelViews();
-      if (mSponsored.getType() != Sponsored.TYPE_VIATOR)
-        hideSponsoredGalleryViews();
-    }
+    refreshHotelDetailViews();
 
     if (mSponsored == null || mSponsored.getType() != Sponsored.TYPE_BOOKING)
     {
@@ -1519,6 +1540,38 @@ public class PlacePageView extends RelativeLayout
                      || UiUtils.isVisible(mAddPlace), mEditTopSpace);
       refreshLocalAdInfo(mapObject);
     }
+    setPlaceDescription(mapObject);
+  }
+
+  private void refreshHotelDetailViews()
+  {
+    mGalleryAdapter.setItems(new ArrayList<>());
+
+    if (mSponsored == null)
+    {
+      hideHotelDetailViews();
+      UiUtils.hide(mSponsoredGalleryView);
+      return;
+    }
+
+    boolean isConnected = ConnectionState.isConnected();
+    UiUtils.showIf(isConnected, mSponsoredGalleryView);
+    if (isConnected)
+      showHotelDetailViews();
+    else
+      hideHotelDetailViews();
+
+    if (mSponsored.getType() == Sponsored.TYPE_BOOKING)
+    {
+      UiUtils.hide(mWebsite);
+      UiUtils.show(mHotelMore);
+    }
+
+    if (mSponsored.getType() != Sponsored.TYPE_BOOKING)
+      hideHotelDetailViews();
+
+    if (mSponsored.getType() != Sponsored.TYPE_VIATOR)
+      UiUtils.hide(mSponsoredGalleryView);
   }
 
   private void showTaxiOffer(@NonNull MapObject mapObject)
@@ -1542,9 +1595,15 @@ public class PlacePageView extends RelativeLayout
     Statistics.INSTANCE.trackTaxiEvent(Statistics.EventName.ROUTING_TAXI_SHOW_IN_PP, type.getProviderName());
   }
 
-  private void hideHotelViews()
+  private void hideHotelDetailViews()
   {
     UiUtils.hide(mHotelDescription, mHotelFacilities, mHotelGallery, mHotelNearby,
+                 mHotelReview, mHotelMore);
+  }
+
+  private void showHotelDetailViews()
+  {
+    UiUtils.show(mHotelDescription, mHotelFacilities, mHotelGallery, mHotelNearby,
                  mHotelReview, mHotelMore);
   }
 

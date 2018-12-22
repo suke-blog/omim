@@ -161,12 +161,10 @@
 
 + (MWMAlert *)createBookmarkCategoryAlertWithMaxCharacterNum:(NSUInteger)max
                                              minCharacterNum:(NSUInteger)min
-                                                       isNewCategory:(BOOL)isNewCategory
                                                     callback:(MWMCheckStringBlock)callback
 {
   return [MWMBCCreateCategoryAlert alertWithMaxCharachersNum:max
                                             minCharactersNum:min
-                                               isNewCategory:isNewCategory
                                                     callback:callback];
 }
 
@@ -192,6 +190,11 @@
   return [MWMDefaultAlert restoreBookmarkAlertWithMessage:message
                                         rightButtonAction:rightButton
                                          leftButtonAction:leftButton];
+}
+
++ (MWMAlert *)tagsLoadingErrorAlertWithOkBlock:okBlock cancelBlock:cancelBlock
+{
+  return [MWMDefaultAlert tagsLoadingErrorAlertWithOkBlock:okBlock cancelBlock:cancelBlock];
 }
 
 + (MWMAlert *)defaultAlertWithTitle:(NSString *)title

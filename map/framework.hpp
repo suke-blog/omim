@@ -10,7 +10,9 @@
 #include "map/feature_vec_model.hpp"
 #include "map/local_ads_manager.hpp"
 #include "map/mwm_url.hpp"
+#include "map/notifications/notification_manager.hpp"
 #include "map/place_page_info.hpp"
+#include "map/power_manager/power_manager.hpp"
 #include "map/purchase.hpp"
 #include "map/routing_manager.hpp"
 #include "map/routing_mark.hpp"
@@ -118,6 +120,11 @@ namespace ads
 class Engine;
 }
 
+namespace descriptions
+{
+class Loader;
+}
+
 /// Uncomment line to make fixed position settings and
 /// build version for screenshots.
 //#define FIXED_LOCATION
@@ -136,7 +143,9 @@ struct FrameworkParams
 
 class Framework : public SearchAPI::Delegate,
                   public RoutingManager::Delegate,
-                  public TipsApi::Delegate
+                  public TipsApi::Delegate,
+                  public notifications::NotificationManager::Delegate,
+                  private PowerManager::Subscriber
 {
   DISALLOW_COPY(Framework);
 
@@ -257,7 +266,8 @@ public:
   viator::Api * GetViatorApi(platform::NetworkPolicy const & policy);
   taxi::Engine * GetTaxiEngine(platform::NetworkPolicy const & policy);
   locals::Api * GetLocalsApi(platform::NetworkPolicy const & policy);
-  ugc::Api * GetUGCApi() { return m_ugcApi.get(); }
+  // NotificationManager::Delegate override.
+  ugc::Api * GetUGCApi() override { return m_ugcApi.get(); }
   ugc::Api const * GetUGCApi() const { return m_ugcApi.get(); }
 
   df::DrapeApi & GetDrapeApi() { return m_drapeApi; }
@@ -539,6 +549,8 @@ private:
 
   CachingPopularityLoader m_popularityLoader;
 
+  unique_ptr<descriptions::Loader> m_descriptionsLoader;
+
 public:
   using TSearchRequest = search::QuerySaver::TSearchRequest;
 
@@ -668,6 +680,7 @@ private:
   /// @returns true if command was handled by drape.
   bool ParseDrapeDebugCommand(string const & query);
 
+  /// This function can be used for enabling some experimental features for routing.
   bool ParseRoutingDebugCommand(search::SearchParams const & params);
 
   void FillFeatureInfo(FeatureID const & fid, place_page::Info & info) const;
@@ -871,6 +884,8 @@ private:
 
   void FillLocalExperts(FeatureType & ft, place_page::Info & info) const;
 
+  void FillDescription(FeatureType & ft, place_page::Info & info) const;
+
 public:
   // UGC.
   void UploadUGC(User::CompleteUploadingHandler const & onCompleteUploading);
@@ -897,6 +912,8 @@ public:
 private:
   std::unique_ptr<Purchase> m_purchase;
   TipsApi m_tipsApi;
+  notifications::NotificationManager m_notificationManager;
+  PowerManager m_powerManager;
 
 public:
   TipsApi const & GetTipsApi() const;
@@ -904,4 +921,11 @@ public:
   // TipsApi::Delegate override.
   bool HaveTransit(m2::PointD const & pt) const override;
   double GetLastBackgroundTime() const override;
+
+  bool MakePlacePageInfo(eye::MapObject const & mapObject, place_page::Info & info) const;
+
+  PowerManager & GetPowerManager() { return m_powerManager; }
+
+  // PowerManager::Subscriber override.
+  void OnPowerFacilityChanged(PowerManager::Facility const facility, bool enabled) override;
 };

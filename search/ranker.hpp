@@ -49,13 +49,14 @@ public:
   {
     int8_t m_currentLocaleCode = CategoriesHolder::kEnglishCode;
     m2::RectD m_viewport;
-    m2::PointD m_position;
+    m2::PointD m_pivot;
     string m_pivotRegion;
     std::vector<uint32_t> m_preferredTypes;
     bool m_suggestsEnabled = false;
     bool m_needAddress = false;
     bool m_needHighlighting = false;
     bool m_viewportSearch = false;
+    bool m_categorialRequest = false;
 
     std::string m_query;
     QueryTokens m_tokens;

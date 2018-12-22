@@ -14,12 +14,13 @@ string ToString(Type type)
   case Type::Region: return "region";
   case Type::Subregion: return "subregion";
   case Type::Locality: return "locality";
-  case Type::Sublocality: return "sublocality";
   case Type::Suburb: return "suburb";
+  case Type::Sublocality: return "sublocality";
+  case Type::Street: return "street";
   case Type::Building: return "building";
   case Type::Count: return "count";
   }
-  CHECK_SWITCH();
+  UNREACHABLE();
 }
 
 string DebugPrint(Type type)

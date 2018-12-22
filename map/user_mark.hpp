@@ -27,7 +27,8 @@ public:
     TransitStop,
     TransitGate,
     TransitTransfer,
-    TransitKeyStop
+    TransitKeyStop,
+    SpeedCamera,
   };
 
   enum Type: uint32_t
@@ -37,6 +38,7 @@ public:
     SEARCH,
     STATIC,
     ROUTING,
+    SPEED_CAM,
     TRANSIT,
     LOCAL_ADS,
     DEBUG_MARK,
@@ -57,25 +59,27 @@ public:
   void ResetChanges() const override { m_isDirty = false; }
   bool IsVisible() const override { return true; }
   m2::PointD const & GetPivot() const override;
-  m2::PointD GetPixelOffset() const override;
-  dp::Anchor GetAnchor() const override;
+  m2::PointD GetPixelOffset() const override { return {}; }
+  dp::Anchor GetAnchor() const override { return dp::Center; }
   bool GetDepthTestEnabled() const override { return true; }
   float GetDepth() const override { return 0.0f; }
-  df::DepthLayer GetDepthLayer() const override;
+  df::DepthLayer GetDepthLayer() const override { return df::DepthLayer::UserMarkLayer; }
   drape_ptr<TitlesInfo> GetTitleDecl() const override { return nullptr; }
   drape_ptr<ColoredSymbolZoomInfo> GetColoredSymbols() const override { return nullptr; }
   drape_ptr<SymbolNameZoomInfo> GetBadgeNames() const override { return nullptr; }
   drape_ptr<SymbolSizes> GetSymbolSizes() const override { return nullptr; }
   drape_ptr<SymbolOffsets> GetSymbolOffsets() const override { return nullptr; }
   uint16_t GetPriority() const override { return static_cast<uint16_t >(Priority::Default); }
+  df::SpecialDisplacement GetDisplacement() const override { return df::SpecialDisplacement::UserMark; }
   uint32_t GetIndex() const override { return 0; }
-  bool HasSymbolPriority() const override { return false; }
+  bool HasSymbolShapes() const override { return false; }
   bool HasTitlePriority() const override { return false; }
   int GetMinZoom() const override { return 1; }
   int GetMinTitleZoom() const override { return GetMinZoom(); }
   FeatureID GetFeatureID() const override { return FeatureID(); }
   bool HasCreationAnimation() const override { return false; }
   df::ColorConstant GetColorConstant() const override { return {}; }
+  bool IsMarkAboveText() const override { return false; }
 
   ms::LatLon GetLatLon() const;
 
@@ -124,6 +128,20 @@ public:
   DebugMarkPoint(m2::PointD const & ptOrg);
 
   drape_ptr<SymbolNameZoomInfo> GetSymbolNames() const override;
+};
+
+class ColoredDebugMarkPoint : public UserMark
+{
+public:
+  ColoredDebugMarkPoint(m2::PointD const & ptOrg);
+
+  void SetColor(dp::Color const & color);
+  bool HasSymbolShapes() const override { return true; }
+  drape_ptr<SymbolNameZoomInfo> GetSymbolNames() const override { return nullptr; }
+  drape_ptr<ColoredSymbolZoomInfo> GetColoredSymbols() const override;
+
+private:
+  ColoredSymbolZoomInfo m_coloredSymbols;
 };
 
 string DebugPrint(UserMark::Type type);

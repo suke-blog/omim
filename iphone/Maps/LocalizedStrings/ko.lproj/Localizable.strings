@@ -298,49 +298,58 @@
 /* Do search in current viewport only */
 "search_mode_viewport" = "화면에";
 
-/* Search Suggestion */
-"food" = "음식";
+/* Search category for cafes, bars, restaurants */
+"eat" = "어디서먹을까";
 
-/* Search Suggestion */
+/* Search category for grocery stores */
+"food" = "식료품들";
+
+/* Search category */
 "transport" = "수송";
 
-/* Search Suggestion */
+/* Search category */
 "fuel" = "연료";
 
-/* Search Suggestion */
+/* Search category */
 "parking" = "주차";
 
-/* Search Suggestion */
-"shop" = "쇼핑";
+/* Search category for clothes/shoes/gifts/jewellery/sport shops */
+"shopping" = "쇼핑";
 
-/* Search Suggestion */
+/* Search category */
 "hotel" = "호텔";
 
-/* Search Suggestion */
+/* Search category */
 "tourism" = "관광";
 
-/* Search Suggestion */
+/* Search category */
 "entertainment" = "엔터테인먼트";
 
-/* Search Suggestion */
+/* Search category */
 "atm" = "ATM";
 
-/* Search Suggestion */
+/* Search category for nightclubs/bars */
+"nightlife" = "유흥";
+
+/* Search category for water park/disneyland/playground/toys store */
+"children" = "가족 기념일";
+
+/* Search category */
 "bank" = "은행";
 
-/* Search Suggestion */
+/* Search category */
 "pharmacy" = "약국";
 
-/* Search Suggestion */
+/* Search category */
 "hospital" = "병원";
 
-/* Search Suggestion */
+/* Search category */
 "toilet" = "화장실";
 
-/* Search Suggestion */
+/* Search category */
 "post" = "우편";
 
-/* Search Suggestion */
+/* Search category */
 "police" = "치안대";
 
 /* String in search result list, when nothing found */
@@ -658,7 +667,7 @@
 /* Settings item title */
 "pref_calibration_title" = "나침반 보정";
 
-/* Search Suggestion */
+/* Search category */
 "wifi" = "WiFi 인터넷";
 
 /* Update map suggestion */
@@ -2486,6 +2495,170 @@
 
 "taxi" = "Taxi";
 
+"sharing_options" = "옵션 공유";
+
+"export_file" = "파일 내보내기";
+
+"list_settings" = "목록 세팅";
+
+"delete_list" = "리스트 삭제";
+
+"hide_from_map" = "지도에서 숨기기";
+
+"ugc_route_tags_screen_label" = "태그 선택하기";
+
+"ugc_route_tags_progress_msg" = "태그 불러오는 중…";
+
+"ugc_route_tags_desc" = "당신의 가이드에서 다른 여행객을 돕기 위한 태그를 선택하세요. 필수입니다.";
+
+"public_access" = "일반 접근";
+
+"limited_access" = "제한 접근";
+
+/* FIXME */
+"bookmarks_public_access" = "bookmarks_public_access";
+
+/* FIXME */
+"bookmarks_link_access" = "bookmarks_link_access";
+
+/* FIXME */
+"bookmarks_private_access" = "bookmarks_private_access";
+
+"upload_and_publish_desc" = "이 가이드는 MAPS.ME 카탈로그에 업로드되며 다른 사용자들에게 제공됩니다";
+
+"upload_and_publish" = "업로드와 발간";
+
+"upload_and_get_direct_link" = "업로드와 다이렉트 링크 얻기";
+
+"get_direct_link_desc" = "당신의 가이드가 링크를 가진 모든 이에게 허락됩니다";
+
+"upload_and_publish_progress_text" = "당신의 가이드를 발간하는 중…";
+
+"upload_and_publish_success" = "가이드가 발간되었습니다";
+
+"ugc_routes_user_agreement" = "<b>알고 계세요:</b> 진행하면, 당신은 <a href=\"%s\">라이센스에 동의</a>하는 것입니다.";
+
+"ugc_route_edit_list_name" = "가이드 이름";
+
+"ugc_route_edit_description_hint" = "묘사를 적으세요 (글자 혹은 html)";
+
+"not_shared" = "개인";
+
+"direct_link_progress_text" = "당신의 파일을 업로드 중…";
+
+"direct_link_success" = "링크가 만들어졌습니다";
+
+"edit_guide_title" = "웹에서 당신의 가이드 수정하기";
+
+"edit_guide_subtitle" = "링크를 타고 웹 앱을 통해 당신의 가이드를 수정하세요: 묘사 추가, 사진 올리기와 선으로 즐겨찾기들 연결하기.";
+
+"send_a_link_btn" = "나에게 링크 보내기";
+
+"upload_error_toast" = "당신의 파일을 업로드 중에 에러가 발생했습니다";
+
+"tags_loading_error_subtitle" = "태그를 불러오는 중 에러가 발생했습니다. 다시 시도해보세요";
+
+"unable_upload_errorr_title" = "파일 업로드 실패";
+
+"unable_upload_error_subtitle_edited" = "이 파일은 웹 앱을 통해 수정되었습니다";
+
+"unable_upload_error_subtitle_broken" = "파일이 망가져서 업로드를 할 수 없습니다. 다른 파일을 업로드하세요.";
+
+"buy_btn" = "%s 구매";
+
+"download_guide_progress" = "당신의 가이드를 다운로드 중…";
+
+"price_error_title" = "가격을 알 수 없습니다";
+
+"price_error_subtitle" = "몇 분 뒤 다시 시도해주세요";
+
+"edit_your_guide_email_body" = "컴퓨터로 당신의 가이드를 쉽게 수정하세요: 묘사 추가, 사진 업로드, 선으로 즐겨찾기들 연결하기.";
+
+"edit_on_web" = "웹에서 수정하기";
+
+"properties_loading_error_subtitle" = "옵션을 불러오는 도중 에러가 발생했습니다. 다시 시도해보세요";
+
+"custom_props_desc" = "이 가이드에서 당신은 장소들을 방문 할 수 있습니다";
+
+"custom_props_title" = "현지인 혹은 여행자";
+
+"custom_props_local" = "현지";
+
+"custom_props_traveler" = "여행자";
+
+"select_properties" = "옵션 선택";
+
+"access_rules_p_to_p" = "특수 접근";
+
+"access_rules_paid" = "구매함";
+
+"failed_purchase_support_message" = "죄송합니다. 구매가 완료되지 않았습니다. 도우미와 연락하시면 문제를 해결해드립니다.";
+
+"contact" = "연락";
+
+"check_price_button" = "가격 확인";
+
+"download_button" = "다운로드";
+
+"speedcams_alert_title" = "속도 감시 카메라";
+
+"speedcams_alert_subtitle" = "속도 제한에 대한 경고";
+
+"speedcam_option_auto" = "자동";
+
+"speedcam_option_always" = "항상";
+
+"speedcam_option_never" = "안함";
+
+"bookmark_description_title" = "즐겨찾기 묘사";
+
+"place_description_title" = "장소 묘사";
+
+"ugc_routes_error_uploading_file_toast" = "안타깝게도, 즐겨찾기를 업로드하는 도중 오류가 발생했습니다. 다시 시도해보세요.";
+
+"notification_channel_ugc" = "소셜 컨텐트";
+
+/* this text will be shown in application notification preferences opposite checkbox which enable/disable downloader notifications. Devices on Android 8+ are affected. */
+"notification_channel_downloader" = "맵 다운로더";
+
+"notification_leave_review_title" = "%s - 어떠셨나요?";
+
+"notification_leave_review_content" = "리뷰를 남겨서 여행자들을 도와주세요!";
+
+"share_bookmarks_email_body_link" = "안녕하세요!\n\n여기 즐겨찾기들을 다운로드 받을 수 있는 링크입니다: %s. MAPS.ME 를 통해 리스트를 열고 당신의 여행을 즐기세요!\n\n어플리케이션을 받으세요: http://maps.me/get?kmz";
+
+"warning_speedcams_title" = "네비게이터가 %d km/h의 속도 제한을 초과시 카메라에 대해 경고 할 것입니다";
+
+"warning_speedcams_subtitle" = "여행하시는 나라의 운전 법규를 준수하시길 바랍니다.";
+
+"speedcams_notice_message" = "자동 - 속도 제한 초과 위험이 있을때 스피드캠에 대해 경고하기\n항상 - 스피드캠에 대해 항상 경고하기\n절대 아님 - 스피드캠에 대해 경고하지 않기";
+
+"whats_new_ugc_routes_title" = "당신의 감동을 공유하기 좋습니다";
+
+"whats_new_ugc_routes_subtitle" = "잊지 못할 장소들을 저장하고 즐겨찾기를 사용해 길을 만들어 MAPS.ME의 모두와 나눠보세요.";
+
+"whats_new_webeditor_title" = "당신의 지나온 길들을 이야기로 바꿔보세요";
+
+"whats_new_ugc_routes_message2" = "웹 에디터 안에서 사진들과 자세한 이야기들을 추가해보세요.";
+
+"whatsnew_standard_routes_title" = "표준 루트";
+
+"whatsnew_standard_routes_message" = "흥미로운 곳들의 기본 내용과 간략한 묘사, 하지만 풍부한 경험들!";
+
+"whatsnew_city_overview_title" = "도시 개관";
+
+"whatsnew_city_overview_message" = "도시 지도에 200여개의 흥미로운 지점: 모든 여행자들이 유용함과 재미를 발견 할 수 있습니다!";
+
+"whatsnew_pro_guides_title" = "전문가 루트";
+
+"whatsnew_pro_guides_message" = "장소에 대한 자세한 묘사와 통행 거리, 시간 계산 능력이 매우 철저합니다";
+
+"whatsnew_paid_routes_title" = "더 새로운 경험들!";
+
+"whatsnew_paid_routes_message" = "무료 루트뿐만 아니라, 3개의 유료 루트 카테고리들도 우리의 카탈로그에 추가했습니다 700개 이상의 새로운 루트들!";
+
+"whats_new_ugc_routes_title_android_only" = "당신의 감동을 공유하기 좋습니다";
+
 
 /**********  Partners  **********/
 
@@ -2800,7 +2973,7 @@
 
 "type.boundary.administrative.suburb" = "boundary-administrative-suburb";
 
-"type.boundary.national_park" = "boundary-national_park";
+"type.boundary.national_park" = "국립 공원";
 
 "type.building" = "건물";
 
@@ -3432,7 +3605,7 @@
 
 "type.leisure.marina" = "leisure-marina";
 
-"type.leisure.nature_reserve" = "leisure-nature_reserve";
+"type.leisure.nature_reserve" = "천연보호구역";
 
 "type.leisure.park" = "공원";
 
@@ -3540,7 +3713,7 @@
 
 "type.natural.beach" = "바닷가";
 
-"type.natural.cape" = "natural-cape";
+"type.natural.cape" = "곶";
 
 "type.natural.cave_entrance" = "동굴입구";
 
@@ -3548,9 +3721,9 @@
 
 "type.natural.coastline" = "natural-coastline";
 
-"type.natural.geyser" = "Geyser";
+"type.natural.geyser" = "온천";
 
-"type.natural.glacier" = "natural-glacier";
+"type.natural.glacier" = "빙하";
 
 "type.natural.grassland" = "natural-grassland";
 
@@ -4148,13 +4321,13 @@
 
 "type.sponsored.partner17" = "sponsored-partner17";
 
-"type.sponsored.partner18" = "sponsored-partner18";
+"type.sponsored.partner18" = "MegaFon";
 
-"type.sponsored.partner19" = "sponsored-partner19";
+"type.sponsored.partner19" = "MegaFon";
 
 "type.sponsored.partner2" = "sponsored-partner2";
 
-"type.sponsored.partner20" = "sponsored-partner20";
+"type.sponsored.partner20" = "MegaFon";
 
 "type.sponsored.partner3" = "sponsored-partner3";
 
@@ -4333,3 +4506,312 @@
 "type.wheelchair.no" = "wheelchair-no";
 
 "type.wheelchair.yes" = "wheelchair-yes";
+
+
+/********** Brands **********/
+
+"brand.aiya" = "Aiya";
+
+"brand.anrakutei" = "Anrakutei";
+
+"brand.applebee_s" = "Applebee's";
+
+"brand.aroma" = "Aroma";
+
+"brand.bamiyan" = "Bamiyan";
+
+"brand.banana_leaf" = "Banana Leaf";
+
+"brand.baskin_robbins" = "Baskin-Robbins";
+
+"brand.big_boy" = "Big Boy";
+
+"brand.bikkuridonkey" = "Bikkuri-Donkey";
+
+"brand.blue_bottle_coffee" = "블루버틀 커피";
+
+"brand.burger_king" = "버거킹";
+
+"brand.cafe_amazon" = "Café Amazon";
+
+"brand.cafe_coffee_day" = "Cafe Coffee Day";
+
+"brand.cafe_de_crie" = "Cafe de Crie";
+
+"brand.capricchosa" = "Capricchosa";
+
+"brand.carl_s_jr" = "Carl's Jr.";
+
+"brand.celentano" = "Celentano";
+
+"brand.chibo" = "Chibo";
+
+"brand.chick_fil_a" = "Chick-fil-A";
+
+"brand.chilis" = "Chili's";
+
+"brand.chipotle" = "Chipotle";
+
+"brand.chowking" = "Chowking";
+
+"brand.cinnabon" = "Cinnabon";
+
+"brand.coco" = "CoCo";
+
+"brand.coco_ichibanya" = "Coco Ichibanya";
+
+"brand.cocos" = "COCO'S";
+
+"brand.coffee_house" = "Coffee House";
+
+"brand.coffee_world" = "Coffee World";
+
+"brand.coffeeport" = "Coffeeport";
+
+"brand.coffeeshop_company" = "Coffeeshop Company";
+
+"brand.cofix" = "Cofix";
+
+"brand.comic_buster" = "Comic Buster";
+
+"brand.costa_coffee" = "Costa Coffee";
+
+"brand.dairy_queen" = "Dairy Queen";
+
+"brand.dennys" = "Denny's";
+
+"brand.doi_chaang" = "Doi Chaang";
+
+"brand.dominos_pizza" = "도미노피자";
+
+"brand.double_b" = "Double B";
+
+"brand.doutor" = "Doutor";
+
+"brand.dunkin_donuts" = "Dunkin Donuts";
+
+"brand.espresso_house" = "Espresso House";
+
+"brand.excelsior_caffe" = "Excelsior Caffe";
+
+"brand.first_kitchen" = "First Kitchen";
+
+"brand.freshness_burger" = "Freshness Burger";
+
+"brand.fujisoba" = "Fujisoba";
+
+"brand.glowsubs" = "GlowSubs";
+
+"brand.grazie_gardens" = "Grazie Gardens";
+
+"brand.gusto" = "Gusto";
+
+"brand.gyukaku" = "Gyu-Kaku";
+
+"brand.haagen_dazs" = "Häagen-Dazs";
+
+"brand.hamazushi" = "Hamazushi";
+
+"brand.hanamaru" = "Hanamaru";
+
+"brand.hanaya_yohei" = "Hanaya Yohei";
+
+"brand.handaya" = "Handaya";
+
+"brand.hard_rock_cafe" = "Hard Rock Cafe";
+
+"brand.havanna" = "Havanna";
+
+"brand.hesburger" = "Hesburger";
+
+"brand.hokkahokka_tei" = "Hokka-Hokka Tei";
+
+"brand.honkekamadoya" = "Honkekamadoya";
+
+"brand.hottomotto" = "HottoMotto";
+
+"brand.ihop" = "IHOP";
+
+"brand.ikinari_steak" = "Ikinari Steak";
+
+"brand.il_patio" = "IL Patio";
+
+"brand.jack_in_the_box" = "Jack in the Box";
+
+"brand.jiyu_kukan" = "Jiyu Kukan";
+
+"brand.jollibee" = "Jollibee";
+
+"brand.jolly_pasta" = "Jolly Pasta";
+
+"brand.jonathans" = "Jonathan's";
+
+"brand.joyfull" = "Joyfull";
+
+"brand.kappazushi" = "Kappazushi";
+
+"brand.katsuya" = "Katsuya";
+
+"brand.kfc" = "KFC";
+
+"brand.kisoji" = "Kisoji";
+
+"brand.kobeya_restaurant" = "Kobeya Restaurant";
+
+"brand.kohikan" = "KO:HI:KAN";
+
+"brand.komeda" = "Komeda";
+
+"brand.komoro_soba" = "Komoro Soba";
+
+"brand.kourakuen" = "Kourakuen";
+
+"brand.kroshka_kartoshka" = "Kroshka Kartoshka";
+
+"brand.kurazushi" = "Kurazushi";
+
+"brand.little_caesars" = "Little Caesars";
+
+"brand.lotteria" = "Lotteria";
+
+"brand.maido_ohkini" = "Maido-Ohkini";
+
+"brand.marrybrown" = "Marrybrown";
+
+"brand.marugame_seimen" = "Marugame Seimen";
+
+"brand.matsunoya" = "Matsunoya";
+
+"brand.matsuya" = "Matsuya";
+
+"brand.mcdonalds" = "디몰 맥도날드";
+
+"brand.mister_donut" = "Mister Donut";
+
+"brand.miyakosoba" = "Miyakosoba";
+
+"brand.miyoshino" = "Miyoshino";
+
+"brand.mk_restaurants" = "MK Restaurants";
+
+"brand.mos_burger" = "MOS BURGER";
+
+"brand.mr_sub" = "Mr. Sub";
+
+"brand.mu_mu" = "Mu-Mu";
+
+"brand.nakau" = "Nakau";
+
+"brand.ohsho" = "Gyoza no Ohsho";
+
+"brand.onebuckscoffee" = "OneBucksCoffee";
+
+"brand.origin_bento" = "Origin Bento";
+
+"brand.osaka_ohsho" = "Osaka Ohsho";
+
+"brand.panda_express" = "Panda Express";
+
+"brand.panera_bread" = "Panera Bread";
+
+"brand.papa_johns" = "Papa John's";
+
+"brand.perkins" = "Perkins";
+
+"brand.pizza_hut" = "Pizza Hut";
+
+"brand.pizza_pizza" = "Pizza Pizza";
+
+"brand.popeyes" = "Popeyes";
+
+"brand.pronto" = "Pronto";
+
+"brand.quiznos" = "Quiznos";
+
+"brand.red_lobster" = "Red Lobster";
+
+"brand.ringer_hut" = "Ringer Hut";
+
+"brand.robin_sdobin" = "Robin Sdobin";
+
+"brand.royal_host" = "Royal Host";
+
+"brand.ruby_tuesday" = "Ruby Tuesday";
+
+"brand.saizeriya" = "Saizeriya";
+
+"brand.sato" = "Sato";
+
+"brand.segafredo" = "Segafredo";
+
+"brand.shake_shack" = "Shake Shack";
+
+"brand.shokoladnitsa" = "Shokoladnitsa";
+
+"brand.sizzler" = "Sizzler";
+
+"brand.skuratov" = "Skuratov";
+
+"brand.spur" = "Spur";
+
+"brand.starbucks" = "스타벅스";
+
+"brand.stardogs" = "Stardog!s";
+
+"brand.steak_n_shake" = "Steak'n Shake";
+
+"brand.stmarc_cafe" = "St. Marc Cafe";
+
+"brand.subway" = "Subway";
+
+"brand.sukiya" = "Sukiya";
+
+"brand.sushi_wok" = "Sushi Wok";
+
+"brand.sushiro" = "Sushiro";
+
+"brand.swensens" = "Swensen's";
+
+"brand.syabu_yo" = "Syabu-yo";
+
+"brand.taco_bell" = "Taco Bell";
+
+"brand.telepizza" = "Telepizza";
+
+"brand.tenkaippin" = "TenkaIppin";
+
+"brand.teremok" = "Teremok";
+
+"brand.tgi_fridays" = "TGI Friday's";
+
+"brand.the_pizza_company" = "The Pizza Company";
+
+"brand.tim_hortons" = "Tim Hortons";
+
+"brand.tonden" = "Tonden";
+
+"brand.tullys_coffee" = "Tully's Coffee";
+
+"brand.ueshima_coffee_ten" = "Ueshima Coffee Ten";
+
+"brand.uobei" = "Uobei";
+
+"brand.vapiano" = "Vapiano";
+
+"brand.victoria_station" = "Victoria Station";
+
+"brand.waffle_house" = "Waffle House";
+
+"brand.wendys" = "Wendy's";
+
+"brand.wokker" = "Wokker";
+
+"brand.yakitoria" = "Yakitoria";
+
+"brand.yomen_ya_goemon" = "Yomenya Goemon";
+
+"brand.yoshinoya" = "Yoshinoya";
+
+"brand.yudetaro" = "Yudetaro";
+
+"brand.yumean" = "Yumean";

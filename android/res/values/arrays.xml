@@ -3,15 +3,15 @@
 
   <!-- What's new -->
   <integer-array name="news_images">
-    <item>@drawable/img_whats_new_leave_review</item>
+    <item>@drawable/img_whatsnew_route</item>
   </integer-array>
 
   <string-array name="news_title_keys">
-    <item>whats_new_ugc_title_updated_v840</item>
+    <item>whats_new_ugc_routes_title_android_only</item>
   </string-array>
 
   <string-array name="news_messages_1">
-    <item>@string/whats_new_leave_review</item>
+    <item>@string/whats_new_ugc_routes_subtitle</item>
   </string-array>
 
   <string-array name="news_messages_2">

@@ -14,16 +14,21 @@ import android.view.View;
 
 import com.cocosw.bottomsheet.BottomSheet;
 import com.mapswithme.maps.R;
+import com.mapswithme.maps.adapter.OnItemClickListener;
 import com.mapswithme.maps.base.BaseMwmRecyclerFragment;
 import com.mapswithme.maps.bookmarks.data.BookmarkCategory;
 import com.mapswithme.maps.bookmarks.data.BookmarkManager;
 import com.mapswithme.maps.bookmarks.data.BookmarkSharingResult;
 import com.mapswithme.maps.dialog.EditTextDialogFragment;
+import com.mapswithme.maps.ugc.routes.UgcRouteEditSettingsActivity;
+import com.mapswithme.maps.ugc.routes.UgcRouteSharingOptionsActivity;
 import com.mapswithme.maps.widget.PlaceholderView;
 import com.mapswithme.maps.widget.recycler.ItemDecoratorFactory;
 import com.mapswithme.util.BottomSheetHelper;
 import com.mapswithme.util.UiUtils;
 import com.mapswithme.util.sharing.SharingHelper;
+import com.mapswithme.util.statistics.Analytics;
+import com.mapswithme.util.statistics.Statistics;
 
 public abstract class BaseBookmarkCategoriesFragment extends BaseMwmRecyclerFragment<BookmarkCategoriesAdapter>
     implements EditTextDialogFragment.EditTextDialogInterface,
@@ -37,6 +42,7 @@ public abstract class BaseBookmarkCategoriesFragment extends BaseMwmRecyclerFrag
 
 {
   private static final int MAX_CATEGORY_NAME_LENGTH = 60;
+
   @NonNull
   private BookmarkCategory mSelectedCategory;
   @Nullable
@@ -143,9 +149,11 @@ public abstract class BaseBookmarkCategoriesFragment extends BaseMwmRecyclerFrag
   {
     MenuItemClickProcessorWrapper processor = MenuItemClickProcessorWrapper
         .getInstance(item.getItemId());
+
     processor
         .mInternalProcessor
         .process(this, mSelectedCategory);
+    Statistics.INSTANCE.trackBookmarkListSettingsClick(processor.getAnalytics());
     return true;
   }
 
@@ -162,13 +170,11 @@ public abstract class BaseBookmarkCategoriesFragment extends BaseMwmRecyclerFrag
                                                     .sheet(getCategoryMenuResId())
                                                     .listener(this);
 
-
     BottomSheet bottomSheet = bs.build();
     prepareBottomMenuItems(bottomSheet);
-    bottomSheet
-        .getMenu().getItem(0)
-        .setIcon(item.isVisible() ? R.drawable.ic_hide : R.drawable.ic_show)
-        .setTitle(item.isVisible() ? R.string.hide : R.string.show);
+    MenuItem menuItem = BottomSheetHelper.findItemById(bottomSheet, R.id.show_on_map);
+    menuItem.setIcon(item.isVisible() ? R.drawable.ic_hide : R.drawable.ic_show)
+            .setTitle(item.isVisible() ? R.string.hide : R.string.show);
     BottomSheetHelper.tint(bottomSheet);
     bottomSheet.show();
   }
@@ -311,6 +317,12 @@ public abstract class BaseBookmarkCategoriesFragment extends BaseMwmRecyclerFrag
     return new BookmarkManager.DefaultBookmarksCatalogListener();
   }
 
+  @NonNull
+  protected BookmarkCategory getSelectedCategory()
+  {
+    return mSelectedCategory;
+  }
+
   interface CategoryEditor
   {
     void commit(@NonNull String newName);
@@ -333,13 +345,24 @@ public abstract class BaseBookmarkCategoriesFragment extends BaseMwmRecyclerFrag
 
   protected enum MenuItemClickProcessorWrapper
   {
-    SET_SHOW(R.id.set_show, showAction()),
-    SET_SHARE(R.id.set_share, shareAction()),
-    SET_DELETE(R.id.set_delete, deleteAction()),
-    SET_EDIT(R.id.set_edit, editAction()),
-    SHOW_ON_MAP(R.id.show_on_map, showAction()),
-    SHARE_LIST(R.id.share_list, shareAction()),
-    DELETE_LIST(R.id.delete_list, deleteAction());
+    SET_SHARE(R.id.share, shareAction(), new Analytics(Statistics.ParamValue.SEND_AS_FILE)),
+    SET_EDIT(R.id.edit, editAction(), new Analytics(Statistics.ParamValue.EDIT)),
+    SHOW_ON_MAP(R.id.show_on_map, showAction(), new Analytics(Statistics.ParamValue.MAKE_INVISIBLE_ON_MAP)),
+    SHARING_OPTIONS(R.id.sharing_options, showSharingOptions(), new Analytics(Statistics.ParamValue.SHARING_OPTIONS)),
+    LIST_SETTINGS(R.id.settings, showListSettings(), new Analytics(Statistics.ParamValue.LIST_SETTINGS)),
+    DELETE_LIST(R.id.delete, deleteAction(), new Analytics(Statistics.ParamValue.DELETE_GROUP));
+
+    @NonNull
+    private static MenuClickProcessorBase showSharingOptions()
+    {
+      return new MenuClickProcessorBase.OpenSharingOptions();
+    }
+
+    @NonNull
+    private static MenuClickProcessorBase showListSettings()
+    {
+      return new MenuClickProcessorBase.OpenListSettings();
+    }
 
     @NonNull
     private static MenuClickProcessorBase.ShowAction showAction()
@@ -369,11 +392,15 @@ public abstract class BaseBookmarkCategoriesFragment extends BaseMwmRecyclerFrag
     private final int mId;
     @NonNull
     private MenuClickProcessorBase mInternalProcessor;
+    @NonNull
+    private final Analytics mAnalytics;
 
-    MenuItemClickProcessorWrapper(@IdRes int id, @NonNull MenuClickProcessorBase processorBase)
+    MenuItemClickProcessorWrapper(@IdRes int id, @NonNull MenuClickProcessorBase processorBase,
+                                  @NonNull Analytics analytics)
     {
       mId = id;
       mInternalProcessor = processorBase;
+      mAnalytics = analytics;
     }
 
     @NonNull
@@ -387,6 +414,12 @@ public abstract class BaseBookmarkCategoriesFragment extends BaseMwmRecyclerFrag
         }
       }
       throw new IllegalArgumentException("Enum value for res id = " + resId + " not found");
+    }
+
+    @NonNull
+    public Analytics getAnalytics()
+    {
+      return mAnalytics;
     }
   }
 
@@ -442,6 +475,26 @@ public abstract class BaseBookmarkCategoriesFragment extends BaseMwmRecyclerFrag
                                     frag.getString(R.string.cancel),
                                     MAX_CATEGORY_NAME_LENGTH,
                                     frag);
+      }
+    }
+
+    protected static class OpenSharingOptions extends MenuClickProcessorBase
+    {
+      @Override
+      public void process(@NonNull BaseBookmarkCategoriesFragment frag,
+                          @NonNull BookmarkCategory category)
+      {
+        UgcRouteSharingOptionsActivity.startForResult(frag.getActivity(), category);
+      }
+    }
+
+    protected static class OpenListSettings extends MenuClickProcessorBase
+    {
+      @Override
+      public void process(@NonNull BaseBookmarkCategoriesFragment frag,
+                          @NonNull BookmarkCategory category)
+      {
+        UgcRouteEditSettingsActivity.startForResult(frag.getActivity(), category);
       }
     }
   }

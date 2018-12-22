@@ -188,35 +188,41 @@
 	<string name="search_mode_nearme">In meiner Nähe</string>
 	<!-- Do search in current viewport only -->
 	<string name="search_mode_viewport">Auf dem Bildschirm</string>
-	<!-- Search Suggestion -->
-	<string name="food">Essen</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for cafes, bars, restaurants -->
+	<string name="eat">Essmöglichkeiten</string>
+	<!-- Search category for grocery stores -->
+	<string name="food">Lebensmittel</string>
+	<!-- Search category -->
 	<string name="transport">Verkehr</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="fuel">Tankstelle</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="parking">Parkplatz</string>
-	<!-- Search Suggestion -->
-	<string name="shop">Geschäft</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for clothes/shoes/gifts/jewellery/sport shops -->
+	<string name="shopping">Shopping</string>
+	<!-- Search category -->
 	<string name="hotel">Hotel</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="tourism">Sehenswürdigkeit</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="entertainment">Unterhaltung</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="atm">Geldautomat</string>
-	<!-- Search Suggestion -->
+	<!-- Search category for nightclubs/bars -->
+	<string name="nightlife">Nachtleben</string>
+	<!-- Search category for water park/disneyland/playground/toys store -->
+	<string name="children">Freizeit mit Kindern</string>
+	<!-- Search category -->
 	<string name="bank">Bank</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="pharmacy">Apotheke</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="hospital">Krankenhaus</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="toilet">Toilette</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="post">Post</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="police">Polizeistation</string>
 	<!-- String in search result list, when nothing found -->
 	<string name="no_search_results_found">Keine Ergebnisse gefunden</string>
@@ -416,7 +422,7 @@
 	<string name="email_error_title">Fehler beim Email-Versand</string>
 	<!-- Settings item title -->
 	<string name="pref_calibration_title">Kompass-Kalibrierung</string>
-	<!-- Search Suggestion -->
+	<!-- Search category -->
 	<string name="wifi">WLAN</string>
 	<!-- Update map suggestion -->
 	<string name="routing_map_outdated">Bitte aktualisieren Sie die Karte, um eine Route zu erstellen.</string>
@@ -1402,6 +1408,84 @@
 	<string name="subscription_terms">Die Zahlung erfolgt nach Kaufbestätigung über Ihr iTunes-Konto. Das Abonnement wird automatisch verlängert, sofern Sie die automatische Verlängerung nicht 24 Stunden vor Ende des aktuellen Zeitraums abgestellt haben. Ihr Konto wird gemäß Ihres Plans für die Verlängerung innerhalb von 24 Stunden vor dem Ende des aktuellen Zeitraums belastet. Sie können bei Kauf die automatisch Verlängerung über Ihre Apple-ID-Kontoeinstellungen jederzeit verwalten oder abstellen.</string>
 	<string name="subscriptions_title">Abonnements</string>
 	<string name="manage_subscription">Abonnements verwalten</string>
+	<string name="sharing_options">Zugriffseinstellungen</string>
+	<string name="export_file">Datei exportieren</string>
+	<string name="list_settings">Listeneinstellungen</string>
+	<string name="delete_list">Liste löschen</string>
+	<string name="hide_from_map">Auf der Karte ausblenden</string>
+	<string name="ugc_route_tags_screen_label">Tags wählen</string>
+	<string name="ugc_route_tags_progress_msg">Tags werden geladen…</string>
+	<string name="ugc_route_tags_desc">Bitte wählen Sie Tags, um anderen Reisenden zu helfen, Ihr Reiseführer zu finden. Das ist obligatorisch.</string>
+	<string name="public_access">Öffentlicher Zugriff</string>
+	<string name="limited_access">Privater Zugriff</string>
+	<string name="upload_and_publish_desc">Dieser Reiseführer wird in das öffentliche Katalog MAPS.ME geladen und wird für andere Benutzer verfügbar sein</string>
+	<string name="upload_and_publish">Laden und veröffentlichen</string>
+	<string name="upload_and_get_direct_link">Laden und Link bekommen</string>
+	<string name="get_direct_link_desc">Ihr Reiseführer wird unter direktem Link verfügbar sein</string>
+	<string name="upload_and_publish_progress_text">Reiseführer wird veröffentlicht…</string>
+	<string name="upload_and_publish_success">Reiseführer wurde veröffentlicht</string>
+	<string name="ugc_routes_user_agreement">&lt;b>WICHTIG:&lt;/b> wenn Sie fortsetzen, stimmen Sie &lt;a href="%s">der Lizenzvereinbarung zu&lt;/a></string>
+	<string name="ugc_route_edit_list_name">Reiseführer Name</string>
+	<string name="ugc_route_edit_description_hint">Fügen Sie die Beschreibung hinzu (Text oder html)</string>
+	<string name="not_shared">Persönlich</string>
+	<string name="direct_link_progress_text">Ihre Datei wird geladen…</string>
+	<string name="direct_link_success">Link erstellt</string>
+	<string name="edit_guide_title">Bearbeiten Sie Ihr Reiseführer online</string>
+	<string name="edit_guide_subtitle">Bekommen Sie den Link für die Bearbeitung Ihres Reiseführers per WebApp: Fügen Sie Ortsbeschreibung hinzu, laden Sie Fotos und verbinden Sie Markierungen mit Linien.</string>
+	<string name="send_a_link_btn">Link senden</string>
+	<string name="upload_error_toast">Während des Ladeprozesses ist ein Fehler aufgetreten</string>
+	<string name="tags_loading_error_subtitle">Während dem Laden der Tags ist ein Fehler aufgetreten, bitte, versuchen Sie es erneut</string>
+	<string name="unable_upload_errorr_title">Laden der Datei fehlgeschlagen</string>
+	<string name="unable_upload_error_subtitle_edited">Datei wurde per WebApp bearbeitet</string>
+	<string name="unable_upload_error_subtitle_broken">Datei ist beschädigt und kann nicht geladen werden. Bitte laden Sie eine andere Datei.</string>
+	<string name="buy_btn">Für %s kaufen</string>
+	<string name="download_guide_progress">Reiseführer wird geladen…</string>
+	<string name="price_error_title">Der Preis ist momentan unbekannt</string>
+	<string name="price_error_subtitle">Bitte, versuchen Sie es in ein paar Minuten erneut</string>
+	<string name="edit_your_guide_email_body">Bearbeiten Sie Ihr Reiseführer auf PC: Fügen Sie Ortsbeschreibung hinzu, laden Sie Fotos und verbinden Sie Markierungen mit Linien.</string>
+	<string name="edit_on_web">Online bearbeiten</string>
+	<string name="properties_loading_error_subtitle">Während dem Laden der Optionen ist ein Fehler aufgetreten, bitte, versuchen Sie es erneut</string>
+	<string name="custom_props_desc">Diesen Reiseführer haben Sie als</string>
+	<string name="custom_props_title">Einheimischer oder Tourist</string>
+	<string name="custom_props_local">Einheimischer</string>
+	<string name="custom_props_traveler">Tourist</string>
+	<string name="select_properties">Optionen wählen</string>
+	<string name="access_rules_p_to_p">Sonderzugriff</string>
+	<string name="access_rules_paid">Gekauft</string>
+	<string name="failed_purchase_support_message">Möglichkerweise haben Sie einen unvollzogenen Kauf. Bitte schreiben Sie unserem Support-Team und wir helfen Ihnen das Problem zu lösen.</string>
+	<string name="contact">Schreiben</string>
+	<string name="check_price_button">Preis erfahren</string>
+	<string name="download_button">Downloaden</string>
+	<string name="speedcams_alert_title">Geschwindigkeitskameras</string>
+	<string name="speedcams_alert_subtitle">Über Geschwindigkeitsbegrenzungen warnen</string>
+	<string name="speedcam_option_auto">Auto</string>
+	<string name="speedcam_option_always">Immer</string>
+	<string name="speedcam_option_never">Niemals</string>
+	<string name="bookmark_description_title">Markierungsbeschreibung</string>
+	<string name="place_description_title">Ortsbeschreibung</string>
+	<string name="ugc_routes_error_uploading_file_toast">Leider ist beim Hochladen der Markierungen ein Fehler aufgetreten. Bitte versuchen Sie es erneut.</string>
+	<string name="notification_channel_ugc">Nutzergenerierte Inhalte</string>
+	<!-- this text will be shown in application notification preferences opposite checkbox which enable/disable downloader notifications. Devices on Android 8+ are affected. -->
+	<string name="notification_channel_downloader">Karten werden geladen</string>
+	<string name="notification_leave_review_title">%s - Gefällt es Ihnen hier?</string>
+	<string name="notification_leave_review_content">Hinterlassen Sie Ihr Feedback und helfen Sie den Reisenden!</string>
+	<string name="share_bookmarks_email_body_link">Guten Tag!\n\nIhre Markierungen stehen unter folgendem Link zum Download bereit: %s. Öffnen Sie die Liste mit MAPS.ME und genießen Sie die Reise!\n\nApp downloaden: http://maps.me/get?kmz</string>
+	<string name="warning_speedcams_title">Der Navigator wird Sie über Geschwindigkeitskameras bei Geschwindigkeitsüberschreitung von %d km/h informieren</string>
+	<string name="warning_speedcams_subtitle">Vergessen Sie nicht sich mit den Verkehrsregeln im Reisezielland vertraut zu machen.</string>
+	<string name="speedcams_notice_message">Auto - Über Geschwindigkeitskameras bei Risiko einer Geschwindigkeitsüberschreitung informieren\nImmer - Immer über Geschwindigkeitskameras informieren\nNiemals - Nie über Geschwindigkeitskameras informieren</string>
+	<string name="whats_new_ugc_routes_title">Es ist einfach, Ihre Eindrücke zu teilen</string>
+	<string name="whats_new_ugc_routes_subtitle">Speichern Sie unvergessliche Orte, erstellen Sie Routen mithilfe von Lesezeichen und teilen Sie sie mit allen im MAPS.ME-Katalog.</string>
+	<string name="whats_new_webeditor_title">Verwandeln Sie Ihre Routen in Geschichten</string>
+	<string name="whats_new_ugc_routes_message2">Fügen Sie Fotos und ausführliche Geschichten im Web-Editor hinzu.</string>
+	<string name="whatsnew_standard_routes_title">Standardrouten</string>
+	<string name="whatsnew_standard_routes_message">Hauptorte, Kurzbeschreibungen, aber viele Eindrücke!</string>
+	<string name="whatsnew_city_overview_title">Stadtübersicht</string>
+	<string name="whatsnew_city_overview_message">Bis zu 200 Orte auf dem Stadtplan: das Nützlichste und Interessanteste für den Reisenden!</string>
+	<string name="whatsnew_pro_guides_title">Profirouten</string>
+	<string name="whatsnew_pro_guides_message">Hohes Detaillierungsniveau, detaillierte Ortsbeschreibung und Möglichkeit die Entfernung und die Ausflugszeit zu berechnen</string>
+	<string name="whatsnew_paid_routes_title">Mehr neue Eindrücke!</string>
+	<string name="whatsnew_paid_routes_message">Zusätzlich zu den kostenfreien Routen haben wir 3 Kategorien kostenpflichtiger Reiseführer zum Katalog hinzugefügt. Über 700 neue Routen!</string>
+	<string name="whats_new_ugc_routes_title_android_only">Es ist einfach, Ihre Eindrücke zu teilen</string>
 
 	<!-- SECTION:  Partners  -->
 	<string name="sponsored_partner2_action">Rabatt</string>
@@ -1499,6 +1583,7 @@
 	<string name="type.barrier.lift_gate">Schranke</string>
 	<string name="type.barrier.stile">Zaunübertritt</string>
 	<string name="type.barrier.toll_booth">Mautstelle</string>
+	<string name="type.boundary.national_park">Naturschutzpark</string>
 	<string name="type.building">Gebäude</string>
 	<string name="type.building.address">Gebäude</string>
 	<string name="type.building.has_parts">Gebäude</string>
@@ -1733,6 +1818,7 @@
 	<string name="type.leisure.fitness_station">Fitnessstation</string>
 	<string name="type.leisure.garden">Garten</string>
 	<string name="type.leisure.golf_course">Golfplatz</string>
+	<string name="type.leisure.nature_reserve">Naturschutzgebiet</string>
 	<string name="type.leisure.pitch">Sportplatz</string>
 	<string name="type.leisure.pitch.tennis">Sportplatz</string>
 	<string name="type.leisure.playground">Spielplatz</string>
@@ -1754,7 +1840,10 @@
 	<string name="type.man_made.windmill">Windmühle</string>
 	<string name="type.natural.bay">Bucht</string>
 	<string name="type.natural.beach">Strand</string>
+	<string name="type.natural.cape">Kap</string>
 	<string name="type.natural.cave_entrance">Höhleneingang</string>
+	<string name="type.natural.geyser">Geysir</string>
+	<string name="type.natural.glacier">Gletscher</string>
 	<string name="type.natural.lake">See</string>
 	<string name="type.natural.peak">Berg</string>
 	<string name="type.natural.pond">Teich</string>

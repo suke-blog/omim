@@ -310,7 +310,9 @@ id<MTLRenderPipelineState> MetalBaseContext::GetPipelineState(ref_ptr<GpuProgram
   CHECK(m_currentCommandEncoder != nil, ("Probably encoding commands were called before ApplyFramebuffer."));
   
   id<MTLTexture> colorTexture = m_renderPassDescriptor.colorAttachments[0].texture;
-  CHECK(colorTexture != nil, ());
+  // It can be nil in the case when Metal drawable is absent (e.g. finish rendering in background).
+  if (colorTexture == nil)
+    return nil;
   
   id<MTLTexture> depthTexture = m_renderPassDescriptor.depthAttachment.texture;
   MTLPixelFormat depthStencilFormat = (depthTexture != nil) ? depthTexture.pixelFormat : MTLPixelFormatInvalid;
@@ -363,6 +365,7 @@ void MetalBaseContext::FinishCurrentEncoding()
   [m_currentCommandEncoder popDebugGroup];
   [m_currentCommandEncoder endEncoding];
   m_currentCommandEncoder = nil;
+  m_lastPipelineState = nil;
 }
   
 void MetalBaseContext::SetSystemPrograms(drape_ptr<GpuProgram> && programClearColor,
@@ -371,6 +374,18 @@ void MetalBaseContext::SetSystemPrograms(drape_ptr<GpuProgram> && programClearCo
 {
   m_cleaner.Init(make_ref(this), std::move(programClearColor), std::move(programClearDepth),
                  std::move(programClearColorAndDepth));
+}
+  
+void MetalBaseContext::ApplyPipelineState(id<MTLRenderPipelineState> state)
+{
+  m_lastPipelineState = state;
+  if (state != nil)
+    [GetCommandEncoder() setRenderPipelineState:state];
+}
+  
+bool MetalBaseContext::HasAppliedPipelineState() const
+{
+  return m_lastPipelineState != nil;
 }
   
 void MetalBaseContext::DebugSynchronizeWithCPU()

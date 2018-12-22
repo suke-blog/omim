@@ -57,6 +57,9 @@ void MetalCleaner::RenderQuad(ref_ptr<MetalBaseContext> metalContext, id<MTLRend
                               ref_ptr<GpuProgram> program)
 {
   id<MTLRenderPipelineState> pipelineState = metalContext->GetPipelineState(program, false /* blendingEnabled */);
+  if (pipelineState == nil)
+    return;
+
   [encoder setRenderPipelineState:pipelineState];
   
   [encoder setVertexBuffer:m_buffer offset:0 atIndex:0];
