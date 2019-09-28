@@ -98,6 +98,7 @@ world  +
         post_office  -
         prison  -
         pub  -
+        public_bath  -
         public_bookcase  -
         recycling  -
         restaurant  -
@@ -190,6 +191,13 @@ world  +
     communication  +
         line  +
             underground  -
+            {}
+        {}
+    contour  +
+        contour_ext  +
+            elevation_major  -
+            elevation_medium  -
+            elevation_minor  -
             {}
         {}
     craft  +

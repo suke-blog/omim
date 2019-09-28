@@ -1323,3 +1323,8 @@ cuisine|tea
 natural|geyser
 sponsored|promo_catalog
 natural|hot_spring
+contour
+contour|contour_ext|elevation_major
+contour|contour_ext|elevation_medium
+contour|contour_ext|elevation_minor
+amenity|public_bath
