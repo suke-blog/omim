@@ -34,7 +34,6 @@
 	<string name="miles">Μίλια</string>
 	<!-- View and button titles for accessibility -->
 	<string name="core_my_position">Η θέση μου</string>
-	<string name="ok">OK</string>
 	<!-- Leave Review dialog - Not now button (remind me later) -->
 	<string name="remind_me_later">Υπενθύμιση αργότερα</string>
 	<!-- Update maps later/Buy pro version later button text -->
@@ -417,6 +416,22 @@
 	<string name="brown">Καφέ</string>
 	<!-- pink color -->
 	<string name="pink">Ροζ</string>
+	<!-- deep purple color -->
+	<string name="deep_purple">Βαθύ πορφυρό</string>
+	<!-- light blue color -->
+	<string name="light_blue">Γαλάζιο</string>
+	<!-- cyan color -->
+	<string name="cyan">Κυανό</string>
+	<!-- teal color -->
+	<string name="teal">Σμαραγδένιο</string>
+	<!-- lime color -->
+	<string name="lime">Κιτρινοπράσινο</string>
+	<!-- deep orange color -->
+	<string name="deep_orange">Βαθύ πορτοκαλί</string>
+	<!-- gray color -->
+	<string name="gray">Γκρι</string>
+	<!-- blue gray color -->
+	<string name="blue_gray">Γκρίζο μπλε</string>
 	<!-- Wi-Fi available -->
 	<string name="WiFi_available">Ναι</string>
 
@@ -604,8 +619,6 @@
 	<string name="onboarding_location_message">Προκειμένου να χρησιμοποιήσετε την πλοήγηση και τις άλλες λειτουργίες του MAPS.ME χρειάζεται πρόσβαση στη γεωγραφική σας θέση.</string>
 	<string name="onboarding_permissions_title">Να επιτραπεί στο MAPS.ME πρόσβαση στον αποθηκευτικό χώρο και την τοποθεσία</string>
 	<string name="onboarding_permissions_message">Μπορείτε να κατεβάσετε χάρτες, να δείτε μέρη και πληροφορίες για την κίνηση κοντά σε εσάς και να χρησιμοποιήσεττ την πλοήγηση.</string>
-	<string name="onboarding_welcome_title">Καλωσήρθατε στο MAPS.ME</string>
-	<string name="onboarding_welcome_first_subtitle">Δωρεάν, γρήγοροι, λεπτομερείς χάρτες αποκλειστικά εκτός σύνδεσης με πλοήγηση αννά στροφή.</string>
 	<string name="onboarding_welcome_second_subtitle">Με την εκκίνηση της εφαρμογής συμφωνείτε με &lt;a href="%1$s">τους Όρους χρήσης&lt;/a> και &lt;a href="%2$s">την Πολιτική απορρήτου&lt;/a>.</string>
 	<string name="dialog_incorrect_feature_position">Αλλαγή τοποθεσίας</string>
 	<string name="message_invalid_feature_position">Δε μπορεί να εντοπιστεί αντικείμενο εδώ</string>
@@ -655,7 +668,7 @@
 	<string name="place_page_booking_rating">Βαθμολογία: %s</string>
 	<string name="place_page_starting_from">από %s</string>
 	<string name="placepage_more_button">Περισσότερα</string>
-	<string name="placepage_more_reviews_button">Περισσότερες κριτικές</string>
+	<string name="placepage_more_reviews_button">Περισσότερα σχόλια</string>
 	<string name="placepage_call_button">Κλήση</string>
 	<string name="placepage_edit_bookmark_button">Επεξεργασία αγαπημένου</string>
 	<string name="placepage_bookmark_name_hint">Όνομα αγαπημένου</string>
@@ -791,8 +804,6 @@
 	<string name="banner_geerbest_message">Άμεση αναζήτηση σε περισσότερα από 50.000 αντικείμενα σε χαμηλές τιμές.</string>
 	<string name="banner_rentalcars_title">Ενοικίαση αυτοκινήτων online</string>
 	<string name="banner_rentalcars_message">800 εταιρείες ενοικίασης αυτοκινήτων σε περισσότερες από 49.000 τοποθεσίες.</string>
-	<string name="banner_viator_title">Αναζήτηση οργανωμένων εκδρομών online</string>
-	<string name="banner_viator_message">Αναζήτηση σε περισσότερες από 50.000 εκδρομές σε όλο τον κόσμο.</string>
 	<!-- december -->
 	<string name="whatsnew_traffic">Πληροφορίες για την κίνηση σε 36 χώρες</string>
 	<!-- december -->
@@ -834,8 +845,6 @@
 	<string name="whatsnew_smaller_mwm_message">Οι χάρτες απαιτούν 20% λιγότερο αποθηκευτικό χώρο.</string>
 	<string name="whatsnew_waypoints_title">Ενδιάμεσα σημεία στη διαδρομή</string>
 	<string name="whatsnew_waypoints_message">Πατήστε στα μέρη για να προσθέσετε ενδιάμεσα σημεία στη διαδρομή σας.</string>
-	<string name="whatsnew_viator_title">Κάντε κράτηση σε μια ξενάγηση</string>
-	<string name="whatsnew_viator_message">Επιλέξτε δημοφιλείς ξεναγήσεις σε τουριστικές πόλεις σε όλο τον κόσμο.</string>
 	<string name="whatsnew_driving_style_title">Νέο στυλ χάρτη για την οδήγηση</string>
 	<string name="whatsnew_driving_style_message">Ευκολότερη λειτουργία πλοήγησης αυτοκινήτου.</string>
 	<string name="more_on_bookingcom">Περισσότερα στο Booking.com</string>
@@ -892,7 +901,6 @@
 	<string name="settings_card_memory">Κάρτα μνήμης</string>
 	<string name="settings_storage_available">%s διαθέσιμα</string>
 	<string name="toast_location_permission_denied">Άρνηση πρόσβασης εφαρμογής στον εντοπισμό τοποθεσίας</string>
-	<string name="place_page_viator_title">Αξιοθέατα και περιηγήσεις</string>
 	<string name="button_use">Χρήση</string>
 	<string name="planning_route_manage_route">Διαχείριση διαδρομής</string>
 	<string name="button_plan">Σχέδιο</string>
@@ -907,8 +915,6 @@
 	<string name="add_my_position">Πρόσθεσε τη θέση μου</string>
 	<string name="choose_start_point">Επιλέξτε αφετηρία</string>
 	<string name="choose_destination">Επιλέξτε προορισμό</string>
-	<string name="preloader_viator_title">Ανακαλύψτε περιηγήσεις και ασυνήθιστες δραστηριότητες</string>
-	<string name="preloader_viator_message">Περιηγήσεις, δραστηριότητες, αξιοθέατα και πολλά άλλα</string>
 	<string name="preloader_viator_button">Μάθετε περισσότερα</string>
 	<string name="whats_new_title_route">Βελτιωμένες διαδρομές ποδηλάτων και πεζών</string>
 	<string name="whats_new_message_route">Επιδιορθώσαμε σφάλματα, κάναμε την δημιουργία διαδρομής αρκετές φορές γρηγορότερη, και προσθέσαμε ενδιάμεσες στάσεις</string>
@@ -919,9 +925,6 @@
 	<string name="placepage_no_reviews">Δεν υπάρχουν κριτικές</string>
 	<string name="placepage_reviewed">Έχετε ήδη παρέχει μια κριτική για αυτό το μέρος</string>
 	<string name="placepage_summary_rating">Σύνοψη κριτικών</string>
-	<plurals name="placepage_summary_rating_description">
-	  <item quantity="other">Σύμφωνα με %d κριτικές</item>
-	</plurals>
 	<string name="placepage_rate_comment">Πατήστε για να βαθμολογήσετε και να γράψετε μια κριτική για αυτό το μέρος.</string>
 	<string name="placepage_rate_horrible">Απαίσιο</string>
 	<string name="placepage_rate_bad">Κακό</string>
@@ -964,8 +967,6 @@
 	<string name="discovery_button_subtitle_attractions">Αξιοθέατα</string>
 	<string name="discovery_button_subtitle_eat_and_drink">Φαγητό και ποτό</string>
 	<string name="discovery_button_subtitle_local_guides">Τοπικοί οδηγοί</string>
-	<string name="discovery_button_viator_offline_title">Ανακαλύψτε περιηγήσεις και ασυνήθιστες δραστηριότητες</string>
-	<string name="discovery_button_viator_offline_message">Εκδρομές, πράγματα να κάνετε, περιηγήσεις στα αξιοθέατα και πολλά άλλα.</string>
 	<string name="discovery_button_viator_error_title">Σφάλμα κατά τη φόρτωση δεδομένων</string>
 	<string name="discovery_button_other_error_message">Σφάλμα κατά τη φόρτωση δεδομένων</string>
 	<string name="discovery_button_other_loading_message">Φόρτωση δεδομένων</string>
@@ -1005,12 +1006,10 @@
 	<string name="downloader_percent">%1$s (%2$s από %3$s)</string>
 	<string name="downloader_process">Λήψη %s...</string>
 	<string name="downloader_applying">Εφαρμογή %s...</string>
-	<string name="transit_not_found">Η πλοήγηση διαμετακόμισης στην περιοχή αυτή δεν είναι ακόμα διαθέσιμη</string>
 	<string name="whats_new_title_hotel_filter">Υπάρχουν διαθέσιμα νέα φίλτρα ξενοδοχείου!</string>
 	<string name="whats_new_message_hotel_filter">Κάντε κράτησ σε ξενοδοχεία που είναι διαθέσιμα τις ημερομηνίες σας! Χρησιμοποιήστε τα φίλτρα άφιξης και αναχώρισης</string>
 	<string name="whats_new_title_ugc_travel">Μοιραστείτε την εμπειρία σας με άλλους ταξιδιώτες!</string>
 	<string name="whats_new_message_ugc_travel">Βαθμολογήστε και αξιολογήστε τα μέρη που έχετε επισκεφτεί!</string>
-	<string name="dialog_pedestrian_route_is_long">Η διαδρομή πεζών είναι υπερβολικά μεγάλη</string>
 	<string name="dialog_message_transit_not_found_connection">Σχεδιάστε μια διαδρομή εντός δικτύου μεταφοράς</string>
 	<string name="bookmarks_error_message_share_general">Αδυναμία κοινής χρήσης λόγω σφάλματος εφαρμογής</string>
 	<string name="bookmarks_error_title_share_empty">Σφάλμα κοινής χρήσης</string>
@@ -1115,8 +1114,8 @@
 	<string name="error_already_downloaded">Έχει γίνει ήδη λήψη αυτής της λίστας</string>
 	<string name="guides">Εγχειρίδια</string>
 	<string name="guide_downloaded_title">Η λήψη του εγχειριδίου πραγματοποιήθηκε με επιτυχία</string>
-	<string name="download_guides">Κατεβάστε τα εγχειρίδια</string>
-	<string name="cached_guides_placeholder_subtitle">Λεπτομερή εγχειρίδια εκτός σύνδεσης για κάθε είδους ταξίδι. Επιλέξτε αυτό που σας ταιριάζει καλύτερα και μεταφορτώστε το απευθείας στον χάρτη. Θα χρειαστείτε τη σύνδεση στο διαδίκτυο για να κατεβάσετε τα εγχειρίδια.</string>
+	<!-- as few symbols as possible -->
+	<string name="download_guides">Έυρεση οδηγών</string>
 	<string name="guides_groups_cached">Κατεβασμένα εγχειρίδια</string>
 	<string name="subtitle_error_downloading_guide">Το εγχειρίδιο δεν έχει ληφθεί</string>
 	<string name="error_already_downloaded_guide">Αυτό το εγχειρίδιο έχει ήδη ληφθεί</string>
@@ -1155,7 +1154,6 @@
 	<string name="restore_success_alert">Η συνδρομή έχει αποκατασταθεί με επιτυχία</string>
 	<string name="restore_error_alert">Παρουσιάστηκε σφάλμα κατά την επαναφορά της συνδρομής</string>
 	<string name="restore_no_subscription_alert">Δεν υπάρχουν ενεργές συνδρομές</string>
-	<string name="subscription_terms">Η πληρωμή θα χρεωθεί στον iTunes λογαριασμό σας κατά την επιβεβαίωση της αγοράς. Η συνδρομή θα ανανεωθεί αυτόματα εκτός εάν η αυτόματη ανανέωση είναι απενεργοποιημένη τουλάχιστον 24 ώρες πριν από το τέλος της τρέχουσας περιόδου. Ο λογαριασμός σας θα χρεωθεί σύμφωνα με το σχέδιο ανανέωσής σας εντός 24 ωρών πριν από το τέλος της τρέχουσας περιόδου. Μπορείτε να διαχειριστείτε ή να απενεργοποιήσετε την αυτόματη ανανέωση στις ρυθμίσεις του Apple ID λογαριασμού σας ανά πάσα στιγμή κατά την αγορά σας.</string>
 	<string name="subscriptions_title">Συνδρομές</string>
 	<string name="manage_subscription">Διαχείριση συνδρομής</string>
 	<string name="sharing_options">Επιλογές κοινοποίησης</string>
@@ -1165,7 +1163,6 @@
 	<string name="hide_from_map">Κρύψε από τον χάρτη</string>
 	<string name="ugc_route_tags_screen_label">Επιλέξτε ετικέτες</string>
 	<string name="ugc_route_tags_progress_msg">Φόρτωση ετικετών…</string>
-	<string name="ugc_route_tags_desc">Παρακαλώ επιλέξτε ετικέτες για να βοηθήσετε άλλους ταξιδιώτες να βρουν τον οδηγό σας. Αυτό είναι υποχρεωτικό.</string>
 	<string name="public_access">Δημόσια πρόσβαση</string>
 	<string name="limited_access">Περιορισμένη πρόσβαση</string>
 	<string name="upload_and_publish_desc">Αυτός ο οδηγός θα ανέβει στο δημόσιο κατάλογο MAPS.ME και θα είναι διαθέσιμος για άλλους χρήστες</string>
@@ -1188,7 +1185,7 @@
 	<string name="unable_upload_errorr_title">Το ανέβασμα του αρχείου απέτυχε</string>
 	<string name="unable_upload_error_subtitle_edited">Το αρχείο επεξεργάστηκε μέσω της εφαρμογής</string>
 	<string name="unable_upload_error_subtitle_broken">Το αρχείο είναι κατεστραμμένο και δεν μπόρεσε να ανέβει. Παρακαλώ ανεβάστε ένα άλλο αρχείο.</string>
-	<string name="buy_btn">Αγοράστε για %s</string>
+	<string name="buy_btn">Αγορά οδηγού για %s</string>
 	<string name="download_guide_progress">Κατεβάζοντας τον οδηγό σας…</string>
 	<string name="price_error_title">Δεν μπορέσαμε να βρούμε τιμή</string>
 	<string name="price_error_subtitle">Δοκιμάστε ξανά σε μερικά λεπτά παρακαλώ</string>
@@ -1229,12 +1226,326 @@
 	<string name="whatsnew_pro_guides_message">Υψηλό επίπεδο λεπτομέρειας, αναλυτικές περιγραφές τοποθεσιών και δυνατότητα υπολογισμού της απόστασης και του χρόνου της βόλτας</string>
 	<string name="whatsnew_paid_routes_title">Περισσότερες νέες εμπειρίες!</string>
 	<string name="whatsnew_paid_routes_message">Εκτός από τις δωρεάν διαδρομές έχουμε προσθέσει στον κατάλογο και 3 κατηγορίες ταξιδιωτικών οδηγών επί πληρωμή. Περισσότερες από 700 νέες διαδρομές!</string>
+	<string name="ugc_thanks_message_auth">Το σχόλιό σας έχει αποθηκευτεί</string>
+	<string name="ugc_thanks_message_not_auth">Εγγραφείτε για ν\' αφήσετε σχόλια</string>
+	<string name="notification_leave_review_v2_title">Αφήστε τα σχόλιά σας και βοηθήστε τους ταξιδιώτες!</string>
+	<string name="error_public_not_enought_title">Δεν υπάρχουν αρκετά σημάδια</string>
+	<string name="error_public_not_enought_subtitle">Η διαδρομή σας πρέπει να έχει τουλάχιστον 3 σημάδια για να μεταφορτωθεί στον δημόσιο κατάλογο</string>
+	<string name="bookmark_public_upload_alert_title">Είστε μόνο μερικά βήματα μακριά από τη φόρτωση της διαδρομής σας στον κατάλογο MAPS.ME!</string>
+	<string name="bookmark_public_upload_alert_subtitle">Βεβαιωθείτε ότι η διαδρομή έχει τίτλο και περιγραφή και ότι όλα τα σημάδια περιέχουν πληροφορίες σχετικά με τις τοποθεσίες. Χάρη σε αυτό, οι χρήστες θα βρουν τη διαδρομή και θα μπορέσουν να τη χρησιμοποιήσουν στο ταξίδι τους.</string>
+	<string name="bookmark_public_upload_alert_ok_button">Ναι, όλα είναι καλά!</string>
+	<string name="name_title">Εισαγάγετε έναν τίτλο</string>
+	<string name="name_placeholder">για παράδειγμα, \"Οι παμπ του Λονδίνου\"</string>
+	<string name="name_comment1">Δώστε στη διαδρομή έναν συγκεκριμένο τίτλο, έτσι ώστε οι χρήστες να μπορούν να την εντοπίσουν, για παράδειγμα, \"Οι παμπ του Λονδίνου\"</string>
+	<string name="name_comment2">Ο τίτλος δεν πρέπει να περιέχει ειδικούς χαρακτήρες. Μην δημοσιεύετε διαδρομές με τον τίτλο \"Οι τοποθεσίες μου\"</string>
+	<string name="description_guide">Περιγραφή</string>
+	<string name="description_title">Εισαγάγετε μια περιγραφή της διαδρομής</string>
+	<string name="description_placeholder">Περιγράψτε λεπτομερώς τη διαδρομή σας</string>
+	<string name="description_comment1">Η περιγραφή της διαδρομής πρέπει να είναι τουλάχιστον 30 χαρακτήρες.</string>
+	<string name="ugc_route_tags_desc">Διαλέξτε ετικέτες για να βοηθήσετε άλλους ταξιδιώτες να βρουν τον ταξιδιωτικό σας οδηγό. Αυτό είναι απαραίτητο. Ο μέγιστος αριθμός των ετικετών δεν πρέπει να υπερβαίνει %s.</string>
+	<string name="html_format_error_title">Η διαδρομή σας δεν έχει δημοσιευθεί</string>
+	<string name="html_format_error_subtitle">Βεβαιωθείτε ότι τα ονόματα και οι περιγραφές των σημαδιών στη διαδρομή έχουν τη σωστή μορφοποίηση. Μπορείτε να το ελέγξετε στον επεξεργαστή μας κάνοντας κλικ στο κουμπί \"Επεξεργασία online\" παρακάτω.</string>
+	<string name="web_editor_description">Φορτώστε τη διαδρομή και λάβετε έναν σύνδεσμο για επεξεργασία στον υπολογιστή</string>
+	<string name="edit_on_web_confirm">Επεξεργασία online</string>
+	<string name="update_guide">Φόρτωση της νέας έκδοσης</string>
+	<string name="direct_link_updating_text">Ενημέρωση της διαδρομής…</string>
+	<string name="direct_link_updating_success">Η διαδρομή ενημερώθηκε</string>
+	<string name="unable_get_direct_link_desc">Μπορείτε να μοιραστείτε τη διαδρομή χρησιμοποιώντας έναν δημόσιο σύνδεσμο</string>
+	<string name="any_access_update_alert_title">Ίσως υπάρχει μια νέα έκδοση της διαδρομής</string>
+	<string name="any_access_update_alert_message">Θέλετε να ενημερώσετε τα σημάδια? Η νέα έκδοση θα είναι διαθέσιμη με τον ίδιο σύνδεσμο.</string>
+	<string name="any_access_update_alert_update">Ενημέρωση</string>
+	<string name="public_or_limited_access_after_edit_online_error_title">Κάνατε την επεξεργασία της διαδρομής online</string>
+	<string name="public_or_limited_access_after_edit_online_error_message">Στο μέλλον κάντε την επεξεργασία, δημοσίευση ή κοινή χρήση της διαδρομής με φίλους μέσω της ιστοσελίδας μας</string>
+	<string name="power_managment_title">Λειτουργία εξοικονόμησης ενέργειας</string>
+	<string name="power_managment_description">Εάν η λειτουργία εξοικονόμησης ενέργειας είναι ενεργοποιημένη, η εφαρμογή θα κλείνει τις λειτουργίες που καταναλώνουν ενέργεια ανάλογα με την τρέχουσα φόρτιση του τηλεφώνου</string>
+	<string name="power_managment_setting_never">Ποτέ</string>
+	<string name="power_managment_setting_auto">Αυτόματα</string>
+	<string name="power_managment_setting_manual_max">Μέγιστη εξοικονόμηση ενέργειας</string>
+	<string name="enable_logging_warning_message">Αυτή η λειτουργία είναι ενεργοποιημένη για την καταγραφή ενεργειών για διαγνωστικούς σκοπούς. Αυτό βοηθά την ομάδα να εντοπίζει προβλήματα με την εφαρμογή. Να ενεργοποιείτε τη λειτουργία μόνο κατόπιν αιτήματος της υποστήριξης του MAPS.ME.</string>
+	<string name="html_error_upload_message_try_again">Ελέγξτε την πρόσβαση στο δίκτυο και δοκιμάστε ξανά</string>
+	<string name="html_error_upload_title_try_again">Δεν υπάρχει σύνδεση με το διαδίκτυο</string>
+	<string name="notification_leave_review_v2_android_short_title">Αφήνετε τα σχόλιά σας και βοηθάτε τους ταξιδιώτες!</string>
+	<string name="notifications_illegal_alert_disable_button">Απενεργοποίηση των ειδοποιήσεων</string>
+	<string name="access_rules_author_only">Επεξεργάζεται online</string>
+	<string name="privacy_settings_menu">Ρυθμίσεις απορρήτου</string>
+	<string name="gdpr_request_setting">Λήψη του αναγνωριστικού αριθμού για το αίτημα GDPR</string>
+	<string name="gdpr_request_window_title">Ο αναγνωριστικός αριθμός σας είναι: %s.</string>
+	<string name="gdpr_request_window_message">Αντιγράψτε το και στείλτε το αίτημα στη διεύθυνση support\@maps.me</string>
+	<string name="gdpr_request_window_copy">Αντιγραφή του αναγνωριστικού αριθμού</string>
+	<string name="unable_upadate_error_title">Δεν ήταν δυνατή η ενημέρωση της διαδρομής</string>
+	<string name="unable_upadate_error_message">Παρουσιάστηκαν σφάλματα κατά την ενημέρωση. Ελέγξτε τις αλλαγές και δοκιμάστε ξανά</string>
+	<string name="whats_new_wiki_title">Τι είναι αυτό το μέρος?</string>
+	<string name="whats_new_wiki_message">Στις κάρτες των δημοφιλών αξιοθέατων προσθέσαμε άρθρα από το Wikipedia.org που είναι διαθέσιμα εκτός σύνδεσης</string>
+	<string name="driving_options_title">Ρυθμίσεις παράκαμψης</string>
+	<string name="driving_options_subheader">Αποφυγή σε κάθε διαδρομή</string>
+	<string name="avoid_tolls">Δρόμοι με διόδια</string>
+	<string name="avoid_unpaved">Χωματόδρομοι</string>
+	<string name="avoid_ferry">Πορθμεία</string>
+	<string name="avoid_motorways">Αυτοκινητόδρομοι</string>
+	<string name="unable_to_calc_alert_title">Δεν είναι δυνατή η δημιουργία διαδρομής</string>
+	<string name="unable_to_calc_alert_subtitle">Δυστυχώς, δεν μπορούσαμε να δημιουργήσουμε μια διαδρομή με τις καθορισμένες επιλογές. Αλλάξτε τις ρυθμίσεις και δοκιμάστε πάλι</string>
+	<string name="define_to_avoid_btn">Ρύθμιση της διαδρομής παράκαμψης</string>
+	<string name="change_driving_options_btn">Ρυθμίσεις δραστηριοποιούνται</string>
+	<string name="toll_road">Δρόμος με διόδια</string>
+	<string name="unpaved_road">Χωματόδρομος</string>
+	<string name="ferry_crossing">Πορθμείο</string>
+	<string name="operated_by">Χειρίζεται από \"%s\"</string>
+	<string name="avoid_toll_roads_placepage">Αποφυγή των δρόμων με διόδια</string>
+	<string name="avoid_unpaved_roads_placepage">Αποφυγή των χωματόδρομων</string>
+	<string name="avoid_ferry_crossing_placepage">Αποφυγή των πορθμείων</string>
+	<string name="cached_guides_placeholder_subtitle">Οι έτοιμοι οδηγοί του MAPS.ME προσφέρουν κάποια επιλεγμένα μέρη με φωτογραφίες και περιγραφές που εμφανίζονται στον χάρτη και είναι διαθέσιμα εκτός σύνδεσης.</string>
+	<string name="guides_catalogue_title">Κατάλογος οδηγών</string>
+	<string name="download_guides_button">Μετάβαση στον κατάλογο</string>
+	<plurals name="placepage_summary_rating_description">
+	  <item quantity="one">Βάσει %d κριτικής</item>
+	  <item quantity="other">Βάσει %d κριτικών</item>
+	</plurals>
+	<string name="type.cuisine.uzbek">Ουζμπεκική κουζίνα</string>
+	<string name="onboarding_welcome_title">Σχεδιάστε και ταξιδέψτε με το MAPS.ME</string>
+	<string name="onboarding_welcome_first_subtitle">Αποθηκεύετε τα ενδιαφέροντα μέρη, κάντε κράτηση ξενοδοχείων, χτίστε τις διαδρομές εκτός σύνδεσης</string>
+	<string name="onboarding_guide_direct_download_title">Ο οδηγός είναι έτοιμος για λήψη</string>
+	<string name="onboarding_guide_direct_download_subtitle">Θα εμφανίζεται στον χάρτη και θα λειτουργεί εκτός σύνδεσης</string>
+	<string name="onboarding_guide_direct_download_button">Λήψη</string>
+	<string name="onboarding_bydeeplink_guide_title">Έτοιμοι οδηγοί στο MAPS.ME</string>
+	<string name="onboarding_bydeeplink_guide_subtitle">Επιλεγμένα μέρη με φωτογραφίες και περιγραφές εμφανίζονται στον χάρτη και είναι διαθέσιμα εκτός σύνδεσης.</string>
+	<string name="whats_new_auto_update_bydeeplink_title">Πριν τη μετάβαση στους οδηγούς…</string>
+	<string name="whats_new_auto_update_bydeeplink_message">Ενημερώστε τους χάρτες για να λάβετε τις έγκυρες πληροφορίες σχετικά με τα αντικείμενα!</string>
+	<string name="whats_new_auto_update_and_proceed_button_size">Ενημέρωση (%s) και συνέχεια</string>
+	<string name="whatsnew_toll_unpaved_title">Σχεδιάστε τις διαδρομές με αυτοκίνητο λαμβάνοντας υπόψη όλους τους τύπους δρόμων</string>
+	<string name="whatsnew_toll_unpaved_message">Επιλέγετε τις διαδρομές παρακάμπτοντας δρόμους με διόδια, χωματόδρομους και πορθμεία</string>
+	<string name="whatsnew_new_catalogue_title">Ενημερωμένες σελίδες καταλόγου</string>
+	<string name="whatsnew_new_catalogue_message">Προσθέσαμε λεπτομερείς πληροφορίες σχετικά με τους οδηγούς συνεργατών έτσι ώστε η επιλογή της διαδρομής να είναι εύκολη και άνετη</string>
+	<string name="purchase_please_wait_toast">Παρακαλείστε να μην μετακινηθείτε από την οθόνη πριν ολοκληρωθεί η αγορά</string>
+	<string name="trip_start">Πάμε</string>
+	<string name="pick_destination">Προορισμός</string>
+	<string name="follow_my_position">Επανατοποθέτηση</string>
+	<string name="search_results">Αποτελέσματα αναζήτησης</string>
+	<string name="then_turn">Μετά</string>
+	<string name="redirect_route_alert">Θα θέλατε να τροποποιήσετε τη διαδρομή;</string>
+	<string name="redirect_route_yes">Ναι</string>
+	<string name="redirect_route_no">Όχι</string>
+	<string name="trip_finished">Έχετε φτάσει!</string>
+	<string name="keyboard_availability_alert">Το πληκτρολόγιο δεν είναι διαθέσιμο κατά τη διάρκεια οδήγησης</string>
+	<string name="dialog_routing_change_start_carplay">Δεν είναι δυνατή η δημιουργία διαδρομής από την τρέχουσα τοποθεσία σας</string>
+	<string name="dialog_routing_change_end_carplay">Δεν είναι δυνατή η δημιουργία διαδρομής μέχρι τον προορισμό σας. Επιλέξτε ένα άλλο σημείο</string>
+	<string name="dialog_routing_check_gps_carplay">Δεν υπάρχει σήμα GPS. Μετακινήστε σε μια ανοικτή τοποθεσία</string>
+	<string name="dialog_routing_unable_locate_route_carplay">Δεν είναι δυνατή η δημιουργία διαδρομής. Επιλέξτε άλλα σημεία διαδρομής</string>
+	<string name="dialog_routing_download_files_carplay">Για να χτίσετε διαδρομή, κατεβάστε χάρτες που λείπουν στη συσκευή</string>
+	<string name="dialog_routing_system_error_carplay">Παρουσιάστηκε σφάλμα. Κάντε επανεκκίνηση της εφαρμογής</string>
+	<string name="dialog_routing_rebuild_from_current_location_carplay">Η διαδρομή θα ξαναδημιουργηθεί από την τρέχουσα τοποθεσία σας</string>
+	<string name="dialog_routing_rebuild_for_vehicle_carplay">Η διαδρομή θα αντικατασταθεί με τη διαδρομή με αυτοκίνητο</string>
+	<string name="ok">Καλώς</string>
+	<string name="booking_button_toolbar">Επιλέξτε ξενοδοχείο στον χάρτη</string>
+	<string name="popup_booking_download_guides_title">Έχετε κράτηση ξενοδοχείου;</string>
+	<string name="popup_booking_download_guides_message">Προγραμματίστε τη διαδρομή σας με τους έτοιμους οδηγούς MAPS.ME</string>
+	<string name="popup_mwm_download_guides_title">Οδηγοί εκτός σύνδεσης</string>
+	<string name="popup_mwm_download_guides_cta">Επιλογή</string>
+	<string name="popup_mwm_download_guides_cta_1">Προβολή</string>
+	<string name="gallery_pp_download_guides_offline_title">Προγραμματίστε τις διακοπές σας με το MAPS.ME!</string>
+	<string name="gallery_pp_download_guides_offline_subtitle">Μην χάσετε τα πιο σημαντικά πράγματα με τη χρήση των διαδρομών από έμπειρους ταξιδιώτες</string>
+	<string name="gallery_pp_download_guides_offline_cta">Ενεργοποίηση της σύνδεσης με το διαδίκτυο</string>
+	<string name="gallery_pp_download_guides_title">Ταξιδιωτικοί οδηγοί</string>
+	<string name="native_screen_subscription_title">Πλήρης πρόσβαση σε 2000+ ταξιδιωτικούς οδηγούς!</string>
+	<string name="native_screen_subscription_message">Οι αξέχαστες διακοπές, όπου και με όποια παρέα κι αν ταξιδέψετε</string>
+	<string name="annual_subscription_title">Ετήσια</string>
+	<string name="montly_subscription_title">Μηνιαία</string>
+	<string name="annual_subscription_message">12 μήνες απεριόριστης πρόσβασης</string>
+	<string name="montly_subscription_message">1 μήνας απεριόριστης πρόσβασης</string>
+	<string name="subscription_success_dialog_title">Ευχαριστούμε για τη συνδρομή σας!</string>
+	<string name="subscription_success_dialog_message">Τώρα έχετε την απεριόριστη πρόσβαση στον κατάλογο των ταξιδιωτικών οδηγών</string>
+	<string name="renewal_screen_title">Η συνδρομή σας έχει λήξει</string>
+	<string name="renewal_screen_message">Όλοι οι ταξιδιωτικοί οδηγοί που κατεβάσατε με τη συνδρομή θα διαγραφτούν. Θέλετε να επαναφέρετε τη συνδρομή σας και να τους διατηρήσετε;</string>
+	<string name="renewal_screen_button_restore">Ναι, επαναφορά</string>
+	<string name="renewal_screen_button_cancel">Όχι, διαγραφή των οδηγών</string>
+	<string name="subscription_error_ping_title">Η αγορά δεν πραγματοποιήθηκε</string>
+	<string name="subscription_error_message">Η υπηρεσία δεν είναι διαθέσιμη στην περιοχή σας αυτή τη στιγμή. Παρακαλούμε, δοκιμάστε ξανά αργότερα</string>
+	<string name="subscription_error_button">Κατανοητό</string>
+	<string name="timeout_error_title">Ουπς, ο χρόνος έληξε!</string>
+	<string name="timeout_error_message">Οι διακομιστές μας δεν ανταποκρίνονται. Παρακαλούμε, ελέγξτε τη σύνδεσή σας με το διαδίκτυο και δοκιμάστε ξανά.</string>
+	<string name="per_month">/μήνας</string>
+	<string name="per_year">/έτος</string>
+	<string name="buy_btn_for_subscription">Πλήρης πρόσβαση από %s</string>
+	<string name="buy_btn_for_subscription_1">Αγορά ΟΛΩΝ οδηγών για %s</string>
+	<string name="buy_btn_for_subscription_ios_only_mo">Πλήρης πρόσβαση για %s/μην.</string>
+	<string name="buy_btn_for_subscription_ios_only_year">Πλήρης πρόσβαση για %s/το έτος</string>
+	<string name="subscription_terms_guides">Η πληρωμή θα πραγματοποιηθεί από το λογαριασμό σας στο iTunes μετά την επιβεβαίωση αγοράς. Η συνδρομή σας θα ανανεώνεται αυτόματα εκτός εάν η αυτόματη ανανέωση απενεργοποιηθεί τουλάχιστον 24 ώρες πριν από τη λήξη της τρέχουσας περιόδου. Τα ποσά θα χρεώνονται στο λογαριασμό σας σύμφωνα με το πρόγραμμα ανανέωσής σας εντός των 24 ωρών πριν από τη λήξη της τρέχουσας περιόδου. Μπορείτε να διαχειριστείτε την αυτόματη ανανέωση ή να την απενεργοποιήσετε στις ρυθμίσεις λογαριασμού Apple ID οποιαδήποτε στιγμή μετά την αγορά. Θα μπορείτε να χρησιμοποιήσετε τους οδηγούς που έχετε κατεβάσει με τη συνδρομή μόνο κατά τη διάρκεια της περιόδου ισχύος της. Οι οδηγοί με όλους τους σελιδοδείκτες θα διαγραφτούν αυτόματα αφού περάσουν 30 ημέρες μετά τη λήξη της συνδρομής.</string>
+	<string name="subscription_terms">Η πληρωμή θα χρεωθεί στον iTunes λογαριασμό σας κατά την επιβεβαίωση της αγοράς. Η συνδρομή θα ανανεωθεί αυτόματα εκτός εάν η αυτόματη ανανέωση είναι απενεργοποιημένη τουλάχιστον 24 ώρες πριν από το τέλος της τρέχουσας περιόδου. Ο λογαριασμός σας θα χρεωθεί σύμφωνα με το σχέδιο ανανέωσής σας εντός 24 ωρών πριν από το τέλος της τρέχουσας περιόδου. Μπορείτε να διαχειριστείτε ή να απενεργοποιήσετε την αυτόματη ανανέωση στις ρυθμίσεις του Apple ID λογαριασμού σας ανά πάσα στιγμή κατά την αγορά σας.</string>
+	<string name="whatsnew_carplay_title">Αυτοπλοήγηση MAPS.ME στο CarPlay!</string>
+	<string name="whatsnew_carplay_message">Ετικέτες, αναζήτηση, κάμερες ταχύτητας και ρυθμίσεις παράκαμψης — όλα λειτουργούν χωρίς την πρόσβαση στο διαδίκτυο</string>
+	<string name="whatsnew_subscription_title">Ανακάλυψε τον κόσμο με συνδρομή!</string>
+	<string name="whatsnew_subscription_message">Η απεριόριστη πρόσβαση στον κατάλογο των διαδρομών συμφέρει πιο πολύ από μια μεμονωμένη αγορά</string>
+	<string name="whatsnew_carnavi_fixes_for_android_title">Ενημέρωση πλοήγησης</string>
+	<string name="whatsnew_carnavi_fixes_for_android_message">Έχουμε βελτιώσει τη δημιουργία διαδρομών έως τα σημεία που βρίσκονται μακριά από τους δρόμους</string>
+	<string name="avoid_unpaved_carplay_1">Χ/χωματόδρ.</string>
+	<string name="avoid_unpaved_carplay_2">Χ/χωματόδρομους</string>
+	<string name="avoid_ferry_carplay_1">Χ/πορθμεία</string>
+	<string name="avoid_ferry_carplay_2">Χωρίς πορθμεία</string>
+	<string name="avoid_tolls_carplay_1">Χωρίς διόδια</string>
+	<string name="avoid_tolls_carplay_2">Χωρίς διόδια</string>
+	<string name="speedcams_alert_title_carplay_1">Κάμερες</string>
+	<string name="speedcams_alert_title_carplay_2">Πληροφ. γιαόρια</string>
+	<string name="download_map_carplay">Κάντε λήψη χαρτών στην εφαρμογή MAPS.ME στη συσκευή σας</string>
+	<string name="carplay_roundabout_exit">%s έξοδος</string>
+	<!-- max. 10 symbols, both iOS and Android -->
+	<string name="sort">Ταξινόμηση</string>
+	<!-- Android, title, max 20-22 symbols -->
+	<string name="sort_bookmarks">Ταξινόμηση σελιδοδ/τών</string>
+	<!-- iOS -->
+	<string name="sort_default">Ταξινόμηση κατά προεπιλογή</string>
+	<string name="sort_type">Ταξινόμηση ανά τύπο</string>
+	<string name="sort_distance">Ταξινόμηση κατά απόσταση</string>
+	<string name="sort_date">Ταξινόμηση κατά ημερομηνία</string>
+	<!-- Android -->
+	<string name="by_default">Προεπιλογή</string>
+	<!-- Android -->
+	<string name="by_type">Ανά τύπο</string>
+	<!-- Android -->
+	<string name="by_distance">Κατά απόσταση</string>
+	<!-- Android -->
+	<string name="by_date">Κατά ημερομηνία</string>
+	<string name="week_ago_sorttype">Μια βδομάδα πριν</string>
+	<string name="month_ago_sorttype">Ένας μήνας πριν</string>
+	<string name="moremonth_ago_sorttype">Περισσότερο από έναν μήνα πριν</string>
+	<string name="moreyear_ago_sorttype">Περισσότερο από ένα έτος πριν</string>
+	<string name="near_me_sorttype">Δίπλα μου</string>
+	<string name="others_sorttype">Άλλα</string>
+	<string name="food_places">Εστίαση</string>
+	<string name="tourist_places">Αξιοθέατα</string>
+	<string name="museums">Μουσεία</string>
+	<string name="parks">Πάρκα</string>
+	<string name="swim_places">Κολύμβηση</string>
+	<string name="mountains">Βουνά</string>
+	<string name="animals">Ζώα</string>
+	<string name="hotels">Διαμονή</string>
+	<string name="buildings">Κτήρια</string>
+	<string name="money">Χρήματα</string>
+	<string name="shops">Καταστήματα</string>
+	<string name="parkings">Χώροι στάθμευσης</string>
+	<string name="fuel_places">Πρατήρια βενζίνης</string>
+	<string name="water">Νερό</string>
+	<string name="medicine">Γιατρική βοήθεια</string>
+	<string name="search_in_the_list">Αναζήτηση στη λίστα</string>
+	<string name="view_on_map_bookmarks">Στον χάρτη</string>
+	<string name="more_bookmarks">Περισσότερα…</string>
+	<string name="no_items_found">Δεν βρέθηκε τίποτα</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_edit_list">Επεξεργασία</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_delete_list">Διαγραφή λίστας</string>
+	<string name="whatsnew_bookmarks_search_sort_title">Τάξη στους σελιδοδείκτες κάνει το ταξίδι άνετο</string>
+	<string name="whatsnew_bookmarks_search_sort_message">Ταξινόμηση των αγαπημένων σας τοποθεσιών ανά κατηγορία, ώρα προσθήκης και γεωγραφική κατανομή και γρήγορη εύρεση συγκεκριμένων σελιδοδεικτών με το όνομα</string>
+	<string name="popup_subscription_success_map_title">Ζήτω! Είστε συνδρομητής!</string>
+	<string name="popup_subscription_success_map_message">Τώρα μελετήστε τα καλύτερα τουριστικά αξιοθέατα στον κατάλογο MAPS.ME</string>
+	<string name="popup_subscription_success_map_start_button">Προβολή</string>
+	<string name="popup_subscription_success_map_not_now_button">Όχι τώρα</string>
+	<string name="religious_places">Άγιοι τόποι</string>
+	<string name="subscription_terms_android">Μετά την επιβεβαίωση αγοράς η πληρωμή θα χρεωθεί στο λογαριασμό σας στο Google Play. Η συνδρομή θα ανανεώνεται αυτόματα εκτός εάν η λειτουργία αυτόματης ανανέωσης απενεργοποιηθεί τουλάχιστον 24 ώρες πριν από το τέλος της τρέχουσας περιόδου. Ο λογαριασμός σας θα χρεώνεται σύμφωνα με το σχέδιο ανανέωσης συνδρομής σας εντός 24 ωρών πριν από το τέλος της τρέχουσας περιόδου. Μπορείτε να διαχειριστείτε ή να απενεργοποιήσετε τη δυνατότητα αυτόματης ανανέωσης στις Ρυθμίσεις λογαριασμού σας μετά την αγορά. Θα μπορέσετε να χρησιμοποιείτε τους οδηγούς που έχουν ληφθεί με τη συνδρομή μόνο μέχρι τη λήξη της. Μετά το πέρασμα 30 ημερών από τη λήξη της συνδρομής οι οδηγοί θα διαγραφούν αυτόματα.</string>
+	<string name="select_list">Επιλογή λίστας</string>
+	<string name="pp_discovery_place_related_header">Αυτό το μέρος υπάρχει στον κατάλογο οδηγών</string>
+	<string name="pp_discovery_place_related_header_1">Αυτό το μέρος υπάρχει στον οδηγό</string>
+	<string name="pp_discovery_place_related_cta_button">Προβολή</string>
+	<string name="pp_discovery_place_related_tag_header">Οδηγοί με ετικέτα «%s»</string>
+	<string name="pp_discovery_place_related_tag_header_1">Μπορεί επίσης να σας αρέσουν</string>
+	<string name="buy_btn_for_subscription_version_2">ΟΛΟΙ οι οδηγοί μόνο με %s/μήνα</string>
+	<string name="buy_btn_for_subscription_version_3">Ολόκληρος κατάλογος με %s/μήνα</string>
+	<string name="buy_btn_for_subscription_ios_only_mo_version_2">Πρόσβαση στον κατάλογο με %s/μήνα</string>
+	<string name="buy_btn_for_subscription_ios_only_year_version_2">Πρόσβαση στον κατάλογο με %s/χρόνο</string>
+	<string name="subscription_screen_native_title_version_2">Πρόσβαση σε οδηγούς με τα Αγαπημένα!</string>
+	<string name="subscription_screen_native_message_version_2">Για να είστε έτοιμοι για κάθε ταξίδι σε 600+ πόλεις και 100+ χώρες</string>
+	<string name="catalog_no_internet_title">Δεν υπάρχει σύνδεση στο διαδίκτυο</string>
+	<string name="catalog_no_internet_button">Δοκιμάστε ξανά</string>
+	<string name="whatsnew_map_updates_title">Αεριωθούμενες ενημερώσεις χαρτών</string>
+	<string name="whatsnew_map_updates_message">Από εδώ και πέρα ενημερώνουμε τα δεδομένα 2 φορές πιο γρήγορα</string>
+	<string name="new_onboarding_button">Επόμενο</string>
+	<string name="new_onboarding_button_2">Εκκίνηση</string>
+	<string name="new_onboarding_step1_header_2">Ολοκληρωμένος βοηθός στα ταξίδια</string>
+	<string name="new_onboarding_step2_header">Κάντε όνειρα και σχέδια</string>
+	<string name="new_onboarding_step2_message">70+ εκατομμύρια ενδιαφέρουσες τοποθεσίες, κατάλογος έτοιμων οδηγών και κρατήσεις ξενοδοχείων από τον χάρτη – είστε έτοιμοι να ταξιδέψετε!</string>
+	<string name="new_onboarding_step3_message">Οι λεπτομερείς χάρτες εκτός σύνδεσης και η πλοήγηση εκτός σύνδεσης θα σας βοηθήσουν να μην χαθείτε σε άγνωστα μέρη!</string>
+	<string name="new_onboarding_step4_header">Μοιραστείτε τις εντυπώσεις σας</string>
+	<string name="new_onboarding_step4_message">Να αποθηκεύετε τις τοποθεσίες που σας άρεσαν σε Αγαπημένα και να τις στέλνετε σε φίλους</string>
+	<string name="new_onboarding_step5.1_header">Προτού ξεκινήσετε…</string>
+	<string name="new_onboarding_step5.1_message">Μην ξεχάσετε να επισκεφθείτε τον καινούριο μας κατάλογο διαδρομών για να βρείτε τον οδηγό εκτός σύνδεσης για το επόμενο ταξίδι σας!</string>
+	<string name="new_onboarding_step5.1_button">Άνοιγμα καταλόγου</string>
+	<string name="new_onboarding_step5.2_message">Η συνδρομή στον κατάλογο οδηγών στο MAPS.ME συνφέρει. Αποκτήστε πλήρη πρόσβαση σε οδηγούς για περιπάτους στην πόλη και υπαίθριες δραστηριότητες!</string>
+	<string name="new_onboarding_step5.2_button">Προβολή όρων</string>
+	<string name="new_onboarding_step5.3_message">Κάντε λήψη και αξιολογήστε διαδρομές για περιπάτους στην πόλη και υπαίθριες δραστηριότητες με δωρεάν συλλογή του MAPS.ME!</string>
+	<string name="new_onboarding_step5.3_button">Δωρεάν λήψη</string>
+	<string name="new_onboarding_additional_steps_later_button">Αργότερα</string>
+	<string name="all_pass_subscription_header">ΕΓΓΡΑΦΗ ΣΤΟΝ ΚΑΤΑΛΟΓΟ</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title">30.000+\nοδηγών\nκαι μονοπατιών</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle"><b>Απεριόριστη λήψη εκτός σύνδεσης</b> διαδρομές για την πόλη και υπαίθριες δραστηριότητες</string>
+	<!-- \n - for a break between lines. Max. 17 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_2">Διαδραστικό\nπροφίλ υψόμετρου</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_2">Όλα τα μονοπάτια φορτώνονται <b>με υψόμετρα και βασικές πληροφορίες διαδρομής</b></string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_3">Αγαπημένα,\nφωτογραφίες\nκαι συστάσεις</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_3"><b>Μάθετε τα πάντα για τη διαδρομή</b> που θα ακολουθήσετε</string>
+	<string name="sightseeing_subscription_header_subscription">Συνδρομή σε οδηγούς</string>
+	<string name="sightseeing_subscription_message">700+ πόλεις και 100+ χώρες</string>
+	<string name="sightseeing_subscription_message_2">Διαθέσιμα χωρίς σύνδεση</string>
+	<string name="sightseeing_subscription_message_3">Φωτογραφίες και μονοπάτια</string>
+	<string name="subscription_success_dialog_title_sightseeing_pass">Ευχαριστούμε για την εγγραφή!</string>
+	<string name="subscription_success_dialog_message_sightseeing_pass">Τώρα έχετε πρόσβαση σε όλους τους οδηγούς περιηγήσεων στις πόλεις που υπάρχουν στον κατάλογο</string>
+	<string name="downloader_main_gallery_header">Χάρτες και οδηγοί</string>
+	<string name="downloader_main_gallery_message">Τώρα, σε αυτήν την ενότητα μπορείτε να κάνετε λήψη των χαρτών και επιπλέον να επιλέξετε τους οδηγούς για τα επόμενα ταξίδια σας</string>
+	<string name="downloader_main_1_element_gallery_header">Όλοι οδηγοί</string>
+	<string name="downloader_main_1_element_gallery_message">σε 100+ χώρες</string>
+	<string name="downloader_country_1_element_gallery_header">%s διαδρομών</string>
+	<string name="downloader_country_no_guides_gallery_header">Προς το παρόν δεν υπάρχουν οδηγοί γι\' αυτή τη χώρα</string>
+	<string name="downloader_country_no_guides_gallery_message">Ρίξτε μια ματιά σε άλλες διαδρομές σε 100+ χώρες για τις αστικές και υπαίθριες δραστηριότητες</string>
+	<string name="dialog_pedestrian_route_is_long">Η διαδρομή με τα πόδια μέχρι το σημείο επιβίβασης είναι πολύ μεγάλη</string>
+	<string name="whatsnew_outdoor_guides_title">Έχουμε προσθέσει 15.000 + μονοπάτια για υπαίθριες δραστηριότητες!</string>
+	<string name="whatsnew_outdoor_guides_message">Οι διαδρομές από την Outdooractive για χειμερινές και καλοκαιρινές διακοπές σας περιμένουν στον κατάλογο!</string>
+	<string name="whatsnew_guides_galleries_title">Προγραμματίστε το επόμενο ταξίδι με το MAPS.ME</string>
+	<string name="whatsnew_guides_galleries_message">Τώρα μπορείτε να βρείτε τους συνιστώμενους οδηγούς στις κάρτες των δημοφιλών πόλεων και αξιοθέατων</string>
+	<string name="new_onboarding_step3_header">Ταξιδέψτε</string>
+	<string name="all_pass_screen_best_value">Καλύτερη τιμή</string>
+	<string name="buy_btn_for_subscription_3">Ολόκληρος κατάλογος με %s/έτος</string>
+	<string name="transit_not_found">Η πλοήγηση στο μετρό γι\' αυτή την περιοχή δεν είναι ακόμα διαθέσιμη</string>
+	<string name="dialog_pedestrian_route_is_long_header">Η διαδρομή του μετρό δεν βρέθηκε</string>
+	<string name="dialog_pedestrian_route_is_long_message">Επιλέξτε το σημείο έναρξης ή τέλους διαδρομής πιο κοντά στο σταθμό του μετρό</string>
+	<!-- Failed planning SUBWAY route message in navigation view -->
+	<string name="routing_planning_error_subway_special">Σφάλμα κατά την δημιουργία διαδρομής του μετρό</string>
+	<string name="whatsnew_isolines_title">Νέο για υπαίθριες δραστηριότητες – τοπογραφικά στρώματα εκτός σύνδεσης!</string>
+	<!-- as less symbols as possible -->
+	<string name="whatsnew_isolines_message">Νιώστε σίγουροι στα ορεινά – ενεργοποιήστε το στρώμα στην πάνω αριστερή γωνία της οθόνης</string>
+	<string name="button_layer_isolines">Υψόμετρα</string>
+	<string name="tips_map_layers_title_countour">Τοπογραφικά στρώματα εκτός σύνδεσης στο MAPS.ME!</string>
+	<string name="tips_map_layers_message_countour">Τα τοπογραφικά στρώματα θα σας βοηθήσουν να σχεδιάσετε το ταξίδι σας στη φύση και να μην χαθείτε στην περιοχή</string>
+	<string name="isolines_activation_error_dialog">Για να χρησιμοποιήσετε τοπογραφικά στρώματα, ενημερώστε ή κατεβάστε τον χάρτη της επιθυμητής περιοχής</string>
+	<string name="isolines_location_error_dialog">Τα τοπογραφικά στρώματα δεν είναι ακόμα διαθέσιμα σε αυτή την περιοχή</string>
+	<string name="elevation_profile_diff_level">Επίπεδο δυσκολίας</string>
+	<string name="elevation_profile_diff_level_easy">Εύκολο</string>
+	<string name="elevation_profile_diff_level_moderate">Μέτριο</string>
+	<string name="elevation_profile_diff_level_hard">Δύσκολο</string>
+	<string name="elevation_profile_ascent">Άνοδος</string>
+	<string name="elevation_profile_descent">Κάθοδος</string>
+	<string name="elevation_profile_minaltitude">Ελ. υψόμετρο</string>
+	<string name="elevation_profile_maxaltitude">Μέγ. υψόμετρο</string>
+	<string name="elevation_profile_m">μ</string>
+	<string name="elevation_profile_difficulty">Δυσκολία</string>
+	<string name="elevation_profile_distance">Απόστ.:</string>
+	<string name="elevation_profile_km">χλμ</string>
+	<string name="elevation_profile_time">Διαρκ:</string>
+	<string name="elevation_profile_hours">ω.</string>
+	<string name="elevation_profile_minutes">λ.</string>
+	<!-- hide the full screen banner and continue working with the app -->
+	<string name="hide_screen_map_update">Απόκρυψη και συνέχεια εργασίας</string>
+	<string name="view_on_map_downloaded_error">Αυτός ο ταξιδιωτικός οδηγός έχει αφαιρεθεί από τη συσκευή</string>
+	<string name="subscription">Συνδρομή</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Σταθμός αερομεταφοράς</string>
 	<string name="type.aeroway.aerodrome">Αεροδρόμιο</string>
 	<string name="type.aeroway.aerodrome.international">Αεροδρόμιο</string>
 	<string name="type.aeroway.helipad">Ελικοδρόμιο</string>
+	<string name="type.amenity">Εγκαταστάσεις υποδομής</string>
+	<string name="type.amenity.arts_centre">Κέντρο καλών τεχνών</string>
 	<string name="type.amenity.bank">Τράπεζα</string>
 	<string name="type.amenity.bar">Μπαρ</string>
 	<string name="type.amenity.bbq">Χώρος εκδρομής</string>
@@ -1282,14 +1593,15 @@
 	<string name="type.amenity.parking">Χώρος στάθμευσης</string>
 	<string name="type.amenity.parking.fee">Χώρος στάθμευσης</string>
 	<string name="type.amenity.parking.multi.storey">Χώρος στάθμευσης</string>
-	<string name="type.amenity.parking.multi.storey.fee">Χώρος στάθμευσης</string>
 	<string name="type.amenity.parking.no.access">Χώρος στάθμευσης</string>
 	<string name="type.amenity.parking.park_and_ride">Χώρος στάθμευσης</string>
 	<string name="type.amenity.parking.permissive">Χώρος στάθμευσης</string>
-	<string name="type.amenity.parking.permissive.fee">Χώρος στάθμευσης</string>
 	<string name="type.amenity.parking.private">Χώρος στάθμευσης</string>
 	<string name="type.amenity.parking.underground">Χώρος στάθμευσης</string>
-	<string name="type.amenity.parking.underground.fee">Χώρος στάθμευσης</string>
+	<string name="type.amenity.parking_space">Χώρος στάθμευσης</string>
+	<string name="type.amenity.parking_space.permissive">Χώρος στάθμευσης</string>
+	<string name="type.amenity.parking_space.private">Χώρος στάθμευσης</string>
+	<string name="type.amenity.parking_space.underground">Χώρος στάθμευσης</string>
 	<string name="type.amenity.payment_terminal">Τερματικό πληρωμών</string>
 	<string name="type.amenity.pharmacy">Φαρμακείο</string>
 	<string name="type.amenity.place_of_worship">Χώρος λατρείας</string>
@@ -1319,6 +1631,7 @@
 	<string name="type.amenity.vending_machine.cigarettes">Αυτόματος πωλητής τσιγάρων</string>
 	<string name="type.amenity.vending_machine.drinks">Αυτόματος πωλητής ποτών</string>
 	<string name="type.amenity.vending_machine.parking_tickets">Εισιτήρια στάθμευσης</string>
+	<string name="type.amenity.vending_machine.public_transport_tickets">Μηχάνημα αυτόματης πώλησης εισιτηρίων για τα μέσα μαζικής μεταφοράς</string>
 	<string name="type.amenity.veterinary">Κτηνίατρος</string>
 	<string name="type.amenity.waste_basket">Κάδος απορριμμάτων</string>
 	<string name="type.amenity.waste_disposal">Διαχείριση απορριμμάτων</string>
@@ -1438,6 +1751,7 @@
 	<string name="type.emergency.phone">Τηλέφωνο έκτακτης ανάγκης</string>
 	<string name="type.entrance">Είσοδος</string>
 	<string name="type.highway.bus_stop">Στάση λεωφορείου</string>
+	<string name="type.highway.construction">Οδός υπό κατασκευή</string>
 	<string name="type.highway.footway">Διαδρομή</string>
 	<string name="type.highway.footway.alpine_hiking">Διαδρομή</string>
 	<string name="type.highway.footway.area">Διαδρομή</string>
@@ -1500,9 +1814,6 @@
 	<string name="type.highway.service.area">Οδός</string>
 	<string name="type.highway.service.bridge">Οδός</string>
 	<string name="type.highway.service.driveway">Οδός</string>
-	<string name="type.highway.service.driveway.area">Οδός</string>
-	<string name="type.highway.service.driveway.bridge">Οδός</string>
-	<string name="type.highway.service.driveway.tunnel">Οδός</string>
 	<string name="type.highway.service.parking_aisle">Οδός</string>
 	<string name="type.highway.service.tunnel">Οδός</string>
 	<string name="type.highway.speed_camera">Κάμερα ταχύτητας</string>
@@ -1521,14 +1832,8 @@
 	<string name="type.highway.track.grade1">Οδός</string>
 	<string name="type.highway.track.grade2">Οδός</string>
 	<string name="type.highway.track.grade3">Οδός</string>
-	<string name="type.highway.track.grade3.no.access">Οδός</string>
-	<string name="type.highway.track.grade3.permissive">Οδός</string>
 	<string name="type.highway.track.grade4">Οδός</string>
-	<string name="type.highway.track.grade4.no.access">Οδός</string>
-	<string name="type.highway.track.grade4.permissive">Οδός</string>
 	<string name="type.highway.track.grade5">Οδός</string>
-	<string name="type.highway.track.grade5.no.access">Οδός</string>
-	<string name="type.highway.track.grade5.permissive">Οδός</string>
 	<string name="type.highway.track.no.access">Οδός</string>
 	<string name="type.highway.track.permissive">Οδός</string>
 	<string name="type.highway.track.tunnel">Οδός</string>
@@ -1560,11 +1865,17 @@
 	<string name="type.landuse.basin">Νερό</string>
 	<string name="type.landuse.cemetery">Νεκροταφείο</string>
 	<string name="type.landuse.cemetery.christian">Νεκροταφείο</string>
+	<string name="type.landuse.churchyard">Αυλόγυρος εκκλησίας</string>
+	<string name="type.landuse.farmland">Αγροτική γη</string>
 	<string name="type.landuse.forest">Δάσος</string>
 	<string name="type.landuse.forest.coniferous">Δάσος</string>
 	<string name="type.landuse.forest.deciduous">Δάσος</string>
 	<string name="type.landuse.forest.mixed">Δάσος</string>
+	<string name="type.landuse.grass">Γκαζόν</string>
+	<string name="type.landuse.landfill">Σκουπιδότοπος</string>
+	<string name="type.landuse.railway">Σιδηροδρομικές εγκαταστάσεις</string>
 	<string name="type.landuse.reservoir">Νερό</string>
+	<string name="type.leisure.dog_park">Περιοχή για βόλτα σκύλων</string>
 	<string name="type.leisure.fitness_centre">Κέντρο γυμναστικής</string>
 	<string name="type.leisure.fitness_station">Γυμναστήριο</string>
 	<string name="type.leisure.garden">Κήπος αναψυχής</string>
@@ -1575,9 +1886,7 @@
 	<string name="type.leisure.park.permissive">Πάρκο</string>
 	<string name="type.leisure.park.private">Πάρκο</string>
 	<string name="type.leisure.pitch">Γήπεδο αθλοπαιδιών</string>
-	<string name="type.leisure.pitch.tennis">Γήπεδο αθλοπαιδιών</string>
 	<string name="type.leisure.playground">Παιδική χαρά</string>
-	<string name="type.leisure.playground.tennis">Παιδική χαρά</string>
 	<string name="type.leisure.sauna">Σάουνα</string>
 	<string name="type.leisure.sports_centre">Αθλητικό κέντρο</string>
 	<string name="type.leisure.sports_centre.climbing">Κέντρο αναρρίχησης</string>
@@ -1599,20 +1908,19 @@
 	<string name="type.natural.bay">Κόλπος</string>
 	<string name="type.natural.beach">Παραλία</string>
 	<string name="type.natural.cape">Ακρωτήρι</string>
-	<string name="type.natural.cave_entrance">Είσοδος σπηλαίου</string>
+	<string name="type.natural.cave_entrance">Σπήλαιο</string>
 	<string name="type.natural.geyser">Θερμοπίδακας</string>
 	<string name="type.natural.glacier">Παγετώνας</string>
+	<string name="type.natural.grassland">Λιβάδι</string>
 	<string name="type.natural.lake">Λίμνη</string>
 	<string name="type.natural.peak">Κορυφή</string>
 	<string name="type.natural.pond">Δεξαμενή</string>
+	<string name="type.natural.scrub">Θαμνώδες περιοχή</string>
 	<string name="type.natural.spring">Πηγή νερού</string>
 	<string name="type.natural.tree">Δέντρο</string>
 	<string name="type.natural.volcano">Ηφαίστειο</string>
 	<string name="type.natural.water">Νερό</string>
-	<string name="type.natural.wood">Δάσος</string>
-	<string name="type.natural.wood.coniferous">Δάσος</string>
-	<string name="type.natural.wood.deciduous">Δάσος</string>
-	<string name="type.natural.wood.mixed">Δάσος</string>
+	<string name="type.natural.wetland">Υγρότοπος</string>
 	<string name="type.office">Γραφείο</string>
 	<string name="type.office.company">Γραφείο επιχείρησης</string>
 	<string name="type.office.estate_agent">Κτηματομεσίτης</string>
@@ -1653,7 +1961,9 @@
 	<string name="type.power.substation">Υποσταθμός</string>
 	<string name="type.power.tower">Πυλώνες μεταφοράς ρεύματος</string>
 	<string name="type.railway.halt">Σιδηροδρομικός σταθμός</string>
-	<string name="type.railway.level_crossing">Ισόπεδη σιδηροδρομική διάβαση</string>
+	<string name="type.railway.level_crossing">Σιδηροδρομική διέλευση</string>
+	<string name="type.railway.monorail">Μονοαξονικός σιδηρόδρομος</string>
+	<string name="type.railway.rail">Σιδηρόδρομος</string>
 	<string name="type.railway.station">Σιδηροδρομικός σταθμός</string>
 	<string name="type.railway.station.light_rail">Σιδηροδρομικός σταθμός</string>
 	<string name="type.railway.station.monorail">Σιδηροδρομικός σταθμός</string>
@@ -1682,7 +1992,7 @@
 	<string name="type.railway.station.subway.spb">Μετρό</string>
 	<string name="type.railway.station.subway.violet">Μετρό</string>
 	<string name="type.railway.station.subway.yellow">Μετρό</string>
-	<string name="type.railway.subway_entrance">Μετρό</string>
+	<string name="type.railway.subway_entrance">Είσοδος μετρό</string>
 	<string name="type.railway.subway_entrance.barcelona">Μετρό</string>
 	<string name="type.railway.subway_entrance.berlin">Μετρό</string>
 	<string name="type.railway.subway_entrance.kiev">Μετρό</string>
@@ -1763,8 +2073,9 @@
 	<string name="type.shop.wine">Οινοπωλείο</string>
 	<string name="type.sponsored.holiday">Χριστούγεννα ή Ρεβεγιόν πρωτοχρονιάς</string>
 	<string name="type.sport.athletics">Στίβος</string>
-	<string name="type.sport.basketball">Καλαθόσφαιρα</string>
+	<string name="type.sport.basketball">Μπάσκετ</string>
 	<string name="type.sport.equestrian">Ιππασία</string>
+	<string name="type.sport.tennis">Γήπεδο τένις</string>
 	<string name="type.tourism.alpine_hut">Ορεινό καταφύγιο</string>
 	<string name="type.tourism.apartment">Διαμερίσματα</string>
 	<string name="type.tourism.artwork">Έργα τέχνης</string>
@@ -1806,4 +2117,8 @@
 	<string name="type.waterway.stream.intermittent">Ποταμός</string>
 	<string name="type.waterway.stream.tunnel">Ποταμός</string>
 	<string name="type.waterway.waterfall">Καταρράκτης</string>
+	<string name="type.wheelchair.limited">Μερικώς εξοπλισμένο για άτομα με ειδικές ανάγκες</string>
+	<string name="type.wheelchair.no">Δεν υπάρχει πρόβλεψη για άτομα με ειδικές ανάγκες</string>
+	<string name="type.wheelchair.yes">Εξοπλισμένο για άτομα με ειδικές ανάγκες</string>
+	<string name="type.building_part">Κτίριο</string>
 </resources>

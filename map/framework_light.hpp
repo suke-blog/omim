@@ -18,8 +18,6 @@
 #include <string>
 #include <vector>
 
-#include <boost/optional.hpp>
-
 namespace lightweight
 {
 struct LightFrameworkTest;
@@ -49,9 +47,17 @@ using RequestTypeMask = unsigned;
 class Framework
 {
 public:
+  class Delegate
+  {
+  public:
+    virtual ~Delegate() = default;
+    virtual notifications::NotificationManager & GetNotificationManager() = 0;
+  };
   friend struct LightFrameworkTest;
 
   explicit Framework(RequestTypeMask request);
+
+  void SetDelegate(std::unique_ptr<Delegate> delegate);
 
   bool IsUserAuthenticated() const;
   size_t GetNumberOfUnsentUGC() const;
@@ -61,10 +67,11 @@ public:
   std::vector<CampaignFeature> GetLocalAdsFeatures(double lat, double lon, double radiusInMeters,
                                                    uint32_t maxCount);
   Statistics * GetLocalAdsStatistics();
-  boost::optional<notifications::NotificationCandidate> GetNotification() const;
+  notifications::Notification GetNotification() const;
 
 private:
   RequestTypeMask m_request;
+  std::unique_ptr<Delegate> m_delegate;
   bool m_userAuthStatus = false;
   size_t m_numberOfUnsentUGC = 0;
   size_t m_numberOfUnsentEdits = 0;
@@ -72,7 +79,6 @@ private:
   std::unique_ptr<CountryInfoReader> m_countryInfoReader;
   std::unique_ptr<LocalAdsFeaturesReader> m_localAdsFeaturesReader;
   std::unique_ptr<Statistics> m_localAdsStatistics;
-  std::unique_ptr<lightweight::NotificationManager> m_notificationManager;
 };
 
 std::string FeatureParamsToString(int64_t mwmVersion, std::string const & countryId, uint32_t featureIndex);

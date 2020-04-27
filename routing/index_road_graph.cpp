@@ -1,20 +1,24 @@
 #include "routing/index_road_graph.hpp"
 
+#include "routing/fake_feature_ids.hpp"
+#include "routing/latlon_with_altitude.hpp"
 #include "routing/routing_exceptions.hpp"
 #include "routing/transit_graph.hpp"
 
 #include "indexer/data_source.hpp"
 
 #include <cstdint>
+#include <utility>
 
 using namespace std;
 
 namespace routing
 {
 IndexRoadGraph::IndexRoadGraph(shared_ptr<NumMwmIds> numMwmIds, IndexGraphStarter & starter,
-                               vector<Segment> const & segments, vector<Junction> const & junctions,
+                               vector<Segment> const & segments,
+                               vector<geometry::PointWithAltitude> const & junctions,
                                DataSource & dataSource)
-  : m_dataSource(dataSource), m_numMwmIds(numMwmIds), m_starter(starter), m_segments(segments)
+  : m_dataSource(dataSource), m_numMwmIds(move(numMwmIds)), m_starter(starter), m_segments(segments)
 {
   //    j0     j1     j2     j3
   //    *--s0--*--s1--*--s2--*
@@ -22,7 +26,7 @@ IndexRoadGraph::IndexRoadGraph(shared_ptr<NumMwmIds> numMwmIds, IndexGraphStarte
 
   for (size_t i = 0; i < junctions.size(); ++i)
   {
-    Junction const & junction = junctions[i];
+    geometry::PointWithAltitude const & junction = junctions[i];
     if (i > 0)
       m_endToSegment[junction].push_back(segments[i - 1]);
     if (i < segments.size())
@@ -30,12 +34,14 @@ IndexRoadGraph::IndexRoadGraph(shared_ptr<NumMwmIds> numMwmIds, IndexGraphStarte
   }
 }
 
-void IndexRoadGraph::GetOutgoingEdges(Junction const & junction, TEdgeVector & edges) const
+void IndexRoadGraph::GetOutgoingEdges(geometry::PointWithAltitude const & junction,
+                                      EdgeVector & edges) const
 {
   GetEdges(junction, true, edges);
 }
 
-void IndexRoadGraph::GetIngoingEdges(Junction const & junction, TEdgeVector & edges) const
+void IndexRoadGraph::GetIngoingEdges(geometry::PointWithAltitude const & junction,
+                                     EdgeVector & edges) const
 {
   GetEdges(junction, false, edges);
 }
@@ -54,38 +60,48 @@ void IndexRoadGraph::GetEdgeTypes(Edge const & edge, feature::TypesHolder & type
 {
   if (edge.IsFake())
   {
-    types = feature::TypesHolder(feature::GEOM_LINE);
+    types = feature::TypesHolder(feature::GeomType::Line);
     return;
   }
 
   FeatureID const featureId = edge.GetFeatureId();
-  FeatureType ft;
+  if (FakeFeatureIds::IsGuidesFeature(featureId.m_index))
+  {
+    types = feature::TypesHolder(feature::GeomType::Line);
+    return;
+  }
+
   FeaturesLoaderGuard loader(m_dataSource, featureId.m_mwmId);
-  if (!loader.GetFeatureByIndex(featureId.m_index, ft))
+  auto ft = loader.GetFeatureByIndex(featureId.m_index);
+  if (!ft)
   {
     LOG(LERROR, ("Can't load types for feature", featureId));
     return;
   }
 
-  ASSERT_EQUAL(ft.GetFeatureType(), feature::GEOM_LINE, ());
-  types = feature::TypesHolder(ft);
+  ASSERT_EQUAL(ft->GetGeomType(), feature::GeomType::Line, ());
+  types = feature::TypesHolder(*ft);
 }
 
-void IndexRoadGraph::GetJunctionTypes(Junction const & junction, feature::TypesHolder & types) const
+void IndexRoadGraph::GetJunctionTypes(geometry::PointWithAltitude const & junction,
+                                      feature::TypesHolder & types) const
 {
   // TODO: implement method to support PedestrianDirection::LiftGate, PedestrianDirection::Gate
   types = feature::TypesHolder();
 }
 
-void IndexRoadGraph::GetRouteEdges(TEdgeVector & edges) const
+void IndexRoadGraph::GetRouteEdges(EdgeVector & edges) const
 {
   edges.clear();
   edges.reserve(m_segments.size());
 
   for (Segment const & segment : m_segments)
   {
-    auto const & junctionFrom = m_starter.GetJunction(segment, false /* front */);
-    auto const & junctionTo = m_starter.GetJunction(segment, true /* front */);
+    auto const & junctionFrom =
+        m_starter.GetJunction(segment, false /* front */).ToPointWithAltitude();
+    auto const & junctionTo =
+        m_starter.GetJunction(segment, true /* front */).ToPointWithAltitude();
+
     if (IndexGraphStarter::IsFakeSegment(segment) || TransitGraph::IsTransitSegment(segment))
     {
       Segment real = segment;
@@ -94,6 +110,7 @@ void IndexRoadGraph::GetRouteEdges(TEdgeVector & edges) const
         platform::CountryFile const & file = m_numMwmIds->GetFile(real.GetMwmId());
         MwmSet::MwmId const mwmId = m_dataSource.GetMwmIdByCountryFile(file);
         edges.push_back(Edge::MakeFakeWithRealPart(FeatureID(mwmId, real.GetFeatureId()),
+                                                   segment.GetSegmentIdx(),
                                                    real.IsForward(), real.GetSegmentIdx(),
                                                    junctionFrom, junctionTo));
       }
@@ -117,7 +134,8 @@ void IndexRoadGraph::GetRouteSegments(std::vector<Segment> & segments) const
   segments = m_segments;
 }
 
-void IndexRoadGraph::GetEdges(Junction const & junction, bool isOutgoing, TEdgeVector & edges) const
+void IndexRoadGraph::GetEdges(geometry::PointWithAltitude const & junction, bool isOutgoing,
+                              EdgeVector & edges) const
 {
   edges.clear();
 
@@ -127,6 +145,7 @@ void IndexRoadGraph::GetEdges(Junction const & junction, bool isOutgoing, TEdgeV
   {
     tmpEdges.clear();
     m_starter.GetEdgesList(segment, isOutgoing, tmpEdges);
+
     segmentEdges.insert(segmentEdges.end(), tmpEdges.begin(), tmpEdges.end());
   }
 
@@ -139,14 +158,14 @@ void IndexRoadGraph::GetEdges(Junction const & junction, bool isOutgoing, TEdgeV
     platform::CountryFile const & file = m_numMwmIds->GetFile(segment.GetMwmId());
     MwmSet::MwmId const mwmId = m_dataSource.GetMwmIdByCountryFile(file);
 
-    edges.push_back(Edge::MakeReal(FeatureID(mwmId, segment.GetFeatureId()), segment.IsForward(),
-                                   segment.GetSegmentIdx(),
-                                   m_starter.GetJunction(segment, false /* front */),
-                                   m_starter.GetJunction(segment, true /* front */)));
+    edges.push_back(Edge::MakeReal(
+        FeatureID(mwmId, segment.GetFeatureId()), segment.IsForward(), segment.GetSegmentIdx(),
+        m_starter.GetJunction(segment, false /* front */).ToPointWithAltitude(),
+        m_starter.GetJunction(segment, true /* front */).ToPointWithAltitude()));
   }
 }
 
-vector<Segment> const & IndexRoadGraph::GetSegments(Junction const & junction,
+vector<Segment> const & IndexRoadGraph::GetSegments(geometry::PointWithAltitude const & junction,
                                                     bool isOutgoing) const
 {
   auto const & junctionToSegment = isOutgoing ? m_endToSegment : m_beginToSegment;

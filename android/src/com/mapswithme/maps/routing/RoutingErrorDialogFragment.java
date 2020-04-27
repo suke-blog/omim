@@ -2,9 +2,9 @@ package com.mapswithme.maps.routing;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AlertDialog;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
@@ -29,10 +29,13 @@ public class RoutingErrorDialogFragment extends BaseRoutingErrorDialogFragment
   {
     super.beforeDialogCreated(builder);
 
-    Pair<String, String> titleMessage = ResultCodesHelper.getDialogTitleSubtitle(mResultCode, mMissingMaps.size());
+    ResultCodesHelper.ResourcesHolder resHolder =
+        ResultCodesHelper.getDialogTitleSubtitle(mResultCode, mMissingMaps.size());
+    Pair<String, String> titleMessage = resHolder.getTitleMessage();
+
     builder.setTitle(titleMessage.first);
     mMessage = titleMessage.second;
-
+    builder.setNegativeButton(resHolder.getCancelBtnResId(), null);
     if (ResultCodesHelper.isDownloadable(mResultCode, mMissingMaps.size()))
       builder.setPositiveButton(R.string.download, null);
 

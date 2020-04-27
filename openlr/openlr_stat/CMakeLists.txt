@@ -11,10 +11,12 @@ omim_add_executable(${PROJECT_NAME} ${SRC})
 omim_link_libraries(${PROJECT_NAME}
   openlr
   routing
+  traffic
   routing_common
   storage
   editor
   indexer
+  mwm_diff
   platform
   geometry
   coding
@@ -25,10 +27,10 @@ omim_link_libraries(${PROJECT_NAME}
   oauthcpp
   opening_hours
   protobuf
-  mwm_diff
   bsdiff
   pugixml
   stats_client
+  succinct
   ${Qt5Core_LIBRARIES}
   ${LIBZ}
 )

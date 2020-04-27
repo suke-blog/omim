@@ -24,7 +24,7 @@ DEFAULT_DOWNLOAD_DIRECTORY = OMIM_ROOT / 'data'
 COUNTRIES_TXT = OMIM_ROOT / 'data' / 'countries.txt'
 TIMEOUT = 3
 
-URL_PATTERN = 'http://{prefix}.mapswithme.com/direct/{version}/{name}.mwm'
+URL_PATTERN = 'http://{prefix}.mapswithme.com/maps/{version}/{name}.mwm'
 MAP_SERVERS = ('maps-dl-ru1', 'maps-dl-ru2', 'maps-dl-ru3', 'maps-dl-ams1',
                'maps-dl-eu2', 'maps-dl-us1')
 MWM_NAME_REGEXP = re.compile(r'"(\S+\.mwm)"')
@@ -114,11 +114,11 @@ def progress_bar(total, progress):
     sys.stderr.flush()
 
 
-def download_mwm_list(version=None, threads=8, folder=None, mwm_prefix_list=None, quiet=True):
+def download_mwm_list(version=None, threads=8, folder=None, countries_path=COUNTRIES_TXT, mwm_prefix_list=None, quiet=True):
     try:
-        countries = json.load(open(str(COUNTRIES_TXT), 'r'))
+        countries = json.load(open(str(countries_path), 'r'))
     except (OSError, json.decoder.JSONDecodeError) as e:
-        logging.error('File \'omim/data/countries.txt\' is corrupted.', exc_info=True)
+        logging.error('File {} is corrupted.'.format(countries_path), exc_info=True)
         exit(1)
 
     mwm_names = country_names_generator(countries)
@@ -160,6 +160,7 @@ if __name__ == '__main__':
     parser.add_argument('-v', '--version', help='Map version number e.g. 180126', type=int, default=None)
     parser.add_argument('-t', '--threads', help='Threads count', type=int, default=8)
     parser.add_argument('-f', '--folder', help='Directory to save maps', type=str, default=None)
+    parser.add_argument('-c', '--countries_path', help='Path to countries.txt', type=str, default=COUNTRIES_TXT)
     parser.add_argument('-m', '--mwm_prefix_list', help='Mwm prefix list (exmp. \'Russia\', \'Russia_Moscow.mwm\')',
                         type=str, default=None, nargs='+')
     parser.add_argument('-q', '--quiet', help='Prevent progress bar showing', action='store_true', default=False)

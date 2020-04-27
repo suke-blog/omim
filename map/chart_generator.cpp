@@ -3,8 +3,7 @@
 #include "base/assert.hpp"
 #include "base/math.hpp"
 
-#include "std/algorithm.hpp"
-#include "std/fstream.hpp"
+#include <algorithm>
 
 #include "3party/agg/agg_conv_curve.h"
 #include "3party/agg/agg_conv_stroke.h"
@@ -14,6 +13,8 @@
 #include "3party/agg/agg_renderer_primitives.h"
 #include "3party/agg/agg_renderer_scanline.h"
 #include "3party/agg/agg_scanline_p.h"
+
+using namespace std;
 
 namespace
 {
@@ -106,7 +107,7 @@ void ReflectChartData(vector<double> & chartData)
 }
 
 bool NormalizeChartData(vector<double> const & distanceDataM,
-                        feature::TAltitudes const & altitudeDataM, size_t resultPointCount,
+                        geometry::Altitudes const & altitudeDataM, size_t resultPointCount,
                         vector<double> & uniformAltitudeDataM)
 {
   double constexpr kEpsilon = 1e-6;
@@ -271,7 +272,7 @@ bool GenerateChartByPoints(uint32_t width, uint32_t height, vector<m2::PointD> c
 }
 
 bool GenerateChart(uint32_t width, uint32_t height, vector<double> const & distanceDataM,
-                   feature::TAltitudes const & altitudeDataM, MapStyle mapStyle,
+                   geometry::Altitudes const & altitudeDataM, MapStyle mapStyle,
                    vector<uint8_t> & frameBuffer)
 {
   if (distanceDataM.size() != altitudeDataM.size())

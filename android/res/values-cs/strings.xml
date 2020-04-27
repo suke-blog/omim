@@ -4,8 +4,6 @@
 <!-- Language: cs -->
 <resources>
 	<!-- SECTION: Strings -->
-	<!-- About button text (should be short) -->
-	<string name="about">O aplikaci</string>
 	<!-- Button text (should be short) -->
 	<string name="back">Zpět</string>
 	<!-- Button text (should be short) -->
@@ -66,8 +64,6 @@
 	<string name="touch_to_download">Klepněte pro stažení</string>
 	<!-- Settings/Downloader - 3G download warning dialog confirm button -->
 	<string name="use_cellular_data">Ano</string>
-	<!-- Settings/Downloader - No internet connection dialog message -->
-	<string name="use_wifi_recommendation_text">Pro stahování větších map doporučujeme používat WiFi</string>
 	<!-- Choose measurement on first launch alert - title -->
 	<string name="which_measurement_system">Jaký systém pro měření preferujete?</string>
 	<!-- Location services are disabled by user alert - message -->
@@ -255,8 +251,6 @@
 	<string name="my_position_share_sms">Koukni kde jsem. Otevři odkaz: %1$s nebo %2$s</string>
 	<!-- Subject for emailed bookmark -->
 	<string name="bookmark_share_email_subject">Koukni na moji značku na mapě v MAPS.ME</string>
-	<!-- Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me -->
-	<string name="bookmark_share_email">Ahoj,\n\noznačil/a jsem %1$s v MAPS.ME, offline mapách celého světa. Klepni na jeden z těchto odkazů %2$s, %3$s a uvidíš toto místo na mapě.\n\nDíky.</string>
 	<!-- Subject for emailed position -->
 	<string name="my_position_share_email_subject">Podívej se na mou aktuální polohu na mapě na MAPS.ME</string>
 	<!-- Share my position using EMail, %1$@ is ge0:// and %2$@ is http://ge0.me link WITHOUT NAME -->
@@ -363,12 +357,6 @@
 	<string name="route">Trasa</string>
 	<!-- category title -->
 	<string name="routes">Trasy</string>
-	<!-- Show on first launch. -->
-	<string name="maps_licence_info">Tato aplikace využívá geografická data (zahrnující mapy, zakreslení firem a zájmových bodů, hranice států a regionů apod.), která byla převzata z otevřeného projektu OpenStreetMap. Konzistenci, přesnost, úplnost ani správnost těchto OpenStreetMap dat proto nemůžeme zaručit.</string>
-	<!-- Show on first launch. -->
-	<string name="agree">Souhlasím</string>
-	<!-- Show on first launch -->
-	<string name="disagree">Nesouhlasím</string>
 	<!-- text of notification -->
 	<string name="download_map_notification">Stáhněte si mapu místa, kde právě jste</string>
 	<!-- text of notification -->
@@ -565,6 +553,22 @@
 	<string name="brown">Hnědá</string>
 	<!-- pink color -->
 	<string name="pink">Růžová</string>
+	<!-- deep purple color -->
+	<string name="deep_purple">Tmavě fialová</string>
+	<!-- light blue color -->
+	<string name="light_blue">Světle modrá</string>
+	<!-- cyan color -->
+	<string name="cyan">Cyan</string>
+	<!-- teal color -->
+	<string name="teal">Teal</string>
+	<!-- lime color -->
+	<string name="lime">Limeta</string>
+	<!-- deep orange color -->
+	<string name="deep_orange">Tmavě oranžová</string>
+	<!-- gray color -->
+	<string name="gray">Šedá</string>
+	<!-- blue gray color -->
+	<string name="blue_gray">Modrošedá</string>
 	<!-- Wi-Fi available -->
 	<string name="WiFi_available">Ano</string>
 
@@ -798,8 +802,6 @@
 	<string name="onboarding_location_message">Chcete-li používat navigaci a další funkce, pak potřebujeme přístup k vaší zeměpisné poloze.</string>
 	<string name="onboarding_permissions_title">Povolte MAPS.ME přístup k úložišti a určení polohy</string>
 	<string name="onboarding_permissions_message">Tím umožníte stahování map, zobrazovat místa a dopravu ve vaší blízkosti a používat navigaci.</string>
-	<string name="onboarding_welcome_title">Vítá vás aplikace MAPS.ME</string>
-	<string name="onboarding_welcome_first_subtitle">Bezplatné, rychlé, podrobné a zcela offline mapy s kompletní navigací.</string>
 	<string name="onboarding_welcome_second_subtitle">Spuštěním aplikace souhlasíte s &lt;a href="%1$s">Podmínkami použití&lt;/a> a &lt;a href="%2$s">Zásadami ochrany osobních údajů&lt;/a>.</string>
 	<string name="dialog_incorrect_feature_position">Změnit umístění</string>
 	<string name="message_invalid_feature_position">Objekt zde nemůže být umístěn</string>
@@ -881,6 +883,7 @@
 	<string name="minute">min</string>
 	<string name="placepage_place_description">Popis</string>
 	<string name="placepage_more_button">Více</string>
+	<string name="placepage_more_reviews_button">Více recenzí</string>
 	<string name="book_button">Rezervace</string>
 	<string name="placepage_call_button">Volat</string>
 	<string name="placepage_edit_bookmark_button">Upravit záložku</string>
@@ -1034,8 +1037,6 @@
 	<string name="banner_geerbest_message">Rychlé hledání ve více než 50 000 položkách za nízké ceny.</string>
 	<string name="banner_rentalcars_title">Pronájem auta online</string>
 	<string name="banner_rentalcars_message">800 autopůjčoven na více než 49 000 místech.</string>
-	<string name="banner_viator_title">Online vyhledávání zájezdů</string>
-	<string name="banner_viator_message">Hledejte ve více než 50 000 zájezdů po celém světě.</string>
 	<!-- december -->
 	<string name="whatsnew_traffic">Údaje o provozu ve 36 zemích</string>
 	<!-- december -->
@@ -1077,8 +1078,6 @@
 	<string name="whatsnew_smaller_mwm_message">Mapy vyžadují až o 20 % méně místa.</string>
 	<string name="whatsnew_waypoints_title">Body průjezdu na trase</string>
 	<string name="whatsnew_waypoints_message">Klepněte na místo a přidejte bod průjezdu.</string>
-	<string name="whatsnew_viator_title">Objednat výlet</string>
-	<string name="whatsnew_viator_message">Vyberte si oblíbené výlety v turistických městech po celém světě.</string>
 	<string name="whatsnew_driving_style_title">Nový styl mapy pro vozidla</string>
 	<string name="whatsnew_driving_style_message">Navigační režim pro auto ještě snadnější.</string>
 	<string name="more_on_bookingcom">Více na Booking.com</string>
@@ -1135,7 +1134,6 @@
 	<string name="settings_card_memory">Paměťovou kartu</string>
 	<string name="settings_storage_available">%s k dispozici</string>
 	<string name="toast_location_permission_denied">Povolení k určení polohy bylo zamítnuto</string>
-	<string name="place_page_viator_title">Atrakce a výlety</string>
 	<string name="button_use">Použít</string>
 	<string name="planning_route_manage_route">Spravovat trasu</string>
 	<string name="button_plan">Naplánovat</string>
@@ -1150,8 +1148,6 @@
 	<string name="add_my_position">Přidat moji polohu</string>
 	<string name="choose_start_point">Vybrat počáteční bod</string>
 	<string name="choose_destination">Vybrat cílové místo</string>
-	<string name="preloader_viator_title">Objevte výlety a neobvyklé aktivity</string>
-	<string name="preloader_viator_message">Výlety, aktivity, památky a více</string>
 	<string name="preloader_viator_button">Zjistit více</string>
 	<string name="whats_new_title_route">Byly vylepšeny cyklostezky a pěší trasy</string>
 	<string name="whats_new_message_route">Opravili jsme chyby, několikanásobně jsme zrychlili vypočítávání trasy a přidali jsme možnost nastavení průjezdního bodu</string>
@@ -1162,9 +1158,6 @@
 	<string name="placepage_no_reviews">Žádná hodnocení</string>
 	<string name="placepage_reviewed">Toto místo jste již hodnotili</string>
 	<string name="placepage_summary_rating">Souhrnné hodnocení</string>
-	<plurals name="placepage_summary_rating_description">
-	  <item quantity="other">Na základě %d hodnocení</item>
-	</plurals>
 	<string name="placepage_rate_comment">Pro ohodnocení tohoto místa a napsání recenze klepněte níže.</string>
 	<string name="placepage_rate_horrible">Hrozné</string>
 	<string name="placepage_rate_bad">Špatné</string>
@@ -1207,8 +1200,6 @@
 	<string name="discovery_button_subtitle_attractions">Atrakce</string>
 	<string name="discovery_button_subtitle_eat_and_drink">Jídlo a pití</string>
 	<string name="discovery_button_subtitle_local_guides">Místní průvodci</string>
-	<string name="discovery_button_viator_offline_title">Objevte výlety a neobvyklé aktivity</string>
-	<string name="discovery_button_viator_offline_message">Výlety, aktivity, vyhlídkové jízdy a další.</string>
 	<string name="discovery_button_viator_error_title">Chyba při načítání dat</string>
 	<string name="discovery_button_other_error_message">Chyba při načítání dat</string>
 	<string name="discovery_button_other_loading_message">Probíhá načítání dat</string>
@@ -1248,12 +1239,10 @@
 	<string name="downloader_percent">%1$s (%2$s z %3$s)</string>
 	<string name="downloader_process">Stahování %s...</string>
 	<string name="downloader_applying">Aplikuji %s...</string>
-	<string name="transit_not_found">Tranzitní navigace v tomto regionu zatím není k dispozici</string>
 	<string name="whats_new_title_hotel_filter">Nové filtry pro hotely k dispozici!</string>
 	<string name="whats_new_message_hotel_filter">Rezervujte si hotely, které jsou k dispozici k vámi požadovaném datu! Použít filtry pro přihlášení a odhlášení v hotelu</string>
 	<string name="whats_new_title_ugc_travel">Podělte se o své zkušenosti s dalšími cestovateli!</string>
 	<string name="whats_new_message_ugc_travel">Ohodnoťte a napište recenzi míst, které jste navštívili!</string>
-	<string name="dialog_pedestrian_route_is_long">Trasa pro chodce je příliš dlouhá</string>
 	<string name="dialog_message_transit_not_found_connection">Naplánovat trasu s jednou tranzitní sítí</string>
 	<string name="bookmarks_error_message_share_general">Nelze sdílet kvůli chybě aplikace</string>
 	<string name="bookmarks_error_title_share_empty">Chyba sdílení</string>
@@ -1359,8 +1348,8 @@
 	<string name="error_already_downloaded">Tento seznam byl již stažen</string>
 	<string name="guides">Průvodci</string>
 	<string name="guide_downloaded_title">Průvodce byl úspěšně stažen.</string>
-	<string name="download_guides">Stáhnout průvodce</string>
-	<string name="cached_guides_placeholder_subtitle">Podrobní offline průvodci pro každý druh cesty. Zvolte si ten, který vám nejlépe vyhovuje, a stáhněte si jej přímo na mapu. Ke stažení průvodců budete potřebovat připojení k internetu.</string>
+	<!-- as few symbols as possible -->
+	<string name="download_guides">Průvodce vyhledáváním</string>
 	<string name="guides_groups_cached">Stažení průvodci</string>
 	<string name="subtitle_error_downloading_guide">Průvodce nebyl stažen</string>
 	<string name="error_already_downloaded_guide">Tento průvodce byl již stažen</string>
@@ -1399,7 +1388,6 @@
 	<string name="restore_success_alert">Předplatné bylo úspěšně obnoveno</string>
 	<string name="restore_error_alert">Během obnovování předplatného došlo k chybě</string>
 	<string name="restore_no_subscription_alert">Neexistuje žádné aktivní předplatné</string>
-	<string name="subscription_terms">Platba bude automaticky zaúčtována na váš účet iTunes v době potvrzení nákupu. Předplatné se automaticky obnoví, pokud automatické obnovení nevypnete nejméně 24 hodin před koncem aktuálního období. Váš účet bude zpoplatněn podle plánu období během 24 hodin před koncem aktuálního období. Automatické obnovení můžete vypnout nebo spravovat kdykoliv v nastavení účtu Apple ID.</string>
 	<string name="subscriptions_title">Předplatné</string>
 	<string name="manage_subscription">Spravovat předplatné</string>
 	<string name="sharing_options">Nastavení přístupu</string>
@@ -1409,7 +1397,6 @@
 	<string name="hide_from_map">Neukazovat na mapě</string>
 	<string name="ugc_route_tags_screen_label">Vyberte tagy</string>
 	<string name="ugc_route_tags_progress_msg">Načítáme tagy…</string>
-	<string name="ugc_route_tags_desc">Vyberte prosím tagy, abyste ostatním cestovatelům pomohli najít váš průvodce. Povinné.</string>
 	<string name="public_access">Veřejně přístupné</string>
 	<string name="limited_access">Soukromé</string>
 	<string name="upload_and_publish_desc">Tento průvodce bude přidán do veřejného katalogu MAPS.ME a bude přístupný ostatním uživatelům</string>
@@ -1432,7 +1419,7 @@
 	<string name="unable_upload_errorr_title">Soubor se nepodařilo nahrát</string>
 	<string name="unable_upload_error_subtitle_edited">Soubor byl upraven pomocí webové aplikace</string>
 	<string name="unable_upload_error_subtitle_broken">Soubor je poškozen a nemůže být nahrán. Nahrajte prosím jiný soubor.</string>
-	<string name="buy_btn">Koupit za %s</string>
+	<string name="buy_btn">Kupte tento za %s</string>
 	<string name="download_guide_progress">Průvodce se načítá…</string>
 	<string name="price_error_title">Cenu se nepodařilo zjistit</string>
 	<string name="price_error_subtitle">Zkuste to prosím za pár minut znovu</string>
@@ -1480,11 +1467,325 @@
 	<string name="whatsnew_paid_routes_title">Více nových zážitků!</string>
 	<string name="whatsnew_paid_routes_message">K trasám zdarma jsme do katalogu navíc přidali 3 kategorie zpoplatněných průvodců. Více než 700 nových tras!</string>
 	<string name="whats_new_ugc_routes_title_android_only">Sdílet své dojmy je jednoduché</string>
+	<string name="ugc_thanks_message_auth">Váš ohlas je uložen</string>
+	<string name="ugc_thanks_message_not_auth">Zaregistrujte se, abyste mohli podat ohlas</string>
+	<string name="notification_leave_review_v2_title">Podejte ohlas a pomozte cestovatelům!</string>
+	<string name="error_public_not_enought_title">Je málo značek</string>
+	<string name="error_public_not_enought_subtitle">Vaše trasa musí mít nejméně než 3 značky, abyste mohli uložit ho do veřejného katalogu</string>
+	<string name="bookmark_public_upload_alert_title">Vám je nutné udělat jen pár kroků, abyste mohli uložit vaši trasu do katalogu MAPS.ME!</string>
+	<string name="bookmark_public_upload_alert_subtitle">Přesvědčte se, že trasa má nazvu a popis, a všichni značky obsahují informaci o místech. Díky tomu, uživatelé najdou trasu a budou mít možnost ji použít na zájezdu.</string>
+	<string name="bookmark_public_upload_alert_ok_button">Ano, všechno je dobře!</string>
+	<string name="name_title">Napište název</string>
+	<string name="name_placeholder">například, Paby Londýnu</string>
+	<string name="name_comment1">Nazvěte trasy konkrétně, aby uživatelé měli možnost ji najít, například, \"Paby Londýnu\"</string>
+	<string name="name_comment2">Název nemusí obsahovat speciální symboly. Nepublikujte trasy který mají název \"Moje místa\"</string>
+	<string name="description_guide">Popis</string>
+	<string name="description_title">Napište popis trasy</string>
+	<string name="description_placeholder">Popište svou trasu podrobně</string>
+	<string name="description_comment1">Popis trasy musí mít nejméně než 30 symboly.</string>
+	<string name="ugc_route_tags_desc">Prosím, vyberte tagy, abyste pomohli jiným cestovatelům najít váš průvodce. To je určitě. Ne vice než %s tagy.</string>
+	<string name="html_format_error_title">Vaše trasa nebyla opublikována</string>
+	<string name="html_format_error_subtitle">Prosím, přesvědčte se, že názvy i popisy značek na trase mají správné formátování. Můžete zkontrolovat to v našem editoru pří pomoci knoflíku níže \"Upravovat on-line\".</string>
+	<string name="web_editor_description">Uložte trasu a dostaňte hyperlink pro upravovaní na počítači</string>
+	<string name="edit_on_web_confirm">Upravovat on-line</string>
+	<string name="update_guide">Uložit novou verzi</string>
+	<string name="direct_link_updating_text">Obnovujeme trasu…</string>
+	<string name="direct_link_updating_success">Trasa se obnovila</string>
+	<string name="unable_get_direct_link_desc">Můžete se podělit trasou s pomoci veřejného hyperlinku</string>
+	<string name="any_access_update_alert_title">Je možnost, že je nová verze trasy</string>
+	<string name="any_access_update_alert_message">Chcete-li obnovit značky? Nová verze bude přístupná podle stejného hyperlinku.</string>
+	<string name="any_access_update_alert_update">Obnovit</string>
+	<string name="public_or_limited_access_after_edit_online_error_title">Upravovali jste trasu on-line</string>
+	<string name="public_or_limited_access_after_edit_online_error_message">V budoucnu upravujte, publikujte nebo se dělte trasou s kamarády přes naši webovou stránku</string>
+	<string name="power_managment_title">Nízkoenergetický režim</string>
+	<string name="power_managment_description">Pokud je nízkoenergetický režim zapojen, příloha bude vypínat funkce, které mrhají energii v závislosti na nynější nabíjení telefonu</string>
+	<string name="power_managment_setting_never">Nikdy</string>
+	<string name="power_managment_setting_auto">Auto</string>
+	<string name="power_managment_setting_manual_max">Maximální šetření energií</string>
+	<string name="enable_logging_warning_message">Daná možnost se zapojuje pro protokolování činností za účelem diagnostiky. To pomáhá týmu odhalit problémy s přílohou. Zapojujte možnost jenom na požádání podržení MAPS.ME.</string>
+	<string name="html_error_upload_message_try_again">Zkontrolujte přístup k síti a zopakujte pokus</string>
+	<string name="html_error_upload_title_try_again">Není přípojení na internet</string>
+	<string name="notification_leave_review_v2_android_short_title">Ponechávejte ohlas a pomáhejte cestovatelům!</string>
+	<string name="notifications_illegal_alert_disable_button">Vypnout oznámení</string>
+	<string name="access_rules_author_only">Upravujte on-line</string>
+	<string name="privacy_settings_menu">Naladění důvěrnosti</string>
+	<string name="gdpr_request_setting">Dostat ID pro GDPR požadavek</string>
+	<string name="gdpr_request_window_title">Váš ID: %s.</string>
+	<string name="gdpr_request_window_message">Prosím, zkopírujte ho a odešlete požadavek do support\@maps.me</string>
+	<string name="gdpr_request_window_copy">Zkopírovat ID</string>
+	<string name="unable_upadate_error_title">Nepovedlo se obnovit trasu</string>
+	<string name="unable_upadate_error_message">Objevily se chyby pří obnovení. Zkontrolujte změny a zopakujte pokus</string>
+	<string name="whats_new_wiki_title">Co je toto místo?</string>
+	<string name="whats_new_wiki_message">Do kartiček populárních pamětihodností jsme vložili články ze Wikipedia.org, které jsou přístupny offline</string>
+	<string name="driving_options_title">Možnosti řízení</string>
+	<string name="driving_options_subheader">Vyhněte se na každé trase</string>
+	<string name="avoid_tolls">Silnice s mýtným</string>
+	<string name="avoid_unpaved">Nezpevněná silnice</string>
+	<string name="avoid_ferry">Přejezdy trajektů</string>
+	<string name="avoid_motorways">Dálnice</string>
+	<string name="unable_to_calc_alert_title">Nelze vypočítat trasu</string>
+	<string name="unable_to_calc_alert_subtitle">Bohužel jsme nemohli nalézt trasu pravděpodobně kvůli vámi definovaným možnostem. Změňte prosím nastavení a zkuste to znovu</string>
+	<string name="define_to_avoid_btn">Definovat silnice, kterým se vyhnout</string>
+	<string name="change_driving_options_btn">Možnosti směrování byly povoleny</string>
+	<string name="toll_road">Silnice s mýtným</string>
+	<string name="unpaved_road">Nezpevněná silnice</string>
+	<string name="ferry_crossing">Přejezd trajektů</string>
+	<string name="operated_by">Provozován \"%s\"</string>
+	<string name="avoid_toll_roads_placepage">Vyhnout se silnicím s mýtným</string>
+	<string name="avoid_unpaved_roads_placepage">Vyhnout se nezpevněným silnicím</string>
+	<string name="avoid_ferry_crossing_placepage">Vyhnout se přejezdům trajektů</string>
+	<string name="cached_guides_placeholder_subtitle">MAPS.ME nabízí hotové průvodce pro vybraná místa s fotografiemi a popisy, které jsou zobrazeny na mapě a jsou k dispozici offline.</string>
+	<string name="guides_catalogue_title">Katalog průvodců</string>
+	<string name="download_guides_button">Ke katalogu</string>
+	<plurals name="placepage_summary_rating_description">
+	  <item quantity="one">Založeno na recenzi %d</item>
+	  <item quantity="other">Založeno na %d recenzích</item>
+	</plurals>
+	<string name="type.cuisine.uzbek">Uzbecká kuchyně</string>
+	<string name="onboarding_welcome_title">Plánujte a cestujte s MAPS.ME</string>
+	<string name="onboarding_welcome_first_subtitle">Přidejte si do záložek zajímavá místa, rezervujte hotely, vypočítejte si trasy offline</string>
+	<string name="onboarding_guide_direct_download_title">Průvodce je připraven ke stažení</string>
+	<string name="onboarding_guide_direct_download_subtitle">Bude zobrazen na mapě a bude pracovat offline</string>
+	<string name="onboarding_guide_direct_download_button">Stáhnout</string>
+	<string name="onboarding_bydeeplink_guide_title">Předem připravení průvodci v MAPS.ME</string>
+	<string name="onboarding_bydeeplink_guide_subtitle">Nejlepší místa k navštívení zobrazená na mapě s fotografiemi a popisy. Pracujte offline.</string>
+	<string name="whats_new_auto_update_bydeeplink_title">Předtím než přejdete k průvodcům…</string>
+	<string name="whats_new_auto_update_bydeeplink_message">Aktualizujte mapy a udržujte informace o objektech aktualizované!</string>
+	<string name="whats_new_auto_update_and_proceed_button_size">Aktualizujte (%s) a pokračujte</string>
+	<string name="whatsnew_toll_unpaved_title">Rozmístěte automobilové trasy s ohledem na všechny typy silnic</string>
+	<string name="whatsnew_toll_unpaved_message">Vyberte si objížďky podle zpoplatněných silnic, prašných silnic a přejezdů trajektů</string>
+	<string name="whatsnew_new_catalogue_title">Aktualizovat stránky katalogu</string>
+	<string name="whatsnew_new_catalogue_message">Přidali jsme podrobné informace o partnerských průvodcích, aby bylo snadné a pohodlné vybírat trasu</string>
+	<string name="purchase_please_wait_toast">Neopouštějte tuto obrazovku dokud nebude dokončen nákup</string>
+	<string name="trip_start">Pojďme</string>
+	<string name="pick_destination">Destinace</string>
+	<string name="follow_my_position">Znovu vystředit</string>
+	<string name="search_results">Prohledat výsledky</string>
+	<string name="then_turn">Poté</string>
+	<string name="redirect_route_alert">Chcete přestavět trasu?</string>
+	<string name="redirect_route_yes">Ano</string>
+	<string name="redirect_route_no">Ne</string>
+	<string name="trip_finished">Přijeli jste!</string>
+	<string name="keyboard_availability_alert">Při řízení není klávesnice dostupná</string>
+	<string name="dialog_routing_change_start_carplay">Od vaší aktuální polohy nelze vystavět trasu</string>
+	<string name="dialog_routing_change_end_carplay">Nelze vystavět trasu k vaší destinaci. Zvolte prosím další bod</string>
+	<string name="dialog_routing_check_gps_carplay">Signál GPS neexistuje. Přesuňte se prosím do otevřeného prostoru</string>
+	<string name="dialog_routing_unable_locate_route_carplay">Nelze sestavit trasu. Specifikujte prosím další body trasy</string>
+	<string name="dialog_routing_download_files_carplay">K vytvoření trasy si stáhněte chybějící mapy do vašeho zařízení</string>
+	<string name="dialog_routing_system_error_carplay">Vyskytla se chyba. Restartujte prosím aplikaci</string>
+	<string name="dialog_routing_rebuild_from_current_location_carplay">Trasa bude přestavěna od vaší aktuální polohy</string>
+	<string name="dialog_routing_rebuild_for_vehicle_carplay">Trasa bude upravena k autu jedna</string>
+	<string name="ok">Ok</string>
+	<string name="booking_button_toolbar">Vyberte si hotel na mapě</string>
+	<string name="popup_booking_download_guides_title">Zamluvili jste si hotel?</string>
+	<string name="popup_booking_download_guides_message">Naplánujte si trasu pomocí ready-made průvodců z MAPS.ME</string>
+	<string name="popup_mwm_download_guides_title">Offline průvodci</string>
+	<string name="popup_mwm_download_guides_cta">Zvolte jedno</string>
+	<string name="popup_mwm_download_guides_cta_1">Podívejte se</string>
+	<string name="gallery_pp_download_guides_offline_title">Plánujte svou dovolenou s MAPS.ME!</string>
+	<string name="gallery_pp_download_guides_offline_subtitle">Nenechte si ujít nic s průvodci od zkušených cestovatelů</string>
+	<string name="gallery_pp_download_guides_offline_cta">Zapněte Internetové</string>
+	<string name="gallery_pp_download_guides_title">Průvodce</string>
+	<string name="native_screen_subscription_title">Neomezený přístup k více než 2000 cestovních průvodců!</string>
+	<string name="native_screen_subscription_message">Nezapomenutelná dovolená, kdekoli a s kýmkoli cestujete</string>
+	<string name="annual_subscription_title">Roční</string>
+	<string name="montly_subscription_title">Měsíční</string>
+	<string name="annual_subscription_message">12 měsíců neomezeného přístupu</string>
+	<string name="montly_subscription_message">1 měsíc neomezeného přístupu</string>
+	<string name="subscription_success_dialog_title">Děkujeme za předplacení!</string>
+	<string name="subscription_success_dialog_message">Nyní máte neomezený přístup k celému katalogu průvodců</string>
+	<string name="renewal_screen_title">Vaše předplatné vypršelo</string>
+	<string name="renewal_screen_message">Všichni průvodci stažení s předplatným budou smazáni. Chcete pokračovat v předplatném a udržet si je?</string>
+	<string name="renewal_screen_button_restore">Ano, obnovit</string>
+	<string name="renewal_screen_button_cancel">Ne, smazat průvodce</string>
+	<string name="subscription_error_ping_title">Koupě selhala</string>
+	<string name="subscription_error_message">Služba je aktuálně ve vašem kraji nedostupná. Zkuste to prosím později</string>
+	<string name="subscription_error_button">Získat</string>
+	<string name="timeout_error_title">Ejhle, čas vypršel!</string>
+	<string name="timeout_error_message">Naše servery neodpovídají. Zkontrolujte prosím internetové připojení a zkuste to později.</string>
+	<string name="per_month">/měs</string>
+	<string name="per_year">/rok</string>
+	<string name="buy_btn_for_subscription">Neomezený přístup od %s</string>
+	<string name="buy_btn_for_subscription_1">Kupte VŠECHNY průvodce za %s</string>
+	<string name="buy_btn_for_subscription_ios_only_mo">Neomezený přístup za %s/měs</string>
+	<string name="buy_btn_for_subscription_ios_only_year">Neomezený přístup za %s/rok</string>
+	<string name="subscription_terms_guides">Platba bude účtována na účet iTunes po potvrzení nákupu. Předplatné se automaticky obnoví, pokud není funkce automatického obnovení vypnuta alespoň 24 hodin před koncem aktuálního období. Váš účet bude zpoplatněn podle vašeho plánu pro obnovení do 24 hodin před koncem aktuálního období. Funkci automatického obnovení můžete v nastavení účtu Apple ID kdykoli spravovat nebo vypnout. Průvodce stažené podle předplatného můžete používat pouze do data expirace. Po 30 dnech od data vypršení předplatného budou automaticky odstraněni průvodci se záložkami.</string>
+	<string name="subscription_terms">Platba bude automaticky zaúčtována na váš účet iTunes v době potvrzení nákupu. Předplatné se automaticky obnoví, pokud automatické obnovení nevypnete nejméně 24 hodin před koncem aktuálního období. Váš účet bude zpoplatněn podle plánu období během 24 hodin před koncem aktuálního období. Automatické obnovení můžete vypnout nebo spravovat kdykoliv v nastavení účtu Apple ID.</string>
+	<string name="whatsnew_carplay_title">Auto navigace MAPS.ME v CarPlay!</string>
+	<string name="whatsnew_carplay_message">Záložky, vyhledávání, rychlostní kamery a možnosti řízení jsou dostupné v režimu offline</string>
+	<string name="whatsnew_subscription_title">Celý svět za předplatné!</string>
+	<string name="whatsnew_subscription_message">Neomezený přístup ke katalogu průvodců je výhodnější než jednorázová koupě</string>
+	<string name="whatsnew_carnavi_fixes_for_android_title">Aktualizace navigace</string>
+	<string name="whatsnew_carnavi_fixes_for_android_message">Zlepšili jsme plánování cesty do míst, která jsou vzdálená od silnic</string>
+	<string name="avoid_unpaved_carplay_1">Bez pr. cest</string>
+	<string name="avoid_unpaved_carplay_2">Vyhnout se nezp</string>
+	<string name="avoid_ferry_carplay_1">Bez trajektů</string>
+	<string name="avoid_ferry_carplay_2">Vyh. se traj.</string>
+	<string name="avoid_tolls_carplay_1">Bez pl.sil.</string>
+	<string name="avoid_tolls_carplay_2">Vyh. se pl. sil</string>
+	<string name="speedcams_alert_title_carplay_1">Rych. kam.</string>
+	<string name="speedcams_alert_title_carplay_2">Rych. varování</string>
+	<string name="download_map_carplay">Stáhněte si prosím mapy do aplikace MAPS.ME ve vašem zařízení</string>
+	<string name="carplay_roundabout_exit">%s výjezd</string>
+	<!-- max. 10 symbols, both iOS and Android -->
+	<string name="sort">Třídit…</string>
+	<!-- Android, title, max 20-22 symbols -->
+	<string name="sort_bookmarks">Třídit záložky</string>
+	<!-- iOS -->
+	<string name="sort_default">Třídit ve výchozím nastavení</string>
+	<string name="sort_type">Třídit dle typu</string>
+	<string name="sort_distance">Třídit dle vzdálenosti</string>
+	<string name="sort_date">Třídit dle data</string>
+	<!-- Android -->
+	<string name="by_default">Podle výchozího stavu</string>
+	<!-- Android -->
+	<string name="by_type">Podle typu</string>
+	<!-- Android -->
+	<string name="by_distance">Podle vzdálenosti</string>
+	<!-- Android -->
+	<string name="by_date">Podle data</string>
+	<string name="week_ago_sorttype">Před týdnem</string>
+	<string name="month_ago_sorttype">Před měsícem</string>
+	<string name="moremonth_ago_sorttype">Více než před měsícem</string>
+	<string name="moreyear_ago_sorttype">Více než před rokem</string>
+	<string name="near_me_sorttype">Blízko mě</string>
+	<string name="others_sorttype">Ostatní</string>
+	<string name="food_places">Jídlo</string>
+	<string name="tourist_places">Památky</string>
+	<string name="museums">Muzea</string>
+	<string name="parks">Parky</string>
+	<string name="swim_places">Plavat</string>
+	<string name="mountains">Hory</string>
+	<string name="animals">Zvířata</string>
+	<string name="hotels">Hotely</string>
+	<string name="buildings">Budovy</string>
+	<string name="money">Peníze</string>
+	<string name="shops">Obchody</string>
+	<string name="parkings">Parkoviště</string>
+	<string name="fuel_places">Čerpací stanice</string>
+	<string name="water">Voda</string>
+	<string name="medicine">Medicína</string>
+	<string name="search_in_the_list">Vyhledat v seznamu</string>
+	<string name="view_on_map_bookmarks">Na mapě</string>
+	<string name="more_bookmarks">Více…</string>
+	<string name="no_items_found">Nebyly nalezeny žádné položky</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_edit_list">Upravit seznam</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_delete_list">Odstranit seznam</string>
+	<string name="whatsnew_bookmarks_search_sort_title">Pořadí v záložkách tvoří pohodlnou cestu</string>
+	<string name="whatsnew_bookmarks_search_sort_message">Seřaďte oblíbená místa podle kategorie, umístění a chronologického pořadí a také rychle najděte konkrétní záložky podle jejich názvu</string>
+	<string name="popup_subscription_success_map_title">Woohoo, máte přeplaceno!</string>
+	<string name="popup_subscription_success_map_message">Objevte nyní ty nejlepší turistické atrakce v katalogu MAPS.ME</string>
+	<string name="popup_subscription_success_map_start_button">Začít s prohlížením</string>
+	<string name="popup_subscription_success_map_not_now_button">Nyní ne</string>
+	<string name="religious_places">Posvátná místa</string>
+	<string name="subscription_terms_android">Po potvrzení nákupu bude platba naúčtována na Váš účet Google Play. Předplatné bude automaticky obnoveno, pokud nedojde ke zrušení funkce automatického obnovení nejméně 24 hodin před koncem aktuálního období. Částka bude naúčtována na Váš účet dle Vašeho plánu obnovy v průběhu 24 hodin před koncem aktuálního období. Funkci automatického obnovení lze po nákupu spravovat nebo vypnout v nastavení účtu. Používat můžete pouze průvodce stažené pomocí předplatného, a to do doby skončení platnosti. Po 30 dnech od skončení předplatného budou stažené průvodce automaticky smazány.</string>
+	<string name="select_list">Vybrat seznam</string>
+	<string name="pp_discovery_place_related_header">Toto místo se nachází v katalogu průvodců</string>
+	<string name="pp_discovery_place_related_header_1">Toto místo je uvedeno v katalogu</string>
+	<string name="pp_discovery_place_related_cta_button">Náhled</string>
+	<string name="pp_discovery_place_related_tag_header">Průvodci podle tagu „%s“</string>
+	<string name="pp_discovery_place_related_tag_header_1">Možná se vám bude také líbit</string>
+	<string name="buy_btn_for_subscription_version_2">VŠICHNI průvodci pouze za %s/měs</string>
+	<string name="buy_btn_for_subscription_version_3">Celý katalog za %s/měs</string>
+	<string name="buy_btn_for_subscription_ios_only_mo_version_2">Přístup do katalogu za %s/měs</string>
+	<string name="buy_btn_for_subscription_ios_only_year_version_2">Přístup do katalogu za %s/rok</string>
+	<string name="subscription_screen_native_title_version_2">Přístup k průvodcům se záložkami!</string>
+	<string name="subscription_screen_native_message_version_2">Buďte připraveni na jakoukoli cestu do více než 600 měst a více než 100 zemí</string>
+	<string name="catalog_no_internet_title">Připojení k internetu není k dispozici</string>
+	<string name="catalog_no_internet_button">Zkusit znovu</string>
+	<string name="whatsnew_map_updates_title">Bleskové aktualizace mapy</string>
+	<string name="whatsnew_map_updates_message">Od nynějška aktualizujeme údaje dvakrát rychleji</string>
+	<string name="new_onboarding_button">Další</string>
+	<string name="new_onboarding_button_2">Začínáme</string>
+	<string name="new_onboarding_step1_header_2">Všestranný parťák na cesty</string>
+	<string name="new_onboarding_step2_header">Sněte a plánujte</string>
+	<string name="new_onboarding_step2_message">Více než 70 milionů míst, hotoví průvodci a rezervace hotelů přímo z mapy – jste připraveni na výlet!</string>
+	<string name="new_onboarding_step3_message">Nikdy se neztratíte díky podrobným mapám jakékoli země a navigaci – vše funguje offline!</string>
+	<string name="new_onboarding_step4_header">Sdílejte dojmy</string>
+	<string name="new_onboarding_step4_message">Umístěte záložky na oblíbená místa a pošlete je vašim přátelům</string>
+	<string name="new_onboarding_step5.1_header">Ještě jedna věc, než začnete…</string>
+	<string name="new_onboarding_step5.1_message">Nezapomeňte navštívit náš zcela nový katalog průvodců a najděte si offline průvodce pro vaši nadcházející cestu!</string>
+	<string name="new_onboarding_step5.1_button">Otevřete katalog</string>
+	<string name="new_onboarding_step5.2_message">Předplatné katalogu průvodců MAPS.ME má velkou hodnotu. Získejte plný přístup k průvodcům městem a venkovem po celém světě!</string>
+	<string name="new_onboarding_step5.2_button">Zkontrolujte termíny</string>
+	<string name="new_onboarding_step5.3_message">Vyzkoušejte zdarma vzorky hotových městských a venkovních tras s bezplatným výběrem MAPS.ME!</string>
+	<string name="new_onboarding_step5.3_button">Stáhněte si zdarma</string>
+	<string name="new_onboarding_additional_steps_later_button">Později</string>
+	<string name="all_pass_subscription_header">PŘEDPLATNÉ KATALOGU</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title">Více než 30000\nprůvodců a tras</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle"><b>Neomezené stahování</b> městských a venkovních tras <b>do režimu offline</b></string>
+	<!-- \n - for a break between lines. Max. 17 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_2">Interaktivní\nvýškový profil</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_2">Každá trasa obsahuje <b>výšku a základní informace o trase</b></string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_3">Záložky,\nfotky a\ndoporučení</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_3"><b>Zjistěte vše o trase,</b> kterou se chcete vydat</string>
+	<string name="sightseeing_subscription_header_subscription">Předplatné průvodců</string>
+	<string name="sightseeing_subscription_message">Více než 700 měst a 100 zemí</string>
+	<string name="sightseeing_subscription_message_2">Dostupné offline</string>
+	<string name="sightseeing_subscription_message_3">Fotky a pěší trasy</string>
+	<string name="subscription_success_dialog_title_sightseeing_pass">Děkujeme za předplatné!</string>
+	<string name="subscription_success_dialog_message_sightseeing_pass">Nyní máte přístup ke všem památkovým průvodcům v katalogu</string>
+	<string name="downloader_main_gallery_header">Mapy a průvodci</string>
+	<string name="downloader_main_gallery_message">Nyní v této sekci si můžete nejen stáhnout mapy, ale také se podívat na průvodce pro vaši nadcházející cestu</string>
+	<string name="downloader_main_1_element_gallery_header">Všichni průvodci</string>
+	<string name="downloader_main_1_element_gallery_message">ve více než 100 zemích</string>
+	<string name="downloader_country_1_element_gallery_header">%s průvodců</string>
+	<string name="downloader_country_no_guides_gallery_header">V této zemi ještě nejsou průvodci</string>
+	<string name="downloader_country_no_guides_gallery_message">Můžete si prohlédnout další offline průvodce ve více než 100 zemích a nalézt zde městské a venkovní aktivity</string>
+	<string name="dialog_pedestrian_route_is_long">Pěší trasa k dopravnímu nástupnímu bodu je příliš dlouhá</string>
+	<string name="whatsnew_outdoor_guides_title">Přidali jsme více než 15000 venkovních tras!</string>
+	<string name="whatsnew_outdoor_guides_message">V katalogu čekají trasy od Outdooractive pro zimní a letní cesty!</string>
+	<string name="whatsnew_guides_galleries_title">Plánujte váš nadcházející výlet s MAPS.ME</string>
+	<string name="whatsnew_guides_galleries_message">Nyní najdete doporučené průvodce na místě na stránkách oblíbených turistických měst a památek</string>
+	<string name="new_onboarding_step3_header">Zažijte</string>
+	<string name="all_pass_screen_best_value">Nejvýhodnější</string>
+	<string name="buy_btn_for_subscription_3">Celý katalog za %s/rok</string>
+	<string name="transit_not_found">Navigace metra v této oblasti zatím není k dispozici</string>
+	<string name="dialog_pedestrian_route_is_long_header">Trasa metra nebyla nalezena</string>
+	<string name="dialog_pedestrian_route_is_long_message">Zvolte prosím počáteční nebo koncový bod blíže k stanici metra</string>
+	<!-- Failed planning SUBWAY route message in navigation view -->
+	<string name="routing_planning_error_subway_special">Plánování trasy metra selhalo</string>
+	<string name="whatsnew_isolines_title">Nové pro outdoor: topografická vrstva offline!</string>
+	<!-- as less symbols as possible -->
+	<string name="whatsnew_isolines_message">Buďte sebevědomí v hornaté oblasti. Stačí zapnout vrstvu v levém horním rohu</string>
+	<string name="button_layer_isolines">Terén</string>
+	<string name="tips_map_layers_title_countour">Novinka v MAPS.ME: offline topografická vrstva!</string>
+	<string name="tips_map_layers_message_countour">Naplánujte si a užijte si své výlety do přírody s jistotou, že víte vše o této oblasti</string>
+	<string name="isolines_activation_error_dialog">Chcete-li aktivovat a používat topografickou vrstvu, prosím aktualizujte nebo si stáhněte mapu oblasti</string>
+	<string name="isolines_location_error_dialog">Topografická vrstva není v této oblasti ještě dostupná</string>
+	<string name="elevation_profile_diff_level">Stupeň obtížnosti</string>
+	<string name="elevation_profile_diff_level_easy">Snadný</string>
+	<string name="elevation_profile_diff_level_moderate">Mírný</string>
+	<string name="elevation_profile_diff_level_hard">Těžký</string>
+	<string name="elevation_profile_ascent">Stoupání</string>
+	<string name="elevation_profile_descent">Klesání</string>
+	<string name="elevation_profile_minaltitude">Min. nadmořská výška</string>
+	<string name="elevation_profile_maxaltitude">Max. nadmořská výška</string>
+	<string name="elevation_profile_m">m</string>
+	<string name="elevation_profile_difficulty">Obtížnost</string>
+	<string name="elevation_profile_distance">Vzdál.:</string>
+	<string name="elevation_profile_km">km</string>
+	<string name="elevation_profile_time">Čas:</string>
+	<string name="elevation_profile_hours">hod.</string>
+	<string name="elevation_profile_minutes">min</string>
+	<!-- hide the full screen banner and continue working with the app -->
+	<string name="hide_screen_map_update">Skrýt a pokračovat</string>
+	<string name="view_on_map_downloaded_error">Tento průvodce byl smazán z tohoto zařízení</string>
+	<string name="subscription">Předplatné</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Stanice lanové dráhy</string>
 	<string name="type.aeroway.aerodrome">Letiště</string>
 	<string name="type.aeroway.aerodrome.international">Letiště</string>
+	<string name="type.amenity">Prostor</string>
+	<string name="type.amenity.arts_centre">Umělecké centrum</string>
 	<string name="type.amenity.atm">Bankomat</string>
 	<string name="type.amenity.bank">Banka</string>
 	<string name="type.amenity.bbq">Piknik</string>
@@ -1531,14 +1832,15 @@
 	<string name="type.amenity.parking">Parkoviště</string>
 	<string name="type.amenity.parking.fee">Parkoviště</string>
 	<string name="type.amenity.parking.multi.storey">Parkoviště</string>
-	<string name="type.amenity.parking.multi.storey.fee">Parkoviště</string>
 	<string name="type.amenity.parking.no.access">Parkoviště</string>
 	<string name="type.amenity.parking.park_and_ride">Parkoviště</string>
 	<string name="type.amenity.parking.permissive">Parkoviště</string>
-	<string name="type.amenity.parking.permissive.fee">Parkoviště</string>
 	<string name="type.amenity.parking.private">Parkoviště</string>
 	<string name="type.amenity.parking.underground">Parkoviště</string>
-	<string name="type.amenity.parking.underground.fee">Parkoviště</string>
+	<string name="type.amenity.parking_space">Prostor pro parkování</string>
+	<string name="type.amenity.parking_space.permissive">Prostor pro parkování</string>
+	<string name="type.amenity.parking_space.private">Prostor pro parkování</string>
+	<string name="type.amenity.parking_space.underground">Prostor pro parkování</string>
 	<string name="type.amenity.payment_terminal">Platební terminál</string>
 	<string name="type.amenity.pharmacy">Lékárna</string>
 	<string name="type.amenity.place_of_worship">Posvátné místo</string>
@@ -1567,6 +1869,7 @@
 	<string name="type.amenity.vending_machine.cigarettes">Automat na cigarety</string>
 	<string name="type.amenity.vending_machine.drinks">Automat na nápoje</string>
 	<string name="type.amenity.vending_machine.parking_tickets">Parkovací automat</string>
+	<string name="type.amenity.vending_machine.public_transport_tickets">Prodejní automat lístků na městskou dopravu</string>
 	<string name="type.amenity.veterinary">Veterinář</string>
 	<string name="type.amenity.waste_basket">Odpadkový koš</string>
 	<string name="type.amenity.waste_disposal">Odpadky</string>
@@ -1686,6 +1989,7 @@
 	<string name="type.emergency.phone">Tísňového volání</string>
 	<string name="type.entrance">Vchod</string>
 	<string name="type.highway.bus_stop">Autobusová zastávka</string>
+	<string name="type.highway.construction">Silnice v rekonstrukci</string>
 	<string name="type.highway.footway">Cesta</string>
 	<string name="type.highway.footway.alpine_hiking">Cesta</string>
 	<string name="type.highway.footway.area">Cesta</string>
@@ -1748,9 +2052,6 @@
 	<string name="type.highway.service.area">Ulice</string>
 	<string name="type.highway.service.bridge">Ulice</string>
 	<string name="type.highway.service.driveway">Ulice</string>
-	<string name="type.highway.service.driveway.area">Ulice</string>
-	<string name="type.highway.service.driveway.bridge">Ulice</string>
-	<string name="type.highway.service.driveway.tunnel">Ulice</string>
 	<string name="type.highway.service.parking_aisle">Ulice</string>
 	<string name="type.highway.service.tunnel">Ulice</string>
 	<string name="type.highway.speed_camera">Rychlostní kamera</string>
@@ -1769,14 +2070,8 @@
 	<string name="type.highway.track.grade1">Ulice</string>
 	<string name="type.highway.track.grade2">Ulice</string>
 	<string name="type.highway.track.grade3">Ulice</string>
-	<string name="type.highway.track.grade3.no.access">Ulice</string>
-	<string name="type.highway.track.grade3.permissive">Ulice</string>
 	<string name="type.highway.track.grade4">Ulice</string>
-	<string name="type.highway.track.grade4.no.access">Ulice</string>
-	<string name="type.highway.track.grade4.permissive">Ulice</string>
 	<string name="type.highway.track.grade5">Ulice</string>
-	<string name="type.highway.track.grade5.no.access">Ulice</string>
-	<string name="type.highway.track.grade5.permissive">Ulice</string>
 	<string name="type.highway.track.no.access">Ulice</string>
 	<string name="type.highway.track.permissive">Ulice</string>
 	<string name="type.highway.track.tunnel">Ulice</string>
@@ -1806,22 +2101,29 @@
 	<string name="type.landuse.basin">Voda</string>
 	<string name="type.landuse.cemetery">Hřbitov</string>
 	<string name="type.landuse.cemetery.christian">Hřbitov</string>
+	<string name="type.landuse.churchyard">Nádvoří kostela</string>
+	<string name="type.landuse.farmland">Orná půda</string>
 	<string name="type.landuse.forest">Les</string>
 	<string name="type.landuse.forest.coniferous">Les</string>
 	<string name="type.landuse.forest.deciduous">Les</string>
 	<string name="type.landuse.forest.mixed">Les</string>
+	<string name="type.landuse.grass">Trávník</string>
+	<string name="type.landuse.landfill">Skládka</string>
+	<string name="type.landuse.railway">Areál železnice</string>
 	<string name="type.landuse.reservoir">Voda</string>
-	<string name="type.leisure.dog_park">Psí hřiště</string>
-	<string name="type.leisure.dog_park.tennis">Psí hřiště</string>
+	<string name="type.leisure.dog_park">Místo pro psy</string>
 	<string name="type.leisure.fitness_centre">Fitness</string>
 	<string name="type.leisure.fitness_station">Posilovna</string>
 	<string name="type.leisure.garden">Zahrada</string>
 	<string name="type.leisure.golf_course">Golf</string>
 	<string name="type.leisure.nature_reserve">Rezervace</string>
+	<string name="type.leisure.park">Park</string>
+	<string name="type.leisure.park.no.access">Park</string>
+	<string name="type.leisure.park.permissive">Park</string>
+	<string name="type.leisure.park.private">Park</string>
 	<string name="type.leisure.pitch">Sportovní hřiště</string>
-	<string name="type.leisure.pitch.tennis">Sportovní hřiště</string>
 	<string name="type.leisure.playground">Hřiště</string>
-	<string name="type.leisure.playground.tennis">Hřiště</string>
+	<string name="type.leisure.sauna">Sauna</string>
 	<string name="type.leisure.sports_centre">Sportovní centrum</string>
 	<string name="type.leisure.sports_centre.climbing">Horolezecké centrum</string>
 	<string name="type.leisure.sports_centre.shooting">Střelnice</string>
@@ -1842,20 +2144,19 @@
 	<string name="type.natural.bay">Záliv</string>
 	<string name="type.natural.beach">Pláž</string>
 	<string name="type.natural.cape">Mys</string>
-	<string name="type.natural.cave_entrance">Vchod do jeskyně</string>
+	<string name="type.natural.cave_entrance">Jeskyně</string>
 	<string name="type.natural.geyser">Gejzír</string>
 	<string name="type.natural.glacier">Ledovec</string>
+	<string name="type.natural.grassland">Pole</string>
 	<string name="type.natural.lake">Jezero</string>
 	<string name="type.natural.peak">Hora</string>
 	<string name="type.natural.pond">Rybník</string>
+	<string name="type.natural.scrub">Křoviny</string>
 	<string name="type.natural.spring">Pramen</string>
 	<string name="type.natural.tree">Strom</string>
 	<string name="type.natural.volcano">Sopka</string>
 	<string name="type.natural.water">Voda</string>
-	<string name="type.natural.wood">Les</string>
-	<string name="type.natural.wood.coniferous">Les</string>
-	<string name="type.natural.wood.deciduous">Les</string>
-	<string name="type.natural.wood.mixed">Les</string>
+	<string name="type.natural.wetland">Mokřadní oblast</string>
 	<string name="type.office">Kancelář</string>
 	<string name="type.office.company">Kancelář společnosti</string>
 	<string name="type.office.estate_agent">Realitní makléř</string>
@@ -1895,7 +2196,9 @@
 	<string name="type.power.substation">Rozvodna</string>
 	<string name="type.power.tower">Sloup elektrického vedení</string>
 	<string name="type.railway.halt">Železniční stanice</string>
-	<string name="type.railway.level_crossing">Železniční přejezd</string>
+	<string name="type.railway.level_crossing">Přejezd</string>
+	<string name="type.railway.monorail">Jednokolejná železnice</string>
+	<string name="type.railway.rail">Železnice</string>
 	<string name="type.railway.station">Železniční stanice</string>
 	<string name="type.railway.station.light_rail">Železniční stanice</string>
 	<string name="type.railway.station.monorail">Železniční stanice</string>
@@ -1924,7 +2227,7 @@
 	<string name="type.railway.station.subway.spb">Metro</string>
 	<string name="type.railway.station.subway.violet">Metro</string>
 	<string name="type.railway.station.subway.yellow">Metro</string>
-	<string name="type.railway.subway_entrance">Metro</string>
+	<string name="type.railway.subway_entrance">Vchod do podchodu</string>
 	<string name="type.railway.subway_entrance.barcelona">Metro</string>
 	<string name="type.railway.subway_entrance.berlin">Metro</string>
 	<string name="type.railway.subway_entrance.kiev">Metro</string>
@@ -2001,6 +2304,10 @@
 	<string name="type.shop.variety_store">Smíšené zboží</string>
 	<string name="type.shop.video">Obchod</string>
 	<string name="type.shop.wine">Vinařství</string>
+	<string name="type.sport.athletics">Atletika</string>
+	<string name="type.sport.basketball">Basketbal</string>
+	<string name="type.sport.equestrian">Koňské sporty</string>
+	<string name="type.sport.tennis">Tenisový kurt</string>
 	<string name="type.tourism.alpine_hut">Ubytování v horách</string>
 	<string name="type.tourism.apartment">Byty</string>
 	<string name="type.tourism.artwork">Umělecké dílo</string>
@@ -2038,4 +2345,8 @@
 	<string name="type.waterway.stream.intermittent">Řeka</string>
 	<string name="type.waterway.stream.tunnel">Řeka</string>
 	<string name="type.waterway.waterfall">Vodopád</string>
+	<string name="type.wheelchair.limited">Omezený vstup pro vozíčkáře</string>
+	<string name="type.wheelchair.no">Bez přístupu pro vozíčkáře</string>
+	<string name="type.wheelchair.yes">Plný vstup pro vozíčkáře</string>
+	<string name="type.building_part">Stavba</string>
 </resources>

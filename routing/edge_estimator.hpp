@@ -21,32 +21,36 @@ namespace routing
 class EdgeEstimator
 {
 public:
-  EdgeEstimator(double maxWeightSpeedKMpH, double offroadSpeedKMpH);
+  enum class Purpose
+  {
+    Weight,
+    ETA
+  };
+
+  EdgeEstimator(double maxWeightSpeedKMpH, SpeedKMpH const & offroadSpeedKMpH);
   virtual ~EdgeEstimator() = default;
 
-  double CalcHeuristic(m2::PointD const & from, m2::PointD const & to) const;
+  double CalcHeuristic(ms::LatLon const & from, ms::LatLon const & to) const;
   // Estimates time in seconds it takes to go from point |from| to point |to| along a leap (fake)
   // edge |from|-|to| using real features.
   // Note 1. The result of the method should be used if it's necessary to add a leap (fake) edge
   // (|from|, |to|) in road graph.
   // Note 2. The result of the method should be less or equal to CalcHeuristic(|from|, |to|).
   // Note 3. It's assumed here that CalcLeapWeight(p1, p2) == CalcLeapWeight(p2, p1).
-  double CalcLeapWeight(m2::PointD const & from, m2::PointD const & to) const;
+  double CalcLeapWeight(ms::LatLon const & from, ms::LatLon const & to) const;
 
-  // Estimates time in seconds it takes to go from point |from| to point |to| along direct fake
-  // edge.
-  double CalcOffroadWeight(m2::PointD const & from, m2::PointD const & to) const;
+  double GetMaxWeightSpeedMpS() const;
 
-  virtual double CalcSegmentWeight(Segment const & segment, RoadGeometry const & road) const = 0;
-  virtual double CalcSegmentETA(Segment const & segment, RoadGeometry const & road) const = 0;
-  virtual double GetUTurnPenalty() const = 0;
-  // The leap is the shortcut edge from mwm border enter to exit.
-  // Router can't use leaps on some mwms: e.g. mwm with loaded traffic data.
-  // Check wherether leap is allowed on specified mwm or not.
-  virtual bool LeapIsAllowed(NumMwmId mwmId) const = 0;
+  // Estimates time in seconds it takes to go from point |from| to point |to| along direct fake edge.
+  double CalcOffroad(ms::LatLon const & from, ms::LatLon const & to, Purpose purpose) const;
+
+  virtual double CalcSegmentWeight(Segment const & segment, RoadGeometry const & road,
+                                   Purpose purpose) const = 0;
+  virtual double GetUTurnPenalty(Purpose purpose) const = 0;
+  virtual double GetFerryLandingPenalty(Purpose purpose) const = 0;
 
   static std::shared_ptr<EdgeEstimator> Create(VehicleType vehicleType, double maxWeighSpeedKMpH,
-                                               double offroadSpeedKMpH,
+                                               SpeedKMpH const & offroadSpeedKMpH,
                                                std::shared_ptr<TrafficStash>);
 
   static std::shared_ptr<EdgeEstimator> Create(VehicleType vehicleType,
@@ -55,6 +59,14 @@ public:
 
 private:
   double const m_maxWeightSpeedMpS;
-  double const m_offroadSpeedMpS;
+  SpeedKMpH const m_offroadSpeedKMpH;
 };
+
+double GetPedestrianClimbPenalty(EdgeEstimator::Purpose purpose, double tangent,
+                                 geometry::Altitude altitudeM);
+double GetBicycleClimbPenalty(EdgeEstimator::Purpose purpose, double tangent,
+                              geometry::Altitude altitudeM);
+double GetCarClimbPenalty(EdgeEstimator::Purpose /* purpose */, double /* tangent */,
+                          geometry::Altitude /* altitude */);
+
 }  // namespace routing

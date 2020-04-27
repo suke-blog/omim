@@ -6,6 +6,7 @@
 
 #include "coding/hex.hpp"
 
+#include "base/assert.hpp"
 #include "base/math.hpp"
 #include "base/visitor.hpp"
 
@@ -319,10 +320,23 @@ inline std::string DebugPrint(UGCUpdate const & ugcUpdate)
 
 struct UGC
 {
+  static float constexpr kMinRating = 0.0f;
+  static float constexpr kMaxRating = 10.0f;
+  // Ratings below threshold will be packed to ratings section without detalization (as single
+  // value).
+  static float constexpr kRatingDetalizationThreshold = 4.0f;
+  static_assert(kMinRating <= kRatingDetalizationThreshold &&
+                    kRatingDetalizationThreshold <= kMaxRating,
+                "");
+
   UGC() = default;
   UGC(Ratings const & records, Reviews const & reviews, float const totalRating, uint32_t basedOn)
     : m_ratings(records), m_reviews(reviews), m_totalRating(totalRating), m_basedOn(basedOn)
   {
+    float constexpr kEps = 0.01f;
+    CHECK_LESS(m_totalRating - kEps, kMaxRating, ());
+    CHECK_GREATER(m_totalRating + kEps, kMinRating, ());
+    m_totalRating = base::Clamp(m_totalRating, kMinRating, kMaxRating);
   }
 
   DECLARE_VISITOR(visitor(m_ratings, "ratings"), visitor(m_reviews, "reviews"),
@@ -339,6 +353,56 @@ struct UGC
   {
     return m_reviews.empty() &&
            (m_ratings.empty() || m_totalRating <= kInvalidRatingValue || m_basedOn == 0);
+  }
+
+  // Packs rating and reviews number to uint8_t.
+  // Uses two most significant bits for reviews number:
+  //  0 - 0 reviews
+  //  1 - 1 or 2 reviews
+  //  2 - from 3 to 10 reviews
+  //  3 - more than 10 reviews
+  // These constants may be changed if we achieve large count of reviews.
+  // The last 6 bits are used to encode rating. Ratings lower than 4.0 are encoded as |0|.
+  // Higher ratings are encoded by mapping real number from [4.0..10.0] to integer [1..63]
+  // uniformly.
+  uint8_t GetPackedRating() const
+  {
+    uint8_t confidence = 0;
+    if (m_basedOn > 0 && m_basedOn <= 2)
+      confidence = 1;
+    if (m_basedOn > 2 && m_basedOn <= 10)
+      confidence = 2;
+    if (m_basedOn > 10)
+      confidence = 3;
+
+    uint8_t rating = 0;
+
+    if (m_totalRating > kRatingDetalizationThreshold)
+    {
+      rating = 1 + (m_totalRating - kRatingDetalizationThreshold) /
+                       (kMaxRating - kRatingDetalizationThreshold) * 62.0f;
+    }
+    rating = base::Clamp(rating, static_cast<uint8_t>(0), static_cast<uint8_t>(63));
+
+    return confidence << 6 | rating;
+  }
+
+  // Complementary function for GetPackedRating.
+  // Returns confidence [0..3] and rating [4.0..10.0] where all ratings lower than 4.0 are
+  // represented as 4.0.
+  static std::pair<uint8_t, float> UnpackRating(uint8_t packed)
+  {
+    uint8_t const confidence = packed >> 6;
+
+    float rating = kRatingDetalizationThreshold;
+    uint8_t const packedRating = packed & 63;
+    if (packedRating > 0)
+    {
+      rating = kRatingDetalizationThreshold + static_cast<float>(packedRating - 1) / 62.0f *
+                                                  (kMaxRating - kRatingDetalizationThreshold);
+    }
+
+    return std::make_pair(confidence, rating);
   }
 
   Ratings m_ratings;

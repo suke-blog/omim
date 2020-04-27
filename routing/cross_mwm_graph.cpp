@@ -1,19 +1,16 @@
 #include "routing/cross_mwm_graph.hpp"
+
 #include "routing/routing_exceptions.hpp"
 #include "routing/transit_graph.hpp"
 
 #include "indexer/data_source.hpp"
 #include "indexer/scales.hpp"
 
-#include "geometry/mercator.hpp"
-
 #include "base/assert.hpp"
-#include "base/math.hpp"
 #include "base/stl_helpers.hpp"
 
 #include "defines.hpp"
 
-#include <algorithm>
 #include <numeric>
 #include <utility>
 
@@ -91,7 +88,7 @@ void CrossMwmGraph::DeserializeTransitTransitions(vector<NumMwmId> const & mwmId
 
 void CrossMwmGraph::GetTwins(Segment const & s, bool isOutgoing, vector<Segment> & twins)
 {
-  CHECK(IsTransition(s, isOutgoing),
+  ASSERT(IsTransition(s, isOutgoing),
         ("The segment", s, "is not a transition segment for isOutgoing ==", isOutgoing));
   // Note. There's an extremely rare case when a segment is ingoing and outgoing at the same time.
   // |twins| is not filled for such cases. For details please see a note in
@@ -131,27 +128,73 @@ void CrossMwmGraph::GetTwins(Segment const & s, bool isOutgoing, vector<Segment>
     CHECK_NOT_EQUAL(s.GetMwmId(), t.GetMwmId(), ());
 }
 
-void CrossMwmGraph::GetOutgoingEdgeList(Segment const & s, vector<SegmentEdge> & edges)
+void CrossMwmGraph::GetOutgoingEdgeList(Segment const & enter, vector<SegmentEdge> & edges)
 {
-  CHECK(IsTransition(s, false /* isEnter */),
-        ("The segment is not a transition segment. IsTransition(", s, ", false) returns false."));
-  edges.clear();
+  ASSERT(
+      IsTransition(enter, false /* isEnter */),
+      ("The segment is not a transition segment. IsTransition(", enter, ", false) returns false."));
 
-  if (TransitGraph::IsTransitSegment(s))
+  // Is not supported yet.
+  /*
+  if (TransitGraph::IsTransitSegment(enter))
   {
-    if (TransitCrossMwmSectionExists(s.GetMwmId()))
-      m_crossMwmTransitGraph.GetOutgoingEdgeList(s, edges);
+    if (TransitCrossMwmSectionExists(enter.GetMwmId()))
+      m_crossMwmTransitGraph.GetOutgoingEdgeList(enter, edges);
     return;
   }
+  */
 
-  if (CrossMwmSectionExists(s.GetMwmId()))
-    m_crossMwmIndexGraph.GetOutgoingEdgeList(s, edges);
+  if (CrossMwmSectionExists(enter.GetMwmId()))
+    m_crossMwmIndexGraph.GetOutgoingEdgeList(enter, edges);
+}
+
+void CrossMwmGraph::GetIngoingEdgeList(Segment const & exit, vector<SegmentEdge> & edges)
+{
+  ASSERT(
+    IsTransition(exit, true /* isEnter */),
+    ("The segment is not a transition segment. IsTransition(", exit, ", true) returns false."));
+
+  // Is not supported yet.
+  /*
+  if (TransitGraph::IsTransitSegment(enter))
+  {
+    if (TransitCrossMwmSectionExists(enter.GetMwmId()))
+      m_crossMwmTransitGraph.GetIngoingEdgeList(enter, edges);
+    return;
+  }
+  */
+
+  if (CrossMwmSectionExists(exit.GetMwmId()))
+    m_crossMwmIndexGraph.GetIngoingEdgeList(exit, edges);
 }
 
 void CrossMwmGraph::Clear()
 {
   m_crossMwmIndexGraph.Clear();
   m_crossMwmTransitGraph.Clear();
+}
+
+void CrossMwmGraph::GetTwinFeature(Segment const & segment, bool isOutgoing, vector<Segment> & twins)
+{
+  std::vector<uint32_t> const & transitSegmentIds =
+    m_crossMwmIndexGraph.GetTransitSegmentId(segment.GetMwmId(), segment.GetFeatureId());
+
+  for (auto transitSegmentId : transitSegmentIds)
+  {
+    Segment const transitSegment(segment.GetMwmId(), segment.GetFeatureId(),
+                                 transitSegmentId, segment.IsForward());
+
+    if (!IsTransition(transitSegment, isOutgoing))
+      continue;
+
+    GetTwins(transitSegment, isOutgoing, twins);
+    break;
+  }
+}
+
+bool CrossMwmGraph::IsFeatureTransit(NumMwmId numMwmId, uint32_t featureId)
+{
+  return m_crossMwmIndexGraph.IsFeatureTransit(numMwmId, featureId);
 }
 
 CrossMwmGraph::MwmStatus CrossMwmGraph::GetMwmStatus(NumMwmId numMwmId,
@@ -161,7 +204,7 @@ CrossMwmGraph::MwmStatus CrossMwmGraph::GetMwmStatus(NumMwmId numMwmId,
   if (!handle.IsAlive())
     return MwmStatus::NotLoaded;
 
-  MwmValue * value = handle.GetValue<MwmValue>();
+  MwmValue const * value = handle.GetValue();
   CHECK(value != nullptr, ("Country file:", m_numMwmIds->GetFile(numMwmId)));
   return value->m_cont.IsExist(sectionName) ? MwmStatus::SectionExists : MwmStatus::NoSection;
 }

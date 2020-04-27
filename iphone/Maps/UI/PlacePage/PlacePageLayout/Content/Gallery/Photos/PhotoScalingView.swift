@@ -1,6 +1,3 @@
-import AlamofireImage
-import UIKit
-
 final class PhotoScalingView: UIScrollView {
   private(set) lazy var imageView: UIImageView = {
     let imageView = UIImageView(frame: self.bounds)
@@ -8,7 +5,7 @@ final class PhotoScalingView: UIScrollView {
     return imageView
   }()
 
-  var photo: GalleryItemModel? {
+  var photo: HotelPhotoUrl? {
     didSet {
       updateImage(photo)
     }
@@ -44,7 +41,7 @@ final class PhotoScalingView: UIScrollView {
     showsVerticalScrollIndicator = false
     showsHorizontalScrollIndicator = false
     bouncesZoom = true
-    decelerationRate = UIScrollViewDecelerationRateFast
+    decelerationRate = .fast
   }
 
   private func centerScrollViewContents() {
@@ -53,18 +50,18 @@ final class PhotoScalingView: UIScrollView {
     contentInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
   }
 
-  private func updateImage(_ photo: GalleryItemModel?) {
+  private func updateImage(_ photo: HotelPhotoUrl?) {
     guard let photo = photo else { return }
     imageView.transform = CGAffineTransform.identity
-    imageView.af_setImage(withURL: photo.imageURL,
-                          imageTransition: .crossDissolve(kDefaultAnimationDuration),
-                          completion: { [weak self] response in
-                            guard let s = self else { return }
-                            s.contentSize = response.value?.size ?? CGSize.zero
-                            s.imageView.frame = CGRect(origin: CGPoint.zero, size: s.contentSize)
-                            s.updateZoomScale()
-                            s.centerScrollViewContents()
-    })
+    guard let url = URL(string: photo.original) else { return }
+    imageView.wi_setImage(with: url,
+                          transitionDuration: kDefaultAnimationDuration) { [weak self] (image, error) in
+      guard let s = self else { return }
+      s.contentSize = image?.size ?? CGSize.zero
+      s.imageView.frame = CGRect(origin: CGPoint.zero, size: s.contentSize)
+      s.updateZoomScale()
+      s.centerScrollViewContents()
+    }
   }
 
   private func updateZoomScale() {

@@ -6,9 +6,6 @@
 
 /********** Strings **********/
 
-/* About button text (should be short) */
-"about" = "Om";
-
 /* Button text (should be short) */
 "back" = "Tillbaka";
 
@@ -81,8 +78,6 @@
 /* View and button titles for accessibility */
 "core_my_position" = "Min position";
 
-"ok" = "OK";
-
 /* Settings/Downloader - No free space dialog message */
 "free_disk_space_for_country_x" = "Frigör mer utrymme på din enhet först för att kunna ladda ner %@";
 
@@ -109,9 +104,6 @@
 
 /* Settings/Downloader - 3G download warning dialog confirm button */
 "use_cellular_data" = "Ja";
-
-/* Settings/Downloader - No internet connection dialog message */
-"use_wifi_recommendation_text" = "Vi rekommenderar att använda WiFi för nedladdning av stora kartor";
 
 /* Choose measurement on first launch alert - title */
 "which_measurement_system" = "Vilket mätsystem föredrar du?";
@@ -408,9 +400,6 @@
 /* Subject for emailed bookmark */
 "bookmark_share_email_subject" = "Hej, kolla på min pin på MAPS.ME kartan";
 
-/* Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me */
-"bookmark_share_email" = "Hej,\n\nJag lade till en knappnål: %1$@ på MAPS.ME, offline-kartor över hela världen. Klicka på denna länk %2$@ eller denna %3$@ för att se platsen på kartan.\n\nTack.";
-
 /* Subject for emailed position */
 "my_position_share_email_subject" = "Hej, kolla på min nuvarande position på MAPS.ME kartan!";
 
@@ -588,15 +577,6 @@
 
 /* category title */
 "routes" = "Rutter";
-
-/* Show on first launch. */
-"maps_licence_info" = "Detta program använder geografisk data (inkluderar kartor, företagsuppgifter, intressepunkter, landsgränser och regioner m.m.) från OpenStreetMap projektet. Vi garanterar ingen konsekvenshet, nogrannhet, fullständighet eller tillämpbarhet av OpenStreetMap datan.";
-
-/* Show on first launch. */
-"agree" = "I agree";
-
-/* Show on first launch */
-"disagree" = "Jag accepterar";
 
 /* text of notification */
 "download_map_notification" = "Ladda ner kartan över din nuvarande plats";
@@ -896,6 +876,30 @@
 
 /* pink color */
 "pink" = "Rosa";
+
+/* deep purple color */
+"deep_purple" = "Mörk purpur";
+
+/* light blue color */
+"light_blue" = "Ljusblå";
+
+/* cyan color */
+"cyan" = "Blågrön";
+
+/* teal color */
+"teal" = "Smaragdgrön";
+
+/* lime color */
+"lime" = "Limefärg";
+
+/* deep orange color */
+"deep_orange" = "Mörkorange";
+
+/* gray color */
+"gray" = "Grå";
+
+/* blue gray color */
+"blue_gray" = "Ljusblå grå";
 
 /* Wi-Fi available */
 "WiFi_available" = "Ja";
@@ -1342,10 +1346,6 @@
 
 "onboarding_permissions_message" = "Så att du kan ladda ned kartor, visa platser och trafik i närheten och använda navigering.";
 
-"onboarding_welcome_title" = "Välkommen till MAPS.ME";
-
-"onboarding_welcome_first_subtitle" = "Gratis, snabba, detaljerade och fullständiga kartor offline med sväng-för-sväng-navigering.";
-
 "onboarding_welcome_second_subtitle" = "Genom att starta applikationen godkänner du <a href=\"%s\">användningsvillkoren</a> och <a href=\"%s\">sekretesspolicyn</a>.";
 
 "dialog_incorrect_feature_position" = "Ändra placering";
@@ -1500,7 +1500,7 @@
 
 "placepage_more_button" = "Mer";
 
-"placepage_more_reviews_button" = "More Reviews";
+"placepage_more_reviews_button" = "Fler recensioner";
 
 "book_button" = "Boka";
 
@@ -1782,10 +1782,6 @@
 
 "banner_rentalcars_message" = "800 biluthyrningsföretag på mer än 49000 biluthyrningsplatser.";
 
-"banner_viator_title" = "Sökning efter turer online";
-
-"banner_viator_message" = "Sök bland mer än 50000 turer över hela världen.";
-
 /* december */
 "whatsnew_traffic" = "Trafikdata i 36 länder";
 
@@ -1860,10 +1856,6 @@
 "whatsnew_waypoints_title" = "Vägpunkter i ruttning";
 
 "whatsnew_waypoints_message" = "Tryck på platser för att lägga till vägpunkter till din rutt.";
-
-"whatsnew_viator_title" = "Boka en tur";
-
-"whatsnew_viator_message" = "Välj populära turer i turiststäder över hela världen.";
 
 "whatsnew_driving_style_title" = "En ny kartstil när du kör";
 
@@ -1977,8 +1969,6 @@
 
 "toast_location_permission_denied" = "Behörighet till appens plats nekades";
 
-"place_page_viator_title" = "Attraktioner och turer";
-
 "button_use" = "Använd";
 
 "planning_route_manage_route" = "Hantera rutt";
@@ -2018,10 +2008,6 @@
 "choose_start_point" = "Välj en startpunkt";
 
 "choose_destination" = "Välj en destination";
-
-"preloader_viator_title" = "Upptäck turer och ovanliga aktiviteter";
-
-"preloader_viator_message" = "Turer, aktiviteter, sightseeing med mera";
 
 "preloader_viator_button" = "Läs mer";
 
@@ -2127,10 +2113,6 @@
 
 "discovery_button_subtitle_local_guides" = "Lokala guider";
 
-"discovery_button_viator_offline_title" = "Upptäck turer och ovanliga saker att göra";
-
-"discovery_button_viator_offline_message" = "Turer, saker att göra, sightseeing-turer med mera.";
-
 "discovery_button_viator_error_title" = "Det gick inte att ladda data";
 
 "discovery_button_other_error_message" = "Det gick inte att ladda data";
@@ -2203,8 +2185,6 @@
 
 "downloader_applying" = "Tillämpar %s...";
 
-"transit_not_found" = "Transitnavigering är inte tillgängligt i den här regionen ännu";
-
 "whats_new_title_hotel_filter" = "Nya hotellfilter finns tillgängliga!";
 
 "whats_new_message_hotel_filter" = "Boka hotell som är tillgängliga för dina datum! Använd filter för incheckning och utcheckning";
@@ -2212,8 +2192,6 @@
 "whats_new_title_ugc_travel" = "Dela din upplevelse med andra resenärer!";
 
 "whats_new_message_ugc_travel" = "Betygsätt och recensera platser du besökt!";
-
-"dialog_pedestrian_route_is_long" = "Fotgängarrutten är för lång";
 
 "dialog_message_transit_not_found_connection" = "Planera en rutt inom ett transportnätverk";
 
@@ -2405,9 +2383,8 @@
 
 "guide_downloaded_title" = "Guiden har laddats ned framgångsrikt";
 
-"download_guides" = "Ladda ned guider";
-
-"cached_guides_placeholder_subtitle" = "Detaljerade offline-guider för alla former av resor. Välj den som passar dig bäst och ladda ned den direkt till kartan. Du behöver internetanslutningen för att ladda ned guider.";
+/* as few symbols as possible */
+"download_guides" = "Hitta guider";
 
 "guides_groups_cached" = "Nedladdade guider";
 
@@ -2487,8 +2464,6 @@
 
 "restore_no_subscription_alert" = "Det finns inga aktiva prenumerationer";
 
-"subscription_terms" = "Betalning kommer att debiteras ditt iTunes-konto vid bekräftelsen av köpet. Prenumerationen kommer att förnyas automatiskt om inte automat-förnyelse är avstängt minst 24 timmar före utgången av innevarande period. Ditt konto kommer att debiteras enligt din plan för förnyelse inom 24 timmar före utgången av innevarande period. Du kan hantera eller stänga av automatisk förnyelse för ditt inköp när som helst i ditt Apple-ID-konto.";
-
 "subscriptions_title" = "Prenumerationer";
 
 "manage_subscription" = "Hantera prenumeration";
@@ -2508,8 +2483,6 @@
 "ugc_route_tags_screen_label" = "Välj taggar";
 
 "ugc_route_tags_progress_msg" = "Laddar upp taggar…";
-
-"ugc_route_tags_desc" = "Var vänlig välj taggar för att hjälpa andra resenärer att hitta din reseguide. Detta är ett måste.";
 
 "public_access" = "Allmänhetens åtkomst";
 
@@ -2564,7 +2537,7 @@
 
 "unable_upload_error_subtitle_broken" = "Filen är skadad och kan inte laddas upp. Var vänlig ladda upp en annan fil.";
 
-"buy_btn" = "Köp för %s";
+"buy_btn" = "Köpa guide för %s";
 
 "download_guide_progress" = "Reseguiden laddar…";
 
@@ -2659,6 +2632,636 @@
 
 "whats_new_ugc_routes_title_android_only" = "Det är lätt att dela dina intryck";
 
+"ugc_thanks_message_auth" = "Din recension har sparats";
+
+"ugc_thanks_message_not_auth" = "Registrera för att lämna en recension";
+
+"notification_leave_review_v2_title" = "Lämna en recension och hjälp resenärer!";
+
+"error_public_not_enought_title" = "Inte tillräckligt med etiketter";
+
+"error_public_not_enought_subtitle" = "Din resrutt måste ha minst 3 etiketter för att laddas upp till den offentliga katalogen";
+
+"bookmark_public_upload_alert_title" = "Det är bara ett par steg från att ladda din resrutt till MAPS.ME katalog!";
+
+"bookmark_public_upload_alert_subtitle" = "Se till att resrutten har ett namn och en beskrivning och alla etiketter innehåller information om platser. På grund av detta kommer användare att hitta resrutten och kunna använda den på resan.";
+
+"bookmark_public_upload_alert_ok_button" = "Ja, det är allt bra!";
+
+"name_title" = "Ange ett namn";
+
+"name_placeholder" = "till exempel, pubar i London";
+
+"name_comment1" = "Benämn resrutten konkret så att användare kan hitta den, till exempel, \"Pubar i London\"";
+
+"name_comment2" = "Namnet ska innehålla varken specialtecken. Publicera inte resrutter med namnet \"Mina Platser\"";
+
+"description_guide" = "Beskrivning";
+
+"description_title" = "Ange beskrivning av resrutten";
+
+"description_placeholder" = "Beskriv din resrutt i detalj";
+
+"description_comment1" = "Beskrivning av resrutt ska innehålla minst 30 symboler.";
+
+"ugc_route_tags_desc" = "Vänligen välj taggar för att hjälpa andra resenärer att hitta din vägvisare. Det är obligatoriskt. Högst %s taggar.";
+
+"html_format_error_title" = "Din resrutt har inte publicerats";
+
+"html_format_error_subtitle" = "Vänligen se till att namn och beskrivningar av taggar i resrutten har en rätt formatering. Du kan kolla detta i vår redigerare genom att klicka på \"Redigera online\"-knappen nedan.";
+
+"web_editor_description" = "Ladda upp resrutten och få en länk för att redigera på datorn";
+
+"edit_on_web_confirm" = "Redigera online";
+
+"update_guide" = "Ladda upp en ny version";
+
+"direct_link_updating_text" = "Uppdaterar resrutten…";
+
+"direct_link_updating_success" = "Resrutten har uppdaterats";
+
+"unable_get_direct_link_desc" = "Du kan dela resrutten med hjälp av en offentlig länk";
+
+"any_access_update_alert_title" = "Möjligen finns det en ny version av resrutten";
+
+"any_access_update_alert_message" = "Vill du uppdatera etiketter? Den nya versionen kommer att finnas tillgänglig på samma länk.";
+
+"any_access_update_alert_update" = "Uppdatera";
+
+"public_or_limited_access_after_edit_online_error_title" = "Du redigerade resrutten online";
+
+"public_or_limited_access_after_edit_online_error_message" = "Vidare redigera, publicera eller dela resrutten med vänner via vår hemsida";
+
+"power_managment_title" = "Energisparläge";
+
+"power_managment_description" = "Om energisparläget är på, ska appen stänga av energikrävande funktioner beroende på telefonens nuvarande laddning";
+
+"power_managment_setting_never" = "Aldrig";
+
+"power_managment_setting_auto" = "Automatiskt";
+
+"power_managment_setting_manual_max" = "Maximal energibesparing";
+
+"enable_logging_warning_message" = "Denna funktion aktiveras för loggning av åtgärder för diagnostiska ändamål. Detta hjälper laget att identifiera problem med applikationen. Slå på funktionen endast på begäran av MAPS.ME supporttjänst.";
+
+"html_error_upload_message_try_again" = "Kontrollera nätverksåtkomst och försök igen";
+
+"html_error_upload_title_try_again" = "Ingen internetanslutning";
+
+"notification_leave_review_v2_android_short_title" = "Lämna en recension och hjälp resenärer!";
+
+"megafon" = "Say goodbye to roaming!";
+
+"notifications_illegal_alert_disable_button" = "Stäng av meddelanden";
+
+"access_rules_author_only" = "Redigeras online";
+
+"privacy_settings_menu" = "Sekretessinställningar";
+
+"gdpr_request_setting" = "Få ID för GDPR förfrågan";
+
+"gdpr_request_window_title" = "Ditt ID: %s.";
+
+"gdpr_request_window_message" = "Vänligen kopiera det och skicka förfrågan till support@maps.me";
+
+"gdpr_request_window_copy" = "Kopiera ID";
+
+"unable_upadate_error_title" = "Det gick inte att uppdatera resrutten";
+
+"unable_upadate_error_message" = "Det uppstod några fel vid uppdatering. Kontrollera ändringarna och försök igen";
+
+"whats_new_wiki_title" = "Vad är det för plats?";
+
+"whats_new_wiki_message" = "Vi har lagt till artiklar från Wikipedia.org, som är tillgängliga offline, i korten av populära sevärdheter";
+
+"driving_options_title" = "Omvägsinställningar";
+
+"driving_options_subheader" = "Undvik på varje rutten";
+
+"avoid_tolls" = "Betalväg";
+
+"avoid_unpaved" = "Kärrväg";
+
+"avoid_ferry" = "Färjetrafik";
+
+"avoid_motorways" = "Motorväg";
+
+"unable_to_calc_alert_title" = "Det går inte att bygga ruttenen";
+
+"unable_to_calc_alert_subtitle" = "Tyvärr kunde vi inte bygga en rutt med de valda alternativen. Ändra inställningar och försök igen";
+
+"define_to_avoid_btn" = "Anpassa omvägsbana";
+
+"change_driving_options_btn" = "Omvägsinställningar aktiverade";
+
+"toll_road" = "Betalvägen";
+
+"unpaved_road" = "Kärrvägen";
+
+"ferry_crossing" = "Färjetrafik";
+
+"operated_by" = "Kontrolleras \"%s\"";
+
+"avoid_toll_roads_placepage" = "Undvik betalvägar";
+
+"avoid_unpaved_roads_placepage" = "Undvik kärrvägar";
+
+"avoid_ferry_crossing_placepage" = "Undvik färjetrafik";
+
+"cached_guides_placeholder_subtitle" = "Färdiga guider i MAPS.ME är valda platser med bilder och beskrivningar som visas på kartan och är tillgängliga offline.";
+
+"guides_catalogue_title" = "Guidebok katalogen";
+
+"download_guides_button" = "Gå till katalogen";
+
+"type.cuisine.uzbek" = "Uzbekiska mat";
+
+"onboarding_welcome_title" = "Planera och resa med MAPS.ME";
+
+"onboarding_welcome_first_subtitle" = "Spara intressanta platser, boka hotell, bygga rutten offline";
+
+"onboarding_guide_direct_download_title" = "Guiden är klar för nedladdning";
+
+"onboarding_guide_direct_download_subtitle" = "Den kommer att visas på kartan och kommer att fungera offline";
+
+"onboarding_guide_direct_download_button" = "Ladda ner";
+
+"onboarding_bydeeplink_guide_title" = "Färdiga guider i MAPS.ME";
+
+"onboarding_bydeeplink_guide_subtitle" = "Valda platser med bilder och beskrivningar visas på kartan och är tillgängliga offline.";
+
+"whats_new_auto_update_bydeeplink_title" = "Innan du går till guideböcker…";
+
+"whats_new_auto_update_bydeeplink_message" = "Uppdatera kartor för aktuell information om objekt!";
+
+"whats_new_auto_update_and_proceed_button_size" = "Uppdatera (%s) och fortsätt";
+
+"whatsnew_toll_unpaved_title" = "Bygga rutter med hänsyn till alla typer av vägar";
+
+"whatsnew_toll_unpaved_message" = "Välj omvägsvägar genom betalvägar, kärrvägar och färjetrafik";
+
+"whatsnew_new_catalogue_title" = "Uppdaterade katalog sidor";
+
+"whatsnew_new_catalogue_message" = "Vi lade till detaljerad information om partnerguider så att valet av rutten är enkelt och bekvämt";
+
+"purchase_please_wait_toast" = "Vänligen lämna inte skärmen tills inköpet är klart";
+
+"trip_start" = "Kom igen";
+
+"pick_destination" = "Målet";
+
+"follow_my_position" = "Placera i mitten";
+
+"search_results" = "Sökresultat";
+
+"then_turn" = "Vidare";
+
+"redirect_route_alert" = "Räknar om rutten?";
+
+"redirect_route_yes" = "Ja";
+
+"redirect_route_no" = "Nej";
+
+"trip_finished" = "Du är framme!";
+
+"keyboard_availability_alert" = "Tangentbordet är inte tillgängligt vid rörelsen";
+
+"dialog_routing_change_start_carplay" = "Det gick inte att bygga rutten från nuvarande plats";
+
+"dialog_routing_change_end_carplay" = "Det går inte att bygga rutten till slutpunkten. Välj en annan";
+
+"dialog_routing_check_gps_carplay" = "Ingen GPS-signal. Följ till öppna området";
+
+"dialog_routing_unable_locate_route_carplay" = "Det går inte att bygga ruten. Välj andra rutenspunkter";
+
+"dialog_routing_download_files_carplay" = "För att skapa en rutt, ladda ner saknade kartor på din enhet";
+
+"dialog_routing_system_error_carplay" = "Ett fel uppstod. Starta om appen";
+
+"dialog_routing_rebuild_from_current_location_carplay" = "Ruten kommer att byggas om från din nuvarande plats";
+
+"dialog_routing_rebuild_for_vehicle_carplay" = "Ruten kommer att ändras till bil";
+
+"ok" = "Ok";
+
+"vezet_taxi" = "Vezet";
+
+"booking_button_toolbar" = "Välja ett hotell på kartan";
+
+"popup_booking_download_guides_title" = "Har bokat ett hotell?";
+
+"popup_booking_download_guides_message" = "Planera din rutt med färdiga reseguider MAPS.ME";
+
+"popup_mwm_download_guides_title" = "Offline guider";
+
+"popup_mwm_download_guides_cta" = "Välja";
+
+"popup_mwm_download_guides_cta_1" = "Se";
+
+"gallery_pp_download_guides_offline_title" = "Planera din semester med MAPS.ME!";
+
+"gallery_pp_download_guides_offline_subtitle" = "Missa inte det viktigaste med rutter från erfarna resenärer";
+
+"gallery_pp_download_guides_offline_cta" = "Aktivera Internet";
+
+"gallery_pp_download_guides_title" = "Reseguider";
+
+"native_screen_subscription_title" = "Full tillgång till 2000+ guider!";
+
+"native_screen_subscription_message" = "En minnesvärd rekreation på resan vart som helst och med vem som helst";
+
+"annual_subscription_title" = "Årlig";
+
+"montly_subscription_title" = "Månatlig";
+
+"annual_subscription_message" = "12 månaders obegränsad tillgång";
+
+"montly_subscription_message" = "1 månads obegränsad tillgång";
+
+"annual_save_component" = "- %d%";
+
+"subscription_success_dialog_title" = "Tack för prenumerationen!";
+
+"subscription_success_dialog_message" = "Nu har du obegränsad tillgång till guidekatalogen";
+
+"renewal_screen_title" = "Prenumerationen har gått ut";
+
+"renewal_screen_message" = "Alla guider nedladdade genom prenumerationen kommer att raderas. Vill du återställa prenumerationen och spara dem?";
+
+"renewal_screen_button_restore" = "Ja, återställa";
+
+"renewal_screen_button_cancel" = "Nej, radera guider";
+
+"subscription_error_ping_title" = "Misslyckades med att köpa";
+
+"subscription_error_message" = "Nu är tjänsten inte tillgänglig i din region. Vänligen försök igen senare";
+
+"subscription_error_button" = "Klart";
+
+"timeout_error_title" = "Hoppsan, tiden är slut!";
+
+"timeout_error_message" = "Våra servrar svarar inte. Vänligen kontrollera din internetanslutning och försök igen.";
+
+"per_month" = "/mån.";
+
+"per_year" = "/år";
+
+"buy_btn_for_subscription" = "Full tillgång från %s";
+
+"buy_btn_for_subscription_1" = "Köpa ALLA guider för %s";
+
+"buy_btn_for_subscription_ios_only_mo" = "Full tillgång för %s/mån.";
+
+"buy_btn_for_subscription_ios_only_year" = "Full tillgång för %s/år";
+
+"subscription_terms_guides" = "Betalning kommer att genomföras från ditt iTunes-konto vid inköpsbekräftelse. Prenumerationen kommer att förnyas automatiskt om automatisk förnyelse är inte avstängd minst 24 timmar före slutet av den aktuella perioden. Pengarna kommer att dras från ditt konto enligt din förnyelseprisplan inom 24 timmar från slutet av den aktuella perioden. Du kan hantera automatisk förnyelse eller inaktivera den i dina Apple ID-kontoinställningar när som helst efter inköpet. Du kommer att kunna använda guiderna nedladdade genom prenumerationen endast under dess giltighetsperiod. Efter 30 dagar från prenumerationens slut kommer guider med alla bokmärken att raderas automatiskt.";
+
+"subscription_terms" = "Betalning kommer att debiteras ditt iTunes-konto vid bekräftelsen av köpet. Prenumerationen kommer att förnyas automatiskt om inte automat-förnyelse är avstängt minst 24 timmar före utgången av innevarande period. Ditt konto kommer att debiteras enligt din plan för förnyelse inom 24 timmar före utgången av innevarande period. Du kan hantera eller stänga av automatisk förnyelse för ditt inköp när som helst i ditt Apple-ID-konto.";
+
+"whatsnew_carplay_title" = "MAPS.ME autonavigering i CarPlay!";
+
+"whatsnew_carplay_message" = "Bokmärken, sök, hastighetskameror och omvägsinställningar - allt fungerar utan internet";
+
+"whatsnew_subscription_title" = "Upptäck världen på en prenumeration!";
+
+"whatsnew_subscription_message" = "Obegränsad tillgång till ruttkatalogen är mer lönsam än ett enstaka köp";
+
+"whatsnew_carnavi_fixes_for_android_title" = "Uppdatering av navigering";
+
+"whatsnew_carnavi_fixes_for_android_message" = "Vi har förbättrat byggandet av rutter till punkter som ligger långt ifrån vägarna";
+
+"avoid_unpaved_carplay_1" = "Utan kärrväg";
+
+"avoid_unpaved_carplay_2" = "Utan kärrvägar";
+
+"avoid_ferry_carplay_1" = "Utan färjor";
+
+"avoid_ferry_carplay_2" = "Utan färjor";
+
+"avoid_tolls_carplay_1" = "Utan betalda";
+
+"avoid_tolls_carplay_2" = "Utan betalda";
+
+"speedcams_alert_title_carplay_1" = "Kameror";
+
+"speedcams_alert_title_carplay_2" = "Info om kameror";
+
+"download_map_carplay" = "Ladda ner kartor i applikation MAPS.ME på din enhet";
+
+"carplay_roundabout_exit" = "%s utgången";
+
+/* max. 10 symbols, both iOS and Android */
+"sort" = "Sortera…";
+
+/* Android, title, max 20-22 symbols */
+"sort_bookmarks" = "Sortera bokmärken";
+
+/* iOS */
+"sort_default" = "Sortera som standard";
+
+"sort_type" = "Sortera efter typ";
+
+"sort_distance" = "Sortera efter avstånd";
+
+"sort_date" = "Sortera efter datum";
+
+/* Android */
+"by_default" = "Som standard";
+
+/* Android */
+"by_type" = "Efter typ";
+
+/* Android */
+"by_distance" = "Efter avstånd";
+
+/* Android */
+"by_date" = "Efter datum";
+
+"week_ago_sorttype" = "För en vecka sedan";
+
+"month_ago_sorttype" = "För en månad sedan";
+
+"moremonth_ago_sorttype" = "För över en månad sedan";
+
+"moreyear_ago_sorttype" = "För över ett år sedan";
+
+"near_me_sorttype" = "Bredvid mig";
+
+"others_sorttype" = "Andra";
+
+"food_places" = "Mat";
+
+"tourist_places" = "Sevärdheter";
+
+"museums" = "Museer";
+
+"parks" = "Parker";
+
+"swim_places" = "Simning";
+
+"mountains" = "Berg";
+
+"animals" = "Djur";
+
+"hotels" = "Hotell";
+
+"buildings" = "Byggnader";
+
+"money" = "Pengar";
+
+"shops" = "Butiker";
+
+"parkings" = "Parkeringsplatser";
+
+"fuel_places" = "Bensinstationer";
+
+"water" = "Vatten";
+
+"medicine" = "Medicin";
+
+"search_in_the_list" = "Söka i listan";
+
+"view_on_map_bookmarks" = "På kartan";
+
+"more_bookmarks" = "Mer…";
+
+"no_items_found" = "Ingenting hittades";
+
+/* Android, max 18 symbols */
+"bookmarks_edit_list" = "Redigera";
+
+/* Android, max 18 symbols */
+"bookmarks_delete_list" = "Ta bort listan";
+
+"whatsnew_bookmarks_search_sort_title" = "Ordningen i bokmärken — bekvämlighet i resan";
+
+"whatsnew_bookmarks_search_sort_message" = "Sortera favoritplatser efter kategorier, tid för tilläggning och geolokation, samt hitta snabbt specifika bokmärken efter namn";
+
+"popup_subscription_success_map_title" = "Hurra! Du är prenumererad!";
+
+"popup_subscription_success_map_message" = "Nu kan du utforska de bästa turistiska sevärdheterna i MAPS.ME-katalogen";
+
+"popup_subscription_success_map_start_button" = "Börja surfa";
+
+"popup_subscription_success_map_not_now_button" = "Inte nu";
+
+"religious_places" = "Heliga platser";
+
+"subscription_terms_android" = "Betalning ska göras från ditt Google Play-konto vid köpbekräftelse. Prenumerationen ska förnyas automatiskt, om automatisk förnyelse inte inaktiverats minst 24 timmar före utgången av den aktuella perioden. Penningmedel ska debiteras från ditt konto i enlighet med din förnyelseplan inom 24 timmar före utgången av den aktuella perioden. Du kan styra automatisk förnyelse eller inaktivera den i dina kontoinställningar efter köpet. Du kan använda guiderna som laddats ner genom prenumerationen bara under dess giltighetsperiod. Efter 30 dagar från prenumerationens utgångsdatum raderas nerladdade guider automatiskt.";
+
+"select_list" = "Välja lista";
+
+"pp_discovery_place_related_header" = "Denna plats i guidebok katalog";
+
+"pp_discovery_place_related_header_1" = "Denna plats finns i guide";
+
+"pp_discovery_place_related_cta_button" = "Se";
+
+"pp_discovery_place_related_tag_header" = "Guider efter tagg ”%s”";
+
+"pp_discovery_place_related_tag_header_1" = "Du kan också gilla";
+
+"buy_btn_for_subscription_version_2" = "ALLA guider bara för %s/mån.";
+
+"buy_btn_for_subscription_version_3" = "Hela katalogen för %s/mån.";
+
+"buy_btn_for_subscription_ios_only_mo_version_2" = "Tillgång till katalogen för %s/mån.";
+
+"buy_btn_for_subscription_ios_only_year_version_2" = "Tillgång till katalogen för %s/år";
+
+"subscription_screen_native_title_version_2" = "Tillgång till guider med bokmärken på kartan!";
+
+"subscription_screen_native_message_version_2" = "Var redo för vilken som helst resa i 600+ städer och 100+ länder";
+
+"catalog_no_internet_title" = "Ingen internetanslutning";
+
+"catalog_no_internet_button" = "Försöka igen";
+
+"whatsnew_map_updates_title" = "Reaktionskartuppdateringar";
+
+"whatsnew_map_updates_message" = "Nu uppdaterar vi data två gånger snabbare";
+
+"new_onboarding_button" = "Nästa";
+
+"new_onboarding_button_2" = "Börja";
+
+"new_onboarding_step1_header" = "MAPS.ME";
+
+"new_onboarding_step1_header_2" = "Universell reseassistent";
+
+"new_onboarding_step2_header" = "Dröm och planera";
+
+"new_onboarding_step2_message" = "70+ miljoner platser, färdiga guider och hotellbokning direkt från kartan – du är redo för resan!";
+
+"new_onboarding_step3_message" = "Detaljerade offlinekartor och offline-navigering hjälper dig att inte gå vilse på okända platser!";
+
+"new_onboarding_step4_header" = "Dela dina intryck";
+
+"new_onboarding_step4_message" = "Placera bokmärken på favoritplatser och skicka dem till dina vänner";
+
+"new_onboarding_step5.1_header" = "Innan du börjar…";
+
+"new_onboarding_step5.1_message" = "Glöm inte att se vår nya guider katalog för att hitta en offline guide för din kommande resa!";
+
+"new_onboarding_step5.1_button" = "Öppna katalog";
+
+"new_onboarding_step5.2_message" = "Prenumeration på katalogen över guider i MAPS.ME är lönsamt. Få full tillgång till guider för stadspromenader och utomhusaktiviteter!";
+
+"new_onboarding_step5.2_button" = "Kolla villkoren";
+
+"new_onboarding_step5.3_message" = "Ladda ner och betygsätt rutter för stadspromenader och utomhusaktiviteter med ett gratis urval av MAPS.ME!";
+
+"new_onboarding_step5.3_button" = "Ladda ner gratis";
+
+"new_onboarding_additional_steps_later_button" = "Senare";
+
+"all_pass_subscription_header" = "PRENUMERATION PÅ KATALOGEN";
+
+/* do not translate */
+"all_pass_subscription_subheader" = "City + Outdoor Pass";
+
+/* \n - for a break between lines. Max. 15 characters per 1 line. */
+"all_pass_subscription_message_title" = "30000+\nguider & spår";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle" = "<b>Obegränsad offline hämtning</b> av rutter för staden och utomhusaktiviteter";
+
+/* \n - for a break between lines. Max. 17 characters per 1 line. */
+"all_pass_subscription_message_title_2" = "Interaktiv\nterräng profil";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle_2" = "Alla spår laddas <b>med terräng och grundläggande ruttinformation</b>";
+
+/* \n - for a break between lines. Max. 15 characters per 1 line. */
+"all_pass_subscription_message_title_3" = "Favoritplatser,\nfoton och\nrekommendation";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle_3" = "<b>Lär dig allt om rutten</b> du ska följa";
+
+/* do not translate */
+"sightseeing_subscription_header_sightseeing" = "City Pass";
+
+"sightseeing_subscription_header_subscription" = "Prenumeration på guider";
+
+"sightseeing_subscription_message" = "700+ städer och 100+ länder";
+
+"sightseeing_subscription_message_2" = "Tillgänglig offline";
+
+"sightseeing_subscription_message_3" = "Foton och vandringsleder";
+
+"subscription_success_dialog_title_sightseeing_pass" = "Tack för att du prenumererar!";
+
+"subscription_success_dialog_message_sightseeing_pass" = "Nu har du tillgång till alla stadsguider i katalogen";
+
+"downloader_main_gallery_header" = "Kartor och guider";
+
+"downloader_main_gallery_message" = "I det här avsnittet kan du inte bara ladda ner kartor utan också välja guider för din kommande resa";
+
+"downloader_main_1_element_gallery_header" = "Alla guider";
+
+"downloader_main_1_element_gallery_message" = "i 100+ länder";
+
+"downloader_country_1_element_gallery_header" = "%s rutter";
+
+"downloader_country_no_guides_gallery_header" = "Det finns inga guider i detta land än";
+
+"downloader_country_no_guides_gallery_message" = "Se andra offline-rutter i 100+ länder för stads- och utomhusaktiviteter";
+
+"dialog_pedestrian_route_is_long" = "Gångvägen till transportstigningen är för lång";
+
+"whatsnew_outdoor_guides_title" = "Vi har lagt till 15 000+ spår för utomhusaktiviteter!";
+
+"whatsnew_outdoor_guides_message" = "Rutter från Outdooractive för vinter- och sommarresor väntar i katalogen!";
+
+"whatsnew_guides_galleries_title" = "Planera din kommande resa med MAPS.ME";
+
+"whatsnew_guides_galleries_message" = "Nu kan du hitta rekommenderade guider på platssidor för populära städer och attraktioner";
+
+"new_onboarding_step3_header" = "Resa";
+
+"all_pass_screen_best_value" = "Lönsamt pris";
+
+"buy_btn_for_subscription_3" = "Hela katalogen för %s/år";
+
+"transit_not_found" = "Metro-navigering är ännu inte tillgänglig i denna region";
+
+"dialog_pedestrian_route_is_long_header" = "Metro rutt hittades inte";
+
+"dialog_pedestrian_route_is_long_message" = "Välj ruttens start- eller slutpunkt närmare till tunnelbanestation";
+
+/* Failed planning SUBWAY route message in navigation view */
+"routing_planning_error_subway_special" = "Fel vid byggande av metro rutt";
+
+"whatsnew_isolines_title" = "Nyhet för utomhusaktiviteter – höjdlinjer offline!";
+
+/* as less symbols as possible */
+"whatsnew_isolines_message" = "Navigera i högländerna – slå på lagret med knappen i det övre vänstra hörnet av skärmen";
+
+"button_layer_isolines" = "Terräng";
+
+"tips_map_layers_title_countour" = "Höjningslinjer offline i MAPS.ME!";
+
+"tips_map_layers_message_countour" = "Höjdlinjer hjälper dig att planera din resa till naturen och inte gå vilse på marken";
+
+"isolines_activation_error_dialog" = "Om du vill använda höjdlinjer, uppdatera eller ladda ner en karta över önskat område";
+
+"isolines_location_error_dialog" = "Höjningslinjer är ännu inte tillgängligt i den här regionen";
+
+"elevation_profile_diff_level" = "Svårighetsgrad";
+
+"elevation_profile_diff_level_easy" = "Lätt";
+
+"elevation_profile_diff_level_moderate" = "Måttlig";
+
+"elevation_profile_diff_level_hard" = "Svår";
+
+"elevation_profile_ascent" = "Stigning";
+
+"elevation_profile_descent" = "Backe";
+
+"elevation_profile_minaltitude" = "Min. höjd";
+
+"elevation_profile_maxaltitude" = "Max. höjd";
+
+"elevation_profile_m" = "m";
+
+"elevation_profile_difficulty" = "Komplexitet";
+
+"elevation_profile_distance" = "Avst.:";
+
+"elevation_profile_km" = "km";
+
+"elevation_profile_time" = "Tid:";
+
+"elevation_profile_hours" = "h.";
+
+"elevation_profile_minutes" = "min";
+
+/* hide the full screen banner and continue working with the app */
+"hide_screen_map_update" = "Dölja och fortsätt";
+
+"view_on_map_downloaded_error" = "Den här guiden har tagits bort från den här enheten";
+
+"subscription" = "Prenumeration";
+
+"freenow_taxi_title" = "FREE NOW";
+
+"tinkoff_allairlines_map_downloader_title" = "Карта Тинькофф All Airlines. 3000 миль в подарок";
+
+"tinkoff_allairlines_map_downloader_cta_button" = "Оформить карту";
+
+"tinkoff_insurance_map_downloader_title" = "Полис Тинькофф со скидкой! Подходит для любых виз.";
+
+"tinkoff_insurance_map_downloader_cta_button" = "Промокод";
+
+"mts_map_downloader_title" = "Забугорище: интернет и звонки за границей как дома";
+
+"mts_map_downloader_cta_button" = "Подключить";
+
+"skyeng_map_downloader_title" = "Дарим 4 бесплатных урока английского от Skyeng.";
+
+"skyeng_map_downloader_cta_button" = "Подробнее";
+
 
 /**********  Partners  **********/
 
@@ -2709,9 +3312,9 @@
 
 "type.aeroway.terminal" = "aeroway-terminal";
 
-"type.amenity" = "amenity";
+"type.amenity" = "Infrastrukturen";
 
-"type.amenity.arts_centre" = "amenity-arts_centre";
+"type.amenity.arts_centre" = "Kulturcenter";
 
 "type.amenity.atm" = "Bankomat";
 
@@ -2775,7 +3378,7 @@
 
 "type.amenity.fire_station" = "Brandstation";
 
-"type.amenity.food_court" = "amenity-food_court";
+"type.amenity.food_court" = "Food court";
 
 "type.amenity.fountain" = "Fontän";
 
@@ -2811,21 +3414,23 @@
 
 "type.amenity.parking.multi.storey" = "Parkering";
 
-"type.amenity.parking.multi.storey.fee" = "Parkering";
-
 "type.amenity.parking.no.access" = "Parkering";
 
 "type.amenity.parking.park_and_ride" = "Parkering";
 
 "type.amenity.parking.permissive" = "Parkering";
 
-"type.amenity.parking.permissive.fee" = "Parkering";
-
 "type.amenity.parking.private" = "Parkering";
 
 "type.amenity.parking.underground" = "Parkering";
 
-"type.amenity.parking.underground.fee" = "Parkering";
+"type.amenity.parking_space" = "Parkeringsplats";
+
+"type.amenity.parking_space.permissive" = "Parkeringsplats";
+
+"type.amenity.parking_space.private" = "Parkeringsplats";
+
+"type.amenity.parking_space.underground" = "Parkeringsplats";
 
 "type.amenity.payment_terminal" = "Betalningsterminal";
 
@@ -2851,9 +3456,9 @@
 
 "type.amenity.post_box" = "Postlåda";
 
-"type.amenity.post_office" = "Post";
+"type.amenity.post_office" = "Postkontor";
 
-"type.amenity.prison" = "amenity-prison";
+"type.amenity.prison" = "Prison";
 
 "type.amenity.pub" = "Krog";
 
@@ -2883,7 +3488,7 @@
 
 "type.amenity.university" = "Universitet";
 
-"type.amenity.vending_machine" = "amenity-vending_machine";
+"type.amenity.vending_machine" = "Vending machine";
 
 "type.amenity.vending_machine.cigarettes" = "Cigarettmaskin";
 
@@ -2891,7 +3496,7 @@
 
 "type.amenity.vending_machine.parking_tickets" = "Parkeringsautomat";
 
-"type.amenity.vending_machine.public_transport_tickets" = "amenity-vending_machine-public_transport_tickets";
+"type.amenity.vending_machine.public_transport_tickets" = "Biljettautomat";
 
 "type.amenity.veterinary" = "Veterinär";
 
@@ -2901,7 +3506,7 @@
 
 "type.amenity.water_point" = "Vattenpost";
 
-"type.barrier" = "barrier";
+"type.barrier" = "Barrier";
 
 "type.barrier.block" = "Blockering";
 
@@ -2909,29 +3514,29 @@
 
 "type.barrier.border_control" = "Gränskontroll";
 
-"type.barrier.city_wall" = "barrier-city_wall";
+"type.barrier.city_wall" = "City wall";
 
-"type.barrier.cycle_barrier" = "barrier-cycle_barrier";
+"type.barrier.cycle_barrier" = "Cycle barrier";
 
 "type.barrier.entrance" = "Ingång";
 
-"type.barrier.fence" = "barrier-fence";
+"type.barrier.fence" = "Fence";
 
 "type.barrier.gate" = "Grind";
 
-"type.barrier.hedge" = "barrier-hedge";
+"type.barrier.hedge" = "Hedge";
 
 "type.barrier.lift_gate" = "Bom";
 
-"type.barrier.retaining_wall" = "barrier-retaining_wall";
+"type.barrier.retaining_wall" = "Retaining wall";
 
 "type.barrier.stile" = "Stätta";
 
 "type.barrier.toll_booth" = "Tullhus";
 
-"type.barrier.wall" = "barrier-wall";
+"type.barrier.wall" = "Wall";
 
-"type.boundary" = "boundary";
+"type.boundary" = "Boundary";
 
 "type.boundary.administrative" = "boundary-administrative";
 
@@ -2984,12 +3589,6 @@
 "type.building.has_parts" = "Byggnad";
 
 "type.building.train_station" = "Tågstation";
-
-"type.communication" = "communication";
-
-"type.communication.line" = "communication-line";
-
-"type.communication.line.underground" = "communication-line-underground";
 
 "type.craft" = "craft";
 
@@ -3207,7 +3806,7 @@
 
 "type.highway.bus_stop" = "Busshållplats";
 
-"type.highway.construction" = "highway-construction";
+"type.highway.construction" = "Väg under uppförande";
 
 "type.highway.cycleway" = "highway-cycleway";
 
@@ -3239,7 +3838,7 @@
 
 "type.highway.footway.tunnel" = "Gångväg";
 
-"type.highway.ford" = "highway-ford";
+"type.highway.ford" = "Ford";
 
 "type.highway.living_street" = "Gata";
 
@@ -3293,8 +3892,6 @@
 
 "type.highway.pedestrian.tunnel" = "Gata";
 
-"type.highway.platform" = "highway-platform";
-
 "type.highway.primary" = "Gata";
 
 "type.highway.primary.bridge" = "Gata";
@@ -3347,12 +3944,6 @@
 
 "type.highway.service.driveway" = "Gata";
 
-"type.highway.service.driveway.area" = "Gata";
-
-"type.highway.service.driveway.bridge" = "Gata";
-
-"type.highway.service.driveway.tunnel" = "Gata";
-
 "type.highway.service.parking_aisle" = "Gata";
 
 "type.highway.service.tunnel" = "Gata";
@@ -3391,21 +3982,9 @@
 
 "type.highway.track.grade3" = "Gata";
 
-"type.highway.track.grade3.no.access" = "Gata";
-
-"type.highway.track.grade3.permissive" = "Gata";
-
 "type.highway.track.grade4" = "Gata";
 
-"type.highway.track.grade4.no.access" = "Gata";
-
-"type.highway.track.grade4.permissive" = "Gata";
-
 "type.highway.track.grade5" = "Gata";
-
-"type.highway.track.grade5.no.access" = "Gata";
-
-"type.highway.track.grade5.permissive" = "Gata";
 
 "type.highway.track.no.access" = "Gata";
 
@@ -3443,7 +4022,7 @@
 
 "type.historic.archaeological_site" = "Arkeologisk plats";
 
-"type.historic.battlefield" = "historic-battlefield";
+"type.historic.battlefield" = "Battlefield";
 
 "type.historic.boundary_stone" = "historic-boundary_stone";
 
@@ -3513,27 +4092,29 @@
 
 "type.landuse" = "landuse";
 
-"type.landuse.allotments" = "landuse-allotments";
+"type.landuse.allotments" = "Allotments";
 
 "type.landuse.basin" = "Vatten";
 
-"type.landuse.brownfield" = "landuse-brownfield";
+"type.landuse.brownfield" = "Brownfield";
 
 "type.landuse.cemetery" = "Begravningsplats";
 
 "type.landuse.cemetery.christian" = "Begravningsplats";
 
+"type.landuse.churchyard" = "Kyrkogård";
+
 "type.landuse.commercial" = "landuse-commercial";
 
-"type.landuse.construction" = "landuse-construction";
+"type.landuse.construction" = "Construction";
 
-"type.landuse.farm" = "landuse-farm";
+"type.landuse.farm" = "Farm";
 
-"type.landuse.farmland" = "landuse-farmland";
+"type.landuse.farmland" = "Jordbruksmark";
 
-"type.landuse.farmyard" = "landuse-farmyard";
+"type.landuse.farmyard" = "Farmyard";
 
-"type.landuse.field" = "landuse-field";
+"type.landuse.field" = "Field";
 
 "type.landuse.forest" = "Skog";
 
@@ -3543,27 +4124,27 @@
 
 "type.landuse.forest.mixed" = "Skog";
 
-"type.landuse.garages" = "landuse-garages";
+"type.landuse.garages" = "Garages";
 
-"type.landuse.grass" = "landuse-grass";
+"type.landuse.grass" = "Gräsmattan";
 
 "type.landuse.greenfield" = "landuse-greenfield";
 
 "type.landuse.greenhouse_horticulture" = "landuse-greenhouse_horticulture";
 
-"type.landuse.industrial" = "landuse-industrial";
+"type.landuse.industrial" = "Industrial land";
 
-"type.landuse.landfill" = "landuse-landfill";
+"type.landuse.landfill" = "Soptippen";
 
-"type.landuse.meadow" = "landuse-meadow";
+"type.landuse.meadow" = "Meadow";
 
-"type.landuse.military" = "landuse-military";
+"type.landuse.military" = "Military area";
 
-"type.landuse.orchard" = "landuse-orchard";
+"type.landuse.orchard" = "Orchard";
 
-"type.landuse.quarry" = "landuse-quarry";
+"type.landuse.quarry" = "Quarry";
 
-"type.landuse.railway" = "landuse-railway";
+"type.landuse.railway" = "Järnvägsfaciliteter";
 
 "type.landuse.recreation_ground" = "landuse-recreation_ground";
 
@@ -3571,25 +4152,19 @@
 
 "type.landuse.residential" = "landuse-residential";
 
-"type.landuse.residential.rural" = "landuse-residential-rural";
-
-"type.landuse.residential.urban" = "landuse-residential-urban";
-
 "type.landuse.retail" = "landuse-retail";
 
 "type.landuse.salt_pond" = "landuse-salt_pond";
 
 "type.landuse.village_green" = "landuse-village_green";
 
-"type.landuse.vineyard" = "landuse-vineyard";
+"type.landuse.vineyard" = "Vineyard";
 
 "type.leisure" = "leisure";
 
 "type.leisure.common" = "leisure-common";
 
-"type.leisure.dog_park" = "Dog area";
-
-"type.leisure.dog_park.tennis" = "Dog area";
+"type.leisure.dog_park" = "Hundparken";
 
 "type.leisure.fitness_centre" = "Gym";
 
@@ -3599,37 +4174,29 @@
 
 "type.leisure.golf_course" = "Golfbana";
 
-"type.leisure.ice_rink" = "leisure-ice_rink";
+"type.leisure.ice_rink" = "Ice rink";
 
-"type.leisure.landscape_reserve" = "leisure-landscape_reserve";
+"type.leisure.landscape_reserve" = "Landscape reserve";
 
-"type.leisure.marina" = "leisure-marina";
+"type.leisure.marina" = "Marina";
 
 "type.leisure.nature_reserve" = "Naturreservat";
 
-"type.leisure.park" = "Park";
+"type.leisure.park" = "Parken";
 
-"type.leisure.park.no.access" = "Park";
+"type.leisure.park.no.access" = "Parken";
 
-"type.leisure.park.permissive" = "Park";
+"type.leisure.park.permissive" = "Parken";
 
-"type.leisure.park.private" = "Park";
+"type.leisure.park.private" = "Parken";
 
 "type.leisure.pitch" = "Idrottsplats";
 
-"type.leisure.pitch.tennis" = "Idrottsplats";
-
 "type.leisure.playground" = "Lekplats";
 
-"type.leisure.playground.tennis" = "Lekplats";
+"type.leisure.recreation_ground" = "Recreation ground";
 
-"type.leisure.playing_fields" = "leisure-playing_fields";
-
-"type.leisure.playing_fields.tennis" = "leisure-playing_fields-tennis";
-
-"type.leisure.recreation_ground" = "leisure-recreation_ground";
-
-"type.leisure.sauna" = "Bastu";
+"type.leisure.sauna" = "Sauna";
 
 "type.leisure.slipway" = "leisure-slipway";
 
@@ -3689,25 +4256,13 @@
 
 "type.mapswithme.grid" = "mapswithme-grid";
 
-"type.marking" = "marking";
-
-"type.marking.sport" = "marking-sport";
-
-"type.marking.sport.black" = "marking-sport-black";
-
-"type.marking.sport.blue" = "marking-sport-blue";
-
-"type.marking.sport.red" = "marking-sport-red";
-
-"type.marking.sport.white" = "marking-sport-white";
-
 "type.military" = "military";
 
 "type.military.bunker" = "Bunker";
 
 "type.natural" = "natural";
 
-"type.natural.bare_rock" = "natural-bare_rock";
+"type.natural.bare_rock" = "Bare rock";
 
 "type.natural.bay" = "Bukt";
 
@@ -3715,63 +4270,57 @@
 
 "type.natural.cape" = "Udde";
 
-"type.natural.cave_entrance" = "Grottöppning";
+"type.natural.cave_entrance" = "Grotta";
 
-"type.natural.cliff" = "natural-cliff";
+"type.natural.cliff" = "Cliff";
 
-"type.natural.coastline" = "natural-coastline";
+"type.natural.coastline" = "Coastline";
 
 "type.natural.geyser" = "Gejser";
 
 "type.natural.glacier" = "Glaciär";
 
-"type.natural.grassland" = "natural-grassland";
+"type.natural.grassland" = "Fältet";
 
-"type.natural.heath" = "natural-heath";
+"type.natural.heath" = "Heath";
+
+"type.natural.hot_spring" = "Hot spring";
 
 "type.natural.lake" = "Sjö";
 
 "type.natural.land" = "natural-land";
 
-"type.natural.meadow" = "natural-meadow";
+"type.natural.meadow" = "Meadow";
 
-"type.natural.orchard" = "natural-orchard";
+"type.natural.orchard" = "Orchard";
 
 "type.natural.peak" = "Bergstopp";
 
 "type.natural.pond" = "Damm";
 
-"type.natural.rock" = "natural-rock";
+"type.natural.rock" = "Rock";
 
-"type.natural.salt_pond" = "natural-salt_pond";
+"type.natural.salt_pond" = "Salt pond";
 
-"type.natural.scrub" = "natural-scrub";
+"type.natural.scrub" = "Ruggen";
 
 "type.natural.spring" = "Vattenkälla";
 
 "type.natural.tree" = "Träd";
 
-"type.natural.tree_row" = "natural-tree_row";
+"type.natural.tree_row" = "Tree row";
 
-"type.natural.vineyard" = "natural-vineyard";
+"type.natural.vineyard" = "Vineyard";
 
 "type.natural.volcano" = "Vulkan";
 
 "type.natural.water" = "Vatten";
 
-"type.natural.wetland" = "natural-wetland";
+"type.natural.wetland" = "Sumpmarken";
 
-"type.natural.wetland.bog" = "natural-wetland-bog";
+"type.natural.wetland.bog" = "Wetland";
 
-"type.natural.wetland.marsh" = "natural-wetland-marsh";
-
-"type.natural.wood" = "Skog";
-
-"type.natural.wood.coniferous" = "Skog";
-
-"type.natural.wood.deciduous" = "Skog";
-
-"type.natural.wood.mixed" = "Skog";
+"type.natural.wetland.marsh" = "Wetland";
 
 "type.noexit" = "noexit";
 
@@ -3867,7 +4416,7 @@
 
 "type.place.locality" = "Lokalitet";
 
-"type.place.neighbourhood" = "place-neighbourhood";
+"type.place.neighbourhood" = "Neighbourhood";
 
 "type.place.ocean" = "Ocean";
 
@@ -3890,12 +4439,6 @@
 "type.power" = "power";
 
 "type.power.generator" = "power-generator";
-
-"type.power.generator.hydro" = "power-generator-hydro";
-
-"type.power.generator.photovoltaic" = "power-generator-photovoltaic";
-
-"type.power.generator.wind" = "power-generator-wind";
 
 "type.power.line" = "power-line";
 
@@ -3953,7 +4496,7 @@
 
 "type.railway.incline.tunnel" = "railway-incline-tunnel";
 
-"type.railway.level_crossing" = "Level Crossing";
+"type.railway.level_crossing" = "Järnvägskorsning";
 
 "type.railway.light_rail" = "railway-light_rail";
 
@@ -3961,7 +4504,7 @@
 
 "type.railway.light_rail.tunnel" = "railway-light_rail-tunnel";
 
-"type.railway.monorail" = "railway-monorail";
+"type.railway.monorail" = "Monorail";
 
 "type.railway.monorail.bridge" = "railway-monorail-bridge";
 
@@ -3983,7 +4526,7 @@
 
 "type.railway.proposed" = "railway-proposed";
 
-"type.railway.rail" = "railway-rail";
+"type.railway.rail" = "Järnväg";
 
 "type.railway.rail.bridge" = "railway-rail-bridge";
 
@@ -4093,7 +4636,7 @@
 
 "type.railway.subway.yellow" = "railway-subway-yellow";
 
-"type.railway.subway_entrance" = "Tunnelbana";
+"type.railway.subway_entrance" = "Tunnelbana entré";
 
 "type.railway.subway_entrance.barcelona" = "Tunnelbana";
 
@@ -4275,28 +4818,6 @@
 
 "type.sponsored" = "sponsored";
 
-"type.sponsored.banner" = "sponsored-banner";
-
-"type.sponsored.banner.deliveryclub" = "sponsored-banner-deliveryclub";
-
-"type.sponsored.banner.geerbest_de" = "sponsored-banner-geerbest_de";
-
-"type.sponsored.banner.geerbest_fr" = "sponsored-banner-geerbest_fr";
-
-"type.sponsored.banner.geerbest_uk" = "sponsored-banner-geerbest_uk";
-
-"type.sponsored.banner.lamoda_ru" = "sponsored-banner-lamoda_ru";
-
-"type.sponsored.banner.lamoda_ua" = "sponsored-banner-lamoda_ua";
-
-"type.sponsored.banner.raileurope" = "sponsored-banner-raileurope";
-
-"type.sponsored.banner.rentalcars" = "sponsored-banner-rentalcars";
-
-"type.sponsored.banner.tutu" = "sponsored-banner-tutu";
-
-"type.sponsored.banner.viator" = "sponsored-banner-viator";
-
 "type.sponsored.booking" = "sponsored-booking";
 
 "type.sponsored.holiday" = "Christmas or New Year Celebrations";
@@ -4343,21 +4864,19 @@
 
 "type.sponsored.partner9" = "sponsored-partner9";
 
-"type.sponsored.viator" = "sponsored-viator";
-
 "type.sport" = "sport";
 
 "type.sport.american_football" = "sport-american_football";
 
 "type.sport.archery" = "sport-archery";
 
-"type.sport.athletics" = "Athletics";
+"type.sport.athletics" = "Friidrott";
 
 "type.sport.australian_football" = "sport-australian_football";
 
 "type.sport.baseball" = "sport-baseball";
 
-"type.sport.basketball" = "Basketball";
+"type.sport.basketball" = "Basket";
 
 "type.sport.bowls" = "sport-bowls";
 
@@ -4367,7 +4886,7 @@
 
 "type.sport.diving" = "sport-diving";
 
-"type.sport.equestrian" = "Equestrian Sports";
+"type.sport.equestrian" = "Ridsport";
 
 "type.sport.football" = "sport-football";
 
@@ -4389,7 +4908,7 @@
 
 "type.sport.swimming" = "sport-swimming";
 
-"type.sport.tennis" = "sport-tennis";
+"type.sport.tennis" = "Tennisbana";
 
 "type.tourism" = "tourism";
 
@@ -4501,11 +5020,75 @@
 
 "type.wheelchair" = "wheelchair";
 
-"type.wheelchair.limited" = "wheelchair-limited";
+"type.wheelchair.limited" = "Delvis utrustad för handikappade";
 
-"type.wheelchair.no" = "wheelchair-no";
+"type.wheelchair.no" = "Ej utrustad för handikappade";
 
-"type.wheelchair.yes" = "wheelchair-yes";
+"type.wheelchair.yes" = "Utrustad för handikappade";
+
+"type.piste_lift" = "piste:lift";
+
+"type.piste_lift.j.bar" = "piste:lift-j-bar";
+
+"type.piste_lift.magic_carpet" = "piste:lift-magic_carpet";
+
+"type.piste_lift.platter" = "piste:lift-platter";
+
+"type.piste_lift.rope_tow" = "piste:lift-rope_tow";
+
+"type.piste_lift.t.bar" = "piste:lift-t-bar";
+
+"type.piste_type" = "piste:type";
+
+"type.piste_type.downhill" = "piste:type-downhill";
+
+"type.piste_type.downhill.advanced" = "piste:type-downhill-advanced";
+
+"type.piste_type.downhill.easy" = "piste:type-downhill-easy";
+
+"type.piste_type.downhill.expert" = "piste:type-downhill-expert";
+
+"type.piste_type.downhill.freeride" = "piste:type-downhill-freeride";
+
+"type.piste_type.downhill.intermediate" = "piste:type-downhill-intermediate";
+
+"type.piste_type.downhill.novice" = "piste:type-downhill-novice";
+
+"type.piste_type.nordic" = "piste:type-nordic";
+
+"type.piste_type.sled" = "piste:type-sled";
+
+"type.building_part" = "Byggnad";
+
+"type.area_highway.cycleway" = "area:highway-cycleway";
+
+"type.area_highway.footway" = "area:highway-footway";
+
+"type.area_highway.living_street" = "area:highway-living_street";
+
+"type.area_highway.motorway" = "area:highway-motorway";
+
+"type.area_highway.path" = "area:highway-path";
+
+"type.area_highway.pedestrian" = "area:highway-pedestrian";
+
+"type.area_highway.primary" = "area:highway-primary";
+
+"type.area_highway.residential" = "area:highway-residential";
+
+"type.area_highway.secondary" = "area:highway-secondary";
+
+"type.area_highway.service" = "area:highway-service";
+
+"type.area_highway.tertiary" = "area:highway-tertiary";
+
+"type.area_highway.steps" = "area:highway-steps";
+
+"type.area_highway.track" = "area:highway-track";
+
+"type.area_highway.trunk" = "area:highway-trunk";
+
+"type.area_highway.unclassified" = "area:highway-unclassified";
 
 
 /********** Brands **********/

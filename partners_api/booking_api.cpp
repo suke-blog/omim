@@ -4,12 +4,11 @@
 #include "platform/http_client.hpp"
 #include "platform/platform.hpp"
 
-#include "coding/url_encode.hpp"
+#include "coding/url.hpp"
+#include "coding/sha1.hpp"
 
 #include "base/get_time.hpp"
 #include "base/logging.hpp"
-#include "base/thread.hpp"
-#include "base/url_helpers.hpp"
 
 #include <chrono>
 #include <iostream>
@@ -31,7 +30,7 @@ namespace
 {
 string const kBookingApiBaseUrlV1 = "https://distribution-xml.booking.com/json/bookings";
 string const kBookingApiBaseUrlV2 = "https://distribution-xml.booking.com/2.0/json";
-string const kExtendedHotelInfoBaseUrl = "https://hotels.maps.me/getDescription";
+string const kExtendedHotelInfoBaseUrl = BOOKING_EXTENDED_INFO_BASE_URL;
 string const kPhotoOriginalUrl = "http://aff.bstatic.com/images/hotel/max500/";
 string const kPhotoSmallUrl = "http://aff.bstatic.com/images/hotel/max300/";
 string const kSearchBaseUrl = "https://www.booking.com/search.html";
@@ -60,11 +59,6 @@ bool RunSimpleHttpRequest(bool const needAuth, string const & url, string & resu
   return request.RunHttpRequest(result);
 }
 
-std::string FormatTime(system_clock::time_point p)
-{
-  return partners_api::FormatTime(p, "%Y-%m-%d");
-}
-
 string MakeUrlForTesting(string const & func, url::Params const & params, string const & divider)
 {
   ASSERT(!g_BookingUrlForTesting.empty(), ());
@@ -91,11 +85,6 @@ string MakeApiUrlImpl(string const & baseUrl, string const & func, url::Params c
     return MakeUrlForTesting(func, params, divider);
 
   return url::Make(baseUrl + divider + func, params);
-}
-
-string MakeApiUrlV1(string const & func, url::Params const & params)
-{
-  return MakeApiUrlImpl(kBookingApiBaseUrlV1, func, params, ".");
 }
 
 string MakeApiUrlV2(string const & func, url::Params const & params)
@@ -393,22 +382,19 @@ string ApplyAvailabilityParamsDeep(string const & url, AvailabilityParams const 
 
   return url::Make(url, p);
 }
+
+string MakeLabel(string const & labelSource)
+{
+  ASSERT(!labelSource.empty(), ());
+  auto static const kDeviceIdHash =
+      coding::SHA1::CalculateForStringFormatted(GetPlatform().UniqueClientId());
+
+  return labelSource + "-" + url::UrlEncode(kDeviceIdHash);
+}
 }  // namespace
 
 namespace booking
 {
-// static
-bool RawApi::GetHotelAvailability(string const & hotelId, string const & currency, string & result)
-{
-  system_clock::time_point p = system_clock::from_time_t(time(nullptr));
-
-  string url = MakeApiUrlV1("getHotelAvailability", {{"hotel_ids", hotelId},
-                                                     {"currency_code", currency},
-                                                     {"arrival_date", FormatTime(p)},
-                                                     {"departure_date", FormatTime(p + hours(24))}});
-  return RunSimpleHttpRequest(true, url, result);
-}
-
 // static
 bool RawApi::GetExtendedInfo(string const & hotelId, string const & lang, string & result)
 {
@@ -433,10 +419,16 @@ bool RawApi::BlockAvailability(BlockParams const & params, string & result)
   return RunSimpleHttpRequest(true, url, result);
 }
 
+Api::Api()
+  : m_affiliateId(BOOKING_AFFILIATE_ID)
+{
+}
+
 string Api::GetBookHotelUrl(string const & baseUrl) const
 {
   ASSERT(!baseUrl.empty(), ());
-  return GetDescriptionUrl(baseUrl);
+  url::Params p = {{"aid", m_affiliateId}, {"label", MakeLabel("ppActionButton")}};
+  return url::Make(baseUrl, p);
 }
 
 string Api::GetDeepLink(string const & hotelId) const
@@ -444,7 +436,7 @@ string Api::GetDeepLink(string const & hotelId) const
   ASSERT(!hotelId.empty(), ());
 
   ostringstream os;
-  os << kDeepLinkBaseUrl << hotelId << "?affiliate_id=" << BOOKING_AFFILIATE_ID;
+  os << kDeepLinkBaseUrl << hotelId << "?affiliate_id=" << m_affiliateId;
 
   return os.str();
 }
@@ -452,34 +444,43 @@ string Api::GetDeepLink(string const & hotelId) const
 string Api::GetDescriptionUrl(string const & baseUrl) const
 {
   ASSERT(!baseUrl.empty(), ());
-  return baseUrl + string("?aid=") + BOOKING_AFFILIATE_ID;
+  url::Params p = {{"aid", m_affiliateId}, {"label", MakeLabel("ppDetails")}};
+  return url::Make(baseUrl, p);
+}
+
+string Api::GetMoreUrl(string const & baseUrl) const
+{
+  ASSERT(!baseUrl.empty(), ());
+  url::Params p = {{"aid", m_affiliateId}, {"label", MakeLabel("ppMoreInfo")}};
+  return url::Make(baseUrl, p);
 }
 
 string Api::GetHotelReviewsUrl(string const & hotelId, string const & baseUrl) const
 {
   ASSERT(!baseUrl.empty(), ());
   ASSERT(!hotelId.empty(), ());
-  ostringstream os;
-  os << GetDescriptionUrl(baseUrl) << "&tab=4&label=hotel-" << hotelId << "_reviews";
-  return os.str();
+
+  url::Params p = {{"aid", m_affiliateId}, {"label", MakeLabel("ppReviews")}, {"tab", "4"}};
+  return url::Make(baseUrl, p);
 }
 
 string Api::GetSearchUrl(string const & city, string const & name) const
 {
   if (city.empty() || name.empty())
-    return "";
+    return {};
 
   ostringstream paramStream;
   paramStream << city << " " << name;
 
-  auto const urlEncodedParams = UrlEncode(paramStream.str());
+  auto const urlEncodedParams = url::UrlEncode(paramStream.str());
 
-  ostringstream resultStream;
-  if (!urlEncodedParams.empty())
-    resultStream << kSearchBaseUrl << "?aid=" << BOOKING_AFFILIATE_ID << ";" << "ss="
-                 << urlEncodedParams << ";";
+  if (urlEncodedParams.empty())
+    return {};
 
-  return resultStream.str();
+  url::Params p = {{"aid", m_affiliateId},
+                   {"label", MakeLabel("ppActionButtonOSM")},
+                   {"ss", urlEncodedParams}};
+  return url::Make(kSearchBaseUrl, p);
 }
 
 string Api::ApplyAvailabilityParams(string const & url, AvailabilityParams const & params) const
@@ -521,6 +522,33 @@ void Api::GetBlockAvailability(BlockParams && params,
   });
 }
 
+void Api::GetHotelAvailability(AvailabilityParams const & params,
+                               GetHotelAvailabilityCallback const & fn) const
+{
+  GetPlatform().RunTask(Platform::Thread::Network, [params, fn]()
+  {
+    std::vector<std::string> result;
+    string httpResult;
+    if (!RawApi::HotelAvailability(params, httpResult))
+    {
+      fn(std::move(result));
+      return;
+    }
+
+    try
+    {
+      FillHotelIds(httpResult, result);
+    }
+    catch (base::Json::Exception const & e)
+    {
+      LOG(LERROR, (e.Msg()));
+      result.clear();
+    }
+
+    fn(std::move(result));
+  });
+}
+
 void Api::GetHotelInfo(string const & hotelId, string const & lang,
                        GetHotelInfoCallback const & fn) const
 {
@@ -550,31 +578,9 @@ void Api::GetHotelInfo(string const & hotelId, string const & lang,
   });
 }
 
-void Api::GetHotelAvailability(AvailabilityParams const & params,
-                               GetHotelAvailabilityCallback const & fn) const
+void Api::SetAffiliateId(string const & affiliateId)
 {
-  GetPlatform().RunTask(Platform::Thread::Network, [params, fn]()
-  {
-    std::vector<std::string> result;
-    string httpResult;
-    if (!RawApi::HotelAvailability(params, httpResult))
-    {
-      fn(std::move(result));
-      return;
-    }
-
-    try
-    {
-      FillHotelIds(httpResult, result);
-    }
-    catch (base::Json::Exception const & e)
-    {
-      LOG(LERROR, (e.Msg()));
-      result.clear();
-    }
-
-    fn(std::move(result));
-  });
+  m_affiliateId = affiliateId;
 }
 
 void SetBookingUrlForTesting(string const & url)

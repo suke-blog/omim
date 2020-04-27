@@ -1,9 +1,9 @@
 package com.mapswithme.maps.gallery;
 
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +15,10 @@ import com.mapswithme.maps.R;
 abstract class SingleItemAdapterStrategy<T extends Holders.BaseViewHolder<Items.Item>>
     extends AdapterStrategy<T, Items.Item>
 {
-  SingleItemAdapterStrategy(@Nullable String url)
+  SingleItemAdapterStrategy(@Nullable String url,
+                            @Nullable ItemSelectedListener<Items.Item> listener)
   {
+    super(listener);
     buildItem(url);
   }
 
@@ -39,17 +41,15 @@ abstract class SingleItemAdapterStrategy<T extends Holders.BaseViewHolder<Items.
 
   @NonNull
   @Override
-  protected T createViewHolder(@NonNull ViewGroup parent, int viewType,
-                               @NonNull GalleryAdapter<?, Items.Item> adapter)
+  protected T createViewHolder(@NonNull ViewGroup parent, int viewType)
   {
     View itemView = inflateView(LayoutInflater.from(parent.getContext()), parent);
     TextView button = (TextView) itemView.findViewById(R.id.button);
     button.setText(getLabelForDetailsView());
-    return createViewHolder(itemView, adapter);
+    return createViewHolder(itemView);
   }
 
-  protected abstract T createViewHolder(@NonNull View itemView,
-                                        @NonNull GalleryAdapter<?, Items.Item> adapter);
+  protected abstract T createViewHolder(@NonNull View itemView);
 
   @StringRes
   protected abstract int getLabelForDetailsView();

@@ -1,41 +1,52 @@
-#!/usr/bin/env python
-import sys, os.path, json
-from mwm import MWM
+import json
+from typing import List
 
-if len(sys.argv) < 4:
-    print('Finds features in an mwm file based on a query')
-    print('Usage: {0} <country.mwm> <type> <string>'.format(sys.argv[0]))
-    print('')
-    print('Type:')
-    print('  t for inside types ("t hwtag" will find all hwtags-*)')
-    print('  et for exact type ("et shop" won\'t find shop-chemist)')
-    print('  n for names, case-sensitive ("n Starbucks" for all starbucks)')
-    print('  m for metadata keys ("m flats" for features with flats)')
-    print('  id for feature id ("id 1234" for feature #1234)')
-    sys.exit(1)
+from mwm import EnumAsStrEncoder
+from mwm import Feature
+from mwm import Mwm
+from mwm import readable_type
 
-typ = sys.argv[2].lower()
-find = sys.argv[3].decode('utf-8')
 
-mwm = MWM(open(sys.argv[1], 'rb'))
-mwm.read_header()
-mwm.read_types(os.path.join(os.path.dirname(sys.argv[0]), '..', '..', '..', 'data', 'types.txt'))
-for i, feature in enumerate(mwm.iter_features(metadata=True)):
-    found = False
-    if typ == 'n' and 'name' in feature['header']:
-        for value in feature['header']['name'].values():
-            if find in value:
-                found = True
-    elif typ in ('t', 'et'):
-        for t in feature['header']['types']:
-            if t == find:
-                found = True
-            elif typ == 't' and find in t:
-                found = True
-    elif typ == 'm' and 'metadata' in feature:
-        if find in feature['metadata']:
+def find_features(path: str, typ: str, string: str) -> List[Feature]:
+    features = []
+    index = int(string) if typ == "id" else None
+    for feature in Mwm(path):
+        found = False
+        if typ == "n":
+            for value in feature.names().values():
+                if string in value:
+                    found = True
+                    break
+        elif typ in ("t", "et"):
+            for t in feature.types():
+                readable_type_ = readable_type(t)
+                if readable_type_ == string:
+                    found = True
+                    break
+                elif typ == "t" and string in readable_type_:
+                    found = True
+                    break
+        elif typ == "m":
+            for f in feature.metadata():
+                if string in f.name:
+                    found = True
+                    break
+        elif typ == "id" and index == feature.index():
             found = True
-    elif typ == 'id' and i == int(find):
-        found = True
-    if found:
-        print(json.dumps(feature, ensure_ascii=False, sort_keys=True).encode('utf-8'))
+
+        if found:
+            features.append(feature)
+
+    return features
+
+
+def find_and_print_features(path: str, typ: str, string: str):
+    for feature in find_features(path, typ, string):
+        print(
+            json.dumps(
+                feature.to_json(),
+                ensure_ascii=False,
+                sort_keys=True,
+                cls=EnumAsStrEncoder,
+            )
+        )

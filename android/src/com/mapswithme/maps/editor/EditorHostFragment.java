@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,17 +20,18 @@ import com.mapswithme.maps.MwmApplication;
 import com.mapswithme.maps.R;
 import com.mapswithme.maps.base.BaseMwmToolbarFragment;
 import com.mapswithme.maps.base.OnBackPressListener;
+import com.mapswithme.maps.dialog.DialogUtils;
 import com.mapswithme.maps.editor.data.Language;
 import com.mapswithme.maps.editor.data.LocalizedName;
 import com.mapswithme.maps.editor.data.LocalizedStreet;
+import com.mapswithme.maps.editor.data.NamesDataSource;
+import com.mapswithme.maps.intent.Factory;
 import com.mapswithme.maps.widget.SearchToolbarController;
 import com.mapswithme.maps.widget.ToolbarController;
 import com.mapswithme.util.ConnectionState;
-import com.mapswithme.maps.dialog.DialogUtils;
 import com.mapswithme.util.UiUtils;
 import com.mapswithme.util.Utils;
 import com.mapswithme.util.statistics.Statistics;
-import com.mapswithme.maps.editor.data.NamesDataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +128,7 @@ public class EditorHostFragment extends BaseMwmToolbarFragment
   {
     super.onViewCreated(view, savedInstanceState);
 
-    getToolbarController().findViewById(R.id.save).setOnClickListener(this);
+    getToolbarController().getToolbar().findViewById(R.id.save).setOnClickListener(this);
     getToolbarController().getToolbar().setNavigationOnClickListener(new View.OnClickListener()
     {
       @Override
@@ -193,7 +194,7 @@ public class EditorHostFragment extends BaseMwmToolbarFragment
     mMode = Mode.MAP_OBJECT;
     ((SearchToolbarController) getToolbarController()).showControls(false);
     getToolbarController().setTitle(getTitle());
-    UiUtils.show(getToolbarController().findViewById(R.id.save));
+    UiUtils.show(getToolbarController().getToolbar().findViewById(R.id.save));
     Bundle args = new Bundle();
     if (focusToLastName)
       args.putInt(EditorFragment.LAST_INDEX_OF_NAMES_ARRAY, sNames.size() - 1);
@@ -206,8 +207,8 @@ public class EditorHostFragment extends BaseMwmToolbarFragment
   protected void editTimetable()
   {
     final Bundle args = new Bundle();
-    args.putString(TimetableFragment.EXTRA_TIME, Editor.nativeGetOpeningHours());
-    editWithFragment(Mode.OPENING_HOURS, R.string.editor_time_title, args, TimetableFragment.class, false);
+    args.putString(TimetableContainerFragment.EXTRA_TIME, Editor.nativeGetOpeningHours());
+    editWithFragment(Mode.OPENING_HOURS, R.string.editor_time_title, args, TimetableContainerFragment.class, false);
   }
 
   protected void editStreet()
@@ -267,7 +268,7 @@ public class EditorHostFragment extends BaseMwmToolbarFragment
       switch (mMode)
       {
       case OPENING_HOURS:
-        final String timetables = ((TimetableFragment) getChildFragmentManager().findFragmentByTag(TimetableFragment.class.getName())).getTimetable();
+        final String timetables = ((TimetableContainerFragment) getChildFragmentManager().findFragmentByTag(TimetableContainerFragment.class.getName())).getTimetable();
         if (OpeningHours.nativeIsTimetableStringValid(timetables))
         {
           Editor.nativeSetOpeningHours(timetables);
@@ -322,7 +323,7 @@ public class EditorHostFragment extends BaseMwmToolbarFragment
         Intent intent = new Intent(parent, MwmActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra(MwmActivity.EXTRA_TASK,
-                        new MwmActivity.ShowDialogTask(AuthDialogFragment.class.getName()));
+                        new Factory.ShowDialogTask(AuthDialogFragment.class.getName()));
         parent.startActivity(intent);
 
         if (parent instanceof MwmActivity)

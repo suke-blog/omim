@@ -17,9 +17,11 @@
 #include "platform/platform_tests_support/async_gui_thread.hpp"
 #include "platform/platform_tests_support/scoped_file.hpp"
 
-#include "coding/file_name_utils.hpp"
+#include "base/file_name_utils.hpp"
+#include "base/logging.hpp"
+#include "base/scope_guard.hpp"
 
-#include "std/unique_ptr.hpp"
+#include <memory>
 
 using namespace generator::tests_support;
 using namespace editor::tests_support;
@@ -47,7 +49,7 @@ private:
 class TestCafe : public TestPOI
 {
 public:
-  TestCafe(m2::PointD const & center, string const & name, string const & lang)
+  TestCafe(m2::PointD const & center, std::string const & name, std::string const & lang)
     : TestPOI(center, name, lang)
   {
     SetTypes({{"amenity", "cafe"}});
@@ -89,13 +91,13 @@ public:
   ScopedOptionalSaveStorage()
   {
     auto & editor = osm::Editor::Instance();
-    editor.SetStorageForTesting(unique_ptr<OptionalSaveStorage>(m_storage));
+    editor.SetStorageForTesting(std::unique_ptr<OptionalSaveStorage>(m_storage));
   }
 
   ~ScopedOptionalSaveStorage()
   {
     auto & editor = osm::Editor::Instance();
-    editor.SetStorageForTesting(make_unique<editor::InMemoryStorage>());
+    editor.SetStorageForTesting(std::make_unique<editor::InMemoryStorage>());
   }
 
   void AllowSave(bool allow)
@@ -107,10 +109,10 @@ private:
   OptionalSaveStorage * m_storage = new OptionalSaveStorage;
 };
 
-template <typename TFn>
-void ForEachCafeAtPoint(DataSource & dataSource, m2::PointD const & mercator, TFn && fn)
+template <typename Fn>
+void ForEachCafeAtPoint(DataSource & dataSource, m2::PointD const & mercator, Fn && fn)
 {
-  m2::RectD const rect = MercatorBounds::RectByCenterXYAndSizeInMeters(mercator, 0.2 /* rect width */);
+  m2::RectD const rect = mercator::RectByCenterXYAndSizeInMeters(mercator, 0.2 /* rect width */);
 
   auto const f = [&fn](FeatureType & ft)
   {
@@ -151,8 +153,6 @@ void GenerateUploadedFeature(MwmSet::MwmId const & mwmId,
                              osm::EditableMapObject const & emo,
                              pugi::xml_document & out)
 {
-  auto & editor = osm::Editor::Instance();
-
   pugi::xml_node root = out.append_child("mapsme");
   root.append_attribute("format_version") = 1;
 
@@ -161,11 +161,8 @@ void GenerateUploadedFeature(MwmSet::MwmId const & mwmId,
   mwmNode.append_attribute("version") = static_cast<long long>(mwmId.GetInfo()->GetVersion());
   pugi::xml_node created = mwmNode.append_child("create");
 
-  FeatureType ft;
-  editor.GetEditedFeature(emo.GetID().m_mwmId, emo.GetID().m_index, ft);
-
-  editor::XMLFeature xf = editor::ToXML(ft, true);
-  xf.SetMWMFeatureIndex(ft.GetID().m_index);
+  editor::XMLFeature xf = editor::ToXML(emo, true);
+  xf.SetMWMFeatureIndex(emo.GetID().m_index);
   xf.SetModificationTime(time(nullptr));
   xf.SetUploadTime(time(nullptr));
   xf.SetUploadStatus("Uploaded");
@@ -207,7 +204,7 @@ EditorTest::EditorTest()
     LOG(LERROR, ("Classificator read error: ", e.what()));
   }
 
-  editor::tests_support::SetUpEditorForTesting(make_unique<search::EditorDelegate>(m_dataSource));
+  editor::tests_support::SetUpEditorForTesting(std::make_unique<search::EditorDelegate>(m_dataSource));
 }
 
 EditorTest::~EditorTest()
@@ -244,7 +241,7 @@ void EditorTest::GetFeatureTypeInfoTest()
     auto const featuresAfter = editor.m_features.Get();
     auto const fti = editor.GetFeatureTypeInfo(*featuresAfter, ft.GetID().m_mwmId, ft.GetID().m_index);
     TEST_NOT_EQUAL(fti, 0, ());
-    TEST_EQUAL(fti->m_feature.GetID(), ft.GetID(), ());
+    TEST_EQUAL(fti->m_object.GetID(), ft.GetID(), ());
   });
 }
 
@@ -254,8 +251,7 @@ void EditorTest::GetEditedFeatureTest()
 
   {
     FeatureID feature;
-    FeatureType ft;
-    TEST(!editor.GetEditedFeature(feature, ft), ());
+    TEST(!editor.GetEditedFeature(feature), ());
   }
 
   auto const mwmId = ConstructTestMwm([](TestMwmBuilder & builder)
@@ -264,21 +260,17 @@ void EditorTest::GetEditedFeatureTest()
     builder.Add(cafe);
   });
 
-  ForEachCafeAtPoint(m_dataSource, m2::PointD(1.0, 1.0), [&editor](FeatureType & ft)
-  {
-    FeatureType featureType;
-    TEST(!editor.GetEditedFeature(ft.GetID(), featureType), ());
+  ForEachCafeAtPoint(m_dataSource, m2::PointD(1.0, 1.0), [&editor](FeatureType & ft) {
+    TEST(!editor.GetEditedFeature(ft.GetID()), ());
 
     SetBuildingLevelsToOne(ft);
 
-    TEST(editor.GetEditedFeature(ft.GetID(), featureType), ());
+    auto savedEmo = editor.GetEditedFeature(ft.GetID());
+    TEST(savedEmo, ());
 
-    osm::EditableMapObject savedEmo;
-    FillEditableMapObject(editor, featureType, savedEmo);
+    TEST_EQUAL(savedEmo->GetBuildingLevels(), "1", ());
 
-    TEST_EQUAL(savedEmo.GetBuildingLevels(), "1", ());
-
-    TEST_EQUAL(ft.GetID(), featureType.GetID(), ());
+    TEST_EQUAL(ft.GetID(), savedEmo->GetID(), ());
   });
 }
 
@@ -291,7 +283,7 @@ void EditorTest::SetIndexTest()
   {
     TestCafe cafe({1.0, 1.0}, "London Cafe", "en");
     TestStreet street({{0.0, 0.0}, {1.0, 1.0}, {2.0, 2.0}}, "Test street", "en");
-    cafe.SetStreet(street);
+    cafe.SetStreetName(street.GetName("en"));
     builder.Add(street);
     builder.Add(cafe);
     builder.Add(TestCafe({3.0, 3.0}, "London Cafe", "en"));
@@ -307,26 +299,24 @@ void EditorTest::SetIndexTest()
   osm::EditableMapObject emo;
   CreateCafeAtPoint({2.0, 2.0}, gbMwmId, emo);
 
-  ForEachCafeAtPoint(m_dataSource, m2::PointD(1.0, 1.0), [&editor](FeatureType & ft)
-  {
-    auto const firstPtr = editor.GetOriginalFeature(ft.GetID());
+  ForEachCafeAtPoint(m_dataSource, m2::PointD(1.0, 1.0), [&editor](FeatureType & ft) {
+    auto const firstPtr = editor.GetOriginalMapObject(ft.GetID());
     TEST(firstPtr, ());
     SetBuildingLevelsToOne(ft);
-    auto const secondPtr = editor.GetOriginalFeature(ft.GetID());
+    auto const secondPtr = editor.GetOriginalMapObject(ft.GetID());
     TEST(secondPtr, ());
     TEST_EQUAL(firstPtr->GetID(), secondPtr->GetID(), ());
   });
 
-  ForEachCafeAtPoint(m_dataSource, m2::PointD(1.0, 1.0), [&editor](FeatureType & ft)
-  {
-    TEST_EQUAL(editor.GetOriginalFeatureStreet(ft), "Test street", ());
+  ForEachCafeAtPoint(m_dataSource, m2::PointD(1.0, 1.0), [&editor](FeatureType & ft) {
+    TEST_EQUAL(editor.GetOriginalFeatureStreet(ft.GetID()), "Test street", ());
 
     EditFeature(ft, [](osm::EditableMapObject & emo)
     {
       osm::LocalizedStreet ls{"Some street", ""};
       emo.SetStreet(ls);
     });
-    TEST_EQUAL(editor.GetOriginalFeatureStreet(ft), "Test street", ());
+    TEST_EQUAL(editor.GetOriginalFeatureStreet(ft.GetID()), "Test street", ());
   });
 
   uint32_t counter = 0;
@@ -368,7 +358,7 @@ void EditorTest::GetEditedFeatureStreetTest()
 
   {
     FeatureID feature;
-    string street;
+    std::string street;
     TEST(!editor.GetEditedFeatureStreet(feature, street), ());
   }
 
@@ -380,7 +370,7 @@ void EditorTest::GetEditedFeatureStreetTest()
 
   ForEachCafeAtPoint(m_dataSource, m2::PointD(1.0, 1.0), [&editor](FeatureType & ft)
   {
-    string street;
+    std::string street;
     TEST(!editor.GetEditedFeatureStreet(ft.GetID(), street), ());
 
     osm::LocalizedStreet ls{"some street", ""};
@@ -479,11 +469,10 @@ void EditorTest::DeleteFeatureTest()
   osm::EditableMapObject emo;
   CreateCafeAtPoint({3.0, 3.0}, mwmId, emo);
 
-  FeatureType ft;
-  editor.GetEditedFeature(emo.GetID().m_mwmId, emo.GetID().m_index, ft);
-  editor.DeleteFeature(ft.GetID());
+  auto ft = editor.GetEditedFeature(emo.GetID());
+  editor.DeleteFeature(ft->GetID());
 
-  TEST_EQUAL(editor.GetFeatureStatus(ft.GetID()), FeatureStatus::Untouched, ());
+  TEST_EQUAL(editor.GetFeatureStatus(ft->GetID()), FeatureStatus::Untouched, ());
 
   ForEachCafeAtPoint(m_dataSource, m2::PointD(1.0, 1.0), [&editor](FeatureType & ft)
   {
@@ -582,8 +571,10 @@ void EditorTest::GetFeaturesByStatusTest()
 void EditorTest::OnMapDeregisteredTest()
 {
   auto & editor = osm::Editor::Instance();
+  m_dataSource.AddObserver(editor);
+  SCOPE_GUARD(removeObs, [&] { m_dataSource.RemoveObserver(editor); });
 
-  auto const gbMwmId = BuildMwm("GB", [](TestMwmBuilder & builder)
+  auto gbMwmId = BuildMwm("GB", [](TestMwmBuilder & builder)
   {
     TestCafe cafeLondon(m2::PointD(1.0, 1.0), "London Cafe", "en");
     builder.Add(cafeLondon);
@@ -595,6 +586,11 @@ void EditorTest::OnMapDeregisteredTest()
     builder.Add(cafeMoscow);
   });
 
+  auto nzMwmId = BuildMwm("NZ", [](TestMwmBuilder & builder)
+  {
+  });
+  m_dataSource.DeregisterMap(nzMwmId.GetInfo()->GetLocalFile().GetCountryFile());
+
   ForEachCafeAtPoint(m_dataSource, m2::PointD(1.0, 1.0), [](FeatureType & ft)
   {
     SetBuildingLevelsToOne(ft);
@@ -605,17 +601,45 @@ void EditorTest::OnMapDeregisteredTest()
     SetBuildingLevelsToOne(ft);
   });
 
-  TEST(!editor.m_features.Get()->empty(), ());
+  TEST_EQUAL(editor.m_features.Get()->size(), 2, (editor.m_features.Get()->size()));
+
+  {
+    platform::tests_support::AsyncGuiThread guiThread;
+    m_dataSource.DeregisterMap(gbMwmId.GetInfo()->GetLocalFile().GetCountryFile());
+  }
+  // The map is deregistered but the edits are not deleted until
+  // LoadEdits() is called again, either on the next startup or
+  // on registering a new map.
   TEST_EQUAL(editor.m_features.Get()->size(), 2, ());
 
   {
     platform::tests_support::AsyncGuiThread guiThread;
-    editor.OnMapDeregistered(gbMwmId.GetInfo()->GetLocalFile());
+    auto result = m_dataSource.RegisterMap(gbMwmId.GetInfo()->GetLocalFile());
+    TEST_EQUAL(result.second, MwmSet::RegResult::Success, ());
+    gbMwmId = result.first;
+    TEST(gbMwmId.IsAlive(), ());
   }
+  // The same map was registered: the edits are still here.
+  TEST_EQUAL(editor.m_features.Get()->size(), 2, ());
 
+  {
+    platform::tests_support::AsyncGuiThread guiThread;
+    m_dataSource.DeregisterMap(gbMwmId.GetInfo()->GetLocalFile().GetCountryFile());
+  }
+  TEST_EQUAL(editor.m_features.Get()->size(), 2, ());
+
+  {
+    platform::tests_support::AsyncGuiThread guiThread;
+    auto result = m_dataSource.RegisterMap(nzMwmId.GetInfo()->GetLocalFile());
+    TEST_EQUAL(result.second, MwmSet::RegResult::Success, ());
+    nzMwmId = result.first;
+    TEST(nzMwmId.IsAlive(), ());
+  }
+  // Another map was registered: all edits are reloaded and
+  // the edits for the deleted map are removed.
   TEST_EQUAL(editor.m_features.Get()->size(), 1, ());
   auto const editedMwmId = editor.m_features.Get()->find(rfMwmId);
-  bool result = (editedMwmId != editor.m_features.Get()->end());
+  bool const result = (editedMwmId != editor.m_features.Get()->end());
   TEST(result, ());
 }
 
@@ -629,7 +653,7 @@ void EditorTest::RollBackChangesTest()
     builder.Add(cafe);
   });
 
-  const string houseNumber = "4a";
+  std::string const houseNumber = "4a";
 
   ForEachCafeAtPoint(m_dataSource, m2::PointD(1.0, 1.0), [&editor, &houseNumber](FeatureType & ft)
   {
@@ -684,7 +708,7 @@ void EditorTest::HaveMapEditsOrNotesToUploadTest()
   {
     using NoteType = osm::Editor::NoteProblemType;
     feature::TypesHolder typesHolder;
-    string defaultName;
+    std::string defaultName;
     editor.CreateNote({1.0, 1.0}, ft.GetID(), typesHolder, defaultName, NoteType::PlaceDoesNotExist,
                       "exploded");
   });
@@ -886,16 +910,16 @@ void EditorTest::CreateNoteTest()
     editor.m_notes = Notes::MakeNotes(sf.GetFullPath(), true);
     feature::TypesHolder holder;
     holder.Assign(classif().GetTypeByPath({"amenity", "restaurant"}));
-    string defaultName = "Test name";
+    std::string defaultName = "Test name";
     editor.CreateNote(pos, fId, holder, defaultName, noteType, "with comment");
 
     auto notes = editor.m_notes->GetNotes();
     TEST_EQUAL(notes.size(), 1, ());
     TEST(notes.front().m_point.EqualDxDy(pos, 1e-10), ());
-    TEST_NOT_EQUAL(notes.front().m_note.find("with comment"), string::npos, ());
-    TEST_NOT_EQUAL(notes.front().m_note.find("OSM data version"), string::npos, ());
-    TEST_NOT_EQUAL(notes.front().m_note.find("restaurant"), string::npos, ());
-    TEST_NOT_EQUAL(notes.front().m_note.find("Test name"), string::npos, ());
+    TEST_NOT_EQUAL(notes.front().m_note.find("with comment"), std::string::npos, ());
+    TEST_NOT_EQUAL(notes.front().m_note.find("OSM data version"), std::string::npos, ());
+    TEST_NOT_EQUAL(notes.front().m_note.find("restaurant"), std::string::npos, ());
+    TEST_NOT_EQUAL(notes.front().m_note.find("Test name"), std::string::npos, ());
   };
 
   ForEachCafeAtPoint(m_dataSource, m2::PointD(1.0, 1.0), [&editor, &createAndCheckNote](FeatureType & ft)
@@ -903,7 +927,7 @@ void EditorTest::CreateNoteTest()
     createAndCheckNote(ft.GetID(), {1.0, 1.0}, osm::Editor::NoteProblemType::PlaceDoesNotExist);
 
     auto notes = editor.m_notes->GetNotes();
-    TEST_NOT_EQUAL(notes.front().m_note.find(osm::Editor::kPlaceDoesNotExistMessage), string::npos, ());
+    TEST_NOT_EQUAL(notes.front().m_note.find(osm::Editor::kPlaceDoesNotExistMessage), std::string::npos, ());
     TEST_EQUAL(editor.GetFeatureStatus(ft.GetID()), FeatureStatus::Obsolete, ());
   });
 
@@ -913,7 +937,7 @@ void EditorTest::CreateNoteTest()
 
     TEST_NOT_EQUAL(editor.GetFeatureStatus(ft.GetID()), FeatureStatus::Obsolete, ());
     auto notes = editor.m_notes->GetNotes();
-    TEST_EQUAL(notes.front().m_note.find(osm::Editor::kPlaceDoesNotExistMessage), string::npos, ());
+    TEST_EQUAL(notes.front().m_note.find(osm::Editor::kPlaceDoesNotExistMessage), std::string::npos, ());
   });
 }
 
@@ -939,7 +963,7 @@ void EditorTest::LoadMapEditsTest()
     builder.Add(TestPOI(m2::PointD(100, 100), "Corner Post", "default"));
   });
 
-  vector<FeatureID> features;
+  std::vector<FeatureID> features;
 
   ForEachCafeAtPoint(m_dataSource, m2::PointD(0.0, 0.0), [&features](FeatureType & ft)
   {
@@ -984,19 +1008,19 @@ void EditorTest::LoadMapEditsTest()
   editor.Save((*editor.m_features.Get()));
   editor.LoadEdits();
 
-  auto const fillLoaded = [&editor](vector<FeatureID> & loadedFeatures)
+  auto const fillLoaded = [&editor](std::vector<FeatureID> & loadedFeatures)
   {
     loadedFeatures.clear();
     for (auto const & mwm : *(editor.m_features.Get()))
     {
       for (auto const & index : mwm.second)
       {
-        loadedFeatures.emplace_back(index.second.m_feature.GetID());
+        loadedFeatures.emplace_back(index.second.m_object.GetID());
       }
     }
   };
 
-  vector<FeatureID> loadedFeatures;
+  std::vector<FeatureID> loadedFeatures;
   fillLoaded(loadedFeatures);
 
   sort(loadedFeatures.begin(), loadedFeatures.end());
@@ -1216,7 +1240,7 @@ void EditorTest::SaveTransactionTest()
     {
       using NoteType = osm::Editor::NoteProblemType;
       feature::TypesHolder typesHolder;
-      string defaultName;
+      std::string defaultName;
       editor.CreateNote({1.0, 1.0}, ft.GetID(), typesHolder, defaultName, NoteType::PlaceDoesNotExist,
                         "exploded");
     });
@@ -1279,7 +1303,7 @@ void EditorTest::SaveTransactionTest()
 void EditorTest::Cleanup(platform::LocalCountryFile const & map)
 {
   platform::CountryIndexes::DeleteFromDisk(map);
-  map.DeleteFromDisk(MapOptions::Map);
+  map.DeleteFromDisk(MapFileType::Map);
 }
 
 bool EditorTest::RemoveMwm(MwmSet::MwmId const & mwmId)

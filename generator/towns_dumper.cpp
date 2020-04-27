@@ -39,8 +39,7 @@ void TownsDumper::FilterTowns()
     auto const & top = towns.back();
     bool isUniq = true;
     resultTree.ForEachInRect(
-        MercatorBounds::RectByCenterXYAndSizeInMeters(MercatorBounds::FromLatLon(top.point),
-                                                      kTownsEqualityMeters),
+        mercator::RectByCenterXYAndSizeInMeters(mercator::FromLatLon(top.point), kTownsEqualityMeters),
         [&top, &isUniq](Town const & candidate)
         {
           if (ms::DistanceOnEarth(top.point, candidate.point) < kTownsEqualityMeters)
@@ -60,7 +59,7 @@ void TownsDumper::FilterTowns()
 
 void TownsDumper::CheckElement(OsmElement const & em)
 {
-  if (em.type != OsmElement::EntityType::Node)
+  if (em.m_type != OsmElement::EntityType::Node)
     return;
 
   uint64_t population = 1;
@@ -69,7 +68,8 @@ void TownsDumper::CheckElement(OsmElement const & em)
   int admin_level = std::numeric_limits<int>::max();
   for (auto const & tag : em.Tags())
   {
-    std::string key(tag.key), value(tag.value);
+    auto const & key = tag.m_key;
+    auto const & value = tag.m_value;
     if (key == "population")
     {
       if (!strings::to_uint64(value, population))
@@ -95,7 +95,7 @@ void TownsDumper::CheckElement(OsmElement const & em)
     capital = false;
 
   if (town || capital)
-    m_records.emplace_back(em.lat, em.lon, em.id, capital, population);
+    m_records.emplace_back(em.m_lat, em.m_lon, em.m_id, capital, population);
 }
 
 void TownsDumper::Dump(std::string const & filePath)
@@ -107,6 +107,6 @@ void TownsDumper::Dump(std::string const & filePath)
   for (auto const & record : m_records)
   {
     std::string const isCapital = record.capital ? "t" : "f";
-    stream << record.point.lat << ";" << record.point.lon << ";" << record.id << ";" << isCapital <<  std::endl;
+    stream << record.point.m_lat << ";" << record.point.m_lon << ";" << record.id << ";" << isCapital <<  std::endl;
   }
 }

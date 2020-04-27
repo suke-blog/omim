@@ -2,7 +2,7 @@ package com.mapswithme.maps.bookmarks.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import java.net.HttpURLConnection;
 
@@ -61,6 +61,15 @@ public class Error implements Parcelable
   {
     dest.writeInt(mHttpCode);
     dest.writeString(mMessage);
+  }
+
+  @Override
+  public String toString()
+  {
+    return "Error{" +
+           "mHttpCode=" + mHttpCode +
+           ", mMessage='" + mMessage + '\'' +
+           '}';
   }
 
   public static final Creator<Error> CREATOR = new Creator<Error>()

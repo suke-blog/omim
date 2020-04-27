@@ -3,13 +3,14 @@
 #import "MWMBookmarkTitleCell.h"
 #import "MWMButtonCell.h"
 #import "MWMNoteCell.h"
-#import "MWMPlacePageData.h"
 #import "SelectSetVC.h"
 #import "SwiftBridge.h"
-#import "UIImageView+Coloring.h"
-#import "UIViewController+Navigation.h"
 
-#include "Framework.h"
+#import <CoreApi/PlacePageData.h>
+#import <CoreApi/PlacePageBookmarkData+Core.h>
+#import <CoreApi/PlacePagePreviewData.h>
+
+#include <CoreApi/Framework.h>
 
 namespace
 {
@@ -25,7 +26,7 @@ enum RowInMetaInfo
 {
   Title,
   Color,
-  Category,
+  Categori,
   RowsInMetaInfoCount
 };
 }  // namespace
@@ -52,14 +53,12 @@ enum RowInMetaInfo
 {
   [super viewDidLoad];
   self.cachedNewBookmarkCatId = kml::kInvalidMarkGroupId;
-  auto data = self.data;
-  NSAssert(data, @"Data can't be nil!");
-  self.cachedDescription = data.bookmarkDescription;
-  self.cachedTitle = data.title;
-  self.cachedCategory = data.bookmarkCategory;
-  self.cachedColor = data.bookmarkColor;
-  m_cachedBookmarkId = data.bookmarkId;
-  m_cachedBookmarkCatId = data.bookmarkCategoryId;
+  self.cachedDescription = self.placePageData.bookmarkData.bookmarkDescription;
+  self.cachedTitle = self.placePageData.previewData.title;
+  self.cachedCategory = self.placePageData.bookmarkData.bookmarkCategory;
+  self.cachedColor = [self.placePageData.bookmarkData kmlColor].m_predefinedColor;
+  m_cachedBookmarkId = self.placePageData.bookmarkData.bookmarkId;
+  m_cachedBookmarkCatId = self.placePageData.bookmarkData.bookmarkGroupId;
   [self configNavBar];
   [self registerCells];
 }
@@ -82,9 +81,9 @@ enum RowInMetaInfo
 - (void)registerCells
 {
   UITableView * tv = self.tableView;
-  [tv registerWithCellClass:[MWMButtonCell class]];
-  [tv registerWithCellClass:[MWMBookmarkTitleCell class]];
-  [tv registerWithCellClass:[MWMNoteCell class]];
+  [tv registerNibWithCellClass:[MWMButtonCell class]];
+  [tv registerNibWithCellClass:[MWMBookmarkTitleCell class]];
+  [tv registerNibWithCellClass:[MWMNoteCell class]];
 }
 
 - (void)onSave
@@ -112,6 +111,7 @@ enum RowInMetaInfo
     bookmark->SetCustomName(self.cachedTitle.UTF8String);
   
   f.UpdatePlacePageInfoForCurrentSelection();
+  [self.placePageData updateBookmarkStatus];
   [self goBack];
 }
 
@@ -162,13 +162,13 @@ enum RowInMetaInfo
       cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
       return cell;
     }
-    case Category:
+    case Categori:
     {
       Class cls = [UITableViewCell class];
       auto cell = [tableView dequeueReusableCellWithCellClass:cls indexPath:indexPath];
       cell.textLabel.text = self.cachedCategory;
       cell.imageView.image = [UIImage imageNamed:@"ic_folder"];
-      cell.imageView.mwm_coloring = MWMImageColoringBlack;
+      cell.imageView.styleName = @"MWMBlack";
       cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
       return cell;
     }
@@ -230,7 +230,7 @@ enum RowInMetaInfo
     [self.navigationController pushViewController:cvc animated:YES];
     break;
   }
-  case Category:
+  case Categori:
   {
     kml::MarkGroupId categoryId = self.cachedNewBookmarkCatId;
     if (categoryId == kml::kInvalidMarkGroupId)
@@ -250,7 +250,7 @@ enum RowInMetaInfo
 
 - (void)cellSelect:(UITableViewCell *)cell
 {
-  [self.data updateBookmarkStatus:NO];
+  [[MWMBookmarksManager sharedManager] deleteBookmark:m_cachedBookmarkId];
   GetFramework().UpdatePlacePageInfoForCurrentSelection();
   [self goBack];
 }
@@ -286,7 +286,7 @@ enum RowInMetaInfo
 {
   self.cachedCategory = category;
   self.cachedNewBookmarkCatId = categoryId;
-  [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:Category inSection:MetaInfo]] withRowAnimation:UITableViewRowAnimationAutomatic];
+  [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:Categori inSection:MetaInfo]] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 #pragma mark - MWMBookmarkTitleDelegate

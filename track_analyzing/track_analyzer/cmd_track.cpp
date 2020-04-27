@@ -12,11 +12,11 @@
 #include "storage/routing_helpers.hpp"
 #include "storage/storage.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/file_reader.hpp"
 
 #include "geometry/mercator.hpp"
 
+#include "base/file_name_utils.hpp"
 #include "base/timer.hpp"
 
 using namespace routing;
@@ -51,8 +51,6 @@ void CmdTrack(string const & trackFile, string const & mwmName, string const & u
   for (size_t i = 0; i < track.size(); ++i)
   {
     MatchedTrackPoint const & point = track[i];
-    FeatureType feature;
-    featuresVector.GetVector().GetByIndex(point.GetSegment().GetFeatureId(), feature);
 
     double speed = 0.0;
     uint64_t elapsed = 0;
@@ -61,9 +59,8 @@ void CmdTrack(string const & trackFile, string const & mwmName, string const & u
     {
       MatchedTrackPoint const & prevPoint = track[i - 1];
       elapsed = point.GetDataPoint().m_timestamp - prevPoint.GetDataPoint().m_timestamp;
-      distance = MercatorBounds::DistanceOnEarth(
-          MercatorBounds::FromLatLon(prevPoint.GetDataPoint().m_latLon),
-          MercatorBounds::FromLatLon(point.GetDataPoint().m_latLon));
+      distance = mercator::DistanceOnEarth(mercator::FromLatLon(prevPoint.GetDataPoint().m_latLon),
+                                           mercator::FromLatLon(point.GetDataPoint().m_latLon));
     }
 
     if (elapsed != 0)

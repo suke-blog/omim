@@ -4,16 +4,21 @@
 
 #include "platform/platform.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/file_writer.hpp"
 
 #include "geometry/latlon.hpp"
 
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 #include "base/scope_guard.hpp"
 
-#include "std/bind.hpp"
-#include "std/chrono.hpp"
+#include <chrono>
+#include <functional>
+#include <utility>
+#include <vector>
+
+using namespace std;
+using namespace std::chrono;
 
 namespace
 {
@@ -23,8 +28,8 @@ inline location::GpsInfo Make(double timestamp, ms::LatLon const & ll, double sp
   location::GpsInfo info;
   info.m_timestamp = timestamp;
   info.m_speedMpS = speed;
-  info.m_latitude = ll.lat;
-  info.m_longitude = ll.lon;
+  info.m_latitude = ll.m_lat;
+  info.m_longitude = ll.m_lon;
   info.m_horizontalAccuracy = 15;
   info.m_source = location::EAndroidNative;
   return info;
@@ -32,7 +37,7 @@ inline location::GpsInfo Make(double timestamp, ms::LatLon const & ll, double sp
 
 inline string GetGpsTrackFilePath()
 {
-  return base::JoinFoldersToPath(GetPlatform().WritableDir(), "gpstrack_test.bin");
+  return base::JoinPath(GetPlatform().WritableDir(), "gpstrack_test.bin");
 }
 
 class GpsTrackCallback
@@ -106,7 +111,8 @@ UNIT_TEST(GpsTrack_Simple)
 
     GpsTrackCallback callback;
 
-    track.SetCallback(bind(&GpsTrackCallback::OnUpdate, &callback, _1, _2));
+    track.SetCallback(
+        bind(&GpsTrackCallback::OnUpdate, &callback, placeholders::_1, placeholders::_2));
 
     TEST(callback.WaitForCallback(kWaitForCallbackTimeout), ());
 
@@ -129,7 +135,8 @@ UNIT_TEST(GpsTrack_Simple)
 
     GpsTrackCallback callback;
 
-    track.SetCallback(bind(&GpsTrackCallback::OnUpdate, &callback, _1, _2));
+    track.SetCallback(
+        bind(&GpsTrackCallback::OnUpdate, &callback, placeholders::_1, placeholders::_2));
 
     TEST(callback.WaitForCallback(kWaitForCallbackTimeout), ());
 
@@ -163,7 +170,8 @@ UNIT_TEST(GpsTrack_EvictedByAdd)
   GpsTrack track(filePath, 1000, hours(24));
 
   GpsTrackCallback callback;
-  track.SetCallback(bind(&GpsTrackCallback::OnUpdate, &callback, _1, _2));
+  track.SetCallback(
+      bind(&GpsTrackCallback::OnUpdate, &callback, placeholders::_1, placeholders::_2));
 
   track.AddPoint(pt1);
 

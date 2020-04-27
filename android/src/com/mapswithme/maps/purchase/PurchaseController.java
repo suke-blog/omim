@@ -1,26 +1,21 @@
 package com.mapswithme.maps.purchase;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import com.mapswithme.maps.base.Initializable;
+import com.mapswithme.maps.base.Savable;
 
 /**
  * Provides necessary purchase functionality to the UI. Controls whole platform-specific billing
- * process. This controller has to be used only within {@link #initialize(Activity)} and {@link #destroy()}
+ * process. This controller has to be used only within
+ * {@link com.mapswithme.maps.base.Initializable#initialize}
+ * and {@link com.mapswithme.maps.base.Initializable#destroy()}
  * interval.
  */
-public interface PurchaseController<T>
+public interface PurchaseController<T> extends Savable<Bundle>, Initializable<Activity>
 {
-  /**
-   * Initializes the controller.
-   * @param activity the activity which controller serves.
-   */
-  void initialize(@NonNull Activity activity);
-
-  /**
-   * Destroys the controller.
-   */
-  void destroy();
-
   /**
    * Indicates whether the purchase flow is supported by this device or not.
    */
@@ -35,9 +30,9 @@ public interface PurchaseController<T>
   void launchPurchaseFlow(@NonNull String productId);
 
   /**
-   * Queries purchase details. They will be delivered to the caller through callback {@link T}.
+   * Queries product details. They will be delivered to the caller through callback {@link T}.
    */
-  void queryPurchaseDetails();
+  void queryProductDetails();
 
   /**
    * Validates existing purchase. A validation result will be delivered through callback {@link T}.

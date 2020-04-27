@@ -41,8 +41,8 @@ bool RawApi::GetTaxiInfo(ms::LatLon const & from, ms::LatLon const & to, std::st
   url << std::fixed << std::setprecision(6) << baseUrl
       << "/CalculateByCoords?version=1.0&platform=WEB&RefOrgId="
       << MAXIM_CLIENT_ID << "&access-token=" << MAXIM_SERVER_TOKEN
-      << "&startLatitude=" << from.lat << "&startLongitude=" << from.lon
-      << "&endLatitude=" << to.lat << "&endLongitude=" << to.lon;
+      << "&startLatitude=" << from.m_lat << "&startLongitude=" << from.m_lon
+      << "&endLatitude=" << to.m_lat << "&endLongitude=" << to.m_lon;
 
   return RunSimpleHttpRequest(url.str(), result);
 }
@@ -99,9 +99,9 @@ RideRequestLinks Api::GetRideRequestLinks(std::string const & productId, ms::Lat
   std::ostringstream orderLink;
   std::ostringstream installLink;
 
-  orderLink << "order?refOrgId=" << MAXIM_CLIENT_ID << "&startLatitude=" << from.lat
-            << "&startLongitude=" << from.lon << "&endLatitude=" << to.lat
-            << "&endLongitude=" << to.lon;
+  orderLink << "order?refOrgId=" << MAXIM_CLIENT_ID << "&startLatitude=" << from.m_lat
+            << "&startLongitude=" << from.m_lon << "&endLatitude=" << to.m_lat
+            << "&endLongitude=" << to.m_lon;
 
 #if defined(OMIM_OS_IPHONE)
   installLink << "https://app.appsflyer.com/id579985456?pid=maps_me";
@@ -144,7 +144,7 @@ void MakeFromJson(std::string const & src, std::vector<taxi::Product> & products
   FromJSONObject(root.get(), "FeedTime", time);
   product.m_time = strings::to_string(static_cast<int64_t>(time * kSecInMinute));
 
-  products.push_back(move(product));
+  products.push_back(std::move(product));
 }
 }  // namespace maxim
 }  // namespace taxi

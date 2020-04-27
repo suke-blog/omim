@@ -20,6 +20,16 @@ public:
     m_os << DebugPrint(t);
   }
 
+  // This override is implemented to support deserialization with optional values
+  // which could be declared by DECLARE_VISITOR_AND_DEBUG_PRINT macro.
+  // Because of this class is used just for serialize structures into strings,
+  // the second parameter is used for method signature compatibility only.
+  template <typename T>
+  void operator()(T const & t, T const &, char const * name = nullptr)
+  {
+    operator()(t, name);
+  }
+
   std::string ToString() const { return m_name + " [" + m_os.str() + "]"; }
 
 private:

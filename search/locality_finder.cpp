@@ -7,6 +7,7 @@
 
 #include "indexer/data_source.hpp"
 #include "indexer/feature_algo.hpp"
+#include "indexer/feature_visibility.hpp"
 #include "indexer/ftypes_matcher.hpp"
 
 #include "base/assert.hpp"
@@ -33,7 +34,7 @@ public:
 class CityFilter : public Filter
 {
 public:
-  CityFilter(RankTable const & ranks) : m_ranks(ranks) {}
+  explicit CityFilter(RankTable const & ranks) : m_ranks(ranks) {}
 
   // Filter overrides:
   bool IsGood(uint32_t id) const override { return m_ranks.Get(id) != 0; }
@@ -76,33 +77,33 @@ public:
     if (m_loadedIds.count(id) != 0)
       return;
 
-    FeatureType ft;
-    if (!m_ctx.GetFeature(id, ft))
+    auto ft = m_ctx.GetFeature(id);
+    if (!ft)
       return;
 
-    if (ft.GetFeatureType() != feature::GEOM_POINT)
+    if (ft->GetGeomType() != feature::GeomType::Point)
       return;
 
     using namespace ftypes;
-    switch (IsLocalityChecker::Instance().GetType(ft))
+    switch (IsLocalityChecker::Instance().GetType(*ft))
     {
-    case CITY:
-    case TOWN:
-    case VILLAGE:
+    case LocalityType::City:
+    case LocalityType::Town:
+    case LocalityType::Village:
       break;
     default:
       return;
     }
 
-    auto const population = ftypes::GetPopulation(ft);
+    auto const population = ftypes::GetPopulation(*ft);
     if (population == 0)
       return;
 
-    auto const names = ft.GetNames();
-    auto const center = ft.GetCenter();
+    auto const names = ft->GetNames();
+    auto const center = ft->GetCenter();
 
     CitiesBoundariesTable::Boundaries boundaries;
-    auto const fid = ft.GetID();
+    auto const fid = ft->GetID();
     m_boundaries.Get(fid, boundaries);
 
     m_holder.Add(LocalityItem(names, center, boundaries, population, fid));
@@ -117,6 +118,25 @@ private:
   LocalityFinder::Holder & m_holder;
   unordered_set<uint32_t> & m_loadedIds;
 };
+
+int GetVillagesScale()
+{
+  auto currentVillagesMinDrawableScale = 0;
+  ftypes::IsVillageChecker::Instance().ForEachType([&currentVillagesMinDrawableScale](uint32_t type)
+  {
+    feature::TypesHolder th;
+    th.Assign(type);
+    currentVillagesMinDrawableScale = max(currentVillagesMinDrawableScale, GetMinDrawableScaleClassifOnly(th));
+  });
+
+  // Needed for backward compatibility. |kCompatibilityVillagesMinDrawableScale| should be set to
+  // maximal value we have in mwms over all data versions.
+  int const kCompatibilityVillagesMinDrawableScale = 13;
+  ASSERT_LESS_OR_EQUAL(
+      currentVillagesMinDrawableScale, kCompatibilityVillagesMinDrawableScale,
+      ("Set kCompatibilityVillagesMinDrawableScale to", currentVillagesMinDrawableScale));
+  return max(currentVillagesMinDrawableScale, kCompatibilityVillagesMinDrawableScale);
+}
 }  // namespace
 
 // LocalityItem ------------------------------------------------------------------------------------
@@ -145,7 +165,7 @@ void LocalitySelector::operator()(LocalityItem const & item)
 
   // TODO (@y, @m): replace this naive score by p-values on
   // multivariate Gaussian.
-  double const distance = MercatorBounds::DistanceOnEarth(item.m_center, m_p);
+  double const distance = mercator::DistanceOnEarth(item.m_center, m_p);
 
   double const score =
       ftypes::GetPopulationByRadius(distance) / static_cast<double>(item.m_population);
@@ -191,12 +211,12 @@ void LocalityFinder::Holder::ForEachInVicinity(m2::RectD const & rect,
 
 m2::RectD LocalityFinder::Holder::GetRect(m2::PointD const & p) const
 {
-  return MercatorBounds::RectByCenterXYAndSizeInMeters(p, m_radiusMeters);
+  return mercator::RectByCenterXYAndSizeInMeters(p, m_radiusMeters);
 }
 
 m2::RectD LocalityFinder::Holder::GetDRect(m2::PointD const & p) const
 {
-  return MercatorBounds::RectByCenterXYAndSizeInMeters(p, 2 * m_radiusMeters);
+  return mercator::RectByCenterXYAndSizeInMeters(p, 2 * m_radiusMeters);
 }
 
 void LocalityFinder::Holder::Clear()
@@ -241,7 +261,7 @@ void LocalityFinder::LoadVicinity(m2::PointD const & p, bool loadCities, bool lo
     auto handle = m_dataSource.GetMwmHandleById(m_worldId);
     if (handle.IsAlive())
     {
-      auto const & value = *handle.GetValue<MwmValue>();
+      auto const & value = *handle.GetValue();
       if (!m_ranks)
         m_ranks = RankTable::Load(value.m_cont, SEARCH_RANKS_FILE_TAG);
       if (!m_ranks)
@@ -263,8 +283,9 @@ void LocalityFinder::LoadVicinity(m2::PointD const & p, bool loadCities, bool lo
       if (!handle.IsAlive())
         return;
 
+      static int const scale = GetVillagesScale();
       MwmContext ctx(move(handle));
-      ctx.ForEachIndex(vrect,
+      ctx.ForEachIndex(vrect, scale,
                        LocalitiesLoader(ctx, m_boundariesTable, VillageFilter(ctx, m_villagesCache),
                                         m_villages, m_loadedIds));
     });

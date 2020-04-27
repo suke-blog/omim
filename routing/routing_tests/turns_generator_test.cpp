@@ -10,14 +10,16 @@
 
 #include "geometry/mercator.hpp"
 #include "geometry/point2d.hpp"
+#include "geometry/point_with_altitude.hpp"
 
 #include "base/macros.hpp"
 
-#include "std/cmath.hpp"
-#include "std/string.hpp"
-#include "std/vector.hpp"
+#include <cmath>
+#include <string>
+#include <vector>
 
 using namespace routing;
+using namespace std;
 using namespace turns;
 
 namespace
@@ -43,16 +45,16 @@ public:
     return 0.0;
   }
 
-  Junction GetStartPoint() const override
+  geometry::PointWithAltitude GetStartPoint() const override
   {
     NOTIMPLEMENTED();
-    return Junction();
+    return geometry::PointWithAltitude();
   }
 
-  Junction GetEndPoint() const override
+  geometry::PointWithAltitude GetEndPoint() const override
   {
     NOTIMPLEMENTED();
-    return Junction();
+    return geometry::PointWithAltitude();
   }
 
 private:
@@ -162,14 +164,14 @@ UNIT_TEST(TestFixupTurns)
 {
   double const kHalfSquareSideMeters = 10.;
   m2::PointD const kSquareCenterLonLat = {0., 0.};
-  m2::RectD const kSquareNearZero = MercatorBounds::MetersToXY(kSquareCenterLonLat.x,
-                                                               kSquareCenterLonLat.y, kHalfSquareSideMeters);
+  m2::RectD const kSquareNearZero =
+      mercator::MetersToXY(kSquareCenterLonLat.x, kSquareCenterLonLat.y, kHalfSquareSideMeters);
   // Removing a turn in case staying on a roundabout.
-  vector<Junction> const pointsMerc1 = {
-    {{ kSquareNearZero.minX(), kSquareNearZero.minY() }, feature::kDefaultAltitudeMeters},
-    {{ kSquareNearZero.minX(), kSquareNearZero.maxY() }, feature::kDefaultAltitudeMeters},
-    {{ kSquareNearZero.maxX(), kSquareNearZero.maxY() }, feature::kDefaultAltitudeMeters},
-    {{ kSquareNearZero.maxX(), kSquareNearZero.minY() }, feature::kDefaultAltitudeMeters},
+  vector<geometry::PointWithAltitude> const pointsMerc1 = {
+      {{kSquareNearZero.minX(), kSquareNearZero.minY()}, geometry::kDefaultAltitudeMeters},
+      {{kSquareNearZero.minX(), kSquareNearZero.maxY()}, geometry::kDefaultAltitudeMeters},
+      {{kSquareNearZero.maxX(), kSquareNearZero.maxY()}, geometry::kDefaultAltitudeMeters},
+      {{kSquareNearZero.maxX(), kSquareNearZero.minY()}, geometry::kDefaultAltitudeMeters},
   };
   // The constructor TurnItem(uint32_t idx, CarDirection t, uint32_t exitNum = 0)
   // is used for initialization of vector<TurnItem> below.
@@ -185,10 +187,10 @@ UNIT_TEST(TestFixupTurns)
   TEST_EQUAL(turnsDir1, expectedTurnDir1, ());
 
   // Merging turns which are close to each other.
-  vector<Junction> const pointsMerc2 = {
-    {{ kSquareNearZero.minX(), kSquareNearZero.minY()}, feature::kDefaultAltitudeMeters},
-    {{ kSquareCenterLonLat.x, kSquareCenterLonLat.y }, feature::kDefaultAltitudeMeters},
-    {{ kSquareNearZero.maxX(), kSquareNearZero.maxY() }, feature::kDefaultAltitudeMeters},
+  vector<geometry::PointWithAltitude> const pointsMerc2 = {
+      {{kSquareNearZero.minX(), kSquareNearZero.minY()}, geometry::kDefaultAltitudeMeters},
+      {{kSquareCenterLonLat.x, kSquareCenterLonLat.y}, geometry::kDefaultAltitudeMeters},
+      {{kSquareNearZero.maxX(), kSquareNearZero.maxY()}, geometry::kDefaultAltitudeMeters},
   };
   Route::TTurns turnsDir2 = {{0, CarDirection::GoStraight},
                              {1, CarDirection::TurnLeft},
@@ -200,10 +202,10 @@ UNIT_TEST(TestFixupTurns)
   TEST_EQUAL(turnsDir2, expectedTurnDir2, ());
 
   // No turn is removed.
-  vector<Junction> const pointsMerc3 = {
-    {{ kSquareNearZero.minX(), kSquareNearZero.minY()}, feature::kDefaultAltitudeMeters},
-    {{ kSquareNearZero.minX(), kSquareNearZero.maxY() }, feature::kDefaultAltitudeMeters},
-    {{ kSquareNearZero.maxX(), kSquareNearZero.maxY() }, feature::kDefaultAltitudeMeters},
+  vector<geometry::PointWithAltitude> const pointsMerc3 = {
+      {{kSquareNearZero.minX(), kSquareNearZero.minY()}, geometry::kDefaultAltitudeMeters},
+      {{kSquareNearZero.minX(), kSquareNearZero.maxY()}, geometry::kDefaultAltitudeMeters},
+      {{kSquareNearZero.maxX(), kSquareNearZero.maxY()}, geometry::kDefaultAltitudeMeters},
   };
   Route::TTurns turnsDir3 = {{1, CarDirection::TurnRight},
                              {2, CarDirection::ReachedYourDestination}};

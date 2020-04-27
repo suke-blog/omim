@@ -1,16 +1,15 @@
 package com.mapswithme.maps.ads;
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import android.util.SparseArray;
 
 import com.mapswithme.maps.BuildConfig;
 import com.mapswithme.maps.MwmActivity;
 import com.mapswithme.maps.downloader.DownloaderFragment;
 import com.mapswithme.maps.downloader.MapManager;
-import com.mapswithme.maps.downloader.MigrationFragment;
 import com.mapswithme.maps.editor.EditorHostFragment;
 import com.mapswithme.maps.routing.RoutingController;
 import com.mapswithme.maps.search.SearchFragment;
@@ -38,8 +37,6 @@ public enum LikesManager
   {
     GPLAY_NEW_USERS(RateStoreDialogFragment.class, DIALOG_DELAY_DEFAULT),
     GPLAY_OLD_USERS(RateStoreDialogFragment.class, DIALOG_DELAY_DEFAULT),
-    GPLUS_NEW_USERS(GooglePlusDialogFragment.class, DIALOG_DELAY_DEFAULT),
-    GPLUS_OLD_USERS(GooglePlusDialogFragment.class, DIALOG_DELAY_DEFAULT),
     FACEBOOK_INVITE_NEW_USERS(FacebookInvitesDialogFragment.class, DIALOG_DELAY_DEFAULT),
     FACEBOOK_INVITES_OLD_USERS(FacebookInvitesDialogFragment.class, DIALOG_DELAY_DEFAULT);
 
@@ -64,26 +61,15 @@ public enum LikesManager
   static
   {
     sOldUsersMapping.put(6, LikeType.FACEBOOK_INVITES_OLD_USERS);
-    sOldUsersMapping.put(24, LikeType.GPLUS_OLD_USERS);
     sOldUsersMapping.put(30, LikeType.FACEBOOK_INVITES_OLD_USERS);
-    sOldUsersMapping.put(44, LikeType.GPLUS_OLD_USERS);
     sOldUsersMapping.put(50, LikeType.FACEBOOK_INVITES_OLD_USERS);
-    sOldUsersMapping.put(90, LikeType.GPLAY_OLD_USERS);
-
-    sNewUsersMapping.put(3, LikeType.GPLAY_NEW_USERS);
     sNewUsersMapping.put(9, LikeType.FACEBOOK_INVITE_NEW_USERS);
-    sNewUsersMapping.put(10, LikeType.GPLAY_NEW_USERS);
-    sNewUsersMapping.put(11, LikeType.GPLUS_NEW_USERS);
-    sNewUsersMapping.put(21, LikeType.GPLAY_NEW_USERS);
-    sNewUsersMapping.put(30, LikeType.GPLUS_NEW_USERS);
     sNewUsersMapping.put(35, LikeType.FACEBOOK_INVITE_NEW_USERS);
-    sNewUsersMapping.put(50, LikeType.GPLUS_NEW_USERS);
     sNewUsersMapping.put(55, LikeType.FACEBOOK_INVITE_NEW_USERS);
 
     sFragments.add(SearchFragment.class);
     sFragments.add(EditorHostFragment.class);
     sFragments.add(DownloaderFragment.class);
-    sFragments.add(MigrationFragment.class);
   }
 
   private final boolean mIsNewUser = (Counters.getFirstInstallVersion() == BuildConfig.VERSION_CODE);

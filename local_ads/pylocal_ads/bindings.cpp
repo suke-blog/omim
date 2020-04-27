@@ -15,6 +15,7 @@
 #pragma clang diagnostic ignored "-Wunused-local-typedef"
 #endif
 
+#include "pyhelpers/module_version.hpp"
 #include "pyhelpers/vector_uint8.hpp"
 #include "pyhelpers/vector_list_conversion.hpp"
 
@@ -33,20 +34,21 @@ namespace
 {
 std::vector<uint8_t> PySerialize(boost::python::list const & cs, Version const version)
 {
-  auto const campaigns = python_list_to_std_vector<Campaign>(cs);
+  auto const campaigns = pyhelpers::PythonListToStdVector<Campaign>(cs);
   return Serialize(campaigns, version);
 }
 
 boost::python::list PyDeserialize(std::vector<uint8_t> const & blob)
 {
   auto const campaigns = Deserialize(blob);
-  return std_vector_to_python_list(campaigns);
+  return pyhelpers::StdVectorToPythonList(campaigns);
 }
 }  // namespace
 
 BOOST_PYTHON_MODULE(pylocal_ads)
 {
   using namespace boost::python;
+  scope().attr("__version__") = PYBINDINGS_VERSION;
 
   // Register the to-python converters.
   to_python_converter<std::vector<uint8_t>, vector_uint8t_to_str>();

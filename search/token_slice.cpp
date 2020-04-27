@@ -1,13 +1,15 @@
 #include "search/token_slice.hpp"
 
-#include "std/sstream.hpp"
+#include <sstream>
+
+using namespace std;
 
 namespace search
 {
 namespace
 {
-template <typename TSlice>
-string SliceToString(string const & name, TSlice const & slice)
+template <typename Slice>
+string SliceToString(string const & name, Slice const & slice)
 {
   ostringstream os;
   os << name << " [";
@@ -53,5 +55,4 @@ string DebugPrint(TokenSliceNoCategories const & slice)
 {
   return SliceToString("TokenSliceNoCategories", slice);
 }
-
 }  // namespace search

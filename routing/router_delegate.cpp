@@ -1,17 +1,31 @@
 #include "routing/router_delegate.hpp"
 
+#include <chrono>
+
 namespace routing
 {
 namespace
 {
 void DefaultProgressFn(float /* progress */) {}
-void DefaultPointFn(m2::PointD const & /* point */) {}
-} //  namespace
+void DefaultPointFn(ms::LatLon const & /* point */) {}
+}  //  namespace
 
 RouterDelegate::RouterDelegate()
 {
   m_progressCallback = DefaultProgressFn;
   m_pointCallback = DefaultPointFn;
+}
+
+void RouterDelegate::OnProgress(float progress) const
+{
+  if (!m_cancellable.IsCancelled())
+    m_progressCallback(progress);
+}
+
+void RouterDelegate::OnPointCheck(ms::LatLon const & point) const
+{
+  if (!m_cancellable.IsCancelled())
+    m_pointCallback(point);
 }
 
 void RouterDelegate::SetProgressCallback(ProgressCallback const & progressCallback)
@@ -24,47 +38,12 @@ void RouterDelegate::SetPointCheckCallback(PointCheckCallback const & pointCallb
   m_pointCallback = pointCallback ? pointCallback : DefaultPointFn;
 }
 
-void RouterDelegate::OnProgress(float progress) const
+void RouterDelegate::SetTimeout(uint32_t timeoutSec)
 {
-  lock_guard<mutex> l(m_guard);
-  if (!IsCancelled())
-    m_progressCallback(progress);
-}
+  if (timeoutSec == kNoTimeout)
+    return;
 
-void RouterDelegate::Reset()
-{
-  lock_guard<mutex> l(m_guard);
-  TimeoutCancellable::Reset();
+  std::chrono::steady_clock::duration const timeout = std::chrono::seconds(timeoutSec);
+  m_cancellable.SetDeadline(std::chrono::steady_clock::now() + timeout);
 }
-
-void RouterDelegate::OnPointCheck(m2::PointD const & point) const
-{
-  lock_guard<mutex> l(m_guard);
-  if (!IsCancelled())
-    m_pointCallback(point);
-}
-
-TimeoutCancellable::TimeoutCancellable() : m_timeoutSec(0)
-{
-}
-
-bool TimeoutCancellable::IsCancelled() const
-{
-  if (m_timeoutSec && m_timer.ElapsedSeconds() > m_timeoutSec)
-    return true;
-  return Cancellable::IsCancelled();
-}
-
-void TimeoutCancellable::Reset()
-{
-  m_timeoutSec = 0;
-  Cancellable::Reset();
-}
-
-void TimeoutCancellable::SetTimeout(uint32_t timeoutSec)
-{
-  m_timeoutSec = timeoutSec;
-  m_timer.Reset();
-}
-
 }  //  namespace routing

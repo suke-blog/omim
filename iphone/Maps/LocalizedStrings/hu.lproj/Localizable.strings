@@ -6,9 +6,6 @@
 
 /********** Strings **********/
 
-/* About button text (should be short) */
-"about" = "A programról";
-
 /* Button text (should be short) */
 "back" = "Vissza";
 
@@ -81,8 +78,6 @@
 /* View and button titles for accessibility */
 "core_my_position" = "Saját helyzet";
 
-"ok" = "OK";
-
 /* Settings/Downloader - No free space dialog message */
 "free_disk_space_for_country_x" = "Kérjük szabadítson fel helyet az eszközön, hogy le tudja tölteni %@-t";
 
@@ -109,9 +104,6 @@
 
 /* Settings/Downloader - 3G download warning dialog confirm button */
 "use_cellular_data" = "Igen";
-
-/* Settings/Downloader - No internet connection dialog message */
-"use_wifi_recommendation_text" = "WiFi használatát javasoljuk nagy térképek letöltéséhez";
 
 /* Choose measurement on first launch alert - title */
 "which_measurement_system" = "Milyen mértékegységet használjunk?";
@@ -408,9 +400,6 @@
 /* Subject for emailed bookmark */
 "bookmark_share_email_subject" = "Nézze meg a MAPS.ME jelzőmet";
 
-/* Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me */
-"bookmark_share_email" = "Üdvözlöm,\n\nleszúrtam egy MAPS.ME jelzőt: %1$@. Kattintson erre a hivatkozásra %2$@ vagy erre %3$@ hogy lássa a helyet a térképen.\n\nKöszönöm.";
-
 /* Subject for emailed position */
 "my_position_share_email_subject" = "Nézze meg a helyzetemet a MAPS.ME térképen!";
 
@@ -588,15 +577,6 @@
 
 /* category title */
 "routes" = "Útvonalak";
-
-/* Show on first launch. */
-"maps_licence_info" = "This applications uses geographical data (including maps, business listings, points of interest, borders of countries and regions, etc.) taken from the OpenStreetMap project. We do not warrant any consistency, accuracy, completeness or applicability of the OpenStreetMap data.";
-
-/* Show on first launch. */
-"agree" = "I agree";
-
-/* Show on first launch */
-"disagree" = "I disagree";
 
 /* text of notification */
 "download_map_notification" = "Töltsd le annak a helynek a térképét, ahol most vagy";
@@ -896,6 +876,30 @@
 
 /* pink color */
 "pink" = "Rózsaszín";
+
+/* deep purple color */
+"deep_purple" = "Sötét lila";
+
+/* light blue color */
+"light_blue" = "Világoskék";
+
+/* cyan color */
+"cyan" = "Cián";
+
+/* teal color */
+"teal" = "Zöldeskék";
+
+/* lime color */
+"lime" = "Lime";
+
+/* deep orange color */
+"deep_orange" = "Sötét Narancs";
+
+/* gray color */
+"gray" = "Szürke";
+
+/* blue gray color */
+"blue_gray" = "Kékes Szürke";
 
 /* Wi-Fi available */
 "WiFi_available" = "Igen";
@@ -1342,10 +1346,6 @@
 
 "onboarding_permissions_message" = "Így tehát Ön letölthet térképeket, megtekintheti az Önhöz közeli helyeket és forgalmat, és használhatja a navigációt.";
 
-"onboarding_welcome_title" = "Üdvözöljük a MAPS.ME alkalmazásban";
-
-"onboarding_welcome_first_subtitle" = "Ingyenes, gyors, részletes és teljes egészében offline térképek navigációval lépésről lépésre.";
-
 "onboarding_welcome_second_subtitle" = "Az alkalmazás indításával Ön elfogadja a <a href=\"%s\">Felhasználási feltételeket</a> és <a href=\"%s\">az Adatvédelmi szabályzatot</a>.";
 
 "dialog_incorrect_feature_position" = "Helyszín megváltoztatása";
@@ -1500,7 +1500,7 @@
 
 "placepage_more_button" = "Még";
 
-"placepage_more_reviews_button" = "More Reviews";
+"placepage_more_reviews_button" = "További vélemények";
 
 "book_button" = "Foglalás";
 
@@ -1782,10 +1782,6 @@
 
 "banner_rentalcars_message" = "800 autókölcsönző cég több mint 49.000 autókölcsönzési helyszínen.";
 
-"banner_viator_title" = "Utazások keresése az interneten";
-
-"banner_viator_message" = "Több mint 50.000 utazás keresése a világ minden táján.";
-
 /* december */
 "whatsnew_traffic" = "Forgalmi adatok 36 országban";
 
@@ -1860,10 +1856,6 @@
 "whatsnew_waypoints_title" = "Iránypontok az útvonaltervezésben";
 
 "whatsnew_waypoints_message" = "Érintsen meg helyeket iránypontok hozzáadásához az útvonatervhez.";
-
-"whatsnew_viator_title" = "Foglaljon helyet egy utazásra";
-
-"whatsnew_viator_message" = "Válasszon népszerű városnéző utakat a világ minden táján.";
 
 "whatsnew_driving_style_title" = "Új térképstílus vezetéshez";
 
@@ -1977,8 +1969,6 @@
 
 "toast_location_permission_denied" = "Alkalmazás helymeghatározási engedélye megtagadva";
 
-"place_page_viator_title" = "Látványosságok és kirándulások";
-
 "button_use" = "Használat";
 
 "planning_route_manage_route" = "Útvonal kezelése";
@@ -2018,10 +2008,6 @@
 "choose_start_point" = "Válasszon egy kiindulási pontot";
 
 "choose_destination" = "Válassza ki a célt";
-
-"preloader_viator_title" = "Fedezze fel a túrákat és a szokatlan tevékenységeket";
-
-"preloader_viator_message" = "Túrák, tevékenységek, városnézés, és sok egyéb";
 
 "preloader_viator_button" = "Tudjon meg többet";
 
@@ -2127,10 +2113,6 @@
 
 "discovery_button_subtitle_local_guides" = "Helyi idegenvezetők";
 
-"discovery_button_viator_offline_title" = "Fedezze fel a túrákat és a szokatlan tevékenységeket";
-
-"discovery_button_viator_offline_message" = "Kirándulások, teendők, városnéző túrák és egyebek.";
-
 "discovery_button_viator_error_title" = "Hiba az adatok betöltésekor";
 
 "discovery_button_other_error_message" = "Hiba az adatok betöltésekor";
@@ -2203,8 +2185,6 @@
 
 "downloader_applying" = "%s alkalmazása...";
 
-"transit_not_found" = "Tranzit navigáció ebben a régióban még nem áll rendelkezésre";
-
 "whats_new_title_hotel_filter" = "Új szálloda szűrők!";
 
 "whats_new_message_hotel_filter" = "Foglaljon elérhető szobát az Ön dátumain! Használja a be- ás kijelentkezési szűrőket";
@@ -2212,8 +2192,6 @@
 "whats_new_title_ugc_travel" = "Ossza meg tapasztalatait más utasokkal!";
 
 "whats_new_message_ugc_travel" = "Értékelje és ismertesse a meglátogatott helyeket!";
-
-"dialog_pedestrian_route_is_long" = "A gyalogos útvonal túl hosszú";
 
 "dialog_message_transit_not_found_connection" = "Útvonaltervezés egy összekötő hálózaton belül";
 
@@ -2405,9 +2383,8 @@
 
 "guide_downloaded_title" = "Az útmutató sikeresen letöltésre került";
 
-"download_guides" = "Útmutatók letöltése";
-
-"cached_guides_placeholder_subtitle" = "Részletes offline útmutatók mindenfajta utazáshoz. Válaszd ki a te utazásodhoz legjobban illőt, és töltsd le közvetlenül a térképre. Az útmutatók letöltéséhez internetkapcsolatra van szükséged.";
+/* as few symbols as possible */
+"download_guides" = "Útmutatók keresése";
 
 "guides_groups_cached" = "Letöltött útmutatók";
 
@@ -2487,8 +2464,6 @@
 
 "restore_no_subscription_alert" = "Nincs aktív előfizetés";
 
-"subscription_terms" = "A vásárlás megerősítésekor az összeg az iTunes számládra lesz terhelve. Az előfizetés automatikusan megújul, ha csak az automatikus megújítást 24 órával a jelenlegi időszak vége előtt ki nem kapcsolod. A számlád az előfizetésednek megfelelően a jelenlegi időszak lejárta előtti 24 órában lesz megterhelve. Az automatikus megújítást az Apple ID fiókod beállításaidban az előfizetés bármely szakaszában kikapcsolhatod.";
-
 "subscriptions_title" = "Előfizetések";
 
 "manage_subscription" = "Előfizetés kezelése";
@@ -2508,8 +2483,6 @@
 "ugc_route_tags_screen_label" = "A tag-ek kiválasztása";
 
 "ugc_route_tags_progress_msg" = "Tag-ek betöltése…";
-
-"ugc_route_tags_desc" = "Kérjük, válassza ki a tag-ket, hogy segítsen a többi utazónak megtalálni az Ön útikalauzát. Ez kötelező.";
 
 "public_access" = "Nyílt hozzáférés";
 
@@ -2564,7 +2537,7 @@
 
 "unable_upload_error_subtitle_broken" = "A fájl sérült és nem lehet feltölteni. Kérjük, más fájlt töltsön fel.";
 
-"buy_btn" = "%s- ért vásárolni";
+"buy_btn" = "Vedd meg ezt ennyiért: %s";
 
 "download_guide_progress" = "Az útikalauz töltődik…";
 
@@ -2659,6 +2632,636 @@
 
 "whats_new_ugc_routes_title_android_only" = "Könnyű megosztani a benyomásaidat";
 
+"ugc_thanks_message_auth" = "Az értékelésed elmentve";
+
+"ugc_thanks_message_not_auth" = "Kérjük jelentkezz be az értékeléshez";
+
+"notification_leave_review_v2_title" = "Értékelj egy meglátogatott helyet és segíts az utazóknak!";
+
+"error_public_not_enought_title" = "Nincs elegendő könyvjelző";
+
+"error_public_not_enought_subtitle" = "Legalább 3 könyvjelződnek kell lennie, hogy az útmutatódat feltölthesd a nyilvános katalógusba";
+
+"bookmark_public_upload_alert_title" = "Csak pár lépésnyire vagy attól, hogy megoszthasd a könyvjelzőidet minden MAPS.ME utazóval!";
+
+"bookmark_public_upload_alert_subtitle" = "Kéjük győződj meg róla, hogy egy jellemző neved és leírásod van a listádhoz, és hogy minden könyvjelzőnél van információ a helyekről. Ily módon a listádat mások is megtalálhatják és használhatják.";
+
+"bookmark_public_upload_alert_ok_button" = "Igen, biztos vagyok benne!";
+
+"name_title" = "Add meg az útmutatód nevét";
+
+"name_placeholder" = "pl.: Londoni kocsmák";
+
+"name_comment1" = "Kérjük adj nevet az útmutatódnak, így az utazók könnyen megtalálhatják: például \"Londoni kocsmák\"";
+
+"name_comment2" = "A név ne tartalmazzon speciális szimbólumokat. A név ne legyen a \"Saját helyeim\"";
+
+"description_guide" = "Leírás";
+
+"description_title" = "Add meg az útmutatód leírását";
+
+"description_placeholder" = "Fejtsd ki az útmutatód részleteit";
+
+"description_comment1" = "Az útmutató leírásodnak legalább 30 szimbólumot kellene tartalmaznia.";
+
+"ugc_route_tags_desc" = "Kérjük válassz címkéket, hogy segíts más utazóknak megtalálni az útmutatódat. Ez kötelező. Maximum %s címke.";
+
+"html_format_error_title" = "Az útmutatód nem lett közzétéve";
+
+"html_format_error_subtitle" = "Kérjük győződj meg róla, hogy a könyvjelzőid nevei és könyvjelzői mind érvényes formátumúak. Ellenőrizheted egy asztali böngészőn a lenti \"Online szerkesztés\" gombra kattintva.";
+
+"web_editor_description" = "Töltsd fel az útmutatódat és szerezd be a szerkesztési linket az asztaliról";
+
+"edit_on_web_confirm" = "Online szerkesztés";
+
+"update_guide" = "Egy frissítés feltöltése";
+
+"direct_link_updating_text" = "A fájlod frissítése…";
+
+"direct_link_updating_success" = "Az útmutatód frissítve lett";
+
+"unable_get_direct_link_desc" = "Egy nyilvános linkkel megoszthatod az útmutatódat";
+
+"any_access_update_alert_title" = "Néhány változás történhetett";
+
+"any_access_update_alert_message" = "Szeretnéd frissíteni a könyvjelzőidet? Az új verzió ugyanazon a linken keresztül lesz elérhető.";
+
+"any_access_update_alert_update" = "Frissítés";
+
+"public_or_limited_access_after_edit_online_error_title" = "Online szerkesztetted a könyvjelzőidet";
+
+"public_or_limited_access_after_edit_online_error_message" = "A jövőben kérjük a weboldalunkon keresztül szerkeszd, publikáld vagy oszd meg az útmutatót a barátaiddal";
+
+"power_managment_title" = "Energiatakarékos mód";
+
+"power_managment_description" = "Amikor az automatikus mód van kiválasztva, az alkalmazás elkezdi kikapcsolni az akkumulátort merítő funkciókat a jelenlegi akkumulátor töltöttség alapján";
+
+"power_managment_setting_never" = "Soha";
+
+"power_managment_setting_auto" = "Automatikus";
+
+"power_managment_setting_manual_max" = "Maximális energiatakarékosság";
+
+"enable_logging_warning_message" = "Az opció bekapcsolja a diagnosztikai célú naplózást. Hasznos lehet a support csapatunknak, akik elhárítják az alkalmazás hibáit. Csak a MAPS.ME support kérésére kapcsold be ezt az opciót.";
+
+"html_error_upload_message_try_again" = "Kérjük ellenőrizd a hálózati beállításaidat és próbáld újra";
+
+"html_error_upload_title_try_again" = "Nincs internetkapcsolat";
+
+"notification_leave_review_v2_android_short_title" = "Értékelj és segítsd az utazókat!";
+
+"megafon" = "Say goodbye to roaming!";
+
+"notifications_illegal_alert_disable_button" = "Értesítések kikapcsolása";
+
+"access_rules_author_only" = "Online szerkesztés";
+
+"privacy_settings_menu" = "Adatvédelmi beállítások";
+
+"gdpr_request_setting" = "ID beszerzése GDPR kéréshez";
+
+"gdpr_request_window_title" = "A te ID-d: %s.";
+
+"gdpr_request_window_message" = "Kérjük másold le és küldd el a kérést a support@maps.me címre";
+
+"gdpr_request_window_copy" = "ID lemásolása";
+
+"unable_upadate_error_title" = "Fájl frissítés sikertelen";
+
+"unable_upadate_error_message" = "Néhány hiba történt frissítés közben. Kérjük ellenőrizd a változtatásokat és próbáld újra";
+
+"whats_new_wiki_title" = "Mi ez a hely?";
+
+"whats_new_wiki_message" = "Wikipedia.org cikkeket adtunk hozzá a legnépszerűbb látnivalók oldalaihoz. Offline elérhetőek";
+
+"driving_options_title" = "Vezetési lehetőségek";
+
+"driving_options_subheader" = "Elkerülés minden útvonalon";
+
+"avoid_tolls" = "Fizetős utak";
+
+"avoid_unpaved" = "Kövezetlen utak";
+
+"avoid_ferry" = "Kompátkelők";
+
+"avoid_motorways" = "Autópályák";
+
+"unable_to_calc_alert_title" = "Nem lehet útvonalat számítani";
+
+"unable_to_calc_alert_subtitle" = "Sajnos nem találunk útvonalat, valószínűleg az általad meghatározott lehetőségek miatt. Kérjük változtass a beállításokon és próbáld újra";
+
+"define_to_avoid_btn" = "Elkerülendő utak meghatározása";
+
+"change_driving_options_btn" = "Vezetési lehetőségek bekapcsolva";
+
+"toll_road" = "Fizetős utak";
+
+"unpaved_road" = "Kövezetlen utak";
+
+"ferry_crossing" = "Kompátkelők";
+
+"operated_by" = "\"%s\" működteti";
+
+"avoid_toll_roads_placepage" = "Fizetős utak elkerülése";
+
+"avoid_unpaved_roads_placepage" = "Kövezetlen utak elkerülése";
+
+"avoid_ferry_crossing_placepage" = "Kompátkelők elkerülése";
+
+"cached_guides_placeholder_subtitle" = "A MAPS.ME használatra kész útmutatókat kínál azon kiválasztott helyekhez fényképekkel és leírásokkal, amelyek a térképen jelölve vannak és offline elérhetőek.";
+
+"guides_catalogue_title" = "Útmutató katalógus";
+
+"download_guides_button" = "A katalógushoz";
+
+"type.cuisine.uzbek" = "Üzbég konyha";
+
+"onboarding_welcome_title" = "Tervezz és utazz a MAPS.ME-vel";
+
+"onboarding_welcome_first_subtitle" = "Könyvjelzőzz érdekes helyeket, foglalj szállásokat, számíts ki útvonalakat offline";
+
+"onboarding_guide_direct_download_title" = "Az útmutató készen áll a letöltésre";
+
+"onboarding_guide_direct_download_subtitle" = "Jelölve lesz a térképen és offline fog működni";
+
+"onboarding_guide_direct_download_button" = "Letöltés";
+
+"onboarding_bydeeplink_guide_title" = "Használatra kész útmutatók a MAPS.ME-ben";
+
+"onboarding_bydeeplink_guide_subtitle" = "A legjobb meglátogatandó helyeket a térkép fényképekkel és leírásokkal jelöli. Offline munka.";
+
+"whats_new_auto_update_bydeeplink_title" = "Mielőtt továbblépnél az útmutatókhoz…";
+
+"whats_new_auto_update_bydeeplink_message" = "Frissítsd a térképeket, hogy az objektumok információi naprakészek legyenek!";
+
+"whats_new_auto_update_and_proceed_button_size" = "Frissítés (%s) és folytatás";
+
+"whatsnew_toll_unpaved_title" = "Autó útvonalak elrendezése minden úttípus figyelembe vételével";
+
+"whatsnew_toll_unpaved_message" = "Kitérők választása fizetős utak, földutak és kompátvelők figyelembe vételével";
+
+"whatsnew_new_catalogue_title" = "Frissített katalógus oldalak";
+
+"whatsnew_new_catalogue_message" = "Részletes információkat adtunk hozzá a partner útmutatókhoz, hogy az útvonal kiválasztását könnyűvé és kényelmessé tegyük";
+
+"purchase_please_wait_toast" = "Kérjük, ne hagyd el ezt a képernyőt a vásárlás befejezése előtt";
+
+"trip_start" = "Gyerünk";
+
+"pick_destination" = "Cél";
+
+"follow_my_position" = "Középre";
+
+"search_results" = "Keresési eredmények";
+
+"then_turn" = "Utána";
+
+"redirect_route_alert" = "Szeretnél újratervezni egy útvonalat?";
+
+"redirect_route_yes" = "Igen";
+
+"redirect_route_no" = "Nem";
+
+"trip_finished" = "Megérkeztél!";
+
+"keyboard_availability_alert" = "A billentyűzet nem elérhető vezetés közben";
+
+"dialog_routing_change_start_carplay" = "Nem lehet útvonalat tervezni a jelenlegi helyedről";
+
+"dialog_routing_change_end_carplay" = "Nem lehet útvonalat tervezni a célodhoz. Kérjük válassz egy másik pontot";
+
+"dialog_routing_check_gps_carplay" = "Nincs GPS-jel. Kérjük menj egy nyílt területre";
+
+"dialog_routing_unable_locate_route_carplay" = "Nem lehet útvonalat tervezni. Kérjük határozz meg más útvonal lehetőségeket";
+
+"dialog_routing_download_files_carplay" = "Útvonal létrehozásához töltsd le a hiányzó térképeket az eszközre";
+
+"dialog_routing_system_error_carplay" = "Hiba történt. Kérjük indítsd újra az alkalmazást";
+
+"dialog_routing_rebuild_from_current_location_carplay" = "Az útvonal újra lesz tervezve a jelenlegi helyzetedről";
+
+"dialog_routing_rebuild_for_vehicle_carplay" = "Az útvonal módosítva lesz egy autó számára";
+
+"ok" = "Oké";
+
+"vezet_taxi" = "Vezet";
+
+"booking_button_toolbar" = "Válassz egy hotelt a térképeb";
+
+"popup_booking_download_guides_title" = "Foglaltál egy hotelben?";
+
+"popup_booking_download_guides_message" = "Tervezd meg az útvonaladat a naprakész útikönyvekkel a MAPS.ME-től";
+
+"popup_mwm_download_guides_title" = "Offline városi útikönyvek";
+
+"popup_mwm_download_guides_cta" = "Válassz egyet";
+
+"popup_mwm_download_guides_cta_1" = "Vess rá egy pillantást";
+
+"gallery_pp_download_guides_offline_title" = "Tervezd meg a nyaralásodat MAPS.ME-vel!";
+
+"gallery_pp_download_guides_offline_subtitle" = "Ne mulassz el semmit az útikönyvekkel, amiket tapasztalt utazók készítettek";
+
+"gallery_pp_download_guides_offline_cta" = "Kapcsold be az internetet";
+
+"gallery_pp_download_guides_title" = "Útikönyvek";
+
+"native_screen_subscription_title" = "Korlátlan hozzáférés 2000+ utazási útikönyvhöz!";
+
+"native_screen_subscription_message" = "Egy emlékezetes nyaralás, bármivel és bárkivel is utazol";
+
+"annual_subscription_title" = "Éves";
+
+"montly_subscription_title" = "Havi";
+
+"annual_subscription_message" = "12 hónap korlátlan hozzáférés";
+
+"montly_subscription_message" = "1 hónap korlátlan hozzáférés";
+
+"annual_save_component" = "- %d%";
+
+"subscription_success_dialog_title" = "Köszönjük az előfizetést!";
+
+"subscription_success_dialog_message" = "Most már korlátlan hozzáférésed van a teljes útikönyv katalógushoz";
+
+"renewal_screen_title" = "Az előfizetésed lejárt";
+
+"renewal_screen_message" = "Minden, az előfizetéssel letöltött útikönyv törölve lesz. Szeretnéd folytatni az előfizetést és megtartani őket?";
+
+"renewal_screen_button_restore" = "Igen, megújítás";
+
+"renewal_screen_button_cancel" = "Nem, útikönyvek törlése";
+
+"subscription_error_ping_title" = "Vásárlás sikertelen";
+
+"subscription_error_message" = "A szolgáltatás jelenleg nem elérhető a régiódban. Kérjük próbálja újra később";
+
+"subscription_error_button" = "Értem";
+
+"timeout_error_title" = "Hoppá, lejárt az idő!";
+
+"timeout_error_message" = "A szervereink nem válaszolnak. Kérjük ellenírizd az internetkapcsolatot és próbáld újra.";
+
+"per_month" = "/hó";
+
+"per_year" = "/év";
+
+"buy_btn_for_subscription" = "Korlátlan hozzáférés %s-től";
+
+"buy_btn_for_subscription_1" = "Az ÖSSZES útikönyv megvásárlása %s-ért";
+
+"buy_btn_for_subscription_ios_only_mo" = "Korlátlan hozzáférés %s/hó-ért";
+
+"buy_btn_for_subscription_ios_only_year" = "Korlátlan hozzáférés %s/év-ért";
+
+"subscription_terms_guides" = "A fizetség az iTunes fiókodat fogja megterhelni a fizetés megerősítése után. Az előfizetés automatikusan meg fog újulni, hacsak az automatikus megújítás ki nem lesz kapcsolva legalább 24 órával a jelenlegi időszak vége előtt. A fiókod meg lesz terhelve a megújítási tervednek megfelelően, 24 órával a jelenlegi időszak vége előtt. Kezelheted vagy bármikor kikapcsolhatod a vásárlásod automatikus megújítás funkcióját az Apple ID fiókbeállításaidban Az előfizetéssel letöltött útikönyveket azok lejárati idejéig használhatod. Harminc nappal az előfizetés lejárta után a könyvjelzőkkel ellátott útikönyvek automatikusan törölve lesznek.";
+
+"subscription_terms" = "A vásárlás megerősítésekor az összeg az iTunes számládra lesz terhelve. Az előfizetés automatikusan megújul, ha csak az automatikus megújítást 24 órával a jelenlegi időszak vége előtt ki nem kapcsolod. A számlád az előfizetésednek megfelelően a jelenlegi időszak lejárta előtti 24 órában lesz megterhelve. Az automatikus megújítást az Apple ID fiókod beállításaidban az előfizetés bármely szakaszában kikapcsolhatod.";
+
+"whatsnew_carplay_title" = "MAPS.ME autós navigáció CarPlayben!";
+
+"whatsnew_carplay_message" = "Könyvjelzők, keresés, traffipax és útvonalválasztási lehetőség offline is elérhető";
+
+"whatsnew_subscription_title" = "Az egész világ az előfizetésed által!";
+
+"whatsnew_subscription_message" = "A korlátlan hozzáférés az útikönyvkatalógushoz sokkal gazdaságosabb, mint az egyszeri vásárlás";
+
+"whatsnew_carnavi_fixes_for_android_title" = "Navigációs frissítés";
+
+"whatsnew_carnavi_fixes_for_android_message" = "Fejlesztettük az útvonaltervezést olyan pontokhoz, melyek távol esnek az utaktól";
+
+"avoid_unpaved_carplay_1" = "Nem földút";
+
+"avoid_unpaved_carplay_2" = "Földút kerülése";
+
+"avoid_ferry_carplay_1" = "Komp nélkül";
+
+"avoid_ferry_carplay_2" = "Kompok kerülése";
+
+"avoid_tolls_carplay_1" = "Nincs útdíj";
+
+"avoid_tolls_carplay_2" = "Útdíj kerülése";
+
+"speedcams_alert_title_carplay_1" = "Traffipaxok";
+
+"speedcams_alert_title_carplay_2" = "Sebességjelzés";
+
+"download_map_carplay" = "Kérjük, töltsd le a térképeket a MAPS.ME alkalmazásban az eszközödre";
+
+"carplay_roundabout_exit" = "%s kijárat";
+
+/* max. 10 symbols, both iOS and Android */
+"sort" = "Rendezd…";
+
+/* Android, title, max 20-22 symbols */
+"sort_bookmarks" = "Könyvelzők rendezése";
+
+/* iOS */
+"sort_default" = "Alapértelmezés szerint";
+
+"sort_type" = "Típus szerint";
+
+"sort_distance" = "Távolság szerint";
+
+"sort_date" = "Dátum szerint";
+
+/* Android */
+"by_default" = "Alapértelmezés szerint";
+
+/* Android */
+"by_type" = "Típus szerint";
+
+/* Android */
+"by_distance" = "Távolság szerint";
+
+/* Android */
+"by_date" = "Dátum szerint";
+
+"week_ago_sorttype" = "Egy hete";
+
+"month_ago_sorttype" = "Egy hónapja";
+
+"moremonth_ago_sorttype" = "Több mint egy hónapja";
+
+"moreyear_ago_sorttype" = "Több mint egy éve";
+
+"near_me_sorttype" = "Hozzám közel";
+
+"others_sorttype" = "Más";
+
+"food_places" = "Étel";
+
+"tourist_places" = "Látnivalók";
+
+"museums" = "Múzeumok";
+
+"parks" = "Parkok";
+
+"swim_places" = "Úszás";
+
+"mountains" = "Hegyek";
+
+"animals" = "Állatok";
+
+"hotels" = "Hotelek";
+
+"buildings" = "Épületek";
+
+"money" = "Pénz";
+
+"shops" = "Üzletek";
+
+"parkings" = "Parkolók";
+
+"fuel_places" = "Benzinkutak";
+
+"water" = "Víz";
+
+"medicine" = "Gyógyszer";
+
+"search_in_the_list" = "Keresés a listában";
+
+"view_on_map_bookmarks" = "Térképen";
+
+"more_bookmarks" = "Továbbiak…";
+
+"no_items_found" = "Nincs találat";
+
+/* Android, max 18 symbols */
+"bookmarks_edit_list" = "Lista szerkesztése";
+
+/* Android, max 18 symbols */
+"bookmarks_delete_list" = "Lista törlése";
+
+"whatsnew_bookmarks_search_sort_title" = "A könyvjelzők rendezése kényelmes utazást tesz lehetővé";
+
+"whatsnew_bookmarks_search_sort_message" = "Rendezze kedvenc helyeit kategóriánként, helyenként és időrendbe, és találja meg őket gyorsan a nevük alapján";
+
+"popup_subscription_success_map_title" = "Hohó, előfizettél!";
+
+"popup_subscription_success_map_message" = "Most már felfedezheted a legjobb turisztikai dolgokat a MAPS.ME katalógusban";
+
+"popup_subscription_success_map_start_button" = "Böngészés megkezdése";
+
+"popup_subscription_success_map_not_now_button" = "Ne most";
+
+"religious_places" = "Vallási helyek";
+
+"subscription_terms_android" = "Amikor megerősíted a vásárlást, a fizetség a Google Play fiókodat fogja megterhelni. Az előfizetés automatikusan megújul, hacsak az automatikus megújulás funkció ki nem lesz kapcsolva legalább 24 órával a jelenlegi időszak vége előtt. A fiókod a megújítási terved értelmében a jelenlegi időszak vége előtt 24 órán belül meg lesz terhelve. Az automatikus megújítás funkciót kezelheted vagy kikapcsolhatod vásárlás után a Fiókbeállításokban. Az előfizetéssel letöltött útikönyveket csak annak lejárati idejéig használhatod. A letöltött útikönyvek 30 nappal az előfizetés lejárati dátuma után automatikusan törölve lesznek.";
+
+"select_list" = "Lista kiválasztása";
+
+"pp_discovery_place_related_header" = "Ez a hely az útikönyv katalógusban van";
+
+"pp_discovery_place_related_header_1" = "Ez a hely kiemelt az útikönyvben";
+
+"pp_discovery_place_related_cta_button" = "Megnézés";
+
+"pp_discovery_place_related_tag_header" = "„%s” címkéjű útikönyvek";
+
+"pp_discovery_place_related_tag_header_1" = "Tetszhet még";
+
+"buy_btn_for_subscription_version_2" = "Az ÖSSZES útikönyv csak %s/hó";
+
+"buy_btn_for_subscription_version_3" = "A teljes katalógus %s/hó";
+
+"buy_btn_for_subscription_ios_only_mo_version_2" = "Hozzáférés a katalógushoz %s/hó";
+
+"buy_btn_for_subscription_ios_only_year_version_2" = "Hozzáférés a katalógushoz %s/év";
+
+"subscription_screen_native_title_version_2" = "Férj hozzá az útikönyvekhez könyvjelzőkkel!";
+
+"subscription_screen_native_message_version_2" = "Állj készen bármilyen utazásra 600+ városba és 100+ országba";
+
+"catalog_no_internet_title" = "Nincs internetkapcsolat";
+
+"catalog_no_internet_button" = "Próbáld újra";
+
+"whatsnew_map_updates_title" = "Reaktív térkép frissítések";
+
+"whatsnew_map_updates_message" = "Mostantól kétszer olyan gyorsan frissítjük az adatokat";
+
+"new_onboarding_button" = "Következő";
+
+"new_onboarding_button_2" = "Kezdés";
+
+"new_onboarding_step1_header" = "MAPS.ME";
+
+"new_onboarding_step1_header_2" = "A mindenes útitárs";
+
+"new_onboarding_step2_header" = "Álmodd meg és tervezd";
+
+"new_onboarding_step2_message" = "70+ millió látnivaló, kész útmutatók és hotelfoglalás egyenesen a térképről – készen állsz az indulásra?";
+
+"new_onboarding_step3_message" = "Maradj mindig az úton az országok részletes térképeivel – minden offline működik!";
+
+"new_onboarding_step4_header" = "Oszd meg tapasztalataid";
+
+"new_onboarding_step4_message" = "Helyezz könyvjelzőket a kedvenc helyekre és küldd tovább barátaidnak";
+
+"new_onboarding_step5.1_header" = "Még egy dolog kezdés előtt…";
+
+"new_onboarding_step5.1_message" = "Ne felejtsd el megnézni az új útmutató katalógusunkat és találd meg a következő utazásodhoz az offline útmutatókat!";
+
+"new_onboarding_step5.1_button" = "Katalógus megnyitása";
+
+"new_onboarding_step5.2_message" = "Az útmutató katalógusra MAPS.ME való előfizetés kiváló választás. Szerezz hozzáférést a városi és szabadtéri útmutatókhoz világszerte!";
+
+"new_onboarding_step5.2_button" = "Nézd meg a feltételeinket";
+
+"new_onboarding_step5.3_message" = "Nézd meg a szabadon válaztható városi és szabadtéri túrák ingyenes példáit a MAPS.ME-ről!";
+
+"new_onboarding_step5.3_button" = "Ingyenes letöltés";
+
+"new_onboarding_additional_steps_later_button" = "Később";
+
+"all_pass_subscription_header" = "ELŐFIZETÉS A KATALÓGUSRA";
+
+/* do not translate */
+"all_pass_subscription_subheader" = "City + Outdoor Pass";
+
+/* \n - for a break between lines. Max. 15 characters per 1 line. */
+"all_pass_subscription_message_title" = "30000+\nútmutatók\n& sávok";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle" = "<b>Korlátlan letöltése</b> a városi és szabadtéri útvonalaknak <b>offline módhoz</b>";
+
+/* \n - for a break between lines. Max. 17 characters per 1 line. */
+"all_pass_subscription_message_title_2" = "Interaktív\nemelkedési profil";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle_2" = "Minden nyomvonal<b>tartalmazza a magassági és alapinfót az útvonalról</b>";
+
+/* \n - for a break between lines. Max. 15 characters per 1 line. */
+"all_pass_subscription_message_title_3" = "Könyvjelzők,\nfotók és\njavaslatok";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle_3" = "<b>Tudjon meg mindent az útvonalról</b> amit megtesz";
+
+/* do not translate */
+"sightseeing_subscription_header_sightseeing" = "City Pass";
+
+"sightseeing_subscription_header_subscription" = "Útmutató előfizetés";
+
+"sightseeing_subscription_message" = "700+ város és 100+ ország";
+
+"sightseeing_subscription_message_2" = "Elérhető offline";
+
+"sightseeing_subscription_message_3" = "Fényépek és séta útvonalak";
+
+"subscription_success_dialog_title_sightseeing_pass" = "Köszönjük előfizetését!";
+
+"subscription_success_dialog_message_sightseeing_pass" = "Így minden városnéző útmutatóhoz hozzáférsz a katalógusból";
+
+"downloader_main_gallery_header" = "Térképek és útmutatók";
+
+"downloader_main_gallery_message" = "Ebben a részben nem csak térképeket tölthetsz le, de a következő utazásod útmutatóit is megtekintheted";
+
+"downloader_main_1_element_gallery_header" = "Minden útmutató";
+
+"downloader_main_1_element_gallery_message" = "100+ országban";
+
+"downloader_country_1_element_gallery_header" = "%s útmutató";
+
+"downloader_country_no_guides_gallery_header" = "Ebben az országban nincs elérhető útmutatónk még";
+
+"downloader_country_no_guides_gallery_message" = "Más offline útmutatókat is megnézhetsz 100+ országban városnézési és szabadtéri programokhoz";
+
+"dialog_pedestrian_route_is_long" = "A gyalogos útvonal az utazás indulási pontjáig túl hosszú";
+
+"whatsnew_outdoor_guides_title" = "Hozzáadásra került 15 000+ szabadtéri útvonal!";
+
+"whatsnew_outdoor_guides_message" = "Az Outdooractive téli és nyári utazásai várnak rád a katalógusban!";
+
+"whatsnew_guides_galleries_title" = "Tervezd meg a következő utad a MAPS.ME-vel";
+
+"whatsnew_guides_galleries_message" = "Megtalálhatod az ajánlott útmutatókat a népszerű túristavárosok és látnivalók helyoldalain";
+
+"new_onboarding_step3_header" = "Éld át";
+
+"all_pass_screen_best_value" = "Legjobb ajánlat";
+
+"buy_btn_for_subscription_3" = "A teljes katalógus %s/év";
+
+"transit_not_found" = "Metró navigáció ebben a régióban még nem érhető el";
+
+"dialog_pedestrian_route_is_long_header" = "Metró útvonal nem található";
+
+"dialog_pedestrian_route_is_long_message" = "Válasszon indulási vagy végpontot közelebb a metróállomáshoz";
+
+/* Failed planning SUBWAY route message in navigation view */
+"routing_planning_error_subway_special" = "A metró útvonaltervezése sikertelen";
+
+"whatsnew_isolines_title" = "Újdonság a szabadtérhez: offline topográfiai réteg!";
+
+/* as less symbols as possible */
+"whatsnew_isolines_message" = "Legyen magabiztos a hegyvidéki területen. Csak kapcsolja be a réteget a bal felső sarokban";
+
+"button_layer_isolines" = "Terep";
+
+"tips_map_layers_title_countour" = "Újdonság a MAPS.ME-n: offline topográfiai réteg!";
+
+"tips_map_layers_message_countour" = "Tervezze meg és élvezze a természetjáró kirándulásait, és tudjon meg mindent a környékről";
+
+"isolines_activation_error_dialog" = "A topográfiai réteg aktiválásához és használatához kérjük frissítse vagy töltse le az adott terület térképét";
+
+"isolines_location_error_dialog" = "Ezen a területen a topográfiai réteg még nem elérhető";
+
+"elevation_profile_diff_level" = "Nehézségi szint";
+
+"elevation_profile_diff_level_easy" = "Könnyű";
+
+"elevation_profile_diff_level_moderate" = "Mérsékelt";
+
+"elevation_profile_diff_level_hard" = "Nehéz";
+
+"elevation_profile_ascent" = "Felemelkedés";
+
+"elevation_profile_descent" = "Leereszkedés";
+
+"elevation_profile_minaltitude" = "Min. magasság";
+
+"elevation_profile_maxaltitude" = "Max. magasság";
+
+"elevation_profile_m" = "m";
+
+"elevation_profile_difficulty" = "Nehézség";
+
+"elevation_profile_distance" = "Táv.:";
+
+"elevation_profile_km" = "km";
+
+"elevation_profile_time" = "Idő";
+
+"elevation_profile_hours" = "ó.";
+
+"elevation_profile_minutes" = "p.";
+
+/* hide the full screen banner and continue working with the app */
+"hide_screen_map_update" = "Elrejt és folytat";
+
+"view_on_map_downloaded_error" = "Ezt az útmutatót törölték erről az eszközről";
+
+"subscription" = "Feliratkozás";
+
+"freenow_taxi_title" = "FREE NOW";
+
+"tinkoff_allairlines_map_downloader_title" = "Карта Тинькофф All Airlines. 3000 миль в подарок";
+
+"tinkoff_allairlines_map_downloader_cta_button" = "Оформить карту";
+
+"tinkoff_insurance_map_downloader_title" = "Полис Тинькофф со скидкой! Подходит для любых виз.";
+
+"tinkoff_insurance_map_downloader_cta_button" = "Промокод";
+
+"mts_map_downloader_title" = "Забугорище: интернет и звонки за границей как дома";
+
+"mts_map_downloader_cta_button" = "Подключить";
+
+"skyeng_map_downloader_title" = "Дарим 4 бесплатных урока английского от Skyeng.";
+
+"skyeng_map_downloader_cta_button" = "Подробнее";
+
 
 /**********  Partners  **********/
 
@@ -2709,9 +3312,9 @@
 
 "type.aeroway.terminal" = "aeroway-terminal";
 
-"type.amenity" = "amenity";
+"type.amenity" = "Infrastruktúra";
 
-"type.amenity.arts_centre" = "amenity-arts_centre";
+"type.amenity.arts_centre" = "Művészeti központ";
 
 "type.amenity.atm" = "Pénzautomata";
 
@@ -2775,7 +3378,7 @@
 
 "type.amenity.fire_station" = "Tűzoltóság";
 
-"type.amenity.food_court" = "amenity-food_court";
+"type.amenity.food_court" = "Food court";
 
 "type.amenity.fountain" = "Szökőkút";
 
@@ -2811,21 +3414,23 @@
 
 "type.amenity.parking.multi.storey" = "Parkoló";
 
-"type.amenity.parking.multi.storey.fee" = "Parkoló";
-
 "type.amenity.parking.no.access" = "Parkoló";
 
 "type.amenity.parking.park_and_ride" = "Parkoló";
 
 "type.amenity.parking.permissive" = "Parkoló";
 
-"type.amenity.parking.permissive.fee" = "Parkoló";
-
 "type.amenity.parking.private" = "Parkoló";
 
 "type.amenity.parking.underground" = "Parkoló";
 
-"type.amenity.parking.underground.fee" = "Parkoló";
+"type.amenity.parking_space" = "Parkolóhely";
+
+"type.amenity.parking_space.permissive" = "Parkolóhely";
+
+"type.amenity.parking_space.private" = "Parkolóhely";
+
+"type.amenity.parking_space.underground" = "Parkolóhely";
 
 "type.amenity.payment_terminal" = "Fizető terminál";
 
@@ -2853,7 +3458,7 @@
 
 "type.amenity.post_office" = "Posta";
 
-"type.amenity.prison" = "amenity-prison";
+"type.amenity.prison" = "Prison";
 
 "type.amenity.pub" = "Kocsma";
 
@@ -2883,7 +3488,7 @@
 
 "type.amenity.university" = "Egyetem";
 
-"type.amenity.vending_machine" = "amenity-vending_machine";
+"type.amenity.vending_machine" = "Vending machine";
 
 "type.amenity.vending_machine.cigarettes" = "Cigarettaautomata";
 
@@ -2891,7 +3496,7 @@
 
 "type.amenity.vending_machine.parking_tickets" = "Parkolóautomata";
 
-"type.amenity.vending_machine.public_transport_tickets" = "amenity-vending_machine-public_transport_tickets";
+"type.amenity.vending_machine.public_transport_tickets" = "Automata jegykiadó tömegközlekedési eszközökhöz";
 
 "type.amenity.veterinary" = "Állatorvos";
 
@@ -2901,7 +3506,7 @@
 
 "type.amenity.water_point" = "Vízvételi pont";
 
-"type.barrier" = "barrier";
+"type.barrier" = "Barrier";
 
 "type.barrier.block" = "Blokk";
 
@@ -2909,29 +3514,29 @@
 
 "type.barrier.border_control" = "Határállomás";
 
-"type.barrier.city_wall" = "barrier-city_wall";
+"type.barrier.city_wall" = "City wall";
 
-"type.barrier.cycle_barrier" = "barrier-cycle_barrier";
+"type.barrier.cycle_barrier" = "Cycle barrier";
 
 "type.barrier.entrance" = "Bejárat";
 
-"type.barrier.fence" = "barrier-fence";
+"type.barrier.fence" = "Fence";
 
 "type.barrier.gate" = "Kapu";
 
-"type.barrier.hedge" = "barrier-hedge";
+"type.barrier.hedge" = "Hedge";
 
 "type.barrier.lift_gate" = "Sorompó";
 
-"type.barrier.retaining_wall" = "barrier-retaining_wall";
+"type.barrier.retaining_wall" = "Retaining wall";
 
 "type.barrier.stile" = "Átjáró";
 
 "type.barrier.toll_booth" = "Díjfizető kapu";
 
-"type.barrier.wall" = "barrier-wall";
+"type.barrier.wall" = "Wall";
 
-"type.boundary" = "boundary";
+"type.boundary" = "Boundary";
 
 "type.boundary.administrative" = "boundary-administrative";
 
@@ -2984,12 +3589,6 @@
 "type.building.has_parts" = "Épület";
 
 "type.building.train_station" = "Vonatmegálló";
-
-"type.communication" = "communication";
-
-"type.communication.line" = "communication-line";
-
-"type.communication.line.underground" = "communication-line-underground";
 
 "type.craft" = "craft";
 
@@ -3207,7 +3806,7 @@
 
 "type.highway.bus_stop" = "Buszmegálló";
 
-"type.highway.construction" = "highway-construction";
+"type.highway.construction" = "Útépítés";
 
 "type.highway.cycleway" = "highway-cycleway";
 
@@ -3239,7 +3838,7 @@
 
 "type.highway.footway.tunnel" = "Ösvény";
 
-"type.highway.ford" = "highway-ford";
+"type.highway.ford" = "Ford";
 
 "type.highway.living_street" = "Utca";
 
@@ -3293,8 +3892,6 @@
 
 "type.highway.pedestrian.tunnel" = "Utca";
 
-"type.highway.platform" = "highway-platform";
-
 "type.highway.primary" = "Utca";
 
 "type.highway.primary.bridge" = "Utca";
@@ -3347,12 +3944,6 @@
 
 "type.highway.service.driveway" = "Utca";
 
-"type.highway.service.driveway.area" = "Utca";
-
-"type.highway.service.driveway.bridge" = "Utca";
-
-"type.highway.service.driveway.tunnel" = "Utca";
-
 "type.highway.service.parking_aisle" = "Utca";
 
 "type.highway.service.tunnel" = "Utca";
@@ -3391,21 +3982,9 @@
 
 "type.highway.track.grade3" = "Utca";
 
-"type.highway.track.grade3.no.access" = "Utca";
-
-"type.highway.track.grade3.permissive" = "Utca";
-
 "type.highway.track.grade4" = "Utca";
 
-"type.highway.track.grade4.no.access" = "Utca";
-
-"type.highway.track.grade4.permissive" = "Utca";
-
 "type.highway.track.grade5" = "Utca";
-
-"type.highway.track.grade5.no.access" = "Utca";
-
-"type.highway.track.grade5.permissive" = "Utca";
 
 "type.highway.track.no.access" = "Utca";
 
@@ -3443,7 +4022,7 @@
 
 "type.historic.archaeological_site" = "Ásatás";
 
-"type.historic.battlefield" = "historic-battlefield";
+"type.historic.battlefield" = "Battlefield";
 
 "type.historic.boundary_stone" = "historic-boundary_stone";
 
@@ -3513,27 +4092,29 @@
 
 "type.landuse" = "landuse";
 
-"type.landuse.allotments" = "landuse-allotments";
+"type.landuse.allotments" = "Allotments";
 
 "type.landuse.basin" = "Víz";
 
-"type.landuse.brownfield" = "landuse-brownfield";
+"type.landuse.brownfield" = "Brownfield";
 
 "type.landuse.cemetery" = "Temető";
 
 "type.landuse.cemetery.christian" = "Temető";
 
+"type.landuse.churchyard" = "Templomtér";
+
 "type.landuse.commercial" = "landuse-commercial";
 
-"type.landuse.construction" = "landuse-construction";
+"type.landuse.construction" = "Construction";
 
-"type.landuse.farm" = "landuse-farm";
+"type.landuse.farm" = "Farm";
 
-"type.landuse.farmland" = "landuse-farmland";
+"type.landuse.farmland" = "Termőföld";
 
-"type.landuse.farmyard" = "landuse-farmyard";
+"type.landuse.farmyard" = "Farmyard";
 
-"type.landuse.field" = "landuse-field";
+"type.landuse.field" = "Field";
 
 "type.landuse.forest" = "Erdő";
 
@@ -3543,27 +4124,27 @@
 
 "type.landuse.forest.mixed" = "Erdő";
 
-"type.landuse.garages" = "landuse-garages";
+"type.landuse.garages" = "Garages";
 
-"type.landuse.grass" = "landuse-grass";
+"type.landuse.grass" = "Gyep";
 
 "type.landuse.greenfield" = "landuse-greenfield";
 
 "type.landuse.greenhouse_horticulture" = "landuse-greenhouse_horticulture";
 
-"type.landuse.industrial" = "landuse-industrial";
+"type.landuse.industrial" = "Industrial land";
 
-"type.landuse.landfill" = "landuse-landfill";
+"type.landuse.landfill" = "Hulladéklerakó";
 
-"type.landuse.meadow" = "landuse-meadow";
+"type.landuse.meadow" = "Meadow";
 
-"type.landuse.military" = "landuse-military";
+"type.landuse.military" = "Military area";
 
-"type.landuse.orchard" = "landuse-orchard";
+"type.landuse.orchard" = "Orchard";
 
-"type.landuse.quarry" = "landuse-quarry";
+"type.landuse.quarry" = "Quarry";
 
-"type.landuse.railway" = "landuse-railway";
+"type.landuse.railway" = "Vasúti helyiségek";
 
 "type.landuse.recreation_ground" = "landuse-recreation_ground";
 
@@ -3571,25 +4152,19 @@
 
 "type.landuse.residential" = "landuse-residential";
 
-"type.landuse.residential.rural" = "landuse-residential-rural";
-
-"type.landuse.residential.urban" = "landuse-residential-urban";
-
 "type.landuse.retail" = "landuse-retail";
 
 "type.landuse.salt_pond" = "landuse-salt_pond";
 
 "type.landuse.village_green" = "landuse-village_green";
 
-"type.landuse.vineyard" = "landuse-vineyard";
+"type.landuse.vineyard" = "Vineyard";
 
 "type.leisure" = "leisure";
 
 "type.leisure.common" = "leisure-common";
 
-"type.leisure.dog_park" = "Dog area";
-
-"type.leisure.dog_park.tennis" = "Dog area";
+"type.leisure.dog_park" = "Kutyás terület";
 
 "type.leisure.fitness_centre" = "Fitnesz-terem";
 
@@ -3599,11 +4174,11 @@
 
 "type.leisure.golf_course" = "Golfpálya";
 
-"type.leisure.ice_rink" = "leisure-ice_rink";
+"type.leisure.ice_rink" = "Ice rink";
 
-"type.leisure.landscape_reserve" = "leisure-landscape_reserve";
+"type.leisure.landscape_reserve" = "Landscape reserve";
 
-"type.leisure.marina" = "leisure-marina";
+"type.leisure.marina" = "Marina";
 
 "type.leisure.nature_reserve" = "Védett terület";
 
@@ -3617,17 +4192,9 @@
 
 "type.leisure.pitch" = "Sportpálya";
 
-"type.leisure.pitch.tennis" = "Sportpálya";
-
 "type.leisure.playground" = "Játszótér";
 
-"type.leisure.playground.tennis" = "Játszótér";
-
-"type.leisure.playing_fields" = "leisure-playing_fields";
-
-"type.leisure.playing_fields.tennis" = "leisure-playing_fields-tennis";
-
-"type.leisure.recreation_ground" = "leisure-recreation_ground";
+"type.leisure.recreation_ground" = "Recreation ground";
 
 "type.leisure.sauna" = "Szauna";
 
@@ -3689,25 +4256,13 @@
 
 "type.mapswithme.grid" = "mapswithme-grid";
 
-"type.marking" = "marking";
-
-"type.marking.sport" = "marking-sport";
-
-"type.marking.sport.black" = "marking-sport-black";
-
-"type.marking.sport.blue" = "marking-sport-blue";
-
-"type.marking.sport.red" = "marking-sport-red";
-
-"type.marking.sport.white" = "marking-sport-white";
-
 "type.military" = "military";
 
 "type.military.bunker" = "Bunker";
 
 "type.natural" = "natural";
 
-"type.natural.bare_rock" = "natural-bare_rock";
+"type.natural.bare_rock" = "Bare rock";
 
 "type.natural.bay" = "Öböl";
 
@@ -3715,63 +4270,57 @@
 
 "type.natural.cape" = "Hegytető";
 
-"type.natural.cave_entrance" = "Barlangbejárat";
+"type.natural.cave_entrance" = "Barlang";
 
-"type.natural.cliff" = "natural-cliff";
+"type.natural.cliff" = "Cliff";
 
-"type.natural.coastline" = "natural-coastline";
+"type.natural.coastline" = "Coastline";
 
 "type.natural.geyser" = "Gejzír";
 
 "type.natural.glacier" = "Gleccser";
 
-"type.natural.grassland" = "natural-grassland";
+"type.natural.grassland" = "Mező";
 
-"type.natural.heath" = "natural-heath";
+"type.natural.heath" = "Heath";
+
+"type.natural.hot_spring" = "Hot spring";
 
 "type.natural.lake" = "Tó";
 
 "type.natural.land" = "natural-land";
 
-"type.natural.meadow" = "natural-meadow";
+"type.natural.meadow" = "Meadow";
 
-"type.natural.orchard" = "natural-orchard";
+"type.natural.orchard" = "Orchard";
 
 "type.natural.peak" = "Csúcs";
 
 "type.natural.pond" = "Tavacska";
 
-"type.natural.rock" = "natural-rock";
+"type.natural.rock" = "Rock";
 
-"type.natural.salt_pond" = "natural-salt_pond";
+"type.natural.salt_pond" = "Salt pond";
 
-"type.natural.scrub" = "natural-scrub";
+"type.natural.scrub" = "Cserjés";
 
 "type.natural.spring" = "Forrás";
 
 "type.natural.tree" = "Fa";
 
-"type.natural.tree_row" = "natural-tree_row";
+"type.natural.tree_row" = "Tree row";
 
-"type.natural.vineyard" = "natural-vineyard";
+"type.natural.vineyard" = "Vineyard";
 
 "type.natural.volcano" = "Tűzhányó";
 
 "type.natural.water" = "Víz";
 
-"type.natural.wetland" = "natural-wetland";
+"type.natural.wetland" = "Vizes terület";
 
-"type.natural.wetland.bog" = "natural-wetland-bog";
+"type.natural.wetland.bog" = "Wetland";
 
-"type.natural.wetland.marsh" = "natural-wetland-marsh";
-
-"type.natural.wood" = "Erdő";
-
-"type.natural.wood.coniferous" = "Erdő";
-
-"type.natural.wood.deciduous" = "Erdő";
-
-"type.natural.wood.mixed" = "Erdő";
+"type.natural.wetland.marsh" = "Wetland";
 
 "type.noexit" = "noexit";
 
@@ -3867,7 +4416,7 @@
 
 "type.place.locality" = "Falu";
 
-"type.place.neighbourhood" = "place-neighbourhood";
+"type.place.neighbourhood" = "Neighbourhood";
 
 "type.place.ocean" = "Óceán";
 
@@ -3890,12 +4439,6 @@
 "type.power" = "power";
 
 "type.power.generator" = "power-generator";
-
-"type.power.generator.hydro" = "power-generator-hydro";
-
-"type.power.generator.photovoltaic" = "power-generator-photovoltaic";
-
-"type.power.generator.wind" = "power-generator-wind";
 
 "type.power.line" = "power-line";
 
@@ -3953,7 +4496,7 @@
 
 "type.railway.incline.tunnel" = "railway-incline-tunnel";
 
-"type.railway.level_crossing" = "Útátjáró";
+"type.railway.level_crossing" = "Vasúti átjáró";
 
 "type.railway.light_rail" = "railway-light_rail";
 
@@ -3961,7 +4504,7 @@
 
 "type.railway.light_rail.tunnel" = "railway-light_rail-tunnel";
 
-"type.railway.monorail" = "railway-monorail";
+"type.railway.monorail" = "Egysínű vasút";
 
 "type.railway.monorail.bridge" = "railway-monorail-bridge";
 
@@ -3983,7 +4526,7 @@
 
 "type.railway.proposed" = "railway-proposed";
 
-"type.railway.rail" = "railway-rail";
+"type.railway.rail" = "Vasút";
 
 "type.railway.rail.bridge" = "railway-rail-bridge";
 
@@ -4093,7 +4636,7 @@
 
 "type.railway.subway.yellow" = "railway-subway-yellow";
 
-"type.railway.subway_entrance" = "Földalatti";
+"type.railway.subway_entrance" = "Földalatti bejárat";
 
 "type.railway.subway_entrance.barcelona" = "Földalatti";
 
@@ -4275,28 +4818,6 @@
 
 "type.sponsored" = "sponsored";
 
-"type.sponsored.banner" = "sponsored-banner";
-
-"type.sponsored.banner.deliveryclub" = "sponsored-banner-deliveryclub";
-
-"type.sponsored.banner.geerbest_de" = "sponsored-banner-geerbest_de";
-
-"type.sponsored.banner.geerbest_fr" = "sponsored-banner-geerbest_fr";
-
-"type.sponsored.banner.geerbest_uk" = "sponsored-banner-geerbest_uk";
-
-"type.sponsored.banner.lamoda_ru" = "sponsored-banner-lamoda_ru";
-
-"type.sponsored.banner.lamoda_ua" = "sponsored-banner-lamoda_ua";
-
-"type.sponsored.banner.raileurope" = "sponsored-banner-raileurope";
-
-"type.sponsored.banner.rentalcars" = "sponsored-banner-rentalcars";
-
-"type.sponsored.banner.tutu" = "sponsored-banner-tutu";
-
-"type.sponsored.banner.viator" = "sponsored-banner-viator";
-
 "type.sponsored.booking" = "sponsored-booking";
 
 "type.sponsored.holiday" = "Christmas or New Year Celebrations";
@@ -4343,8 +4864,6 @@
 
 "type.sponsored.partner9" = "sponsored-partner9";
 
-"type.sponsored.viator" = "sponsored-viator";
-
 "type.sport" = "sport";
 
 "type.sport.american_football" = "sport-american_football";
@@ -4367,7 +4886,7 @@
 
 "type.sport.diving" = "sport-diving";
 
-"type.sport.equestrian" = "Lovassportok";
+"type.sport.equestrian" = "Lovas sportok";
 
 "type.sport.football" = "sport-football";
 
@@ -4389,7 +4908,7 @@
 
 "type.sport.swimming" = "sport-swimming";
 
-"type.sport.tennis" = "sport-tennis";
+"type.sport.tennis" = "Teniszpálya";
 
 "type.tourism" = "tourism";
 
@@ -4501,11 +5020,75 @@
 
 "type.wheelchair" = "wheelchair";
 
-"type.wheelchair.limited" = "wheelchair-limited";
+"type.wheelchair.limited" = "Korlátozottan akadálymentesített";
 
-"type.wheelchair.no" = "wheelchair-no";
+"type.wheelchair.no" = "Nem akadálymentesített";
 
-"type.wheelchair.yes" = "wheelchair-yes";
+"type.wheelchair.yes" = "Teljesen akadálymentesített";
+
+"type.piste_lift" = "piste:lift";
+
+"type.piste_lift.j.bar" = "piste:lift-j-bar";
+
+"type.piste_lift.magic_carpet" = "piste:lift-magic_carpet";
+
+"type.piste_lift.platter" = "piste:lift-platter";
+
+"type.piste_lift.rope_tow" = "piste:lift-rope_tow";
+
+"type.piste_lift.t.bar" = "piste:lift-t-bar";
+
+"type.piste_type" = "piste:type";
+
+"type.piste_type.downhill" = "piste:type-downhill";
+
+"type.piste_type.downhill.advanced" = "piste:type-downhill-advanced";
+
+"type.piste_type.downhill.easy" = "piste:type-downhill-easy";
+
+"type.piste_type.downhill.expert" = "piste:type-downhill-expert";
+
+"type.piste_type.downhill.freeride" = "piste:type-downhill-freeride";
+
+"type.piste_type.downhill.intermediate" = "piste:type-downhill-intermediate";
+
+"type.piste_type.downhill.novice" = "piste:type-downhill-novice";
+
+"type.piste_type.nordic" = "piste:type-nordic";
+
+"type.piste_type.sled" = "piste:type-sled";
+
+"type.building_part" = "Épület";
+
+"type.area_highway.cycleway" = "area:highway-cycleway";
+
+"type.area_highway.footway" = "area:highway-footway";
+
+"type.area_highway.living_street" = "area:highway-living_street";
+
+"type.area_highway.motorway" = "area:highway-motorway";
+
+"type.area_highway.path" = "area:highway-path";
+
+"type.area_highway.pedestrian" = "area:highway-pedestrian";
+
+"type.area_highway.primary" = "area:highway-primary";
+
+"type.area_highway.residential" = "area:highway-residential";
+
+"type.area_highway.secondary" = "area:highway-secondary";
+
+"type.area_highway.service" = "area:highway-service";
+
+"type.area_highway.tertiary" = "area:highway-tertiary";
+
+"type.area_highway.steps" = "area:highway-steps";
+
+"type.area_highway.track" = "area:highway-track";
+
+"type.area_highway.trunk" = "area:highway-trunk";
+
+"type.area_highway.unclassified" = "area:highway-unclassified";
 
 
 /********** Brands **********/

@@ -14,9 +14,9 @@
 #include "platform/platform.hpp"
 #include "platform/platform_tests_support/scoped_mwm.hpp"
 
-#include "coding/file_name_utils.hpp"
-
 #include "base/assert.hpp"
+#include "base/file_name_utils.hpp"
+#include "base/stl_helpers.hpp"
 
 #include <algorithm>
 #include <fstream>
@@ -48,7 +48,7 @@ public:
   }
 
   // TestFeature overrides:
-  std::string ToString() const override { return m_name; }
+  std::string ToDebugString() const override { return DebugPrint(m_names); }
 
 private:
   std::vector<uint32_t> m_types;
@@ -77,7 +77,7 @@ public:
   {
     for (auto const & m : kWikiData)
     {
-      auto const dir = DescriptionsCollectionBuilder::MakePath(m_wikiDir, m.m_url);
+      auto const dir = DescriptionsCollectionBuilder::MakePathForWikipedia(m_wikiDir, m.m_url);
       CHECK(Platform::MkDirRecursively(dir), ());
       for (auto const & d : m.m_pages)
       {
@@ -98,11 +98,11 @@ public:
   void MakeDescriptions() const
   {
     DescriptionsCollectionBuilder b(m_wikiDir, kMwmFile);
-    auto const descriptionList = b.MakeDescriptions<Feature, ForEachFromDatMockAdapt>();
+    auto const descriptionList = b.MakeDescriptions<Feature, ForEachFeatureMockAdapt>();
     auto const  & stat = b.GetStat();
     TEST_EQUAL(GetTestDataPages(), descriptionList.size(), ());
-    TEST_EQUAL(GetTestDataPages(), stat.GetPages(), ());
-    TEST_EQUAL(GetTestDataSize(), stat.GetSize(), ());
+    TEST_EQUAL(GetTestDataPages(), stat.GetNumberOfPages(), ());
+    TEST_EQUAL(GetTestDataSize(), stat.GetTotalSize(), ());
     TEST(CheckLangs(stat.GetLangStatistics()), ());
   }
 
@@ -112,13 +112,13 @@ public:
     {
       std::string const wikiDir = "/wikiDir/";
       std::string const wikiUrl = "http://en.wikipedia.org/wiki/Helsinki_Olympic_Stadium/";
-      auto const answer = DescriptionsCollectionBuilder::MakePath(wikiDir, wikiUrl);
+      auto const answer = DescriptionsCollectionBuilder::MakePathForWikipedia(wikiDir, wikiUrl);
       TEST_EQUAL(trueAnswer, answer, ());
     }
     {
       std::string const wikiDir = "/wikiDir";
       std::string const wikiUrl = "https://en.wikipedia.org/wiki/Helsinki_Olympic_Stadium";
-      auto const answer = DescriptionsCollectionBuilder::MakePath(wikiDir, wikiUrl);
+      auto const answer = DescriptionsCollectionBuilder::MakePathForWikipedia(wikiDir, wikiUrl);
       TEST_EQUAL(trueAnswer, answer, ());
     }
   }
@@ -130,16 +130,18 @@ public:
       CHECK(!kWikiData.empty(), ());
       auto const & first = kWikiData.front();
       StringUtf8Multilang str;
-      auto const size = b.FindPageAndFill(first.m_url, str);
+      auto const path = DescriptionsCollectionBuilder::MakePathForWikipedia(m_wikiDir, first.m_url);
+      auto const size = b.FindPageAndFill(path, str);
       TEST(size, ());
-      TEST_EQUAL(*size, GetPageSize(first.m_pages), ());
+      TEST_EQUAL(*size, GetNumberOfPagesize(first.m_pages), ());
       TEST(CheckLangs(str, first.m_pages), ());
     }
     {
       DescriptionsCollectionBuilder b(m_wikiDir, kMwmFile);
       StringUtf8Multilang str;
       std::string const badUrl = "https://en.wikipedia.org/wiki/Not_exists";
-      auto const size = b.FindPageAndFill(badUrl, str);
+      auto const path = DescriptionsCollectionBuilder::MakePathForWikipedia(m_wikiDir, badUrl);
+      auto const size = b.FindPageAndFill(path, str);
       TEST(!size, ());
     }
   }
@@ -151,13 +153,12 @@ public:
     auto const & first = kWikiData.front();
     std::string const lang = "en";
     auto const langIndex = StringUtf8Multilang::GetLangIndex(lang);
-    auto const path = DescriptionsCollectionBuilder::MakePath(m_wikiDir, first.m_url);
+    auto const path = DescriptionsCollectionBuilder::MakePathForWikipedia(m_wikiDir, first.m_url);
     auto const fullPath = base::JoinPath(path, (lang + ".html"));
     StringUtf8Multilang str;
     // This is a private function and should take the right path fullPath.
     auto const size = DescriptionsCollectionBuilder::FillStringFromFile(fullPath, langIndex, str);
-    auto const it = std::find_if(std::begin(first.m_pages), std::end(first.m_pages),
-                                 [&](auto const & p) { return p.first == lang; });
+    auto const it = base::FindIf(first.m_pages, [&](auto const & p) { return p.first == lang; });
     CHECK(it != std::end(first.m_pages), ());
     TEST_EQUAL(size, it->second.size(), ());
     TEST(CheckLangs(str, first.m_pages), ());
@@ -172,9 +173,10 @@ public:
     auto ft = MakeFeature(first.m_url);
     descriptions::FeatureDescription description;
     auto const wikiUrl = ft.GetMetadata().GetWikiURL();
-    auto const size = b.GetFeatureDescription(wikiUrl, featureId, description);
+    auto const path = DescriptionsCollectionBuilder::MakePathForWikipedia(m_wikiDir, wikiUrl);
+    auto const size = b.GetFeatureDescription(path, featureId, description);
 
-    TEST_EQUAL(size, GetPageSize(first.m_pages), ());
+    TEST_EQUAL(size, GetNumberOfPagesize(first.m_pages), ());
     CHECK_NOT_EQUAL(size, 0, ());
     TEST_EQUAL(description.m_featureIndex, featureId, ());
     TEST(CheckLangs(description.m_description, first.m_pages), ());
@@ -186,7 +188,7 @@ public:
     using namespace platform::tests_support;
     auto const testMwm = kMwmFile + DATA_FILE_EXTENSION;
     ScopedMwm testScopedMwm(testMwm);
-    DescriptionsSectionBuilder<Feature, ForEachFromDatMockAdapt>::Build(m_wikiDir,
+    DescriptionsSectionBuilder<Feature, ForEachFeatureMockAdapt>::Build(m_wikiDir,
                                                                         testScopedMwm.GetFullPath());
     FilesContainerR container(testScopedMwm.GetFullPath());
     TEST(container.IsExist(DESCRIPTIONS_FILE_TAG), ());
@@ -212,7 +214,7 @@ public:
 
 private:
   template <class ToDo>
-  static void ForEachFromDatMock(string const &, ToDo && toDo)
+  static void ForEachFeatureMock(std::string const &, ToDo && toDo)
   {
     for (size_t i = 0; i < kWikiData.size(); ++i)
     {
@@ -222,11 +224,11 @@ private:
   }
 
   template <class T>
-  struct ForEachFromDatMockAdapt
+  struct ForEachFeatureMockAdapt
   {
     void operator()(std::string const & str, T && fn) const
     {
-      ForEachFromDatMock(str, std::forward<T>(fn));
+      ForEachFeatureMock(str, std::forward<T>(fn));
     }
   };
 
@@ -251,11 +253,7 @@ private:
     for (auto const & m : kWikiData)
     {
       auto const & pages = m.m_pages;
-      auto const exists = std::any_of(std::begin(pages), std::end(pages), [](auto const & d) {
-        return IsSupportedLang(d.first);
-      });
-
-      if (exists)
+      if (base::AnyOf(pages, [](auto const & d) { return IsSupportedLang(d.first); }))
         ++size;
     }
 
@@ -282,7 +280,7 @@ private:
     return StringUtf8Multilang::GetLangIndex(lang) != StringUtf8Multilang::kUnsupportedLanguageCode;
   }
 
-  static size_t GetPageSize(std::vector<std::pair<std::string, std::string>> const & p)
+  static size_t GetNumberOfPagesize(std::vector<std::pair<std::string, std::string>> const & p)
   {
     return std::accumulate(std::begin(p), std::end(p), size_t{0}, [] (size_t acc, auto const & n) {
       return acc + n.second.size();
@@ -291,18 +289,18 @@ private:
 
   static Feature MakeFeature(std::string const & url)
   {
-    FeatureParams params;
+    FeatureBuilderParams params;
     MetadataTagProcessor p(params);
     feature::Metadata & md = params.GetMetadata();
     p("wikipedia", url);
     Feature ft;
     ft.SetMetadata(md);
 
-    auto const & wikiChecker = ftypes::WikiChecker::Instance();
-    CHECK(!wikiChecker.kTypesForWiki.empty(), ());
-    auto const itFirst = std::begin(wikiChecker.kTypesForWiki);
-    auto const type = classif().GetTypeByPath({itFirst->first, itFirst->second});
-    ft.SetTypes({type});
+    auto const & attractionsChecker = ftypes::AttractionsChecker::Instance();
+    CHECK(!attractionsChecker.m_primaryTypes.empty(), ());
+    CHECK(!attractionsChecker.m_additionalTypes.empty(), ());
+    auto const itFirst = std::begin(attractionsChecker.m_primaryTypes);
+    ft.SetTypes({*itFirst});
     return ft;
   }
 
@@ -329,7 +327,7 @@ private:
   {
     bool result = true;
     str.ForEach([&](auto code, auto const &) {
-      auto const it = std::find_if(std::begin(p), std::end(p), [&](auto const & p) {
+      auto const it = base::FindIf(p, [&](auto const & p) {
         return StringUtf8Multilang::GetLangIndex(p.first) == code;
       });
 

@@ -1,17 +1,21 @@
 #include "map/bookmark_catalog.hpp"
+
 #include "map/bookmark_helpers.hpp"
 
-#include "platform/http_client.hpp"
+#include "web_api/request_headers.hpp"
+#include "web_api/utils.hpp"
+
+#include "platform/http_payload.hpp"
 #include "platform/http_uploader.hpp"
 #include "platform/platform.hpp"
 #include "platform/preferred_languages.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/serdes_json.hpp"
 #include "coding/sha1.hpp"
 #include "coding/zip_creator.hpp"
 
 #include "base/assert.hpp"
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 #include "base/string_utils.hpp"
 #include "base/visitor.hpp"
@@ -39,7 +43,7 @@ std::string BuildTagsUrl(std::string const & language)
 {
   if (kCatalogEditorServer.empty())
     return {};
-  return kCatalogEditorServer + "editor/tags/?lang=" + language;
+  return kCatalogEditorServer + "editor/v2/tags/?lang=" + language;
 }
 
 std::string BuildCustomPropertiesUrl(std::string const & language)
@@ -63,6 +67,27 @@ std::string BuildUploadUrl()
   return kCatalogFrontendServer + "storage/upload";
 }
 
+std::string BuildWebEditorUrl(std::string const & serverId, std::string const & language)
+{
+  if (kCatalogEditorServer.empty())
+    return {};
+  return kCatalogEditorServer + "webeditor/" + language + "/edit/" + serverId;
+}
+
+std::string BuildPingUrl()
+{
+  if (kCatalogFrontendServer.empty())
+    return {};
+  return kCatalogFrontendServer + "storage/ping";
+}
+
+std::string BuildDeleteRequestUrl()
+{
+  if (kCatalogFrontendServer.empty())
+    return {};
+  return kCatalogFrontendServer + "storage/kmls_to_delete";
+}
+
 struct SubtagData
 {
   std::string m_name;
@@ -81,11 +106,20 @@ struct TagData
                   visitor(m_subtags, "subtags"))
 };
 
+struct TagsMeta
+{
+  uint32_t m_maxTags;
+
+  DECLARE_VISITOR(visitor(m_maxTags, "max_for_bundle"))
+};
+
 struct TagsResponseData
 {
   std::vector<TagData> m_tags;
+  TagsMeta m_meta;
 
-  DECLARE_VISITOR(visitor(m_tags))
+  DECLARE_VISITOR(visitor(m_tags, "data"),
+                  visitor(m_meta, "meta"))
 };
 
 BookmarkCatalog::Tag::Color ExtractColor(std::string const & c)
@@ -134,6 +168,31 @@ struct HashResponseData
   DECLARE_VISITOR(visitor(m_hash, "hash"))
 };
 
+struct DeleteRequestData
+{
+  DeleteRequestData(std::string const & deviceId, std::string const & userId,
+                    std::vector<std::string> const & serverIds)
+    : m_deviceId(deviceId)
+    , m_userId(userId)
+    , m_serverIds(serverIds)
+  {}
+
+  std::string m_deviceId;
+  std::string m_userId;
+  std::vector<std::string> m_serverIds;
+
+  DECLARE_VISITOR(visitor(m_deviceId, "device_id"),
+                  visitor(m_userId, "user_id"),
+                  visitor(m_serverIds, "server_ids"))
+};
+
+struct DeleteRequestResponseData
+{
+  std::vector<std::string> m_serverIds;
+
+  DECLARE_VISITOR(visitor(m_serverIds))
+};
+
 int constexpr kInvalidHash = -1;
 
 int RequestNewServerId(std::string const & accessToken,
@@ -143,8 +202,8 @@ int RequestNewServerId(std::string const & accessToken,
   if (hashUrl.empty())
     return kInvalidHash;
   platform::HttpClient request(hashUrl);
+  request.SetRawHeaders(web_api::GetDefaultCatalogHeaders());
   request.SetRawHeader("Accept", "application/json");
-  request.SetRawHeader("User-Agent", GetPlatform().GetAppUserAgent());
   request.SetRawHeader("Authorization", "Bearer " + accessToken);
   request.SetHttpMethod("POST");
   if (request.RunHttpRequest())
@@ -199,29 +258,19 @@ bool BookmarkCatalog::HasDownloaded(std::string const & id) const
   return m_registeredInCatalog.find(id) != m_registeredInCatalog.cend();
 }
 
-std::vector<std::string> BookmarkCatalog::GetDownloadingNames() const
-{
-  std::vector<std::string> names;
-  names.reserve(m_downloadingIds.size());
-  for (auto const & p : m_downloadingIds)
-    names.push_back(p.second);
-  return names;
-}
-
-void BookmarkCatalog::Download(std::string const & id, std::string const & name,
-                               std::string const & accessToken,
+void BookmarkCatalog::Download(std::string const & id, std::string const & accessToken,
                                DownloadStartCallback && startHandler,
                                DownloadFinishCallback && finishHandler)
 {
   if (IsDownloading(id) || HasDownloaded(id))
     return;
 
-  m_downloadingIds.insert(std::make_pair(id, name));
+  m_downloadingIds.insert(id);
 
   static uint32_t counter = 0;
   auto const path = base::JoinPath(GetPlatform().TmpDir(), "file" + strings::to_string(++counter));
 
-  platform::RemoteFile remoteFile(BuildCatalogDownloadUrl(id), accessToken);
+  platform::RemoteFile remoteFile(BuildCatalogDownloadUrl(id), accessToken, GetHeaders());
   remoteFile.DownloadAsync(path, [startHandler = std::move(startHandler)](std::string const &)
   {
     if (startHandler)
@@ -241,6 +290,8 @@ void BookmarkCatalog::Download(std::string const & id, std::string const & name,
         downloadResult = DownloadResult::Success;
         break;
       case platform::RemoteFile::Status::Forbidden:
+        if (m_onInvalidToken)
+          m_onInvalidToken();
         downloadResult = DownloadResult::AuthError;
         break;
       case platform::RemoteFile::Status::NotFound:
@@ -268,9 +319,15 @@ std::string BookmarkCatalog::GetDownloadUrl(std::string const & serverId) const
   return BuildCatalogDownloadUrl(serverId);
 }
 
-std::string BookmarkCatalog::GetFrontendUrl() const
+std::string BookmarkCatalog::GetWebEditorUrl(std::string const & serverId,
+                                             std::string const & language) const
 {
-  return kCatalogFrontendServer + languages::GetCurrentNorm() + "/v2/mobilefront/";
+  return BuildWebEditorUrl(serverId, language);
+}
+
+std::string BookmarkCatalog::GetFrontendUrl(UTM utm) const
+{
+  return InjectUTM(kCatalogFrontendServer + languages::GetCurrentNorm() + "/v3/mobilefront/", utm);
 }
 
 void BookmarkCatalog::RequestTagGroups(std::string const & language,
@@ -280,18 +337,19 @@ void BookmarkCatalog::RequestTagGroups(std::string const & language,
   if (tagsUrl.empty())
   {
     if (callback)
-      callback(false /* success */, {});
+      callback(false /* success */, {}, 0 /* maxTagsCount */);
     return;
   }
 
   GetPlatform().RunTask(Platform::Thread::Network, [tagsUrl, callback = std::move(callback)]()
   {
     platform::HttpClient request(tagsUrl);
+    request.SetRawHeaders(web_api::GetDefaultCatalogHeaders());
     request.SetRawHeader("Accept", "application/json");
-    request.SetRawHeader("User-Agent", GetPlatform().GetAppUserAgent());
     if (request.RunHttpRequest())
     {
       auto const resultCode = request.ErrorCode();
+      uint32_t maxTagsCount = 0;
       if (resultCode >= 200 && resultCode < 300)  // Ok.
       {
         TagsResponseData tagsResponseData;
@@ -304,7 +362,7 @@ void BookmarkCatalog::RequestTagGroups(std::string const & language,
         {
           LOG(LWARNING, ("Tags request deserialization error:", ex.Msg()));
           if (callback)
-            callback(false /* success */, {});
+            callback(false /* success */, {}, 0 /* maxTagsCount */);
           return;
         }
 
@@ -324,9 +382,11 @@ void BookmarkCatalog::RequestTagGroups(std::string const & language,
             group.m_tags.push_back(std::move(tag));
           }
           result.push_back(std::move(group));
+
+          maxTagsCount = tagsResponseData.m_meta.m_maxTags;
         }
         if (callback)
-          callback(true /* success */, result);
+          callback(true /* success */, result, maxTagsCount);
         return;
       }
       else
@@ -335,7 +395,7 @@ void BookmarkCatalog::RequestTagGroups(std::string const & language,
       }
     }
     if (callback)
-      callback(false /* success */, {});
+      callback(false /* success */, {}, 0 /* maxTagsCount */);
   });
 }
 
@@ -353,8 +413,8 @@ void BookmarkCatalog::RequestCustomProperties(std::string const & language,
   GetPlatform().RunTask(Platform::Thread::Network, [url, callback = std::move(callback)]()
   {
     platform::HttpClient request(url);
+    request.SetRawHeaders(web_api::GetDefaultCatalogHeaders());
     request.SetRawHeader("Accept", "application/json");
-    request.SetRawHeader("User-Agent", GetPlatform().GetAppUserAgent());
     if (request.RunHttpRequest())
     {
       auto const resultCode = request.ErrorCode();
@@ -428,18 +488,17 @@ void BookmarkCatalog::Upload(UploadData uploadData, std::string const & accessTo
     return;
   }
 
-  if (fileData->m_categoryData.m_accessRules == kml::AccessRules::Public &&
-      uploadData.m_accessRules != kml::AccessRules::Public)
+  if (!fileData->m_categoryData.m_authorId.empty() &&
+      fileData->m_categoryData.m_authorId != uploadData.m_userId)
   {
     if (uploadErrorCallback)
     {
-      uploadErrorCallback(UploadResult::AccessError, "Could not upload public bookmarks with " +
-                                                     DebugPrint(uploadData.m_accessRules) + " access.");
+      uploadErrorCallback(UploadResult::AccessError, "Could not upload not own bookmarks.");
     }
     return;
   }
 
-  GetPlatform().RunTask(Platform::Thread::File, [uploadData = std::move(uploadData), accessToken, fileData,
+  GetPlatform().RunTask(Platform::Thread::File, [this, uploadData = std::move(uploadData), accessToken, fileData,
                                                  pathToKmb, uploadSuccessCallback = std::move(uploadSuccessCallback),
                                                  uploadErrorCallback = std::move(uploadErrorCallback)]() mutable
   {
@@ -458,7 +517,7 @@ void BookmarkCatalog::Upload(UploadData uploadData, std::string const & accessTo
       return;
     }
 
-    GetPlatform().RunTask(Platform::Thread::Network, [uploadData = std::move(uploadData), accessToken,
+    GetPlatform().RunTask(Platform::Thread::Network, [this, uploadData = std::move(uploadData), accessToken,
                                                       pathToKmb, fileData, originalSha1,
                                                       uploadSuccessCallback = std::move(uploadSuccessCallback),
                                                       uploadErrorCallback = std::move(uploadErrorCallback)]() mutable
@@ -471,6 +530,9 @@ void BookmarkCatalog::Upload(UploadData uploadData, std::string const & accessTo
         auto const resultCode = RequestNewServerId(accessToken, serverId, errorString);
         if (resultCode == 403)
         {
+          if (m_onInvalidToken)
+            m_onInvalidToken();
+
           if (uploadErrorCallback)
             uploadErrorCallback(UploadResult::AuthError, errorString);
           return;
@@ -492,8 +554,9 @@ void BookmarkCatalog::Upload(UploadData uploadData, std::string const & accessTo
 
       // Save KML.
       auto const filePath = base::JoinPath(GetPlatform().TmpDir(), uploadData.m_serverId + kKmlExtension);
-      if (!SaveKmlFile(*fileData, filePath, KmlFileType::Text))
+      if (!SaveKmlFileSafe(*fileData, filePath, KmlFileType::Text))
       {
+        FileWriter::DeleteFileX(filePath);
         if (uploadErrorCallback)
           uploadErrorCallback(UploadResult::InvalidCall, "Could not save the uploading file.");
         return;
@@ -511,15 +574,18 @@ void BookmarkCatalog::Upload(UploadData uploadData, std::string const & accessTo
       FileWriter::DeleteFileX(filePath);
 
       // Upload zipped KML.
-      platform::HttpUploader request;
-      request.SetUrl(BuildUploadUrl());
-      request.SetHeaders({{"Authorization", "Bearer " + accessToken},
-                          {"User-Agent", GetPlatform().GetAppUserAgent()}});
-      request.SetParam("author_id", uploadData.m_userId);
-      request.SetParam("bundle_hash", uploadData.m_serverId);
-      request.SetParam("locale", languages::GetCurrentOrig());
-      request.SetFileKey("file_contents");
-      request.SetFilePath(zippedFilePath);
+      platform::HttpPayload payload;
+      payload.m_url = BuildUploadUrl();
+      payload.m_headers = {{"Authorization", "Bearer " + accessToken},
+                           {"User-Agent", GetPlatform().GetAppUserAgent()}};
+
+      payload.m_params = {{"author_id", uploadData.m_userId},
+                          {"bundle_hash", uploadData.m_serverId},
+                          {"locale", languages::GetCurrentOrig()}};
+      payload.m_fileKey = "file_contents";
+      payload.m_filePath = zippedFilePath;
+
+      platform::HttpUploader request(payload);
       auto const uploadCode = request.Upload();
       if (uploadCode.m_httpCode >= 200 && uploadCode.m_httpCode < 300)
       {
@@ -546,6 +612,9 @@ void BookmarkCatalog::Upload(UploadData uploadData, std::string const & accessTo
       }
       else if (uploadCode.m_httpCode == 403)
       {
+        if (m_onInvalidToken)
+          m_onInvalidToken();
+
         if (uploadErrorCallback)
           uploadErrorCallback(UploadResult::AuthError, uploadCode.m_description);
       }
@@ -567,4 +636,110 @@ void BookmarkCatalog::Upload(UploadData uploadData, std::string const & accessTo
       FileWriter::DeleteFileX(zippedFilePath);
     });
   });
+}
+
+void BookmarkCatalog::Ping(PingCallback && callback) const
+{
+  auto const url = BuildPingUrl();
+  if (url.empty())
+  {
+    if (callback)
+      callback(false /* isSuccessful */);
+    return;
+  }
+
+  GetPlatform().RunTask(Platform::Thread::Network, [url, callback = std::move(callback)]()
+  {
+    platform::HttpClient request(url);
+    request.SetRawHeaders(web_api::GetDefaultCatalogHeaders());
+    uint32_t constexpr kPingTimeoutInSec = 10;
+    request.SetTimeout(kPingTimeoutInSec);
+    if (request.RunHttpRequest())
+    {
+      auto constexpr kExpectedResponse = "pong";
+      auto const resultCode = request.ErrorCode();
+      if (callback && resultCode >= 200 && resultCode < 300 &&
+          request.ServerResponse() == kExpectedResponse)
+      {
+        callback(true /* isSuccessful */);
+        return;
+      }
+    }
+    if (callback)
+      callback(false /* isSuccessful */);
+  });
+}
+
+void BookmarkCatalog::RequestBookmarksToDelete(std::string const & accessToken, std::string const & userId,
+                                               std::vector<std::string> const & serverIds,
+                                               BookmarksToDeleteCallback && callback) const
+{
+  auto const url = BuildDeleteRequestUrl();
+  if (url.empty())
+  {
+    if (callback)
+      callback({});
+    return;
+  }
+
+  GetPlatform().RunTask(Platform::Thread::Network,
+                        [url, accessToken, userId, serverIds, callback = std::move(callback)]()
+  {
+    platform::HttpClient request(url);
+    request.SetRawHeaders(web_api::GetDefaultCatalogHeaders());
+    request.SetRawHeader("Accept", "application/json");
+    if (!accessToken.empty())
+      request.SetRawHeader("Authorization", "Bearer " + accessToken);
+    request.SetHttpMethod("POST");
+
+    std::string jsonStr;
+    {
+      using Sink = MemWriter<std::string>;
+      Sink sink(jsonStr);
+      coding::SerializerJson<Sink> serializer(sink);
+      serializer(DeleteRequestData(web_api::DeviceId(), userId, serverIds));
+    }
+    request.SetBodyData(std::move(jsonStr), "application/json");
+
+    uint32_t constexpr kTimeoutInSec = 5;
+    request.SetTimeout(kTimeoutInSec);
+    if (request.RunHttpRequest())
+    {
+      auto const resultCode = request.ErrorCode();
+      if (resultCode >= 200 && resultCode < 300)
+      {
+        DeleteRequestResponseData responseData;
+        try
+        {
+          coding::DeserializerJson des(request.ServerResponse());
+          des(responseData);
+        }
+        catch (coding::DeserializerJson::Exception const & ex)
+        {
+          LOG(LERROR, ("Bookmarks-to-delete request deserialization error:", ex.Msg()));
+          callback({});
+          return;
+        }
+
+        callback(responseData.m_serverIds);
+        return;
+      }
+    }
+    callback({});
+  });
+}
+
+void BookmarkCatalog::SetInvalidTokenHandler(InvalidTokenHandler && onInvalidToken)
+{
+  m_onInvalidToken = std::move(onInvalidToken);
+}
+
+void BookmarkCatalog::SetHeadersProvider(HeadersProvider const & provider)
+{
+  m_headersProvider = provider;
+}
+
+platform::HttpClient::Headers BookmarkCatalog::GetHeaders() const
+{
+  return m_headersProvider();
 }

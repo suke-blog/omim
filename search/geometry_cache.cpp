@@ -45,8 +45,7 @@ CBV PivotRectsCache::Get(MwmContext const & context, m2::RectD const & rect, int
   auto & entry = p.first;
   if (p.second)
   {
-    m2::RectD normRect =
-        MercatorBounds::RectByCenterXYAndSizeInMeters(rect.Center(), m_maxRadiusMeters);
+    m2::RectD normRect = mercator::RectByCenterXYAndSizeInMeters(rect.Center(), m_maxRadiusMeters);
     if (!normRect.IsRectInside(rect))
       normRect = rect;
     InitEntry(context, normRect, scale, entry);
@@ -73,5 +72,4 @@ CBV LocalityRectsCache::Get(MwmContext const & context, m2::RectD const & rect, 
     InitEntry(context, rect, scale, entry);
   return entry.m_cbv;
 }
-
 }  // namespace search

@@ -1,7 +1,6 @@
 #include "kml/type_utils.hpp"
 #include "kml/types.hpp"
 
-#include "indexer/categories_holder.hpp"
 #include "indexer/classificator.hpp"
 #include "indexer/feature_utils.hpp"
 
@@ -17,10 +16,24 @@ bool IsEqual(std::vector<m2::PointD> const & v1, std::vector<m2::PointD> const &
   if (v1.size() != v2.size())
     return false;
 
-  double constexpr kEps = 1e-5;
   for (size_t i = 0; i < v1.size(); ++i)
   {
-    if (!v1[i].EqualDxDy(v2[i], kEps))
+    if (!v1[i].EqualDxDy(v2[i], kMwmPointAccuracy))
+      return false;
+  }
+
+  return true;
+}
+
+bool IsEqual(std::vector<geometry::PointWithAltitude> const & v1,
+             std::vector<geometry::PointWithAltitude> const & v2)
+{
+  if (v1.size() != v2.size())
+    return false;
+
+  for (size_t i = 0; i < v1.size(); ++i)
+  {
+    if (!AlmostEqualAbs(v1[i], v2[i], kMwmPointAccuracy))
       return false;
   }
 
@@ -62,7 +75,7 @@ std::string GetPreferredBookmarkStr(LocalizableString const & name, feature::Reg
   return preferredName;
 }
 
-std::string GetLocalizedBookmarkType(std::vector<uint32_t> const & types)
+std::string GetLocalizedFeatureType(std::vector<uint32_t> const & types)
 {
   if (types.empty())
     return {};
@@ -80,7 +93,7 @@ std::string GetPreferredBookmarkName(BookmarkData const & bmData, std::string co
   if (name.empty())
     name = GetPreferredBookmarkStr(bmData.m_name, languageNorm);
   if (name.empty())
-    name = GetLocalizedBookmarkType(bmData.m_featureTypes);
+    name = GetLocalizedFeatureType(bmData.m_featureTypes);
   return name;
 }
 }  // namespace kml

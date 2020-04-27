@@ -10,9 +10,9 @@
 
 #include "coding/bit_streams.hpp"
 #include "coding/elias_coder.hpp"
-#include "coding/file_container.hpp"
+#include "coding/files_container.hpp"
 #include "coding/reader.hpp"
-#include "coding/url_encode.hpp"
+#include "coding/url.hpp"
 #include "coding/varint.hpp"
 #include "coding/write_to_sink.hpp"
 #include "coding/writer.hpp"
@@ -23,16 +23,17 @@
 #include "base/logging.hpp"
 #include "base/string_utils.hpp"
 
-#include "std/algorithm.hpp"
-#include "std/limits.hpp"
-#include "std/sstream.hpp"
-#include "std/string.hpp"
+#include <algorithm>
+#include <limits>
+#include <sstream>
+#include <string>
 
 #include "defines.hpp"
-
 #include "private.h"
 
 #include "3party/Alohalytics/src/alohalytics.h"
+
+using namespace std;
 
 namespace traffic
 {
@@ -73,7 +74,7 @@ string MakeRemoteURL(string const & name, uint64_t version)
   ss << TRAFFIC_DATA_BASE_URL;
   if (version != 0)
     ss << version << "/";
-  ss << UrlEncode(name) << TRAFFIC_FILE_EXTENSION;
+  ss << url::UrlEncode(name) << TRAFFIC_FILE_EXTENSION;
   return ss.str();
 }
 
@@ -103,14 +104,14 @@ TrafficInfo::TrafficInfo(MwmSet::MwmId const & mwmId, int64_t currentDataVersion
     LOG(LWARNING, ("Attempt to create a traffic info for dead mwm."));
     return;
   }
-  string const mwmPath = mwmId.GetInfo()->GetLocalFile().GetPath(MapOptions::Map);
+  string const mwmPath = mwmId.GetInfo()->GetLocalFile().GetPath(MapFileType::Map);
   try
   {
     FilesContainerR rcont(mwmPath);
     if (rcont.IsExist(TRAFFIC_KEYS_FILE_TAG))
     {
       auto reader = rcont.GetReader(TRAFFIC_KEYS_FILE_TAG);
-      vector<uint8_t> buf(reader.Size());
+      vector<uint8_t> buf(static_cast<size_t>(reader.Size()));
       reader.Read(0, buf.data(), buf.size());
       LOG(LINFO, ("Reading keys for", mwmId, "from section"));
       try
@@ -183,7 +184,7 @@ SpeedGroup TrafficInfo::GetSpeedGroup(RoadSegmentId const & id) const
 void TrafficInfo::ExtractTrafficKeys(string const & mwmPath, vector<RoadSegmentId> & result)
 {
   result.clear();
-  feature::ForEachFromDat(mwmPath, [&](FeatureType & ft, uint32_t const fid) {
+  feature::ForEachFeature(mwmPath, [&](FeatureType & ft, uint32_t const fid) {
     if (!routing::CarModel::AllLimitsInstance().IsRoad(ft))
       return;
 
@@ -318,7 +319,7 @@ void TrafficInfo::DeserializeTrafficKeys(vector<uint8_t> const & data,
     }
 
     for (size_t i = 0; i < n; ++i)
-      numSegs[i] = coding::GammaCoder::Decode(bitReader) - 1;
+      numSegs[i] = static_cast<size_t>(coding::GammaCoder::Decode(bitReader) - 1);
 
     for (size_t i = 0; i < n; ++i)
       oneWay[i] = bitReader.Read(1) > 0;

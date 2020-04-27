@@ -2,20 +2,19 @@
 
 #include "testing/testing.hpp"
 
-#include "coding/file_name_utils.hpp"
-
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 
-#include "std/sstream.hpp"
+#include <sstream>
 
 namespace platform
 {
 namespace tests_support
 {
-ScopedDir::ScopedDir(string const & relativePath)
-    : m_fullPath(base::JoinFoldersToPath(GetPlatform().WritableDir(), relativePath)),
-      m_relativePath(relativePath),
-      m_reset(false)
+ScopedDir::ScopedDir(std::string const & relativePath)
+  : m_fullPath(base::JoinPath(GetPlatform().WritableDir(), relativePath))
+  , m_relativePath(relativePath)
+  , m_reset(false)
 {
   Platform::EError ret = Platform::MkDir(GetFullPath());
   switch (ret)
@@ -33,8 +32,8 @@ ScopedDir::ScopedDir(string const & relativePath)
   }
 }
 
-ScopedDir::ScopedDir(ScopedDir const & parent, string const & name)
-  : ScopedDir(base::JoinFoldersToPath(parent.GetRelativePath(), name))
+ScopedDir::ScopedDir(ScopedDir const & parent, std::string const & name)
+  : ScopedDir(base::JoinPath(parent.GetRelativePath(), name))
 {
 }
 
@@ -43,7 +42,7 @@ ScopedDir::~ScopedDir()
   if (m_reset)
     return;
 
-  string const fullPath = GetFullPath();
+  std::string const fullPath = GetFullPath();
   Platform::EError ret = Platform::RmDir(fullPath);
   switch (ret)
   {
@@ -61,9 +60,9 @@ ScopedDir::~ScopedDir()
   }
 }
 
-string DebugPrint(ScopedDir const & dir)
+std::string DebugPrint(ScopedDir const & dir)
 {
-  ostringstream os;
+  std::ostringstream os;
   os << "ScopedDir [" << dir.GetFullPath() << "]";
   return os.str();
 }

@@ -1,16 +1,19 @@
 #include "indexer/editable_map_object.hpp"
+
 #include "indexer/classificator.hpp"
 #include "indexer/cuisines.hpp"
 #include "indexer/postcodes_matcher.hpp"
+
+#include "platform/preferred_languages.hpp"
 
 #include "base/control_flow.hpp"
 #include "base/macros.hpp"
 #include "base/string_utils.hpp"
 
 #include <algorithm>
-#include <codecvt>
 #include <cctype>
 #include <cmath>
+#include <codecvt>
 #include <regex>
 #include <sstream>
 
@@ -205,15 +208,20 @@ bool EditableMapObject::IsAddressEditable() const { return m_editableProperties.
 
 vector<Props> EditableMapObject::GetEditableProperties() const
 {
-  return MetadataToProps(m_editableProperties.m_metadata);
+  auto props = MetadataToProps(m_editableProperties.m_metadata);
+  if (m_editableProperties.m_cuisine)
+  {
+    props.push_back(Props::Cuisine);
+    base::SortUnique(props);
+  }
+
+  return props;
 }
 
 vector<feature::Metadata::EType> const & EditableMapObject::GetEditableFields() const
 {
   return m_editableProperties.m_metadata;
 }
-
-StringUtf8Multilang const & EditableMapObject::GetName() const { return m_name; }
 
 NamesDataSource EditableMapObject::GetNamesDataSource(bool needFakes /* = true */)
 {
@@ -282,16 +290,24 @@ NamesDataSource EditableMapObject::GetNamesDataSource(StringUtf8Multilang const 
 }
 
 vector<LocalizedStreet> const & EditableMapObject::GetNearbyStreets() const { return m_nearbyStreets; }
-string const & EditableMapObject::GetHouseNumber() const { return m_houseNumber; }
 
-string EditableMapObject::GetPostcode() const
-{
-  return m_metadata.Get(feature::Metadata::FMD_POSTCODE);
-}
+string EditableMapObject::GetPostcode() const { return m_postcode; }
 
 string EditableMapObject::GetWikipedia() const
 {
   return m_metadata.Get(feature::Metadata::FMD_WIKIPEDIA);
+}
+
+void EditableMapObject::ForEachMetadataItem(
+    bool skipSponsored, function<void(string const & tag, string const & value)> const & fn) const
+{
+  for (auto const type : m_metadata.GetKeys())
+  {
+    if (skipSponsored && m_metadata.IsSponsoredType(type))
+      continue;
+    auto const attributeName = ToString(type);
+    fn(attributeName, m_metadata.Get(type));
+  }
 }
 
 uint64_t EditableMapObject::GetTestId() const
@@ -402,10 +418,10 @@ void EditableMapObject::SetMercator(m2::PointD const & center) { m_mercator = ce
 
 void EditableMapObject::SetType(uint32_t featureType)
 {
-  if (m_types.GetGeoType() == feature::EGeomType::GEOM_UNDEFINED)
+  if (m_types.GetGeomType() == feature::GeomType::Undefined)
   {
     // Support only point type for newly created features.
-    m_types = feature::TypesHolder(feature::EGeomType::GEOM_POINT);
+    m_types = feature::TypesHolder(feature::GeomType::Point);
     m_types.Assign(featureType);
   }
   else
@@ -420,6 +436,8 @@ void EditableMapObject::SetType(uint32_t featureType)
   }
 }
 
+void EditableMapObject::SetTypes(feature::TypesHolder const & types) { m_types = types; }
+
 void EditableMapObject::SetID(FeatureID const & fid) { m_featureID = fid; }
 void EditableMapObject::SetStreet(LocalizedStreet const & st) { m_street = st; }
 
@@ -433,10 +451,16 @@ void EditableMapObject::SetHouseNumber(string const & houseNumber)
   m_houseNumber = houseNumber;
 }
 
-void EditableMapObject::SetPostcode(string const & postcode)
+bool EditableMapObject::UpdateMetadataValue(string const & key, string const & value)
 {
-  m_metadata.Set(feature::Metadata::FMD_POSTCODE, postcode);
+  feature::Metadata::EType mdType;
+  if (!feature::Metadata::TypeFromString(key, mdType))
+    return false;
+  m_metadata.Set(mdType, value);
+  return true;
 }
+
+void EditableMapObject::SetPostcode(string const & postcode) { m_postcode = postcode; }
 
 void EditableMapObject::SetPhone(string const & phone)
 {
@@ -520,9 +544,21 @@ void EditableMapObject::SetLevel(string const & level)
 
 LocalizedStreet const & EditableMapObject::GetStreet() const { return m_street; }
 
-void EditableMapObject::SetCuisines(vector<string> const & cuisine)
+void EditableMapObject::SetCuisines(vector<string> const & cuisines)
 {
-  m_metadata.Set(feature::Metadata::FMD_CUISINE, strings::JoinStrings(cuisine, ';'));
+  FeatureParams params;
+  params.m_types.insert(params.m_types.begin(), m_types.begin(), m_types.end());
+  for (auto const & cuisine : cuisines)
+    params.m_types.push_back(classif().GetTypeByPath({"cuisine", cuisine}));
+
+  // Move useless types to the end and resize to fit TypesHolder.
+  params.FinishAddingTypes();
+
+  feature::TypesHolder types;
+  for (auto const t : params.m_types)
+    types.Add(t);
+
+  m_types = types;
 }
 
 void EditableMapObject::SetOpeningHours(string const & openingHours)
@@ -530,7 +566,7 @@ void EditableMapObject::SetOpeningHours(string const & openingHours)
   m_metadata.Set(feature::Metadata::FMD_OPEN_HOURS, openingHours);
 }
 
-void EditableMapObject::SetPointType() { m_geomType = feature::EGeomType::GEOM_POINT; }
+void EditableMapObject::SetPointType() { m_geomType = feature::GeomType::Point; }
 
 void EditableMapObject::RemoveBlankAndDuplicationsForDefault()
 {

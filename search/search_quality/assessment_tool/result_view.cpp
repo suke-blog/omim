@@ -72,9 +72,9 @@ ResultView::ResultView(search::Sample::Result const & result, QWidget & parent)
 {
 }
 
-void ResultView::SetEditor(Edits::Editor && editor)
+void ResultView::SetEditor(ResultsEdits::Editor && editor)
 {
-  m_editor = make_unique<Edits::Editor>(std::move(editor));
+  m_editor = make_unique<ResultsEdits::Editor>(std::move(editor));
 
   UpdateRelevanceRadioButtons();
 
@@ -89,7 +89,7 @@ void ResultView::Update()
     return;
   }
 
-  if (m_editor->GetType() == Edits::Entry::Type::Created)
+  if (m_editor->GetType() == ResultsEdits::Entry::Type::Created)
   {
     setStyleSheet("#result {background: rgba(173, 223, 173, 50%)}");
   }
@@ -127,6 +127,7 @@ void ResultView::Init()
     auto * groupLayout = new QHBoxLayout(group /* parent */);
     group->setLayout(groupLayout);
 
+    m_harmful = CreateRatioButton("Harmful", *groupLayout);
     m_irrelevant = CreateRatioButton("Irrelevant", *groupLayout);
     m_relevant = CreateRatioButton("Relevant", *groupLayout);
     m_vital = CreateRatioButton("Vital", *groupLayout);
@@ -141,6 +142,7 @@ void ResultView::SetContents(string const & name, string const & type, string co
   SetText(*m_type, type);
   SetText(*m_address, address);
 
+  m_harmful->setChecked(false);
   m_irrelevant->setChecked(false);
   m_relevant->setChecked(false);
   m_vital->setChecked(false);
@@ -161,7 +163,9 @@ void ResultView::OnRelevanceChanged()
     return;
 
   auto relevance = Relevance::Irrelevant;
-  if (m_irrelevant->isChecked())
+  if (m_harmful->isChecked())
+    relevance = Relevance::Harmful;
+  else if (m_irrelevant->isChecked())
     relevance = Relevance::Irrelevant;
   else if (m_relevant->isChecked())
     relevance = Relevance::Relevant;
@@ -176,16 +180,19 @@ void ResultView::UpdateRelevanceRadioButtons()
   if (!m_editor)
     return;
 
+  m_harmful->setChecked(false);
   m_irrelevant->setChecked(false);
   m_relevant->setChecked(false);
   m_vital->setChecked(false);
 
   auto const & r = m_editor->Get();
+
   if (!r)
     return;
 
   switch (*r)
   {
+  case Relevance::Harmful: m_harmful->setChecked(true); break;
   case Relevance::Irrelevant: m_irrelevant->setChecked(true); break;
   case Relevance::Relevant: m_relevant->setChecked(true); break;
   case Relevance::Vital: m_vital->setChecked(true); break;

@@ -5,8 +5,8 @@ add_definitions("-DOMIM_UNIT_TEST_WITH_QT_EVENT_LOOP")
 
 set(
   SRC
+  download_calc_size_test.cpp
   lightweight_matching_tests.cpp
-  migrate_tests.cpp
   storage_3levels_tests.cpp
   storage_downloading_tests.cpp
   storage_group_download_tests.cpp
@@ -22,6 +22,7 @@ omim_link_libraries(
   ${PROJECT_NAME}
   platform_tests_support
   map
+  ge0
   drape_frontend
   shaders
   routing
@@ -35,6 +36,7 @@ omim_link_libraries(
   ugc
   drape
   partners_api
+  web_api
   local_ads
   kml
   editor
@@ -60,10 +62,18 @@ omim_link_libraries(
   oauthcpp
   stb_image
   sdf_image
+  vulkan_wrapper
   ${Qt5Widgets_LIBRARIES}
   ${Qt5Network_LIBRARIES}
   ${LIBZ}
 )
+
+if (PLATFORM_LINUX)
+  omim_link_libraries(
+    ${PROJECT_NAME}
+    dl
+  )
+endif()
 
 link_opengl(${PROJECT_NAME})
 link_qt5_core(${PROJECT_NAME})

@@ -2,9 +2,11 @@
 
 #include "base/stl_helpers.hpp"
 
-#include "std/algorithm.hpp"
-#include "std/cstring.hpp"
-#include "std/unordered_map.hpp"
+#include <algorithm>
+#include <cstring>
+#include <unordered_map>
+
+using namespace std;
 
 namespace
 {
@@ -12,7 +14,6 @@ using EType = feature::Metadata::EType;
 
 // TODO(mgsergio): It would be nice to have this map generated from editor.config.
 static unordered_map<string, EType> const kNamesToFMD = {
-    {"cuisine", feature::Metadata::FMD_CUISINE},
     {"opening_hours", feature::Metadata::FMD_OPEN_HOURS},
     {"phone", feature::Metadata::FMD_PHONE_NUMBER},
     {"fax", feature::Metadata::FMD_FAX_NUMBER},
@@ -26,7 +27,6 @@ static unordered_map<string, EType> const kNamesToFMD = {
     // {"", feature::Metadata::FMD_TURN_LANES_FORWARD},
     // {"", feature::Metadata::FMD_TURN_LANES_BACKWARD},
     {"email", feature::Metadata::FMD_EMAIL},
-    {"postcode", feature::Metadata::FMD_POSTCODE},
     {"wikipedia", feature::Metadata::FMD_WIKIPEDIA},
     // {"", feature::Metadata::FMD_MAXSPEED},
     {"flats", feature::Metadata::FMD_FLATS},
@@ -53,14 +53,22 @@ bool TypeDescriptionFromXml(pugi::xml_node const & root, pugi::xml_node const & 
       return;
     }
 
-    if (fieldName == "street" || fieldName == "housenumber" || fieldName == "housename")
+    if (fieldName == "street" || fieldName == "housenumber" || fieldName == "housename" ||
+        fieldName == "postcode")
     {
       outDesc.m_address = true;
       return;
     }
 
+    if (fieldName == "cuisine")
+    {
+      outDesc.m_cuisine = true;
+      return;
+    }
+
     // TODO(mgsergio): Add support for non-metadata fields like atm, wheelchair, toilet etc.
     auto const it = kNamesToFMD.find(fieldName);
+
     ASSERT(it != end(kNamesToFMD), ("Wrong field:", fieldName));
     outDesc.m_editableFields.push_back(it->second);
   };
@@ -125,7 +133,6 @@ bool EditorConfig::GetTypeDescription(vector<string> classificatorTypes,
     {
       outDesc.m_address = isBuilding = true;
       outDesc.m_editableFields.push_back(feature::Metadata::FMD_BUILDING_LEVELS);
-      outDesc.m_editableFields.push_back(feature::Metadata::FMD_POSTCODE);
       classificatorTypes.erase(it);
       break;
     }

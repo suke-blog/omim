@@ -3,22 +3,28 @@ package com.mapswithme.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.mapswithme.maps.MwmApplication;
 import com.mapswithme.maps.R;
 import com.mapswithme.maps.bookmarks.BookmarksPageFactory;
+import com.mapswithme.maps.maplayer.Mode;
+
+import java.util.Locale;
 
 import static com.mapswithme.util.Config.KEY_PREF_STATISTICS;
 
 public final class SharedPropertiesUtils
 {
+  private static final String USER_AGREEMENT_TERM_OF_USE = "user_agreement_term_of_use";
+  private static final String USER_AGREEMENT_PRIVACY_POLICY = "user_agreement_privacy_policy";
   private static final String PREFS_SHOW_EMULATE_BAD_STORAGE_SETTING = "ShowEmulateBadStorageSetting";
   private static final String PREFS_BACKUP_WIDGET_EXPANDED = "BackupWidgetExpanded";
   private static final String PREFS_WHATS_NEW_TITLE_CONCATENATION = "WhatsNewTitleConcatenation";
   private static final String PREFS_CATALOG_CATEGORIES_HEADER_CLOSED = "CatalogCategoriesHeaderClosed";
   private static final String PREFS_BOOKMARK_CATEGORIES_LAST_VISIBLE_PAGE = "BookmarkCategoriesLastVisiblePage";
+  private static final String PREFS_SHOULD_SHOW_LAYER_MARKER_FOR = "ShouldShowGuidesLayerMarkerFor";
   private static final SharedPreferences PREFS
       = PreferenceManager.getDefaultSharedPreferences(MwmApplication.get());
 
@@ -101,6 +107,66 @@ public final class SharedPropertiesUtils
     MwmApplication.prefs(context)
                   .edit()
                   .putInt(PREFS_BOOKMARK_CATEGORIES_LAST_VISIBLE_PAGE, pageIndex)
+                  .apply();
+  }
+
+  public static boolean isTermOfUseAgreementConfirmed(@NonNull Context context)
+  {
+    return getBoolean(context, USER_AGREEMENT_TERM_OF_USE);
+  }
+
+  public static boolean isPrivacyPolicyAgreementConfirmed(@NonNull Context context)
+  {
+    return getBoolean(context, USER_AGREEMENT_PRIVACY_POLICY);
+  }
+
+  public static void putPrivacyPolicyAgreement(@NonNull Context context, boolean isChecked)
+  {
+    putBoolean(context, USER_AGREEMENT_PRIVACY_POLICY, isChecked);
+  }
+
+  public static void putTermOfUseAgreement(@NonNull Context context, boolean isChecked)
+  {
+    putBoolean(context, USER_AGREEMENT_TERM_OF_USE, isChecked);
+  }
+
+  public static boolean shouldShowNewMarkerForLayerMode(@NonNull Context context,
+                                                        @NonNull Mode mode)
+  {
+    switch (mode)
+    {
+      case SUBWAY:
+      case TRAFFIC:
+      case ISOLINES:
+        return false;
+      default:
+        return getBoolean(context, PREFS_SHOULD_SHOW_LAYER_MARKER_FOR + mode.name()
+                                                                            .toLowerCase(Locale.ENGLISH),
+                          true);
+    }
+  }
+
+  public static void setLayerMarkerShownForLayerMode(@NonNull Context context, @NonNull Mode mode)
+  {
+    putBoolean(context, PREFS_SHOULD_SHOW_LAYER_MARKER_FOR + mode.name()
+                                                                 .toLowerCase(Locale.ENGLISH), false);
+  }
+
+  private static boolean getBoolean(@NonNull Context context,  @NonNull String key)
+  {
+    return getBoolean(context, key, false);
+  }
+
+  private static boolean getBoolean(@NonNull Context context,  @NonNull String key, boolean defValue)
+  {
+    return MwmApplication.prefs(context).getBoolean(key, defValue);
+  }
+
+  private static void putBoolean(@NonNull Context context,  @NonNull String key, boolean value)
+  {
+    MwmApplication.prefs(context)
+                  .edit()
+                  .putBoolean(key, value)
                   .apply();
   }
 }

@@ -1,6 +1,10 @@
 #include "testing/testing.hpp"
 
+#include "routing/routing_tests/index_graph_tools.hpp"
+
 #include "routing/base/astar_algorithm.hpp"
+#include "routing/base/astar_graph.hpp"
+
 #include "routing/edge_estimator.hpp"
 #include "routing/fake_ending.hpp"
 #include "routing/index_graph.hpp"
@@ -10,12 +14,11 @@
 #include "routing/routing_helpers.hpp"
 #include "routing/vehicle_mask.hpp"
 
-#include "routing/routing_tests/index_graph_tools.hpp"
-
 #include "routing_common/car_model.hpp"
 
 #include "geometry/mercator.hpp"
 #include "geometry/point2d.hpp"
+#include "geometry/point_with_altitude.hpp"
 
 #include "coding/reader.hpp"
 #include "coding/writer.hpp"
@@ -23,12 +26,11 @@
 #include "base/assert.hpp"
 #include "base/math.hpp"
 
-#include "std/algorithm.hpp"
-#include "std/cstdint.hpp"
-#include "std/shared_ptr.hpp"
-#include "std/unique_ptr.hpp"
-#include "std/unordered_map.hpp"
-#include "std/vector.hpp"
+#include <algorithm>
+#include <cstdint>
+#include <memory>
+#include <unordered_map>
+#include <vector>
 
 using namespace std;
 
@@ -39,6 +41,8 @@ using namespace routing_test;
 
 using TestEdge = TestIndexGraphTopology::Edge;
 
+using AlgorithmForIndexGraphStarter = AStarAlgorithm<Segment, SegmentEdge, RouteWeight>;
+
 double constexpr kUnknownWeight = -1.0;
 
 void TestRoute(FakeEnding const & start, FakeEnding const & finish, size_t expectedLength,
@@ -48,7 +52,7 @@ void TestRoute(FakeEnding const & start, FakeEnding const & finish, size_t expec
   vector<Segment> route;
   double timeSec;
   auto const resultCode = CalculateRoute(*starter, route, timeSec);
-  TEST_EQUAL(resultCode, AStarAlgorithm<IndexGraphStarter>::Result::OK, ());
+  TEST_EQUAL(resultCode, AlgorithmForIndexGraphStarter::Result::OK, ());
 
   TEST_GREATER(route.size(), 2, ());
 
@@ -81,7 +85,7 @@ void TestEdges(IndexGraph & graph, Segment const & segment, vector<Segment> cons
          ());
 
   vector<SegmentEdge> edges;
-  graph.GetEdgeList(segment, isOutgoing, edges);
+  graph.GetEdgeList(segment, isOutgoing, true /* useRoutingOptions */, edges);
 
   vector<Segment> targets;
   for (SegmentEdge const & edge : edges)
@@ -390,11 +394,11 @@ UNIT_TEST(RoadSpeed)
                                        {kTestNumMwmId, 0, 3, true},
                                        {kTestNumMwmId, 1, 3, true}});
   double const expectedWeight =
-      MercatorBounds::DistanceOnEarth({0.5, 0.0}, {1.0, 0.0}) / KMPH2MPS(1.0) +
-      MercatorBounds::DistanceOnEarth({1.0, 0.0}, {2.0, -1.0}) / KMPH2MPS(10.0) +
-      MercatorBounds::DistanceOnEarth({2.0, -1.0}, {4.0, -1.0}) / KMPH2MPS(10.0) +
-      MercatorBounds::DistanceOnEarth({4.0, -1.0}, {5.0, 0.0}) / KMPH2MPS(10.0) +
-      MercatorBounds::DistanceOnEarth({5.0, 0.0}, {5.5, 0.0}) / KMPH2MPS(1.0);
+      mercator::DistanceOnEarth({0.5, 0.0}, {1.0, 0.0}) / KMPH2MPS(1.0) +
+      mercator::DistanceOnEarth({1.0, 0.0}, {2.0, -1.0}) / KMPH2MPS(10.0) +
+      mercator::DistanceOnEarth({2.0, -1.0}, {4.0, -1.0}) / KMPH2MPS(10.0) +
+      mercator::DistanceOnEarth({4.0, -1.0}, {5.0, 0.0}) / KMPH2MPS(10.0) +
+      mercator::DistanceOnEarth({5.0, 0.0}, {5.5, 0.0}) / KMPH2MPS(1.0);
   TestRoute(start, finish, expectedRoute.size(), &expectedRoute, expectedWeight, *worldGraph);
 }
 
@@ -425,13 +429,12 @@ UNIT_TEST(OneSegmentWay)
   {
     for (auto const finishIsForward : tf)
     {
-      auto const start = MakeFakeEnding(Segment(kTestNumMwmId, 0, 0, startIsForward),
+      auto const start = MakeFakeEnding({Segment(kTestNumMwmId, 0, 0, startIsForward)},
                                         m2::PointD(1.0, 0.0), *worldGraph);
-      auto const finish = MakeFakeEnding(Segment(kTestNumMwmId, 0, 0, finishIsForward),
+      auto const finish = MakeFakeEnding({Segment(kTestNumMwmId, 0, 0, finishIsForward)},
                                          m2::PointD(2.0, 0.0), *worldGraph);
 
-      auto const expectedWeight =
-          MercatorBounds::DistanceOnEarth({1.0, 0.0}, {2.0, 0.0}) / KMPH2MPS(1.0);
+      auto const expectedWeight = mercator::DistanceOnEarth({1.0, 0.0}, {2.0, 0.0}) / KMPH2MPS(1.0);
       TestRoute(start, finish, expectedRoute.size(), &expectedRoute, expectedWeight, *worldGraph);
     }
   }
@@ -465,7 +468,7 @@ UNIT_TEST(OneSegmentWayBackward)
   vector<Segment> route;
   double timeSec;
   auto const resultCode = CalculateRoute(*starter, route, timeSec);
-  TEST_EQUAL(resultCode, AStarAlgorithm<IndexGraphStarter>::Result::NoPath, ());
+  TEST_EQUAL(resultCode, AlgorithmForIndexGraphStarter::Result::NoPath, ());
 }
 
 // Roads                             y:
@@ -499,13 +502,13 @@ UNIT_TEST(FakeSegmentCoordinates)
   {
     for (auto const finishIsForward : tf)
     {
-      auto const start = MakeFakeEnding(Segment(kTestNumMwmId, 0, 0, startIsForward),
+      auto const start = MakeFakeEnding({Segment(kTestNumMwmId, 0, 0, startIsForward)},
                                         m2::PointD(1, 0), *worldGraph);
-      auto const finish = MakeFakeEnding(Segment(kTestNumMwmId, 1, 0, finishIsForward),
+      auto const finish = MakeFakeEnding({Segment(kTestNumMwmId, 1, 0, finishIsForward)},
                                          m2::PointD(3, 0), *worldGraph);
 
       auto starter = MakeStarter(start, finish, *worldGraph);
-      TestRouteGeometry(*starter, AStarAlgorithm<IndexGraphStarter>::Result::OK, expectedGeom);
+      TestRouteGeometry(*starter, AlgorithmForIndexGraphStarter::Result::OK, expectedGeom);
     }
   }
 }
@@ -542,9 +545,9 @@ UNIT_TEST(FakeEndingAStarInvariant)
   auto const finish = MakeFakeEnding(0, 0, m2::PointD(2.0, 1.0), *worldGraph);
 
   auto const expectedWeight =
-      estimator->CalcOffroadWeight({1.0, 1.0}, {1.0, 0.0}) +
-      MercatorBounds::DistanceOnEarth({1.0, 0.0}, {2.0, 0.0}) / KMPH2MPS(1.0) +
-      estimator->CalcOffroadWeight({2.0, 0.0}, {2.0, 1.0});
+      estimator->CalcOffroad({1.0, 1.0}, {1.0, 0.0}, EdgeEstimator::Purpose::Weight) +
+      mercator::DistanceOnEarth({1.0, 0.0}, {2.0, 0.0}) / KMPH2MPS(1.0) +
+          estimator->CalcOffroad({2.0, 0.0}, {2.0, 1.0}, EdgeEstimator::Purpose::Weight);
   TestRoute(start, finish, expectedRoute.size(), &expectedRoute, expectedWeight, *worldGraph);
 }
 
@@ -682,13 +685,13 @@ UNIT_CLASS_TEST(RestrictionTest, LoopGraph)
                                          {kTestNumMwmId, 2, 0, true}};
 
   auto const expectedWeight =
-      MercatorBounds::DistanceOnEarth({0.0002, 0.0}, {0.0002, 0.0001}) / KMPH2MPS(100.0) +
-      MercatorBounds::DistanceOnEarth({0.0002, 0.0001}, {0.00015, 0.0001}) / KMPH2MPS(100.0) +
-      MercatorBounds::DistanceOnEarth({0.00015, 0.0001}, {0.0001, 0.0001}) / KMPH2MPS(100.0) +
-      MercatorBounds::DistanceOnEarth({0.0001, 0.0001}, {0.00005, 0.00015}) / KMPH2MPS(100.0) +
-      MercatorBounds::DistanceOnEarth({0.00005, 0.00015}, {0.00005, 0.0002}) / KMPH2MPS(100.0) +
-      MercatorBounds::DistanceOnEarth({0.00005, 0.0002}, {0.00005, 0.0003}) / KMPH2MPS(100.0) +
-      MercatorBounds::DistanceOnEarth({0.00005, 0.0003}, {0.00005, 0.0004}) / KMPH2MPS(100.0);
+      mercator::DistanceOnEarth({0.0002, 0.0}, {0.0002, 0.0001}) / KMPH2MPS(100.0) +
+      mercator::DistanceOnEarth({0.0002, 0.0001}, {0.00015, 0.0001}) / KMPH2MPS(100.0) +
+      mercator::DistanceOnEarth({0.00015, 0.0001}, {0.0001, 0.0001}) / KMPH2MPS(100.0) +
+      mercator::DistanceOnEarth({0.0001, 0.0001}, {0.00005, 0.00015}) / KMPH2MPS(100.0) +
+      mercator::DistanceOnEarth({0.00005, 0.00015}, {0.00005, 0.0002}) / KMPH2MPS(100.0) +
+      mercator::DistanceOnEarth({0.00005, 0.0002}, {0.00005, 0.0003}) / KMPH2MPS(100.0) +
+      mercator::DistanceOnEarth({0.00005, 0.0003}, {0.00005, 0.0004}) / KMPH2MPS(100.0);
   TestRoute(start, finish, expectedRoute.size(), &expectedRoute, expectedWeight, *m_graph);
 }
 
@@ -745,10 +748,10 @@ UNIT_TEST(IndexGraph_OnlyTopology_3)
 // Test that a codirectional edge is always better than others.
 UNIT_TEST(BestEdgeComparator_OneCodirectionalEdge)
 {
-  Edge const edge1 = Edge::MakeFake(MakeJunctionForTesting({-0.002, 0.0}),
-                                    MakeJunctionForTesting({-0.002, 0.002}));
-  Edge const edge2 = Edge::MakeFake(MakeJunctionForTesting({-0.002, 0.0}),
-                                    MakeJunctionForTesting({0.002, 0.0}));
+  Edge const edge1 = Edge::MakeFake(geometry::MakePointWithAltitudeForTesting({-0.002, 0.0}),
+                                    geometry::MakePointWithAltitudeForTesting({-0.002, 0.002}));
+  Edge const edge2 = Edge::MakeFake(geometry::MakePointWithAltitudeForTesting({-0.002, 0.0}),
+                                    geometry::MakePointWithAltitudeForTesting({0.002, 0.0}));
   IndexRouter::BestEdgeComparator bestEdgeComparator(m2::PointD(0.0, 0.0), m2::PointD(0.0, 0.001));
 
   TEST_EQUAL(bestEdgeComparator.Compare(edge1, edge2), -1, ());
@@ -769,10 +772,10 @@ UNIT_TEST(BestEdgeComparator_OneCodirectionalEdge)
 // Test that if there are two codirectional edges the closest one to |point| is better.
 UNIT_TEST(BestEdgeComparator_TwoCodirectionalEdges)
 {
-  Edge const edge1 = Edge::MakeFake(MakeJunctionForTesting({-0.002, 0.0}),
-                                    MakeJunctionForTesting({-0.002, 0.004}));
-  Edge const edge2 = Edge::MakeFake(MakeJunctionForTesting({0.0, 0.0}),
-                                    MakeJunctionForTesting({0.0, 0.002}));
+  Edge const edge1 = Edge::MakeFake(geometry::MakePointWithAltitudeForTesting({-0.002, 0.0}),
+                                    geometry::MakePointWithAltitudeForTesting({-0.002, 0.004}));
+  Edge const edge2 = Edge::MakeFake(geometry::MakePointWithAltitudeForTesting({0.0, 0.0}),
+                                    geometry::MakePointWithAltitudeForTesting({0.0, 0.002}));
   IndexRouter::BestEdgeComparator bestEdgeComparator(m2::PointD(0.0, 0.0), m2::PointD(0.0, 0.001));
 
   TEST_EQUAL(bestEdgeComparator.Compare(edge1, edge2), 1, ());
@@ -788,10 +791,10 @@ UNIT_TEST(BestEdgeComparator_TwoCodirectionalEdges)
 // Test that if two edges are not codirectional the closet one to |point| is better.
 UNIT_TEST(BestEdgeComparator_TwoNotCodirectionalEdges)
 {
-  Edge const edge1 = Edge::MakeFake(MakeJunctionForTesting({-0.002, 0.002}),
-                                    MakeJunctionForTesting({0.002, 0.002}));
-  Edge const edge2 = Edge::MakeFake(MakeJunctionForTesting({-0.002, 0.0}),
-                                    MakeJunctionForTesting({0.002, 0.0}));
+  Edge const edge1 = Edge::MakeFake(geometry::MakePointWithAltitudeForTesting({-0.002, 0.002}),
+                                    geometry::MakePointWithAltitudeForTesting({0.002, 0.002}));
+  Edge const edge2 = Edge::MakeFake(geometry::MakePointWithAltitudeForTesting({-0.002, 0.0}),
+                                    geometry::MakePointWithAltitudeForTesting({0.002, 0.0}));
   IndexRouter::BestEdgeComparator bestEdgeComparator(m2::PointD(0.0, 0.0), m2::PointD(0.0, 0.001));
 
   TEST_EQUAL(bestEdgeComparator.Compare(edge1, edge2), 1, ());
@@ -807,8 +810,8 @@ UNIT_TEST(BestEdgeComparator_TwoNotCodirectionalEdges)
 UNIT_TEST(BestEdgeComparator_TwoEdgesOfOneFeature)
 {
   // Please see a note in class Edge definition about start and end point of Edge.
-  Edge const edge1 = Edge::MakeFake(MakeJunctionForTesting({-0.002, 0.0}),
-                                    MakeJunctionForTesting({0.002, 0.0}));
+  Edge const edge1 = Edge::MakeFake(geometry::MakePointWithAltitudeForTesting({-0.002, 0.0}),
+                                    geometry::MakePointWithAltitudeForTesting({0.002, 0.0}));
   Edge const edge2 = edge1.GetReverseEdge();
 
   IndexRouter::BestEdgeComparator bestEdgeComparator(m2::PointD(0.0, 0.001), m2::PointD(0.001, 0.0));
@@ -840,14 +843,14 @@ UNIT_TEST(FinishNearZeroEdge)
   traffic::TrafficCache const trafficCache;
   shared_ptr<EdgeEstimator> estimator = CreateEstimatorForCar(trafficCache);
   unique_ptr<WorldGraph> worldGraph = BuildWorldGraph(move(loader), estimator, joints);
-  auto const start = MakeFakeEnding(Segment(kTestNumMwmId, 0, 0, true /* forward */),
+  auto const start = MakeFakeEnding({Segment(kTestNumMwmId, 0, 0, true /* forward */)},
                                     m2::PointD(1.0, 0.0), *worldGraph);
-  auto const finish = MakeFakeEnding(Segment(kTestNumMwmId, 1, 0, false /* forward */),
+  auto const finish = MakeFakeEnding({Segment(kTestNumMwmId, 1, 0, false /* forward */)},
                                      m2::PointD(5.0, 0.0), *worldGraph);
   auto starter = MakeStarter(start, finish, *worldGraph);
 
   vector<m2::PointD> const expectedGeom = {
       {1.0 /* x */, 0.0 /* y */}, {2.0, 0.0}, {4.0, 0.0}, {5.0, 0.0}};
-  TestRouteGeometry(*starter, AStarAlgorithm<IndexGraphStarter>::Result::OK, expectedGeom);
+  TestRouteGeometry(*starter, AlgorithmForIndexGraphStarter::Result::OK, expectedGeom);
 }
 }  // namespace routing_test

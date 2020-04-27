@@ -1,8 +1,10 @@
+#include "search/locality_scorer.hpp"
+
 #include "testing/testing.hpp"
 
 #include "search/cbv.hpp"
 #include "search/geocoder_context.hpp"
-#include "search/locality_scorer.hpp"
+#include "search/ranking_utils.hpp"
 
 #include "indexer/search_delimiters.hpp"
 #include "indexer/search_string_utils.hpp"
@@ -15,7 +17,9 @@
 #include "base/string_utils.hpp"
 
 #include <algorithm>
+#include <cstdint>
 #include <set>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -30,15 +34,27 @@ class LocalityScorerTest : public LocalityScorer::Delegate
 public:
   using Ids = vector<uint32_t>;
 
-  LocalityScorerTest() : m_scorer(m_params, static_cast<LocalityScorer::Delegate &>(*this)) {}
+  LocalityScorerTest()
+    : m_scorer(m_params, m2::PointD(), static_cast<LocalityScorer::Delegate &>(*this))
+  {
+  }
 
   void InitParams(string const & query, bool lastTokenIsPrefix)
   {
+    InitParams(query, m2::PointD(), lastTokenIsPrefix);
+  }
+
+  void InitParams(string const & query, m2::PointD const & pivot, bool lastTokenIsPrefix)
+  {
     m_params.Clear();
+
+    m_scorer.SetPivotForTesting(pivot);
 
     vector<UniString> tokens;
     Delimiters delims;
     SplitUniString(NormalizeAndSimplifyString(query), base::MakeBackInsertFunctor(tokens), delims);
+    // We remove stop words from query in processor.
+    base::EraseIf(tokens, &IsStopWord);
 
     if (lastTokenIsPrefix)
     {
@@ -51,7 +67,8 @@ public:
     }
   }
 
-  void AddLocality(string const & name, uint32_t featureId, uint8_t rank = 0)
+  void AddLocality(string const & name, uint32_t featureId, uint8_t rank = 0,
+                   m2::PointD const & center = {})
   {
     set<UniString> tokens;
     Delimiters delims;
@@ -62,6 +79,7 @@ public:
 
     m_names[featureId].push_back(name);
     m_ranks[featureId] = rank;
+    m_centers[featureId] = center;
   }
 
   Ids GetTopLocalities(size_t limit)
@@ -76,22 +94,23 @@ public:
       bool const isPrefixToken = m_params.IsPrefixToken(i);
 
       vector<uint64_t> ids;
-      token.ForEach([&](UniString const & name) {
+      token.ForOriginalAndSynonyms([&](UniString const & synonym) {
         if (isPrefixToken)
         {
-          m_searchIndex.ForEachInSubtree(name,
+          m_searchIndex.ForEachInSubtree(synonym,
                                          [&](UniString const & /* prefix */, uint32_t featureId) {
                                            ids.push_back(featureId);
                                          });
         }
         else
         {
-          m_searchIndex.ForEachInNode(name, [&](uint32_t featureId) { ids.push_back(featureId); });
+          m_searchIndex.ForEachInNode(synonym,
+                                      [&](uint32_t featureId) { ids.push_back(featureId); });
         }
       });
 
       base::SortUnique(ids);
-      ctx.m_features.emplace_back(coding::CompressedBitVectorBuilder::FromBitPositions(ids));
+      ctx.m_features.emplace_back(CBV(coding::CompressedBitVectorBuilder::FromBitPositions(ids)));
     }
 
     CBV filter;
@@ -121,28 +140,17 @@ public:
     return it == m_ranks.end() ? 0 : it->second;
   }
 
-  CBV GetMatchedFeatures(strings::UniString const & token, bool isPrefix) const override
+  optional<m2::PointD> GetCenter(uint32_t featureId) override
   {
-    vector<uint64_t> ids;
-
-    if (isPrefix)
-    {
-      m_searchIndex.ForEachInSubtree(token, [&ids](strings::UniString const & /* prefix */,
-                                                   uint32_t id) { ids.push_back(id); });
-    }
-    else
-    {
-      m_searchIndex.ForEachInNode(token, [&ids](uint32_t id) { ids.push_back(id); });
-    }
-
-    base::SortUnique(ids);
-    return CBV{coding::CompressedBitVectorBuilder::FromBitPositions(move(ids))};
+    auto it = m_centers.find(featureId);
+    return it == m_centers.end() ? optional<m2::PointD>() : it->second;
   }
 
 protected:
   QueryParams m_params;
   unordered_map<uint32_t, vector<string>> m_names;
   unordered_map<uint32_t, uint8_t> m_ranks;
+  unordered_map<uint32_t, m2::PointD> m_centers;
   LocalityScorer m_scorer;
 
   base::MemTrie<UniString, base::VectorValues<uint32_t>> m_searchIndex;
@@ -166,7 +174,7 @@ UNIT_CLASS_TEST(LocalityScorerTest, Smoke)
 
   TEST_EQUAL(GetTopLocalities(100 /* limit */), Ids({ID_NEW_ORLEANS, ID_YORK, ID_NEW_YORK}), ());
   TEST_EQUAL(GetTopLocalities(2 /* limit */), Ids({ID_YORK, ID_NEW_YORK}), ());
-  TEST_EQUAL(GetTopLocalities(1 /* limit */), Ids({ID_YORK}), ());
+  TEST_EQUAL(GetTopLocalities(1 /* limit */), Ids({ID_NEW_YORK}), ());
 }
 
 UNIT_CLASS_TEST(LocalityScorerTest, NumbersMatch)
@@ -250,4 +258,51 @@ UNIT_CLASS_TEST(LocalityScorerTest, Ranks)
              Ids({ID_SAN_MARINO, ID_SAN_ANTONIO, ID_SAN_FRANCISCO}), ());
   TEST_EQUAL(GetTopLocalities(2 /* limit */), Ids({ID_SAN_MARINO, ID_SAN_FRANCISCO}), ());
   TEST_EQUAL(GetTopLocalities(1 /* limit */), Ids({ID_SAN_FRANCISCO}), ());
+}
+
+UNIT_CLASS_TEST(LocalityScorerTest, Similarity)
+{
+  enum
+  {
+    ID_SAN_CARLOS,
+    ID_SAN_CARLOS_BARILOCHE,
+    ID_SAN_CARLOS_APOQUINDO
+  };
+
+  AddLocality("San Carlos", ID_SAN_CARLOS, 20 /* rank */);
+  AddLocality("San Carlos de Bariloche", ID_SAN_CARLOS_BARILOCHE, 30 /* rank */);
+  AddLocality("San Carlos de Apoquindo", ID_SAN_CARLOS_APOQUINDO, 10 /* rank */);
+
+  InitParams("San Carlos", false /* lastTokenIsPrefix */);
+  TEST_EQUAL(GetTopLocalities(1 /* limit */), Ids({ID_SAN_CARLOS}), ());
+
+  InitParams("San Carlos de Bariloche", false /* lastTokenIsPrefix */);
+  TEST_EQUAL(GetTopLocalities(1 /* limit */), Ids({ID_SAN_CARLOS_BARILOCHE}), ());
+
+  InitParams("San Carlos de Apoquindo", false /* lastTokenIsPrefix */);
+  TEST_EQUAL(GetTopLocalities(1 /* limit */), Ids({ID_SAN_CARLOS_APOQUINDO}), ());
+}
+
+UNIT_CLASS_TEST(LocalityScorerTest, DistanceToPivot)
+{
+  enum
+  {
+    ID_ABERDEEN_CLOSE,
+    ID_ABERDEEN_RANK1,
+    ID_ABERDEEN_RANK2,
+    ID_ABERDEEN_RANK3
+  };
+
+  AddLocality("Aberdeen", ID_ABERDEEN_CLOSE, 10 /* rank */, m2::PointD(11.0, 11.0));
+  AddLocality("Aberdeen", ID_ABERDEEN_RANK1, 100 /* rank */, m2::PointD(0.0, 0.0));
+  AddLocality("Aberdeen", ID_ABERDEEN_RANK2, 50 /* rank */, m2::PointD(2.0, 2.0));
+  AddLocality("Aberdeen", ID_ABERDEEN_RANK3, 5 /* rank */, m2::PointD(4.0, 4.0));
+
+  InitParams("Aberdeen", m2::PointD(10.0, 10.0) /* pivot */, false /* lastTokenIsPrefix */);
+
+  // Expected order is: the closest one (ID_ABERDEEN_CLOSE) first, then sorted by rank.
+  TEST_EQUAL(GetTopLocalities(1 /* limit */), Ids({ID_ABERDEEN_CLOSE}), ());
+  TEST_EQUAL(GetTopLocalities(2 /* limit */), Ids({ID_ABERDEEN_CLOSE, ID_ABERDEEN_RANK1}), ());
+  TEST_EQUAL(GetTopLocalities(3 /* limit */),
+             Ids({ID_ABERDEEN_CLOSE, ID_ABERDEEN_RANK1, ID_ABERDEEN_RANK2}), ());
 }

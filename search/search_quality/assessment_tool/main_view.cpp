@@ -18,15 +18,25 @@
 #include "geometry/mercator.hpp"
 
 #include "base/assert.hpp"
+#include "base/checked_cast.hpp"
 #include "base/string_utils.hpp"
+
+#include <limits>
 
 #include <QtCore/Qt>
 #include <QtGui/QCloseEvent>
+#include <QtGui/QIntValidator>
+#include <QtGui/QKeySequence>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDesktopWidget>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QDockWidget>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QFormLayout>
 #include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QToolBar>
@@ -35,7 +45,7 @@ using Relevance = search::Sample::Result::Relevance;
 
 namespace
 {
-char const kJSON[] = "JSON files (*.json)";
+char const kJSON[] = "JSON Lines files (*.jsonl)";
 }  // namespace
 
 MainView::MainView(Framework & framework) : m_framework(framework)
@@ -48,8 +58,9 @@ MainView::MainView(Framework & framework) : m_framework(framework)
   InitDocks();
   InitMenuBar();
 
-  m_framework.SetMapSelectionListeners(
-      [this](place_page::Info const & info) {
+  m_framework.SetPlacePageListeners(
+      [this]() {
+        auto const & info = m_framework.GetCurrentPlacePageInfo();
         auto const & selectedFeature = info.GetID();
         if (!selectedFeature.IsValid())
           return;
@@ -61,15 +72,16 @@ MainView::MainView(Framework & framework) : m_framework(framework)
           return;
         }
 
-        FeatureType ft;
-        if (!m_framework.GetFeatureByID(selectedFeature, ft))
+        auto mapObject = m_framework.GetMapObjectByID(selectedFeature);
+        if (!mapObject.GetID().IsValid())
           return;
 
-        auto const address = m_framework.GetAddressInfoAtPoint(feature::GetCenter(ft));
-        FeatureInfoDialog dialog(this /* parent */, ft, address, m_sampleLocale);
+        auto const address = m_framework.GetAddressAtPoint(mapObject.GetMercator());
+        FeatureInfoDialog dialog(this /* parent */, mapObject, address, m_sampleLocale);
         dialog.exec();
       },
-      [this](bool /* switchFullScreenMode */) { m_selectedFeature = FeatureID(); });
+      [this](bool /* switchFullScreenMode */) { m_selectedFeature = FeatureID(); },
+      {} /* onUpdate */);
 }
 
 MainView::~MainView()
@@ -85,6 +97,7 @@ void MainView::SetSamples(ContextList::SamplesSlice const & samples)
 {
   m_samplesView->SetSamples(samples);
   m_sampleView->Clear();
+  m_initiateBackgroundSearch->setEnabled(true);
 }
 
 void MainView::OnSearchStarted()
@@ -99,19 +112,19 @@ void MainView::OnSearchCompleted()
   m_sampleView->OnSearchCompleted();
 }
 
-void MainView::ShowSample(size_t sampleIndex, search::Sample const & sample, bool positionAvailable,
-                          m2::PointD const & position, bool hasEdits)
+void MainView::ShowSample(size_t sampleIndex, search::Sample const & sample,
+                          std::optional<m2::PointD> const & position, bool isUseless, bool hasEdits)
 {
   m_sampleLocale = sample.m_locale;
 
   MoveViewportToRect(sample.m_viewport);
 
-  m_sampleView->SetContents(sample, positionAvailable, position);
+  m_sampleView->SetContents(sample, position);
   m_sampleView->show();
 
-  OnResultChanged(sampleIndex, ResultType::Found, Edits::Update::MakeAll());
-  OnResultChanged(sampleIndex, ResultType::NonFound, Edits::Update::MakeAll());
-  OnSampleChanged(sampleIndex, hasEdits);
+  OnResultChanged(sampleIndex, ResultType::Found, ResultsEdits::Update::MakeAll());
+  OnResultChanged(sampleIndex, ResultType::NonFound, ResultsEdits::Update::MakeAll());
+  OnSampleChanged(sampleIndex, isUseless, hasEdits);
 }
 
 void MainView::AddFoundResults(search::Results::ConstIter begin, search::Results::ConstIter end)
@@ -120,9 +133,16 @@ void MainView::AddFoundResults(search::Results::ConstIter begin, search::Results
 }
 
 void MainView::ShowNonFoundResults(std::vector<search::Sample::Result> const & results,
-                                   std::vector<Edits::Entry> const & entries)
+                                   std::vector<ResultsEdits::Entry> const & entries)
 {
   m_sampleView->ShowNonFoundResults(results, entries);
+}
+
+void MainView::ShowMarks(Context const & context)
+{
+  ClearSearchResultMarks();
+  ShowFoundResultsMarks(context.m_foundResults.begin(), context.m_foundResults.end());
+  ShowNonFoundResultsMarks(context.m_nonFoundResults, context.m_nonFoundResultsEdits.GetEntries());
 }
 
 void MainView::ShowFoundResultsMarks(search::Results::ConstIter begin,
@@ -133,7 +153,7 @@ void MainView::ShowFoundResultsMarks(search::Results::ConstIter begin,
 }
 
 void MainView::ShowNonFoundResultsMarks(std::vector<search::Sample::Result> const & results,
-                                        std::vector<Edits::Entry> const & entries)
+                                        std::vector<ResultsEdits::Entry> const & entries)
 {
   m_sampleView->ShowNonFoundResultsMarks(results, entries);
 }
@@ -150,7 +170,7 @@ void MainView::MoveViewportToResult(search::Sample::Result const & result)
 {
   int constexpr kViewportAroundResultSizeM = 100;
   auto const rect =
-      MercatorBounds::RectByCenterXYAndSizeInMeters(result.m_pos, kViewportAroundResultSizeM);
+      mercator::RectByCenterXYAndSizeInMeters(result.m_pos, kViewportAroundResultSizeM);
   MoveViewportToRect(rect);
 }
 
@@ -159,12 +179,14 @@ void MainView::MoveViewportToRect(m2::RectD const & rect)
   m_framework.ShowRect(rect, -1 /* maxScale */, false /* animation */);
 }
 
-void MainView::OnResultChanged(size_t sampleIndex, ResultType type, Edits::Update const & update)
+void MainView::OnResultChanged(size_t sampleIndex, ResultType type,
+                               ResultsEdits::Update const & update)
 {
   m_samplesView->OnUpdate(sampleIndex);
 
   if (!m_samplesView->IsSelected(sampleIndex))
     return;
+
   switch (type)
   {
   case ResultType::Found: m_sampleView->GetFoundResultsView().Update(update); break;
@@ -172,11 +194,13 @@ void MainView::OnResultChanged(size_t sampleIndex, ResultType type, Edits::Updat
   }
 }
 
-void MainView::OnSampleChanged(size_t sampleIndex, bool hasEdits)
+void MainView::OnSampleChanged(size_t sampleIndex, bool isUseless, bool hasEdits)
 {
+  m_samplesView->OnUpdate(sampleIndex);
   if (!m_samplesView->IsSelected(sampleIndex))
     return;
-  SetSampleDockTitle(hasEdits);
+  SetSampleDockTitle(isUseless, hasEdits);
+  m_sampleView->OnUselessnessChanged(isUseless);
 }
 
 void MainView::OnSamplesChanged(bool hasEdits)
@@ -186,10 +210,11 @@ void MainView::OnSamplesChanged(bool hasEdits)
   m_saveAs->setEnabled(hasEdits);
 }
 
-void MainView::SetEdits(size_t sampleIndex, Edits & foundResultsEdits, Edits & nonFoundResultsEdits)
+void MainView::SetResultsEdits(size_t sampleIndex, ResultsEdits & foundResultsEdits,
+                               ResultsEdits & nonFoundResultsEdits)
 {
   CHECK(m_samplesView->IsSelected(sampleIndex), ());
-  m_sampleView->SetEdits(foundResultsEdits, nonFoundResultsEdits);
+  m_sampleView->SetResultsEdits(foundResultsEdits, nonFoundResultsEdits);
 }
 
 void MainView::ShowError(std::string const & msg)
@@ -206,7 +231,7 @@ void MainView::Clear()
   SetSamplesDockTitle(false /* hasEdits */);
 
   m_sampleView->Clear();
-  SetSampleDockTitle(false /* hasEdits */);
+  SetSampleDockTitle(false /* isUseless */, false /* hasEdits */);
 
   m_skipFeatureInfoDialog = false;
   m_sampleLocale.clear();
@@ -276,6 +301,17 @@ void MainView::InitMenuBar()
     fileMenu->addAction(m_saveAs);
   }
 
+  {
+    m_initiateBackgroundSearch = new QAction(tr("Initiate background search"), this /* parent */);
+    m_initiateBackgroundSearch->setShortcut(Qt::CTRL | Qt::Key_I);
+    m_initiateBackgroundSearch->setStatusTip(
+        tr("Search in the background for the queries from a selected range"));
+    m_initiateBackgroundSearch->setEnabled(false);
+    connect(m_initiateBackgroundSearch, &QAction::triggered, this,
+            &MainView::InitiateBackgroundSearch);
+    fileMenu->addAction(m_initiateBackgroundSearch);
+  }
+
   fileMenu->addSeparator();
 
   {
@@ -306,7 +342,8 @@ void MainView::InitMapWidget()
   widget->setLayout(layout);
 
   {
-    auto * mapWidget = new qt::common::MapWidget(m_framework, false /* apiOpenGLES3 */, widget /* parent */);
+    auto * mapWidget = new qt::common::MapWidget(m_framework, false /* apiOpenGLES3 */,
+                                                 false /* screenshotMode */, widget /* parent */);
     connect(mapWidget, &qt::common::MapWidget::OnContextMenuRequested,
             [this](QPoint const & p) { AddSelectedFeature(p); });
     auto * toolBar = new QToolBar(widget /* parent */);
@@ -329,6 +366,9 @@ void MainView::InitDocks()
     auto * model = m_samplesView->selectionModel();
     connect(model, &QItemSelectionModel::selectionChanged, this, &MainView::OnSampleSelected);
   }
+
+  connect(m_samplesView, &SamplesView::FlipSampleUsefulness,
+          [this](int index) { m_model->FlipSampleUsefulness(index); });
 
   m_samplesDock = CreateDock(*m_samplesView);
   addDockWidget(Qt::LeftDockWidgetArea, m_samplesDock);
@@ -362,7 +402,7 @@ void MainView::InitDocks()
   connect(m_sampleDock, &QDockWidget::dockLocationChanged,
           [this](Qt::DockWidgetArea area) { m_sampleView->OnLocationChanged(area); });
   addDockWidget(Qt::RightDockWidgetArea, m_sampleDock);
-  SetSampleDockTitle(false /* hasEdits */);
+  SetSampleDockTitle(false /* isUseless */, false /* hasEdits */);
 }
 
 void MainView::Open()
@@ -392,6 +432,52 @@ void MainView::SaveAs()
     m_model->SaveAs(file);
 }
 
+void MainView::InitiateBackgroundSearch()
+{
+  QDialog dialog(this);
+  QFormLayout form(&dialog);
+
+  form.addRow(new QLabel("Queries range"));
+
+  QValidator * validator = new QIntValidator(0, std::numeric_limits<int>::max(), this);
+
+  QLineEdit * lineEditFrom = new QLineEdit(&dialog);
+  form.addRow(new QLabel("First"), lineEditFrom);
+  lineEditFrom->setValidator(validator);
+
+  QLineEdit * lineEditTo = new QLineEdit(&dialog);
+  form.addRow(new QLabel("Last"), lineEditTo);
+  lineEditTo->setValidator(validator);
+
+  QDialogButtonBox buttonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal,
+                             &dialog);
+  form.addRow(&buttonBox);
+
+  connect(&buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+  connect(&buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+
+  if (dialog.exec() != QDialog::Accepted)
+    return;
+
+  std::string const strFrom = lineEditFrom->text().toStdString();
+  std::string const strTo = lineEditTo->text().toStdString();
+  uint64_t from = 0;
+  uint64_t to = 0;
+  if (!strings::to_uint64(strFrom, from))
+  {
+    LOG(LERROR, ("Could not parse number from", strFrom));
+    return;
+  }
+  if (!strings::to_uint64(strTo, to))
+  {
+    LOG(LERROR, ("Could not parse number from", strTo));
+    return;
+  }
+
+  m_model->InitiateBackgroundSearch(base::checked_cast<size_t>(from),
+                                    base::checked_cast<size_t>(to));
+}
+
 void MainView::SetSamplesDockTitle(bool hasEdits)
 {
   CHECK(m_samplesDock, ());
@@ -401,13 +487,15 @@ void MainView::SetSamplesDockTitle(bool hasEdits)
     m_samplesDock->setWindowTitle(tr("Samples"));
 }
 
-void MainView::SetSampleDockTitle(bool hasEdits)
+void MainView::SetSampleDockTitle(bool isUseless, bool hasEdits)
 {
   CHECK(m_sampleDock, ());
+  std::string title = "Sample";
   if (hasEdits)
-    m_sampleDock->setWindowTitle(tr("Sample *"));
-  else
-    m_sampleDock->setWindowTitle(tr("Sample"));
+    title += " *";
+  if (isUseless)
+    title += " (useless)";
+  m_sampleDock->setWindowTitle(tr(title.data()));
 }
 
 MainView::SaveResult MainView::TryToSaveEdits(QString const & msg)

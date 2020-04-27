@@ -8,10 +8,11 @@
 #include "base/string_utils.hpp"
 
 #include <algorithm>
+#include <cstddef>
+#include <cstdint>
 #include <iterator>
 #include <map>
 #include <memory>
-#include <queue>
 #include <type_traits>
 #include <vector>
 
@@ -40,7 +41,7 @@ public:
     template <typename T>
     void Add(T const * begin, T const * const end)
     {
-      static_assert(is_integral<T>::value, "");
+      static_assert(std::is_integral<T>::value, "");
       AddImpl(begin, end);
     }
 
@@ -170,14 +171,14 @@ public:
   template <typename TWriter, typename T>
   uint32_t EncodeAndWrite(TWriter & writer, T const * begin, T const * end) const
   {
-    static_assert(is_integral<T>::value, "");
+    static_assert(std::is_integral<T>::value, "");
     return EncodeAndWriteImpl(writer, begin, end);
   }
 
   template <typename TWriter, typename It>
   uint32_t EncodeAndWrite(TWriter & writer, It begin, It end) const
   {
-    static_assert(is_integral<typename It::value_type>::value, "");
+    static_assert(std::is_integral<typename It::value_type>::value, "");
     return EncodeAndWriteImpl(writer, begin, end);
   }
 
@@ -200,7 +201,6 @@ public:
   {
     BitReader<TSource> bitReader(src);
     size_t sz = static_cast<size_t>(ReadVarUint<uint32_t, TSource>(src));
-    std::vector<strings::UniChar> v(sz);
     for (size_t i = 0; i < sz; ++i)
       *out++ = ReadAndDecode(bitReader);
     return out;
@@ -262,7 +262,7 @@ private:
   {
     static_assert(sizeof(*begin) <= 4, "");
 
-    size_t const d = base::asserted_cast<size_t>(distance(begin, end));
+    size_t const d = base::asserted_cast<size_t>(std::distance(begin, end));
     BitWriter<TWriter> bitWriter(writer);
     WriteVarUint(writer, d);
     uint32_t sz = 0;

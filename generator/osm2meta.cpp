@@ -1,19 +1,23 @@
 #include "generator/osm2meta.hpp"
 
-#include "platform/measurement_utils.hpp"
-
 #include "routing/routing_helpers.hpp"
 
-#include "coding/url_encode.hpp"
+#include "indexer/classificator.hpp"
+#include "indexer/ftypes_matcher.hpp"
+
+#include "platform/measurement_utils.hpp"
+
+#include "coding/url.hpp"
 
 #include "base/logging.hpp"
+#include "base/math.hpp"
 #include "base/string_utils.hpp"
 
 #include <algorithm>
 #include <cctype>
 #include <cmath>
 #include <cstdlib>
-#include <iostream>
+#include <optional>
 #include <sstream>
 #include <unordered_map>
 #include <unordered_set>
@@ -65,10 +69,11 @@ private:
   vector<string> m_values;
 };
 
-void CollapseMultipleConsecutiveCharsIntoOne(char c, string & str)
+bool IsNoNameNoAddressBuilding(FeatureParams const & params)
 {
-  auto const comparator = [c](char lhs, char rhs) { return lhs == rhs && lhs == c; };
-  str.erase(unique(str.begin(), str.end(), comparator), str.end());
+  static uint32_t const buildingType = classif().GetTypeByPath({"building"});
+  return params.m_types.size() == 1 && params.m_types[0] == buildingType &&
+         params.house.Get().empty() && params.name.IsEmpty();
 }
 }  // namespace
 
@@ -116,6 +121,9 @@ string MetadataTagProcessorImpl::ValidateAndFormat_opening_hours(string const & 
 
 string MetadataTagProcessorImpl::ValidateAndFormat_ele(string const & v) const
 {
+  if (IsNoNameNoAddressBuilding(m_params))
+    return {};
+
   return measurement_utils::OSMDistanceToMetersString(v);
 }
 
@@ -135,11 +143,6 @@ string MetadataTagProcessorImpl::ValidateAndFormat_turn_lanes_backward(string co
 }
 
 string MetadataTagProcessorImpl::ValidateAndFormat_email(string const & v) const
-{
-  return v;
-}
-
-string MetadataTagProcessorImpl::ValidateAndFormat_postcode(string const & v) const
 {
   return v;
 }
@@ -200,31 +203,6 @@ string MetadataTagProcessorImpl::ValidateAndFormat_denomination(string const & v
   return v;
 }
 
-string MetadataTagProcessorImpl::ValidateAndFormat_cuisine(string v) const
-{
-  strings::MakeLowerCaseInplace(v);
-  strings::SimpleTokenizer iter(v, ",;");
-  MultivalueCollector collector;
-  while (iter) {
-    string normalized = *iter;
-    strings::Trim(normalized, " ");
-    CollapseMultipleConsecutiveCharsIntoOne(' ', normalized);
-    replace(normalized.begin(), normalized.end(), ' ', '_');
-    // Avoid duplication for some cuisines.
-    if (normalized == "bbq" || normalized == "barbeque")
-      normalized = "barbecue";
-    if (normalized == "doughnut")
-      normalized = "donut";
-    if (normalized == "steak")
-      normalized = "steak_house";
-    if (normalized == "coffee")
-      normalized = "coffee_shop";
-    collector(normalized);
-    ++iter;
-  }
-  return collector.GetString();
-}
-
 string MetadataTagProcessorImpl::ValidateAndFormat_wikipedia(string v) const
 {
   strings::Trim(v);
@@ -242,7 +220,7 @@ string MetadataTagProcessorImpl::ValidateAndFormat_wikipedia(string v) const
       if (slashIndex != string::npos && slashIndex + 1 != baseIndex)
       {
         // Normalize article title according to OSM standards.
-        string title = UrlDecode(v.substr(baseIndex + baseSize));
+        string title = url::UrlDecode(v.substr(baseIndex + baseSize));
         replace(title.begin(), title.end(), '_', ' ');
         return v.substr(slashIndex + 1, baseIndex - slashIndex - 1) + ":" + title;
       }
@@ -272,6 +250,9 @@ string MetadataTagProcessorImpl::ValidateAndFormat_wikipedia(string v) const
 
 string MetadataTagProcessorImpl::ValidateAndFormat_airport_iata(string const & v) const
 {
+  if (!ftypes::IsAirportChecker::Instance()(m_params.m_types))
+    return {};
+
   if (v.size() != 3)
     return {};
 
@@ -284,3 +265,110 @@ string MetadataTagProcessorImpl::ValidateAndFormat_airport_iata(string const & v
   }
   return str;
 }
+
+string MetadataTagProcessorImpl::ValidateAndFormat_duration(string const & v) const
+{
+  if (!ftypes::IsFerryChecker::Instance()(m_params.m_types))
+    return {};
+
+  auto const format = [](double hours) -> string {
+    if (base::AlmostEqualAbs(hours, 0.0, 1e-5))
+      return {};
+
+    stringstream ss;
+    ss << setprecision(5);
+    ss << hours;
+    return ss.str();
+  };
+
+  auto const readNumber = [&v](size_t & pos) -> optional<uint32_t> {
+    uint32_t number = 0;
+    size_t const startPos = pos;
+    while (pos < v.size() && isdigit(v[pos]))
+    {
+      number *= 10;
+      number += v[pos] - '0';
+      ++pos;
+    }
+
+    if (startPos == pos)
+      return {};
+
+    return {number};
+  };
+
+  auto const convert = [](char type, uint32_t number) -> optional<double> {
+    switch (type)
+    {
+    case 'H': return number;
+    case 'M': return number / 60.0;
+    case 'S': return number / 3600.0;
+    }
+
+    return {};
+  };
+
+  if (v.empty())
+    return {};
+
+  double hours = 0.0;
+  size_t pos = 0;
+  optional<uint32_t> op;
+
+  if (strings::StartsWith(v, "PT"))
+  {
+    if (v.size() < 4)
+      return {};
+
+    pos = 2;
+    while (pos < v.size() && (op = readNumber(pos)))
+    {
+      if (pos >= v.size())
+        return {};
+
+      char const type = v[pos];
+      auto const addHours = convert(type, *op);
+      if (addHours)
+        hours += *addHours;
+      else
+        return {};
+
+      ++pos;
+    }
+
+    if (!op)
+      return {};
+
+    return format(hours);
+  }
+
+  // "hh:mm:ss" or just "mm"
+  vector<uint32_t> numbers;
+  while (pos < v.size() && (op = readNumber(pos)))
+  {
+    numbers.emplace_back(*op);
+    if (pos >= v.size())
+      break;
+
+    if (v[pos] != ':')
+      return {};
+
+    ++pos;
+  }
+
+  if (numbers.size() > 3 || !op)
+    return {};
+
+  if (numbers.size() == 1)
+    return format(numbers.back() / 60.0);
+
+  double pow = 1.0;
+  for (auto number : numbers)
+  {
+    hours += number / pow;
+    pow *= 60.0;
+  }
+
+  return format(hours);
+}
+

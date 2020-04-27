@@ -1,15 +1,13 @@
 #import "MWMObjectsCategorySelectorController.h"
 #import "MWMAuthorizationCommon.h"
 #import "MWMObjectsCategorySelectorDataSource.h"
-#import "MWMCommon.h"
 #import "MWMEditorViewController.h"
 #import "MWMKeyboard.h"
 #import "MWMTableViewCell.h"
 #import "Statistics.h"
 #import "SwiftBridge.h"
-#import "UIViewController+Navigation.h"
 
-#include "Framework.h"
+#include <CoreApi/Framework.h>
 
 using namespace osm;
 
@@ -52,31 +50,24 @@ NSString * const kToEditorSegue = @"CategorySelectorToEditorSegue";
 
 - (void)configTable
 {
-  self.tableView.backgroundColor = [UIColor pressBackground];
-  self.tableView.separatorColor = [UIColor blackDividers];
   [self.tableView registerClass:[MWMTableViewCell class]
          forCellReuseIdentifier:[UITableViewCell className]];
 }
 
-- (void)setSelectedCategory:(string const &)type
+- (void)setSelectedCategory:(std::string const &)type
 {
   self.selectedType = @(type.c_str());
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
-  setStatusBarBackgroundColor(UIColor.clearColor);
   return UIStatusBarStyleLightContent;
 }
 
 - (void)configNavBar { self.title = L(@"editor_add_select_category"); }
 - (void)configSearchBar
 {
-  self.searchBar.backgroundImage = [UIImage imageWithColor:[UIColor primary]];
   self.searchBar.placeholder = L(@"search");
-  UITextField * textFiled = [self.searchBar valueForKey:@"searchField"];
-  UILabel * placeholder = [textFiled valueForKey:@"_placeholderLabel"];
-  placeholder.textColor = [UIColor blackHintText];
 }
 
 - (void)onDone
@@ -105,7 +96,7 @@ NSString * const kToEditorSegue = @"CategorySelectorToEditorSegue";
         withParameters:@{
           kStatIsAuthenticated: @(AuthorizationHaveCredentials()),
           kStatIsOnline: Platform::IsConnected() ? kStatYes : kStatNo,
-          kStatEditorMWMName: @(featureID.GetMwmName().c_str()),
+          kStatMWMName: @(featureID.GetMwmName().c_str()),
           kStatEditorMWMVersion: @(featureID.GetMwmVersion())
         }];
 }

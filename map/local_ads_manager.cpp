@@ -20,17 +20,17 @@
 #include "platform/preferred_languages.hpp"
 #include "platform/settings.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/point_coding.hpp"
 #include "coding/string_utf8_multilang.hpp"
-#include "coding/url_encode.hpp"
+#include "coding/url.hpp"
 
-#include "base/url_helpers.hpp"
+#include "base/file_name_utils.hpp"
 
 #include "private.h"
 
 #include <array>
 #include <cstring>
+#include <limits>
 #include <sstream>
 
 using namespace base;
@@ -77,7 +77,7 @@ void DeserializeCampaign(ReaderSource<FileReader> & src, std::string & countryNa
 
 std::string GetPath(std::string const & fileName)
 {
-  return base::JoinFoldersToPath(GetPlatform().SettingsDir(), fileName);
+  return base::JoinPath(GetPlatform().SettingsDir(), fileName);
 }
 
 std::string MakeCampaignDownloadingURL(MwmSet::MwmId const & mwmId)
@@ -90,13 +90,13 @@ std::string MakeCampaignDownloadingURL(MwmSet::MwmId const & mwmId)
   ss << kServerUrl << "/"
      << campaignDataVersion << "/"
      << mwmId.GetInfo()->GetVersion() << "/"
-     << UrlEncode(mwmId.GetInfo()->GetCountryName()) << ".ads";
+     << url::UrlEncode(mwmId.GetInfo()->GetCountryName()) << ".ads";
   return ss.str();
 }
 
-std::string GetCustomIcon(FeatureType & featureType)
+std::string GetCustomIcon(osm::MapObject const & mapObject)
 {
-  auto const & metadata = featureType.GetMetadata();
+  auto const & metadata = mapObject.GetMetadata();
   auto const websiteStr = metadata.Get(feature::Metadata::FMD_WEBSITE);
   if (websiteStr.find("burgerking") != std::string::npos)
     return "0_burger-king";
@@ -148,13 +148,13 @@ std::string MakeCampaignPageURL(FeatureID const & featureId)
 
   std::ostringstream ss;
   ss << kCampaignPageUrl << "/" << featureId.m_mwmId.GetInfo()->GetVersion() << "/"
-     << UrlEncode(featureId.m_mwmId.GetInfo()->GetCountryName()) << "/" << featureId.m_index;
+     << url::UrlEncode(featureId.m_mwmId.GetInfo()->GetCountryName()) << "/" << featureId.m_index;
 
   url::Params params;
   params.reserve(kMarketingParameters.size());
   for (auto const & key : kMarketingParameters)
   {
-    string value;
+    std::string value;
     if (!marketing::Settings::Get(key, value))
       continue;
 
@@ -236,18 +236,18 @@ void DeserializePackedFeatures(ReaderSource<FileReader> & src, std::vector<Packe
 LocalAdsManager::LocalAdsManager(GetMwmsByRectFn && getMwmsByRectFn,
                                  GetMwmIdByNameFn && getMwmIdByName,
                                  ReadFeaturesFn && readFeaturesFn,
-                                 GetFeatureByIdFn && getFeatureByIDFn)
+                                 GetMapObjectByIdFn && getMapObjectByIdFn)
   : m_getMwmsByRectFn(std::move(getMwmsByRectFn))
   , m_getMwmIdByNameFn(std::move(getMwmIdByName))
   , m_readFeaturesFn(std::move(readFeaturesFn))
-  , m_getFeatureByIdFn(std::move(getFeatureByIDFn))
+  , m_getMapObjectByIdFn(std::move(getMapObjectByIdFn))
   , m_isStarted(false)
   , m_bmManager(nullptr)
 {
   CHECK(m_getMwmsByRectFn != nullptr, ());
   CHECK(m_getMwmIdByNameFn != nullptr, ());
   CHECK(m_readFeaturesFn != nullptr, ());
-  CHECK(m_getFeatureByIdFn != nullptr, ());
+  CHECK(m_getMapObjectByIdFn != nullptr, ());
 }
 
 void LocalAdsManager::Startup(BookmarkManager * bmManager, bool isEnabled)
@@ -443,7 +443,7 @@ void LocalAdsManager::ProcessRequests(std::set<Request> && requests)
         ClearLocalAdsForMwm(mwm);
         if (!info.m_data.empty())
         {
-          auto campaignData = ParseCampaign(info.m_data, mwm, info.m_created, m_getFeatureByIdFn);
+          auto campaignData = ParseCampaign(info.m_data, mwm, info.m_created, m_getMapObjectByIdFn);
           if (!campaignData.empty())
           {
             UpdateFeaturesCache(ReadCampaignFeatures(campaignData));
@@ -608,7 +608,7 @@ void LocalAdsManager::InvalidateImpl()
     for (auto const & info : m_info)
     {
       auto data = ParseCampaign(info.second.m_data, m_getMwmIdByNameFn(info.first),
-                                info.second.m_created, m_getFeatureByIdFn);
+                                info.second.m_created, m_getMapObjectByIdFn);
       campaignData.insert(data.begin(), data.end());
     }
   }
@@ -619,9 +619,9 @@ void LocalAdsManager::InvalidateImpl()
 LocalAdsManager::CampaignData LocalAdsManager::ParseCampaign(std::vector<uint8_t> const & rawData,
                                                              MwmSet::MwmId const & mwmId,
                                                              Timestamp timestamp,
-                                                             GetFeatureByIdFn const & getFeatureByIdFn) const
+                                                             GetMapObjectByIdFn const & getMapObjectByIdFn) const
 {
-  ASSERT(getFeatureByIdFn != nullptr, ());
+  ASSERT(getMapObjectByIdFn != nullptr, ());
   CampaignData data;
   auto campaigns = local_ads::Deserialize(rawData);
   for (local_ads::Campaign const & campaign : campaigns)
@@ -641,10 +641,10 @@ LocalAdsManager::CampaignData LocalAdsManager::ParseCampaign(std::vector<uint8_t
     if (iconName.empty() || local_ads::Clock::now() > expiration)
       continue;
 
-    FeatureType featureType;
-    if (getFeatureByIdFn(featureId, featureType))
+    auto const mapObject = getMapObjectByIdFn(featureId);
+    if (mapObject.GetID().IsValid())
     {
-      auto const customIcon = GetCustomIcon(featureType);
+      auto const customIcon = GetCustomIcon(mapObject);
       if (!customIcon.empty())
         iconName = customIcon;
     }
@@ -724,7 +724,7 @@ LocalAdsManager::FeaturesCache LocalAdsManager::ReadCampaignFeatures(CampaignDat
 
       LocalAdsManager::CacheEntry entry;
       entry.m_position = feature::GetCenter(ft, scales::GetUpperScale());
-      entry.m_isCustom = it->second != nullptr;
+      entry.m_isVisibleOnMap = it->second != nullptr;
       if (it->second != nullptr)
       {
         it->second->m_position = entry.m_position;
@@ -744,7 +744,7 @@ void LocalAdsManager::UpdateFeaturesCache(FeaturesCache && features)
     if (!features.empty())
       m_featuresCache.insert(features.begin(), features.end());
     for (auto const & entry : m_featuresCache)
-      customFeatures.insert(std::make_pair(entry.first, entry.second.m_isCustom));
+      customFeatures.insert(std::make_pair(entry.first, entry.second.m_isVisibleOnMap));
   }
   m_drapeEngine.SafeCall(&df::DrapeEngine::SetCustomFeatures, std::move(customFeatures));
 }
@@ -770,10 +770,20 @@ void LocalAdsManager::ClearLocalAdsForMwm(MwmSet::MwmId const & mwmId)
   DeleteLocalAdsMarks(mwmId);
 }
 
-bool LocalAdsManager::Contains(FeatureID const & featureId) const
+bool LocalAdsManager::HasAds(FeatureID const & featureId) const
 {
   std::lock_guard<std::mutex> lock(m_featuresCacheMutex);
   return m_featuresCache.find(featureId) != m_featuresCache.cend();
+}
+
+bool LocalAdsManager::HasVisualization(FeatureID const & featureId) const
+{
+  std::lock_guard<std::mutex> lock(m_featuresCacheMutex);
+  auto const it = m_featuresCache.find(featureId);
+  if (it == m_featuresCache.cend())
+    return false;
+
+  return it->second.m_isVisibleOnMap;
 }
 
 bool LocalAdsManager::IsSupportedType(feature::TypesHolder const & types) const
@@ -844,27 +854,27 @@ void LocalAdsManager::OnLocationUpdate(location::GpsInfo const & info, int zoomL
   if (std::chrono::steady_clock::now() < (m_lastCheckTime + kMinCheckInterval))
     return;
 
-  auto const pt = MercatorBounds::FromLatLon(info.m_latitude, info.m_longitude);
+  auto const pt = mercator::FromLatLon(info.m_latitude, info.m_longitude);
 
   if ((m_foundFeatureHitCount == 0 || m_foundFeatureHitCount == kMaxHitCount) &&
-    MercatorBounds::DistanceOnEarth(m_lastCheckedPos, pt) < kMinCheckDistanceInMeters)
+      mercator::DistanceOnEarth(m_lastCheckedPos, pt) < kMinCheckDistanceInMeters)
   {
     return;
   }
 
   auto const radius = std::max(info.m_horizontalAccuracy, kMinSearchRadiusInMeters);
-  auto searchRect = MercatorBounds::RectByCenterXYAndSizeInMeters(pt, radius);
+  auto searchRect = mercator::RectByCenterXYAndSizeInMeters(pt, radius);
 
   FeatureID fid;
   {
     std::lock_guard<std::mutex> lock(m_featuresCacheMutex);
-    double minDist = numeric_limits<double>::max();
+    double minDist = std::numeric_limits<double>::max();
     for (auto const & pair : m_featuresCache)
     {
       auto const & pos = pair.second.m_position;
       if (!searchRect.IsPointInside(pos))
         continue;
-      auto const dist = MercatorBounds::DistanceOnEarth(pos, pt);
+      auto const dist = mercator::DistanceOnEarth(pos, pt);
       if (dist < radius && dist < minDist)
       {
         minDist = dist;
@@ -928,7 +938,7 @@ void LocalAdsFeaturesReader::ReadCampaignFeaturesFile()
       {
         auto const pos = Int64ToPointObsolete(data.m_mercator, kPointCoordBits);
         m_features.push_back(CampaignFeature(mwmVersion, countryId, data.m_featureIndex,
-                                             MercatorBounds::YToLat(pos.y), MercatorBounds::XToLon(pos.x)));
+                                             mercator::YToLat(pos.y), mercator::XToLon(pos.x)));
       }
     }
   }
@@ -951,16 +961,16 @@ std::vector<CampaignFeature> LocalAdsFeaturesReader::GetCampaignFeatures(double 
   if (m_features.empty())
     return {};
 
-  auto const pt = MercatorBounds::FromLatLon(lat, lon);
-  auto searchRect = MercatorBounds::RectByCenterXYAndSizeInMeters(pt, radiusInMeters);
+  auto const pt = mercator::FromLatLon(lat, lon);
+  auto searchRect = mercator::RectByCenterXYAndSizeInMeters(pt, radiusInMeters);
 
   std::multimap<uint32_t, CampaignFeature> sortedFeatures;
   for (auto const & f : m_features)
   {
-    auto const pos = MercatorBounds::FromLatLon(f.m_lat, f.m_lon);
+    auto const pos = mercator::FromLatLon(f.m_lat, f.m_lon);
     if (!searchRect.IsPointInside(pos))
       continue;
-    auto const dist = static_cast<uint32_t>(MercatorBounds::DistanceOnEarth(pos, pt));
+    auto const dist = static_cast<uint32_t>(mercator::DistanceOnEarth(pos, pt));
     sortedFeatures.insert(std::make_pair(dist, f));
   }
 

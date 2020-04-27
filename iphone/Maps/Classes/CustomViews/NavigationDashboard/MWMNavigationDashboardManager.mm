@@ -5,13 +5,7 @@
 #import "MWMSearch.h"
 #import "MapViewController.h"
 
-#import <AudioToolbox/AudioServices.h>
-#import <Crashlytics/Crashlytics.h>
 #import "SwiftBridge.h"
-
-#include "platform/platform.hpp"
-
-extern NSString * const kAlohalyticsTapEventKey;
 
 namespace
 {
@@ -30,7 +24,7 @@ using Observers = NSHashTable<Observer>;
 
 @end
 
-@interface MWMNavigationDashboardManager ()<MWMSearchManagerObserver>
+@interface MWMNavigationDashboardManager ()<MWMSearchManagerObserver, MWMRoutePreviewDelegate>
 
 @property(copy, nonatomic) NSDictionary * etaAttributes;
 @property(copy, nonatomic) NSDictionary * etaSecondaryAttributes;
@@ -54,7 +48,7 @@ using Observers = NSHashTable<Observer>;
 
 @implementation MWMNavigationDashboardManager
 
-+ (MWMNavigationDashboardManager *)manager
++ (MWMNavigationDashboardManager *)sharedManager
 {
   return [MWMMapViewControlsManager manager].navigationManager;
 }
@@ -102,17 +96,6 @@ using Observers = NSHashTable<Observer>;
     [button setTitle:title forState:UIControlStateNormal];
 }
 
-- (void)mwm_refreshUI
-{
-  [_routePreview mwm_refreshUI];
-  [_navigationInfoView mwm_refreshUI];
-  [_navigationControlView mwm_refreshUI];
-  [_baseRoutePreviewStatus mwm_refreshUI];
-  [_transportRoutePreviewStatus mwm_refreshUI];
-  _etaAttributes = nil;
-  _etaSecondaryAttributes = nil;
-}
-
 - (void)onNavigationInfoUpdated
 {
   auto entity = self.entity;
@@ -128,18 +111,33 @@ using Observers = NSHashTable<Observer>;
 
 #pragma mark - On route updates
 
-- (void)onRoutePrepare { self.state = MWMNavigationDashboardStatePrepare; }
-- (void)onRoutePlanning { self.state = MWMNavigationDashboardStatePlanning; }
+- (void)onRoutePrepare {
+  self.state = MWMNavigationDashboardStatePrepare;
+  self.routePreview.drivingOptionsState = MWMDrivingOptionsStateNone;
+}
+
+- (void)onRoutePlanning {
+  self.state = MWMNavigationDashboardStatePlanning;
+  self.routePreview.drivingOptionsState = MWMDrivingOptionsStateNone;
+}
+
 - (void)onRouteError:(NSString *)error
 {
   self.errorMessage = error;
   self.state = MWMNavigationDashboardStateError;
+  self.routePreview.drivingOptionsState = [MWMRouter hasActiveDrivingOptions] ?
+    MWMDrivingOptionsStateChange : MWMDrivingOptionsStateNone;
 }
 
-- (void)onRouteReady
+- (void)onRouteReady:(BOOL)hasWarnings
 {
   if (self.state != MWMNavigationDashboardStateNavigation && ![MWMRouter isTaxi])
     self.state = MWMNavigationDashboardStateReady;
+  if ([MWMRouter hasActiveDrivingOptions]) {
+    self.routePreview.drivingOptionsState = MWMDrivingOptionsStateChange;
+  } else {
+    self.routePreview.drivingOptionsState = hasWarnings ? MWMDrivingOptionsStateDefine : MWMDrivingOptionsStateNone;
+  }
 }
 
 - (void)onRoutePointsUpdated
@@ -210,6 +208,9 @@ using Observers = NSHashTable<Observer>;
 
 - (void)stateError
 {
+  if (_state == MWMNavigationDashboardStateReady)
+    return;
+  
   NSAssert(_state == MWMNavigationDashboardStatePlanning, @"Invalid state change (error)");
   auto routePreview = self.routePreview;
   [routePreview router:[MWMRouter type] setState:MWMCircularProgressStateFailed];
@@ -281,9 +282,9 @@ using Observers = NSHashTable<Observer>;
 
 - (IBAction)trafficButtonAction
 {
-  BOOL const switchOn = ([MWMTrafficManager trafficState] == MWMTrafficManagerStateDisabled);
+  BOOL const switchOn = ([MWMMapOverlayManager trafficState] == MWMMapOverlayTrafficStateDisabled);
   [Statistics logEvent:kStatMenu withParameters:@{kStatTraffic : switchOn ? kStatOn : kStatOff}];
-  [MWMTrafficManager setTrafficEnabled:switchOn];
+  [MWMMapOverlayManager setTrafficEnabled:switchOn];
 }
 
 - (IBAction)settingsButtonAction
@@ -303,12 +304,12 @@ using Observers = NSHashTable<Observer>;
 
 + (void)addObserver:(id<MWMNavigationDashboardObserver>)observer
 {
-  [[self manager].observers addObject:observer];
+  [[self sharedManager].observers addObject:observer];
 }
 
 + (void)removeObserver:(id<MWMNavigationDashboardObserver>)observer
 {
-  [[self manager].observers removeObject:observer];
+  [[self sharedManager].observers removeObject:observer];
 }
 
 #pragma mark - MWMNavigationDashboardObserver
@@ -332,7 +333,7 @@ using Observers = NSHashTable<Observer>;
 
 + (void)updateNavigationInfoAvailableArea:(CGRect)frame
 {
-  [[self manager] updateNavigationInfoAvailableArea:frame];
+  [[self sharedManager] updateNavigationInfoAvailableArea:frame];
 }
 
 - (void)updateNavigationInfoAvailableArea:(CGRect)frame
@@ -367,8 +368,6 @@ using Observers = NSHashTable<Observer>;
 
 - (void)setState:(MWMNavigationDashboardState)state
 {
-  if (_state == state)
-    return;
   if (state == MWMNavigationDashboardStateHidden)
     [MWMSearchManager removeObserver:self];
   else
@@ -409,6 +408,7 @@ using Observers = NSHashTable<Observer>;
     return;
   [_routePreview remove];
   _routePreview = routePreview;
+  _routePreview.delegate = self;
 }
 
 - (MWMBaseRoutePreviewStatus *)baseRoutePreviewStatus
@@ -456,6 +456,12 @@ using Observers = NSHashTable<Observer>;
 - (void)setMapSearch
 {
   [_navigationInfoView setMapSearch];
+}
+
+#pragma mark - MWMRoutePreviewDelegate
+
+- (void)routePreviewDidPressDrivingOptions:(MWMRoutePreview *)routePreview {
+  [[MapViewController sharedController] openDrivingOptions];
 }
 
 @end

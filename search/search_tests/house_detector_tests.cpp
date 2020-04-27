@@ -17,10 +17,14 @@
 
 #include "base/logging.hpp"
 
-#include "std/iostream.hpp"
-#include "std/fstream.hpp"
+#include <algorithm>
+#include <cstddef>
+#include <fstream>
+#include <map>
+#include <string>
+#include <vector>
 
-
+using namespace std;
 using platform::LocalCountryFile;
 
 class StreetIDsByName
@@ -32,7 +36,7 @@ public:
 
   void operator()(FeatureType & f)
   {
-    if (f.GetFeatureType() == feature::GEOM_LINE)
+    if (f.GetGeomType() == feature::GeomType::Line)
     {
       string name;
       if (f.GetName(0, name) &&
@@ -57,7 +61,7 @@ class CollectStreetIDs
   static bool GetKey(string const & name, string & key)
   {
     TEST(!name.empty(), ());
-    key = strings::ToUtf8(search::GetStreetNameAsKey(name));
+    key = strings::ToUtf8(search::GetStreetNameAsKey(name, false /* ignoreStreetSynonyms */));
 
     if (key.empty())
     {
@@ -67,17 +71,17 @@ class CollectStreetIDs
     return true;
   }
 
-  typedef map<string, vector<FeatureID> > ContT;
-  ContT m_ids;
+  using Cont = map<string, vector<FeatureID>>;
+  Cont m_ids;
   vector<FeatureID> m_empty;
 
 public:
   void operator()(FeatureType & f)
   {
-    if (f.GetFeatureType() == feature::GEOM_LINE)
+    if (f.GetGeomType() == feature::GeomType::Line)
     {
       string name;
-      if (f.GetName(0, name) && ftypes::IsStreetChecker::Instance()(f))
+      if (f.GetName(0, name) && ftypes::IsWayChecker::Instance()(f))
       {
         string key;
         if (GetKey(name, key))
@@ -88,28 +92,28 @@ public:
 
   void Finish()
   {
-    for (ContT::iterator i = m_ids.begin(); i != m_ids.end(); ++i)
+    for (Cont::iterator i = m_ids.begin(); i != m_ids.end(); ++i)
       sort(i->second.begin(), i->second.end());
   }
 
   vector<FeatureID> const & Get(string const & key) const
   {
-    ContT::const_iterator i = m_ids.find(key);
+    Cont::const_iterator i = m_ids.find(key);
     return (i == m_ids.end() ? m_empty : i->second);
   }
 };
 
 UNIT_TEST(HS_ParseNumber)
 {
-  typedef search::ParsedNumber NumberT;
+  using Number = search::ParsedNumber;
 
   {
-    NumberT n("135");
+    Number n("135");
     TEST(n.IsOdd(), ());
     TEST_EQUAL(n.GetIntNumber(), 135, ());
 
-    NumberT n1("133");
-    NumberT n2("137");
+    Number n1("133");
+    Number n2("137");
     TEST(n.IsIntersect(n1, 2), ());
     TEST(!n.IsIntersect(n1, 1), ());
     TEST(n.IsIntersect(n2, 2), ());
@@ -117,69 +121,69 @@ UNIT_TEST(HS_ParseNumber)
   }
 
   {
-    NumberT n("135 1к/2");
+    Number n("135 1к/2");
     TEST(n.IsOdd(), ());
     TEST_EQUAL(n.GetIntNumber(), 135, ());
 
-    TEST(!n.IsIntersect(NumberT("134")), ());
-    TEST(!n.IsIntersect(NumberT("136")), ());
+    TEST(!n.IsIntersect(Number("134")), ());
+    TEST(!n.IsIntersect(Number("136")), ());
   }
 
   {
-    NumberT n("135A");
+    Number n("135A");
     TEST(n.IsOdd(), ());
     TEST_EQUAL(n.GetIntNumber(), 135, ());
 
-    TEST(!n.IsIntersect(NumberT("134")), ());
-    TEST(!n.IsIntersect(NumberT("136")), ());
+    TEST(!n.IsIntersect(Number("134")), ());
+    TEST(!n.IsIntersect(Number("136")), ());
   }
 
   {
-    NumberT n("135-к1", false);
+    Number n("135-к1", false);
     TEST(n.IsOdd(), ());
     TEST_EQUAL(n.GetIntNumber(), 135, ());
 
-    TEST(!n.IsIntersect(NumberT("134")), ());
-    TEST(!n.IsIntersect(NumberT("136")), ());
+    TEST(!n.IsIntersect(Number("134")), ());
+    TEST(!n.IsIntersect(Number("136")), ());
   }
 
   {
-    NumberT n("135-12", false);
+    Number n("135-12", false);
     TEST(n.IsOdd(), ());
     TEST_EQUAL(n.GetIntNumber(), 135, ());
 
-    TEST(!n.IsIntersect(NumberT("134")), ());
-    TEST(!n.IsIntersect(NumberT("136")), ());
+    TEST(!n.IsIntersect(Number("134")), ());
+    TEST(!n.IsIntersect(Number("136")), ());
   }
 
 
   {
-    NumberT n("135-24", true);
+    Number n("135-24", true);
     TEST(!n.IsOdd(), ());
     TEST_EQUAL(n.GetIntNumber(), 13524, ());
   }
 
   {
-    NumberT n("135;133;131");
+    Number n("135;133;131");
     TEST(n.IsOdd(), ());
     TEST_EQUAL(n.GetIntNumber(), 131, ());
 
     for (int i = 131; i <= 135; ++i)
-      TEST(n.IsIntersect(NumberT(strings::to_string(i))), ());
-    TEST(!n.IsIntersect(NumberT("130")), ());
-    TEST(!n.IsIntersect(NumberT("136")), ());
+      TEST(n.IsIntersect(Number(strings::to_string(i))), ());
+    TEST(!n.IsIntersect(Number("130")), ());
+    TEST(!n.IsIntersect(Number("136")), ());
   }
 
   {
-    NumberT n("6-10", false);
+    Number n("6-10", false);
     TEST(!n.IsOdd(), ());
     TEST_EQUAL(n.GetIntNumber(), 6, ());
 
     for (int i = 6; i <= 10; ++i)
-      TEST(n.IsIntersect(NumberT(strings::to_string(i))), ());
+      TEST(n.IsIntersect(Number(strings::to_string(i))), ());
 
-    TEST(!n.IsIntersect(NumberT("5")), ());
-    TEST(!n.IsIntersect(NumberT("11")), ());
+    TEST(!n.IsIntersect(Number("5")), ());
+    TEST(!n.IsIntersect(Number("11")), ());
   }
 }
 
@@ -336,9 +340,9 @@ namespace
 {
 string GetStreetKey(string const & name)
 {
-  return strings::ToUtf8(search::GetStreetNameAsKey(name));
+  return strings::ToUtf8(search::GetStreetNameAsKey(name, false /* ignoreStreetSynonyms */));
 }
-} // namespace
+}  // namespace
 
 UNIT_TEST(HS_StreetKey)
 {
@@ -351,7 +355,6 @@ UNIT_TEST(HS_StreetKey)
 
 namespace
 {
-
 struct Address
 {
   string m_streetKey;
@@ -368,8 +371,7 @@ void swap(Address & a1, Address & a2)
   std::swap(a1.m_lat, a2.m_lat);
   std::swap(a1.m_lon, a2.m_lon);
 }
-
-}
+}  // namespace
 
 UNIT_TEST(HS_MWMSearch)
 {
@@ -467,8 +469,8 @@ UNIT_TEST(HS_MWMSearch)
     {
       search::House const * h = houses[j].m_house;
       m2::PointD p = h->GetPosition();
-      p.x = MercatorBounds::XToLon(p.x);
-      p.y = MercatorBounds::YToLat(p.y);
+      p.x = mercator::XToLon(p.x);
+      p.y = mercator::YToLat(p.y);
 
       //double const eps = 3.0E-4;
       //if (fabs(p.x - a.m_lon) < eps && fabs(p.y - a.m_lat) < eps)

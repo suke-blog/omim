@@ -34,6 +34,7 @@
 
 #include <cerrno>
 #include <cstring>
+#include <memory>
 #include <vector>
 
 using namespace openlr;
@@ -47,7 +48,7 @@ class TrafficDrawerDelegate : public TrafficDrawerDelegateBase
   static constexpr char const * kGoldenLineId = "goldenPath";
 
 public:
-  TrafficDrawerDelegate(Framework & framework)
+  explicit TrafficDrawerDelegate(Framework & framework)
     : m_framework(framework)
     , m_drapeApi(m_framework.GetDrapeApi())
     , m_bm(framework.GetBookmarkManager())
@@ -116,17 +117,17 @@ private:
 bool PointsMatch(m2::PointD const & a, m2::PointD const & b)
 {
   auto constexpr kToleranceDistanceM = 1.0;
-  return MercatorBounds::DistanceOnEarth(a, b) < kToleranceDistanceM;
+  return mercator::DistanceOnEarth(a, b) < kToleranceDistanceM;
 }
 
 class PointsControllerDelegate : public PointsControllerDelegateBase
 {
 public:
-  PointsControllerDelegate(Framework & framework)
+  explicit PointsControllerDelegate(Framework & framework)
     : m_framework(framework)
     , m_dataSource(framework.GetDataSource())
     , m_roadGraph(m_dataSource, routing::IRoadGraph::Mode::ObeyOnewayTag,
-                  make_unique<routing::CarModelFactory>(storage::CountryParentGetter{}))
+                  std::make_unique<routing::CarModelFactory>(storage::CountryParentGetter{}))
   {
   }
 
@@ -146,7 +147,7 @@ public:
     };
 
     auto const pushFeaturePoints = [&pushPoint](FeatureType & ft) {
-      if (ft.GetFeatureType() != feature::GEOM_LINE)
+      if (ft.GetGeomType() != feature::GeomType::Line)
         return;
       auto const roadClass = ftypes::GetHighwayClass(feature::TypesHolder(ft));
       if (roadClass == ftypes::HighwayClass::Error ||
@@ -169,7 +170,7 @@ public:
     std::vector<FeaturePoint> points;
     m2::PointD pointOnFt;
     indexer::ForEachFeatureAtPoint(m_dataSource, [&points, &p, &pointOnFt](FeatureType & ft) {
-        if (ft.GetFeatureType() != feature::GEOM_LINE)
+        if (ft.GetGeomType() != feature::GeomType::Line)
           return;
 
         ft.ParseGeometry(FeatureType::BEST_GEOMETRY);
@@ -179,7 +180,7 @@ public:
         for (size_t i = 0; i < ft.GetPointsCount(); ++i)
         {
           auto const & fp = ft.GetPoint(i);
-          auto const distance = MercatorBounds::DistanceOnEarth(fp, p);
+          auto const distance = mercator::DistanceOnEarth(fp, p);
           if (PointsMatch(fp, p) && distance < minDistance)
           {
             bestPointIndex = i;
@@ -200,10 +201,9 @@ public:
 
   std::vector<m2::PointD> GetReachablePoints(m2::PointD const & p) const override
   {
-    routing::FeaturesRoadGraph::TEdgeVector edges;
-    m_roadGraph.GetOutgoingEdges(
-        routing::Junction(p, feature::kDefaultAltitudeMeters),
-        edges);
+    routing::FeaturesRoadGraph::EdgeVector edges;
+    m_roadGraph.GetOutgoingEdges(geometry::PointWithAltitude(p, geometry::kDefaultAltitudeMeters),
+                                 edges);
 
     std::vector<m2::PointD> points;
     for (auto const & e : edges)
@@ -306,12 +306,12 @@ MainWindow::MainWindow(Framework & framework)
   m_ignorePathAction->setEnabled(false /* enabled */);
 }
 
-void MainWindow::CreateTrafficPanel(string const & dataFilePath)
+void MainWindow::CreateTrafficPanel(std::string const & dataFilePath)
 {
   m_trafficMode = new TrafficMode(dataFilePath,
                                   m_framework.GetDataSource(),
-                                  make_unique<TrafficDrawerDelegate>(m_framework),
-                                  make_unique<PointsControllerDelegate>(m_framework));
+                                  std::make_unique<TrafficDrawerDelegate>(m_framework),
+                                  std::make_unique<PointsControllerDelegate>(m_framework));
 
   connect(m_mapWidget, &MapWidget::TrafficMarkupClick,
           m_trafficMode, &TrafficMode::OnClick);
@@ -326,6 +326,7 @@ void MainWindow::CreateTrafficPanel(string const & dataFilePath)
   m_docWidget->setWidget(new TrafficPanel(m_trafficMode, m_docWidget));
 
   m_docWidget->adjustSize();
+  m_docWidget->setMinimumWidth(400);
   m_docWidget->show();
 }
 

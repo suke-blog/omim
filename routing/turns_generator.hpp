@@ -13,6 +13,8 @@
 
 #include "traffic/traffic_info.hpp"
 
+#include "geometry/point_with_altitude.hpp"
+
 #include <cstdint>
 #include <functional>
 #include <string>
@@ -94,9 +96,10 @@ bool GetNextRoutePointIndex(IRoutingResult const & result, RoutePointIndex const
  * \return routing operation result code.
  */
 RouterResultCode MakeTurnAnnotation(IRoutingResult const & result, NumMwmIds const & numMwmIds,
-                                       RouterDelegate const & delegate, std::vector<Junction> & points,
-                                       Route::TTurns & turnsDir, Route::TStreets & streets,
-                                       std::vector<Segment> & segments);
+                                    base::Cancellable const & cancellable,
+                                    std::vector<geometry::PointWithAltitude> & points,
+                                    Route::TTurns & turnsDir, Route::TStreets & streets,
+                                    std::vector<Segment> & segments);
 
 // Returns the distance in meractor units for the path of points for the range [startPointIndex, endPointIndex].
 double CalculateMercatorDistanceAlongPath(uint32_t startPointIndex, uint32_t endPointIndex,
@@ -106,7 +109,7 @@ double CalculateMercatorDistanceAlongPath(uint32_t startPointIndex, uint32_t end
  * \brief Selects lanes which are recommended for an end user.
  */
 void SelectRecommendedLanes(Route::TTurns & turnsDir);
-void FixupTurns(std::vector<Junction> const & points, Route::TTurns & turnsDir);
+void FixupTurns(std::vector<geometry::PointWithAltitude> const & points, Route::TTurns & turnsDir);
 inline size_t GetFirstSegmentPointIndex(std::pair<size_t, size_t> const & p) { return p.first; }
 
 CarDirection InvertDirection(CarDirection dir);

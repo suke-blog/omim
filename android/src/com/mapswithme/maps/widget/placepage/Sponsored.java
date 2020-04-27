@@ -1,9 +1,9 @@
 package com.mapswithme.maps.widget.placepage;
 
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 import android.text.TextUtils;
 
 import com.mapswithme.maps.bookmarks.data.MapObject;
@@ -22,15 +22,19 @@ import java.util.Map;
 @UiThread
 public final class Sponsored
 {
+  // Order is important, must match place_page_info.hpp/SponsoredType.
   public static final int TYPE_NONE = 0;
   public static final int TYPE_BOOKING = 1;
   public static final int TYPE_OPENTABLE = 2;
-  public static final int TYPE_VIATOR = 3;
-  public static final int TYPE_PARTNER = 4;
-  public static final int TYPE_HOLIDAY = 5;
+  public static final int TYPE_PARTNER = 3;
+  public static final int TYPE_HOLIDAY = 4;
+  public static final int TYPE_PROMO_CATALOG_CITY = 5;
+  public static final int TYPE_PROMO_CATALOG_SIGHTSEEINGS = 6;
+  public static final int TYPE_PROMO_CATALOG_OUTDOOR = 7;
 
   @Retention(RetentionPolicy.SOURCE)
-  @IntDef({ TYPE_NONE, TYPE_BOOKING, TYPE_OPENTABLE, TYPE_VIATOR, TYPE_PARTNER, TYPE_HOLIDAY })
+  @IntDef({ TYPE_NONE, TYPE_BOOKING, TYPE_OPENTABLE, TYPE_PARTNER, TYPE_HOLIDAY,
+            TYPE_PROMO_CATALOG_CITY, TYPE_PROMO_CATALOG_SIGHTSEEINGS, TYPE_PROMO_CATALOG_OUTDOOR })
   public @interface SponsoredType {}
 
   static class FacilityType
@@ -189,6 +193,8 @@ public final class Sponsored
   @NonNull
   private final String mDescriptionUrl;
   @NonNull
+  private final String mMoreUrl;
+  @NonNull
   private final String mReviewUrl;
   @SponsoredType
   private final int mType;
@@ -198,8 +204,8 @@ public final class Sponsored
 
   private Sponsored(@NonNull String rating, @UGC.Impress int impress, @NonNull String price,
                     @NonNull String url, @NonNull String deepLink, @NonNull String descriptionUrl,
-                    @NonNull String reviewUrl, @SponsoredType int type, int partnerIndex,
-                    @NonNull String partnerName)
+                    @NonNull String moreUrl, @NonNull String reviewUrl, @SponsoredType int type,
+                    int partnerIndex, @NonNull String partnerName)
   {
     mRating = rating;
     mImpress = impress;
@@ -207,6 +213,7 @@ public final class Sponsored
     mUrl = url;
     mDeepLink = deepLink;
     mDescriptionUrl = descriptionUrl;
+    mMoreUrl = moreUrl;
     mReviewUrl = reviewUrl;
     mType = type;
     mPartnerIndex = partnerIndex;
@@ -258,6 +265,12 @@ public final class Sponsored
   String getDescriptionUrl()
   {
     return mDescriptionUrl;
+  }
+
+  @NonNull
+  String getMoreUrl()
+  {
+    return mMoreUrl;
   }
 
   @NonNull

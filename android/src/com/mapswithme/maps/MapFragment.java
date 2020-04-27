@@ -1,12 +1,12 @@
 package com.mapswithme.maps;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -63,19 +63,17 @@ public class MapFragment extends BaseMwmFragment
   private int mHeight;
   private int mWidth;
   private boolean mRequireResize;
-  private boolean mContextCreated;
+  private boolean mSurfaceCreated;
+  private boolean mSurfaceAttached;
   private boolean mLaunchByDeepLink;
   private static boolean sWasCopyrightDisplayed;
   @Nullable
   private String mUiThemeOnPause;
+  @SuppressWarnings("NullableProblems")
   @NonNull
   private SurfaceView mSurfaceView;
-
-  interface MapRenderingListener
-  {
-    void onRenderingInitialized();
-    void onRenderingRestored();
-  }
+  @Nullable
+  private MapRenderingListener mMapRenderingListener;
 
   private void setupWidgets(int width, int height)
   {
@@ -100,7 +98,7 @@ public class MapFragment extends BaseMwmFragment
                       UiUtils.dimen(R.dimen.margin_base),
                       ANCHOR_LEFT_TOP);
 
-    setupCompass(UiUtils.getCompassYOffset(getContext()), false);
+    setupCompass(UiUtils.getCompassYOffset(requireContext()), false);
   }
 
   void setupCompass(int offsetY, boolean forceRedraw)
@@ -112,7 +110,7 @@ public class MapFragment extends BaseMwmFragment
                       mWidth - marginX,
                       offsetY + marginY,
                       ANCHOR_CENTER);
-    if (forceRedraw && mContextCreated)
+    if (forceRedraw && mSurfaceCreated)
       nativeApplyWidgets();
   }
 
@@ -122,7 +120,7 @@ public class MapFragment extends BaseMwmFragment
                       UiUtils.dimen(R.dimen.margin_ruler_left),
                       mHeight - UiUtils.dimen(R.dimen.margin_ruler_bottom) + offsetY,
                       ANCHOR_LEFT_BOTTOM);
-    if (forceRedraw && mContextCreated)
+    if (forceRedraw && mSurfaceCreated)
       nativeApplyWidgets();
   }
 
@@ -132,27 +130,13 @@ public class MapFragment extends BaseMwmFragment
                       mWidth - UiUtils.dimen(R.dimen.margin_watermark_right),
                       mHeight - UiUtils.dimen(R.dimen.margin_watermark_bottom) + offsetY,
                       ANCHOR_RIGHT_BOTTOM);
-    if (forceRedraw && mContextCreated)
+    if (forceRedraw && mSurfaceCreated)
       nativeApplyWidgets();
-  }
-
-  private void onRenderingInitialized()
-  {
-    final Activity activity = getActivity();
-    if (isAdded() && activity instanceof MapRenderingListener)
-      ((MapRenderingListener) activity).onRenderingInitialized();
-  }
-
-  private void onRenderingRestored()
-  {
-    final Activity activity = getActivity();
-    if (isAdded() && activity instanceof MapRenderingListener)
-      ((MapRenderingListener) activity).onRenderingRestored();
   }
 
   private void reportUnsupported()
   {
-    new AlertDialog.Builder(getActivity())
+    new AlertDialog.Builder(requireActivity())
         .setMessage(getString(R.string.unsupported_phone))
         .setCancelable(false)
         .setPositiveButton(getString(R.string.close), new DialogInterface.OnClickListener()
@@ -160,7 +144,7 @@ public class MapFragment extends BaseMwmFragment
           @Override
           public void onClick(DialogInterface dlg, int which)
           {
-            getActivity().moveTaskToBack(true);
+            requireActivity().moveTaskToBack(true);
           }
         }).show();
   }
@@ -174,7 +158,7 @@ public class MapFragment extends BaseMwmFragment
       return;
     }
 
-    LOGGER.d(TAG, "surfaceCreated, mContextCreated = " + mContextCreated);
+    LOGGER.d(TAG, "surfaceCreated, mSurfaceCreated = " + mSurfaceCreated);
     final Surface surface = surfaceHolder.getSurface();
     if (nativeIsEngineCreated())
     {
@@ -183,8 +167,10 @@ public class MapFragment extends BaseMwmFragment
         reportUnsupported();
         return;
       }
-      mContextCreated = true;
+      mSurfaceCreated = true;
+      mSurfaceAttached = true;
       mRequireResize = true;
+      nativeResumeSurfaceRendering();
       return;
     }
 
@@ -193,11 +179,12 @@ public class MapFragment extends BaseMwmFragment
     setupWidgets(rect.width(), rect.height());
 
     final DisplayMetrics metrics = new DisplayMetrics();
-    getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+    requireActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
     final float exactDensityDpi = metrics.densityDpi;
 
-    final boolean firstStart = SplashActivity.isFirstStart();
-    if (!nativeCreateEngine(surface, (int) exactDensityDpi, firstStart, mLaunchByDeepLink))
+    final boolean firstStart = MwmApplication.from(requireActivity()).isFirstLaunch();
+    if (!nativeCreateEngine(surface, (int) exactDensityDpi, firstStart, mLaunchByDeepLink,
+                            BuildConfig.VERSION_CODE))
     {
       reportUnsupported();
       return;
@@ -215,8 +202,11 @@ public class MapFragment extends BaseMwmFragment
       });
     }
 
-    mContextCreated = true;
-    onRenderingInitialized();
+    mSurfaceCreated = true;
+    mSurfaceAttached = true;
+    nativeResumeSurfaceRendering();
+    if (mMapRenderingListener != null)
+      mMapRenderingListener.onRenderingCreated();
   }
 
   @Override
@@ -228,35 +218,51 @@ public class MapFragment extends BaseMwmFragment
       return;
     }
 
-    LOGGER.d(TAG, "surfaceChanged, mContextCreated = " + mContextCreated);
-    if (!mContextCreated ||
-        (!mRequireResize && surfaceHolder.isCreating()))
+    LOGGER.d(TAG, "surfaceChanged, mSurfaceCreated = " + mSurfaceCreated);
+    if (!mSurfaceCreated || (!mRequireResize && surfaceHolder.isCreating()))
       return;
 
-    nativeSurfaceChanged(width, height);
+    final Surface surface = surfaceHolder.getSurface();
+    nativeSurfaceChanged(surface, width, height);
 
     mRequireResize = false;
     setupWidgets(width, height);
     nativeApplyWidgets();
-    onRenderingRestored();
+    if (mMapRenderingListener != null)
+      mMapRenderingListener.onRenderingRestored();
   }
 
   @Override
   public void surfaceDestroyed(SurfaceHolder surfaceHolder)
   {
     LOGGER.d(TAG, "surfaceDestroyed");
-    destroyContext();
+    destroySurface();
   }
 
-  void destroyContext()
+  void destroySurface()
   {
-    LOGGER.d(TAG, "destroyContext, mContextCreated = " + mContextCreated +
-                  ", isAdded = " + isAdded(), new Throwable());
-    if (!mContextCreated || !isAdded())
+    LOGGER.d(TAG, "destroySurface, mSurfaceCreated = " + mSurfaceCreated +
+             ", mSurfaceAttached = " + mSurfaceAttached + ", isAdded = " + isAdded());
+    if (!mSurfaceCreated || !mSurfaceAttached || !isAdded())
       return;
 
-    nativeDetachSurface(!getActivity().isChangingConfigurations());
-    mContextCreated = false;
+    nativeDetachSurface(!requireActivity().isChangingConfigurations());
+    mSurfaceCreated = !nativeDestroySurfaceOnDetach();
+    mSurfaceAttached = false;
+  }
+
+  @Override
+  public void onAttach(Context context)
+  {
+    super.onAttach(context);
+    mMapRenderingListener = (MapRenderingListener) context;
+  }
+
+  @Override
+  public void onDetach()
+  {
+    super.onDetach();
+    mMapRenderingListener = null;
   }
 
   @Override
@@ -273,7 +279,15 @@ public class MapFragment extends BaseMwmFragment
   public void onStart()
   {
     super.onStart();
+    nativeSetRenderingInitializationFinishedListener(mMapRenderingListener);
     LOGGER.d(TAG, "onStart");
+  }
+
+  public void onStop()
+  {
+    super.onStop();
+    nativeSetRenderingInitializationFinishedListener(null);
+    LOGGER.d(TAG, "onStop");
   }
 
   private boolean isThemeChangingProcess()
@@ -285,7 +299,11 @@ public class MapFragment extends BaseMwmFragment
   public void onPause()
   {
     mUiThemeOnPause = Config.getCurrentUiTheme();
-    nativePauseSurfaceRendering();
+
+    // Pause/Resume can be called without surface creation/destroy.
+    if (mSurfaceAttached)
+      nativePauseSurfaceRendering();
+
     super.onPause();
   }
 
@@ -293,14 +311,17 @@ public class MapFragment extends BaseMwmFragment
   public void onResume()
   {
     super.onResume();
-    nativeResumeSurfaceRendering();
+
+    // Pause/Resume can be called without surface creation/destroy.
+    if (mSurfaceAttached)
+      nativeResumeSurfaceRendering();
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
   {
     View view = inflater.inflate(R.layout.fragment_map, container, false);
-    mSurfaceView = (SurfaceView) view.findViewById(R.id.map_surfaceview);
+    mSurfaceView = view.findViewById(R.id.map_surfaceview);
     mSurfaceView.getHolder().addCallback(this);
     return view;
   }
@@ -355,24 +376,28 @@ public class MapFragment extends BaseMwmFragment
 
   boolean isContextCreated()
   {
-    return mContextCreated;
+    return mSurfaceCreated;
   }
 
-  static native void nativeCompassUpdated(double magneticNorth, double trueNorth, boolean forceRedraw);
+  static native void nativeCompassUpdated(double north, boolean forceRedraw);
   static native void nativeScalePlus();
   static native void nativeScaleMinus();
-  static native boolean nativeShowMapForUrl(String url);
+  public static native boolean nativeShowMapForUrl(String url);
   static native boolean nativeIsEngineCreated();
+  static native boolean nativeDestroySurfaceOnDetach();
   private static native boolean nativeCreateEngine(Surface surface, int density,
                                                    boolean firstLaunch,
-                                                   boolean isLaunchByDeepLink);
+                                                   boolean isLaunchByDeepLink,
+                                                   int appVersionCode);
   private static native boolean nativeAttachSurface(Surface surface);
-  private static native void nativeDetachSurface(boolean destroyContext);
+  private static native void nativeDetachSurface(boolean destroySurface);
   private static native void nativePauseSurfaceRendering();
   private static native void nativeResumeSurfaceRendering();
-  private static native void nativeSurfaceChanged(int w, int h);
+  private static native void nativeSurfaceChanged(Surface surface, int w, int h);
   private static native void nativeOnTouch(int actionType, int id1, float x1, float y1, int id2, float x2, float y2, int maskedPointer);
   private static native void nativeSetupWidget(int widget, float x, float y, int anchor);
   private static native void nativeApplyWidgets();
   private static native void nativeCleanWidgets();
+  private static native void nativeSetRenderingInitializationFinishedListener(
+      @Nullable MapRenderingListener listener);
 }

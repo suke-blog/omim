@@ -69,18 +69,17 @@ world  +
         nursing_home  -
         parking  +
             fee  -
-            multi-storey  +
-                fee  -
-                {}
+            multi-storey  -
             no-access  -
             park_and_ride  -
-            permissive  +
-                fee  -
-                {}
+            permissive  -
             private  -
-            underground  +
-                fee  -
-                {}
+            underground  -
+            {}
+        parking_space  +
+            permissive  -
+            private  -
+            underground  -
             {}
         payment_terminal  -
         pharmacy  -
@@ -187,11 +186,7 @@ world  +
         train_station  -
         {}
     building:part  -
-    communication  +
-        line  +
-            underground  -
-            {}
-        {}
+    complex_entry  -
     craft  +
         brewery  -
         carpenter  -
@@ -358,7 +353,6 @@ world  +
             bridge  -
             tunnel  -
             {}
-        platform  -
         primary  +
             bridge  -
             tunnel  -
@@ -390,11 +384,7 @@ world  +
         service  +
             area  -
             bridge  -
-            driveway  +
-                area  -
-                bridge  -
-                tunnel  -
-                {}
+            driveway  -
             parking_aisle  -
             tunnel  -
             {}
@@ -417,18 +407,9 @@ world  +
             bridge  -
             grade1  -
             grade2  -
-            grade3  +
-                no-access  -
-                permissive  -
-                {}
-            grade4  +
-                no-access  -
-                permissive  -
-                {}
-            grade5  +
-                no-access  -
-                permissive  -
-                {}
+            grade3  -
+            grade4  -
+            grade5  -
             no-access  -
             permissive  -
             tunnel  -
@@ -489,6 +470,14 @@ world  +
     internet_access  +
         wlan  -
         {}
+    isoline  +
+        step_10  -
+        step_100  -
+        step_1000  -
+        step_50  -
+        step_500  -
+        zero  -
+        {}
     junction  +
         roundabout  -
         {}
@@ -499,6 +488,7 @@ world  +
         cemetery  +
             christian  -
             {}
+        churchyard  -
         commercial  -
         construction  -
         farm  -
@@ -523,10 +513,7 @@ world  +
         railway  -
         recreation_ground  -
         reservoir  -
-        residential  +
-            rural  -
-            urban  -
-            {}
+        residential  -
         retail  -
         salt_pond  -
         village_green  -
@@ -534,9 +521,7 @@ world  +
         {}
     leisure  +
         common  -
-        dog_park  +
-            tennis  -
-            {}
+        dog_park  -
         fitness_centre  -
         fitness_station  -
         garden  -
@@ -550,15 +535,8 @@ world  +
             permissive  -
             private  -
             {}
-        pitch  +
-            tennis  -
-            {}
-        playground  +
-            tennis  -
-            {}
-        playing_fields  +
-            tennis  -
-            {}
+        pitch  -
+        playground  -
         recreation_ground  -
         sauna  -
         slipway  -
@@ -595,14 +573,6 @@ world  +
     mapswithme  +
         grid  -
         {}
-    marking  +
-        sport  +
-            black  -
-            blue  -
-            red  -
-            white  -
-            {}
-        {}
     military  +
         bunker  -
         {}
@@ -618,6 +588,7 @@ world  +
         glacier  -
         grassland  -
         heath  -
+        hot_spring  -
         lake  -
         land  -
         meadow  -
@@ -636,11 +607,6 @@ world  +
         wetland  +
             bog  -
             marsh  -
-            {}
-        wood  +
-            coniferous  -
-            deciduous  -
-            mixed  -
             {}
         {}
     noexit  +
@@ -727,11 +693,7 @@ world  +
         village  -
         {}
     power  +
-        generator  +
-            hydro  -
-            photovoltaic  -
-            wind  -
-            {}
+        generator  -
         line  +
             underground  -
             {}
@@ -946,18 +908,6 @@ world  +
         wine  -
         {}
     sponsored  +
-        banner  +
-            deliveryclub  -
-            geerbest_de  -
-            geerbest_fr  -
-            geerbest_uk  -
-            lamoda_ru  -
-            lamoda_ua  -
-            raileurope  -
-            rentalcars  -
-            tutu  -
-            viator  -
-            {}
         booking  -
         holiday  -
         opentable  -
@@ -981,7 +931,7 @@ world  +
         partner7  -
         partner8  -
         partner9  -
-        viator  -
+        promo_catalog  -
         {}
     sport  +
         american_football  -

@@ -14,8 +14,7 @@
 #include "platform/platform_tests_support/scoped_dir.hpp"
 #include "platform/platform_tests_support/scoped_file.hpp"
 
-#include "coding/file_name_utils.hpp"
-
+#include "base/file_name_utils.hpp"
 #include "base/checked_cast.hpp"
 
 #include <algorithm>
@@ -47,9 +46,9 @@ double RoughUpToFive(double d)
 
 m2::PointD RoughPoint(m2::PointD const & p) { return {RoughUpToFive(p.x), RoughUpToFive(p.y)}; }
 
-routing::Junction RoughJunction(routing::Junction const & j)
+geometry::PointWithAltitude RoughJunction(geometry::PointWithAltitude const & j)
 {
-  return routing::Junction(RoughPoint(j.GetPoint()), j.GetAltitude());
+  return geometry::PointWithAltitude(RoughPoint(j.GetPoint()), j.GetAltitude());
 }
 
 routing::Edge RoughEdgeJunctions(routing::Edge const & e)
@@ -73,7 +72,7 @@ void TestSerializeDeserialize(openlr::Path const & path, DataSource const & data
   openlr::Path restoredPath;
   openlr::PathFromXML(doc, dataSource, restoredPath);
 
-  // Fix MercatorBounds::From/ToLatLon floating point error
+  // Fix mercator::From/ToLatLon floating point error
   // for we could use TEST_EQUAL on result.
   RoughJunctionsInPath(restoredPath);
 
@@ -82,7 +81,7 @@ void TestSerializeDeserialize(openlr::Path const & path, DataSource const & data
 
 openlr::Path MakePath(FeatureType const & road, bool const forward)
 {
-  CHECK_EQUAL(road.GetFeatureType(), feature::GEOM_LINE, ());
+  CHECK_EQUAL(road.GetGeomType(), feature::GeomType::Line, ());
   CHECK_GREATER(road.GetPointsCount(), 0, ());
   openlr::Path path;
 
@@ -107,7 +106,8 @@ openlr::Path MakePath(FeatureType const & road, bool const forward)
     path.push_back(routing::Edge::MakeReal(
         road.GetID(), forward,
         base::checked_cast<uint32_t>(current - static_cast<size_t>(!forward)) /* segId */,
-        routing::Junction(from, 0 /* altitude */), routing::Junction(to, 0 /* altitude */)));
+        geometry::PointWithAltitude(from, 0 /* altitude */),
+        geometry::PointWithAltitude(to, 0 /* altitude */)));
   }
 
   RoughJunctionsInPath(path);
@@ -129,7 +129,7 @@ void WithRoad(vector<m2::PointD> const & points, Func && fn)
                            ScopedFile::Mode::Create);
 
   {
-    TestMwmBuilder builder(country, feature::DataHeader::country);
+    TestMwmBuilder builder(country, feature::DataHeader::MapType::Country);
     builder.Add(TestRoad(points, "Interstate 60", "en"));
   }
 
@@ -141,11 +141,11 @@ void WithRoad(vector<m2::PointD> const & points, Func && fn)
   TEST(mwmHandle.IsAlive(), ());
 
   FeaturesLoaderGuard const guard(dataSource, regResult.first);
-  FeatureType road;
-  TEST(guard.GetFeatureByIndex(0, road), ());
-  road.ParseEverything();
+  auto road = guard.GetFeatureByIndex(0);
+  TEST(road, ());
 
-  fn(dataSource, road);
+  road->ParseGeometry(FeatureType::BEST_GEOMETRY);
+  fn(dataSource, *road);
 }
 
 UNIT_TEST(MakePath_Test)

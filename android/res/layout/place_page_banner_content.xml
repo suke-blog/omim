@@ -119,6 +119,7 @@
       android:paddingEnd="@dimen/margin_quarter"
       android:minHeight="@dimen/placepage_banner_button_height"
       android:textAppearance="@style/MwmTextAppearance.Body3"
+      android:textSize="14dp"
       android:textAllCaps="true"
       android:background="?bannerRemoveButtonBackground"
       android:gravity="center"
@@ -128,7 +129,8 @@
       android:singleLine="true"
       tools:visibility="visible"
       android:fontFamily="@string/robotoMedium"
-      tools:targetApi="jelly_bean"/>
+      tools:targetApi="jelly_bean"
+      tools:ignore="SpUsage"/>
     <TextView
       android:id="@+id/tv__action_large"
       android:layout_width="@dimen/dp_0"
@@ -140,6 +142,7 @@
       android:paddingEnd="@dimen/margin_quarter"
       android:minHeight="@dimen/placepage_banner_button_height"
       android:textAppearance="@style/MwmTextAppearance.Body3"
+      android:textSize="14dp"
       android:textAllCaps="true"
       android:background="?bannerButtonBackground"
       android:gravity="center"
@@ -149,7 +152,8 @@
       tools:text="Заказать"
       tools:visibility="visible"
       android:fontFamily="@string/robotoMedium"
-      tools:targetApi="jelly_bean"/>
+      tools:targetApi="jelly_bean"
+      tools:ignore="SpUsage"/>
   </LinearLayout>
   <ImageButton
     android:id="@+id/remove_btn"

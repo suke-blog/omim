@@ -1,24 +1,15 @@
 #include "search/engine.hpp"
 
-#include "search/geometry_utils.hpp"
 #include "search/processor.hpp"
-#include "search/search_params.hpp"
 
 #include "storage/country_info_getter.hpp"
 
 #include "indexer/categories_holder.hpp"
-#include "indexer/classificator.hpp"
-#include "indexer/scales.hpp"
 #include "indexer/search_string_utils.hpp"
 
-#include "platform/platform.hpp"
-
-#include "geometry/distance_on_sphere.hpp"
-#include "geometry/mercator.hpp"
-
-#include "base/logging.hpp"
 #include "base/scope_guard.hpp"
 #include "base/stl_helpers.hpp"
+#include "base/timer.hpp"
 
 #include <algorithm>
 #include <cstdint>
@@ -112,6 +103,7 @@ Engine::Engine(DataSource & dataSource, CategoriesHolder const & categories,
   for (size_t i = 0; i < params.m_numThreads; ++i)
     m_threads.emplace_back(&Engine::MainLoop, this, ref(m_contexts[i]));
 
+  CacheWorldLocalities();
   LoadCitiesBoundaries();
   LoadCountriesTree();
 }
@@ -144,9 +136,17 @@ void Engine::SetLocale(string const & locale)
               [locale](Processor & processor) { processor.SetPreferredLocale(locale); });
 }
 
+size_t Engine::GetNumThreads() const { return m_threads.size(); }
+
 void Engine::ClearCaches()
 {
   PostMessage(Message::TYPE_BROADCAST, [](Processor & processor) { processor.ClearCaches(); });
+}
+
+void Engine::CacheWorldLocalities()
+{
+  PostMessage(Message::TYPE_BROADCAST,
+              [](Processor & processor) { processor.CacheWorldLocalities(); });
 }
 
 void Engine::LoadCitiesBoundaries()
@@ -159,6 +159,27 @@ void Engine::LoadCountriesTree()
 {
   PostMessage(Message::TYPE_BROADCAST,
               [](Processor & processor) { processor.LoadCountriesTree(); });
+}
+
+void Engine::EnableIndexingOfBookmarksDescriptions(bool enable)
+{
+  PostMessage(Message::TYPE_BROADCAST, [enable](Processor & processor) {
+    processor.EnableIndexingOfBookmarksDescriptions(enable);
+  });
+}
+
+void Engine::EnableIndexingOfBookmarkGroup(bookmarks::GroupId const & groupId, bool enable)
+{
+  PostMessage(Message::TYPE_BROADCAST, [=](Processor & processor) {
+    processor.EnableIndexingOfBookmarkGroup(groupId, enable);
+  });
+}
+
+void Engine::ResetBookmarks()
+{
+  PostMessage(Message::TYPE_BROADCAST, [](Processor & processor) {
+    processor.ResetBookmarks();
+  });
 }
 
 void Engine::OnBookmarksCreated(vector<pair<bookmarks::Id, bookmarks::Doc>> const & marks)
@@ -177,6 +198,22 @@ void Engine::OnBookmarksDeleted(vector<bookmarks::Id> const & marks)
 {
   PostMessage(Message::TYPE_BROADCAST,
               [marks](Processor & processor) { processor.OnBookmarksDeleted(marks); });
+}
+
+void Engine::OnBookmarksAttachedToGroup(bookmarks::GroupId const & groupId,
+                                        vector<bookmarks::Id> const & marks)
+{
+  PostMessage(Message::TYPE_BROADCAST, [groupId, marks](Processor & processor) {
+    processor.OnBookmarksAttachedToGroup(groupId, marks);
+  });
+}
+
+void Engine::OnBookmarksDetachedFromGroup(bookmarks::GroupId const & groupId,
+                                          vector<bookmarks::Id> const & marks)
+{
+  PostMessage(Message::TYPE_BROADCAST, [groupId, marks](Processor & processor) {
+    processor.OnBookmarksDetachedFromGroup(groupId, marks);
+  });
 }
 
 void Engine::MainLoop(Context & context)
@@ -248,6 +285,12 @@ void Engine::PostMessage(Args &&... args)
 void Engine::DoSearch(SearchParams const & params, shared_ptr<ProcessorHandle> handle,
                       Processor & processor)
 {
+  LOG(LINFO, ("Search started."));
+  base::Timer timer;
+  SCOPE_GUARD(printDuration, [&timer]() {
+    LOG(LINFO, ("Search ended. Time:", timer.ElapsedSeconds(), "seconds."));
+  });
+
   processor.Reset();
   handle->Attach(processor);
   SCOPE_GUARD(detach, [&handle] { handle->Detach(); });

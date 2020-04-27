@@ -3,8 +3,8 @@ package com.mapswithme.maps.adapter;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,11 +34,14 @@ public class TagsCompositeAdapter extends RecyclerView.Adapter<TagsCompositeAdap
   public TagsCompositeAdapter(@NonNull Context context,
                               @NonNull List<CatalogTagsGroup> groups,
                               @NonNull List<CatalogTag> savedState,
-                              @NonNull OnItemClickListener<Pair<TagsAdapter, TagsAdapter.TagViewHolder>> clickListener)
+                              @NonNull OnItemClickListener<Pair<TagsAdapter, TagsAdapter.TagViewHolder>> clickListener,
+                              int selectedTagsLimit)
   {
     mContext = context;
     mCatalogTagsGroups = groups;
-    mComponentHolders = makeRecyclerComponents(context, groups, savedState, clickListener);
+
+    mComponentHolders = makeRecyclerComponents(context, groups, savedState, clickListener,
+                                               selectedTagsLimit);
     setHasStableIds(true);
   }
 
@@ -46,16 +49,18 @@ public class TagsCompositeAdapter extends RecyclerView.Adapter<TagsCompositeAdap
   private List<ComponentHolder> makeRecyclerComponents(@NonNull Context context,
                                                        @NonNull List<CatalogTagsGroup> groups,
                                                        @NonNull List<CatalogTag> savedState,
-                                                       @NonNull OnItemClickListener<Pair<TagsAdapter, TagsAdapter.TagViewHolder>> externalListener)
+                                                       @NonNull OnItemClickListener<Pair<TagsAdapter, TagsAdapter.TagViewHolder>> externalListener,
+                                                       int selectedTagsLimit)
   {
     List<ComponentHolder> result = new ArrayList<>();
-
+    SelectionPolicy selectionPolicy = () -> getSelectedTags().size() < selectedTagsLimit;
     for (int i = 0; i < groups.size(); i++)
     {
       CatalogTagsGroup each = groups.get(i);
       TagsAdapter.SelectionState state = TagsAdapter.SelectionState.from(savedState, each);
       OnItemClickListener<TagsAdapter.TagViewHolder> listener = new TagsListClickListener(externalListener, i);
-      TagsAdapter adapter = new TagsAdapter(listener, state, each.getTags());
+
+      TagsAdapter adapter = new TagsAdapter(listener, state, each.getTags(), selectionPolicy);
       Resources res = context.getResources();
       Drawable divider = res.getDrawable(R.drawable.divider_transparent_base);
       TagItemDecoration decor = new UgcRouteTagItemDecorator(divider);
@@ -86,12 +91,10 @@ public class TagsCompositeAdapter extends RecyclerView.Adapter<TagsCompositeAdap
   private void initDecor(@NonNull TagsRecyclerHolder holder,
                          @NonNull ComponentHolder componentHolder)
   {
-    RecyclerView.ItemDecoration decor;
-    int index = 0;
-    while ((decor = holder.mRecycler.getItemDecorationAt(index)) != null)
+    int decorationCount = holder.mRecycler.getItemDecorationCount();
+    for (int i = 0; i < decorationCount; i++)
     {
-      holder.mRecycler.removeItemDecoration(decor);
-      index++;
+      holder.mRecycler.removeItemDecorationAt(i);
     }
     holder.mRecycler.addItemDecoration(componentHolder.mDecor);
   }
@@ -127,6 +130,12 @@ public class TagsCompositeAdapter extends RecyclerView.Adapter<TagsCompositeAdap
         return true;
     }
     return false;
+  }
+
+  @NonNull
+  public TagsAdapter getItem(int index)
+  {
+    return mComponentHolders.get(index).mAdapter;
   }
 
   private static class ComponentHolder
@@ -176,5 +185,10 @@ public class TagsCompositeAdapter extends RecyclerView.Adapter<TagsCompositeAdap
       Pair<TagsAdapter, TagsAdapter.TagViewHolder> pair = new Pair<>(components.mAdapter, item);
       mListener.onItemClick(v, pair);
     }
+  }
+
+  public interface SelectionPolicy
+  {
+    boolean isTagsSelectionAllowed();
   }
 }

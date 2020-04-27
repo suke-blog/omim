@@ -3,8 +3,8 @@ package com.mapswithme.maps.ugc.routes;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -161,7 +161,8 @@ public class UgcRoutePropertiesFragment extends BaseMwmFragment implements Bookm
   }
 
   @Override
-  public void onTagsReceived(boolean successful, @NonNull List<CatalogTagsGroup> tagsGroups)
+  public void onTagsReceived(boolean successful, @NonNull List<CatalogTagsGroup> tagsGroups,
+                             int tagsLimit)
   {
     /* Do noting by default */
   }
@@ -213,7 +214,7 @@ public class UgcRoutePropertiesFragment extends BaseMwmFragment implements Bookm
         .setPositiveBtnId(R.string.try_again)
         .setNegativeBtnId(R.string.cancel)
         .setReqCode(REQ_CODE_LOAD_FAILED)
-        .setFragManagerStrategy(new AlertDialog.ActivityFragmentManagerStrategy())
+        .setFragManagerStrategyType(AlertDialog.FragManagerStrategyType.ACTIVITY_FRAGMENT_MANAGER)
         .build();
     dialog.setTargetFragment(this, REQ_CODE_LOAD_FAILED);
     dialog.show(this, ERROR_LOADING_DIALOG_TAG);
@@ -254,11 +255,6 @@ public class UgcRoutePropertiesFragment extends BaseMwmFragment implements Bookm
         intent.putParcelableArrayListExtra(EXTRA_CATEGORY_OPTIONS, options);
         intent.putExtra(EXTRA_TAGS_ACTIVITY_RESULT, data.getExtras());
         getActivity().setResult(Activity.RESULT_OK, intent);
-        getActivity().finish();
-      }
-      else if (resultCode == Activity.RESULT_CANCELED)
-      {
-        getActivity().setResult(Activity.RESULT_CANCELED);
         getActivity().finish();
       }
     }

@@ -10,13 +10,13 @@
 
 #include "geometry/mercator.hpp"
 
-#include "std/bind.hpp"
+using namespace std;
 
 namespace
 {
 inline string LatLonToURLArgs(ms::LatLon const & point)
 {
-  return strings::to_string(point.lat) + ','+ strings::to_string(point.lon);
+  return strings::to_string(point.m_lat) + ','+ strings::to_string(point.m_lon);
 }
 }  // namespace
 
@@ -74,8 +74,8 @@ void OnlineCrossFetcher::Do()
     if (mwmFrom == mwmTo)
       continue;
 
-    string const url = GenerateOnlineRequest(m_serverURL, MercatorBounds::ToLatLon(pointFrom),
-                                             MercatorBounds::ToLatLon(pointTo));
+    string const url = GenerateOnlineRequest(m_serverURL, mercator::ToLatLon(pointFrom),
+                                             mercator::ToLatLon(pointTo));
     platform::HttpClient request(url);
     request.SetRawHeader("User-Agent", GetPlatform().GetAppUserAgent());
     LOG(LINFO, ("Check mwms by URL: ", url));

@@ -1,6 +1,8 @@
 #include "routing/routing_tests/routing_algorithm.hpp"
 
 #include "routing/base/astar_algorithm.hpp"
+#include "routing/base/astar_graph.hpp"
+
 #include "routing/maxspeeds.hpp"
 #include "routing/routing_helpers.hpp"
 
@@ -12,19 +14,76 @@
 #include <cstdint>
 #include <vector>
 
+namespace routing_test
+{
+void UndirectedGraph::AddEdge(Vertex u, Vertex v, Weight w)
+{
+  m_adjs[u].emplace_back(v, w);
+  m_adjs[v].emplace_back(u, w);
+}
+
+size_t UndirectedGraph::GetNodesNumber() const
+{
+  return m_adjs.size();
+}
+
+void UndirectedGraph::GetEdgesList(Vertex const & vertex, bool /* isOutgoing */,
+                                   std::vector<Edge> & adj)
+{
+  GetAdjacencyList(vertex, adj);
+}
+
+void UndirectedGraph::GetIngoingEdgesList(astar::VertexData<Vertex, Weight> const & vertexData,
+                                          std::vector<SimpleEdge> & adj)
+{
+  GetEdgesList(vertexData.m_vertex, false /* isOutgoing */, adj);
+}
+
+void UndirectedGraph::GetOutgoingEdgesList(astar::VertexData<Vertex, Weight> const & vertexData,
+                                           std::vector<SimpleEdge> & adj)
+{
+  GetEdgesList(vertexData.m_vertex, true /* isOutgoing */, adj);
+}
+
+double UndirectedGraph::HeuristicCostEstimate(Vertex const & v, Vertex const & w)
+{
+  return 0.0;
+}
+
+void UndirectedGraph::GetAdjacencyList(Vertex v, std::vector<Edge> & adj) const
+{
+  adj.clear();
+  auto const it = m_adjs.find(v);
+  if (it != m_adjs.cend())
+    adj = it->second;
+}
+
+void DirectedGraph::AddEdge(Vertex from, Vertex to, Weight w)
+{
+  m_outgoing[from].emplace_back(to, w);
+  m_ingoing[to].emplace_back(from, w);
+}
+
+void DirectedGraph::GetEdgesList(Vertex const & v, bool isOutgoing, std::vector<Edge> & adj)
+{
+  adj = isOutgoing ? m_outgoing[v] : m_ingoing[v];
+}
+}  // namespace routing_tests
+
 namespace routing
 {
 using namespace std;
 
 namespace
 {
-inline double TimeBetweenSec(Junction const & j1, Junction const & j2, double speedMPS)
+inline double TimeBetweenSec(geometry::PointWithAltitude const & j1,
+                             geometry::PointWithAltitude const & j2, double speedMPS)
 {
   ASSERT(speedMPS > 0.0, ());
-  ASSERT_NOT_EQUAL(j1.GetAltitude(), feature::kInvalidAltitude, ());
-  ASSERT_NOT_EQUAL(j2.GetAltitude(), feature::kInvalidAltitude, ());
+  ASSERT_NOT_EQUAL(j1.GetAltitude(), geometry::kInvalidAltitude, ());
+  ASSERT_NOT_EQUAL(j2.GetAltitude(), geometry::kInvalidAltitude, ());
 
-  double const distanceM = MercatorBounds::DistanceOnEarth(j1.GetPoint(), j2.GetPoint());
+  double const distanceM = mercator::DistanceOnEarth(j1.GetPoint(), j2.GetPoint());
   double const altitudeDiffM =
       static_cast<double>(j2.GetAltitude()) - static_cast<double>(j1.GetAltitude());
   return sqrt(distanceM * distanceM + altitudeDiffM * altitudeDiffM) / speedMPS;
@@ -34,31 +93,35 @@ inline double TimeBetweenSec(Junction const & j1, Junction const & j2, double sp
 class WeightedEdge
 {
 public:
-  WeightedEdge(Junction const & target, double weight) : target(target), weight(weight) {}
+  WeightedEdge(geometry::PointWithAltitude const & target, double weight)
+    : target(target), weight(weight)
+  {
+  }
 
-  inline Junction const & GetTarget() const { return target; }
+  inline geometry::PointWithAltitude const & GetTarget() const { return target; }
   inline double GetWeight() const { return weight; }
 
 private:
-  Junction const target;
+  geometry::PointWithAltitude const target;
   double const weight;
 };
 
+using Algorithm = AStarAlgorithm<geometry::PointWithAltitude, WeightedEdge, double>;
+
 /// A wrapper around IRoadGraph, which makes it possible to use IRoadGraph with astar algorithms.
-class RoadGraph
+class RoadGraph : public Algorithm::Graph
 {
 public:
-  using Vertex = Junction;
-  using Edge = WeightedEdge;
-  using Weight = double;
 
-  RoadGraph(IRoadGraph const & roadGraph)
+  explicit RoadGraph(IRoadGraph const & roadGraph)
     : m_roadGraph(roadGraph), m_maxSpeedMPS(KMPH2MPS(roadGraph.GetMaxSpeedKMpH()))
   {}
 
-  void GetOutgoingEdgesList(Junction const & v, vector<WeightedEdge> & adj) const
+  void GetOutgoingEdgesList(astar::VertexData<Vertex, Weight> const & vertexData,
+                            std::vector<Edge> & adj) override
   {
-    IRoadGraph::TEdgeVector edges;
+    auto const & v = vertexData.m_vertex;
+    IRoadGraph::EdgeVector edges;
     m_roadGraph.GetOutgoingEdges(v, edges);
 
     adj.clear();
@@ -74,9 +137,11 @@ public:
     }
   }
 
-  void GetIngoingEdgesList(Junction const & v, vector<WeightedEdge> & adj) const
+  void GetIngoingEdgesList(astar::VertexData<Vertex, Weight> const & vertexData,
+                           std::vector<Edge> & adj) override
   {
-    IRoadGraph::TEdgeVector edges;
+    auto const & v = vertexData.m_vertex;
+    IRoadGraph::EdgeVector edges;
     m_roadGraph.GetIngoingEdges(v, edges);
 
     adj.clear();
@@ -92,7 +157,7 @@ public:
     }
   }
 
-  double HeuristicCostEstimate(Junction const & v, Junction const & w) const
+  double HeuristicCostEstimate(Vertex const & v, Vertex const & w) override
   {
     return TimeBetweenSec(v, w, m_maxSpeedMPS);
   }
@@ -102,46 +167,48 @@ private:
   double const m_maxSpeedMPS;
 };
 
-typedef AStarAlgorithm<RoadGraph> TAlgorithmImpl;
-
-IRoutingAlgorithm::Result Convert(TAlgorithmImpl::Result value)
+TestAStarBidirectionalAlgo::Result Convert(Algorithm::Result value)
 {
   switch (value)
   {
-  case TAlgorithmImpl::Result::OK: return IRoutingAlgorithm::Result::OK;
-  case TAlgorithmImpl::Result::NoPath: return IRoutingAlgorithm::Result::NoPath;
-  case TAlgorithmImpl::Result::Cancelled: return IRoutingAlgorithm::Result::Cancelled;
+  case Algorithm::Result::OK: return TestAStarBidirectionalAlgo::Result::OK;
+  case Algorithm::Result::NoPath: return TestAStarBidirectionalAlgo::Result::NoPath;
+  case Algorithm::Result::Cancelled: return TestAStarBidirectionalAlgo::Result::Cancelled;
   }
-  ASSERT(false, ("Unexpected TAlgorithmImpl::Result value:", value));
-  return IRoutingAlgorithm::Result::NoPath;
+
+  UNREACHABLE();
+  return TestAStarBidirectionalAlgo::Result::NoPath;
 }
 }  // namespace
 
-string DebugPrint(IRoutingAlgorithm::Result const & value)
+string DebugPrint(TestAStarBidirectionalAlgo::Result const & value)
 {
   switch (value)
   {
-  case IRoutingAlgorithm::Result::OK:
+  case TestAStarBidirectionalAlgo::Result::OK:
     return "OK";
-  case IRoutingAlgorithm::Result::NoPath:
+  case TestAStarBidirectionalAlgo::Result::NoPath:
     return "NoPath";
-  case IRoutingAlgorithm::Result::Cancelled:
+  case TestAStarBidirectionalAlgo::Result::Cancelled:
     return "Cancelled";
   }
-  ASSERT(false, ("Unexpected TAlgorithmImpl::Result value:", value));
+
+  UNREACHABLE();
   return string();
 }
 
 // *************************** AStar-bidirectional routing algorithm implementation ***********************
-IRoutingAlgorithm::Result AStarBidirectionalRoutingAlgorithm::CalculateRoute(
-    IRoadGraph const & graph, Junction const & startPos, Junction const & finalPos,
+TestAStarBidirectionalAlgo::Result TestAStarBidirectionalAlgo::CalculateRoute(
+    IRoadGraph const & graph, geometry::PointWithAltitude const & startPos,
+    geometry::PointWithAltitude const & finalPos,
     RoutingResult<IRoadGraph::Vertex, IRoadGraph::Weight> & path)
 {
   RoadGraph roadGraph(graph);
-  base::Cancellable const cancellable;
-  TAlgorithmImpl::Params params(roadGraph, startPos, finalPos, {} /* prevRoute */,
-                                cancellable, {} /* onVisitJunctionFn */, {} /* checkLength */);
-  TAlgorithmImpl::Result const res = TAlgorithmImpl().FindPathBidirectional(params, path);
+  base::Cancellable cancellable;
+  Algorithm::Params<> params(roadGraph, startPos, finalPos, {} /* prevRoute */,
+                             cancellable);
+
+  Algorithm::Result const res = Algorithm().FindPathBidirectional(params, path);
   return Convert(res);
 }
 }  // namespace routing

@@ -1,16 +1,13 @@
 #import "MWMLocationManager.h"
-#import <Pushwoosh/PushNotificationManager.h>
 #import "MWMAlertViewController.h"
-#import "MWMGeoTrackerCore.h"
 #import "MWMLocationObserver.h"
 #import "MWMLocationPredictor.h"
 #import "MWMRouter.h"
 #import "MapsAppDelegate.h"
-#import "Statistics.h"
 #import "SwiftBridge.h"
-#import "3party/Alohalytics/src/alohalytics_objc.h"
+#import "location_util.h"
 
-#include "Framework.h"
+#include <CoreApi/Framework.h>
 
 #include "map/gps_tracker.hpp"
 
@@ -18,42 +15,6 @@ namespace
 {
 using Observer = id<MWMLocationObserver>;
 using Observers = NSHashTable<Observer>;
-
-location::GpsInfo gpsInfoFromLocation(CLLocation * l, location::TLocationSource source)
-{
-  location::GpsInfo info;
-  info.m_source = source;
-
-  info.m_latitude = l.coordinate.latitude;
-  info.m_longitude = l.coordinate.longitude;
-  info.m_timestamp = l.timestamp.timeIntervalSince1970;
-
-  if (l.horizontalAccuracy >= 0.0)
-    info.m_horizontalAccuracy = l.horizontalAccuracy;
-
-  if (l.verticalAccuracy >= 0.0)
-  {
-    info.m_verticalAccuracy = l.verticalAccuracy;
-    info.m_altitude = l.altitude;
-  }
-
-  if (l.course >= 0.0)
-    info.m_bearing = l.course;
-
-  if (l.speed >= 0.0)
-    info.m_speedMpS = l.speed;
-  return info;
-}
-
-location::CompassInfo compassInfoFromHeading(CLHeading * h)
-{
-  location::CompassInfo info;
-  if (h.trueHeading >= 0.0)
-    info.m_bearing = base::DegToRad(h.trueHeading);
-  else if (h.headingAccuracy >= 0.0)
-    info.m_bearing = base::DegToRad(h.magneticHeading);
-  return info;
-}
 
 typedef NS_OPTIONS(NSUInteger, MWMLocationFrameworkUpdate) {
   MWMLocationFrameworkUpdateNone = 0,
@@ -85,7 +46,7 @@ struct GeoModeSettings
   DesiredAccuracy accuracy;
 };
 
-map<GeoMode, GeoModeSettings> const kGeoSettings{
+std::map<GeoMode, GeoModeSettings> const kGeoSettings{
     {GeoMode::Pending,
      {.distanceFilter = kCLDistanceFilterNone,
       .accuracy = {.charging = kCLLocationAccuracyBestForNavigation,
@@ -132,17 +93,28 @@ BOOL keepRunningInBackground()
 }
 
 NSString * const kLocationPermissionRequestedKey = @"kLocationPermissionRequestedKey";
+NSString * const kLocationAlertNeedShowKey = @"kLocationAlertNeedShowKey";
 
-BOOL isPermissionRequested()
-{
+BOOL isPermissionRequested() {
   return [NSUserDefaults.standardUserDefaults boolForKey:kLocationPermissionRequestedKey];
 }
 
-void setPermissionRequested()
-{
+void setPermissionRequested() {
   NSUserDefaults * ud = NSUserDefaults.standardUserDefaults;
   [ud setBool:YES forKey:kLocationPermissionRequestedKey];
   [ud synchronize];
+}
+       
+BOOL needShowLocationAlert() {
+ if ([NSUserDefaults.standardUserDefaults objectForKey:kLocationAlertNeedShowKey] == nil)
+   return YES;
+ return [NSUserDefaults.standardUserDefaults boolForKey:kLocationAlertNeedShowKey];
+}
+
+void setShowLocationAlert(BOOL needShow) {
+ NSUserDefaults * ud = NSUserDefaults.standardUserDefaults;
+ [ud setBool:needShow forKey:kLocationAlertNeedShowKey];
+ [ud synchronize];
 }
 }  // namespace
 
@@ -153,7 +125,7 @@ void setPermissionRequested()
 @property(nonatomic) GeoMode geoMode;
 @property(nonatomic) CLHeading * lastHeadingInfo;
 @property(nonatomic) CLLocation * lastLocationInfo;
-@property(nonatomic) location::TLocationError lastLocationStatus;
+@property(nonatomic) MWMLocationStatus lastLocationStatus;
 @property(nonatomic) MWMLocationPredictor * predictor;
 @property(nonatomic) Observers * observers;
 @property(nonatomic) MWMLocationFrameworkUpdate frameworkUpdateMode;
@@ -171,7 +143,7 @@ void setPermissionRequested()
   static MWMLocationManager * manager;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    manager = [[super alloc] initManager];
+    manager = [[self alloc] initManager];
   });
   return manager;
 }
@@ -192,7 +164,13 @@ void setPermissionRequested()
   [NSNotificationCenter.defaultCenter removeObserver:self];
   self.locationManager.delegate = nil;
 }
+
 + (void)start { [self manager].started = YES; }
+
++ (void)stop { [self manager].started = NO; }
+
++ (BOOL)isStarted { return [self manager].started; }
+
 #pragma mark - Add/Remove Observers
 
 + (void)addObserver:(Observer)observer
@@ -239,7 +217,7 @@ void setPermissionRequested()
   MWMLocationManager * manager = [self manager];
   if (!manager.started || !manager.lastLocationInfo ||
       manager.lastLocationInfo.horizontalAccuracy < 0 ||
-      manager.lastLocationStatus != location::TLocationError::ENoError)
+      manager.lastLocationStatus != MWMLocationStatusNoError)
     return nil;
   return manager.lastLocationInfo;
 }
@@ -247,8 +225,8 @@ void setPermissionRequested()
 + (BOOL)isLocationProhibited
 {
   auto const status = [self manager].lastLocationStatus;
-  return status == location::TLocationError::EDenied ||
-         status == location::TLocationError::EGPSIsOff;
+  return status == MWMLocationStatusDenied ||
+         status == MWMLocationStatusGPSIsOff;
 }
 
 + (CLHeading *)lastHeading
@@ -261,10 +239,10 @@ void setPermissionRequested()
 
 #pragma mark - Observer notifications
 
-- (void)processLocationStatus:(location::TLocationError)locationError
+- (void)processLocationStatus:(MWMLocationStatus)locationError
 {
   self.lastLocationStatus = locationError;
-  if (self.lastLocationStatus != location::TLocationError::ENoError)
+  if (self.lastLocationStatus != MWMLocationStatusNoError)
     self.frameworkUpdateMode |= MWMLocationFrameworkUpdateStatus;
   for (Observer observer in self.observers)
   {
@@ -277,17 +255,17 @@ void setPermissionRequested()
 {
   self.lastHeadingInfo = headingInfo;
   self.frameworkUpdateMode |= MWMLocationFrameworkUpdateHeading;
-  location::CompassInfo const compassInfo = compassInfoFromHeading(headingInfo);
+//  location::CompassInfo const compassInfo = compassInfoFromHeading(headingInfo);
   for (Observer observer in self.observers)
   {
     if ([observer respondsToSelector:@selector(onHeadingUpdate:)])
-      [observer onHeadingUpdate:compassInfo];
+      [observer onHeadingUpdate:headingInfo];
   }
 }
 
 - (void)processLocationUpdate:(CLLocation *)locationInfo
 {
-  if (!locationInfo || self.lastLocationStatus != location::TLocationError::ENoError)
+  if (!locationInfo || self.lastLocationStatus != MWMLocationStatusNoError)
     return;
   [self onLocationUpdate:locationInfo source:self.locationSource];
   if (![self.lastLocationInfo isEqual:locationInfo])
@@ -296,7 +274,7 @@ void setPermissionRequested()
 
 - (void)onLocationUpdate:(CLLocation *)locationInfo source:(location::TLocationSource)source
 {
-  location::GpsInfo const gpsInfo = gpsInfoFromLocation(locationInfo, source);
+  location::GpsInfo const gpsInfo = location_util::gpsInfoFromLocation(locationInfo, source);
   GpsTracker::Instance().OnLocationUpdated(gpsInfo);
 
   self.lastLocationInfo = locationInfo;
@@ -305,26 +283,28 @@ void setPermissionRequested()
   for (Observer observer in self.observers)
   {
     if ([observer respondsToSelector:@selector(onLocationUpdate:)])
-      [observer onLocationUpdate:gpsInfo];
+      [observer onLocationUpdate:locationInfo];
   }
 }
 
 #pragma mark - Location Status
 
-- (void)setLastLocationStatus:(location::TLocationError)lastLocationStatus
+- (void)setLastLocationStatus:(MWMLocationStatus)lastLocationStatus
 {
   _lastLocationStatus = lastLocationStatus;
   switch (lastLocationStatus)
   {
-  case location::ENoError: break;
-  case location::ENotSupported:
+  case MWMLocationStatusNoError: break;
+  case MWMLocationStatusNotSupported:
     [[MWMAlertViewController activeAlertController] presentLocationServiceNotSupportedAlert];
     break;
-  case location::EDenied:
-    [[MWMAlertViewController activeAlertController] presentLocationAlert];
-    break;
-  case location::EGPSIsOff:
-    // iOS shows its own alert.
+  case MWMLocationStatusDenied:
+  case MWMLocationStatusGPSIsOff:
+    if (needShowLocationAlert()) {
+      [[MWMAlertViewController activeAlertController] presentLocationAlertWithCancelBlock:^{
+        setShowLocationAlert(NO);
+      }];
+    }
     break;
   }
 }
@@ -450,15 +430,15 @@ void setPermissionRequested()
   if (location.horizontalAccuracy < 0.)
     return;
 
-  self.lastLocationStatus = location::TLocationError::ENoError;
+  self.lastLocationStatus = MWMLocationStatusNoError;
   self.locationSource = location::EAppleNative;
   [self processLocationUpdate:location];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-  if (self.lastLocationStatus == location::TLocationError::ENoError && error.code == kCLErrorDenied)
-    [self processLocationStatus:location::EDenied];
+  if (self.lastLocationStatus == MWMLocationStatusNoError && error.code == kCLErrorDenied)
+    [self processLocationStatus:MWMLocationStatusDenied];
 }
 
 #pragma mark - Start / Stop
@@ -468,20 +448,19 @@ void setPermissionRequested()
   if (_started == started)
     return;
   NSNotificationCenter * notificationCenter = NSNotificationCenter.defaultCenter;
-  if (started)
-  {
+  if (started) {
     _started = [self start];
-    [notificationCenter addObserver:self
-                           selector:@selector(orientationChanged)
-                               name:UIDeviceOrientationDidChangeNotification
-                             object:nil];
-    [notificationCenter addObserver:self
-                           selector:@selector(batteryStateChangedNotification:)
-                               name:UIDeviceBatteryStateDidChangeNotification
-                             object:nil];
-  }
-  else
-  {
+    if (_started) {
+      [notificationCenter addObserver:self
+                             selector:@selector(orientationChanged)
+                                 name:UIDeviceOrientationDidChangeNotification
+                               object:nil];
+      [notificationCenter addObserver:self
+                             selector:@selector(batteryStateChangedNotification:)
+                                 name:UIDeviceBatteryStateDidChangeNotification
+                               object:nil];
+    }
+  } else {
     _started = NO;
     [self stop];
     [notificationCenter removeObserver:self
@@ -505,7 +484,6 @@ void setPermissionRequested()
     setPermissionRequested();
     if ([CLLocationManager headingAvailable])
       [locationManager startUpdatingHeading];
-    [[PushNotificationManager pushManager] startLocationTracking];
   };
   if ([CLLocationManager locationServicesEnabled])
   {
@@ -515,14 +493,12 @@ void setPermissionRequested()
     case kCLAuthorizationStatusAuthorizedAlways:
     case kCLAuthorizationStatusNotDetermined: doStart(); return YES;
     case kCLAuthorizationStatusRestricted:
-    case kCLAuthorizationStatusDenied: [self processLocationStatus:location::EDenied]; break;
+    case kCLAuthorizationStatusDenied: [self processLocationStatus:MWMLocationStatusDenied]; break;
     }
   }
   else
   {
-    // Call start to make iOS show its alert to request geo service.
-    doStart();
-    [self processLocationStatus:location::EGPSIsOff];
+    [self processLocationStatus:MWMLocationStatusGPSIsOff];
   }
   return NO;
 }
@@ -534,7 +510,6 @@ void setPermissionRequested()
   [locationManager stopUpdatingLocation];
   if ([CLLocationManager headingAvailable])
     [locationManager stopUpdatingHeading];
-  [[PushNotificationManager pushManager] stopLocationTracking];
 }
 
 #pragma mark - Framework
@@ -551,13 +526,13 @@ void setPermissionRequested()
     if (self.frameworkUpdateMode & MWMLocationFrameworkUpdateLocation)
     {
       location::GpsInfo const gpsInfo =
-          gpsInfoFromLocation(self.lastLocationInfo, self.locationSource);
+          location_util::gpsInfoFromLocation(self.lastLocationInfo, self.locationSource);
       f.OnLocationUpdate(gpsInfo);
     }
     if (self.frameworkUpdateMode & MWMLocationFrameworkUpdateHeading)
-      f.OnCompassUpdate(compassInfoFromHeading(self.lastHeadingInfo));
+      f.OnCompassUpdate(location_util::compassInfoFromHeading(self.lastHeadingInfo));
     if (self.frameworkUpdateMode & MWMLocationFrameworkUpdateStatus)
-      f.OnLocationError(self.lastLocationStatus);
+      f.OnLocationError((location::TLocationError)self.lastLocationStatus);
     self.frameworkUpdateMode = MWMLocationFrameworkUpdateNone;
   }
   else
@@ -583,6 +558,12 @@ void setPermissionRequested()
   {
     _frameworkUpdateMode = frameworkUpdateMode;
   }
+}
+
+#pragma mark - Location alert
+
++ (void)enableLocationAlert {
+  setShowLocationAlert(YES);
 }
 
 @end

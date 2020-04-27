@@ -24,8 +24,8 @@
 #include "base/logging.hpp"
 #include "base/string_utils.hpp"
 
-#include <map>
 #include <memory>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -39,44 +39,6 @@ namespace generator
 {
 namespace
 {
-bool ParseFeatureIdToOsmIdMapping(string const & path,
-                                  map<uint32_t, vector<base::GeoObjectId>> & mapping)
-{
-  return ForEachOsmId2FeatureId(path,
-                                [&](base::GeoObjectId const & osmId, uint32_t const featureId) {
-                                  mapping[featureId].push_back(osmId);
-                                });
-}
-
-bool ParseFeatureIdToTestIdMapping(string const & path, map<uint32_t, vector<uint64_t>> & mapping)
-{
-  bool success = true;
-  feature::ForEachFromDat(path, [&](FeatureType & feature, uint32_t fid) {
-    auto const & metatada = feature.GetMetadata();
-    auto const sid = metatada.Get(feature::Metadata::FMD_TEST_ID);
-    uint64_t tid;
-    if (!strings::to_uint64(sid, tid))
-    {
-      LOG(LERROR, ("Can't parse test id from:", sid, "for a feature", fid));
-      success = false;
-      return;
-    }
-    mapping[fid].push_back(tid);
-  });
-  return success;
-}
-
-CBV GetLocalities(string const & dataPath)
-{
-  FrozenDataSource dataSource;
-  auto const result = dataSource.Register(platform::LocalCountryFile::MakeTemporary(dataPath));
-  CHECK_EQUAL(result.second, MwmSet::RegResult::Success, ("Can't register", dataPath));
-
-  search::MwmContext context(dataSource.GetMwmHandleById(result.first));
-  ::base::Cancellable const cancellable;
-  return search::CategoriesCache(LocalitiesSource{}, cancellable).Get(context);
-}
-
 template <typename BoundariesTable, typename MappingReader>
 bool BuildCitiesBoundaries(string const & dataPath, BoundariesTable & table,
                            MappingReader && reader)
@@ -94,19 +56,16 @@ bool BuildCitiesBoundaries(string const & dataPath, BoundariesTable & table,
     auto it = mapping->find(base::asserted_cast<uint32_t>(fid));
     if (it != mapping->end())
     {
-      for (auto const & id : it->second)
-      {
-        auto const & b = table.Get(id);
-        bs.insert(bs.end(), b.begin(), b.end());
-      }
+      auto const & b = table.Get(it->second);
+      bs.insert(bs.end(), b.begin(), b.end());
     }
 
     all.emplace_back(move(bs));
   });
 
   FilesContainerW container(dataPath, FileWriter::OP_WRITE_EXISTING);
-  FileWriter sink = container.GetWriter(CITIES_BOUNDARIES_FILE_TAG);
-  indexer::CitiesBoundariesSerDes::Serialize(sink, all);
+  auto sink = container.GetWriter(CITIES_BOUNDARIES_FILE_TAG);
+  indexer::CitiesBoundariesSerDes::Serialize(*sink, all);
 
   return true;
 }
@@ -115,10 +74,11 @@ bool BuildCitiesBoundaries(string const & dataPath, BoundariesTable & table,
 bool BuildCitiesBoundaries(string const & dataPath, string const & osmToFeaturePath,
                            OsmIdToBoundariesTable & table)
 {
-  using Mapping = map<uint32_t, vector<base::GeoObjectId>>;
+  using Mapping = unordered_map<uint32_t, base::GeoObjectId>;
 
   return BuildCitiesBoundaries(dataPath, table, [&]() -> unique_ptr<Mapping> {
     Mapping mapping;
+    // todo(@m) Use osmToFeaturePath?
     if (!ParseFeatureIdToOsmIdMapping(dataPath + OSM2FEATURE_FILE_EXTENSION, mapping))
     {
       LOG(LERROR, ("Can't parse feature id to osm id mapping."));
@@ -130,7 +90,7 @@ bool BuildCitiesBoundaries(string const & dataPath, string const & osmToFeatureP
 
 bool BuildCitiesBoundariesForTesting(string const & dataPath, TestIdToBoundariesTable & table)
 {
-  using Mapping = map<uint32_t, vector<uint64_t>>;
+  using Mapping = unordered_map<uint32_t, uint64_t>;
 
   return BuildCitiesBoundaries(dataPath, table, [&]() -> unique_ptr<Mapping> {
     Mapping mapping;
@@ -143,7 +103,7 @@ bool BuildCitiesBoundariesForTesting(string const & dataPath, TestIdToBoundaries
   });
 }
 
-bool SerializeBoundariesTable(std::string const & path, OsmIdToBoundariesTable & table)
+void SerializeBoundariesTable(std::string const & path, OsmIdToBoundariesTable & table)
 {
   vector<vector<base::GeoObjectId>> allIds;
   vector<vector<CityBoundary>> allBoundaries;
@@ -155,25 +115,13 @@ bool SerializeBoundariesTable(std::string const & path, OsmIdToBoundariesTable &
 
   CHECK_EQUAL(allIds.size(), allBoundaries.size(), ());
 
-  try
+  FileWriter sink(path);
+  indexer::CitiesBoundariesSerDes::Serialize(sink, allBoundaries);
+  for (auto const & ids : allIds)
   {
-    FileWriter sink(path);
-
-    indexer::CitiesBoundariesSerDes::Serialize(sink, allBoundaries);
-
-    for (auto const & ids : allIds)
-    {
-      WriteToSink(sink, static_cast<uint64_t>(ids.size()));
-      for (auto const & id : ids)
-        WriteToSink(sink, id.GetEncodedId());
-    }
-
-    return true;
-  }
-  catch (Writer::Exception const & e)
-  {
-    LOG(LERROR, ("Can't serialize boundaries table:", e.what()));
-    return false;
+    WriteToSink(sink, static_cast<uint64_t>(ids.size()));
+    for (auto const & id : ids)
+      WriteToSink(sink, id.GetEncodedId());
   }
 }
 

@@ -14,7 +14,7 @@ final class RouteManagerViewController: MWMViewController, UITableViewDataSource
 
   lazy var chromeView: UIView = {
     let view = UIView()
-    view.backgroundColor = UIColor.blackStatusBarBackground()
+    view.styleName = "BlackStatusBarBackground"
     return view
   }()
 
@@ -186,9 +186,9 @@ final class RouteManagerViewController: MWMViewController, UITableViewDataSource
   }
 
   private func setupTableView() {
-    tableView.register(cellClass: RouteManagerCell.self)
+    tableView.registerNib(cellClass: RouteManagerCell.self)
     tableView.estimatedRowHeight = 48
-    tableView.rowHeight = UITableViewAutomaticDimension
+    tableView.rowHeight = UITableView.automaticDimension
   }
 
   @IBAction func onCancel() {
@@ -252,12 +252,12 @@ final class RouteManagerViewController: MWMViewController, UITableViewDataSource
     return cell
   }
 
-  func tableView(_ tableView: UITableView, commit _: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+  func tableView(_ tableView: UITableView, commit _: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
     viewModel.deletePoint(at: indexPath.row)
   }
 
   // MARK: - UITableViewDelegate
-  func tableView(_: UITableView, editingStyleForRowAt _: IndexPath) -> UITableViewCellEditingStyle {
+  func tableView(_: UITableView, editingStyleForRowAt _: IndexPath) -> UITableViewCell.EditingStyle {
     return canDeleteRow ? .delete : .none
   }
 }

@@ -16,7 +16,7 @@ UGC Loader::GetUGC(FeatureID const & featureId)
   if (!handle.IsAlive())
     return {};
 
-  auto const & value = *handle.GetValue<MwmValue>();
+  auto const & value = *handle.GetValue();
 
   if (!value.m_cont.IsExist(UGC_FILE_TAG))
     return {};
@@ -29,7 +29,7 @@ UGC Loader::GetUGC(FeatureID const & featureId)
 
     if (it == m_deserializers.end())
     {
-      auto const result = m_deserializers.emplace(featureId.m_mwmId, make_shared<Entry>());
+      auto const result = m_deserializers.emplace(featureId.m_mwmId, std::make_shared<Entry>());
       it = result.first;
     }
     entry = it->second;

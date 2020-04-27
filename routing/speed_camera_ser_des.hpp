@@ -5,7 +5,7 @@
 #include "routing/segment.hpp"
 #include "routing/speed_camera.hpp"
 
-#include "coding/file_container.hpp"
+#include "coding/files_container.hpp"
 #include "coding/file_writer.hpp"
 #include "coding/point_coding.hpp"
 #include "coding/reader.hpp"
@@ -41,8 +41,7 @@ struct SpeedCameraMwmPosition
   double m_coef = 0.0;
 };
 
-// Don't touch the order of enum (this is will be part of mwm).
-// TODO (@gmoryes) change comment after adding section in mwm.
+// Don't touch the order of enum (this is the part of mwm).
 enum class SpeedCameraDirection
 {
   Unknown = 0,

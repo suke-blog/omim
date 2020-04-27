@@ -5,14 +5,22 @@
 
 #include "drape_frontend/visual_params.hpp"
 
+#include "platform/platform.hpp"
 #include "platform/settings.hpp"
 
-#include "coding/uri.hpp"
+#include "coding/internal/file_data.hpp"
+#include "coding/url.hpp"
 
+#include "base/macros.hpp"
 #include "base/string_format.hpp"
 
-#include "std/random.hpp"
+#include <random>
+#include <sstream>
+#include <string>
 
+#include "defines.hpp"
+
+using namespace std;
 using namespace url_scheme;
 
 namespace
@@ -21,8 +29,8 @@ static FrameworkParams const kFrameworkParams(false /* m_enableLocalAds */, fals
 
 void ToMercatoToLatLon(double & lat, double & lon)
 {
-  lon = MercatorBounds::XToLon(MercatorBounds::LonToX(lon));
-  lat = MercatorBounds::YToLat(MercatorBounds::LatToY(lat));
+  lon = mercator::XToLon(mercator::LonToX(lon));
+  lat = mercator::YToLat(mercator::LatToY(lat));
 }
 
 UserMark::Type const type = UserMark::Type::API;
@@ -30,13 +38,15 @@ UserMark::Type const type = UserMark::Type::API;
 class ApiTest
 {
 public:
-  ApiTest(string const & uriString)
-    : m_fm(kFrameworkParams)
+  explicit ApiTest(string const & urlString)
+    : m_framework(kFrameworkParams)
   {
-    m_m = &m_fm.GetBookmarkManager();
+    df::VisualParams::Init(1.0, 1024);
+
+    m_m = &m_framework.GetBookmarkManager();
     m_api.SetBookmarkManager(m_m);
 
-    auto const res = m_api.SetUriAndParse(uriString);
+    auto const res = m_api.SetUrlAndParse(urlString);
     if (res != ParsedMapApi::ParsingResult::Incorrect)
     {
       if (!m_api.GetViewportRect(m_viewportRect))
@@ -55,7 +65,7 @@ public:
     return m_m->GetUserMarkIds(type).size();
   }
 
-  CatalogItem const & GetCatalogItem() const { return m_api.GetCatalogItem(); }
+  Catalog const & GetCatalog() const { return m_api.GetCatalog(); }
   vector<RoutePoint> GetRoutePoints() const { return m_api.GetRoutePoints(); }
   url_scheme::SearchRequest const & GetSearchRequest() const { return m_api.GetSearchRequest(); }
   string const & GetGlobalBackUrl() const { return m_api.GetGlobalBackUrl(); }
@@ -64,13 +74,13 @@ public:
   bool TestLatLon(int index, double lat, double lon) const
   {
     ms::LatLon const ll = GetMark(index)->GetLatLon();
-    return base::AlmostEqualULPs(ll.lat, lat) && base::AlmostEqualULPs(ll.lon, lon);
+    return base::AlmostEqualULPs(ll.m_lat, lat) && base::AlmostEqualULPs(ll.m_lon, lon);
   }
 
   bool TestRoutePoint(int index, double lat, double lon, string const & name)
   {
     RoutePoint const pt = GetRoutePoints()[index];
-    return pt.m_org == MercatorBounds::FromLatLon(lat, lon) && pt.m_name == name;
+    return pt.m_org == mercator::FromLatLon(lat, lon) && pt.m_name == name;
   }
 
   bool TestName(int index, string const & name) const
@@ -95,29 +105,29 @@ private:
   }
 
 private:
-  Framework m_fm;
+  Framework m_framework;
   ParsedMapApi m_api;
   m2::RectD m_viewportRect;
   BookmarkManager * m_m;
 };
 
-bool IsValid(Framework & fm, string const & uriString)
+bool IsValid(Framework & fm, string const & urlString)
 {
   ParsedMapApi api;
   api.SetBookmarkManager(&fm.GetBookmarkManager());
-  api.SetUriAndParse(uriString);
+  api.SetUrlAndParse(urlString);
   fm.GetBookmarkManager().GetEditSession().ClearGroup(UserMark::Type::API);
 
   return api.IsValid();
 }
-}
+}  // namespace
 
 UNIT_TEST(MapApiSmoke)
 {
-  string uriString = "mapswithme://map?ll=38.970559,-9.419289&ignoreThisParam=Yes&z=17&n=Point%20Name";
-  TEST(Uri(uriString).IsValid(), ());
+  string urlString = "mapswithme://map?ll=38.970559,-9.419289&ignoreThisParam=Yes&z=17&n=Point%20Name";
+  TEST(url::Url(urlString).IsValid(), ());
 
-  ApiTest test(uriString);
+  ApiTest test(urlString);
 
   TEST(test.IsValid(), ());
   TEST_EQUAL(test.GetPointCount(), 1, ());
@@ -129,11 +139,11 @@ UNIT_TEST(MapApiSmoke)
 
 UNIT_TEST(RouteApiSmoke)
 {
-  string const uriString =
+  string const urlString =
       "mapswithme://route?sll=1,1&saddr=name0&dll=2,2&daddr=name1&type=vehicle";
-  TEST(Uri(uriString).IsValid(), ());
+  TEST(url::Url(urlString).IsValid(), ());
 
-  ApiTest test(uriString);
+  ApiTest test(urlString);
   TEST(test.IsValid(), ());
   TEST(test.TestRoutePoint(0, 1, 1, "name0"), ());
   TEST(test.TestRoutePoint(1, 2, 2, "name1"), ());
@@ -142,13 +152,13 @@ UNIT_TEST(RouteApiSmoke)
 
 UNIT_TEST(CatalogueApiSmoke)
 {
-  string const uriString = "mapsme://catalogue?id=440f02e5-ff38-45ed-95c0-44587c9a5fc7&name=CatalogGroupName";
-  TEST(Uri(uriString).IsValid(), ());
+  string const urlString = "mapsme://catalogue?id=440f02e5-ff38-45ed-95c0-44587c9a5fc7&name=CatalogGroupName";
+  TEST(url::Url(urlString).IsValid(), ());
 
-  ApiTest test(uriString);
+  ApiTest test(urlString);
   TEST(test.IsValid(), ());
 
-  auto const & catalogItem = test.GetCatalogItem();
+  auto const & catalogItem = test.GetCatalog();
   TEST_EQUAL(catalogItem.m_id, "440f02e5-ff38-45ed-95c0-44587c9a5fc7", ());
   TEST_EQUAL(catalogItem.m_name, "CatalogGroupName", ());
 }
@@ -168,10 +178,10 @@ UNIT_TEST(CatalogueApiInvalidUrl)
 
 UNIT_TEST(SearchApiSmoke)
 {
-  string const uriString = "mapsme://search?query=fff&cll=1,1&locale=ru&map";
-  TEST(Uri(uriString).IsValid(), ());
+  string const urlString = "mapsme://search?query=fff&cll=1,1&locale=ru&map";
+  TEST(url::Url(urlString).IsValid(), ());
 
-  ApiTest test(uriString);
+  ApiTest test(urlString);
   TEST(test.IsValid(), ());
 
   auto const & request = test.GetSearchRequest();
@@ -195,9 +205,14 @@ UNIT_TEST(SearchApiInvalidUrl)
 
 UNIT_TEST(LeadApiSmoke)
 {
-  string const uriString = "mapsme://lead?utm_source=a&utm_medium=b&utm_campaign=c&utm_content=d&utm_term=e";
-  TEST(Uri(uriString).IsValid(), ());
-  ApiTest test(uriString);
+  SCOPE_GUARD(cleanup, [] {
+    auto const path = GetPlatform().SettingsPathForFile(MARKETING_SETTINGS_FILE_NAME);
+    UNUSED_VALUE(base::DeleteFileX(path));
+  });
+
+  string const urlString = "mapsme://lead?utm_source=a&utm_medium=b&utm_campaign=c&utm_content=d&utm_term=e";
+  TEST(url::Url(urlString).IsValid(), ());
+  ApiTest test(urlString);
   TEST(test.IsValid(), ());
 
   auto checkEqual = [](string const & key, string const & value)

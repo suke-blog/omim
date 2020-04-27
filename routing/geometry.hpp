@@ -1,23 +1,28 @@
 #pragma once
 
 #include "routing/city_roads.hpp"
+#include "routing/latlon_with_altitude.hpp"
 #include "routing/maxspeeds.hpp"
 #include "routing/road_graph.hpp"
 #include "routing/road_point.hpp"
+#include "routing/routing_options.hpp"
 
 #include "routing_common/maxspeed_conversion.hpp"
 #include "routing_common/vehicle_model.hpp"
 
 #include "indexer/feature_altitude.hpp"
 
-#include "geometry/point2d.hpp"
+#include "geometry/latlon.hpp"
 
 #include "base/buffer_vector.hpp"
 #include "base/fifo_cache.hpp"
 
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <string>
+
+#include "3party/skarupke/bytell_hash_map.hpp"
 
 class DataSource;
 
@@ -32,19 +37,20 @@ public:
   RoadGeometry(bool oneWay, double weightSpeedKMpH, double etaSpeedKMpH, Points const & points);
 
   void Load(VehicleModelInterface const & vehicleModel, FeatureType & feature,
-            feature::TAltitudes const * altitudes, bool inCity, Maxspeed const & maxspeed);
+            geometry::Altitudes const * altitudes, bool inCity, Maxspeed const & maxspeed);
 
   bool IsOneWay() const { return m_isOneWay; }
-  VehicleModelInterface::SpeedKMpH const & GetSpeed(bool forward) const;
+  SpeedKMpH const & GetSpeed(bool forward) const;
+  HighwayType GetHighwayType() const { return *m_highwayType; }
   bool IsPassThroughAllowed() const { return m_isPassThroughAllowed; }
 
-  Junction const & GetJunction(uint32_t junctionId) const
+  LatLonWithAltitude const & GetJunction(uint32_t junctionId) const
   {
     ASSERT_LESS(junctionId, m_junctions.size(), ());
     return m_junctions[junctionId];
   }
 
-  m2::PointD const & GetPoint(uint32_t pointId) const { return GetJunction(pointId).GetPoint(); }
+  ms::LatLon const & GetPoint(uint32_t pointId) const { return GetJunction(pointId).GetLatLon(); }
 
   uint32_t GetPointsCount() const { return static_cast<uint32_t>(m_junctions.size()); }
 
@@ -65,13 +71,25 @@ public:
     m_isPassThroughAllowed = passThroughAllowed;
   }
 
+  bool SuitableForOptions(RoutingOptions avoidRoutingOptions) const
+  {
+    return (avoidRoutingOptions.GetOptions() & m_routingOptions.GetOptions()) == 0;
+  }
+
+  RoutingOptions GetRoutingOptions() const { return m_routingOptions; }
+
 private:
-  buffer_vector<Junction, 32> m_junctions;
-  VehicleModelInterface::SpeedKMpH m_forwardSpeed;
-  VehicleModelInterface::SpeedKMpH m_backwardSpeed;
+
+  double GetRoadLengthM() const;
+
+  buffer_vector<LatLonWithAltitude, 32> m_junctions;
+  SpeedKMpH m_forwardSpeed;
+  SpeedKMpH m_backwardSpeed;
+  std::optional<HighwayType> m_highwayType;
   bool m_isOneWay = false;
   bool m_valid = false;
   bool m_isPassThroughAllowed = false;
+  RoutingOptions m_routingOptions;
 };
 
 struct AttrLoader
@@ -125,13 +143,16 @@ public:
 
   /// \note The reference returned by the method is valid until the next call of GetRoad()
   /// of GetPoint() methods.
-  m2::PointD const & GetPoint(RoadPoint const & rp)
+  ms::LatLon const & GetPoint(RoadPoint const & rp)
   {
     return GetRoad(rp.GetFeatureId()).GetPoint(rp.GetPointId());
   }
 
 private:
+  using RoutingFifoCache =
+      FifoCache<uint32_t, RoadGeometry, ska::bytell_hash_map<uint32_t, RoadGeometry>>;
+
   std::unique_ptr<GeometryLoader> m_loader;
-  std::unique_ptr<FifoCache<uint32_t, RoadGeometry>> m_featureIdToRoad;
+  std::unique_ptr<RoutingFifoCache> m_featureIdToRoad;
 };
 }  // namespace routing

@@ -25,12 +25,12 @@ using namespace std;
 
 namespace
 {
-template <typename TValue>
+template <typename Value>
 struct SearchTokensCollector
 {
   SearchTokensCollector() : m_currentS(), m_currentCount(0) {}
 
-  void operator()(strings::UniString const & s, TValue const & /* value */)
+  void operator()(strings::UniString const & s, Value const & /* value */)
   {
     if (m_currentS != s)
     {
@@ -99,7 +99,7 @@ namespace feature
   void DumpTypes(string const & fPath)
   {
     TypesCollector doClass;
-    feature::ForEachFromDat(fPath, doClass);
+    feature::ForEachFeature(fPath, doClass);
 
     typedef pair<vector<uint32_t>, size_t> stats_elem_type;
     typedef vector<stats_elem_type> vec_to_sort;
@@ -185,7 +185,7 @@ namespace feature
   void DumpPrefixes(string const & fPath)
   {
     PrefixesCollector doClass;
-    feature::ForEachFromDat(fPath, doClass);
+    feature::ForEachFeature(fPath, doClass);
     for (TokensContainerT::iterator it = doClass.m_stats.begin();
          it != doClass.m_stats.end(); ++it)
     {
@@ -195,17 +195,15 @@ namespace feature
 
   void DumpSearchTokens(string const & fPath, size_t maxTokensToShow)
   {
-    using TValue = FeatureIndexValue;
+    using Value = Uint64IndexValue;
 
     FilesContainerR container(make_unique<FileReader>(fPath));
     feature::DataHeader header(container);
-    serial::GeometryCodingParams codingParams(
-        trie::GetGeometryCodingParams(header.GetDefGeometryCodingParams()));
 
-    auto const trieRoot = trie::ReadTrie<ModelReaderPtr, ValueList<TValue>>(
-        container.GetReader(SEARCH_INDEX_FILE_TAG), SingleValueSerializer<TValue>(codingParams));
+    auto const trieRoot = trie::ReadTrie<ModelReaderPtr, ValueList<Value>>(
+        container.GetReader(SEARCH_INDEX_FILE_TAG), SingleValueSerializer<Value>());
 
-    SearchTokensCollector<TValue> f;
+    SearchTokensCollector<Value> f;
     trie::ForEachRef(*trieRoot, f, strings::UniString());
     f.Finish();
 
@@ -227,7 +225,7 @@ namespace feature
         cout << name << endl;
     };
 
-    feature::ForEachFromDat(fPath, [&](FeatureType & f, uint32_t)
+    feature::ForEachFeature(fPath, [&](FeatureType & f, uint32_t)
                             {
                               f.ForEachName(printName);
                             });

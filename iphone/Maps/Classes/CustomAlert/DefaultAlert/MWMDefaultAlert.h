@@ -17,9 +17,8 @@
 + (instancetype)noCurrentPositionAlert;
 + (instancetype)pointsInDifferentMWMAlert;
 + (instancetype)disabledLocationAlert;
-+ (instancetype)noWiFiAlertWithOkBlock:(MWMVoidBlock)okBlock;
++ (instancetype)noWiFiAlertWithOkBlock:(MWMVoidBlock)okBlock andCancelBlock:(MWMVoidBlock)cancelBlock;
 + (instancetype)noConnectionAlert;
-+ (instancetype)migrationProhibitedAlert;
 + (instancetype)deleteMapProhibitedAlert;
 + (instancetype)unsavedEditsAlertWithOkBlock:(MWMVoidBlock)okBlock;
 + (instancetype)locationServiceNotSupportedAlert;
@@ -31,7 +30,6 @@
 + (instancetype)downloaderInternalErrorAlertWithOkBlock:(MWMVoidBlock)okBlock
                                             cancelBlock:(MWMVoidBlock)cancelBlock;
 + (instancetype)downloaderNeedUpdateAlertWithOkBlock:(MWMVoidBlock)okBlock;
-+ (instancetype)routingMigrationAlertWithOkBlock:(MWMVoidBlock)okBlock;
 + (instancetype)resetChangesAlertWithBlock:(MWMVoidBlock)block;
 + (instancetype)deleteFeatureAlertWithBlock:(MWMVoidBlock)block;
 + (instancetype)personalInfoWarningAlertWithBlock:(MWMVoidBlock)block;

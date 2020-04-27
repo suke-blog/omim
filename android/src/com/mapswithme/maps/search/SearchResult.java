@@ -1,19 +1,19 @@
 package com.mapswithme.maps.search;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.mapswithme.maps.bookmarks.data.FeatureId;
-
-import static com.mapswithme.maps.search.SearchResultTypes.TYPE_LOCAL_ADS_CUSTOMER;
-import static com.mapswithme.maps.search.SearchResultTypes.TYPE_RESULT;
-import static com.mapswithme.maps.search.SearchResultTypes.TYPE_SUGGEST;
 
 /**
  * Class instances are created from native code.
  */
 @SuppressWarnings("unused")
-public class SearchResult implements SearchData, PopularityProvider
+public class SearchResult implements PopularityProvider
 {
+  public static final int TYPE_SUGGEST = 0;
+  public static final int TYPE_RESULT = 1;
+  public static final int TYPE_LOCAL_ADS_CUSTOMER = 2;
+
   // Values should match osm::YesNoUnknown enum.
   public static final int OPEN_NOW_UNKNOWN = 0;
   public static final int OPEN_NOW_YES = 1;
@@ -31,6 +31,7 @@ public class SearchResult implements SearchData, PopularityProvider
     public final String cuisine;
     public final String brand;
     public final String airportIata;
+    public final String roadShields;
     public final String pricing;
     public final float rating;
     public final int stars;
@@ -38,7 +39,7 @@ public class SearchResult implements SearchData, PopularityProvider
     public final boolean hasPopularityHigherPriority;
 
     public Description(FeatureId featureId, String featureType, String region, String distance,
-                       String cuisine, String brand, String airportIata, String pricing,
+                       String cuisine, String brand, String airportIata, String roadShields, String pricing,
                        float rating, int stars, int openNow, boolean hasPopularityHigherPriority)
     {
       this.featureId = featureId;
@@ -48,6 +49,7 @@ public class SearchResult implements SearchData, PopularityProvider
       this.cuisine = cuisine;
       this.brand = brand;
       this.airportIata = airportIata;
+      this.roadShields = roadShields;
       this.pricing = pricing;
       this.rating = rating;
       this.stars = stars;
@@ -96,12 +98,6 @@ public class SearchResult implements SearchData, PopularityProvider
     this.lon = lon;
     this.description = description;
     this.highlightRanges = highlightRanges;
-  }
-
-  @Override
-  public int getItemViewType()
-  {
-    return type;
   }
 
   @NonNull

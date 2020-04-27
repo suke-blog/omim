@@ -1,9 +1,13 @@
+#import <CoreApi/MWMTypes.h>
+
 #import "MWMSearchManager.h"
-#import "MWMTypes.h"
+#import "MWMSearchHotelsFilterViewController.h"
+#import "MWMHotelParams.h"
 
-@interface MWMSearchManager (Filter)
+@interface MWMSearchManager (Filter)<MWMSearchHotelsFilterViewControllerDelegate>
 
-- (void)updateFilter:(MWMVoidBlock)completion;
 - (void)clearFilter;
+- (void)showHotelFilterWithParams:(MWMHotelParams *)params
+                 onFinishCallback:(MWMVoidBlock)callback;
 
 @end

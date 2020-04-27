@@ -28,6 +28,8 @@ public:
   size_t GetNumSubroutes() const { return m_points.size() - 1; }
   bool IsFinished() const { return m_passedIdx >= GetNumSubroutes(); }
 
+  double GetSummaryLengthBetweenPointsMeters() const;
+
   void PassNextPoint();
 
 private:

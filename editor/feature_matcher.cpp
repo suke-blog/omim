@@ -4,10 +4,10 @@
 #include "base/stl_helpers.hpp"
 #include "base/stl_iterator.hpp"
 
-#include "std/algorithm.hpp"
-#include "std/function.hpp"
-#include "std/string.hpp"
-#include "std/utility.hpp"
+#include <algorithm>
+#include <functional>
+#include <string>
+#include <utility>
 
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/adapted/boost_tuple.hpp>
@@ -146,8 +146,8 @@ MultiPolygon TrianglesToPolygon(vector<m2::PointD> const & points)
 /// Returns value form (-Inf, 1]. Negative values are used as penalty, positive as score.
 double ScoreLatLon(XMLFeature const & xmlFt, ms::LatLon const & latLon)
 {
-  auto const a = MercatorBounds::FromLatLon(xmlFt.GetCenter());
-  auto const b = MercatorBounds::FromLatLon(latLon);
+  auto const a = mercator::FromLatLon(xmlFt.GetCenter());
+  auto const b = mercator::FromLatLon(latLon);
   return 1.0 - (a.Length(b) / kPointDiffEps);
 }
 

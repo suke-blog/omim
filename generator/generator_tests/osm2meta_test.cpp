@@ -2,22 +2,9 @@
 
 #include <generator/osm2meta.hpp>
 
-UNIT_TEST(ValidateAndFormat_cuisine_test)
-{
-  FeatureParams params;
-  MetadataTagProcessorImpl tagProc(params);
-  TEST_EQUAL(tagProc.ValidateAndFormat_cuisine(" ,ABC, CDE;   FgH,   "), "abc;cde;fgh", ());
-  TEST_EQUAL(tagProc.ValidateAndFormat_cuisine(";;;ABc,   cef,,,"), "abc;cef", ());
-  TEST_EQUAL(tagProc.ValidateAndFormat_cuisine("abc bca"), "abc_bca", ());
-  TEST_EQUAL(tagProc.ValidateAndFormat_cuisine("abc      def  gh"), "abc_def_gh", ());
-  TEST_EQUAL(tagProc.ValidateAndFormat_cuisine(""), "", ());
-  TEST_EQUAL(tagProc.ValidateAndFormat_cuisine(" ; , "), "", ());
-  TEST_EQUAL(tagProc.ValidateAndFormat_cuisine(" Korean bbq;barbeque;grill,bbq; "), "korean_bbq;barbecue;grill", ());
-}
-
 UNIT_TEST(ValidateAndFormat_ele)
 {
-  FeatureParams params;
+  FeatureBuilderParams params;
   MetadataTagProcessorImpl tagProc(params);
   TEST_EQUAL(tagProc.ValidateAndFormat_ele(""), "", ());
   TEST_EQUAL(tagProc.ValidateAndFormat_ele("not a number"), "", ());
@@ -43,7 +30,7 @@ UNIT_TEST(ValidateAndFormat_ele)
 
 UNIT_TEST(ValidateAndFormat_building_levels)
 {
-  FeatureParams params;
+  FeatureBuilderParams params;
   MetadataTagProcessorImpl tp(params);
   TEST_EQUAL(tp.ValidateAndFormat_building_levels("４"), "4", ());
   TEST_EQUAL(tp.ValidateAndFormat_building_levels("４floors"), "4", ());

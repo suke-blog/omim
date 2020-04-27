@@ -11,9 +11,11 @@ import android.graphics.RectF;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v4.graphics.drawable.DrawableWrapper;
+import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.appcompat.graphics.drawable.DrawableWrapper;
+import androidx.appcompat.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 import com.mapswithme.maps.R;
 import com.mapswithme.util.Graphics;
@@ -22,7 +24,7 @@ import com.mapswithme.util.ThemeUtils;
 /**
  * Draws progress wheel, consisting of circle with background and 'stop' button in the center of the circle.
  */
-public class WheelProgressView extends ImageView
+public class WheelProgressView extends AppCompatImageView
 {
   private static final int DEFAULT_THICKNESS = 4;
 
@@ -42,30 +44,31 @@ public class WheelProgressView extends ImageView
   public WheelProgressView(Context context)
   {
     super(context);
-    init(null);
+    init(context, null);
   }
 
   public WheelProgressView(Context context, AttributeSet attrs)
   {
     super(context, attrs);
-    init(attrs);
+    init(context, attrs);
   }
 
   public WheelProgressView(Context context, AttributeSet attrs, int defStyle)
   {
     super(context, attrs, defStyle);
-    init(attrs);
+    init(context, attrs);
   }
 
-  private void init(AttributeSet attrs)
+  private void init(Context context, AttributeSet attrs)
   {
-    final TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.WheelProgressView, 0, 0);
+    final TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.WheelProgressView, 0, 0);
     mStrokeWidth = typedArray.getDimensionPixelSize(R.styleable.WheelProgressView_wheelThickness, DEFAULT_THICKNESS);
     final int progressColor = typedArray.getColor(R.styleable.WheelProgressView_wheelProgressColor, Color.WHITE);
     final int secondaryColor = typedArray.getColor(R.styleable.WheelProgressView_wheelSecondaryColor, Color.GRAY);
     mCenterDrawable = typedArray.getDrawable(R.styleable.WheelProgressView_centerDrawable);
     if (mCenterDrawable == null)
-      mCenterDrawable = Graphics.tint(getContext(), R.drawable.ic_close_spinner);
+      mCenterDrawable = makeCenterDrawable(context);
+
     typedArray.recycle();
 
     mPendingDrawable = (AnimationDrawable) getResources().getDrawable(ThemeUtils.getResource(getContext(), R.attr.wheelPendingAnimation));
@@ -82,6 +85,15 @@ public class WheelProgressView extends ImageView
     mFgPaint.setStrokeWidth(mStrokeWidth);
     mFgPaint.setStyle(Paint.Style.STROKE);
     mFgPaint.setAntiAlias(true);
+  }
+
+  @NonNull
+  private static Drawable makeCenterDrawable(@NonNull Context context)
+  {
+    Drawable normalDrawable = context.getResources().getDrawable(R.drawable.ic_close_spinner);
+    Drawable wrapped = DrawableCompat.wrap(normalDrawable);
+    DrawableCompat.setTint(wrapped.mutate(), ThemeUtils.getColor(context, R.attr.iconTint));
+    return normalDrawable;
   }
 
   public void setProgress(int progress)
@@ -109,8 +121,8 @@ public class WheelProgressView extends ImageView
     mCenter.set(left + width / 2, top + height / 2);
     mProgressRect.set(mCenter.x - mRadius, mCenter.y - mRadius, mCenter.x + mRadius, mCenter.y + mRadius);
 
-    Drawable d = ((mCenterDrawable instanceof DrawableWrapper) ? ((DrawableWrapper)mCenterDrawable).getWrappedDrawable()
-                                                               : mCenterDrawable);
+    Drawable d = ((mCenterDrawable instanceof DrawableWrapper) ? ((DrawableWrapper) mCenterDrawable)
+        .getWrappedDrawable() : mCenterDrawable);
     if (d instanceof BitmapDrawable)
     {
       Bitmap bmp = ((BitmapDrawable)d).getBitmap();

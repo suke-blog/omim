@@ -30,8 +30,18 @@ std::string Platform::UniqueClientId() const
 
 std::string Platform::AdvertisingId() const
 {
-  //TODO(@alexzatsepin): Implement me.
-  return {};
+  JNIEnv *env = jni::GetEnv();
+  static jmethodID const getAdvertisingId = jni::GetStaticMethodID(env, g_utilsClazz,
+                                                                   "getAdvertisingId",
+                                                                   "(Landroid/content/Context;)"
+                                                                   "Ljava/lang/String;");
+  jobject context = android::Platform::Instance().GetContext();
+  jni::TScopedLocalRef adIdRef(env, env->CallStaticObjectMethod(g_utilsClazz, getAdvertisingId,
+                                                                context));
+  if (adIdRef.get() == nullptr)
+    return {};
+
+  return jni::ToNativeString(env, static_cast<jstring>(adIdRef.get()));
 }
 
 std::string Platform::MacAddress(bool md5Decoded) const
@@ -50,7 +60,7 @@ std::string Platform::GetMemoryInfo() const
   if (env == nullptr)
     return std::string();
 
-  static shared_ptr<jobject> classMemLogging = jni::make_global_ref(env->FindClass("com/mapswithme/util/log/MemLogging"));
+  static std::shared_ptr<jobject> classMemLogging = jni::make_global_ref(env->FindClass("com/mapswithme/util/log/MemLogging"));
   ASSERT(classMemLogging, ());
 
   static jmethodID const getMemoryInfoId = jni::GetStaticMethodID(env, static_cast<jclass>(*classMemLogging), "getMemoryInfo", "()Ljava/lang/String;");
@@ -96,7 +106,7 @@ Platform::EConnectionType Platform::ConnectionStatus()
   if (env == nullptr)
     return EConnectionType::CONNECTION_NONE;
 
-  static shared_ptr<jobject> clazzConnectionState = jni::make_global_ref(env->FindClass("com/mapswithme/util/ConnectionState"));
+  static std::shared_ptr<jobject> clazzConnectionState = jni::make_global_ref(env->FindClass("com/mapswithme/util/ConnectionState"));
   ASSERT(clazzConnectionState, ());
 
   static jmethodID const getConnectionMethodId = jni::GetStaticMethodID(env, static_cast<jclass>(*clazzConnectionState), "getConnectionState", "()B");
@@ -119,7 +129,23 @@ Platform::ChargingStatus Platform::GetChargingStatus()
       env->CallStaticIntMethod(clazzBatteryState, getChargingMethodId));
 }
 
-void Platform::SetGuiThread(unique_ptr<base::TaskLoop> guiThread)
+uint8_t Platform::GetBatteryLevel()
+{
+  JNIEnv * env = jni::GetEnv();
+  if (env == nullptr)
+    return 100;
+
+  static auto const clazzBatteryState =
+      jni::GetGlobalClassRef(env, "com/mapswithme/util/BatteryState");
+  ASSERT(clazzBatteryState, ());
+
+  static auto const getLevelMethodId =
+      jni::GetStaticMethodID(env, clazzBatteryState, "getLevel", "()I");
+
+  return static_cast<uint8_t>(env->CallStaticIntMethod(clazzBatteryState, getLevelMethodId));
+}
+
+void Platform::SetGuiThread(std::unique_ptr<base::TaskLoop> guiThread)
 {
   android::Platform::Instance().SetGuiThread(move(guiThread));
 }
@@ -281,7 +307,7 @@ void Platform::SendMarketingEvent(std::string const & tag,
                       jni::TScopedLocalObjectArrayRef(env, jni::ToKeyValueArray(env, params)).get());
 }
 
-void Platform::SetGuiThread(unique_ptr<base::TaskLoop> guiThread)
+void Platform::SetGuiThread(std::unique_ptr<base::TaskLoop> guiThread)
 {
   m_guiThread = std::move(guiThread);
 }

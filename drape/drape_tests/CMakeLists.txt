@@ -3,6 +3,7 @@ project(drape_tests)
 add_definitions(
   -DOGL_TEST_ENABLED
   -DGTEST_DONT_DEFINE_TEST
+  -DWITH_GL_MOCK
 )
 
 include_directories(
@@ -35,11 +36,10 @@ set(
   stipple_pen_tests.cpp
   texture_of_colors_tests.cpp
   testing_graphics_context.hpp
-  testingmain.cpp
   uniform_value_tests.cpp
 )
 
-omim_add_executable(${PROJECT_NAME} ${DRAPE_COMMON_SRC} ${SRC})
+omim_add_test(${PROJECT_NAME} ${DRAPE_COMMON_SRC} ${VULKAN_SRC} ${SRC})
 
 omim_link_libraries(
   ${PROJECT_NAME}
@@ -52,10 +52,12 @@ omim_link_libraries(
   icu
   expat
   stats_client
+  oauthcpp
   freetype
   gmock
   stb_image
   sdf_image
+  vulkan_wrapper
   ${Qt5Core_LIBRARIES}
   ${Qt5Gui_LIBRARIES}
   ${Qt5Widgets_LIBRARIES}
@@ -68,5 +70,12 @@ if (PLATFORM_MAC)
   omim_link_libraries(
     ${PROJECT_NAME}
     "-framework CoreLocation"
+  )
+endif()
+
+if (PLATFORM_LINUX)
+  omim_link_libraries(
+    ${PROJECT_NAME}
+    dl
   )
 endif()

@@ -14,8 +14,8 @@
 #include "indexer/mwm_set.hpp"
 
 #include "storage/country_info_getter.hpp"
-#include "storage/index.hpp"
 #include "storage/storage.hpp"
+#include "storage/storage_defines.hpp"
 
 #include "coding/reader_wrapper.hpp"
 
@@ -53,12 +53,8 @@ int main(int argc, char * argv[])
 
   Platform & platform = GetPlatform();
 
-  std::string countriesFile = COUNTRIES_FILE;
   if (!FLAGS_user_resource_path.empty())
-  {
     platform.SetResourceDir(FLAGS_user_resource_path);
-    countriesFile = base::JoinFoldersToPath(FLAGS_user_resource_path, COUNTRIES_FILE);
-  }
 
   if (!FLAGS_data_path.empty())
   {

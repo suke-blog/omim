@@ -5,7 +5,8 @@
 
 #include "base/math.hpp"
 
-#include "std/utility.hpp"
+#include <string>
+#include <utility>
 
 using namespace measurement_utils;
 using namespace settings;
@@ -15,7 +16,7 @@ struct ScopedSettings
   ScopedSettings() { m_wasSet = Get(kMeasurementUnits, m_oldUnits); }
 
   /// Saves/restores previous units and sets new units for a scope.
-  ScopedSettings(Units newUnits) : ScopedSettings()
+  explicit ScopedSettings(Units newUnits) : ScopedSettings()
   {
     Set(kMeasurementUnits, newUnits);
   }
@@ -36,28 +37,28 @@ UNIT_TEST(Measurement_Smoke)
 {
   ScopedSettings guard(Units::Metric);
 
-  typedef pair<double, char const *> PairT;
+  using Pair = std::pair<double, char const *>;
 
-  PairT arr[] = {
-    PairT(10.0, "10 m"),
-    PairT(10.4, "10 m"),
-    PairT(10.51, "11 m"),
-    PairT(1000.0, "1.0 km"),
-    PairT(1100.0, "1.1 km"),
-    PairT(1140.0, "1.1 km"),
-    PairT(1151.0, "1.2 km"),
-    PairT(1500.0, "1.5 km"),
-    PairT(1549.9, "1.5 km"),
-    PairT(1551.0, "1.6 km"),
-    PairT(10000.0, "10 km"),
-    PairT(10400.0, "10 km"),
-    PairT(10499.9, "10 km"),
-    PairT(10501.0, "11 km")
+  Pair arr[] = {
+    Pair(10.0, "10 m"),
+    Pair(10.4, "10 m"),
+    Pair(10.51, "11 m"),
+    Pair(1000.0, "1.0 km"),
+    Pair(1100.0, "1.1 km"),
+    Pair(1140.0, "1.1 km"),
+    Pair(1151.0, "1.2 km"),
+    Pair(1500.0, "1.5 km"),
+    Pair(1549.9, "1.5 km"),
+    Pair(1551.0, "1.6 km"),
+    Pair(10000.0, "10 km"),
+    Pair(10400.0, "10 km"),
+    Pair(10499.9, "10 km"),
+    Pair(10501.0, "11 km")
   };
 
   for (size_t i = 0; i < ARRAY_SIZE(arr); ++i)
   {
-    string s;
+    std::string s;
     TEST(FormatDistance(arr[i].first, s), (arr[i]));
     TEST_EQUAL(s, arr[i].second, (arr[i]));
   }
@@ -94,33 +95,33 @@ UNIT_TEST(FormatAltitude)
 {
   ScopedSettings guard;
   settings::Set(settings::kMeasurementUnits, Units::Imperial);
-  TEST_EQUAL(FormatAltitude(10000), "32808ft", ());
+  TEST_EQUAL(FormatAltitude(10000), "32808 ft", ());
   settings::Set(settings::kMeasurementUnits, Units::Metric);
-  TEST_EQUAL(FormatAltitude(5), "5m", ());
+  TEST_EQUAL(FormatAltitude(5), "5 m", ());
 }
 
 UNIT_TEST(FormatSpeedWithDeviceUnits)
 {
   {
     ScopedSettings guard(Units::Metric);
-    TEST_EQUAL(FormatSpeedWithDeviceUnits(10), "36km/h", ());
-    TEST_EQUAL(FormatSpeedWithDeviceUnits(1), "3.6km/h", ());
+    TEST_EQUAL(FormatSpeedWithDeviceUnits(10), "36 km/h", ());
+    TEST_EQUAL(FormatSpeedWithDeviceUnits(1), "3.6 km/h", ());
   }
 
   {
     ScopedSettings guard(Units::Imperial);
-    TEST_EQUAL(FormatSpeedWithDeviceUnits(10), "22mph", ());
-    TEST_EQUAL(FormatSpeedWithDeviceUnits(1), "2.2mph", ());
+    TEST_EQUAL(FormatSpeedWithDeviceUnits(10), "22 mph", ());
+    TEST_EQUAL(FormatSpeedWithDeviceUnits(1), "2.2 mph", ());
   }
 }
 
 UNIT_TEST(FormatSpeedWithUnits)
 {
-  TEST_EQUAL(FormatSpeedWithUnits(10, Units::Metric), "36km/h", ());
-  TEST_EQUAL(FormatSpeedWithUnits(1, Units::Metric), "3.6km/h", ());
+  TEST_EQUAL(FormatSpeedWithUnits(10, Units::Metric), "36 km/h", ());
+  TEST_EQUAL(FormatSpeedWithUnits(1, Units::Metric), "3.6 km/h", ());
 
-  TEST_EQUAL(FormatSpeedWithUnits(10, Units::Imperial), "22mph", ());
-  TEST_EQUAL(FormatSpeedWithUnits(1, Units::Imperial), "2.2mph", ());
+  TEST_EQUAL(FormatSpeedWithUnits(10, Units::Imperial), "22 mph", ());
+  TEST_EQUAL(FormatSpeedWithUnits(1, Units::Imperial), "2.2 mph", ());
 }
 
 UNIT_TEST(FormatSpeed)
@@ -134,8 +135,8 @@ UNIT_TEST(FormatSpeed)
 
 UNIT_TEST(FormatSpeedUnits)
 {
-  TEST_EQUAL(FormatSpeedUnits(Units::Metric), "km/h", ());
-  TEST_EQUAL(FormatSpeedUnits(Units::Imperial), "mph", ());
+  TEST_EQUAL(FormatSpeedUnits(Units::Metric), " km/h", ());
+  TEST_EQUAL(FormatSpeedUnits(Units::Imperial), " mph", ());
 }
 
 UNIT_TEST(OSMDistanceToMetersString)

@@ -4,8 +4,6 @@
 <!-- Language: hu -->
 <resources>
 	<!-- SECTION: Strings -->
-	<!-- About button text (should be short) -->
-	<string name="about">A programról</string>
 	<!-- Button text (should be short) -->
 	<string name="back">Vissza</string>
 	<!-- Button text (should be short) -->
@@ -66,8 +64,6 @@
 	<string name="touch_to_download">Érintse meg letöltéshez</string>
 	<!-- Settings/Downloader - 3G download warning dialog confirm button -->
 	<string name="use_cellular_data">Igen</string>
-	<!-- Settings/Downloader - No internet connection dialog message -->
-	<string name="use_wifi_recommendation_text">WiFi használatát javasoljuk nagy térképek letöltéséhez</string>
 	<!-- Choose measurement on first launch alert - title -->
 	<string name="which_measurement_system">Milyen mértékegységet használjunk?</string>
 	<!-- Location services are disabled by user alert - message -->
@@ -255,8 +251,6 @@
 	<string name="my_position_share_sms">Nézd meg a MAPS.ME helyzetemet! %1$s vagy %2$s A program letöltése: http://maps.me/get</string>
 	<!-- Subject for emailed bookmark -->
 	<string name="bookmark_share_email_subject">Nézze meg a MAPS.ME jelzőmet</string>
-	<!-- Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me -->
-	<string name="bookmark_share_email">Üdvözlöm,\n\nleszúrtam egy MAPS.ME jelzőt: %1$s. Kattintson erre a hivatkozásra %2$s vagy erre %3$s hogy lássa a helyet a térképen.\n\nKöszönöm.</string>
 	<!-- Subject for emailed position -->
 	<string name="my_position_share_email_subject">Nézze meg a helyzetemet a MAPS.ME térképen!</string>
 	<!-- Share my position using EMail, %1$@ is ge0:// and %2$@ is http://ge0.me link WITHOUT NAME -->
@@ -559,6 +553,22 @@
 	<string name="brown">Barna</string>
 	<!-- pink color -->
 	<string name="pink">Rózsaszín</string>
+	<!-- deep purple color -->
+	<string name="deep_purple">Sötét lila</string>
+	<!-- light blue color -->
+	<string name="light_blue">Világoskék</string>
+	<!-- cyan color -->
+	<string name="cyan">Cián</string>
+	<!-- teal color -->
+	<string name="teal">Zöldeskék</string>
+	<!-- lime color -->
+	<string name="lime">Lime</string>
+	<!-- deep orange color -->
+	<string name="deep_orange">Sötét Narancs</string>
+	<!-- gray color -->
+	<string name="gray">Szürke</string>
+	<!-- blue gray color -->
+	<string name="blue_gray">Kékes Szürke</string>
 	<!-- Wi-Fi available -->
 	<string name="WiFi_available">Igen</string>
 
@@ -792,8 +802,6 @@
 	<string name="onboarding_location_message">A navigáció és egyéb funkciók használatához hozzá kell férnünk a geolokációdhoz.</string>
 	<string name="onboarding_permissions_title">Engedélyezi a MAPS.ME számára, hogy hozzáférjen a tárolóhoz és a tartózkodási helyhez</string>
 	<string name="onboarding_permissions_message">Így tehát Ön letölthet térképeket, megtekintheti az Önhöz közeli helyeket és forgalmat, és használhatja a navigációt.</string>
-	<string name="onboarding_welcome_title">Üdvözöljük a MAPS.ME alkalmazásban</string>
-	<string name="onboarding_welcome_first_subtitle">Ingyenes, gyors, részletes és teljes egészében offline térképek navigációval lépésről lépésre.</string>
 	<string name="onboarding_welcome_second_subtitle">Az alkalmazás indításával Ön elfogadja a &lt;a href="%1$s">Felhasználási feltételeket&lt;/a> és &lt;a href="%2$s">az Adatvédelmi szabályzatot&lt;/a>.</string>
 	<string name="dialog_incorrect_feature_position">Helyszín megváltoztatása</string>
 	<string name="message_invalid_feature_position">Célpont áthelyezése ide nem lehetséges</string>
@@ -874,6 +882,7 @@
 	<string name="minute">p</string>
 	<string name="placepage_place_description">Leírás</string>
 	<string name="placepage_more_button">Még</string>
+	<string name="placepage_more_reviews_button">További vélemények</string>
 	<string name="book_button">Foglalás</string>
 	<string name="placepage_call_button">Hívás</string>
 	<string name="placepage_edit_bookmark_button">Könyvjelző szerkesztése</string>
@@ -1027,8 +1036,6 @@
 	<string name="banner_geerbest_message">Több mint 50.000 cikk azonnali keresése alacsony áron.</string>
 	<string name="banner_rentalcars_title">Autóbérlés az interneten</string>
 	<string name="banner_rentalcars_message">800 autókölcsönző cég több mint 49.000 autókölcsönzési helyszínen.</string>
-	<string name="banner_viator_title">Utazások keresése az interneten</string>
-	<string name="banner_viator_message">Több mint 50.000 utazás keresése a világ minden táján.</string>
 	<!-- december -->
 	<string name="whatsnew_traffic">Forgalmi adatok 36 országban</string>
 	<!-- december -->
@@ -1070,8 +1077,6 @@
 	<string name="whatsnew_smaller_mwm_message">A térképek 20 %-kal kevesebb tárolóterületet igényelnek.</string>
 	<string name="whatsnew_waypoints_title">Iránypontok az útvonaltervezésben</string>
 	<string name="whatsnew_waypoints_message">Érintsen meg helyeket iránypontok hozzáadásához az útvonatervhez.</string>
-	<string name="whatsnew_viator_title">Foglaljon helyet egy utazásra</string>
-	<string name="whatsnew_viator_message">Válasszon népszerű városnéző utakat a világ minden táján.</string>
 	<string name="whatsnew_driving_style_title">Új térképstílus vezetéshez</string>
 	<string name="whatsnew_driving_style_message">Az autós navigáció üzemmód használata egyszerűbb lett.</string>
 	<string name="more_on_bookingcom">Továbbiak a Booking.com-on</string>
@@ -1128,7 +1133,6 @@
 	<string name="settings_card_memory">Memóriakártya</string>
 	<string name="settings_storage_available">%s rendelkezésre áll</string>
 	<string name="toast_location_permission_denied">Alkalmazás helymeghatározási engedélye megtagadva</string>
-	<string name="place_page_viator_title">Látványosságok és kirándulások</string>
 	<string name="button_use">Használat</string>
 	<string name="planning_route_manage_route">Útvonal kezelése</string>
 	<string name="button_plan">Terv</string>
@@ -1143,8 +1147,6 @@
 	<string name="add_my_position">Add hozzá saját pozíciómat</string>
 	<string name="choose_start_point">Válasszon egy kiindulási pontot</string>
 	<string name="choose_destination">Válassza ki a célt</string>
-	<string name="preloader_viator_title">Fedezze fel a túrákat és a szokatlan tevékenységeket</string>
-	<string name="preloader_viator_message">Túrák, tevékenységek, városnézés, és sok egyéb</string>
 	<string name="preloader_viator_button">Tudjon meg többet</string>
 	<string name="whats_new_title_route">A kerékpáros és gyalogos útvonalakat is tovább javítottuk</string>
 	<string name="whats_new_message_route">Kijavítottuk a hibákat, töredékére csökkentettük az útvonalak felépítéséhez szükséges időt, közbülső megállókat építettünk be</string>
@@ -1155,9 +1157,6 @@
 	<string name="placepage_no_reviews">Nincs véleményezés</string>
 	<string name="placepage_reviewed">Ezt a helyet már átnézte</string>
 	<string name="placepage_summary_rating">Összesített minősítés</string>
-	<plurals name="placepage_summary_rating_description">
-	  <item quantity="other">%d értékelések alapján</item>
-	</plurals>
 	<string name="placepage_rate_comment">A hely értékeléséhez és minősítéséhez koppintson rá.</string>
 	<string name="placepage_rate_horrible">Borzalmas</string>
 	<string name="placepage_rate_bad">Rossz</string>
@@ -1200,8 +1199,6 @@
 	<string name="discovery_button_subtitle_attractions">Látnivalók</string>
 	<string name="discovery_button_subtitle_eat_and_drink">Enni és inni</string>
 	<string name="discovery_button_subtitle_local_guides">Helyi idegenvezetők</string>
-	<string name="discovery_button_viator_offline_title">Fedezze fel a túrákat és a szokatlan tevékenységeket</string>
-	<string name="discovery_button_viator_offline_message">Kirándulások, teendők, városnéző túrák és egyebek.</string>
 	<string name="discovery_button_viator_error_title">Hiba az adatok betöltésekor</string>
 	<string name="discovery_button_other_error_message">Hiba az adatok betöltésekor</string>
 	<string name="discovery_button_other_loading_message">Adatok betöltése</string>
@@ -1241,12 +1238,10 @@
 	<string name="downloader_percent">%1$s (%2$s / %3$s)</string>
 	<string name="downloader_process">%s letöltése...</string>
 	<string name="downloader_applying">%s alkalmazása...</string>
-	<string name="transit_not_found">Tranzit navigáció ebben a régióban még nem áll rendelkezésre</string>
 	<string name="whats_new_title_hotel_filter">Új szálloda szűrők!</string>
 	<string name="whats_new_message_hotel_filter">Foglaljon elérhető szobát az Ön dátumain! Használja a be- ás kijelentkezési szűrőket</string>
 	<string name="whats_new_title_ugc_travel">Ossza meg tapasztalatait más utasokkal!</string>
 	<string name="whats_new_message_ugc_travel">Értékelje és ismertesse a meglátogatott helyeket!</string>
-	<string name="dialog_pedestrian_route_is_long">A gyalogos útvonal túl hosszú</string>
 	<string name="dialog_message_transit_not_found_connection">Útvonaltervezés egy összekötő hálózaton belül</string>
 	<string name="bookmarks_error_message_share_general">Nem lehet megosztani alkalmazáshiba miatt</string>
 	<string name="bookmarks_error_title_share_empty">Megosztási hiba</string>
@@ -1351,8 +1346,8 @@
 	<string name="error_already_downloaded">Ezt a listát már letöltötték</string>
 	<string name="guides">Útmutatók</string>
 	<string name="guide_downloaded_title">Az útmutató sikeresen letöltésre került</string>
-	<string name="download_guides">Útmutatók letöltése</string>
-	<string name="cached_guides_placeholder_subtitle">Részletes offline útmutatók mindenfajta utazáshoz. Válaszd ki a te utazásodhoz legjobban illőt, és töltsd le közvetlenül a térképre. Az útmutatók letöltéséhez internetkapcsolatra van szükséged.</string>
+	<!-- as few symbols as possible -->
+	<string name="download_guides">Útmutatók keresése</string>
 	<string name="guides_groups_cached">Letöltött útmutatók</string>
 	<string name="subtitle_error_downloading_guide">Az útmutató nem került letöltésre</string>
 	<string name="error_already_downloaded_guide">Ez az útmutató már letöltésre került</string>
@@ -1391,7 +1386,6 @@
 	<string name="restore_success_alert">Az előfizetés sikeresen visszaállításra került</string>
 	<string name="restore_error_alert">Hiba lépett fel az előfizetés visszaállítása során</string>
 	<string name="restore_no_subscription_alert">Nincs aktív előfizetés</string>
-	<string name="subscription_terms">A vásárlás megerősítésekor az összeg az iTunes számládra lesz terhelve. Az előfizetés automatikusan megújul, ha csak az automatikus megújítást 24 órával a jelenlegi időszak vége előtt ki nem kapcsolod. A számlád az előfizetésednek megfelelően a jelenlegi időszak lejárta előtti 24 órában lesz megterhelve. Az automatikus megújítást az Apple ID fiókod beállításaidban az előfizetés bármely szakaszában kikapcsolhatod.</string>
 	<string name="subscriptions_title">Előfizetések</string>
 	<string name="manage_subscription">Előfizetés kezelése</string>
 	<string name="sharing_options">A hozzáférés beállításai</string>
@@ -1401,7 +1395,6 @@
 	<string name="hide_from_map">Lefedés a térképen</string>
 	<string name="ugc_route_tags_screen_label">A tag-ek kiválasztása</string>
 	<string name="ugc_route_tags_progress_msg">Tag-ek betöltése…</string>
-	<string name="ugc_route_tags_desc">Kérjük, válassza ki a tag-ket, hogy segítsen a többi utazónak megtalálni az Ön útikalauzát. Ez kötelező.</string>
 	<string name="public_access">Nyílt hozzáférés</string>
 	<string name="limited_access">Személyes hozzáférés</string>
 	<string name="upload_and_publish_desc">Ez az útikalauz a MAPS.ME nyitott katalógusba lesz feltöltve, és mindenki számára elérhető lesz</string>
@@ -1424,7 +1417,7 @@
 	<string name="unable_upload_errorr_title">Nem sikerült a fájl feltöltése</string>
 	<string name="unable_upload_error_subtitle_edited">A fájl a web alkalmazáson keresztül volt újraszerkesztve</string>
 	<string name="unable_upload_error_subtitle_broken">A fájl sérült és nem lehet feltölteni. Kérjük, más fájlt töltsön fel.</string>
-	<string name="buy_btn">%s- ért vásárolni</string>
+	<string name="buy_btn">Vedd meg ezt ennyiért: %s</string>
 	<string name="download_guide_progress">Az útikalauz töltődik…</string>
 	<string name="price_error_title">Lehetetlen megtudni az értékét</string>
 	<string name="price_error_subtitle">Kérem egy néhány perc múlva próbálkozzon újra</string>
@@ -1472,12 +1465,326 @@
 	<string name="whatsnew_paid_routes_title">Új tapasztalatok!</string>
 	<string name="whatsnew_paid_routes_message">Az ingyenes útvonalakon felül 3 fizetős útvonalkategóriát is hozzáadtunk a katalógusunkhoz. Több mint 700 új útvonal!</string>
 	<string name="whats_new_ugc_routes_title_android_only">Könnyű megosztani a benyomásaidat</string>
+	<string name="ugc_thanks_message_auth">Az értékelésed elmentve</string>
+	<string name="ugc_thanks_message_not_auth">Kérjük jelentkezz be az értékeléshez</string>
+	<string name="notification_leave_review_v2_title">Értékelj egy meglátogatott helyet és segíts az utazóknak!</string>
+	<string name="error_public_not_enought_title">Nincs elegendő könyvjelző</string>
+	<string name="error_public_not_enought_subtitle">Legalább 3 könyvjelződnek kell lennie, hogy az útmutatódat feltölthesd a nyilvános katalógusba</string>
+	<string name="bookmark_public_upload_alert_title">Csak pár lépésnyire vagy attól, hogy megoszthasd a könyvjelzőidet minden MAPS.ME utazóval!</string>
+	<string name="bookmark_public_upload_alert_subtitle">Kéjük győződj meg róla, hogy egy jellemző neved és leírásod van a listádhoz, és hogy minden könyvjelzőnél van információ a helyekről. Ily módon a listádat mások is megtalálhatják és használhatják.</string>
+	<string name="bookmark_public_upload_alert_ok_button">Igen, biztos vagyok benne!</string>
+	<string name="name_title">Add meg az útmutatód nevét</string>
+	<string name="name_placeholder">pl.: Londoni kocsmák</string>
+	<string name="name_comment1">Kérjük adj nevet az útmutatódnak, így az utazók könnyen megtalálhatják: például \"Londoni kocsmák\"</string>
+	<string name="name_comment2">A név ne tartalmazzon speciális szimbólumokat. A név ne legyen a \"Saját helyeim\"</string>
+	<string name="description_guide">Leírás</string>
+	<string name="description_title">Add meg az útmutatód leírását</string>
+	<string name="description_placeholder">Fejtsd ki az útmutatód részleteit</string>
+	<string name="description_comment1">Az útmutató leírásodnak legalább 30 szimbólumot kellene tartalmaznia.</string>
+	<string name="ugc_route_tags_desc">Kérjük válassz címkéket, hogy segíts más utazóknak megtalálni az útmutatódat. Ez kötelező. Maximum %s címke.</string>
+	<string name="html_format_error_title">Az útmutatód nem lett közzétéve</string>
+	<string name="html_format_error_subtitle">Kérjük győződj meg róla, hogy a könyvjelzőid nevei és könyvjelzői mind érvényes formátumúak. Ellenőrizheted egy asztali böngészőn a lenti \"Online szerkesztés\" gombra kattintva.</string>
+	<string name="web_editor_description">Töltsd fel az útmutatódat és szerezd be a szerkesztési linket az asztaliról</string>
+	<string name="edit_on_web_confirm">Online szerkesztés</string>
+	<string name="update_guide">Egy frissítés feltöltése</string>
+	<string name="direct_link_updating_text">A fájlod frissítése…</string>
+	<string name="direct_link_updating_success">Az útmutatód frissítve lett</string>
+	<string name="unable_get_direct_link_desc">Egy nyilvános linkkel megoszthatod az útmutatódat</string>
+	<string name="any_access_update_alert_title">Néhány változás történhetett</string>
+	<string name="any_access_update_alert_message">Szeretnéd frissíteni a könyvjelzőidet? Az új verzió ugyanazon a linken keresztül lesz elérhető.</string>
+	<string name="any_access_update_alert_update">Frissítés</string>
+	<string name="public_or_limited_access_after_edit_online_error_title">Online szerkesztetted a könyvjelzőidet</string>
+	<string name="public_or_limited_access_after_edit_online_error_message">A jövőben kérjük a weboldalunkon keresztül szerkeszd, publikáld vagy oszd meg az útmutatót a barátaiddal</string>
+	<string name="power_managment_title">Energiatakarékos mód</string>
+	<string name="power_managment_description">Amikor az automatikus mód van kiválasztva, az alkalmazás elkezdi kikapcsolni az akkumulátort merítő funkciókat a jelenlegi akkumulátor töltöttség alapján</string>
+	<string name="power_managment_setting_never">Soha</string>
+	<string name="power_managment_setting_auto">Automatikus</string>
+	<string name="power_managment_setting_manual_max">Maximális energiatakarékosság</string>
+	<string name="enable_logging_warning_message">Az opció bekapcsolja a diagnosztikai célú naplózást. Hasznos lehet a support csapatunknak, akik elhárítják az alkalmazás hibáit. Csak a MAPS.ME support kérésére kapcsold be ezt az opciót.</string>
+	<string name="html_error_upload_message_try_again">Kérjük ellenőrizd a hálózati beállításaidat és próbáld újra</string>
+	<string name="html_error_upload_title_try_again">Nincs internetkapcsolat</string>
+	<string name="notification_leave_review_v2_android_short_title">Értékelj és segítsd az utazókat!</string>
+	<string name="notifications_illegal_alert_disable_button">Értesítések kikapcsolása</string>
+	<string name="access_rules_author_only">Online szerkesztés</string>
+	<string name="privacy_settings_menu">Adatvédelmi beállítások</string>
+	<string name="gdpr_request_setting">ID beszerzése GDPR kéréshez</string>
+	<string name="gdpr_request_window_title">A te ID-d: %s.</string>
+	<string name="gdpr_request_window_message">Kérjük másold le és küldd el a kérést a support\@maps.me címre</string>
+	<string name="gdpr_request_window_copy">ID lemásolása</string>
+	<string name="unable_upadate_error_title">Fájl frissítés sikertelen</string>
+	<string name="unable_upadate_error_message">Néhány hiba történt frissítés közben. Kérjük ellenőrizd a változtatásokat és próbáld újra</string>
+	<string name="whats_new_wiki_title">Mi ez a hely?</string>
+	<string name="whats_new_wiki_message">Wikipedia.org cikkeket adtunk hozzá a legnépszerűbb látnivalók oldalaihoz. Offline elérhetőek</string>
+	<string name="driving_options_title">Vezetési lehetőségek</string>
+	<string name="driving_options_subheader">Elkerülés minden útvonalon</string>
+	<string name="avoid_tolls">Fizetős utak</string>
+	<string name="avoid_unpaved">Kövezetlen utak</string>
+	<string name="avoid_ferry">Kompátkelők</string>
+	<string name="avoid_motorways">Autópályák</string>
+	<string name="unable_to_calc_alert_title">Nem lehet útvonalat számítani</string>
+	<string name="unable_to_calc_alert_subtitle">Sajnos nem találunk útvonalat, valószínűleg az általad meghatározott lehetőségek miatt. Kérjük változtass a beállításokon és próbáld újra</string>
+	<string name="define_to_avoid_btn">Elkerülendő utak meghatározása</string>
+	<string name="change_driving_options_btn">Vezetési lehetőségek bekapcsolva</string>
+	<string name="toll_road">Fizetős utak</string>
+	<string name="unpaved_road">Kövezetlen utak</string>
+	<string name="ferry_crossing">Kompátkelők</string>
+	<string name="operated_by">\"%s\" működteti</string>
+	<string name="avoid_toll_roads_placepage">Fizetős utak elkerülése</string>
+	<string name="avoid_unpaved_roads_placepage">Kövezetlen utak elkerülése</string>
+	<string name="avoid_ferry_crossing_placepage">Kompátkelők elkerülése</string>
+	<string name="cached_guides_placeholder_subtitle">A MAPS.ME használatra kész útmutatókat kínál azon kiválasztott helyekhez fényképekkel és leírásokkal, amelyek a térképen jelölve vannak és offline elérhetőek.</string>
+	<string name="guides_catalogue_title">Útmutató katalógus</string>
+	<string name="download_guides_button">A katalógushoz</string>
+	<plurals name="placepage_summary_rating_description">
+	  <item quantity="one">%d értékelés alapján</item>
+	  <item quantity="other">%d értékelés alapján</item>
+	</plurals>
+	<string name="type.cuisine.uzbek">Üzbég konyha</string>
+	<string name="onboarding_welcome_title">Tervezz és utazz a MAPS.ME-vel</string>
+	<string name="onboarding_welcome_first_subtitle">Könyvjelzőzz érdekes helyeket, foglalj szállásokat, számíts ki útvonalakat offline</string>
+	<string name="onboarding_guide_direct_download_title">Az útmutató készen áll a letöltésre</string>
+	<string name="onboarding_guide_direct_download_subtitle">Jelölve lesz a térképen és offline fog működni</string>
+	<string name="onboarding_guide_direct_download_button">Letöltés</string>
+	<string name="onboarding_bydeeplink_guide_title">Használatra kész útmutatók a MAPS.ME-ben</string>
+	<string name="onboarding_bydeeplink_guide_subtitle">A legjobb meglátogatandó helyeket a térkép fényképekkel és leírásokkal jelöli. Offline munka.</string>
+	<string name="whats_new_auto_update_bydeeplink_title">Mielőtt továbblépnél az útmutatókhoz…</string>
+	<string name="whats_new_auto_update_bydeeplink_message">Frissítsd a térképeket, hogy az objektumok információi naprakészek legyenek!</string>
+	<string name="whats_new_auto_update_and_proceed_button_size">Frissítés (%s) és folytatás</string>
+	<string name="whatsnew_toll_unpaved_title">Autó útvonalak elrendezése minden úttípus figyelembe vételével</string>
+	<string name="whatsnew_toll_unpaved_message">Kitérők választása fizetős utak, földutak és kompátvelők figyelembe vételével</string>
+	<string name="whatsnew_new_catalogue_title">Frissített katalógus oldalak</string>
+	<string name="whatsnew_new_catalogue_message">Részletes információkat adtunk hozzá a partner útmutatókhoz, hogy az útvonal kiválasztását könnyűvé és kényelmessé tegyük</string>
+	<string name="purchase_please_wait_toast">Kérjük, ne hagyd el ezt a képernyőt a vásárlás befejezése előtt</string>
+	<string name="trip_start">Gyerünk</string>
+	<string name="pick_destination">Cél</string>
+	<string name="follow_my_position">Középre</string>
+	<string name="search_results">Keresési eredmények</string>
+	<string name="then_turn">Utána</string>
+	<string name="redirect_route_alert">Szeretnél újratervezni egy útvonalat?</string>
+	<string name="redirect_route_yes">Igen</string>
+	<string name="redirect_route_no">Nem</string>
+	<string name="trip_finished">Megérkeztél!</string>
+	<string name="keyboard_availability_alert">A billentyűzet nem elérhető vezetés közben</string>
+	<string name="dialog_routing_change_start_carplay">Nem lehet útvonalat tervezni a jelenlegi helyedről</string>
+	<string name="dialog_routing_change_end_carplay">Nem lehet útvonalat tervezni a célodhoz. Kérjük válassz egy másik pontot</string>
+	<string name="dialog_routing_check_gps_carplay">Nincs GPS-jel. Kérjük menj egy nyílt területre</string>
+	<string name="dialog_routing_unable_locate_route_carplay">Nem lehet útvonalat tervezni. Kérjük határozz meg más útvonal lehetőségeket</string>
+	<string name="dialog_routing_download_files_carplay">Útvonal létrehozásához töltsd le a hiányzó térképeket az eszközre</string>
+	<string name="dialog_routing_system_error_carplay">Hiba történt. Kérjük indítsd újra az alkalmazást</string>
+	<string name="dialog_routing_rebuild_from_current_location_carplay">Az útvonal újra lesz tervezve a jelenlegi helyzetedről</string>
+	<string name="dialog_routing_rebuild_for_vehicle_carplay">Az útvonal módosítva lesz egy autó számára</string>
+	<string name="ok">Oké</string>
+	<string name="booking_button_toolbar">Válassz egy hotelt a térképeb</string>
+	<string name="popup_booking_download_guides_title">Foglaltál egy hotelben?</string>
+	<string name="popup_booking_download_guides_message">Tervezd meg az útvonaladat a naprakész útikönyvekkel a MAPS.ME-től</string>
+	<string name="popup_mwm_download_guides_title">Offline városi útikönyvek</string>
+	<string name="popup_mwm_download_guides_cta">Válassz egyet</string>
+	<string name="popup_mwm_download_guides_cta_1">Vess rá egy pillantást</string>
+	<string name="gallery_pp_download_guides_offline_title">Tervezd meg a nyaralásodat MAPS.ME-vel!</string>
+	<string name="gallery_pp_download_guides_offline_subtitle">Ne mulassz el semmit az útikönyvekkel, amiket tapasztalt utazók készítettek</string>
+	<string name="gallery_pp_download_guides_offline_cta">Kapcsold be az internetet</string>
+	<string name="gallery_pp_download_guides_title">Útikönyvek</string>
+	<string name="native_screen_subscription_title">Korlátlan hozzáférés 2000+ utazási útikönyvhöz!</string>
+	<string name="native_screen_subscription_message">Egy emlékezetes nyaralás, bármivel és bárkivel is utazol</string>
+	<string name="annual_subscription_title">Éves</string>
+	<string name="montly_subscription_title">Havi</string>
+	<string name="annual_subscription_message">12 hónap korlátlan hozzáférés</string>
+	<string name="montly_subscription_message">1 hónap korlátlan hozzáférés</string>
+	<string name="subscription_success_dialog_title">Köszönjük az előfizetést!</string>
+	<string name="subscription_success_dialog_message">Most már korlátlan hozzáférésed van a teljes útikönyv katalógushoz</string>
+	<string name="renewal_screen_title">Az előfizetésed lejárt</string>
+	<string name="renewal_screen_message">Minden, az előfizetéssel letöltött útikönyv törölve lesz. Szeretnéd folytatni az előfizetést és megtartani őket?</string>
+	<string name="renewal_screen_button_restore">Igen, megújítás</string>
+	<string name="renewal_screen_button_cancel">Nem, útikönyvek törlése</string>
+	<string name="subscription_error_ping_title">Vásárlás sikertelen</string>
+	<string name="subscription_error_message">A szolgáltatás jelenleg nem elérhető a régiódban. Kérjük próbálja újra később</string>
+	<string name="subscription_error_button">Értem</string>
+	<string name="timeout_error_title">Hoppá, lejárt az idő!</string>
+	<string name="timeout_error_message">A szervereink nem válaszolnak. Kérjük ellenírizd az internetkapcsolatot és próbáld újra.</string>
+	<string name="per_month">/hó</string>
+	<string name="per_year">/év</string>
+	<string name="buy_btn_for_subscription">Korlátlan hozzáférés %s-től</string>
+	<string name="buy_btn_for_subscription_1">Az ÖSSZES útikönyv megvásárlása %s-ért</string>
+	<string name="buy_btn_for_subscription_ios_only_mo">Korlátlan hozzáférés %s/hó-ért</string>
+	<string name="buy_btn_for_subscription_ios_only_year">Korlátlan hozzáférés %s/év-ért</string>
+	<string name="subscription_terms_guides">A fizetség az iTunes fiókodat fogja megterhelni a fizetés megerősítése után. Az előfizetés automatikusan meg fog újulni, hacsak az automatikus megújítás ki nem lesz kapcsolva legalább 24 órával a jelenlegi időszak vége előtt. A fiókod meg lesz terhelve a megújítási tervednek megfelelően, 24 órával a jelenlegi időszak vége előtt. Kezelheted vagy bármikor kikapcsolhatod a vásárlásod automatikus megújítás funkcióját az Apple ID fiókbeállításaidban Az előfizetéssel letöltött útikönyveket azok lejárati idejéig használhatod. Harminc nappal az előfizetés lejárta után a könyvjelzőkkel ellátott útikönyvek automatikusan törölve lesznek.</string>
+	<string name="subscription_terms">A vásárlás megerősítésekor az összeg az iTunes számládra lesz terhelve. Az előfizetés automatikusan megújul, ha csak az automatikus megújítást 24 órával a jelenlegi időszak vége előtt ki nem kapcsolod. A számlád az előfizetésednek megfelelően a jelenlegi időszak lejárta előtti 24 órában lesz megterhelve. Az automatikus megújítást az Apple ID fiókod beállításaidban az előfizetés bármely szakaszában kikapcsolhatod.</string>
+	<string name="whatsnew_carplay_title">MAPS.ME autós navigáció CarPlayben!</string>
+	<string name="whatsnew_carplay_message">Könyvjelzők, keresés, traffipax és útvonalválasztási lehetőség offline is elérhető</string>
+	<string name="whatsnew_subscription_title">Az egész világ az előfizetésed által!</string>
+	<string name="whatsnew_subscription_message">A korlátlan hozzáférés az útikönyvkatalógushoz sokkal gazdaságosabb, mint az egyszeri vásárlás</string>
+	<string name="whatsnew_carnavi_fixes_for_android_title">Navigációs frissítés</string>
+	<string name="whatsnew_carnavi_fixes_for_android_message">Fejlesztettük az útvonaltervezést olyan pontokhoz, melyek távol esnek az utaktól</string>
+	<string name="avoid_unpaved_carplay_1">Nem földút</string>
+	<string name="avoid_unpaved_carplay_2">Földút kerülése</string>
+	<string name="avoid_ferry_carplay_1">Komp nélkül</string>
+	<string name="avoid_ferry_carplay_2">Kompok kerülése</string>
+	<string name="avoid_tolls_carplay_1">Nincs útdíj</string>
+	<string name="avoid_tolls_carplay_2">Útdíj kerülése</string>
+	<string name="speedcams_alert_title_carplay_1">Traffipaxok</string>
+	<string name="speedcams_alert_title_carplay_2">Sebességjelzés</string>
+	<string name="download_map_carplay">Kérjük, töltsd le a térképeket a MAPS.ME alkalmazásban az eszközödre</string>
+	<string name="carplay_roundabout_exit">%s kijárat</string>
+	<!-- max. 10 symbols, both iOS and Android -->
+	<string name="sort">Rendezd…</string>
+	<!-- Android, title, max 20-22 symbols -->
+	<string name="sort_bookmarks">Könyvelzők rendezése</string>
+	<!-- iOS -->
+	<string name="sort_default">Alapértelmezés szerint</string>
+	<string name="sort_type">Típus szerint</string>
+	<string name="sort_distance">Távolság szerint</string>
+	<string name="sort_date">Dátum szerint</string>
+	<!-- Android -->
+	<string name="by_default">Alapértelmezés szerint</string>
+	<!-- Android -->
+	<string name="by_type">Típus szerint</string>
+	<!-- Android -->
+	<string name="by_distance">Távolság szerint</string>
+	<!-- Android -->
+	<string name="by_date">Dátum szerint</string>
+	<string name="week_ago_sorttype">Egy hete</string>
+	<string name="month_ago_sorttype">Egy hónapja</string>
+	<string name="moremonth_ago_sorttype">Több mint egy hónapja</string>
+	<string name="moreyear_ago_sorttype">Több mint egy éve</string>
+	<string name="near_me_sorttype">Hozzám közel</string>
+	<string name="others_sorttype">Más</string>
+	<string name="food_places">Étel</string>
+	<string name="tourist_places">Látnivalók</string>
+	<string name="museums">Múzeumok</string>
+	<string name="parks">Parkok</string>
+	<string name="swim_places">Úszás</string>
+	<string name="mountains">Hegyek</string>
+	<string name="animals">Állatok</string>
+	<string name="hotels">Hotelek</string>
+	<string name="buildings">Épületek</string>
+	<string name="money">Pénz</string>
+	<string name="shops">Üzletek</string>
+	<string name="parkings">Parkolók</string>
+	<string name="fuel_places">Benzinkutak</string>
+	<string name="water">Víz</string>
+	<string name="medicine">Gyógyszer</string>
+	<string name="search_in_the_list">Keresés a listában</string>
+	<string name="view_on_map_bookmarks">Térképen</string>
+	<string name="more_bookmarks">Továbbiak…</string>
+	<string name="no_items_found">Nincs találat</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_edit_list">Lista szerkesztése</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_delete_list">Lista törlése</string>
+	<string name="whatsnew_bookmarks_search_sort_title">A könyvjelzők rendezése kényelmes utazást tesz lehetővé</string>
+	<string name="whatsnew_bookmarks_search_sort_message">Rendezze kedvenc helyeit kategóriánként, helyenként és időrendbe, és találja meg őket gyorsan a nevük alapján</string>
+	<string name="popup_subscription_success_map_title">Hohó, előfizettél!</string>
+	<string name="popup_subscription_success_map_message">Most már felfedezheted a legjobb turisztikai dolgokat a MAPS.ME katalógusban</string>
+	<string name="popup_subscription_success_map_start_button">Böngészés megkezdése</string>
+	<string name="popup_subscription_success_map_not_now_button">Ne most</string>
+	<string name="religious_places">Vallási helyek</string>
+	<string name="subscription_terms_android">Amikor megerősíted a vásárlást, a fizetség a Google Play fiókodat fogja megterhelni. Az előfizetés automatikusan megújul, hacsak az automatikus megújulás funkció ki nem lesz kapcsolva legalább 24 órával a jelenlegi időszak vége előtt. A fiókod a megújítási terved értelmében a jelenlegi időszak vége előtt 24 órán belül meg lesz terhelve. Az automatikus megújítás funkciót kezelheted vagy kikapcsolhatod vásárlás után a Fiókbeállításokban. Az előfizetéssel letöltött útikönyveket csak annak lejárati idejéig használhatod. A letöltött útikönyvek 30 nappal az előfizetés lejárati dátuma után automatikusan törölve lesznek.</string>
+	<string name="select_list">Lista kiválasztása</string>
+	<string name="pp_discovery_place_related_header">Ez a hely az útikönyv katalógusban van</string>
+	<string name="pp_discovery_place_related_header_1">Ez a hely kiemelt az útikönyvben</string>
+	<string name="pp_discovery_place_related_cta_button">Megnézés</string>
+	<string name="pp_discovery_place_related_tag_header">„%s” címkéjű útikönyvek</string>
+	<string name="pp_discovery_place_related_tag_header_1">Tetszhet még</string>
+	<string name="buy_btn_for_subscription_version_2">Az ÖSSZES útikönyv csak %s/hó</string>
+	<string name="buy_btn_for_subscription_version_3">A teljes katalógus %s/hó</string>
+	<string name="buy_btn_for_subscription_ios_only_mo_version_2">Hozzáférés a katalógushoz %s/hó</string>
+	<string name="buy_btn_for_subscription_ios_only_year_version_2">Hozzáférés a katalógushoz %s/év</string>
+	<string name="subscription_screen_native_title_version_2">Férj hozzá az útikönyvekhez könyvjelzőkkel!</string>
+	<string name="subscription_screen_native_message_version_2">Állj készen bármilyen utazásra 600+ városba és 100+ országba</string>
+	<string name="catalog_no_internet_title">Nincs internetkapcsolat</string>
+	<string name="catalog_no_internet_button">Próbáld újra</string>
+	<string name="whatsnew_map_updates_title">Reaktív térkép frissítések</string>
+	<string name="whatsnew_map_updates_message">Mostantól kétszer olyan gyorsan frissítjük az adatokat</string>
+	<string name="new_onboarding_button">Következő</string>
+	<string name="new_onboarding_button_2">Kezdés</string>
+	<string name="new_onboarding_step1_header_2">A mindenes útitárs</string>
+	<string name="new_onboarding_step2_header">Álmodd meg és tervezd</string>
+	<string name="new_onboarding_step2_message">70+ millió látnivaló, kész útmutatók és hotelfoglalás egyenesen a térképről – készen állsz az indulásra?</string>
+	<string name="new_onboarding_step3_message">Maradj mindig az úton az országok részletes térképeivel – minden offline működik!</string>
+	<string name="new_onboarding_step4_header">Oszd meg tapasztalataid</string>
+	<string name="new_onboarding_step4_message">Helyezz könyvjelzőket a kedvenc helyekre és küldd tovább barátaidnak</string>
+	<string name="new_onboarding_step5.1_header">Még egy dolog kezdés előtt…</string>
+	<string name="new_onboarding_step5.1_message">Ne felejtsd el megnézni az új útmutató katalógusunkat és találd meg a következő utazásodhoz az offline útmutatókat!</string>
+	<string name="new_onboarding_step5.1_button">Katalógus megnyitása</string>
+	<string name="new_onboarding_step5.2_message">Az útmutató katalógusra MAPS.ME való előfizetés kiváló választás. Szerezz hozzáférést a városi és szabadtéri útmutatókhoz világszerte!</string>
+	<string name="new_onboarding_step5.2_button">Nézd meg a feltételeinket</string>
+	<string name="new_onboarding_step5.3_message">Nézd meg a szabadon válaztható városi és szabadtéri túrák ingyenes példáit a MAPS.ME-ről!</string>
+	<string name="new_onboarding_step5.3_button">Ingyenes letöltés</string>
+	<string name="new_onboarding_additional_steps_later_button">Később</string>
+	<string name="all_pass_subscription_header">ELŐFIZETÉS A KATALÓGUSRA</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title">30000+\nútmutatók\n&amp; sávok</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle"><b>Korlátlan letöltése</b> a városi és szabadtéri útvonalaknak <b>offline módhoz</b></string>
+	<!-- \n - for a break between lines. Max. 17 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_2">Interaktív\nemelkedési profil</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_2">Minden nyomvonal<b>tartalmazza a magassági és alapinfót az útvonalról</b></string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_3">Könyvjelzők,\nfotók és\njavaslatok</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_3"><b>Tudjon meg mindent az útvonalról</b> amit megtesz</string>
+	<string name="sightseeing_subscription_header_subscription">Útmutató előfizetés</string>
+	<string name="sightseeing_subscription_message">700+ város és 100+ ország</string>
+	<string name="sightseeing_subscription_message_2">Elérhető offline</string>
+	<string name="sightseeing_subscription_message_3">Fényépek és séta útvonalak</string>
+	<string name="subscription_success_dialog_title_sightseeing_pass">Köszönjük előfizetését!</string>
+	<string name="subscription_success_dialog_message_sightseeing_pass">Így minden városnéző útmutatóhoz hozzáférsz a katalógusból</string>
+	<string name="downloader_main_gallery_header">Térképek és útmutatók</string>
+	<string name="downloader_main_gallery_message">Ebben a részben nem csak térképeket tölthetsz le, de a következő utazásod útmutatóit is megtekintheted</string>
+	<string name="downloader_main_1_element_gallery_header">Minden útmutató</string>
+	<string name="downloader_main_1_element_gallery_message">100+ országban</string>
+	<string name="downloader_country_1_element_gallery_header">%s útmutató</string>
+	<string name="downloader_country_no_guides_gallery_header">Ebben az országban nincs elérhető útmutatónk még</string>
+	<string name="downloader_country_no_guides_gallery_message">Más offline útmutatókat is megnézhetsz 100+ országban városnézési és szabadtéri programokhoz</string>
+	<string name="dialog_pedestrian_route_is_long">A gyalogos útvonal az utazás indulási pontjáig túl hosszú</string>
+	<string name="whatsnew_outdoor_guides_title">Hozzáadásra került 15 000+ szabadtéri útvonal!</string>
+	<string name="whatsnew_outdoor_guides_message">Az Outdooractive téli és nyári utazásai várnak rád a katalógusban!</string>
+	<string name="whatsnew_guides_galleries_title">Tervezd meg a következő utad a MAPS.ME-vel</string>
+	<string name="whatsnew_guides_galleries_message">Megtalálhatod az ajánlott útmutatókat a népszerű túristavárosok és látnivalók helyoldalain</string>
+	<string name="new_onboarding_step3_header">Éld át</string>
+	<string name="all_pass_screen_best_value">Legjobb ajánlat</string>
+	<string name="buy_btn_for_subscription_3">A teljes katalógus %s/év</string>
+	<string name="transit_not_found">Metró navigáció ebben a régióban még nem érhető el</string>
+	<string name="dialog_pedestrian_route_is_long_header">Metró útvonal nem található</string>
+	<string name="dialog_pedestrian_route_is_long_message">Válasszon indulási vagy végpontot közelebb a metróállomáshoz</string>
+	<!-- Failed planning SUBWAY route message in navigation view -->
+	<string name="routing_planning_error_subway_special">A metró útvonaltervezése sikertelen</string>
+	<string name="whatsnew_isolines_title">Újdonság a szabadtérhez: offline topográfiai réteg!</string>
+	<!-- as less symbols as possible -->
+	<string name="whatsnew_isolines_message">Legyen magabiztos a hegyvidéki területen. Csak kapcsolja be a réteget a bal felső sarokban</string>
+	<string name="button_layer_isolines">Terep</string>
+	<string name="tips_map_layers_title_countour">Újdonság a MAPS.ME-n: offline topográfiai réteg!</string>
+	<string name="tips_map_layers_message_countour">Tervezze meg és élvezze a természetjáró kirándulásait, és tudjon meg mindent a környékről</string>
+	<string name="isolines_activation_error_dialog">A topográfiai réteg aktiválásához és használatához kérjük frissítse vagy töltse le az adott terület térképét</string>
+	<string name="isolines_location_error_dialog">Ezen a területen a topográfiai réteg még nem elérhető</string>
+	<string name="elevation_profile_diff_level">Nehézségi szint</string>
+	<string name="elevation_profile_diff_level_easy">Könnyű</string>
+	<string name="elevation_profile_diff_level_moderate">Mérsékelt</string>
+	<string name="elevation_profile_diff_level_hard">Nehéz</string>
+	<string name="elevation_profile_ascent">Felemelkedés</string>
+	<string name="elevation_profile_descent">Leereszkedés</string>
+	<string name="elevation_profile_minaltitude">Min. magasság</string>
+	<string name="elevation_profile_maxaltitude">Max. magasság</string>
+	<string name="elevation_profile_m">m</string>
+	<string name="elevation_profile_difficulty">Nehézség</string>
+	<string name="elevation_profile_distance">Táv.:</string>
+	<string name="elevation_profile_km">km</string>
+	<string name="elevation_profile_time">Idő</string>
+	<string name="elevation_profile_hours">ó.</string>
+	<string name="elevation_profile_minutes">p.</string>
+	<!-- hide the full screen banner and continue working with the app -->
+	<string name="hide_screen_map_update">Elrejt és folytat</string>
+	<string name="view_on_map_downloaded_error">Ezt az útmutatót törölték erről az eszközről</string>
+	<string name="subscription">Feliratkozás</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Felvonóállomás</string>
 	<string name="type.aeroway.aerodrome">Repülőtér</string>
 	<string name="type.aeroway.aerodrome.international">Repülőtér</string>
 	<string name="type.aeroway.helipad">Helikopterleszálló</string>
+	<string name="type.amenity">Infrastruktúra</string>
+	<string name="type.amenity.arts_centre">Művészeti központ</string>
 	<string name="type.amenity.atm">Pénzautomata</string>
 	<string name="type.amenity.bar">Bár</string>
 	<string name="type.amenity.bbq">Piknikező hely</string>
@@ -1525,14 +1832,15 @@
 	<string name="type.amenity.parking">Parkoló</string>
 	<string name="type.amenity.parking.fee">Parkoló</string>
 	<string name="type.amenity.parking.multi.storey">Parkoló</string>
-	<string name="type.amenity.parking.multi.storey.fee">Parkoló</string>
 	<string name="type.amenity.parking.no.access">Parkoló</string>
 	<string name="type.amenity.parking.park_and_ride">Parkoló</string>
 	<string name="type.amenity.parking.permissive">Parkoló</string>
-	<string name="type.amenity.parking.permissive.fee">Parkoló</string>
 	<string name="type.amenity.parking.private">Parkoló</string>
 	<string name="type.amenity.parking.underground">Parkoló</string>
-	<string name="type.amenity.parking.underground.fee">Parkoló</string>
+	<string name="type.amenity.parking_space">Parkolóhely</string>
+	<string name="type.amenity.parking_space.permissive">Parkolóhely</string>
+	<string name="type.amenity.parking_space.private">Parkolóhely</string>
+	<string name="type.amenity.parking_space.underground">Parkolóhely</string>
 	<string name="type.amenity.payment_terminal">Fizető terminál</string>
 	<string name="type.amenity.pharmacy">Gyógyszertár</string>
 	<string name="type.amenity.place_of_worship">Templom</string>
@@ -1561,6 +1869,7 @@
 	<string name="type.amenity.vending_machine.cigarettes">Cigarettaautomata</string>
 	<string name="type.amenity.vending_machine.drinks">Italautomata</string>
 	<string name="type.amenity.vending_machine.parking_tickets">Parkolóautomata</string>
+	<string name="type.amenity.vending_machine.public_transport_tickets">Automata jegykiadó tömegközlekedési eszközökhöz</string>
 	<string name="type.amenity.veterinary">Állatorvos</string>
 	<string name="type.amenity.waste_basket">Szemétkosár</string>
 	<string name="type.amenity.waste_disposal">Szemét</string>
@@ -1680,6 +1989,7 @@
 	<string name="type.emergency.phone">Sürgősségi telefon</string>
 	<string name="type.entrance">Bejárat</string>
 	<string name="type.highway.bus_stop">Buszmegálló</string>
+	<string name="type.highway.construction">Útépítés</string>
 	<string name="type.highway.footway">Ösvény</string>
 	<string name="type.highway.footway.alpine_hiking">Ösvény</string>
 	<string name="type.highway.footway.area">Ösvény</string>
@@ -1742,9 +2052,6 @@
 	<string name="type.highway.service.area">Utca</string>
 	<string name="type.highway.service.bridge">Utca</string>
 	<string name="type.highway.service.driveway">Utca</string>
-	<string name="type.highway.service.driveway.area">Utca</string>
-	<string name="type.highway.service.driveway.bridge">Utca</string>
-	<string name="type.highway.service.driveway.tunnel">Utca</string>
 	<string name="type.highway.service.parking_aisle">Utca</string>
 	<string name="type.highway.service.tunnel">Utca</string>
 	<string name="type.highway.speed_camera">Traffipax</string>
@@ -1763,14 +2070,8 @@
 	<string name="type.highway.track.grade1">Utca</string>
 	<string name="type.highway.track.grade2">Utca</string>
 	<string name="type.highway.track.grade3">Utca</string>
-	<string name="type.highway.track.grade3.no.access">Utca</string>
-	<string name="type.highway.track.grade3.permissive">Utca</string>
 	<string name="type.highway.track.grade4">Utca</string>
-	<string name="type.highway.track.grade4.no.access">Utca</string>
-	<string name="type.highway.track.grade4.permissive">Utca</string>
 	<string name="type.highway.track.grade5">Utca</string>
-	<string name="type.highway.track.grade5.no.access">Utca</string>
-	<string name="type.highway.track.grade5.permissive">Utca</string>
 	<string name="type.highway.track.no.access">Utca</string>
 	<string name="type.highway.track.permissive">Utca</string>
 	<string name="type.highway.track.tunnel">Utca</string>
@@ -1800,20 +2101,28 @@
 	<string name="type.landuse.basin">Víz</string>
 	<string name="type.landuse.cemetery">Temető</string>
 	<string name="type.landuse.cemetery.christian">Temető</string>
+	<string name="type.landuse.churchyard">Templomtér</string>
+	<string name="type.landuse.farmland">Termőföld</string>
 	<string name="type.landuse.forest">Erdő</string>
 	<string name="type.landuse.forest.coniferous">Erdő</string>
 	<string name="type.landuse.forest.deciduous">Erdő</string>
 	<string name="type.landuse.forest.mixed">Erdő</string>
+	<string name="type.landuse.grass">Gyep</string>
+	<string name="type.landuse.landfill">Hulladéklerakó</string>
+	<string name="type.landuse.railway">Vasúti helyiségek</string>
 	<string name="type.landuse.reservoir">Víz</string>
+	<string name="type.leisure.dog_park">Kutyás terület</string>
 	<string name="type.leisure.fitness_centre">Fitnesz-terem</string>
 	<string name="type.leisure.fitness_station">Fitness állomás</string>
 	<string name="type.leisure.garden">Kert</string>
 	<string name="type.leisure.golf_course">Golfpálya</string>
 	<string name="type.leisure.nature_reserve">Védett terület</string>
+	<string name="type.leisure.park">Park</string>
+	<string name="type.leisure.park.no.access">Park</string>
+	<string name="type.leisure.park.permissive">Park</string>
+	<string name="type.leisure.park.private">Park</string>
 	<string name="type.leisure.pitch">Sportpálya</string>
-	<string name="type.leisure.pitch.tennis">Sportpálya</string>
 	<string name="type.leisure.playground">Játszótér</string>
-	<string name="type.leisure.playground.tennis">Játszótér</string>
 	<string name="type.leisure.sauna">Szauna</string>
 	<string name="type.leisure.sports_centre">Sportközpont</string>
 	<string name="type.leisure.sports_centre.climbing">Hegymászó központ</string>
@@ -1834,20 +2143,19 @@
 	<string name="type.natural.bay">Öböl</string>
 	<string name="type.natural.beach">Strand</string>
 	<string name="type.natural.cape">Hegytető</string>
-	<string name="type.natural.cave_entrance">Barlangbejárat</string>
+	<string name="type.natural.cave_entrance">Barlang</string>
 	<string name="type.natural.geyser">Gejzír</string>
 	<string name="type.natural.glacier">Gleccser</string>
+	<string name="type.natural.grassland">Mező</string>
 	<string name="type.natural.lake">Tó</string>
 	<string name="type.natural.peak">Csúcs</string>
 	<string name="type.natural.pond">Tavacska</string>
+	<string name="type.natural.scrub">Cserjés</string>
 	<string name="type.natural.spring">Forrás</string>
 	<string name="type.natural.tree">Fa</string>
 	<string name="type.natural.volcano">Tűzhányó</string>
 	<string name="type.natural.water">Víz</string>
-	<string name="type.natural.wood">Erdő</string>
-	<string name="type.natural.wood.coniferous">Erdő</string>
-	<string name="type.natural.wood.deciduous">Erdő</string>
-	<string name="type.natural.wood.mixed">Erdő</string>
+	<string name="type.natural.wetland">Vizes terület</string>
 	<string name="type.office">Hivatal</string>
 	<string name="type.office.company">Vállalati iroda</string>
 	<string name="type.office.estate_agent">Ingatlanügynök</string>
@@ -1888,7 +2196,9 @@
 	<string name="type.power.substation">Kapcsolószekrény</string>
 	<string name="type.power.tower">Villanyoszlop</string>
 	<string name="type.railway.halt">Vonatmegálló</string>
-	<string name="type.railway.level_crossing">Útátjáró</string>
+	<string name="type.railway.level_crossing">Vasúti átjáró</string>
+	<string name="type.railway.monorail">Egysínű vasút</string>
+	<string name="type.railway.rail">Vasút</string>
 	<string name="type.railway.station">Vonatmegálló</string>
 	<string name="type.railway.station.light_rail">Vonatmegálló</string>
 	<string name="type.railway.station.monorail">Vonatmegálló</string>
@@ -1917,7 +2227,7 @@
 	<string name="type.railway.station.subway.spb">Földalatti</string>
 	<string name="type.railway.station.subway.violet">Földalatti</string>
 	<string name="type.railway.station.subway.yellow">Földalatti</string>
-	<string name="type.railway.subway_entrance">Földalatti</string>
+	<string name="type.railway.subway_entrance">Földalatti bejárat</string>
 	<string name="type.railway.subway_entrance.barcelona">Földalatti</string>
 	<string name="type.railway.subway_entrance.berlin">Földalatti</string>
 	<string name="type.railway.subway_entrance.kiev">Földalatti</string>
@@ -1998,7 +2308,8 @@
 	<string name="type.shop.wine">Szeszesital-üzlet</string>
 	<string name="type.sport.athletics">Atlétika</string>
 	<string name="type.sport.basketball">Kosárlabda</string>
-	<string name="type.sport.equestrian">Lovassportok</string>
+	<string name="type.sport.equestrian">Lovas sportok</string>
+	<string name="type.sport.tennis">Teniszpálya</string>
 	<string name="type.tourism.alpine_hut">Hegyi menedék</string>
 	<string name="type.tourism.apartment">Apartmanok</string>
 	<string name="type.tourism.artwork">Szobor</string>
@@ -2038,4 +2349,8 @@
 	<string name="type.waterway.stream.intermittent">Folyó</string>
 	<string name="type.waterway.stream.tunnel">Folyó</string>
 	<string name="type.waterway.waterfall">Vízesés</string>
+	<string name="type.wheelchair.limited">Korlátozottan akadálymentesített</string>
+	<string name="type.wheelchair.no">Nem akadálymentesített</string>
+	<string name="type.wheelchair.yes">Teljesen akadálymentesített</string>
+	<string name="type.building_part">Épület</string>
 </resources>

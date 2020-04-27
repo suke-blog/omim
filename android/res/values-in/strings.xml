@@ -4,8 +4,6 @@
 <!-- Language: id -->
 <resources>
 	<!-- SECTION: Strings -->
-	<!-- About button text (should be short) -->
-	<string name="about">Tentang</string>
 	<!-- Button text (should be short) -->
 	<string name="back">Kembali</string>
 	<!-- Button text (should be short) -->
@@ -52,7 +50,6 @@
 	<string name="miles">Mil</string>
 	<!-- View and button titles for accessibility -->
 	<string name="core_my_position">Posisi Saya</string>
-	<string name="ok">OK</string>
 	<!-- Settings/Downloader - No free space dialog message -->
 	<string name="free_disk_space_for_country_x">Mohon bebaskan ruang pada perangkat Anda terlebih dahulu untuk mengunduh %s</string>
 	<!-- Leave Review dialog - Not now button (remind me later) -->
@@ -71,8 +68,6 @@
 	<string name="touch_to_download">Sentuh untuk mengunduh</string>
 	<!-- Settings/Downloader - 3G download warning dialog confirm button -->
 	<string name="use_cellular_data">Ya</string>
-	<!-- Settings/Downloader - No internet connection dialog message -->
-	<string name="use_wifi_recommendation_text">Kami merekomendasi gunakan WiFi untuk mengunduh peta yang berukuran besar</string>
 	<!-- Choose measurement on first launch alert - title -->
 	<string name="which_measurement_system">Sistem pengukuran manakah yang lebih Anda sukai?</string>
 	<!-- Location services are disabled by user alert - message -->
@@ -254,8 +249,6 @@
 	<string name="my_position_share_sms">Hei, lihat lokasiku saat ini di MAPS.ME! %1$s atau %2$s belum memiliki peta offline? Unduh di sini: http://maps.me/get</string>
 	<!-- Subject for emailed bookmark -->
 	<string name="bookmark_share_email_subject">Hei, lihat pinku di peta MAPS.ME</string>
-	<!-- Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me -->
-	<string name="bookmark_share_email">Hai,\n\nI disematkan: %1$s di MAPS.ME, peta offline dunia. Klik tautan ini %2$s atau ini %3$s untuk melihat tempat di peta.\n\n Terima kasih.</string>
 	<!-- Subject for emailed position -->
 	<string name="my_position_share_email_subject">Hei, lihat lokasiku saat ini di peta MAPS.ME!</string>
 	<!-- Share my position using EMail, %1$@ is ge0:// and %2$@ is http://ge0.me link WITHOUT NAME -->
@@ -358,12 +351,6 @@
 	<string name="route">Rute</string>
 	<!-- category title -->
 	<string name="routes">Rute</string>
-	<!-- Show on first launch. -->
-	<string name="maps_licence_info">Aplikasi ini menggunakan data geografis (termasuk peta, daftar perusahaan, lokasi-lokasi menarik, batas-batas negara dan daerah, dll) yang diambil dari proyek OpenStreetMap. Kami tidak menjamin konsistensi, akurasi, kelengkapan atau kesesuaian data OpenStreetMap apa pun.</string>
-	<!-- Show on first launch. -->
-	<string name="agree">Saya setuju</string>
-	<!-- Show on first launch -->
-	<string name="disagree">Saya setuju</string>
 	<!-- text of notification -->
 	<string name="download_map_notification">Unduh peta tempat di mana Anda berada sekarang</string>
 	<!-- Dialog for transferring maps from lite to pro. -->
@@ -557,6 +544,22 @@
 	<string name="brown">Nâu</string>
 	<!-- pink color -->
 	<string name="pink">Hồng</string>
+	<!-- deep purple color -->
+	<string name="deep_purple">Ungu Gelap</string>
+	<!-- light blue color -->
+	<string name="light_blue">Biru Muda</string>
+	<!-- cyan color -->
+	<string name="cyan">Biru Kehijauan</string>
+	<!-- teal color -->
+	<string name="teal">Biru Gelap</string>
+	<!-- lime color -->
+	<string name="lime">Kuning Gelap</string>
+	<!-- deep orange color -->
+	<string name="deep_orange">Oranye Gelap</string>
+	<!-- gray color -->
+	<string name="gray">Abu-abu</string>
+	<!-- blue gray color -->
+	<string name="blue_gray">Biru Keabu-abuan</string>
 	<!-- Wi-Fi available -->
 	<string name="WiFi_available">Ya</string>
 
@@ -790,8 +793,6 @@
 	<string name="onboarding_location_message">Untuk menggunakan navigasi dan fitur-fitur lainnya, kami perlu mengakses geolokasi Anda.</string>
 	<string name="onboarding_permissions_title">Izinkan MAPS.ME mengakses penyimpanan dan lokasi</string>
 	<string name="onboarding_permissions_message">Agar Anda dapat mengunduh peta, melihat tempat dan lalu lintas di dekat Anda, dan menggunakan navigasi.</string>
-	<string name="onboarding_welcome_title">Selamat datang di MAPS.ME</string>
-	<string name="onboarding_welcome_first_subtitle">Peta gratis, cepat, terperinci, dan sepenuhnya tanpa internet dengan navigasi untuk setiap belokan.</string>
 	<string name="onboarding_welcome_second_subtitle">Dengan menjalankan aplikasi ini, Anda menyetujui &lt;a href="%1$s">Syarat-Syarat Penggunaan&lt;/a> dan &lt;a href="%2$s">Kebijakan Privasi&lt;/a>.</string>
 	<string name="dialog_incorrect_feature_position">Ubah lokasi</string>
 	<string name="message_invalid_feature_position">Objek tidak dapat diletakkan di sini</string>
@@ -873,6 +874,7 @@
 	<string name="minute">mnt</string>
 	<string name="placepage_place_description">Deskripsi</string>
 	<string name="placepage_more_button">Lainnya</string>
+	<string name="placepage_more_reviews_button">Ulasan Lainnya</string>
 	<string name="book_button">Pesan</string>
 	<string name="placepage_call_button">Hubungi</string>
 	<string name="placepage_edit_bookmark_button">Edit Bookmark</string>
@@ -1026,8 +1028,6 @@
 	<string name="banner_geerbest_message">Cari cepat di antara lebih dari 50.000 barang berharga murah.</string>
 	<string name="banner_rentalcars_title">Penyewaan mobil online</string>
 	<string name="banner_rentalcars_message">800 perusahaan penyewaan mobil di lebih dari 49.000 lokasi penyewaan mobil.</string>
-	<string name="banner_viator_title">Pencarian wisata online</string>
-	<string name="banner_viator_message">Cari di antara lebih dari 50.000 wisata di seluruh dunia.</string>
 	<!-- december -->
 	<string name="whatsnew_traffic">Data Lalu Lintas di 36 Negara</string>
 	<!-- december -->
@@ -1069,8 +1069,6 @@
 	<string name="whatsnew_smaller_mwm_message">Peta memerlukan pengurangan penyimpanan hingga 20%.</string>
 	<string name="whatsnew_waypoints_title">Titik Koordinat dalam Pembuatan Rute</string>
 	<string name="whatsnew_waypoints_message">Ketuk tempat untuk menambahkan titik acuan koordinat ke rute Anda.</string>
-	<string name="whatsnew_viator_title">Pesan tur</string>
-	<string name="whatsnew_viator_message">Pilih wisata populer di kota-kota wisata seluruh dunia.</string>
 	<string name="whatsnew_driving_style_title">Model Peta Baru untuk Berkendara</string>
 	<string name="whatsnew_driving_style_message">Mode navigasi mobil menjadi semakin mudah digunakan.</string>
 	<string name="more_on_bookingcom">Selengkapnya di Booking.com</string>
@@ -1127,7 +1125,6 @@
 	<string name="settings_card_memory">Memori kartu</string>
 	<string name="settings_storage_available">%s tersedia</string>
 	<string name="toast_location_permission_denied">Izin lokasi aplikasi ditolak</string>
-	<string name="place_page_viator_title">Objek wisata dan tur</string>
 	<string name="button_use">Gunakan</string>
 	<string name="planning_route_manage_route">Kelola rute</string>
 	<string name="button_plan">Rencana</string>
@@ -1142,8 +1139,6 @@
 	<string name="add_my_position">Tambahkan posisi saya</string>
 	<string name="choose_start_point">Pilih titik awal</string>
 	<string name="choose_destination">Pilih destinasi</string>
-	<string name="preloader_viator_title">Temukan wisata dan kegiatan yang unik</string>
-	<string name="preloader_viator_message">Wisata, kegiatan, tamasya, dan lain-lain</string>
 	<string name="preloader_viator_button">Pelajari selengkapnya</string>
 	<string name="whats_new_title_route">Rute sepeda dan pejalan kaki sudah diperbagus</string>
 	<string name="whats_new_message_route">Kami sudah memperbaiki kesalahan, membuat pembangunan rute menjadi berkali-kali lipat lebih cepat, dan menambahkan sejumlah perhentian antara</string>
@@ -1154,9 +1149,6 @@
 	<string name="placepage_no_reviews">Tidak ada ulasan</string>
 	<string name="placepage_reviewed">Anda sudah mengulas tempat ini</string>
 	<string name="placepage_summary_rating">Rangkuman peringkat</string>
-	<plurals name="placepage_summary_rating_description">
-	  <item quantity="other">Berdasarkan %d ulasan</item>
-	</plurals>
 	<string name="placepage_rate_comment">Ketuk untuk memberikan peringkat dan mengulas tempat ini.</string>
 	<string name="placepage_rate_horrible">Buruk sekali</string>
 	<string name="placepage_rate_bad">Buruk</string>
@@ -1199,8 +1191,6 @@
 	<string name="discovery_button_subtitle_attractions">Atraksi</string>
 	<string name="discovery_button_subtitle_eat_and_drink">Makan dan minum</string>
 	<string name="discovery_button_subtitle_local_guides">Panduan Lokal</string>
-	<string name="discovery_button_viator_offline_title">Temukan wisata dan hal unik yang akan dilakukan</string>
-	<string name="discovery_button_viator_offline_message">Wisata, hal yang akan dilakukan, wisata pemandangan, dan lain sebagainya.</string>
 	<string name="discovery_button_viator_error_title">Ada kesalahan saat memuat data</string>
 	<string name="discovery_button_other_error_message">Ada kesalahan saat memuat data</string>
 	<string name="discovery_button_other_loading_message">Data sedang dimuat</string>
@@ -1240,12 +1230,10 @@
 	<string name="downloader_percent">%1$s (%2$s dari %3$s)</string>
 	<string name="downloader_process">Mengunduh %s...</string>
 	<string name="downloader_applying">Menerapkan %s...</string>
-	<string name="transit_not_found">Navigasi transit di daerah ini masih belum tersedia</string>
 	<string name="whats_new_title_hotel_filter">Filter hotel baru tersedia!</string>
 	<string name="whats_new_message_hotel_filter">Pesan hotel yang tersedia untuk tanggal perjalanan Anda! Gunakan filter check-in dan check-out</string>
 	<string name="whats_new_title_ugc_travel">Bagikan pengalaman Anda dengan musafir lain!</string>
 	<string name="whats_new_message_ugc_travel">Berikan peringkat dan ulasan untuk tempat yang telah Anda kunjungi!</string>
-	<string name="dialog_pedestrian_route_is_long">Rute pejalan kaki terlalu panjang</string>
 	<string name="dialog_message_transit_not_found_connection">Rencanakan rute dalam satu jaringan transit</string>
 	<string name="bookmarks_error_message_share_general">Tidak dapat berbagi karena kesalahan aplikasi</string>
 	<string name="bookmarks_error_title_share_empty">Kesalahan dalam membagikan</string>
@@ -1350,8 +1338,8 @@
 	<string name="error_already_downloaded">Daftar ini sudah diunduh</string>
 	<string name="guides">Panduan</string>
 	<string name="guide_downloaded_title">Panduan telah berhasil diunduh</string>
-	<string name="download_guides">Unduh panduan</string>
-	<string name="cached_guides_placeholder_subtitle">Panduan offline (luring) terperinci untuk segala jenis perjalanan. Pilih yang paling sesuai untuk Anda dan unduh langsung ke peta. Anda akan memerlukan koneksi internet untuk mengunduh panduan.</string>
+	<!-- as few symbols as possible -->
+	<string name="download_guides">Panduan pencarian</string>
 	<string name="guides_groups_cached">Panduan yang diunduh</string>
 	<string name="subtitle_error_downloading_guide">Panduan itu tidak diunduh</string>
 	<string name="error_already_downloaded_guide">Panduan ini telah diunduh</string>
@@ -1390,7 +1378,6 @@
 	<string name="restore_success_alert">Langganan telah berhasil dipulihkan</string>
 	<string name="restore_error_alert">Terjadi kesalahan saat sedang memulihkan langganan</string>
 	<string name="restore_no_subscription_alert">Tidak ada langganan yang aktif</string>
-	<string name="subscription_terms">Pembayaran akan dibebankan ke akun iTunes Anda pada konfirmasi pembelian. Langganan akan diperbarui secara otomatis kecuali jika langganan otomatis dinonaktifkan setidaknya 24 jam sebelum akhir periode berjalan. Akun Anda akan dikenakan biaya sesuai dengan paket langganan Anda untuk perpanjangan dalam 24 jam sebelum akhir periode berjalan. Anda dapat mengelola atau menonaktifkan perpanjangan otomatis pada pengaturan akun ID Apple Anda kapan saja dari pembelian Anda.</string>
 	<string name="subscriptions_title">Langganan</string>
 	<string name="manage_subscription">Kelola langganan</string>
 	<string name="sharing_options">Opsi berbagi</string>
@@ -1400,7 +1387,6 @@
 	<string name="hide_from_map">Sembunyikan dari peta</string>
 	<string name="ugc_route_tags_screen_label">Pilih tag</string>
 	<string name="ugc_route_tags_progress_msg">Memuat tag…</string>
-	<string name="ugc_route_tags_desc">Silakan pilih tag untuk membantu pelancong lain menemukan panduan Anda. Ini wajib.</string>
 	<string name="public_access">Akses umum</string>
 	<string name="limited_access">Akses terbatas</string>
 	<string name="upload_and_publish_desc">Panduan ini akan diunggah ke katalog MAPS.ME umum dan akan tersedia untuk pengguna lain</string>
@@ -1423,7 +1409,7 @@
 	<string name="unable_upload_errorr_title">Gagal mengunggah file</string>
 	<string name="unable_upload_error_subtitle_edited">File telah diedit melalui aplikasi web</string>
 	<string name="unable_upload_error_subtitle_broken">File rusak dan tidak dapat diunggah. Silakan unggah file lain.</string>
-	<string name="buy_btn">Beli seharga %s</string>
+	<string name="buy_btn">Beli dengan harga %s</string>
 	<string name="download_guide_progress">Mengunduh panduan Anda…</string>
 	<string name="price_error_title">Tidak bisa mendapatkan harga</string>
 	<string name="price_error_subtitle">Silakan coba beberapa saat lagi</string>
@@ -1471,12 +1457,326 @@
 	<string name="whatsnew_paid_routes_title">Lebih banyak pengalaman baru!</string>
 	<string name="whatsnew_paid_routes_message">Sebagai tambahan untuk rute-rute gratis, kami juga telah menambahkan 3 kategori rute berbayar ke dalam katalog kami. Lebih dari 700 rute baru!</string>
 	<string name="whats_new_ugc_routes_title_android_only">Mudah untuk membagikan kesan Anda</string>
+	<string name="ugc_thanks_message_auth">Ulasan Anda telah disimpan</string>
+	<string name="ugc_thanks_message_not_auth">Harap masuk untuk memberikan ulasan</string>
+	<string name="notification_leave_review_v2_title">Beri nilai tempat yang sudah dikunjungi dan bantu para traveler!</string>
+	<string name="error_public_not_enought_title">Bookmark tidak mencukupi</string>
+	<string name="error_public_not_enought_subtitle">Anda setidaknya harus memiliki 3 bookmark untuk dapat mengunggah panduan ke katalog publik</string>
+	<string name="bookmark_public_upload_alert_title">Tinggal sedikit lagi untuk dapat membagikan bookmark dengan para traveler MAPS.ME!</string>
+	<string name="bookmark_public_upload_alert_subtitle">Pastikan Anda memiliki nama yang spesifik dan deskripsi untuk daftar Anda, dan semua bookmark memiliki sedikit info tentang tempat-tempat tersebut. Dengan begini, daftar Anda dapat ditemukan dan digunakan oleh orang lain.</string>
+	<string name="bookmark_public_upload_alert_ok_button">Ya, saya yakin!</string>
+	<string name="name_title">Masukkan nama panduan Anda</string>
+	<string name="name_placeholder">mis. London Pubs</string>
+	<string name="name_comment1">Beri nama panduan Anda sehingga traveler dapat menemukannya dengan mudah: misalnya, \"London Pubs\"</string>
+	<string name="name_comment2">Nama tidak boleh berisi karakter khusus. Nama tidak boleh berupa \"Tempat saya\"</string>
+	<string name="description_guide">Deskripsi</string>
+	<string name="description_title">Masukkan deskripsi panduan Anda</string>
+	<string name="description_placeholder">Deskripsikan panduan Anda secara mendetail</string>
+	<string name="description_comment1">Deskripsi panduan Anda setidaknya harus terdiri dari 30 simbol.</string>
+	<string name="ugc_route_tags_desc">Pilih tag untuk membantu traveler lain menemukan panduan Anda. Ini wajib diisi. Maksimum %s tag.</string>
+	<string name="html_format_error_title">Panduan Anda belum dipublikasikan</string>
+	<string name="html_format_error_subtitle">Pastikan bahwa nama dan deskripsi bookmark dalam format yang valid. Anda dapat memeriksanya di browser desktop dengan mengeklik tombol \"Edit online\" di bawah.</string>
+	<string name="web_editor_description">Unggah panduan dan dapatkan tautan edit dari desktop</string>
+	<string name="edit_on_web_confirm">Edit online</string>
+	<string name="update_guide">Unggah pembaruan</string>
+	<string name="direct_link_updating_text">Memperbarui file Anda…</string>
+	<string name="direct_link_updating_success">Panduan Anda telah diperbarui</string>
+	<string name="unable_get_direct_link_desc">Anda dapat membagikan panduan dengan tautan publik</string>
+	<string name="any_access_update_alert_title">Beberapa perubahan mungkin terjadi</string>
+	<string name="any_access_update_alert_message">Ingin memperbarui bookmark Anda? Versi baru akan tersedia dengan tautan yang sama.</string>
+	<string name="any_access_update_alert_update">Perbarui</string>
+	<string name="public_or_limited_access_after_edit_online_error_title">Anda telah mengedit bookmark secara online</string>
+	<string name="public_or_limited_access_after_edit_online_error_message">Selanjutnya, edit, publikasikan, atau bagikan panduan dengan teman melalui situs web kami</string>
+	<string name="power_managment_title">Mode hemat daya</string>
+	<string name="power_managment_description">Saat mode otomatis dipilih, aplikasi mulai menonaktifkan fitur yang menghabiskan daya baterai, bergantung pada tingkat daya baterai saat ini</string>
+	<string name="power_managment_setting_never">Jangan pernah</string>
+	<string name="power_managment_setting_auto">Otomatis</string>
+	<string name="power_managment_setting_manual_max">Hemat daya maksimum</string>
+	<string name="enable_logging_warning_message">Opsi ini mengaktifkan pencatatan untuk tujuan diagnostik. Bisa amat membantu bagi staf dukungan kami yang memecahkan masalah dalam aplikasi. Aktifkan opsi ini hanya saat diminta oleh dukungan MAPS.ME.</string>
+	<string name="html_error_upload_message_try_again">Periksa pengaturan jaringan Anda dan coba lagi</string>
+	<string name="html_error_upload_title_try_again">Tidak ada koneksi internet</string>
+	<string name="notification_leave_review_v2_android_short_title">Ulas dan bantu traveler!</string>
+	<string name="notifications_illegal_alert_disable_button">Nonaktifkan pemberitahuan</string>
+	<string name="access_rules_author_only">Pengeditan online</string>
+	<string name="privacy_settings_menu">Pengaturan privasi</string>
+	<string name="gdpr_request_setting">Dapatkan ID untuk permintaan GDPR</string>
+	<string name="gdpr_request_window_title">ID Anda: %s.</string>
+	<string name="gdpr_request_window_message">Salin dan kirim permintaan ke support\@maps.me</string>
+	<string name="gdpr_request_window_copy">Salin ID</string>
+	<string name="unable_upadate_error_title">Pembaruan file gagal</string>
+	<string name="unable_upadate_error_message">Beberapa kesalahan terjadi saat memperbarui. Periksa perubahan dan coba lagi</string>
+	<string name="whats_new_wiki_title">Tempat apa itu?</string>
+	<string name="whats_new_wiki_message">Kami telah menambahkan artikel Wikipedia.org ke halaman tempat wisata yang paling populer dikunjungi turis. Tersedia secara offline</string>
+	<string name="driving_options_title">Pilihan berkendara</string>
+	<string name="driving_options_subheader">Hindari di setiap rute</string>
+	<string name="avoid_tolls">Jalan tol</string>
+	<string name="avoid_unpaved">Jalan tanah</string>
+	<string name="avoid_ferry">Penyeberangan kapal feri</string>
+	<string name="avoid_motorways">Jalur motor</string>
+	<string name="unable_to_calc_alert_title">Tidak dapat menghitung rute</string>
+	<string name="unable_to_calc_alert_subtitle">Sayangnya kami tidak dapat menemukan rute karena opsi pilihan Anda. Harap ubah pengaturan lalu coba lagi</string>
+	<string name="define_to_avoid_btn">Tentukan jalan yang dihindari</string>
+	<string name="change_driving_options_btn">Opsi perutean diaktifkan</string>
+	<string name="toll_road">Jalan tol</string>
+	<string name="unpaved_road">Jalan tanah</string>
+	<string name="ferry_crossing">Penyeberangan kapal feri</string>
+	<string name="operated_by">Dioperasikan oleh \"%s\"</string>
+	<string name="avoid_toll_roads_placepage">Hindari jalan tol</string>
+	<string name="avoid_unpaved_roads_placepage">Hindari jalan tanah</string>
+	<string name="avoid_ferry_crossing_placepage">Hindari penyeberangan kapal feri</string>
+	<string name="cached_guides_placeholder_subtitle">MAPS.ME menawarkan panduan siap pakai ke tempat pilihan dilengkapi foto dan keterangan pada peta dan tersedia offline.</string>
+	<string name="guides_catalogue_title">Katalog panduan</string>
+	<string name="download_guides_button">Ke katalog</string>
+	<plurals name="placepage_summary_rating_description">
+	  <item quantity="one">Berdasarkan ulasan %d</item>
+	  <item quantity="other">Berdasarkan ulasan %d</item>
+	</plurals>
+	<string name="type.cuisine.uzbek">Masakan Uzbek</string>
+	<string name="onboarding_welcome_title">Rencanakan dan bepergian dengan MAPS.ME</string>
+	<string name="onboarding_welcome_first_subtitle">Menandai tempat menarik, memesan hotel, menghitung rute secara offline</string>
+	<string name="onboarding_guide_direct_download_title">Panduan siap diunduh</string>
+	<string name="onboarding_guide_direct_download_subtitle">Panduan akan ditampilkan di peta dan berfungsi offline</string>
+	<string name="onboarding_guide_direct_download_button">Unduh</string>
+	<string name="onboarding_bydeeplink_guide_title">Panduan siap pakai di MAPS.ME</string>
+	<string name="onboarding_bydeeplink_guide_subtitle">Kunjungi tempat terbaik di peta lengkap dengan foto dan keterangan. Berfungsi offline.</string>
+	<string name="whats_new_auto_update_bydeeplink_title">Sebelum Anda lanjut ke panduan…</string>
+	<string name="whats_new_auto_update_bydeeplink_message">Perbarui peta agar informasi tentang obyek tetap terbaru!</string>
+	<string name="whats_new_auto_update_and_proceed_button_size">Perbarui (%s) dan lanjutkan</string>
+	<string name="whatsnew_toll_unpaved_title">Susun rute mobil dengan mempertimbangkan semua jenis jalan</string>
+	<string name="whatsnew_toll_unpaved_message">Pilih jalan memutar untuk hindari jalan tol, jalan tanah, dan penyeberangan kapal feri</string>
+	<string name="whatsnew_new_catalogue_title">Halaman katalog diperbarui</string>
+	<string name="whatsnew_new_catalogue_message">Kami menambahkan detail informasi tentang panduan mitra agar pemilihan rute menjadi mudah dan nyaman</string>
+	<string name="purchase_please_wait_toast">Jangan keluar dari layar ini sebelum pembelian selesai</string>
+	<string name="trip_start">Ayo</string>
+	<string name="pick_destination">Tujuan</string>
+	<string name="follow_my_position">Pusatkan ulang</string>
+	<string name="search_results">Hasil pencarian</string>
+	<string name="then_turn">Lalu</string>
+	<string name="redirect_route_alert">Anda ingin membuat ulang rute?</string>
+	<string name="redirect_route_yes">Ya</string>
+	<string name="redirect_route_no">Tidak</string>
+	<string name="trip_finished">Anda telah tiba!</string>
+	<string name="keyboard_availability_alert">Papan ketik tidak tersedia saat berkendara</string>
+	<string name="dialog_routing_change_start_carplay">Tidak dapat membuat rute dari lokasi saat ini</string>
+	<string name="dialog_routing_change_end_carplay">Tidak dapat membuat rute ke tujuan Anda. Pilih titik lainnya</string>
+	<string name="dialog_routing_check_gps_carplay">Tidak ada sinyal GPS. Harap pindah ke area terbuka</string>
+	<string name="dialog_routing_unable_locate_route_carplay">Tidak dapat membuat rute. Harap tentukan titik rute lainnya</string>
+	<string name="dialog_routing_download_files_carplay">Untuk membuat rute, unduh peta baru di perangkat anda</string>
+	<string name="dialog_routing_system_error_carplay">Terjadi kesalahan. Harap mulai ulang aplikasi</string>
+	<string name="dialog_routing_rebuild_from_current_location_carplay">Rute akan dibuat ulang dari lokasi saat ini</string>
+	<string name="dialog_routing_rebuild_for_vehicle_carplay">Rute akan diubah untuk mobil</string>
+	<string name="ok">Oke</string>
+	<string name="booking_button_toolbar">Pilih hotel yang ada di peta</string>
+	<string name="popup_booking_download_guides_title">Pesan kamar hotel?</string>
+	<string name="popup_booking_download_guides_message">Rencanakan rute perjalanan anda bersama panduan dari MAPS.ME</string>
+	<string name="popup_mwm_download_guides_title">Panduan kota offline</string>
+	<string name="popup_mwm_download_guides_cta">Pilih salah satu</string>
+	<string name="popup_mwm_download_guides_cta_1">Lihat</string>
+	<string name="gallery_pp_download_guides_offline_title">Rencanakan liburan anda bersama MAPS.ME!</string>
+	<string name="gallery_pp_download_guides_offline_subtitle">Jangan lewatkan panduan panduan yang telah dibuat oleh para pelancong</string>
+	<string name="gallery_pp_download_guides_offline_cta">Hidupkan internet</string>
+	<string name="gallery_pp_download_guides_title">Panduan</string>
+	<string name="native_screen_subscription_title">Akses tak terbatas ke 2000 lebih panduan perjalanan!</string>
+	<string name="native_screen_subscription_message">Liburan tak terlupakan dengan siapa pun dan kapan pun dimana saja</string>
+	<string name="annual_subscription_title">Tahunan</string>
+	<string name="montly_subscription_title">Bulanan</string>
+	<string name="annual_subscription_message">12 bulan akses tanpa batas</string>
+	<string name="montly_subscription_message">1 bulan akses tanpa batas</string>
+	<string name="subscription_success_dialog_title">Terima kasih telah berlangganan!</string>
+	<string name="subscription_success_dialog_message">Kini anda mendapatkan akses tanpa batas ke seluruh katalog panduan</string>
+	<string name="renewal_screen_title">Masa berlangganan anda telah berakhir</string>
+	<string name="renewal_screen_message">Semua panduan yang telah diunduh pada masa berlangganan akan dihapus. Apakah anda ingin memperbaharui langganan dan menyimpan panduannya?</string>
+	<string name="renewal_screen_button_restore">Iya, perbaharui</string>
+	<string name="renewal_screen_button_cancel">Tidak, hapus panduan</string>
+	<string name="subscription_error_ping_title">Pembayaran gagal</string>
+	<string name="subscription_error_message">Layanan ini saat ini tidak tersedia di wilayah anda. Silakan coba lagi</string>
+	<string name="subscription_error_button">Mengerti</string>
+	<string name="timeout_error_title">Oops, waktu habis!</string>
+	<string name="timeout_error_message">Server kami tidak merespon. Mohon periksa sambungan internetnya dan silakan coba lagi.</string>
+	<string name="per_month">/bln</string>
+	<string name="per_year">/thn</string>
+	<string name="buy_btn_for_subscription">Akses tanpa batas dari %s</string>
+	<string name="buy_btn_for_subscription_1">Beli SEMUA panduan seharga %s</string>
+	<string name="buy_btn_for_subscription_ios_only_mo">Akses tanpa batas seharga %s/bln</string>
+	<string name="buy_btn_for_subscription_ios_only_year">Akses tanpa batas seharga %s/tahun</string>
+	<string name="subscription_terms_guides">Pembayaran akan dibebankan pada akun iTunes anda setelah dilakukan pembelian. Program berlangganan akan diperbarui secara otomatis selama fitur pembaruan otomatis tetap menyala dalam waktu 24 jam sebelum waktu berlangganan berakhir. Anda akan dikenai biaya sesuai dengan program berlangganan anda yang baru dalam waktu 24 jam sebelum masa berlangganan yang lama berakhir. Anda setiap waktu bisa mengatur atau mematikan fitur perbarui otomatis di pengaturan akun Apple ID anda. Anda hanya bisa menggunakan panduan yang telah diunduh lewat program berlangganan sampai masa berlangganan tersebut habis. Setelah 30 hari dari habisnya masa berlangganan, panduan dengan bookmark akan dihapus secara otomatis.</string>
+	<string name="subscription_terms">Pembayaran akan dibebankan ke akun iTunes Anda pada konfirmasi pembelian. Langganan akan diperbarui secara otomatis kecuali jika langganan otomatis dinonaktifkan setidaknya 24 jam sebelum akhir periode berjalan. Akun Anda akan dikenakan biaya sesuai dengan paket langganan Anda untuk perpanjangan dalam 24 jam sebelum akhir periode berjalan. Anda dapat mengelola atau menonaktifkan perpanjangan otomatis pada pengaturan akun ID Apple Anda kapan saja dari pembelian Anda.</string>
+	<string name="whatsnew_carplay_title">Navigasi MAPS.ME ada di CarPlay!</string>
+	<string name="whatsnew_carplay_message">Kini fitur penanda, pencarian, kamera kecepatan dan pemilihan rute bisa dilakukan secara offline</string>
+	<string name="whatsnew_subscription_title">Dapatkan semua akses dengan berlangganan!</string>
+	<string name="whatsnew_subscription_message">Lebih hemat dengan akses tanpa batas ke katalog panduan tanpa harus membelinya</string>
+	<string name="whatsnew_carnavi_fixes_for_android_title">Pembaruan navigasi</string>
+	<string name="whatsnew_carnavi_fixes_for_android_message">Kami meningkatkan perencanaan rute hingga ke titik titik yang jauh lokasinya dengan jalan</string>
+	<string name="avoid_unpaved_carplay_1">Jalan aspal</string>
+	<string name="avoid_unpaved_carplay_2">Hindari tanah</string>
+	<string name="avoid_ferry_carplay_1">Tanpa feri</string>
+	<string name="avoid_ferry_carplay_2">Hindari feri</string>
+	<string name="avoid_tolls_carplay_1">Tanpa tol</string>
+	<string name="avoid_tolls_carplay_2">Hindari tol</string>
+	<string name="speedcams_alert_title_carplay_1">Speedcam</string>
+	<string name="speedcams_alert_title_carplay_2">Info kecepatan</string>
+	<string name="download_map_carplay">Silakan unduh peta di apl MAPS.ME pada perangkat Anda</string>
+	<string name="carplay_roundabout_exit">Jalan keluar ke %s</string>
+	<!-- max. 10 symbols, both iOS and Android -->
+	<string name="sort">Urutkan…</string>
+	<!-- Android, title, max 20-22 symbols -->
+	<string name="sort_bookmarks">Urutkan bookmark</string>
+	<!-- iOS -->
+	<string name="sort_default">Urutkan standar</string>
+	<string name="sort_type">Urutkan per tipe</string>
+	<string name="sort_distance">Urutkan per jarak</string>
+	<string name="sort_date">Urutkan per tanggal</string>
+	<!-- Android -->
+	<string name="by_default">Standar</string>
+	<!-- Android -->
+	<string name="by_type">Per tipe</string>
+	<!-- Android -->
+	<string name="by_distance">Per jarak</string>
+	<!-- Android -->
+	<string name="by_date">Per tanggal</string>
+	<string name="week_ago_sorttype">Seminggu yang lalu</string>
+	<string name="month_ago_sorttype">Sebulan yang lalu</string>
+	<string name="moremonth_ago_sorttype">Lebih dari sebulan yang lalu</string>
+	<string name="moreyear_ago_sorttype">Lebih dari setahun yang lalu</string>
+	<string name="near_me_sorttype">Dekat dengan saya</string>
+	<string name="others_sorttype">Lainnya</string>
+	<string name="food_places">Makanan</string>
+	<string name="tourist_places">Tempat Rekreasi</string>
+	<string name="museums">Museum</string>
+	<string name="parks">Taman</string>
+	<string name="swim_places">Kolam renang</string>
+	<string name="mountains">Pegunungan</string>
+	<string name="animals">Kebun binatang</string>
+	<string name="hotels">Hotel</string>
+	<string name="buildings">Gedung</string>
+	<string name="money">Uang</string>
+	<string name="shops">Pusat perbelanjaan</string>
+	<string name="parkings">Parkir</string>
+	<string name="fuel_places">SPBU</string>
+	<string name="water">Air</string>
+	<string name="medicine">Obat</string>
+	<string name="search_in_the_list">Cari dalam daftar</string>
+	<string name="view_on_map_bookmarks">Di peta</string>
+	<string name="more_bookmarks">Lainnya…</string>
+	<string name="no_items_found">Item tidak ditemukan</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_edit_list">Ubah daftar</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_delete_list">Hapus daftar</string>
+	<string name="whatsnew_bookmarks_search_sort_title">Bookmark yang rapi membuat perjalanan menjadi nyaman</string>
+	<string name="whatsnew_bookmarks_search_sort_message">Urutkan tempat favorit berdasarkan kategori, lokasi dan waktu kunjungan, serta temukan bookmark secara cepat hanya dengan menggunakan nama</string>
+	<string name="popup_subscription_success_map_title">Woohoo, anda telah berlangganan!</string>
+	<string name="popup_subscription_success_map_message">Kini saatnya menemukan tempat wisata terbaik di katalog MAPS.ME</string>
+	<string name="popup_subscription_success_map_start_button">Mulai menjelajah</string>
+	<string name="popup_subscription_success_map_not_now_button">Jangan sekarang</string>
+	<string name="religious_places">Tempat ibadah</string>
+	<string name="subscription_terms_android">Setelah anda mengkonfirmasi pembelian, pembayaran akan diteruskan ke akun Google Play anda. Program langganan akan diperbaharui secara otomatis kecuali jika fitur pembaruan otomatis dimatikan dalam waktu 24 jam sebelum periode tersebut berakhir. Akun anda akan dikenakan biaya sesuai dengan rencana perpanjangan dalam waktu 24 jam sebelum akhir periode berjalan. Anda bisa mengatur dan mematikan fitur pembaruan otomatis di Pengaturan Akun setelah melakukan pembayaran. Anda hanya bisa menggunakan panduan yang didownload lewat program berlangganan sampai akhir masa berlaku. Setelah 30 hari dari masa berakhirnya program langganan, panduan yang telah didownload akan dihapus secara otomatis.</string>
+	<string name="select_list">Pilih daftar</string>
+	<string name="pp_discovery_place_related_header">Tempat ini ada dalam katalog panduan</string>
+	<string name="pp_discovery_place_related_header_1">Tempat ini terdapat dalam panduan</string>
+	<string name="pp_discovery_place_related_cta_button">Lihat</string>
+	<string name="pp_discovery_place_related_tag_header">Panduan dengan tag \"%s\"</string>
+	<string name="pp_discovery_place_related_tag_header_1">Anda mungkin menyukai</string>
+	<string name="buy_btn_for_subscription_version_2">Dapatkan SEMUA panduan hanya dengan %s/bln</string>
+	<string name="buy_btn_for_subscription_version_3">Katalog lengkap hanya dengan %s/bln</string>
+	<string name="buy_btn_for_subscription_ios_only_mo_version_2">Akses ke katalog hanya dengan %s/bln</string>
+	<string name="buy_btn_for_subscription_ios_only_year_version_2">Akses ke katalog hanya dengan %s/tahun</string>
+	<string name="subscription_screen_native_title_version_2">Akses ke panduan dengan penanda!</string>
+	<string name="subscription_screen_native_message_version_2">Bersiaplah untuk melakukan perjalanan di lebih dari 600 kota dan 100 negara</string>
+	<string name="catalog_no_internet_title">Tidak ada sambungan internet</string>
+	<string name="catalog_no_internet_button">Coba lagi</string>
+	<string name="whatsnew_map_updates_title">Pembaruan peta secara cepat</string>
+	<string name="whatsnew_map_updates_message">Mulai sekarang kami memperbarui data dua kali lebih cepat</string>
+	<string name="new_onboarding_button">Berikutnya</string>
+	<string name="new_onboarding_button_2">Memulai</string>
+	<string name="new_onboarding_step1_header_2">Teman perjalanan yang lengkap</string>
+	<string name="new_onboarding_step2_header">Rencanakan dan impikan</string>
+	<string name="new_onboarding_step2_message">Lebih dari 70 juta tempat, peta panduan yang siap pakai dan memesan hotel langsung dari peta – Anda pun siap melakukan perjalanan!</string>
+	<string name="new_onboarding_step3_message">Tak perlu lagi tersesat dengan peta dan navigasi yang lengkap – semuanya bisa digunakan secara offline!</string>
+	<string name="new_onboarding_step4_header">Bagikan kesan</string>
+	<string name="new_onboarding_step4_message">Buat penanda pada tempat favorit dan kirimkan ke teman Anda</string>
+	<string name="new_onboarding_step5.1_header">Satu hal sebelum Anda mulai…</string>
+	<string name="new_onboarding_step5.1_message">Jangan lupa untuk mengunjungi katalog panduan baru kami dan temukan panduan offline untuk perjalanan Anda selanjutnya!</string>
+	<string name="new_onboarding_step5.1_button">Buka katalog</string>
+	<string name="new_onboarding_step5.2_message">Berlangganan katalog panduan MAPS.ME sangatlah menguntungkan. Dapatkan akses lengkap ke berbagai kota dan panduan perjalanan di seluruh dunia!</string>
+	<string name="new_onboarding_step5.2_button">Lihat ketentuannya</string>
+	<string name="new_onboarding_step5.3_message">Lihatlah contoh rute perjalanan dan kota secara gratis dengan berbagai macam pilihan dari MAPS.ME!</string>
+	<string name="new_onboarding_step5.3_button">Download Gratis</string>
+	<string name="new_onboarding_additional_steps_later_button">Nanti</string>
+	<string name="all_pass_subscription_header">BERLANGGANAN KATALOG</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title">30000+\npanduan &amp; jalur</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle"><b>Unduh tanpa batas</b> jalur perkotaan dan outdoor <b>untuk mode offline</b></string>
+	<!-- \n - for a break between lines. Max. 17 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_2">Profil ketinggian\ninteraktif</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_2">Setiap jalur terdapat <b>ketinggian dan informasi jalur secara umum</b></string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_3">Penanda,\nfoto dan\nrekomendasi</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_3"><b>Pelajari semua rute</b> yang akan Anda ambil</string>
+	<string name="sightseeing_subscription_header_subscription">Langganan Panduan</string>
+	<string name="sightseeing_subscription_message">700+ kota dan 100+ negara</string>
+	<string name="sightseeing_subscription_message_2">Tersedia secara Offline</string>
+	<string name="sightseeing_subscription_message_3">Foto dan jalur pejalan kaki</string>
+	<string name="subscription_success_dialog_title_sightseeing_pass">Terima kasih telah berlangganan!</string>
+	<string name="subscription_success_dialog_message_sightseeing_pass">Kini Anda telah memiliki akses ke katalog panduan perjalanan</string>
+	<string name="downloader_main_gallery_header">Peta &amp; panduan</string>
+	<string name="downloader_main_gallery_message">Kini, Anda tak hanya bisa mendownload peta, namun Anda juga bisa melihat panduan perjalanan Anda berikutnya</string>
+	<string name="downloader_main_1_element_gallery_header">Semua panduan</string>
+	<string name="downloader_main_1_element_gallery_message">di 100+ negara</string>
+	<string name="downloader_country_1_element_gallery_header">%s panduan</string>
+	<string name="downloader_country_no_guides_gallery_header">Belum ada panduan di negara ini</string>
+	<string name="downloader_country_no_guides_gallery_message">Anda bisa melihat panduan offline lainnya di 100+ negara yang berisi kota dan berbagai panduan perjalanan</string>
+	<string name="dialog_pedestrian_route_is_long">Rute pejalan kaki ke halte atau stasiun terlalu jauh</string>
+	<string name="whatsnew_outdoor_guides_title">Kami telah menambahkan 15000+ jalur luar ruangan!</string>
+	<string name="whatsnew_outdoor_guides_message">Rute dari Outdooractive untuk perjalanan musim dingin dan panas tengah menunggu di katalog!</string>
+	<string name="whatsnew_guides_galleries_title">Rencanakan perjalanan Anda selanjutnya dengan MAPS.ME</string>
+	<string name="whatsnew_guides_galleries_message">Kini Anda dapat menemukan panduan yang disarankan di halaman tempat wisata yang paling populer dikunjungi turis</string>
+	<string name="new_onboarding_step3_header">Pengalaman</string>
+	<string name="all_pass_screen_best_value">Harga terbaik</string>
+	<string name="buy_btn_for_subscription_3">Katalog lengkap hanya dengan %s/tahun</string>
+	<string name="transit_not_found">Navigasi kereta bawah tanah di wilayah ini belum tersedia</string>
+	<string name="dialog_pedestrian_route_is_long_header">Jalur kereta bawah tanah tidak ditemukan</string>
+	<string name="dialog_pedestrian_route_is_long_message">Silakan pilih titik awal atau akhir yang lebih dekat ke stasiun kereta bawah tanah</string>
+	<!-- Failed planning SUBWAY route message in navigation view -->
+	<string name="routing_planning_error_subway_special">Perencanaan jalur kereta bawah tanah gagal</string>
+	<string name="whatsnew_isolines_title">Yang baru di outdoor: lapisan topografi offline!</string>
+	<!-- as less symbols as possible -->
+	<string name="whatsnew_isolines_message">Merasa percaya diri di daerah pegunungan. Cukup aktifkan layer di sudut kiri atas</string>
+	<string name="button_layer_isolines">Isometrik</string>
+	<string name="tips_map_layers_title_countour">Yang baru di MAPS.ME: lapisan topografi offline!</string>
+	<string name="tips_map_layers_message_countour">Rencanakan dan nikmati perjalanan alam Anda dan pastikan Anda tahu segalanya tentang daerah tersebut</string>
+	<string name="isolines_activation_error_dialog">Untuk mengaktifkan dan menggunakan lapisan topografi, silakan perbarui atau unduh peta area</string>
+	<string name="isolines_location_error_dialog">Lapisan topografi belum tersedia untuk wilayah ini</string>
+	<string name="elevation_profile_diff_level">Tingkat kesulitan</string>
+	<string name="elevation_profile_diff_level_easy">Mudah</string>
+	<string name="elevation_profile_diff_level_moderate">Sedang</string>
+	<string name="elevation_profile_diff_level_hard">Sulit</string>
+	<string name="elevation_profile_ascent">Menanjak</string>
+	<string name="elevation_profile_descent">Menurun</string>
+	<string name="elevation_profile_minaltitude">Ketinggian Min.</string>
+	<string name="elevation_profile_maxaltitude">Ketinggian Maks.</string>
+	<string name="elevation_profile_m">m</string>
+	<string name="elevation_profile_difficulty">Kesulitan</string>
+	<string name="elevation_profile_distance">Jarak:</string>
+	<string name="elevation_profile_km">km</string>
+	<string name="elevation_profile_time">Waktu:</string>
+	<string name="elevation_profile_hours">j.</string>
+	<string name="elevation_profile_minutes">mnt</string>
+	<!-- hide the full screen banner and continue working with the app -->
+	<string name="hide_screen_map_update">Sembunyikan dan lanjutkan</string>
+	<string name="view_on_map_downloaded_error">Panduan ini telah dihapus dari perangkat ini</string>
+	<string name="subscription">Berlangganan</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Stasiun kereta gantung</string>
 	<string name="type.aeroway.aerodrome">Bandar udara</string>
 	<string name="type.aeroway.aerodrome.international">Bandar udara</string>
 	<string name="type.aeroway.helipad">Landasan helikopter</string>
+	<string name="type.amenity">Ruang berfasilitas</string>
+	<string name="type.amenity.arts_centre">Pusat kesenian</string>
 	<string name="type.amenity.bbq">Lokasi piknik</string>
 	<string name="type.amenity.bench">Bangku panjang</string>
 	<string name="type.amenity.bicycle_parking">Parkir Sepeda</string>
@@ -1521,14 +1821,15 @@
 	<string name="type.amenity.parking">Parkir</string>
 	<string name="type.amenity.parking.fee">Parkir</string>
 	<string name="type.amenity.parking.multi.storey">Parkir</string>
-	<string name="type.amenity.parking.multi.storey.fee">Parkir</string>
 	<string name="type.amenity.parking.no.access">Parkir</string>
 	<string name="type.amenity.parking.park_and_ride">Parkir</string>
 	<string name="type.amenity.parking.permissive">Parkir</string>
-	<string name="type.amenity.parking.permissive.fee">Parkir</string>
 	<string name="type.amenity.parking.private">Parkir</string>
 	<string name="type.amenity.parking.underground">Parkir</string>
-	<string name="type.amenity.parking.underground.fee">Parkir</string>
+	<string name="type.amenity.parking_space">Tempat parkir</string>
+	<string name="type.amenity.parking_space.permissive">Tempat parkir</string>
+	<string name="type.amenity.parking_space.private">Tempat parkir</string>
+	<string name="type.amenity.parking_space.underground">Tempat parkir</string>
 	<string name="type.amenity.payment_terminal">Terminal Pembayaran</string>
 	<string name="type.amenity.pharmacy">Apotek</string>
 	<string name="type.amenity.place_of_worship">Tempat ibadah</string>
@@ -1541,7 +1842,7 @@
 	<string name="type.amenity.place_of_worship.taoist">Kuil</string>
 	<string name="type.amenity.police">Polisi</string>
 	<string name="type.amenity.post_box">Kotak pos</string>
-	<string name="type.amenity.post_office">Pos</string>
+	<string name="type.amenity.post_office">Kantor pos</string>
 	<string name="type.amenity.public_bookcase">Rak Buku</string>
 	<string name="type.amenity.recycling">TPA</string>
 	<string name="type.amenity.restaurant">Restoran</string>
@@ -1556,6 +1857,7 @@
 	<string name="type.amenity.vending_machine.cigarettes">Mesin rokok</string>
 	<string name="type.amenity.vending_machine.drinks">Mesin penjual minuman</string>
 	<string name="type.amenity.vending_machine.parking_tickets">Mesin pembayaran tiket parkir</string>
+	<string name="type.amenity.vending_machine.public_transport_tickets">Mesin penjual otomatis tiket transportasi umum</string>
 	<string name="type.amenity.veterinary">Dokter Hewan</string>
 	<string name="type.amenity.waste_basket">Kotak sampah</string>
 	<string name="type.amenity.waste_disposal">Sampah</string>
@@ -1674,6 +1976,7 @@
 	<string name="type.emergency.phone">Telepon darurat</string>
 	<string name="type.entrance">Pintu masuk</string>
 	<string name="type.highway.bus_stop">Halte bus</string>
+	<string name="type.highway.construction">Jalan sedang dibangun</string>
 	<string name="type.highway.footway">Jalur</string>
 	<string name="type.highway.footway.alpine_hiking">Jalur</string>
 	<string name="type.highway.footway.area">Jalur</string>
@@ -1736,9 +2039,6 @@
 	<string name="type.highway.service.area">Jalan</string>
 	<string name="type.highway.service.bridge">Jalan</string>
 	<string name="type.highway.service.driveway">Jalan</string>
-	<string name="type.highway.service.driveway.area">Jalan</string>
-	<string name="type.highway.service.driveway.bridge">Jalan</string>
-	<string name="type.highway.service.driveway.tunnel">Jalan</string>
 	<string name="type.highway.service.parking_aisle">Jalan</string>
 	<string name="type.highway.service.tunnel">Jalan</string>
 	<string name="type.highway.speed_camera">Kamera Kecepatan</string>
@@ -1757,14 +2057,8 @@
 	<string name="type.highway.track.grade1">Jalan</string>
 	<string name="type.highway.track.grade2">Jalan</string>
 	<string name="type.highway.track.grade3">Jalan</string>
-	<string name="type.highway.track.grade3.no.access">Jalan</string>
-	<string name="type.highway.track.grade3.permissive">Jalan</string>
 	<string name="type.highway.track.grade4">Jalan</string>
-	<string name="type.highway.track.grade4.no.access">Jalan</string>
-	<string name="type.highway.track.grade4.permissive">Jalan</string>
 	<string name="type.highway.track.grade5">Jalan</string>
-	<string name="type.highway.track.grade5.no.access">Jalan</string>
-	<string name="type.highway.track.grade5.permissive">Jalan</string>
 	<string name="type.highway.track.no.access">Jalan</string>
 	<string name="type.highway.track.permissive">Jalan</string>
 	<string name="type.highway.track.tunnel">Jalan</string>
@@ -1794,11 +2088,17 @@
 	<string name="type.landuse.basin">Air</string>
 	<string name="type.landuse.cemetery">Pemakaman</string>
 	<string name="type.landuse.cemetery.christian">Pemakaman</string>
+	<string name="type.landuse.churchyard">Halaman gereja</string>
+	<string name="type.landuse.farmland">Lahan pertanian</string>
 	<string name="type.landuse.forest">Hutan</string>
 	<string name="type.landuse.forest.coniferous">Hutan</string>
 	<string name="type.landuse.forest.deciduous">Hutan</string>
 	<string name="type.landuse.forest.mixed">Hutan</string>
+	<string name="type.landuse.grass">Lapangan rumput</string>
+	<string name="type.landuse.landfill">TPA</string>
+	<string name="type.landuse.railway">Stasiun kereta api</string>
 	<string name="type.landuse.reservoir">Air</string>
+	<string name="type.leisure.dog_park">Area untuk anjing</string>
 	<string name="type.leisure.fitness_centre">Pusat kebugaran</string>
 	<string name="type.leisure.fitness_station">Stasiun Kebugaran</string>
 	<string name="type.leisure.garden">Situs arkeologi</string>
@@ -1809,9 +2109,8 @@
 	<string name="type.leisure.park.permissive">Taman</string>
 	<string name="type.leisure.park.private">Taman</string>
 	<string name="type.leisure.pitch">Lapangan olahraga</string>
-	<string name="type.leisure.pitch.tennis">Lapangan olahraga</string>
 	<string name="type.leisure.playground">Taman bermain</string>
-	<string name="type.leisure.playground.tennis">Taman bermain</string>
+	<string name="type.leisure.sauna">Sauna</string>
 	<string name="type.leisure.sports_centre">Olahraga</string>
 	<string name="type.leisure.sports_centre.climbing">Pusat Peralatan Mendaki</string>
 	<string name="type.leisure.sports_centre.shooting">Lapangan tembak</string>
@@ -1831,20 +2130,19 @@
 	<string name="type.natural.bay">Teluk</string>
 	<string name="type.natural.beach">Pantai</string>
 	<string name="type.natural.cape">Tanjung</string>
-	<string name="type.natural.cave_entrance">Mulut gua</string>
+	<string name="type.natural.cave_entrance">Gua</string>
 	<string name="type.natural.geyser">Geiser</string>
 	<string name="type.natural.glacier">Gletser</string>
+	<string name="type.natural.grassland">Ladang</string>
 	<string name="type.natural.lake">Danau</string>
 	<string name="type.natural.peak">Puncak</string>
 	<string name="type.natural.pond">Kolam</string>
+	<string name="type.natural.scrub">Semak</string>
 	<string name="type.natural.spring">Mata air</string>
 	<string name="type.natural.tree">Pohon</string>
 	<string name="type.natural.volcano">Gunung berapi</string>
 	<string name="type.natural.water">Air</string>
-	<string name="type.natural.wood">Hutan</string>
-	<string name="type.natural.wood.coniferous">Hutan</string>
-	<string name="type.natural.wood.deciduous">Hutan</string>
-	<string name="type.natural.wood.mixed">Hutan</string>
+	<string name="type.natural.wetland">Area lahan basah</string>
 	<string name="type.office">Kantor</string>
 	<string name="type.office.company">Kantor perusahaan</string>
 	<string name="type.office.estate_agent">Agen ril estat</string>
@@ -1885,6 +2183,9 @@
 	<string name="type.power.substation">Stasiun bawah tanah</string>
 	<string name="type.power.tower">Menara listrik</string>
 	<string name="type.railway.halt">Rel kereta api</string>
+	<string name="type.railway.level_crossing">Perlintasan Kereta Api</string>
+	<string name="type.railway.monorail">Monorel</string>
+	<string name="type.railway.rail">Kereta api</string>
 	<string name="type.railway.station">Rel kereta api</string>
 	<string name="type.railway.station.light_rail">Rel kereta api</string>
 	<string name="type.railway.station.monorail">Rel kereta api</string>
@@ -1913,7 +2214,7 @@
 	<string name="type.railway.station.subway.spb">Stasiun bawah tanah</string>
 	<string name="type.railway.station.subway.violet">Stasiun bawah tanah</string>
 	<string name="type.railway.station.subway.yellow">Stasiun bawah tanah</string>
-	<string name="type.railway.subway_entrance">Stasiun bawah tanah</string>
+	<string name="type.railway.subway_entrance">Pintu masuk kereta bawah tanah</string>
 	<string name="type.railway.subway_entrance.barcelona">Stasiun bawah tanah</string>
 	<string name="type.railway.subway_entrance.berlin">Stasiun bawah tanah</string>
 	<string name="type.railway.subway_entrance.kiev">Stasiun bawah tanah</string>
@@ -1990,6 +2291,10 @@
 	<string name="type.shop.variety_store">Toko Kelontong</string>
 	<string name="type.shop.video">Toko</string>
 	<string name="type.shop.wine">Toko anggur</string>
+	<string name="type.sport.athletics">Atletik</string>
+	<string name="type.sport.basketball">Bola basket</string>
+	<string name="type.sport.equestrian">Olahraga Berkuda</string>
+	<string name="type.sport.tennis">Lapangan tenis</string>
 	<string name="type.tourism.alpine_hut">Penginapan di pegunungan</string>
 	<string name="type.tourism.apartment">Apartemen</string>
 	<string name="type.tourism.artwork">Pariwisata</string>
@@ -2026,4 +2331,8 @@
 	<string name="type.waterway.stream.intermittent">Sungai</string>
 	<string name="type.waterway.stream.tunnel">Sungai</string>
 	<string name="type.waterway.waterfall">Air terjun</string>
+	<string name="type.wheelchair.limited">Akses kursi roda terbatas</string>
+	<string name="type.wheelchair.no">Tidak ada akses kursi roda</string>
+	<string name="type.wheelchair.yes">Akses penuh kursi roda</string>
+	<string name="type.building_part">Gedung</string>
 </resources>

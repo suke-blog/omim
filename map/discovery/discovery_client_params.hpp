@@ -9,11 +9,11 @@ namespace discovery
 {
 enum class ItemType
 {
-  Viator,
   Attractions,
   Cafes,
   Hotels,
-  LocalExperts
+  LocalExperts,
+  Promo
 };
 
 using ItemTypes = std::vector<ItemType>;

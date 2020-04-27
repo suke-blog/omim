@@ -3,8 +3,8 @@ package com.mapswithme.maps.bookmarks;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,8 +17,8 @@ import com.mapswithme.maps.bookmarks.data.BookmarkManager;
 import com.mapswithme.maps.bookmarks.data.CatalogCustomProperty;
 import com.mapswithme.maps.bookmarks.data.CatalogTagsGroup;
 import com.mapswithme.util.SharedPropertiesUtils;
+import com.mapswithme.util.UTM;
 import com.mapswithme.util.UiUtils;
-import com.mapswithme.util.sharing.TargetUtils;
 import com.mapswithme.util.statistics.Statistics;
 
 import java.util.List;
@@ -58,7 +58,7 @@ public class CachedBookmarkCategoriesFragment extends BaseBookmarkCategoriesFrag
     downloadRoutesBtn.setOnClickListener(btn -> openBookmarksCatalogScreen());
     View closeHeaderBtn = view.findViewById(R.id.header_close);
     closeHeaderBtn.setOnClickListener(new CloseHeaderClickListener());
-    boolean isClosed = SharedPropertiesUtils.isCatalogCategoriesHeaderClosed(getContext());
+    boolean isClosed = SharedPropertiesUtils.isCatalogCategoriesHeaderClosed(requireContext());
     View header = view.findViewById(R.id.header);
     UiUtils.hideIf(isClosed, header);
     ImageView imageView = downloadRoutesBtn.findViewById(R.id.image);
@@ -76,9 +76,17 @@ public class CachedBookmarkCategoriesFragment extends BaseBookmarkCategoriesFrag
 
   @NonNull
   @Override
-  protected CatalogBookmarkCategoriesAdapter createAdapter()
+  protected BookmarkCategory.Type getType()
   {
-    return new CatalogBookmarkCategoriesAdapter(getContext());
+    return BookmarkCategory.Type.DOWNLOADED;
+  }
+
+  @Override
+  public void onItemClick(@NonNull View v, @NonNull BookmarkCategory category)
+  {
+    if (BookmarkManager.INSTANCE.isGuide(category))
+      Statistics.INSTANCE.trackGuideOpen(category.getServerId());
+    super.onItemClick(v, category);
   }
 
   @Override
@@ -90,18 +98,12 @@ public class CachedBookmarkCategoriesFragment extends BaseBookmarkCategoriesFrag
   @Override
   protected void onShareActionSelected(@NonNull BookmarkCategory category)
   {
-    String deepLink = BookmarkManager.INSTANCE.getCatalogDeeplink(category.getId());
-    Intent intent = new Intent(Intent.ACTION_SEND)
-        .setType(TargetUtils.TYPE_TEXT_PLAIN)
-        .putExtra(Intent.EXTRA_SUBJECT, deepLink)
-        .putExtra(Intent.EXTRA_TEXT, getString(R.string.share_bookmarks_email_body));
-    startActivity(Intent.createChooser(intent, getString(R.string.share)));
+    throw new AssertionError("Sharing is not supported for downloaded guides");
   }
 
   @Override
-  protected void onDeleteActionSelected(@NonNull BookmarkCategory category)
+  protected void onDeleteActionSelected()
   {
-    super.onDeleteActionSelected(category);
     updateLoadingPlaceholder();
   }
 
@@ -122,6 +124,8 @@ public class CachedBookmarkCategoriesFragment extends BaseBookmarkCategoriesFrag
       UiUtils.showIf(isEmptyAdapter, mEmptyViewContainer);
       mPayloadContainer.setVisibility(isEmptyAdapter ? View.GONE : View.VISIBLE);
       mProgressContainer.setVisibility(View.GONE);
+      if (!isEmptyAdapter)
+        Statistics.INSTANCE.trackGuidesShown(BookmarkManager.INSTANCE.getGuidesIds());
     }
   }
 
@@ -133,17 +137,20 @@ public class CachedBookmarkCategoriesFragment extends BaseBookmarkCategoriesFrag
 
   private void openBookmarksCatalogScreen()
   {
-    BookmarksCatalogActivity.startForResult(this, BookmarksCatalogActivity.REQ_CODE_CATALOG);
+    String catalogUrl = BookmarkManager.INSTANCE.getCatalogFrontendUrl(
+        UTM.UTM_BOOKMARKS_PAGE_CATALOG_BUTTON);
+    BookmarksCatalogActivity.startForResult(this, BaseBookmarkCategoriesFragment.REQ_CODE_CATALOG,
+                                            catalogUrl);
     Statistics.INSTANCE.trackOpenCatalogScreen();
   }
 
   @Override
-  public void onActivityResult(int requestCode, int resultCode, Intent data)
+  public void onActivityResultInternal(int requestCode, int resultCode, @NonNull Intent data)
   {
-    if (requestCode == BookmarksCatalogActivity.REQ_CODE_CATALOG && resultCode == Activity.RESULT_OK)
+    if (requestCode == BaseBookmarkCategoriesFragment.REQ_CODE_CATALOG && resultCode == Activity.RESULT_OK)
     {
-      getActivity().setResult(Activity.RESULT_OK, data);
-      getActivity().finish();
+      requireActivity().setResult(Activity.RESULT_OK, data);
+      requireActivity().finish();
     }
   }
 
@@ -174,7 +181,7 @@ public class CachedBookmarkCategoriesFragment extends BaseBookmarkCategoriesFrag
     {
       View header = mPayloadContainer.findViewById(R.id.header);
       header.setVisibility(View.GONE);
-      SharedPropertiesUtils.setCatalogCategoriesHeaderClosed(getContext(), true);
+      SharedPropertiesUtils.setCatalogCategoriesHeaderClosed(requireContext(), true);
     }
   }
 
@@ -204,6 +211,7 @@ public class CachedBookmarkCategoriesFragment extends BaseBookmarkCategoriesFrag
         UiUtils.show(mPayloadContainer);
         UiUtils.hide(mProgressContainer, mEmptyViewContainer);
         getAdapter().notifyDataSetChanged();
+        Statistics.INSTANCE.trackGuidesShown(BookmarkManager.INSTANCE.getGuidesIds());
       }
       else
       {
@@ -215,7 +223,8 @@ public class CachedBookmarkCategoriesFragment extends BaseBookmarkCategoriesFrag
     }
 
     @Override
-    public void onTagsReceived(boolean successful, @NonNull List<CatalogTagsGroup> tagsGroups)
+    public void onTagsReceived(boolean successful, @NonNull List<CatalogTagsGroup> tagsGroups,
+                               int tagsLimit)
     {
       //TODO(@alexzatsepin): Implement me if necessary
     }

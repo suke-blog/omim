@@ -38,6 +38,9 @@
 //              all routines to use MAPS.ME readers and writers instead
 //              of Courgette streams and files.
 //                --Maxim Pimenov <m@maps.me>
+// 2019-01-24 - Got rid of the paged array. We have enough address space
+//              for our application of bsdiff.
+//                --Maxim Pimenov <m@maps.me>
 
 // Changelog for bsdiff_apply:
 // 2009-03-31 - Change to use Streams.  Move CRC code to crc.{h,cc}
@@ -77,6 +80,7 @@
 #include "coding/write_to_sink.hpp"
 #include "coding/writer.hpp"
 
+#include "base/cancellable.hpp"
 #include "base/checked_cast.hpp"
 #include "base/logging.hpp"
 #include "base/string_utils.hpp"
@@ -89,7 +93,6 @@
 
 #include "3party/bsdiff-courgette/bsdiff/bsdiff_common.h"
 #include "3party/bsdiff-courgette/bsdiff/bsdiff_search.h"
-#include "3party/bsdiff-courgette/bsdiff/paged_array.h"
 #include "3party/bsdiff-courgette/divsufsort/divsufsort.h"
 
 #include "zlib.h"
@@ -141,16 +144,9 @@ BSDiffStatus CreateBinaryPatch(OldReader & old_reader,
   old_source.Read(old_buf.data(), old_buf.size());
   const uint8_t * old = old_buf.data();
 
-  courgette::PagedArray<divsuf::saidx_t> I;
-
-  if (!I.Allocate(old_size + 1)) {
-    LOG(LERROR, ("Could not allocate I[], ", ((old_size + 1) * sizeof(int)), "bytes"));
-    return MEM_ERROR;
-  }
-
+  std::vector<divsuf::saidx_t> suffix_array(old_size + 1);
   base::Timer suf_sort_timer;
-  divsuf::saint_t result = divsuf::divsufsort_include_empty(
-      old, I.begin(), old_size);
+  divsuf::saint_t result = divsuf::divsufsort_include_empty(old, suffix_array.data(), old_size);
   LOG(LINFO, ("Done divsufsort", suf_sort_timer.ElapsedSeconds()));
   if (result != 0)
     return UNEXPECTED_ERROR;
@@ -215,8 +211,8 @@ BSDiffStatus CreateBinaryPatch(OldReader & old_reader,
 
     scan += match.size;
     for (int scsc = scan; scan < new_size; ++scan) {
-      match = search<courgette::PagedArray<divsuf::saidx_t>&>(
-          I, old, old_size, newbuf + scan, new_size - scan);
+      match = search<decltype(suffix_array)>(suffix_array, old, old_size, newbuf + scan,
+                                             new_size - scan);
 
       for (; scsc < scan + match.size; scsc++)
         if ((scsc + lastoffset < old_size) &&
@@ -342,7 +338,7 @@ BSDiffStatus CreateBinaryPatch(OldReader & old_reader,
 
   WriteVarUint(diff_skips.GetWriter(), pending_diff_zeros);
 
-  I.clear();
+  suffix_array.clear();
 
   MBSPatchHeader header;
   // The string will have a null terminator that we don't use, hence '-1'.
@@ -385,9 +381,9 @@ BSDiffStatus CreateBinaryPatch(OldReader & old_reader,
 // the CRC of the original file stored in the patch file, before applying the
 // patch to it.
 template <typename OldReader, typename NewSink, typename PatchReader>
-BSDiffStatus ApplyBinaryPatch(OldReader & old_reader,
-                              NewSink & new_sink,
-                              PatchReader & patch_reader) {
+BSDiffStatus ApplyBinaryPatch(OldReader & old_reader, NewSink & new_sink,
+                              PatchReader & patch_reader, const base::Cancellable & cancellable)
+{
   ReaderSource<OldReader> old_source(old_reader);
   ReaderSource<PatchReader> patch_source(patch_reader);
 
@@ -396,7 +392,7 @@ BSDiffStatus ApplyBinaryPatch(OldReader & old_reader,
   if (ret != OK)
     return ret;
 
-  const size_t old_size = old_source.Size();
+  const auto old_size = static_cast<size_t>(old_source.Size());
   std::vector<uint8_t> old_buf(old_size);
   old_source.Read(old_buf.data(), old_buf.size());
 
@@ -411,7 +407,7 @@ BSDiffStatus ApplyBinaryPatch(OldReader & old_reader,
     return CRC_ERROR;
 
   CHECK_GREATER_OR_EQUAL(kNumStreams, 6, ());
-  vector<uint32_t> stream_sizes(kNumStreams);
+  std::vector<uint32_t> stream_sizes(kNumStreams);
   for (auto & s : stream_sizes)
     s = ReadPrimitiveFromSource<uint32_t>(patch_source);
 
@@ -429,7 +425,7 @@ BSDiffStatus ApplyBinaryPatch(OldReader & old_reader,
   auto & diff_bytes = patch_streams[4];
   auto & extra_bytes = patch_streams[5];
 
-  std::vector<uint8_t> extra_bytes_buf(extra_bytes.Size());
+  std::vector<uint8_t> extra_bytes_buf(static_cast<size_t>(extra_bytes.Size()));
   extra_bytes.Read(extra_bytes_buf.data(), extra_bytes_buf.size());
 
   const uint8_t* extra_start = extra_bytes_buf.data();
@@ -441,7 +437,14 @@ BSDiffStatus ApplyBinaryPatch(OldReader & old_reader,
 
   auto pending_diff_zeros = ReadVarUint<uint32_t>(diff_skips);
 
+  // We will check whether the application process has been cancelled
+  // upon copying every |kCheckCancelledPeriod| bytes from the old file.
+  constexpr size_t kCheckCancelledPeriod = 100 * 1024;
+
   while (control_stream_copy_counts.Size() > 0) {
+    if (cancellable.IsCancelled())
+      return CANCELLED;
+
     auto copy_count = ReadVarUint<uint32_t>(control_stream_copy_counts);
     auto extra_count = ReadVarUint<uint32_t>(control_stream_extra_counts);
     auto seek_adjustment = ReadVarInt<int32_t>(control_stream_seeks);
@@ -457,6 +460,9 @@ BSDiffStatus ApplyBinaryPatch(OldReader & old_reader,
 
     // Add together bytes from the 'old' file and the 'diff' stream.
     for (size_t i = 0; i < copy_count; ++i) {
+      if (i > 0 && i % kCheckCancelledPeriod == 0 && cancellable.IsCancelled())
+        return CANCELLED;
+
       uint8_t diff_byte = 0;
       if (pending_diff_zeros) {
         --pending_diff_zeros;
@@ -494,6 +500,9 @@ BSDiffStatus ApplyBinaryPatch(OldReader & old_reader,
   {
     return UNEXPECTED_ERROR;
   }
+
+  if (cancellable.IsCancelled())
+    return CANCELLED;
 
   return OK;
 }

@@ -8,10 +8,10 @@ import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -342,8 +342,7 @@ public class FilterFragment extends BaseMwmToolbarFragment
   {
     super.onViewCreated(view, savedInstanceState);
     getToolbarController().setTitle(R.string.booking_filters);
-    getToolbarController()
-        .findViewById(R.id.reset)
+    getToolbarController().getToolbar().findViewById(R.id.reset)
         .setOnClickListener(
             v ->
             {

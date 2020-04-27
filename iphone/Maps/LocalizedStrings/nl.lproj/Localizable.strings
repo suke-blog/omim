@@ -6,9 +6,6 @@
 
 /********** Strings **********/
 
-/* About button text (should be short) */
-"about" = "Over";
-
 /* Button text (should be short) */
 "back" = "Terug";
 
@@ -81,8 +78,6 @@
 /* View and button titles for accessibility */
 "core_my_position" = "Mijn Locatie";
 
-"ok" = "OK";
-
 /* Settings/Downloader - No free space dialog message */
 "free_disk_space_for_country_x" = "Maak ruimte vrij op uw apparaat om %@ te kunnen downloaden";
 
@@ -109,9 +104,6 @@
 
 /* Settings/Downloader - 3G download warning dialog confirm button */
 "use_cellular_data" = "Ja";
-
-/* Settings/Downloader - No internet connection dialog message */
-"use_wifi_recommendation_text" = "We raden WiFi aan om grote kaarten te downloaden";
 
 /* Choose measurement on first launch alert - title */
 "which_measurement_system" = "Welk meetstelsel heeft u liever?";
@@ -408,9 +400,6 @@
 /* Subject for emailed bookmark */
 "bookmark_share_email_subject" = "Kijk naar mijn pin op MAPS.ME kaart";
 
-/* Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me */
-"bookmark_share_email" = "Hoi,\n\nIk heb: %1$@ geprikt bij MAPS.ME, offline wereldkaarten. Klik op deze %2$@ of deze %3$@ om de plaats op de kaart te zien.\n\nBedankt.";
-
 /* Subject for emailed position */
 "my_position_share_email_subject" = "Kijk naar mijn huidige locatie op MAPS.ME kaart";
 
@@ -588,15 +577,6 @@
 
 /* category title */
 "routes" = "Routes";
-
-/* Show on first launch. */
-"maps_licence_info" = "This applications uses geographical data (including maps, business listings, points of interest, borders of countries and regions, etc.) taken from the OpenStreetMap project. We do not warrant any consistency, accuracy, completeness or applicability of the OpenStreetMap data.";
-
-/* Show on first launch. */
-"agree" = "I agree";
-
-/* Show on first launch */
-"disagree" = "I disagree";
 
 /* text of notification */
 "download_map_notification" = "Download de kaart van de plaats waar u bent";
@@ -896,6 +876,30 @@
 
 /* pink color */
 "pink" = "Roze";
+
+/* deep purple color */
+"deep_purple" = "Donker paars";
+
+/* light blue color */
+"light_blue" = "Lichtblauw";
+
+/* cyan color */
+"cyan" = "Blauwgroen";
+
+/* teal color */
+"teal" = "Smaragdgroen";
+
+/* lime color */
+"lime" = "Lime";
+
+/* deep orange color */
+"deep_orange" = "Donkeroranje";
+
+/* gray color */
+"gray" = "Grijs";
+
+/* blue gray color */
+"blue_gray" = "Grijsblauw";
 
 /* Wi-Fi available */
 "WiFi_available" = "Ja";
@@ -1342,10 +1346,6 @@
 
 "onboarding_permissions_message" = "Zodat u kaarten kunt downloaden, plaatsen en verkeer rondom u kunt zien, en navigatie kunt gebruiken.";
 
-"onboarding_welcome_title" = "Welkom bij MAPS.ME";
-
-"onboarding_welcome_first_subtitle" = "Gratis, snelle, gedetailleerde en volledig offline kaarten met turn-by-turn navigatie.";
-
 "onboarding_welcome_second_subtitle" = "Door de toepassing te starten, gaat u akkoord met de <a href=\"%s\">Gebruiksvoorwaarden</a> en het <a href=\"%s\">Privacybeleid</a>.";
 
 "dialog_incorrect_feature_position" = "Locatie wijzigen";
@@ -1500,7 +1500,7 @@
 
 "placepage_more_button" = "Meer";
 
-"placepage_more_reviews_button" = "More Reviews";
+"placepage_more_reviews_button" = "Meer reacties";
 
 "book_button" = "Boeken";
 
@@ -1782,10 +1782,6 @@
 
 "banner_rentalcars_message" = "800 autoverhuurbedrijven in meer dan 49.000 locaties voor autoverhuur.";
 
-"banner_viator_title" = "Online tours zoeken";
-
-"banner_viator_message" = "Zoek in meer dan 50.000 tours over de hele wereld.";
-
 /* december */
 "whatsnew_traffic" = "Verkeersgegevens in 36 Landen";
 
@@ -1860,10 +1856,6 @@
 "whatsnew_waypoints_title" = "Tussenstops in Route";
 
 "whatsnew_waypoints_message" = "Tap op plaatsen om tussenstops toe te voegen aan uw route.";
-
-"whatsnew_viator_title" = "Boek een tour";
-
-"whatsnew_viator_message" = "Kies populaire tours in toeristische steden over de hele wereld.";
 
 "whatsnew_driving_style_title" = "Nieuwe Kaartstijl voor het Rijden";
 
@@ -1977,8 +1969,6 @@
 
 "toast_location_permission_denied" = "App toelating locatie geweigerd";
 
-"place_page_viator_title" = "Attracties en tours";
-
 "button_use" = "Gebruiken";
 
 "planning_route_manage_route" = "Route beheren";
@@ -2018,10 +2008,6 @@
 "choose_start_point" = "Kies een vertrekpunt";
 
 "choose_destination" = "Kies een bestemming";
-
-"preloader_viator_title" = "Ontdek tours en ongewone activiteiten";
-
-"preloader_viator_message" = "Tours, activiteiten, bezienswaardigheden en meer";
 
 "preloader_viator_button" = "Meer leren";
 
@@ -2127,10 +2113,6 @@
 
 "discovery_button_subtitle_local_guides" = "Lokale Gidsen";
 
-"discovery_button_viator_offline_title" = "Ontdek tours en ongewone activiteiten";
-
-"discovery_button_viator_offline_message" = "Rondleidingen, activiteiten, excursies en meer.";
-
 "discovery_button_viator_error_title" = "Fout bij laden gegevens";
 
 "discovery_button_other_error_message" = "Fout bij laden gegevens";
@@ -2203,8 +2185,6 @@
 
 "downloader_applying" = "%s toepassen...";
 
-"transit_not_found" = "Transit navigatie is in deze regio nog niet beschikbaar";
-
 "whats_new_title_hotel_filter" = "Nieuwe hotelfilters beschikbaar!";
 
 "whats_new_message_hotel_filter" = "Boek beschikbare hotels voor uw data! Gebruik de filters inchecken en uitchecken";
@@ -2212,8 +2192,6 @@
 "whats_new_title_ugc_travel" = "Deel uw ervaring met andere reizigers!";
 
 "whats_new_message_ugc_travel" = "Rate en beoordeel bezochte plaatsen!";
-
-"dialog_pedestrian_route_is_long" = "De voetgangersroute is te lang";
 
 "dialog_message_transit_not_found_connection" = "Plan een route binnen één vervoersnetwerk";
 
@@ -2405,9 +2383,8 @@
 
 "guide_downloaded_title" = "De handleiding is met succes gedownload";
 
-"download_guides" = "Handleidingen downloaden";
-
-"cached_guides_placeholder_subtitle" = "Gedetailleerde offline handleidingen voor elk type reis. Kies de handleiding die het beste bij je past en download hem direct naar de kaart. Je hebt een internetverbinding nodig om handleidingen te downloaden.";
+/* as few symbols as possible */
+"download_guides" = "Gidsen zoeken";
 
 "guides_groups_cached" = "Gedownloade handleidingen";
 
@@ -2487,8 +2464,6 @@
 
 "restore_no_subscription_alert" = "Er zijn geen actieve abonnementen";
 
-"subscription_terms" = "Payment will be charged to your iTunes account at confirmation of purchase. The subscription will automatically renew unless auto-renew is turned off at least 24 hours before the end of the current period. Your account will be charged according to your plan for renewal within 24 hours prior to the end of the current period. You can manage or turn off auto-renew in your Apple ID account settings at any time of your purchase.";
-
 "subscriptions_title" = "Subscriptions";
 
 "manage_subscription" = "Manage subscription";
@@ -2508,8 +2483,6 @@
 "ugc_route_tags_screen_label" = "Selecteer tags";
 
 "ugc_route_tags_progress_msg" = "Tags aan het laden…";
-
-"ugc_route_tags_desc" = "Gelieve tags te kiezen om andere reizigers te helpen uw gids te vinden. Dit is verplicht.";
 
 "public_access" = "Publiek toegang";
 
@@ -2564,7 +2537,7 @@
 
 "unable_upload_error_subtitle_broken" = "Dit bestand is beschadigd en kon niet worden geüpload. Gelieve een ander bestand te uploaden.";
 
-"buy_btn" = "Kopen voor %s";
+"buy_btn" = "Een gids kopen voor %s";
 
 "download_guide_progress" = "Uw gids aan het downloaden…";
 
@@ -2659,6 +2632,636 @@
 
 "whats_new_ugc_routes_title_android_only" = "Het is eenvoudig om je indrukken te delen";
 
+"ugc_thanks_message_auth" = "Uw feedback is opgeslagen";
+
+"ugc_thanks_message_not_auth" = "Meld je aan om een feedback achter te laten";
+
+"notification_leave_review_v2_title" = "Laat een feedback achter en help de reizigers!";
+
+"error_public_not_enought_title" = "Niet genoeg tags";
+
+"error_public_not_enought_subtitle" = "Uw route moet minimaal 3 tags bevatten, zodat deze kan worden geüpload naar de openbare map";
+
+"bookmark_public_upload_alert_title" = "U bent slechts een paar stappen verwijderd van het laden van uw route in de MAPS.ME catalogus!";
+
+"bookmark_public_upload_alert_subtitle" = "Zorg ervoor dat de route een naam en beschrijving heeft en dat alle tags informatie over de plaatsen bevatten. Dankzij dit zullen gebruikers de route vinden en deze tijdens een reis kunnen gebruiken.";
+
+"bookmark_public_upload_alert_ok_button" = "Ja, alles is goed!";
+
+"name_title" = "Voer de naam in";
+
+"name_placeholder" = "bijvoorbeeld \"London pubs\"";
+
+"name_comment1" = "Geef de route een specifieke naam zodat gebruikers deze kunnen vinden, bijvoorbeeld \"London Pubs\"";
+
+"name_comment2" = "De naam mag geen speciale tekens. Publiceer geen routes met de naam \"Mijn Plaatsen\"";
+
+"description_guide" = "Beschrijving";
+
+"description_title" = "Voer de route beschrijving in";
+
+"description_placeholder" = "Beschrijf uw route in detail";
+
+"description_comment1" = "De routebeschrijving moet uit minimaal 30 tekens bestaan.";
+
+"ugc_route_tags_desc" = "Alstublieft, selecteer tags om andere reizigers te helpen uw reisgids te vinden. Dit is verplicht. Niet meer dan %s tags.";
+
+"html_format_error_title" = "Uw route is niet gepubliceerd";
+
+"html_format_error_subtitle" = "Zorg ervoor dat de namen en beschrijvingen van tags in de route de juiste opmaak hebben. U kunt dit controleren in onze editor door op de knop \"Online bewerken\" hieronder te klikken.";
+
+"web_editor_description" = "Download de route en krijg een link om deze te bewerken op de computer";
+
+"edit_on_web_confirm" = "Bewerk online";
+
+"update_guide" = "Download de nieuwe versie";
+
+"direct_link_updating_text" = "Op het bijwerken van de route…";
+
+"direct_link_updating_success" = "De route is bijgewerkt";
+
+"unable_get_direct_link_desc" = "U kunt de route delen via een openbare link";
+
+"any_access_update_alert_title" = "Misschien is er een nieuwe versie van de route";
+
+"any_access_update_alert_message" = "Wilt u de tags bijwerken? De nieuwe versie zal beschikbaar zijn op dezelfde link.";
+
+"any_access_update_alert_update" = "Bijwerken";
+
+"public_or_limited_access_after_edit_online_error_title" = "U heeft de route online bewerkt";
+
+"public_or_limited_access_after_edit_online_error_message" = "Later bewerk, publiceer of deel de route met de vrienden via onze website";
+
+"power_managment_title" = "Energiebesparende modus";
+
+"power_managment_description" = "Als de energiebesparende modus is ingeschakeld, schakelt de app de energieverbruikende functies uit afhankelijk van de huidige lading van de mobiele telefoon";
+
+"power_managment_setting_never" = "Nooit";
+
+"power_managment_setting_auto" = "Auto";
+
+"power_managment_setting_manual_max" = "Maximale energiebesparing";
+
+"enable_logging_warning_message" = "Deze optie is ingeschakeld voor logboekregistraties voor diagnostische doeleinden. Het helpt bij het identificeren van problemen met de applicatie. Schakel de optie alleen in op verzoek van MAPS.ME-ondersteuning.";
+
+"html_error_upload_message_try_again" = "Controleer de netwerktoegang en probeer het opnieuw";
+
+"html_error_upload_title_try_again" = "Geen internetverbinding";
+
+"notification_leave_review_v2_android_short_title" = "Laat een feedback achter en help reizigers!";
+
+"megafon" = "Say goodbye to roaming!";
+
+"notifications_illegal_alert_disable_button" = "Meldingen uitschakelen";
+
+"access_rules_author_only" = "Wordt online bewerkt";
+
+"privacy_settings_menu" = "Privacy instellingen";
+
+"gdpr_request_setting" = "Ontvang ID voor GDPR-verzoek";
+
+"gdpr_request_window_title" = "Uw ID: %s.";
+
+"gdpr_request_window_message" = "Alstublieft, kopieer het en stuur een verzoek naar support@maps.me";
+
+"gdpr_request_window_copy" = "ID kopiëren";
+
+"unable_upadate_error_title" = "Kan de route niet bijwerken";
+
+"unable_upadate_error_message" = "Er zijn fouten opgetreden tijdens het updaten. Controleer de wijzigingen en probeer het opnieuw";
+
+"whats_new_wiki_title" = "Wat is deze plaats?";
+
+"whats_new_wiki_message" = "We hebben artikelen van Wikipedia.org toegevoegd aan de kaartjes van de populairste attracties. Ze zijn offline beschikbaar";
+
+"driving_options_title" = "Omweginstellingen";
+
+"driving_options_subheader" = "Vermijden op elke route";
+
+"avoid_tolls" = "Tolwegen";
+
+"avoid_unpaved" = "Aardewegen";
+
+"avoid_ferry" = "Ferries";
+
+"avoid_motorways" = "Hoofdverkeerswegen";
+
+"unable_to_calc_alert_title" = "Kan route niet opbouwen";
+
+"unable_to_calc_alert_subtitle" = "Helaas konden we geen route opbouwen met de gekozen opties. Wijzig de instellingen en probeer het opnieuw";
+
+"define_to_avoid_btn" = "Omwegen configureren";
+
+"change_driving_options_btn" = "Omweginstellingen ingeschakeld";
+
+"toll_road" = "Tolweg";
+
+"unpaved_road" = "Aardeweg";
+
+"ferry_crossing" = "Ferry";
+
+"operated_by" = "Gecontroleerd door \"%s\"";
+
+"avoid_toll_roads_placepage" = "Tolwegen vermijden";
+
+"avoid_unpaved_roads_placepage" = "Aardewegen vermijden";
+
+"avoid_ferry_crossing_placepage" = "Ferries vermijden";
+
+"cached_guides_placeholder_subtitle" = "Klare reisgids op MAPS.ME bevatten geselecteerde plaatsen met foto's en beschrijvingen die op de kaart worden weergegeven en offline beschikbaar zijn.";
+
+"guides_catalogue_title" = "Reisgidscatalogus";
+
+"download_guides_button" = "Ga naar de catalogus";
+
+"type.cuisine.uzbek" = "Oezbeekse keuken";
+
+"onboarding_welcome_title" = "Plan en reis met MAPS.ME";
+
+"onboarding_welcome_first_subtitle" = "Slaat op interessante plaatsen, boek hotels, bouw routen offline";
+
+"onboarding_guide_direct_download_title" = "De reisgids is klaar om te downloaden";
+
+"onboarding_guide_direct_download_subtitle" = "Hij wordt weergegeven op de kaart en zal offline werken";
+
+"onboarding_guide_direct_download_button" = "Downloaden";
+
+"onboarding_bydeeplink_guide_title" = "Klare reisgids op MAPS.ME";
+
+"onboarding_bydeeplink_guide_subtitle" = "Geselecteerde plaatsen met foto's en beschrijvingen worden op de kaart weergegeven en zijn offline beschikbaar.";
+
+"whats_new_auto_update_bydeeplink_title" = "Voordat u naar reisgids gaat…";
+
+"whats_new_auto_update_bydeeplink_message" = "Heerladt de kaarten op actuele informatie over objecten te krijgen!";
+
+"whats_new_auto_update_and_proceed_button_size" = "Bijwerken (%s) en verder gaan";
+
+"whatsnew_toll_unpaved_title" = "Bouw routen met inachtneming van alle soorten wegen";
+
+"whatsnew_toll_unpaved_message" = "Kies omwegen via tolwegen, aardewegen en ferries";
+
+"whatsnew_new_catalogue_title" = "Bijgewerkte cataloguspagina's";
+
+"whatsnew_new_catalogue_message" = "We hebben gedetailleerde informatie over partnerhandleidingen toegevoegd, zodat de routekeuze gemakkelijk en handig is";
+
+"purchase_please_wait_toast" = "Verlaat het scherm niet, alstublieft, voordat het aankoopproces is voltooid";
+
+"trip_start" = "Kom op";
+
+"pick_destination" = "Doel";
+
+"follow_my_position" = "Centreren";
+
+"search_results" = "Zoekresultaten";
+
+"then_turn" = "Dan";
+
+"redirect_route_alert" = "Wilt u de route wijzigen?";
+
+"redirect_route_yes" = "Ja";
+
+"redirect_route_no" = "Nee";
+
+"trip_finished" = "U bent aangekomen!";
+
+"keyboard_availability_alert" = "Toetsenbord is niet beschikbaar tijdens het rijden";
+
+"dialog_routing_change_start_carplay" = "Kan route vanaf huidige positie niet opbouwen";
+
+"dialog_routing_change_end_carplay" = "Kan route naar het eindpunt niet opbouwen. Kies een andere punt";
+
+"dialog_routing_check_gps_carplay" = "Geen GPS-signaal. Ga naar het open veld";
+
+"dialog_routing_unable_locate_route_carplay" = "Kan route niet bouwen. Selecteer andere tussenpunten";
+
+"dialog_routing_download_files_carplay" = "Om een route te bouwen, download u ontbrekende kaarten";
+
+"dialog_routing_system_error_carplay" = "Lets fout gegaan. Start de app opnieuw";
+
+"dialog_routing_rebuild_from_current_location_carplay" = "De route wordt opnieuw opgebouwd vanaf uw huidige positie";
+
+"dialog_routing_rebuild_for_vehicle_carplay" = "De route wordt gewijzigd in de autoroute";
+
+"ok" = "Goed";
+
+"vezet_taxi" = "Vezet";
+
+"booking_button_toolbar" = "Een hotel op de kaart zoeken";
+
+"popup_booking_download_guides_title" = "Hebt u een hotel geboekt?";
+
+"popup_booking_download_guides_message" = "Plan uw route met kant-en-klare reisgidsen van MAPS.ME";
+
+"popup_mwm_download_guides_title" = "Offline handleidingen";
+
+"popup_mwm_download_guides_cta" = "Kiezen";
+
+"popup_mwm_download_guides_cta_1" = "Kijken";
+
+"gallery_pp_download_guides_offline_title" = "Plan uw vakantie met MAPS.ME!";
+
+"gallery_pp_download_guides_offline_subtitle" = "Pas op voor de belangrijkste routes van ervaren reizigers";
+
+"gallery_pp_download_guides_offline_cta" = "Schakel internet in";
+
+"gallery_pp_download_guides_title" = "Gidsen";
+
+"native_screen_subscription_title" = "Volledige toegang tot 2000+ gidsen!";
+
+"native_screen_subscription_message" = "Een onvergetelijke vakantie, ongeacht waar en met wie u reist";
+
+"annual_subscription_title" = "Jaarlijks";
+
+"montly_subscription_title" = "Maandelijks";
+
+"annual_subscription_message" = "12 maanden onbeperkte toegang";
+
+"montly_subscription_message" = "1 maand onbeperkte toegang";
+
+"annual_save_component" = "- %d%";
+
+"subscription_success_dialog_title" = "Bedankt voor uw aanmelden!";
+
+"subscription_success_dialog_message" = "U hebt nu onbeperkte toegang tot de catalogus met gidsen";
+
+"renewal_screen_title" = "Abonnement verlopen";
+
+"renewal_screen_message" = "Alle door abonnementen gedownloade gidsen worden verwijderd. Wilt u uw abonnement herstellen en ze opslaan?";
+
+"renewal_screen_button_restore" = "Ja, herstel";
+
+"renewal_screen_button_cancel" = "Nee, verwijder de gidsen";
+
+"subscription_error_ping_title" = "Mislukt te kopen";
+
+"subscription_error_message" = "Nu is de service niet beschikbaar in uw regio. Probeer het later opnieuw";
+
+"subscription_error_button" = "Klaar";
+
+"timeout_error_title" = "Oeps, de tijd is om!";
+
+"timeout_error_message" = "Onze servers reageren niet. Controleer uw internetverbinding, alstublieft, en probeer het opnieuw.";
+
+"per_month" = "/maand.";
+
+"per_year" = "/jaar";
+
+"buy_btn_for_subscription" = "Volledige toegang vanaf %s";
+
+"buy_btn_for_subscription_1" = "ALLE gidsen kopen voor %s";
+
+"buy_btn_for_subscription_ios_only_mo" = "Volledige toegang voor %s/maand";
+
+"buy_btn_for_subscription_ios_only_year" = "Volledige toegang voor %s/jaar";
+
+"subscription_terms_guides" = "De betaling wordt gedaan vanaf uw iTunes-account na bevestiging van de aankoop. Abonnement wordt automatisch verlengd tenzij automatisch vernieuwen is uitgeschakeld ten minste 24 uur vóór het einde van de huidige periode. Het geld wordt binnen 24 uur na afloop van de lopende periode van uw rekening afgeschreven volgens uw verlengingsplan. Je kunt automatische verlenging beheren of uitschakelen in de instellingen van je Apple ID-account op elk moment na aankoop. U kunt de gidsen die u via abonnement hebt gedownload alleen gebruiken tijdens de abonnementsperiode. Na 30 dagen na het einde van het abonnement worden gidsen met alle bladwijzers automatisch verwijderd.";
+
+"subscription_terms" = "Payment will be charged to your iTunes account at confirmation of purchase. The subscription will automatically renew unless auto-renew is turned off at least 24 hours before the end of the current period. Your account will be charged according to your plan for renewal within 24 hours prior to the end of the current period. You can manage or turn off auto-renew in your Apple ID account settings at any time of your purchase.";
+
+"whatsnew_carplay_title" = "Automatische navigatie MAPS.ME met CarPlay!";
+
+"whatsnew_carplay_message" = "Bladwijzers, zoeken, snelheidscamera's en omweginstellingen – alles werkt zonder internet";
+
+"whatsnew_subscription_title" = "Ontdek de wereld met een abonnement!";
+
+"whatsnew_subscription_message" = "Onbeperkte toegang tot de catalogus met routes is winstgevender dan een enige aankoop";
+
+"whatsnew_carnavi_fixes_for_android_title" = "Navigatie update";
+
+"whatsnew_carnavi_fixes_for_android_message" = "We hebben de aanleg van routes naar punten ver van de weggen verbeterd";
+
+"avoid_unpaved_carplay_1" = "Geen aardew.";
+
+"avoid_unpaved_carplay_2" = "Geen aardewegen";
+
+"avoid_ferry_carplay_1" = "Geen ferry's";
+
+"avoid_ferry_carplay_2" = "Geen ferry's";
+
+"avoid_tolls_carplay_1" = "Zonder tol";
+
+"avoid_tolls_carplay_2" = "Zonder tol";
+
+"speedcams_alert_title_carplay_1" = "Cameras";
+
+"speedcams_alert_title_carplay_2" = "Over cameras";
+
+"download_map_carplay" = "Download kaarten in de MAPS.ME app op uw apparaat";
+
+"carplay_roundabout_exit" = "Afrit nr. %s";
+
+/* max. 10 symbols, both iOS and Android */
+"sort" = "Sorteer…";
+
+/* Android, title, max 20-22 symbols */
+"sort_bookmarks" = "Bladwijzers sorteren";
+
+/* iOS */
+"sort_default" = "Standaard sorteren";
+
+"sort_type" = "Sorteren op type";
+
+"sort_distance" = "Sorteer op afstand";
+
+"sort_date" = "Sorteer op datum";
+
+/* Android */
+"by_default" = "Standaard";
+
+/* Android */
+"by_type" = "Op type";
+
+/* Android */
+"by_distance" = "Op afstand";
+
+/* Android */
+"by_date" = "Op datum";
+
+"week_ago_sorttype" = "Een week geleden";
+
+"month_ago_sorttype" = "Een maand geleden";
+
+"moremonth_ago_sorttype" = "Meer dan een maand geleden";
+
+"moreyear_ago_sorttype" = "Meer dan een jaar geleden";
+
+"near_me_sorttype" = "Naast mij";
+
+"others_sorttype" = "Andere";
+
+"food_places" = "Eten";
+
+"tourist_places" = "Bezienswaardigheden";
+
+"museums" = "Musea";
+
+"parks" = "Parken";
+
+"swim_places" = "Zwemmen";
+
+"mountains" = "Bergen";
+
+"animals" = "Dieren";
+
+"hotels" = "Hotels";
+
+"buildings" = "Gebouwen";
+
+"money" = "Geld";
+
+"shops" = "Winkels";
+
+"parkings" = "Parkeerplaatsen";
+
+"fuel_places" = "Benzinestations";
+
+"water" = "Water";
+
+"medicine" = "Geneeskunde";
+
+"search_in_the_list" = "In de lijst zoeken";
+
+"view_on_map_bookmarks" = "Op de kaart";
+
+"more_bookmarks" = "Meer…";
+
+"no_items_found" = "Niets gevonden";
+
+/* Android, max 18 symbols */
+"bookmarks_edit_list" = "Bewerken";
+
+/* Android, max 18 symbols */
+"bookmarks_delete_list" = "Lijst verwijderen";
+
+"whatsnew_bookmarks_search_sort_title" = "Bladwijzerts in orde om gemakkelijk te reizen";
+
+"whatsnew_bookmarks_search_sort_message" = "Sorteer uw favoriete plaatsen op categorie, tijdstip van toevoegen en geolocatie, en vind ook snel specifieke bladwijzers op hun namen";
+
+"popup_subscription_success_map_title" = "Hoera! U bent opgeschreven!";
+
+"popup_subscription_success_map_message" = "Ontdekt u nu de beste toeristische attracties in de MAPS.ME catalogus";
+
+"popup_subscription_success_map_start_button" = "Kijken";
+
+"popup_subscription_success_map_not_now_button" = "Niet nu";
+
+"religious_places" = "Religieuze plaatsen";
+
+"subscription_terms_android" = "De betaling zal worden gedaan vanaf uw Google Play-account wanneer u uw aankoop bevestigt. Het abonnement wordt automatisch hervat als de automatische verlenging niet minstens 24 uur voor het einde van de lopende periode wordt gedeactiveerd. Het geld wordt volgens uw verlengingsplan binnen 24 uur na afloop van de lopende periode van uw rekening afgetrokken. U kunt de automatische verlenging beheren of uitschakelen in de accountinstellingen na de aankoop. U kunt de handleidingen die u via het abonnement hebt gedownload alleen gebruiken voor de duur van het abonnement. Na 30 dagen na het einde van het abonnement worden de handleidingen automatisch verwijderd.";
+
+"select_list" = "Lijst kiezen";
+
+"pp_discovery_place_related_header" = "Deze plaats in de catalogus van reisgidsen";
+
+"pp_discovery_place_related_header_1" = "Deze plaats verschijnt in de reisgids";
+
+"pp_discovery_place_related_cta_button" = "Kijken";
+
+"pp_discovery_place_related_tag_header" = "De reisgidsen voor het tag „%s”";
+
+"pp_discovery_place_related_tag_header_1" = "Misschien wilt u ook graag";
+
+"buy_btn_for_subscription_version_2" = "ALLE handleidingen voor slechts %s per maand";
+
+"buy_btn_for_subscription_version_3" = "De hele catalogus voor %s per maand";
+
+"buy_btn_for_subscription_ios_only_mo_version_2" = "Toegang tot de catalogus voor %s per maand";
+
+"buy_btn_for_subscription_ios_only_year_version_2" = "Toegang tot de catalogus voor %s per jaar";
+
+"subscription_screen_native_title_version_2" = "Toegang tot handleidingen met markeringen op de kaart!";
+
+"subscription_screen_native_message_version_2" = "Bereidt u voor op elke reis in meer dan 600 steden en meer dan 100 landen";
+
+"catalog_no_internet_title" = "Geen internetverbinding";
+
+"catalog_no_internet_button" = "Opnieuw verzoeken";
+
+"whatsnew_map_updates_title" = "Supersnelle updates van kaarten";
+
+"whatsnew_map_updates_message" = "Nu updaten we de gegevens twee keer zo snel als vroeger";
+
+"new_onboarding_button" = "Verder";
+
+"new_onboarding_button_2" = "Start";
+
+"new_onboarding_step1_header" = "MAPS.ME";
+
+"new_onboarding_step1_header_2" = "Een universele reisadviseur";
+
+"new_onboarding_step2_header" = "Droom verder en plan";
+
+"new_onboarding_step2_message" = "70+ miljoen bezienswaardigheden, een catalogus van kant-en-klare handleidingen en hotelreserveringen met een kaart – u bent klaar om te reizen!";
+
+"new_onboarding_step3_message" = "Gedetailleerde offline kaarten en offline navigatie zullen helpen om niet te verdwalen in vreemde plaatsen!";
+
+"new_onboarding_step4_header" = "Deelt u uw indrukken";
+
+"new_onboarding_step4_message" = "Sla uw favoriete plaatsen op in uw blaadwijzers en stuur ze naar uw vrienden en kennissen";
+
+"new_onboarding_step5.1_header" = "Voordat we beginnen…";
+
+"new_onboarding_step5.1_message" = "Vergeet u niet onze nieuwe handleidingen te bekijken om een offline gids te vinden voor uw volgende reis!";
+
+"new_onboarding_step5.1_button" = "Catalogus openen";
+
+"new_onboarding_step5.2_message" = "Een abonnement op MAPS.ME's catalogus van handleidingen is gunstig. Krijg volledige toegang tot de handleidingen voor stadswandelingen en buitenactiviteiten!";
+
+"new_onboarding_step5.2_button" = "Bekijk de voorwaarden";
+
+"new_onboarding_step5.3_message" = "Bekijk gratis voorbeelden van kant-en-klare stads- en buitenroutes met een gratis selectie van MAPS.ME!";
+
+"new_onboarding_step5.3_button" = "Gratis downloaden";
+
+"new_onboarding_additional_steps_later_button" = "Niet nu";
+
+"all_pass_subscription_header" = "INSCHRIJVING OP DE CATALOGUS";
+
+/* do not translate */
+"all_pass_subscription_subheader" = "City + Outdoor Pass";
+
+/* \n - for a break between lines. Max. 15 characters per 1 line. */
+"all_pass_subscription_message_title" = "30000+\ngidsen\nen paden";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle" = "<b>Onbeperkt offline downloaden</b> van stads- en natuurroutes";
+
+/* \n - for a break between lines. Max. 17 characters per 1 line. */
+"all_pass_subscription_message_title_2" = "Interactief\nhoogteprofiel";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle_2" = "Elk pad bevat <b>informatie over de hoogte en basisinformatie over de route</b>";
+
+/* \n - for a break between lines. Max. 15 characters per 1 line. */
+"all_pass_subscription_message_title_3" = "Favorieten\nplekjes, foto's\nen tips";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle_3" = "<b>Meer informatie over de route</b> die u gaat nemen";
+
+/* do not translate */
+"sightseeing_subscription_header_sightseeing" = "City Pass";
+
+"sightseeing_subscription_header_subscription" = "Gidsen abonnement";
+
+"sightseeing_subscription_message" = "700+ steden en 100+ landen";
+
+"sightseeing_subscription_message_2" = "Online beschikbaar";
+
+"sightseeing_subscription_message_3" = "Foto's en wandelroutes";
+
+"subscription_success_dialog_title_sightseeing_pass" = "Bedankt voor uw inschrijving!";
+
+"subscription_success_dialog_message_sightseeing_pass" = "Nu heeft u toegang tot alle gidsen voor sightseeing in de catalogus";
+
+"downloader_main_gallery_header" = "Kaarten en handleidingen";
+
+"downloader_main_gallery_message" = "In deze sectie kunt u niet alleen kaarten downloaden, maar ook gidsen voor uw volgende reis bekijken";
+
+"downloader_main_1_element_gallery_header" = "Alle handleidingen";
+
+"downloader_main_1_element_gallery_message" = "in 100+ landen";
+
+"downloader_country_1_element_gallery_header" = "%s routes";
+
+"downloader_country_no_guides_gallery_header" = "Nog geen handleidingen in dit land";
+
+"downloader_country_no_guides_gallery_message" = "U kunt andere offline gidsen in 100+ landen bekijken voor stads- en buitenactiviteiten";
+
+"dialog_pedestrian_route_is_long" = "De voetgangersroute naar het instappunt is te lang";
+
+"whatsnew_outdoor_guides_title" = "We hebben 15000+ buitenpaden toegevoegd!";
+
+"whatsnew_outdoor_guides_message" = "Routes van Outdooractive voor winter- en zomerreizen wachten op u in de catalogus!";
+
+"whatsnew_guides_galleries_title" = "Plan uw volgende reis met MAPS.ME";
+
+"whatsnew_guides_galleries_message" = "Nu kunt u de aanbevolen handleidingen in de populaire steden en sightseeing kaarten vinden";
+
+"new_onboarding_step3_header" = "Reist";
+
+"all_pass_screen_best_value" = "Gunstige prijs";
+
+"buy_btn_for_subscription_3" = "De hele catalogus voor %s per jaar";
+
+"transit_not_found" = "Metro-navigatie is nog niet beschikbaar in deze regio";
+
+"dialog_pedestrian_route_is_long_header" = "Metroroute niet gevonden";
+
+"dialog_pedestrian_route_is_long_message" = "Kies een begin- of eindpunt dichter bij het metrostation";
+
+/* Failed planning SUBWAY route message in navigation view */
+"routing_planning_error_subway_special" = "Routeplanner per metro is mislukt";
+
+"whatsnew_isolines_title" = "Nieuwigheid voor buitenactiviteiten: hoogtelijnen offline!";
+
+/* as less symbols as possible */
+"whatsnew_isolines_message" = "Navigeer probleemloos in bergachtig gebied. Schakel gewoon de hoogtelijn in via de toets in de linkerbovenhoek van het scherm";
+
+"button_layer_isolines" = "Hoogtes";
+
+"tips_map_layers_title_countour" = "Hoogtelijnen offline in MAPS.ME!";
+
+"tips_map_layers_message_countour" = "Dankzij de hoogtelijnen kunt u probleemloos natuurreizen plannen en er zeker van zijn dat u niet verdwalen zult";
+
+"isolines_activation_error_dialog" = "Als u gebruik wilt maken van hoogtelijnen, moet u een kaart van het gewenste gebied bijwerken of downloaden";
+
+"isolines_location_error_dialog" = "De hoogtelijnen zijn nog niet beschikbaar in deze regio";
+
+"elevation_profile_diff_level" = "Moeilijkheidsgraad";
+
+"elevation_profile_diff_level_easy" = "Gemakkelijk";
+
+"elevation_profile_diff_level_moderate" = "Middelmatig";
+
+"elevation_profile_diff_level_hard" = "Moeilijk";
+
+"elevation_profile_ascent" = "Opstijging";
+
+"elevation_profile_descent" = "Afdaling";
+
+"elevation_profile_minaltitude" = "Min. hoogte";
+
+"elevation_profile_maxaltitude" = "Max. hoogte";
+
+"elevation_profile_m" = "m";
+
+"elevation_profile_difficulty" = "Moeilijkheid";
+
+"elevation_profile_distance" = "Afst.:";
+
+"elevation_profile_km" = "km";
+
+"elevation_profile_time" = "Op weg";
+
+"elevation_profile_hours" = "uur";
+
+"elevation_profile_minutes" = "min";
+
+/* hide the full screen banner and continue working with the app */
+"hide_screen_map_update" = "Verbergen en doorgaan";
+
+"view_on_map_downloaded_error" = "Deze gids is van dit apparaat verwijderd";
+
+"subscription" = "Abonnement";
+
+"freenow_taxi_title" = "FREE NOW";
+
+"tinkoff_allairlines_map_downloader_title" = "Карта Тинькофф All Airlines. 3000 миль в подарок";
+
+"tinkoff_allairlines_map_downloader_cta_button" = "Оформить карту";
+
+"tinkoff_insurance_map_downloader_title" = "Полис Тинькофф со скидкой! Подходит для любых виз.";
+
+"tinkoff_insurance_map_downloader_cta_button" = "Промокод";
+
+"mts_map_downloader_title" = "Забугорище: интернет и звонки за границей как дома";
+
+"mts_map_downloader_cta_button" = "Подключить";
+
+"skyeng_map_downloader_title" = "Дарим 4 бесплатных урока английского от Skyeng.";
+
+"skyeng_map_downloader_cta_button" = "Подробнее";
+
 
 /**********  Partners  **********/
 
@@ -2709,9 +3312,9 @@
 
 "type.aeroway.terminal" = "aeroway-terminal";
 
-"type.amenity" = "amenity";
+"type.amenity" = "Infrastructuur objecten";
 
-"type.amenity.arts_centre" = "amenity-arts_centre";
+"type.amenity.arts_centre" = "Kunstcentrum";
 
 "type.amenity.atm" = "Geldautomaat";
 
@@ -2775,7 +3378,7 @@
 
 "type.amenity.fire_station" = "Brandweer";
 
-"type.amenity.food_court" = "amenity-food_court";
+"type.amenity.food_court" = "Food court";
 
 "type.amenity.fountain" = "Fontein";
 
@@ -2811,21 +3414,23 @@
 
 "type.amenity.parking.multi.storey" = "Parkeerplaats";
 
-"type.amenity.parking.multi.storey.fee" = "Parkeerplaats";
-
 "type.amenity.parking.no.access" = "Parkeerplaats";
 
 "type.amenity.parking.park_and_ride" = "Parkeerplaats";
 
 "type.amenity.parking.permissive" = "Parkeerplaats";
 
-"type.amenity.parking.permissive.fee" = "Parkeerplaats";
-
 "type.amenity.parking.private" = "Parkeerplaats";
 
 "type.amenity.parking.underground" = "Parkeerplaats";
 
-"type.amenity.parking.underground.fee" = "Parkeerplaats";
+"type.amenity.parking_space" = "Parkeerplaats";
+
+"type.amenity.parking_space.permissive" = "Parkeerplaats";
+
+"type.amenity.parking_space.private" = "Parkeerplaats";
+
+"type.amenity.parking_space.underground" = "Parkeerplaats";
 
 "type.amenity.payment_terminal" = "Betaalautomaat";
 
@@ -2851,9 +3456,9 @@
 
 "type.amenity.post_box" = "Brievenbus";
 
-"type.amenity.post_office" = "Post";
+"type.amenity.post_office" = "Postkantoor";
 
-"type.amenity.prison" = "amenity-prison";
+"type.amenity.prison" = "Prison";
 
 "type.amenity.pub" = "Kroeg";
 
@@ -2883,7 +3488,7 @@
 
 "type.amenity.university" = "Universiteit";
 
-"type.amenity.vending_machine" = "amenity-vending_machine";
+"type.amenity.vending_machine" = "Vending machine";
 
 "type.amenity.vending_machine.cigarettes" = "Sigarettenautomaat";
 
@@ -2891,7 +3496,7 @@
 
 "type.amenity.vending_machine.parking_tickets" = "Betaalautomaat parkeergarage";
 
-"type.amenity.vending_machine.public_transport_tickets" = "amenity-vending_machine-public_transport_tickets";
+"type.amenity.vending_machine.public_transport_tickets" = "Kaartjesautomaat voor openbaar vervoer";
 
 "type.amenity.veterinary" = "Dierenarts";
 
@@ -2901,7 +3506,7 @@
 
 "type.amenity.water_point" = "Waterpunt";
 
-"type.barrier" = "barrier";
+"type.barrier" = "Barrier";
 
 "type.barrier.block" = "Blok";
 
@@ -2909,29 +3514,29 @@
 
 "type.barrier.border_control" = "Grenscontrole";
 
-"type.barrier.city_wall" = "barrier-city_wall";
+"type.barrier.city_wall" = "City wall";
 
-"type.barrier.cycle_barrier" = "barrier-cycle_barrier";
+"type.barrier.cycle_barrier" = "Cycle barrier";
 
 "type.barrier.entrance" = "Ingang";
 
-"type.barrier.fence" = "barrier-fence";
+"type.barrier.fence" = "Fence";
 
 "type.barrier.gate" = "Poort";
 
-"type.barrier.hedge" = "barrier-hedge";
+"type.barrier.hedge" = "Hedge";
 
 "type.barrier.lift_gate" = "Slagboom";
 
-"type.barrier.retaining_wall" = "barrier-retaining_wall";
+"type.barrier.retaining_wall" = "Retaining wall";
 
 "type.barrier.stile" = "Tourniquet";
 
 "type.barrier.toll_booth" = "Tolhokje";
 
-"type.barrier.wall" = "barrier-wall";
+"type.barrier.wall" = "Wall";
 
-"type.boundary" = "boundary";
+"type.boundary" = "Boundary";
 
 "type.boundary.administrative" = "boundary-administrative";
 
@@ -2984,12 +3589,6 @@
 "type.building.has_parts" = "Gebouw";
 
 "type.building.train_station" = "Station";
-
-"type.communication" = "communication";
-
-"type.communication.line" = "communication-line";
-
-"type.communication.line.underground" = "communication-line-underground";
 
 "type.craft" = "craft";
 
@@ -3207,7 +3806,7 @@
 
 "type.highway.bus_stop" = "Bushalte";
 
-"type.highway.construction" = "highway-construction";
+"type.highway.construction" = "Baan in aanbouw";
 
 "type.highway.cycleway" = "highway-cycleway";
 
@@ -3239,7 +3838,7 @@
 
 "type.highway.footway.tunnel" = "Pad";
 
-"type.highway.ford" = "highway-ford";
+"type.highway.ford" = "Ford";
 
 "type.highway.living_street" = "Straat";
 
@@ -3283,7 +3882,7 @@
 
 "type.highway.path.permissive" = "Pad";
 
-"type.highway.path.tunnel" = "Pad";
+"type.highway.path.tunnel" = "Tunnel";
 
 "type.highway.pedestrian" = "Straat";
 
@@ -3292,8 +3891,6 @@
 "type.highway.pedestrian.bridge" = "Straat";
 
 "type.highway.pedestrian.tunnel" = "Straat";
-
-"type.highway.platform" = "highway-platform";
 
 "type.highway.primary" = "Straat";
 
@@ -3347,12 +3944,6 @@
 
 "type.highway.service.driveway" = "Straat";
 
-"type.highway.service.driveway.area" = "Straat";
-
-"type.highway.service.driveway.bridge" = "Straat";
-
-"type.highway.service.driveway.tunnel" = "Straat";
-
 "type.highway.service.parking_aisle" = "Straat";
 
 "type.highway.service.tunnel" = "Straat";
@@ -3391,21 +3982,9 @@
 
 "type.highway.track.grade3" = "Straat";
 
-"type.highway.track.grade3.no.access" = "Straat";
-
-"type.highway.track.grade3.permissive" = "Straat";
-
 "type.highway.track.grade4" = "Straat";
 
-"type.highway.track.grade4.no.access" = "Straat";
-
-"type.highway.track.grade4.permissive" = "Straat";
-
 "type.highway.track.grade5" = "Straat";
-
-"type.highway.track.grade5.no.access" = "Straat";
-
-"type.highway.track.grade5.permissive" = "Straat";
 
 "type.highway.track.no.access" = "Straat";
 
@@ -3443,7 +4022,7 @@
 
 "type.historic.archaeological_site" = "Archeologische site";
 
-"type.historic.battlefield" = "historic-battlefield";
+"type.historic.battlefield" = "Battlefield";
 
 "type.historic.boundary_stone" = "historic-boundary_stone";
 
@@ -3513,27 +4092,29 @@
 
 "type.landuse" = "landuse";
 
-"type.landuse.allotments" = "landuse-allotments";
+"type.landuse.allotments" = "Allotments";
 
 "type.landuse.basin" = "Water";
 
-"type.landuse.brownfield" = "landuse-brownfield";
+"type.landuse.brownfield" = "Brownfield";
 
 "type.landuse.cemetery" = "Begraafplaats";
 
 "type.landuse.cemetery.christian" = "Begraafplaats";
 
+"type.landuse.churchyard" = "Kerkhof";
+
 "type.landuse.commercial" = "landuse-commercial";
 
-"type.landuse.construction" = "landuse-construction";
+"type.landuse.construction" = "Construction";
 
-"type.landuse.farm" = "landuse-farm";
+"type.landuse.farm" = "Farm";
 
-"type.landuse.farmland" = "landuse-farmland";
+"type.landuse.farmland" = "Landbouwgrond";
 
-"type.landuse.farmyard" = "landuse-farmyard";
+"type.landuse.farmyard" = "Farmyard";
 
-"type.landuse.field" = "landuse-field";
+"type.landuse.field" = "Field";
 
 "type.landuse.forest" = "Bos";
 
@@ -3543,27 +4124,27 @@
 
 "type.landuse.forest.mixed" = "Bos";
 
-"type.landuse.garages" = "landuse-garages";
+"type.landuse.garages" = "Garages";
 
-"type.landuse.grass" = "landuse-grass";
+"type.landuse.grass" = "Gazon";
 
 "type.landuse.greenfield" = "landuse-greenfield";
 
 "type.landuse.greenhouse_horticulture" = "landuse-greenhouse_horticulture";
 
-"type.landuse.industrial" = "landuse-industrial";
+"type.landuse.industrial" = "Industrial land";
 
-"type.landuse.landfill" = "landuse-landfill";
+"type.landuse.landfill" = "Stortplaats";
 
-"type.landuse.meadow" = "landuse-meadow";
+"type.landuse.meadow" = "Meadow";
 
-"type.landuse.military" = "landuse-military";
+"type.landuse.military" = "Military area";
 
-"type.landuse.orchard" = "landuse-orchard";
+"type.landuse.orchard" = "Orchard";
 
-"type.landuse.quarry" = "landuse-quarry";
+"type.landuse.quarry" = "Quarry";
 
-"type.landuse.railway" = "landuse-railway";
+"type.landuse.railway" = "Spoorwegfaciliteiten";
 
 "type.landuse.recreation_ground" = "landuse-recreation_ground";
 
@@ -3571,25 +4152,19 @@
 
 "type.landuse.residential" = "landuse-residential";
 
-"type.landuse.residential.rural" = "landuse-residential-rural";
-
-"type.landuse.residential.urban" = "landuse-residential-urban";
-
 "type.landuse.retail" = "landuse-retail";
 
 "type.landuse.salt_pond" = "landuse-salt_pond";
 
 "type.landuse.village_green" = "landuse-village_green";
 
-"type.landuse.vineyard" = "landuse-vineyard";
+"type.landuse.vineyard" = "Vineyard";
 
 "type.leisure" = "leisure";
 
 "type.leisure.common" = "leisure-common";
 
-"type.leisure.dog_park" = "Dog area";
-
-"type.leisure.dog_park.tennis" = "Dog area";
+"type.leisure.dog_park" = "Plaats voor hondenuitlaten";
 
 "type.leisure.fitness_centre" = "Fitnesscentrum";
 
@@ -3599,11 +4174,11 @@
 
 "type.leisure.golf_course" = "Golfbaan";
 
-"type.leisure.ice_rink" = "leisure-ice_rink";
+"type.leisure.ice_rink" = "Ice rink";
 
-"type.leisure.landscape_reserve" = "leisure-landscape_reserve";
+"type.leisure.landscape_reserve" = "Landscape reserve";
 
-"type.leisure.marina" = "leisure-marina";
+"type.leisure.marina" = "Marina";
 
 "type.leisure.nature_reserve" = "Reserve";
 
@@ -3617,17 +4192,9 @@
 
 "type.leisure.pitch" = "Sportveld";
 
-"type.leisure.pitch.tennis" = "Sportveld";
-
 "type.leisure.playground" = "Speeltuin";
 
-"type.leisure.playground.tennis" = "Speeltuin";
-
-"type.leisure.playing_fields" = "leisure-playing_fields";
-
-"type.leisure.playing_fields.tennis" = "leisure-playing_fields-tennis";
-
-"type.leisure.recreation_ground" = "leisure-recreation_ground";
+"type.leisure.recreation_ground" = "Recreation ground";
 
 "type.leisure.sauna" = "Sauna";
 
@@ -3689,25 +4256,13 @@
 
 "type.mapswithme.grid" = "mapswithme-grid";
 
-"type.marking" = "marking";
-
-"type.marking.sport" = "marking-sport";
-
-"type.marking.sport.black" = "marking-sport-black";
-
-"type.marking.sport.blue" = "marking-sport-blue";
-
-"type.marking.sport.red" = "marking-sport-red";
-
-"type.marking.sport.white" = "marking-sport-white";
-
 "type.military" = "military";
 
 "type.military.bunker" = "Bunker";
 
 "type.natural" = "natural";
 
-"type.natural.bare_rock" = "natural-bare_rock";
+"type.natural.bare_rock" = "Bare rock";
 
 "type.natural.bay" = "Baai";
 
@@ -3715,63 +4270,57 @@
 
 "type.natural.cape" = "Kaap";
 
-"type.natural.cave_entrance" = "Grotingang";
+"type.natural.cave_entrance" = "Grot";
 
-"type.natural.cliff" = "natural-cliff";
+"type.natural.cliff" = "Cliff";
 
-"type.natural.coastline" = "natural-coastline";
+"type.natural.coastline" = "Coastline";
 
 "type.natural.geyser" = "Geiser";
 
 "type.natural.glacier" = "Gletsjer";
 
-"type.natural.grassland" = "natural-grassland";
+"type.natural.grassland" = "Veld";
 
-"type.natural.heath" = "natural-heath";
+"type.natural.heath" = "Heath";
+
+"type.natural.hot_spring" = "Hot spring";
 
 "type.natural.lake" = "Meer";
 
 "type.natural.land" = "natural-land";
 
-"type.natural.meadow" = "natural-meadow";
+"type.natural.meadow" = "Meadow";
 
-"type.natural.orchard" = "natural-orchard";
+"type.natural.orchard" = "Orchard";
 
 "type.natural.peak" = "Top";
 
 "type.natural.pond" = "Plas";
 
-"type.natural.rock" = "natural-rock";
+"type.natural.rock" = "Rock";
 
-"type.natural.salt_pond" = "natural-salt_pond";
+"type.natural.salt_pond" = "Salt pond";
 
-"type.natural.scrub" = "natural-scrub";
+"type.natural.scrub" = "Kreupel bos";
 
 "type.natural.spring" = "Bron";
 
 "type.natural.tree" = "Boom";
 
-"type.natural.tree_row" = "natural-tree_row";
+"type.natural.tree_row" = "Tree row";
 
-"type.natural.vineyard" = "natural-vineyard";
+"type.natural.vineyard" = "Vineyard";
 
 "type.natural.volcano" = "Vulkaan";
 
 "type.natural.water" = "Water";
 
-"type.natural.wetland" = "natural-wetland";
+"type.natural.wetland" = "Moerasland";
 
-"type.natural.wetland.bog" = "natural-wetland-bog";
+"type.natural.wetland.bog" = "Wetland";
 
-"type.natural.wetland.marsh" = "natural-wetland-marsh";
-
-"type.natural.wood" = "Bos";
-
-"type.natural.wood.coniferous" = "Bos";
-
-"type.natural.wood.deciduous" = "Bos";
-
-"type.natural.wood.mixed" = "Bos";
+"type.natural.wetland.marsh" = "Wetland";
 
 "type.noexit" = "noexit";
 
@@ -3867,7 +4416,7 @@
 
 "type.place.locality" = "Plaats";
 
-"type.place.neighbourhood" = "place-neighbourhood";
+"type.place.neighbourhood" = "Neighbourhood";
 
 "type.place.ocean" = "Oceaan";
 
@@ -3890,12 +4439,6 @@
 "type.power" = "power";
 
 "type.power.generator" = "power-generator";
-
-"type.power.generator.hydro" = "power-generator-hydro";
-
-"type.power.generator.photovoltaic" = "power-generator-photovoltaic";
-
-"type.power.generator.wind" = "power-generator-wind";
 
 "type.power.line" = "power-line";
 
@@ -3953,7 +4496,7 @@
 
 "type.railway.incline.tunnel" = "railway-incline-tunnel";
 
-"type.railway.level_crossing" = "Overweg";
+"type.railway.level_crossing" = "Spoorwegovergang";
 
 "type.railway.light_rail" = "railway-light_rail";
 
@@ -3961,7 +4504,7 @@
 
 "type.railway.light_rail.tunnel" = "railway-light_rail-tunnel";
 
-"type.railway.monorail" = "railway-monorail";
+"type.railway.monorail" = "Monorail";
 
 "type.railway.monorail.bridge" = "railway-monorail-bridge";
 
@@ -3983,7 +4526,7 @@
 
 "type.railway.proposed" = "railway-proposed";
 
-"type.railway.rail" = "railway-rail";
+"type.railway.rail" = "Spoorlijn";
 
 "type.railway.rail.bridge" = "railway-rail-bridge";
 
@@ -4093,7 +4636,7 @@
 
 "type.railway.subway.yellow" = "railway-subway-yellow";
 
-"type.railway.subway_entrance" = "Metro";
+"type.railway.subway_entrance" = "Metro ingang";
 
 "type.railway.subway_entrance.barcelona" = "Metro";
 
@@ -4275,28 +4818,6 @@
 
 "type.sponsored" = "sponsored";
 
-"type.sponsored.banner" = "sponsored-banner";
-
-"type.sponsored.banner.deliveryclub" = "sponsored-banner-deliveryclub";
-
-"type.sponsored.banner.geerbest_de" = "sponsored-banner-geerbest_de";
-
-"type.sponsored.banner.geerbest_fr" = "sponsored-banner-geerbest_fr";
-
-"type.sponsored.banner.geerbest_uk" = "sponsored-banner-geerbest_uk";
-
-"type.sponsored.banner.lamoda_ru" = "sponsored-banner-lamoda_ru";
-
-"type.sponsored.banner.lamoda_ua" = "sponsored-banner-lamoda_ua";
-
-"type.sponsored.banner.raileurope" = "sponsored-banner-raileurope";
-
-"type.sponsored.banner.rentalcars" = "sponsored-banner-rentalcars";
-
-"type.sponsored.banner.tutu" = "sponsored-banner-tutu";
-
-"type.sponsored.banner.viator" = "sponsored-banner-viator";
-
 "type.sponsored.booking" = "sponsored-booking";
 
 "type.sponsored.holiday" = "Christmas or New Year Celebrations";
@@ -4343,8 +4864,6 @@
 
 "type.sponsored.partner9" = "sponsored-partner9";
 
-"type.sponsored.viator" = "sponsored-viator";
-
 "type.sport" = "sport";
 
 "type.sport.american_football" = "sport-american_football";
@@ -4367,7 +4886,7 @@
 
 "type.sport.diving" = "sport-diving";
 
-"type.sport.equestrian" = "Paardensport";
+"type.sport.equestrian" = "Paardesport";
 
 "type.sport.football" = "sport-football";
 
@@ -4389,7 +4908,7 @@
 
 "type.sport.swimming" = "sport-swimming";
 
-"type.sport.tennis" = "sport-tennis";
+"type.sport.tennis" = "Tennisveld";
 
 "type.tourism" = "tourism";
 
@@ -4501,11 +5020,75 @@
 
 "type.wheelchair" = "wheelchair";
 
-"type.wheelchair.limited" = "wheelchair-limited";
+"type.wheelchair.limited" = "Gedeeltelijk uitgerust voor gehandicapten";
 
-"type.wheelchair.no" = "wheelchair-no";
+"type.wheelchair.no" = "Niet uitgerust voor gehandicapten";
 
-"type.wheelchair.yes" = "wheelchair-yes";
+"type.wheelchair.yes" = "Uitgerust voor gehandicapten";
+
+"type.piste_lift" = "piste:lift";
+
+"type.piste_lift.j.bar" = "piste:lift-j-bar";
+
+"type.piste_lift.magic_carpet" = "piste:lift-magic_carpet";
+
+"type.piste_lift.platter" = "piste:lift-platter";
+
+"type.piste_lift.rope_tow" = "piste:lift-rope_tow";
+
+"type.piste_lift.t.bar" = "piste:lift-t-bar";
+
+"type.piste_type" = "piste:type";
+
+"type.piste_type.downhill" = "piste:type-downhill";
+
+"type.piste_type.downhill.advanced" = "piste:type-downhill-advanced";
+
+"type.piste_type.downhill.easy" = "piste:type-downhill-easy";
+
+"type.piste_type.downhill.expert" = "piste:type-downhill-expert";
+
+"type.piste_type.downhill.freeride" = "piste:type-downhill-freeride";
+
+"type.piste_type.downhill.intermediate" = "piste:type-downhill-intermediate";
+
+"type.piste_type.downhill.novice" = "piste:type-downhill-novice";
+
+"type.piste_type.nordic" = "piste:type-nordic";
+
+"type.piste_type.sled" = "piste:type-sled";
+
+"type.building_part" = "Gebouw";
+
+"type.area_highway.cycleway" = "area:highway-cycleway";
+
+"type.area_highway.footway" = "area:highway-footway";
+
+"type.area_highway.living_street" = "area:highway-living_street";
+
+"type.area_highway.motorway" = "area:highway-motorway";
+
+"type.area_highway.path" = "area:highway-path";
+
+"type.area_highway.pedestrian" = "area:highway-pedestrian";
+
+"type.area_highway.primary" = "area:highway-primary";
+
+"type.area_highway.residential" = "area:highway-residential";
+
+"type.area_highway.secondary" = "area:highway-secondary";
+
+"type.area_highway.service" = "area:highway-service";
+
+"type.area_highway.tertiary" = "area:highway-tertiary";
+
+"type.area_highway.steps" = "area:highway-steps";
+
+"type.area_highway.track" = "area:highway-track";
+
+"type.area_highway.trunk" = "area:highway-trunk";
+
+"type.area_highway.unclassified" = "area:highway-unclassified";
 
 
 /********** Brands **********/

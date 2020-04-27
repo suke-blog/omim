@@ -9,8 +9,6 @@ include_directories(
 
 set(
   SRC
-  ../api/src/c/api-client.c
-  address_finder.cpp
   api_mark_point.cpp
   api_mark_point.hpp
   benchmark_tools.hpp
@@ -32,6 +30,9 @@ set(
   bookmark_manager.cpp
   bookmark_manager.hpp
   bookmarks_search_params.hpp
+  caching_address_getter.hpp
+  catalog_headers_provider.cpp
+  catalog_headers_provider.hpp
   chart_generator.cpp
   chart_generator.hpp
   cloud.cpp
@@ -46,21 +47,22 @@ set(
   displacement_mode_manager.hpp
   displayed_categories_modifiers.cpp
   displayed_categories_modifiers.hpp
+  download_on_map_ads_delegate.cpp
+  download_on_map_ads_delegate.hpp
+  elevation_info.cpp
+  elevation_info.hpp
   everywhere_search_callback.cpp
   everywhere_search_callback.hpp
   everywhere_search_params.hpp
   extrapolation/extrapolator.cpp
   extrapolation/extrapolator.hpp
-  feature_vec_model.cpp
-  feature_vec_model.hpp
+  features_fetcher.cpp
+  features_fetcher.hpp
   framework.cpp
   framework.hpp
   framework_light.cpp
   framework_light.hpp
-  ge0_parser.cpp
-  ge0_parser.hpp
-  geourl_process.cpp
-  geourl_process.hpp
+  framework_light_delegate.hpp
   gps_track_collection.cpp
   gps_track_collection.hpp
   gps_track_filter.cpp
@@ -71,6 +73,12 @@ set(
   gps_track.hpp
   gps_tracker.cpp
   gps_tracker.hpp
+  guides_manager.cpp
+  guides_manager.hpp
+  guides_on_map_delegate.cpp
+  guides_on_map_delegate.hpp
+  isolines_manager.cpp
+  isolines_manager.hpp
   local_ads_manager.cpp
   local_ads_manager.hpp
   local_ads_mark.cpp
@@ -80,15 +88,26 @@ set(
   mwm_url.hpp
   notifications/notification_manager.cpp
   notifications/notification_manager.hpp
+  notifications/notification_manager_delegate.cpp
+  notifications/notification_manager_delegate.hpp
+  notifications/notification_queue.cpp
   notifications/notification_queue.hpp
   notifications/notification_queue_serdes.cpp
   notifications/notification_queue_serdes.hpp
   notifications/notification_queue_storage.cpp
   notifications/notification_queue_storage.hpp
+  onboarding.cpp
+  onboarding.hpp
   place_page_info.cpp
   place_page_info.hpp
-  power_manager/power_manager.cpp
-  power_manager/power_manager.hpp
+  position_provider.hpp
+  power_management/power_manager.cpp
+  power_management/power_manager.hpp
+  power_management/power_management_schemas.cpp
+  power_management/power_management_schemas.hpp
+  promo_catalog_poi_checker.hpp
+  promo_delegate.cpp
+  promo_delegate.hpp
   purchase.cpp
   purchase.hpp
   reachable_by_taxi_checker.cpp
@@ -106,8 +125,12 @@ set(
   taxi_delegate.hpp
   tips_api.cpp
   tips_api.hpp
+  tips_api_delegate.cpp
+  tips_api_delegate.hpp
   track.cpp
   track.hpp
+  track_mark.cpp
+  track_mark.hpp
   traffic_manager.cpp
   traffic_manager.hpp
   transit/transit_display.cpp

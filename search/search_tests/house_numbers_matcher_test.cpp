@@ -2,13 +2,15 @@
 
 #include "search/house_numbers_matcher.hpp"
 
-#include "std/vector.hpp"
+#include <string>
+#include <vector>
 
 #include "base/string_utils.hpp"
 
 using namespace search::house_numbers;
 using namespace search;
 using namespace strings;
+using namespace std;
 
 namespace
 {
@@ -62,11 +64,6 @@ bool CheckParser(string const & utf8s, string const & expected)
   }
 
   return true;
-}
-
-bool LooksLikeHouseNumber(string const & s, bool isPrefix)
-{
-  return house_numbers::LooksLikeHouseNumber(MakeUniString(s), isPrefix);
 }
 }  // namespace
 
@@ -129,9 +126,16 @@ UNIT_TEST(HouseNumbersMatcher_Smoke)
   TEST(HouseNumbersMatch("3/7 с1Б", "3/7 строение 1 Б", false /* queryIsPrefix */), ());
   TEST(!HouseNumbersMatch("3/7 с1Б", "3/7 с 1Д", false /* queryIsPrefix */), ());
 
-  TEST(!HouseNumbersMatch("39", "39 с 79"), ());
+  TEST(HouseNumbersMatch("39с80", "39"), ());
+  TEST(HouseNumbersMatch("39", "39 с 80"), ());
+  TEST(!HouseNumbersMatch("39 c 80", "39 с 79"), ());
+  TEST(!HouseNumbersMatch("39 c 79", "39 с 80"), ());
+
   TEST(!HouseNumbersMatch("6 корпус 2", "7"), ());
   TEST(!HouseNumbersMatch("10/42 корпус 2", "42"), ());
+
+  TEST(HouseNumbersMatch("22", "22к"), ());
+  TEST(HouseNumbersMatch("22к", "22"), ());
   TEST(!HouseNumbersMatch("22к", "22я"), ());
   TEST(!HouseNumbersMatch("22к", "22л"), ());
 

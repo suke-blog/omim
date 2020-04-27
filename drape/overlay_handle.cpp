@@ -16,7 +16,7 @@ namespace dp
 struct OverlayHandle::OffsetNodeFinder
 {
 public:
-  OffsetNodeFinder(uint8_t bufferID) : m_bufferID(bufferID) {}
+  explicit OffsetNodeFinder(uint8_t bufferID) : m_bufferID(bufferID) {}
 
   bool operator()(OverlayHandle::TOffsetNode const & node) const
   {
@@ -273,7 +273,7 @@ uint64_t CalculateOverlayPriority(int minZoomLevel, uint8_t rank, float depth)
 
   float const kMinDepth = -100000.0f;
   float const kMaxDepth = 100000.0f;
-  float const d = base::clamp(depth, kMinDepth, kMaxDepth) - kMinDepth;
+  float const d = base::Clamp(depth, kMinDepth, kMaxDepth) - kMinDepth;
   auto const priority = static_cast<uint32_t>(d);
 
   return (static_cast<uint64_t>(minZoom) << 56) |

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "coding/file_container.hpp"
+#include "coding/files_container.hpp"
 #include "coding/mmap_reader.hpp"
 
 #include "defines.hpp"
@@ -67,18 +67,7 @@ namespace feature
     static std::unique_ptr<FeaturesOffsetsTable> Load(std::string const & filePath);
 
     static std::unique_ptr<FeaturesOffsetsTable> Load(FilesContainerR const & cont);
-    static std::unique_ptr<FeaturesOffsetsTable> Build(FilesContainerR const & cont,
-                                                       std::string const & storePath);
-
-    /// Get table for the MWM map, represented by localFile and cont.
-    static std::unique_ptr<FeaturesOffsetsTable> CreateIfNotExistsAndLoad(
-             platform::LocalCountryFile const & localFile, FilesContainerR const & cont);
-
-    /// @todo The easiest solution for now. Need to be removed in future.
-    //@{
-    static std::unique_ptr<FeaturesOffsetsTable> CreateIfNotExistsAndLoad(platform::LocalCountryFile const & localFile);
-    static std::unique_ptr<FeaturesOffsetsTable> CreateIfNotExistsAndLoad(FilesContainerR const & cont);
-    //@}
+    static void Build(ModelReaderPtr & reader, std::string const & storePath);
 
     FeaturesOffsetsTable(FeaturesOffsetsTable const &) = delete;
     FeaturesOffsetsTable const & operator=(FeaturesOffsetsTable const &) = delete;
@@ -110,9 +99,6 @@ namespace feature
     FeaturesOffsetsTable() = default;
 
     static std::unique_ptr<FeaturesOffsetsTable> LoadImpl(std::string const & filePath);
-    static std::unique_ptr<FeaturesOffsetsTable> CreateImpl(platform::LocalCountryFile const & localFile,
-                                                            FilesContainerR const & cont,
-                                                            std::string const & storePath);
 
     succinct::elias_fano m_table;
     std::unique_ptr<MmapReader> m_pReader;

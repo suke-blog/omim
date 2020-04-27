@@ -1,7 +1,7 @@
 #pragma once
 
-#include "std/cstdint.hpp"
-#include "std/string.hpp"
+#include <cstdint>
+#include <string>
 
 class FilesContainerR;
 class ReaderSrc;
@@ -10,6 +10,7 @@ class ModelReaderPtr;
 
 namespace version
 {
+// Add new types to the corresponding list in generator/pygen/pygen.cpp.
 enum class Format
 {
   unknownFormat = -1,
@@ -23,10 +24,20 @@ enum class Format
   v8,      // February 2016 (long strings in metadata; store seconds since epoch in MwmVersion).
            // December 2016 (index graph section was added in version 161206, between v8 and v9).
   v9,      // April 2017 (OSRM sections are deleted and replaced by cross mwm section).
-  lastFormat = v9
+  v10,     // April 2020 (dat section renamed to features, compressed metadata index, addr section with
+           // header, sdx section with header, dat section renamed to features, features section with
+           // header).
+  lastFormat = v10
 };
 
-string DebugPrint(Format f);
+enum class MwmType
+{
+  SeparateMwms,
+  SingleMwm,
+  Unknown
+};
+
+std::string DebugPrint(Format f);
 
 class MwmVersion
 {
@@ -46,6 +57,8 @@ private:
   uint64_t m_secondsSinceEpoch{0};
 };
 
+std::string DebugPrint(MwmVersion const & mwmVersion);
+
 /// Writes latest format and current timestamp to the writer.
 void WriteVersion(Writer & w, uint64_t secondsSinceEpoch);
 
@@ -62,16 +75,18 @@ uint32_t ReadVersionDate(ModelReaderPtr const & reader);
 
 /// \returns true if version is version of an mwm which was generated after small mwm update.
 /// This means it contains routing file as well.
+/// Always returns true for mwms with version 0 (located in root directory).
 bool IsSingleMwm(int64_t version);
 
-/// \brief This enum sets constants which are used for writing test to set a version of mwm
-/// which should be processed as either single or two components (mwm and routing) mwms.
+/// Returns MwmType (SeparateMwms/SingleMwm/Unknown) on the basis of mwm version and format.
+MwmType GetMwmType(MwmVersion const & version);
+
+/// \brief This enum sets constants which are used for
+/// writing test to set a version of mwm which should be processed.
 enum ForTesting
 {
-  FOR_TESTING_TWO_COMPONENT_MWM1 = 10,
-  FOR_TESTING_TWO_COMPONENT_MWM2,
-  FOR_TESTING_SINGLE_MWM1 = 991215,
-  FOR_TESTING_SINGLE_MWM2,
-  FOR_TESTING_SINGLE_MWM_LATEST,
+  FOR_TESTING_MWM1 = 991215,
+  FOR_TESTING_MWM2,
+  FOR_TESTING_MWM_LATEST,
 };
 }  // namespace version

@@ -9,30 +9,30 @@
 #include <string>
 #include <vector>
 
-class FeatureBuilder1;
-
 namespace feature
 {
-// Writes features to dat file.
+class FeatureBuilder;
+
+// Writes features to file.
 class FeaturesCollector
 {
 public:
   static size_t constexpr kBufferSize = 48000;
 
-  FeaturesCollector(std::string const & fName);
+  FeaturesCollector(std::string const & fName, FileWriter::Op op = FileWriter::Op::OP_WRITE_TRUNCATE);
   virtual ~FeaturesCollector();
 
   static uint64_t GetCurrentPosition();
-  std::string const & GetFilePath() const { return m_datFile.GetName(); }
+  std::string const & GetFilePath() const { return m_dataFile.GetName(); }
   /// \brief Serializes |f|.
   /// \returns Feature id of serialized feature if |f| is serialized after the call
   /// and |kInvalidFeatureId| if not.
   /// \note See implementation operator() in derived class for cases when |f| cannot be
   /// serialized.
-  virtual uint32_t operator()(FeatureBuilder1 const & f);
-  virtual uint32_t operator()(FeatureBuilder1 & f)
+  virtual uint32_t Collect(FeatureBuilder const & f);
+  virtual uint32_t Collect(FeatureBuilder & f)
   {
-    return (*this)(const_cast<FeatureBuilder1 const &>(f));
+    return Collect(const_cast<FeatureBuilder const &>(f));
   }
   virtual void Finish() {}
 
@@ -40,10 +40,10 @@ protected:
   static uint32_t constexpr kInvalidFeatureId = std::numeric_limits<uint32_t>::max();
 
   /// \return Feature offset in the file, which is used as an ID later
-  uint32_t WriteFeatureBase(std::vector<char> const & bytes, FeatureBuilder1 const & fb);
+  uint32_t WriteFeatureBase(std::vector<char> const & bytes, FeatureBuilder const & fb);
   void Flush();
 
-  FileWriter m_datFile;
+  FileWriter m_dataFile;
   m2::RectD m_bounds;
 
 private:
@@ -65,8 +65,8 @@ public:
                                   std::string const & rawGeometryFileName);
   ~FeaturesAndRawGeometryCollector() override;
 
-  uint32_t operator()(FeatureBuilder1 const & f) override;
+  uint32_t Collect(FeatureBuilder const & f) override;
 };
 
 uint32_t CheckedFilePosCast(FileWriter const & f);
-}
+}  // namespace feature

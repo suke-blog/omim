@@ -8,8 +8,7 @@
 #include "indexer/feature_data.hpp"
 #include "indexer/feature_processor.hpp"
 
-#include "coding/file_container.hpp"
-#include "coding/file_name_utils.hpp"
+#include "coding/files_container.hpp"
 #include "coding/internal/file_data.hpp"
 #include "coding/read_write_utils.hpp"
 #include "coding/reader.hpp"
@@ -20,6 +19,7 @@
 
 #include "base/assert.hpp"
 #include "base/checked_cast.hpp"
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 #include "base/scope_guard.hpp"
 #include "base/stl_helpers.hpp"
@@ -45,12 +45,12 @@ using namespace routing;
 class SrtmGetter : public AltitudeGetter
 {
 public:
-  SrtmGetter(std::string const & srtmDir) : m_srtmManager(srtmDir) {}
+  explicit SrtmGetter(std::string const & srtmDir) : m_srtmManager(srtmDir) {}
 
   // AltitudeGetter overrides:
-  feature::TAltitude GetAltitude(m2::PointD const & p) override
+  geometry::Altitude GetAltitude(m2::PointD const & p) override
   {
-    return m_srtmManager.GetHeight(MercatorBounds::ToLatLon(p));
+    return m_srtmManager.GetHeight(mercator::ToLatLon(p));
   }
 
 private:
@@ -74,8 +74,8 @@ public:
 
   using TFeatureAltitudes = std::vector<FeatureAltitude>;
 
-  Processor(AltitudeGetter & altitudeGetter)
-    : m_altitudeGetter(altitudeGetter), m_minAltitude(kInvalidAltitude)
+  explicit Processor(AltitudeGetter & altitudeGetter)
+    : m_altitudeGetter(altitudeGetter), m_minAltitude(geometry::kInvalidAltitude)
   {
   }
 
@@ -86,7 +86,7 @@ public:
     return m_altitudeAvailabilityBuilder;
   }
 
-  TAltitude GetMinAltitude() const { return m_minAltitude; }
+  geometry::Altitude GetMinAltitude() const { return m_minAltitude; }
 
   void operator()(FeatureType & f, uint32_t const & id)
   {
@@ -108,18 +108,18 @@ public:
     if (pointsCount == 0)
       return;
 
-    TAltitudes altitudes;
-    TAltitude minFeatureAltitude = kInvalidAltitude;
+    geometry::Altitudes altitudes;
+    geometry::Altitude minFeatureAltitude = geometry::kInvalidAltitude;
     for (size_t i = 0; i < pointsCount; ++i)
     {
-      TAltitude const a = m_altitudeGetter.GetAltitude(f.GetPoint(i));
-      if (a == kInvalidAltitude)
+      geometry::Altitude const a = m_altitudeGetter.GetAltitude(f.GetPoint(i));
+      if (a == geometry::kInvalidAltitude)
       {
         // One invalid point invalidates the whole feature.
         return;
       }
 
-      if (minFeatureAltitude == kInvalidAltitude)
+      if (minFeatureAltitude == geometry::kInvalidAltitude)
         minFeatureAltitude = a;
       else
         minFeatureAltitude = std::min(minFeatureAltitude, a);
@@ -130,7 +130,7 @@ public:
     hasAltitude = true;
     m_featureAltitudes.emplace_back(id, Altitudes(std::move(altitudes)));
 
-    if (m_minAltitude == kInvalidAltitude)
+    if (m_minAltitude == geometry::kInvalidAltitude)
       m_minAltitude = minFeatureAltitude;
     else
       m_minAltitude = std::min(minFeatureAltitude, m_minAltitude);
@@ -148,7 +148,7 @@ private:
   AltitudeGetter & m_altitudeGetter;
   TFeatureAltitudes m_featureAltitudes;
   succinct::bit_vector_builder m_altitudeAvailabilityBuilder;
-  TAltitude m_minAltitude;
+  geometry::Altitude m_minAltitude;
 };
 }  // namespace
 
@@ -160,7 +160,7 @@ void BuildRoadAltitudes(std::string const & mwmPath, AltitudeGetter & altitudeGe
   {
     // Preparing altitude information.
     Processor processor(altitudeGetter);
-    feature::ForEachFromDat(mwmPath, processor);
+    feature::ForEachFeature(mwmPath, processor);
 
     if (!processor.HasAltitudeInfo())
     {
@@ -171,20 +171,20 @@ void BuildRoadAltitudes(std::string const & mwmPath, AltitudeGetter & altitudeGe
     CHECK(processor.IsFeatureAltitudesSorted(), ());
 
     FilesContainerW cont(mwmPath, FileWriter::OP_WRITE_EXISTING);
-    FileWriter w = cont.GetWriter(ALTITUDES_FILE_TAG);
+    auto w = cont.GetWriter(ALTITUDES_FILE_TAG);
 
     AltitudeHeader header;
     header.m_minAltitude = processor.GetMinAltitude();
 
-    auto const startOffset = w.Pos();
-    header.Serialize(w);
+    auto const startOffset = w->Pos();
+    header.Serialize(*w);
     {
       // Altitude availability serialization.
-      coding::FreezeVisitor<Writer> visitor(w);
+      coding::FreezeVisitor<Writer> visitor(*w);
       succinct::bit_vector_builder & builder = processor.GetAltitudeAvailabilityBuilder();
       succinct::rs_bit_vector(&builder).map(visitor);
     }
-    header.m_featureTableOffset = base::checked_cast<uint32_t>(w.Pos() - startOffset);
+    header.m_featureTableOffset = base::checked_cast<uint32_t>(w->Pos() - startOffset);
 
     std::vector<uint32_t> offsets;
     std::vector<uint8_t> deltas;
@@ -207,20 +207,20 @@ void BuildRoadAltitudes(std::string const & mwmPath, AltitudeGetter & altitudeGe
       for (uint32_t offset : offsets)
         builder.push_back(offset);
 
-      coding::FreezeVisitor<Writer> visitor(w);
+      coding::FreezeVisitor<Writer> visitor(*w);
       succinct::elias_fano(&builder).map(visitor);
     }
     // Writing altitude info.
-    header.m_altitudesOffset = base::checked_cast<uint32_t>(w.Pos() - startOffset);
-    w.Write(deltas.data(), deltas.size());
-    w.WritePaddingByEnd(8);
-    header.m_endOffset = base::checked_cast<uint32_t>(w.Pos() - startOffset);
+    header.m_altitudesOffset = base::checked_cast<uint32_t>(w->Pos() - startOffset);
+    w->Write(deltas.data(), deltas.size());
+    w->WritePaddingByEnd(8);
+    header.m_endOffset = base::checked_cast<uint32_t>(w->Pos() - startOffset);
 
     // Rewriting header info.
-    auto const endOffset = w.Pos();
-    w.Seek(startOffset);
+    auto const endOffset = w->Pos();
+    w->Seek(startOffset);
     header.Serialize(w);
-    w.Seek(endOffset);
+    w->Seek(endOffset);
     LOG(LINFO, (ALTITUDES_FILE_TAG, "section is ready. The size is", header.m_endOffset));
     if (processor.HasAltitudeInfo())
       LOG(LINFO, ("Min altitude is", processor.GetMinAltitude()));

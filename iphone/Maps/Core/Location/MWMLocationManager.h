@@ -1,13 +1,14 @@
 #import "MWMMyPositionMode.h"
-
-@protocol MWMLocationObserver;
+#import "MWMLocationObserver.h"
 
 @interface MWMLocationManager : NSObject
 
 + (void)start;
++ (void)stop;
++ (BOOL)isStarted;
 
-+ (void)addObserver:(id<MWMLocationObserver>)observer;
-+ (void)removeObserver:(id<MWMLocationObserver>)observer;
++ (void)addObserver:(id<MWMLocationObserver>)observer NS_SWIFT_NAME(add(observer:));
++ (void)removeObserver:(id<MWMLocationObserver>)observer NS_SWIFT_NAME(remove(observer:));
 
 + (void)setMyPositionMode:(MWMMyPositionMode)mode;
 
@@ -18,10 +19,11 @@
 + (void)applicationDidBecomeActive;
 + (void)applicationWillResignActive;
 
++ (void)enableLocationAlert;
+
 - (instancetype)init __attribute__((unavailable("call +manager instead")));
 - (instancetype)copy __attribute__((unavailable("call +manager instead")));
 - (instancetype)copyWithZone:(NSZone *)zone __attribute__((unavailable("call +manager instead")));
-+ (instancetype)alloc __attribute__((unavailable("call +manager instead")));
 + (instancetype)allocWithZone:(struct _NSZone *)zone
     __attribute__((unavailable("call +manager instead")));
 + (instancetype) new __attribute__((unavailable("call +manager instead")));

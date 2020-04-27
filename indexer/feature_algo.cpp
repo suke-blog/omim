@@ -7,6 +7,7 @@
 
 #include "base/logging.hpp"
 
+#include <limits>
 
 namespace feature
 {
@@ -15,26 +16,26 @@ namespace feature
 /// logic if you really-really know what you are doing.
 m2::PointD GetCenter(FeatureType & f, int scale)
 {
-  EGeomType const type = f.GetFeatureType();
+  GeomType const type = f.GetGeomType();
   switch (type)
   {
-  case GEOM_POINT:
+  case GeomType::Point:
+  {
     return f.GetCenter();
-
-  case GEOM_LINE:
-    {
-      m2::CalculatePolyLineCenter doCalc;
-      f.ForEachPoint(doCalc, scale);
-      return doCalc.GetResult();
-    }
-
+  }
+  case GeomType::Line:
+  {
+    m2::CalculatePolyLineCenter doCalc;
+    f.ForEachPoint(doCalc, scale);
+    return doCalc.GetResult();
+  }
   default:
-    {
-      ASSERT_EQUAL(type, GEOM_AREA, ());
-      m2::CalculatePointOnSurface doCalc(f.GetLimitRect(scale));
-      f.ForEachTriangle(doCalc, scale);
-      return doCalc.GetResult();
-    }
+  {
+    ASSERT_EQUAL(type, GeomType::Area, ());
+    m2::CalculatePointOnSurface doCalc(f.GetLimitRect(scale));
+    f.ForEachTriangle(doCalc, scale);
+    return doCalc.GetResult();
+  }
   }
 }
 
@@ -42,22 +43,22 @@ m2::PointD GetCenter(FeatureType & f) { return GetCenter(f, FeatureType::BEST_GE
 
 double GetMinDistanceMeters(FeatureType & ft, m2::PointD const & pt, int scale)
 {
-  double res = numeric_limits<double>::max();
+  double res = std::numeric_limits<double>::max();
   auto updateDistanceFn = [&] (m2::PointD const & p)
   {
-    double const d = MercatorBounds::DistanceOnEarth(p, pt);
+    double const d = mercator::DistanceOnEarth(p, pt);
     if (d < res)
       res = d;
   };
 
-  EGeomType const type = ft.GetFeatureType();
+  GeomType const type = ft.GetGeomType();
   switch (type)
   {
-  case GEOM_POINT:
+  case GeomType::Point:
     updateDistanceFn(ft.GetCenter());
     break;
 
-  case GEOM_LINE:
+  case GeomType::Line:
   {
     ft.ParseGeometry(scale);
     size_t const count = ft.GetPointsCount();
@@ -70,7 +71,7 @@ double GetMinDistanceMeters(FeatureType & ft, m2::PointD const & pt, int scale)
   }
 
   default:
-    ASSERT_EQUAL(type, GEOM_AREA, ());
+    ASSERT_EQUAL(type, GeomType::Area, ());
     ft.ForEachTriangle([&](m2::PointD const & p1, m2::PointD const & p2, m2::PointD const & p3)
     {
       if (res == 0.0)

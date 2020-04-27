@@ -1,34 +1,36 @@
 #include "map/user.hpp"
 
+#include "web_api/request_headers.hpp"
+
 #include "platform/http_client.hpp"
+#include "platform/http_payload.hpp"
 #include "platform/http_uploader.hpp"
 #include "platform/platform.hpp"
 #include "platform/preferred_languages.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/file_writer.hpp"
 #include "coding/internal/file_data.hpp"
 #include "coding/serdes_json.hpp"
-#include "coding/url_encode.hpp"
+#include "coding/url.hpp"
 #include "coding/writer.hpp"
 
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 #include "base/scope_guard.hpp"
 #include "base/stl_helpers.hpp"
 #include "base/string_utils.hpp"
-
 #include "base/visitor.hpp"
 
-#include "3party/Alohalytics/src/alohalytics.h"
-#include "3party/jansson/myjansson.hpp"
+#include "std/target_os.hpp"
 
 #include <chrono>
 #include <limits>
 #include <sstream>
 
-#include "std/target_os.hpp"
-
 #include "private.h"
+
+#include "3party/Alohalytics/src/alohalytics.h"
+#include "3party/jansson/myjansson.hpp"
 
 namespace
 {
@@ -82,6 +84,11 @@ std::string AuthenticationUrl(std::string const & socialToken,
     ss << "/otp/token/";
     return ss.str();
   }
+  case User::SocialTokenType::Apple:
+  {
+    ss << "/register-by-token/apple-id/";
+    return ss.str();
+  }
   }
   UNREACHABLE();
 }
@@ -125,7 +132,7 @@ std::string UserBindingRequestUrl(std::string const & advertisingId)
   std::ostringstream ss;
   ss << kUserBindingRequestUrl
      << "?vendor=" << kVendor
-     << "&advertising_id=" << UrlEncode(advertisingId);
+     << "&advertising_id=" << url::UrlEncode(advertisingId);
   return ss.str();
 }
 
@@ -189,6 +196,8 @@ struct SocialNetworkAuthRequestData
   bool m_privacyAccepted = false;
   bool m_termsAccepted = false;
   bool m_promoAccepted = false;
+  std::string m_firstName;
+  std::string m_lastName;
   
   DECLARE_VISITOR(visitor(m_accessToken, "access_token"),
                   visitor(m_clientId, "client_id"),
@@ -196,7 +205,9 @@ struct SocialNetworkAuthRequestData
                   visitor(m_termsLink, "terms_link"),
                   visitor(m_privacyAccepted, "privacy_accepted"),
                   visitor(m_termsAccepted, "terms_accepted"),
-                  visitor(m_promoAccepted, "promo_accepted"))
+                  visitor(m_promoAccepted, "promo_accepted"),
+                  visitor(m_firstName, "first_name"),
+                  visitor(m_lastName, "last_name"))
 };
 
 struct UserDetailsResponseData
@@ -271,7 +282,16 @@ void User::ResetAccessToken()
 {
   std::lock_guard<std::mutex> lock(m_mutex);
   m_accessToken.clear();
-  GetPlatform().GetSecureStorage().Remove(kMapsMeTokenKey);
+  m_userName.clear();
+  m_userId.clear();
+  m_details = {};
+
+  // Reset all user-bound keys.
+  std::vector<std::string> const kKeysToRemove = {{kMapsMeTokenKey, kReviewIdsKey,
+                                                   kUserNameKey, kUserIdKey}};
+  for (auto const & k : kKeysToRemove)
+    GetPlatform().GetSecureStorage().Remove(k);
+
   NotifySubscribersImpl();
 }
 
@@ -324,7 +344,8 @@ void User::SetAccessToken(std::string const & accessToken)
 }
 
 void User::Authenticate(std::string const & socialToken, SocialTokenType socialTokenType,
-                        bool privacyAccepted, bool termsAccepted, bool promoAccepted)
+                        bool privacyAccepted, bool termsAccepted, bool promoAccepted,
+                        std::string const & firstName, std::string const & lastName)
 {
   std::string const url = AuthenticationUrl(socialToken, socialTokenType);
   if (url.empty())
@@ -355,6 +376,8 @@ void User::Authenticate(std::string const & socialToken, SocialTokenType socialT
     authData.m_termsAccepted = termsAccepted;
     authData.m_privacyAccepted = privacyAccepted;
     authData.m_promoAccepted = promoAccepted;
+    authData.m_firstName = firstName;
+    authData.m_lastName = lastName;
     authParams = [authData = std::move(authData)](platform::HttpClient & request)
     {
       auto jsonData = SerializeToJson(authData);
@@ -633,13 +656,13 @@ void User::BindUser(CompleteUserBindingHandler && completionHandler)
                             [this, url, filePath, completionHandler = std::move(completionHandler)]()
       {
         SCOPE_GUARD(tmpFileGuard, std::bind(&base::DeleteFileX, std::cref(filePath)));
-        platform::HttpUploader request;
-        request.SetUrl(url);
-        request.SetNeedClientAuth(true);
-        request.SetHeaders({{"Authorization", BuildAuthorizationToken(m_accessToken)},
-                            {"User-Agent", GetPlatform().GetAppUserAgent()}});
-        request.SetFilePath(filePath);
-
+        platform::HttpPayload payload;
+        payload.m_url = url;
+        payload.m_needClientAuth = true;
+        payload.m_headers = {{"Authorization", BuildAuthorizationToken(m_accessToken)},
+                             {"User-Agent", GetPlatform().GetAppUserAgent()}};
+        payload.m_filePath = filePath;
+        platform::HttpUploader request(payload);
         auto const result = request.Upload();
         if (result.m_httpCode >= 200 && result.m_httpCode < 300)
         {
@@ -662,7 +685,7 @@ std::string User::GetPhoneAuthUrl(std::string const & redirectUri)
 {
   std::ostringstream os;
   os << kPassportServerUrl << "/oauth/authorize/?mode=phone_device&response_type=code"
-     << "&locale=" << languages::GetCurrentOrig() << "&redirect_uri=" << UrlEncode(redirectUri)
+     << "&locale=" << languages::GetCurrentOrig() << "&redirect_uri=" << url::UrlEncode(redirectUri)
      << "&client_id=" << kAppName;
 
   return os.str();
@@ -701,7 +724,7 @@ void User::RequestImpl(std::string const & url, BuildRequestHandler const & onBu
 
   platform::HttpClient request(url);
   request.SetRawHeader("Accept", kApplicationJson);
-  request.SetRawHeader("User-Agent", GetPlatform().GetAppUserAgent());
+  request.SetRawHeaders(web_api::GetDefaultAuthHeaders());
   if (onBuildRequest)
     onBuildRequest(request);
 

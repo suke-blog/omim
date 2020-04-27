@@ -1,5 +1,6 @@
 #include "drape_frontend/gui/gui_text.hpp"
 
+#include "drape_frontend/batcher_bucket.hpp"
 #include "drape_frontend/visual_params.hpp"
 
 #include "shaders/programs.hpp"
@@ -82,7 +83,7 @@ void FillMaskDecl(dp::BindingDecl & decl, uint8_t stride, uint8_t offset)
 
 dp::BindingInfo const & StaticLabel::Vertex::GetBindingInfo()
 {
-  static unique_ptr<dp::BindingInfo> info;
+  static std::unique_ptr<dp::BindingInfo> info;
 
   if (info == nullptr)
   {
@@ -194,7 +195,7 @@ void StaticLabel::CacheStaticText(std::string const & text, char const * delim,
         rb.push_back(Vertex(position, pen + normals[v], colorTex, outlineTex, maskTex[v]));
 
       float const advance = glyph.GetAdvanceX() * textRatio;
-      prevLineHeight = max(prevLineHeight, offsets.y + glyph.GetPixelHeight() * textRatio);
+      prevLineHeight = std::max(prevLineHeight, offsets.y + glyph.GetPixelHeight() * textRatio);
       pen += glsl::vec2(advance, glyph.GetAdvanceY() * textRatio);
 
       depth += 10.0f;
@@ -224,7 +225,7 @@ void StaticLabel::CacheStaticText(std::string const & text, char const * delim,
   size_t startIndex = 0;
   for (size_t i = 0; i < ranges.size(); ++i)
   {
-    maxLineLength = max(lineLengths[i], maxLineLength);
+    maxLineLength = std::max(lineLengths[i], maxLineLength);
     float xOffset = -lineLengths[i] / 2.0f;
     if (anchor & dp::Left)
       xOffset = 0;
@@ -247,7 +248,7 @@ void StaticLabel::CacheStaticText(std::string const & text, char const * delim,
 
 dp::BindingInfo const & MutableLabel::StaticVertex::GetBindingInfo()
 {
-  static unique_ptr<dp::BindingInfo> info;
+  static std::unique_ptr<dp::BindingInfo> info;
 
   if (info == nullptr)
   {
@@ -269,7 +270,7 @@ dp::BindingInfo const & MutableLabel::StaticVertex::GetBindingInfo()
 
 dp::BindingInfo const & MutableLabel::DynamicVertex::GetBindingInfo()
 {
-  static unique_ptr<dp::BindingInfo> info;
+  static std::unique_ptr<dp::BindingInfo> info;
 
   if (info == nullptr)
   {
@@ -306,8 +307,8 @@ ref_ptr<dp::Texture> MutableLabel::SetAlphabet(std::string const & alphabet,
                                                ref_ptr<dp::TextureManager> mng)
 {
   strings::UniString str = strings::MakeUniString(alphabet + ".");
-  sort(str.begin(), str.end());
-  strings::UniString::iterator it = unique(str.begin(), str.end());
+  std::sort(str.begin(), str.end());
+  strings::UniString::iterator it = std::unique(str.begin(), str.end());
   str.resize(std::distance(str.begin(), it));
 
   dp::TextureManager::TGlyphsBuffer buffer;
@@ -412,7 +413,7 @@ void MutableLabel::SetText(LabelResult & result, std::string text) const
       float const advance = glyph.GetAdvanceX() * m_textRatio;
       length += advance + offsets.x;
       pen += glsl::vec2(advance, glyph.GetAdvanceY() * m_textRatio);
-      maxHeight = max(maxHeight, offsets.y  + glyph.GetPixelHeight() * m_textRatio);
+      maxHeight = std::max(maxHeight, offsets.y + glyph.GetPixelHeight() * m_textRatio);
     }
   }
 
@@ -445,7 +446,7 @@ m2::PointF MutableLabel::GetAverageSize() const
     dp::TextureManager::GlyphRegion const & reg = node.second;
     m2::PointF size = reg.GetPixelSize() * m_textRatio;
     w += size.x;
-    h = max(h, size.y);
+    h = std::max(h, size.y);
   }
 
   w /= m_alphabet.size();
@@ -485,7 +486,7 @@ void MutableLabelHandle::GetAttributeMutation(ref_ptr<dp::AttributeBufferMutator
 
   auto dataPointer =
       reinterpret_cast<MutableLabel::DynamicVertex *>(mutator->AllocateMutationBuffer(byteCount));
-  copy(result.m_buffer.begin(), result.m_buffer.end(), dataPointer);
+  std::copy(result.m_buffer.begin(), result.m_buffer.end(), dataPointer);
 
   dp::BindingInfo const & binding = MutableLabel::DynamicVertex::GetBindingInfo();
   dp::OverlayHandle::TOffsetNode offsetNode = GetOffsetNode(binding.GetID());
@@ -580,6 +581,7 @@ m2::PointF MutableLabelDrawer::Draw(ref_ptr<dp::GraphicsContext> context, Params
 
   {
     dp::Batcher batcher(indexCount, vertexCount);
+    batcher.SetBatcherHash(static_cast<uint64_t>(df::BatcherBucket::Default));
     dp::SessionGuard guard(context, batcher, flushFn);
     batcher.InsertListOfStrip(context, staticData.m_state, make_ref(&provider),
                               move(handle), dp::Batcher::VertexPerQuad);

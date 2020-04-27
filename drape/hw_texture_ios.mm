@@ -11,16 +11,8 @@
 
 #include <boost/integer_traits.hpp>
 
-/// @todo(greshilov): delete this hack for next boost version (>1.65.0)
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++11-narrowing"
-#endif
 #include <boost/gil/algorithm.hpp>
 #include <boost/gil/typedefs.hpp>
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
 
 using boost::gil::gray8c_pixel_t;
 using boost::gil::gray8_pixel_t;
@@ -171,7 +163,8 @@ void HWTextureApple::Create(ref_ptr<dp::GraphicsContext> context, Params const &
   Unlock();
 }
 
-void HWTextureApple::UploadData(uint32_t x, uint32_t y, uint32_t width, uint32_t height, ref_ptr<void> data)
+void HWTextureApple::UploadData(ref_ptr<dp::GraphicsContext> context, uint32_t x, uint32_t y,
+                                uint32_t width, uint32_t height, ref_ptr<void> data)
 {
   uint8_t bytesPerPixel = GetBytesPerPixel(GetFormat());
   Lock();
@@ -197,8 +190,9 @@ void HWTextureApple::UploadData(uint32_t x, uint32_t y, uint32_t width, uint32_t
   Unlock();
 }
 
-void HWTextureApple::Bind() const
+void HWTextureApple::Bind(ref_ptr<dp::GraphicsContext> context) const
 {
+  UNUSED_VALUE(context);
   ASSERT(Validate(), ());
   if (m_textureID != 0)
     GLFunctions::glBindTexture(GetID());

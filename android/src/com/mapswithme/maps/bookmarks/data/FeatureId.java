@@ -2,8 +2,9 @@ package com.mapswithme.maps.bookmarks.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
+import com.mapswithme.maps.LightFramework;
 
 public class FeatureId implements Parcelable
 {
@@ -31,16 +32,22 @@ public class FeatureId implements Parcelable
   private final int mFeatureIndex;
 
   @NonNull
-  public static FeatureId fromString(@NonNull String string)
+  public static FeatureId fromFeatureIdString(@NonNull String id)
   {
-    if (TextUtils.isEmpty(string))
+    if (TextUtils.isEmpty(id))
       throw new AssertionError("Feature id string is empty");
 
-    String parts[] = string.split(":");
+    String parts[] = id.split(":");
     if (parts.length != 3)
       throw new AssertionError("Wrong feature id string format");
 
-    return new FeatureId(parts[0], Long.parseLong(parts[1]), Integer.parseInt(parts[2]));
+    return new FeatureId(parts[1], Long.parseLong(parts[0]), Integer.parseInt(parts[2]));
+  }
+
+  @NonNull
+  public String toFeatureIdString()
+  {
+    return LightFramework.nativeMakeFeatureId(mMwmName, mMwmVersion, mFeatureIndex);
   }
 
   public FeatureId(@NonNull String mwmName, long mwmVersion, int featureIndex)
@@ -112,6 +119,10 @@ public class FeatureId implements Parcelable
   @Override
   public String toString()
   {
-    return mMwmName + ":" + mMwmVersion + ":" + mFeatureIndex;
+    return "FeatureId{" +
+           "mMwmName='" + mMwmName + '\'' +
+           ", mMwmVersion=" + mMwmVersion +
+           ", mFeatureIndex=" + mFeatureIndex +
+           '}';
   }
 }

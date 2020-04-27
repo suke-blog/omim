@@ -30,6 +30,8 @@ set(
   sample_view.hpp
   samples_view.cpp
   samples_view.hpp
+  search_request_runner.cpp
+  search_request_runner.hpp
   view.hpp
 )
 
@@ -39,10 +41,12 @@ omim_link_libraries(
   ${PROJECT_NAME}
   qt_common
   map
+  ge0
   drape_frontend
   shaders
   routing
   search_quality
+  search_tests_support
   search
   storage
   tracking
@@ -53,6 +57,7 @@ omim_link_libraries(
   ugc
   drape
   partners_api
+  web_api
   local_ads
   kml
   editor
@@ -80,9 +85,17 @@ omim_link_libraries(
   stats_client
   stb_image
   succinct
+  vulkan_wrapper
   ${Qt5Widgets_LIBRARIES}
   ${LIBZ}
 )
+
+if (PLATFORM_LINUX)
+  omim_link_libraries(
+    ${PROJECT_NAME}
+    dl
+  )
+endif()
 
 link_opengl(${PROJECT_NAME})
 link_qt5_core(${PROJECT_NAME})

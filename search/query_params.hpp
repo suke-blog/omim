@@ -9,6 +9,7 @@
 #include "base/string_utils.hpp"
 
 #include <algorithm>
+#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <type_traits>
@@ -26,36 +27,47 @@ public:
   using TypeIndices = std::vector<uint32_t>;
   using Langs = base::SafeSmallSet<StringUtf8Multilang::kMaxSupportedLanguages>;
 
-  struct Token
+  class Token
   {
+  public:
     Token() = default;
     Token(String const & original) : m_original(original) {}
 
     void AddSynonym(std::string const & s);
     void AddSynonym(String const & s);
 
-    // Calls |fn| on the original token and on synonyms.
     template <typename Fn>
-    std::enable_if_t<std::is_same<std::result_of_t<Fn(String)>, void>::value> ForEach(
+    std::enable_if_t<std::is_same<std::result_of_t<Fn(String)>, void>::value> ForEachSynonym(
         Fn && fn) const
     {
-      fn(m_original);
       std::for_each(m_synonyms.begin(), m_synonyms.end(), std::forward<Fn>(fn));
     }
 
-    // Calls |fn| on the original token and on synonyms until |fn| return false.
     template <typename Fn>
-    std::enable_if_t<std::is_same<std::result_of_t<Fn(String)>, bool>::value> ForEach(
+    std::enable_if_t<std::is_same<std::result_of_t<Fn(String)>, void>::value>
+    ForOriginalAndSynonyms(Fn && fn) const
+    {
+      fn(m_original);
+      ForEachSynonym(std::forward<Fn>(fn));
+    }
+
+    template <typename Fn>
+    std::enable_if_t<std::is_same<std::result_of_t<Fn(String)>, bool>::value, bool> AnyOfSynonyms(
         Fn && fn) const
     {
-      if (!fn(m_original))
-        return;
-      for (auto const & synonym : m_synonyms)
-      {
-        if (!fn(synonym))
-          return;
-      }
+      return std::any_of(m_synonyms.begin(), m_synonyms.end(), std::forward<Fn>(fn));
     }
+
+    template <typename Fn>
+    std::enable_if_t<std::is_same<std::result_of_t<Fn(String)>, bool>::value, bool>
+    AnyOfOriginalOrSynonyms(Fn && fn) const
+    {
+      if (fn(m_original))
+        return true;
+      return std::any_of(m_synonyms.begin(), m_synonyms.end(), std::forward<Fn>(fn));
+    }
+
+    String const & GetOriginal() const { return m_original; }
 
     void Clear()
     {
@@ -63,11 +75,16 @@ public:
       m_synonyms.clear();
     }
 
+  private:
+    friend std::string DebugPrint(QueryParams::Token const & token);
+
     String m_original;
     std::vector<String> m_synonyms;
   };
 
   QueryParams() = default;
+
+  void SetQuery(std::string const & query) { m_query = query; }
 
   template <typename It>
   void InitNoPrefix(It tokenBegin, It tokenEnd)
@@ -76,6 +93,7 @@ public:
     for (; tokenBegin != tokenEnd; ++tokenBegin)
       m_tokens.emplace_back(*tokenBegin);
     m_typeIndices.resize(GetNumTokens());
+    AddSynonyms();
   }
 
   template <typename It>
@@ -84,9 +102,10 @@ public:
     Clear();
     for (; tokenBegin != tokenEnd; ++tokenBegin)
       m_tokens.emplace_back(*tokenBegin);
-    m_prefixToken.m_original = prefix;
+    m_prefixToken = Token(prefix);
     m_hasPrefix = true;
     m_typeIndices.resize(GetNumTokens());
+    AddSynonyms();
   }
 
   size_t GetNumTokens() const { return m_hasPrefix ? m_tokens.size() + 1 : m_tokens.size(); }
@@ -121,6 +140,11 @@ public:
 private:
   friend std::string DebugPrint(QueryParams const & params);
 
+  void AddSynonyms();
+
+  // The original query without any normalizations.
+  std::string m_query;
+
   std::vector<Token> m_tokens;
   Token m_prefixToken;
   bool m_hasPrefix = false;
@@ -131,6 +155,4 @@ private:
   Langs m_langs;
   int m_scale = scales::GetUpperScale();
 };
-
-std::string DebugPrint(QueryParams::Token const & token);
 }  // namespace search

@@ -33,7 +33,8 @@ class ReadManager
 {
 public:
   ReadManager(ref_ptr<ThreadsCommutator> commutator, MapDataProvider & model,
-              bool allow3dBuildings, bool trafficEnabled, EngineContext::TIsUGCFn && isUGCFn);
+              bool allow3dBuildings, bool trafficEnabled, bool isolinesEnabled,
+              EngineContext::TIsUGCFn && isUGCFn);
 
   void Start();
   void Stop();
@@ -50,6 +51,7 @@ public:
   void Allow3dBuildings(bool allow3dBuildings);
 
   void SetTrafficEnabled(bool trafficEnabled);
+  void SetIsolinesEnabled(bool isolinesEnabled);
 
   void SetDisplacementMode(int displacementMode);
 
@@ -62,6 +64,8 @@ public:
 
   void EnableUGCRendering(bool enabled);
 
+  MapDataProvider & GetMapDataProvider() { return m_model; }
+
 private:
   void OnTaskFinished(threads::IRoutine * task);
   bool MustDropAllTiles(ScreenBase const & screen) const;
@@ -73,12 +77,13 @@ private:
 
   MapDataProvider & m_model;
 
-  drape_ptr<threads::ThreadPool> m_pool;
+  drape_ptr<base::thread_pool::routine::ThreadPool> m_pool;
 
   ScreenBase m_currentViewport;
   bool m_have3dBuildings;
   bool m_allow3dBuildings;
   bool m_trafficEnabled;
+  bool m_isolinesEnabled;
   int m_displacementMode;
   bool m_modeChanged;
   bool m_ugcRenderingEnabled;

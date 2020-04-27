@@ -4,13 +4,12 @@ add_definitions("-DOMIM_UNIT_TEST_WITH_QT_EVENT_LOOP")
 
 set(
   SRC
-  country_info_getter_test.cpp
-  country_name_getter_test.cpp
+  country_info_getter_tests.cpp
+  country_name_getter_tests.cpp
   fake_map_files_downloader.cpp
   fake_map_files_downloader.hpp
   helpers.cpp
   helpers.hpp
-  queued_country_tests.cpp
   simple_tree_test.cpp
   storage_tests.cpp
   task_runner.cpp
@@ -28,12 +27,13 @@ omim_link_libraries(
   drape_frontend
   shaders
   map
-  traffic
+  ge0
   storage
   drape
   generator
   search
   routing
+  traffic
   routing_common
   ugc
   kml
@@ -60,9 +60,17 @@ omim_link_libraries(
   pugixml
   stb_image
   sdf_image
+  vulkan_wrapper
   ${Qt5Widgets_LIBRARIES}
   ${Qt5Network_LIBRARIES}
   ${LIBZ}
 )
+
+if (PLATFORM_LINUX)
+  omim_link_libraries(
+    ${PROJECT_NAME}
+    dl
+  )
+endif()
 
 link_qt5_core(${PROJECT_NAME})

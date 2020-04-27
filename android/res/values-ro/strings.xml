@@ -4,8 +4,6 @@
 <!-- Language: ro -->
 <resources>
 	<!-- SECTION: Strings -->
-	<!-- About button text (should be short) -->
-	<string name="about">Despre</string>
 	<!-- Button text (should be short) -->
 	<string name="back">Înapoi</string>
 	<!-- Button text (should be short) -->
@@ -52,7 +50,6 @@
 	<string name="miles">Mile</string>
 	<!-- View and button titles for accessibility -->
 	<string name="core_my_position">Poziția mea</string>
-	<string name="ok">OK</string>
 	<!-- Settings/Downloader - No free space dialog message -->
 	<string name="free_disk_space_for_country_x">Vă rugăm să eliberați niște spațiu pe dispozitivul dvs. mai întâi, pentru a descărca %s.</string>
 	<!-- Leave Review dialog - Not now button (remind me later) -->
@@ -71,8 +68,6 @@
 	<string name="touch_to_download">Atingeți pentru a descărca.</string>
 	<!-- Settings/Downloader - 3G download warning dialog confirm button -->
 	<string name="use_cellular_data">Da</string>
-	<!-- Settings/Downloader - No internet connection dialog message -->
-	<string name="use_wifi_recommendation_text">Vă recomandăm să utilizați WiFi pentru a descărca hărți mari.</string>
 	<!-- Choose measurement on first launch alert - title -->
 	<string name="which_measurement_system">Ce sistem de măsură preferați?</string>
 	<!-- Location services are disabled by user alert - message -->
@@ -254,8 +249,6 @@
 	<string name="my_position_share_sms">Hei, îmi poți vedea poziția actuală pe MAPS.ME! %1$s sau %2$s Nu ai hărțile offline? Descarcă de aici: http://maps.me/get</string>
 	<!-- Subject for emailed bookmark -->
 	<string name="bookmark_share_email_subject">Hei, poți vedea care este poziția mea pe harta MAPS.ME!</string>
-	<!-- Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me -->
-	<string name="bookmark_share_email">Salut,\n\nAm fixat poziția: %1$s pe MAPS.ME, hărțile offline din întreaga lume. Clic pe acest link %2$s sau pe acesta %3$s pentru a vedea locul pe hartă.\n\nMulțumesc.</string>
 	<!-- Subject for emailed position -->
 	<string name="my_position_share_email_subject">Hei, îmi poți vedea poziția actuală pe harta MAPS.ME!</string>
 	<!-- Share my position using EMail, %1$@ is ge0:// and %2$@ is http://ge0.me link WITHOUT NAME -->
@@ -358,12 +351,6 @@
 	<string name="route">Traseu</string>
 	<!-- category title -->
 	<string name="routes">Trasee</string>
-	<!-- Show on first launch. -->
-	<string name="maps_licence_info">Această aplicație utilizează date geografice (inclusiv hărți, liste de firme, puncte de interes, frontiere de țări și regiuni etc.) preluate din proiectul OpenStreetMap. Nu garantăm uniformitatea, acuratețea, integralitatea sau aplicabilitatea datelor OpenStreetMap.</string>
-	<!-- Show on first launch. -->
-	<string name="agree">Sunt de acord</string>
-	<!-- Show on first launch -->
-	<string name="disagree">Nu sunt de acord</string>
 	<!-- text of notification -->
 	<string name="download_map_notification">Descărcați harta locului în care vă aflați</string>
 	<!-- Dialog for transferring maps from lite to pro. -->
@@ -555,6 +542,22 @@
 	<string name="brown">Maro</string>
 	<!-- pink color -->
 	<string name="pink">Roz</string>
+	<!-- deep purple color -->
+	<string name="deep_purple">Purpuriu închis</string>
+	<!-- light blue color -->
+	<string name="light_blue">Albastru deschis</string>
+	<!-- cyan color -->
+	<string name="cyan">Albastru-verziu</string>
+	<!-- teal color -->
+	<string name="teal">Smarald</string>
+	<!-- lime color -->
+	<string name="lime">Var</string>
+	<!-- deep orange color -->
+	<string name="deep_orange">Portocaliu închis</string>
+	<!-- gray color -->
+	<string name="gray">Gri</string>
+	<!-- blue gray color -->
+	<string name="blue_gray">Gri albăstriu</string>
 	<!-- Wi-Fi available -->
 	<string name="WiFi_available">Da</string>
 
@@ -788,8 +791,6 @@
 	<string name="onboarding_location_message">Ca să puteți naviga și folosi alte funcții, trebuie să accesăm poziționarea dvs. geografică.</string>
 	<string name="onboarding_permissions_title">Permiteți aplicației MAPS.ME accesul la spațiul de stocare și locație</string>
 	<string name="onboarding_permissions_message">Puteți să descărcați hărți, să vedeți locurile și starea traficului din apropiere și să utilizați navigația.</string>
-	<string name="onboarding_welcome_title">Bun venit în MAPS.ME</string>
-	<string name="onboarding_welcome_first_subtitle">Hărți gratuite, accesibile și disponibile offline, alături de navigație pas cu pas.</string>
 	<string name="onboarding_welcome_second_subtitle">Lansând aplicația confirmați că sunteți de acord cu &lt;a href="%1$s">Condițiile de utilizare&lt;/a> și &lt;a href="%2$s">Politica de confidențialitate&lt;/a>.</string>
 	<string name="dialog_incorrect_feature_position">Schimbare locație</string>
 	<string name="message_invalid_feature_position">În acest loc nu poate fi localizat un obiect</string>
@@ -870,6 +871,7 @@
 	<string name="minute">min</string>
 	<string name="placepage_place_description">Descriere</string>
 	<string name="placepage_more_button">Mai multe</string>
+	<string name="placepage_more_reviews_button">Mai multe recenzii</string>
 	<string name="book_button">Rezervare</string>
 	<string name="placepage_call_button">Apel</string>
 	<string name="placepage_edit_bookmark_button">Editare marcaj</string>
@@ -1023,8 +1025,6 @@
 	<string name="banner_geerbest_message">Căutare instantanee printre peste 50.000 de articole la prețuri mici.</string>
 	<string name="banner_rentalcars_title">Închiriere mașini online</string>
 	<string name="banner_rentalcars_message">800 de firme care închiriază mașini în peste 49.000 de locații de închiriere mașini.</string>
-	<string name="banner_viator_title">Căutare excursii online</string>
-	<string name="banner_viator_message">Căutați în peste 50.000 de excursii din întreaga lume.</string>
 	<!-- december -->
 	<string name="whatsnew_traffic">Date privind traficul în 36 de țări</string>
 	<!-- december -->
@@ -1066,8 +1066,6 @@
 	<string name="whatsnew_smaller_mwm_message">Hărţile necesită cu 20% mai puțin spațiu de stocare.</string>
 	<string name="whatsnew_waypoints_title">Puncte de schimbare a direcției de pe traseu</string>
 	<string name="whatsnew_waypoints_message">Atingeți locații pentru a adăuga puncte de schimbare a direcției pe traseu.</string>
-	<string name="whatsnew_viator_title">Rezervați un tur</string>
-	<string name="whatsnew_viator_message">Selectați dintre tururile populare din orașe turistice din întreaga lume.</string>
 	<string name="whatsnew_driving_style_title">Un nou stil de hartă pentru condus</string>
 	<string name="whatsnew_driving_style_message">Modul de navigare din mașină este acum mai ușor de utilizat.</string>
 	<string name="more_on_bookingcom">Mai multe pe Booking.com</string>
@@ -1124,7 +1122,6 @@
 	<string name="settings_card_memory">Card</string>
 	<string name="settings_storage_available">%s disponibil</string>
 	<string name="toast_location_permission_denied">Permisiune de accesare a locației respinsă</string>
-	<string name="place_page_viator_title">Atracții și tururi</string>
 	<string name="button_use">Utilizare</string>
 	<string name="planning_route_manage_route">Administrare traseu</string>
 	<string name="button_plan">Planificare</string>
@@ -1139,8 +1136,6 @@
 	<string name="add_my_position">Adaugă poziția mea</string>
 	<string name="choose_start_point">Alege un punct de plecare</string>
 	<string name="choose_destination">Alege o destinație</string>
-	<string name="preloader_viator_title">Descoperă tururi și activități neobișnuite</string>
-	<string name="preloader_viator_message">Tururi, activități, obiective turistice și multe altele</string>
 	<string name="preloader_viator_button">Află mai multe</string>
 	<string name="whats_new_title_route">Au fost îmbunătățite traseele de biciclete și de pietoni</string>
 	<string name="whats_new_message_route">Am remediat erorile, am făcut crearea traseelor mai rapidă și am adăugat opriri intermediare</string>
@@ -1151,9 +1146,6 @@
 	<string name="placepage_no_reviews">Nicio recenzie</string>
 	<string name="placepage_reviewed">Ați recenzat deja acest loc</string>
 	<string name="placepage_summary_rating">Calificativ sumar</string>
-	<plurals name="placepage_summary_rating_description">
-	  <item quantity="other">Bazat pe %d recenzii</item>
-	</plurals>
 	<string name="placepage_rate_comment">Atingeți pentru a evalua și a recenza acest loc.</string>
 	<string name="placepage_rate_horrible">Oribil</string>
 	<string name="placepage_rate_bad">Rău</string>
@@ -1196,8 +1188,6 @@
 	<string name="discovery_button_subtitle_attractions">Atracții</string>
 	<string name="discovery_button_subtitle_eat_and_drink">Restaurante și baruri</string>
 	<string name="discovery_button_subtitle_local_guides">Ghizi locali</string>
-	<string name="discovery_button_viator_offline_title">Descoperă tururi și activități neobișnuite</string>
-	<string name="discovery_button_viator_offline_message">Tururi, activități, panorame și multe altele.</string>
 	<string name="discovery_button_viator_error_title">Eroare la încărcarea datelor</string>
 	<string name="discovery_button_other_error_message">Eroare la încărcarea datelor</string>
 	<string name="discovery_button_other_loading_message">Datele se încarcă</string>
@@ -1237,12 +1227,10 @@
 	<string name="downloader_percent">%1$s (%2$s din %3$s)</string>
 	<string name="downloader_process">Descărcare %s...</string>
 	<string name="downloader_applying">Aplicare %s...</string>
-	<string name="transit_not_found">Navigarea în tranzit prin această regiune nu este disponibilă încă</string>
 	<string name="whats_new_title_hotel_filter">Sunt disponibile filtre noi pentru hoteluri!</string>
 	<string name="whats_new_message_hotel_filter">Rezervați camere la hoteluri disponibile la datele dorite de dvs.! Utilizați filtrele de cazare și plecare</string>
 	<string name="whats_new_title_ugc_travel">Comunicați-vă experiențele altor călători!</string>
 	<string name="whats_new_message_ugc_travel">Evaluați și recenzați locurile pe care le-ați vizitat!</string>
-	<string name="dialog_pedestrian_route_is_long">Ruta pietonală este prea lungă</string>
 	<string name="dialog_message_transit_not_found_connection">Planifică o rută într-o singură rețea de tranzit</string>
 	<string name="bookmarks_error_message_share_general">Imposibil de distribuit din cauza unei erori a aplicației</string>
 	<string name="bookmarks_error_title_share_empty">Eroare la distribuire</string>
@@ -1347,8 +1335,8 @@
 	<string name="error_already_downloaded">Lista aceasta a fost descărcată deja</string>
 	<string name="guides">Ghiduri</string>
 	<string name="guide_downloaded_title">Ghidul a fost descărcat cu succes</string>
-	<string name="download_guides">Descarcă ghiduri</string>
-	<string name="cached_guides_placeholder_subtitle">Ghiduri offline detaliate pentru orice tip de călătorie. Alege-l pe cel care ți se potrivește cel mai bine și descarcă-l direct pe hartă. Vei avea nevoie de conexiune la internet pentru a descărca ghidurile.</string>
+	<!-- as few symbols as possible -->
+	<string name="download_guides">Găsește ghiduri</string>
 	<string name="guides_groups_cached">Ghiduri descărcate</string>
 	<string name="subtitle_error_downloading_guide">Ghidul nu a fost descărcat</string>
 	<string name="error_already_downloaded_guide">Acest ghid a fost deja descărcat</string>
@@ -1387,7 +1375,6 @@
 	<string name="restore_success_alert">Abonamentul a fost restabilit</string>
 	<string name="restore_error_alert">A apărut o eroare la restabilirea abonamentului</string>
 	<string name="restore_no_subscription_alert">Nu există abonamente active</string>
-	<string name="subscription_terms">Plata va fi percepută din contul dvs. iTunes la confirmarea achiziției. Abonamentul va fi reînnoit în mod automat, cu excepția cazului în care reînnoirea automată este oprită cu cel puțin 24 de ore înainte de sfârșitul perioadei curente. Plata va fi percepută din contul dvs. în conformitate cu planul dvs. de reînnoire într-un interval de timp de 24 de ore înainte de încheierea perioadei curente. Puteți administra sau dezactiva reînnoirea automată din setările contului dvs. Apple ID în orice moment al achiziției.</string>
 	<string name="subscriptions_title">Abonamente</string>
 	<string name="manage_subscription">Administrare abonament</string>
 	<string name="sharing_options">Setările accesului</string>
@@ -1397,7 +1384,6 @@
 	<string name="hide_from_map">Ascundeți de pe hartă</string>
 	<string name="ugc_route_tags_screen_label">Alegeți tag-urile</string>
 	<string name="ugc_route_tags_progress_msg">Încărcăm tag-urile…</string>
-	<string name="ugc_route_tags_desc">Vă rugăm, alegeți tag-urile pentru a ajuta alți turiști să găsească ghidul dvs. Acest lucru este obligatoriu.</string>
 	<string name="public_access">Acces public</string>
 	<string name="limited_access">Acces privat</string>
 	<string name="upload_and_publish_desc">Acest ghid va fi încărcat în catalogul public MAPS.ME și va fi disponibil altor utilizatori</string>
@@ -1420,7 +1406,7 @@
 	<string name="unable_upload_errorr_title">Încărcarea fișierului nu s-a primit</string>
 	<string name="unable_upload_error_subtitle_edited">Fișierul a fost editat prin intermediul aplicației web</string>
 	<string name="unable_upload_error_subtitle_broken">Fișierul a fost deteriorat și nu poate fi încărcat. Vă rugăm, alegeți alt fișier.</string>
-	<string name="buy_btn">Cumpărați pentru %s</string>
+	<string name="buy_btn">Cumpără un ghid la preț de %s</string>
 	<string name="download_guide_progress">Ghidul de călătorie se încarcă…</string>
 	<string name="price_error_title">Imposibil de aflat prețul</string>
 	<string name="price_error_subtitle">Vă rugăm să încercați încă odată peste câteva minute</string>
@@ -1468,12 +1454,326 @@
 	<string name="whatsnew_paid_routes_title">Mai multe experiențe noi!</string>
 	<string name="whatsnew_paid_routes_message">Pe lângă rutele gratuite, în catalogul nostru am adăugat 3 categorii de rute plătite. Peste 700 de rute noi!</string>
 	<string name="whats_new_ugc_routes_title_android_only">Este ușor să vă împărtășiți impresiile</string>
+	<string name="ugc_thanks_message_auth">Comentariul dvs. a fost salvat</string>
+	<string name="ugc_thanks_message_not_auth">Înregistrați-vă pentru a lăsa comentarii</string>
+	<string name="notification_leave_review_v2_title">Lăsați comentarii și ajutați călătorii!</string>
+	<string name="error_public_not_enought_title">Etichete insuficiente</string>
+	<string name="error_public_not_enought_subtitle">Pe traseul dvs. trebuie să fie cel puțin 3 etichete, pentru a le încărca în catalogul public</string>
+	<string name="bookmark_public_upload_alert_title">Sunteți doar la câțiva pași de încărcarea traseului dvs. în catalogul MAPS.ME!</string>
+	<string name="bookmark_public_upload_alert_subtitle">Verificați ca traseul dvs. să aibă un nume și o descriere, iar etichetele să conțină informație despre locurile date. Datorită acestui fapt, utilizatorii vor găsi traseul și vor putea să se folosească de el în timpul călătoriei.</string>
+	<string name="bookmark_public_upload_alert_ok_button">Da, totul e ok!</string>
+	<string name="name_title">Introduceți denumirea</string>
+	<string name="name_placeholder">de exemplu, Pub-urile din Londra</string>
+	<string name="name_comment1">Dați un nume traseului, pentru ca utilizatorii să-l poată găsi cu ușurință, de exemplu \"Pub-urile din Londra\"</string>
+	<string name="name_comment2">Denumirea nu trebuie să conțină simboluri speciale. Nu publicați trasee cu denumirea \"Etichetele mele\"</string>
+	<string name="description_guide">Descriere</string>
+	<string name="description_title">Introduceți descrierea traseului</string>
+	<string name="description_placeholder">Descrieți detaliat traseul</string>
+	<string name="description_comment1">Descrierea traseului trebuie să conțină cel puțin 30 de simboluri.</string>
+	<string name="ugc_route_tags_desc">Vă rugăm să selectați tag-urile, pentru a ajuta alți călători să găsească ghidul dvs. Este obligatoriu. Nu mai mult de %s tag-uri.</string>
+	<string name="html_format_error_title">Traseul dvs. nu a fost publicat</string>
+	<string name="html_format_error_subtitle">Vă rugăm să verificați ca numele și descrierea etichetelor pe traseu să aibă un format corect. Îl puteți verifica în editorul nostru după butonul \"Editare online\" de mai jos.</string>
+	<string name="web_editor_description">Încărcați traseul și primiți link-ul pentru editarea la computer</string>
+	<string name="edit_on_web_confirm">Editare online</string>
+	<string name="update_guide">De încărcat o nouă versiune</string>
+	<string name="direct_link_updating_text">Actualizăm traseul…</string>
+	<string name="direct_link_updating_success">Traseul este actualizat</string>
+	<string name="unable_get_direct_link_desc">Puteți face schimb de traseu cu ajutorul unul link public</string>
+	<string name="any_access_update_alert_title">Posibil că există o nouă versiune a traseului</string>
+	<string name="any_access_update_alert_message">Vreți să actualizați etichetele? Noua versiune va fi accesibilă la același link.</string>
+	<string name="any_access_update_alert_update">Actualizare</string>
+	<string name="public_or_limited_access_after_edit_online_error_title">Ați editat traseul online</string>
+	<string name="public_or_limited_access_after_edit_online_error_message">În continuare editați, publicați și faceți schimb de trasee cu prietenii prin intermediul site-ului nostru</string>
+	<string name="power_managment_title">Modul de economisire a energiei</string>
+	<string name="power_managment_description">Dacă este pornit modul de economisire a energiei, aplicația va deconecta funcțiile care consumă multă energie în dependență de încărcarea bateriei telefonice</string>
+	<string name="power_managment_setting_never">Niciodată</string>
+	<string name="power_managment_setting_auto">Auto</string>
+	<string name="power_managment_setting_manual_max">Economisire maximă a energiei</string>
+	<string name="enable_logging_warning_message">Aceasta opțiune se pornește pentru logarea acțiunii în scopul diagnosticării. Aceasta va ajuta echipei să găsească problemele legate de aplicație. Conectați opțiunea numai la solicitarea serviciului de suport MAPS.ME.</string>
+	<string name="html_error_upload_message_try_again">Verificați accesul la rețea și încercați încă o dată</string>
+	<string name="html_error_upload_title_try_again">Aveți o problemă cu conexiunea dvs. la internet</string>
+	<string name="notification_leave_review_v2_android_short_title">Lăsați un comentariu și ajutați călătorii!</string>
+	<string name="notifications_illegal_alert_disable_button">Porniți notificarea</string>
+	<string name="access_rules_author_only">Se editează online</string>
+	<string name="privacy_settings_menu">Setarea confidențialității</string>
+	<string name="gdpr_request_setting">Primiți ID pentru GDPR-ul solicitării</string>
+	<string name="gdpr_request_window_title">ID dvs.: %s.</string>
+	<string name="gdpr_request_window_message">Vă rugăm să copiați și să expediați cererea pe support\@maps.me</string>
+	<string name="gdpr_request_window_copy">Copierea ID</string>
+	<string name="unable_upadate_error_title">Nu s-a actualizat traseul</string>
+	<string name="unable_upadate_error_message">Au intervenit erori de actualizare. Verificați modificările și încercați încă o dată</string>
+	<string name="whats_new_wiki_title">Ce loc este acesta?</string>
+	<string name="whats_new_wiki_message">În fișierele locurilor atractive, am adăugat articole din Wikipedia.org, accesibile offline</string>
+	<string name="driving_options_title">Setarea ocolirii</string>
+	<string name="driving_options_subheader">De evitat pe orice traseu</string>
+	<string name="avoid_tolls">Drumuri cu plată</string>
+	<string name="avoid_unpaved">Drum de țară</string>
+	<string name="avoid_ferry">Trecere cu bac</string>
+	<string name="avoid_motorways">Magistrale</string>
+	<string name="unable_to_calc_alert_title">Imposibil de elaborat un traseu</string>
+	<string name="unable_to_calc_alert_subtitle">Din păcate, nu reușim să elaborăm un traseu cu opțiunile alese. Modificați setările și încercați încă o dată</string>
+	<string name="define_to_avoid_btn">Setați căile de ocolire</string>
+	<string name="change_driving_options_btn">Setarea ocolirii este activată</string>
+	<string name="toll_road">Drum cu plată</string>
+	<string name="unpaved_road">Drum de țară</string>
+	<string name="ferry_crossing">Trecere cu bac</string>
+	<string name="operated_by">Se gestionează \"%s\"</string>
+	<string name="avoid_toll_roads_placepage">De evitat drumurile cu plată</string>
+	<string name="avoid_unpaved_roads_placepage">De evitat drumurile de țară</string>
+	<string name="avoid_ferry_crossing_placepage">De evitat trecerile cu bac</string>
+	<string name="cached_guides_placeholder_subtitle">Ghiduri pregătire de MAPS.ME sunt locuri selectare cu fotografii și descrieri, care se reflectă pe hartă și sunt accesibile off-line.</string>
+	<string name="guides_catalogue_title">Catalogul ghidurilor</string>
+	<string name="download_guides_button">De trecut în catalog</string>
+	<plurals name="placepage_summary_rating_description">
+	  <item quantity="one">În baza %d comentariului</item>
+	  <item quantity="other">În baza %d comentariilor</item>
+	</plurals>
+	<string name="type.cuisine.uzbek">Bucătărie uzbecă</string>
+	<string name="onboarding_welcome_title">Planifică și călătorește cu MAPS.ME</string>
+	<string name="onboarding_welcome_first_subtitle">Salvați locurile interesante, rezervați hotele, elaborați trasee</string>
+	<string name="onboarding_guide_direct_download_title">Ghidul este gata pentru a fi încărcat</string>
+	<string name="onboarding_guide_direct_download_subtitle">Se va reflecta pe hartă și va funcționa on-line</string>
+	<string name="onboarding_guide_direct_download_button">De descărcat</string>
+	<string name="onboarding_bydeeplink_guide_title">Ghiduri elaborate în MAPS.ME</string>
+	<string name="onboarding_bydeeplink_guide_subtitle">Locuri alese cu fotografii și descrieri se reflectă pe hartă și sunt accesibile off-line.</string>
+	<string name="whats_new_auto_update_bydeeplink_title">Înainte de a trece la ghiduri…</string>
+	<string name="whats_new_auto_update_bydeeplink_message">Actualizați hărțile pentru a primi informație actuală despre obiecte!</string>
+	<string name="whats_new_auto_update_and_proceed_button_size">De actualizat (%s) și de continuat</string>
+	<string name="whatsnew_toll_unpaved_title">Elaborați trasee auto ținând cont de toate tipurile de drumuri</string>
+	<string name="whatsnew_toll_unpaved_message">Selectați căile de ocolire pe drumurile cu plată, de țară și trecerile cu bacul</string>
+	<string name="whatsnew_new_catalogue_title">Paginile actualizate ale catalogului</string>
+	<string name="whatsnew_new_catalogue_message">Am adăugat informație detaliată privind ghidurile partenerilor, pentru ca selectarea traseelor să fie simplă și comodă</string>
+	<string name="purchase_please_wait_toast">Vă rugăm să nu părăsiți ecranul până la finalizarea cumpărăturii</string>
+	<string name="trip_start">Mergem</string>
+	<string name="pick_destination">Scop</string>
+	<string name="follow_my_position">Centrați</string>
+	<string name="search_results">Rezultatul căutării</string>
+	<string name="then_turn">După</string>
+	<string name="redirect_route_alert">Doriți să refaceți traseul?</string>
+	<string name="redirect_route_yes">Da</string>
+	<string name="redirect_route_no">Nu</string>
+	<string name="trip_finished">Ați sosit!</string>
+	<string name="keyboard_availability_alert">Tastiera nu este accesibilă în timpul deplasării</string>
+	<string name="dialog_routing_change_start_carplay">Este imposibil de elabora traseul de la punctul de aflare</string>
+	<string name="dialog_routing_change_end_carplay">Este imposibil de elaborat traseu până la punctul de sosire. Selectați altul</string>
+	<string name="dialog_routing_check_gps_carplay">Nu este semnal GPS. Mergeți la loc deschis</string>
+	<string name="dialog_routing_unable_locate_route_carplay">Este imposibil de elaborat un traseu. Selectați alte puncte ale traseului</string>
+	<string name="dialog_routing_download_files_carplay">Pentru noi trasee, încărcați hărțile lipsa pe dispozitivul dvs.</string>
+	<string name="dialog_routing_system_error_carplay">Eroare. Restartați aplicația</string>
+	<string name="dialog_routing_rebuild_from_current_location_carplay">Traseul se va reface de la locul actual al aflării dvs</string>
+	<string name="dialog_routing_rebuild_for_vehicle_carplay">Traseul va fi modificat cu unul automobilistic</string>
+	<string name="ok">Ok</string>
+	<string name="booking_button_toolbar">Selectează hotel pe hartă</string>
+	<string name="popup_booking_download_guides_title">Rezervare hotel?</string>
+	<string name="popup_booking_download_guides_message">Planificați traseul cu ghidurile MAPS.ME</string>
+	<string name="popup_mwm_download_guides_title">Ghiduri offline</string>
+	<string name="popup_mwm_download_guides_cta">Selectează</string>
+	<string name="popup_mwm_download_guides_cta_1">Privește</string>
+	<string name="gallery_pp_download_guides_offline_title">Planifică odihna ta cu MAPS.ME!</string>
+	<string name="gallery_pp_download_guides_offline_subtitle">Nu ratați cel mai important cu traseele de la călători experimentați</string>
+	<string name="gallery_pp_download_guides_offline_cta">Conectare Internet</string>
+	<string name="gallery_pp_download_guides_title">Ghiduri</string>
+	<string name="native_screen_subscription_title">Acces la 2000+ghiduri!</string>
+	<string name="native_screen_subscription_message">O călătorie de neuitat, oriunde și cu oricine ai călători</string>
+	<string name="annual_subscription_title">Anual</string>
+	<string name="montly_subscription_title">Lunar</string>
+	<string name="annual_subscription_message">12 luni de acces nelimitat</string>
+	<string name="montly_subscription_message">1 lună de acces nelimitat</string>
+	<string name="subscription_success_dialog_title">Vă mulțumim pentru abonare!</string>
+	<string name="subscription_success_dialog_message">Acum aveți un acces nelimitat la catalogul de ghiduri</string>
+	<string name="renewal_screen_title">Termenul de valabilitate a abonării a expirat</string>
+	<string name="renewal_screen_message">Toate ghidurile, descărcate la abonare vor fi eliminate. Doriți să restabiliți abonarea și să le păstrați?</string>
+	<string name="renewal_screen_button_restore">Da, restabilire</string>
+	<string name="renewal_screen_button_cancel">Nu, eliminare ghiduri</string>
+	<string name="subscription_error_ping_title">Nu a fost posibil de făcut cumpărătura</string>
+	<string name="subscription_error_message">Acum serviciul nu este disponibil în regiunea dvs. Vă rugăm să încercați mai târziu</string>
+	<string name="subscription_error_button">Clar</string>
+	<string name="timeout_error_title">Ups, timpul a expirat!</string>
+	<string name="timeout_error_message">Server-ul nostru nu răspunde. Vă rugăm să verificați conectarea la Internet și să încercați din nou.</string>
+	<string name="per_month">/lună</string>
+	<string name="per_year">/an</string>
+	<string name="buy_btn_for_subscription">Acces complet de la %s</string>
+	<string name="buy_btn_for_subscription_1">Cumpără toate ghidurile la preț de %s</string>
+	<string name="buy_btn_for_subscription_ios_only_mo">Acces complet de %s/lună</string>
+	<string name="buy_btn_for_subscription_ios_only_year">Acces complet de %s/an</string>
+	<string name="subscription_terms_guides">Plata se va efectua de pe contul dvs. iTunes la confirmarea cumpărăturii. Abonamentul va fi reînnoit automat, cu excepția cazului în care reînnoirea automată este oprită cu cel puțin 24 de ore înainte de sfârșitul perioadei curente. Banii vor fi debitați din contul dvs. în conformitate cu planul dvs. de tarifare de reînnoire în termen de 24 de ore de la sfârșitul perioadei curente. Aveți posibilitatea să gestionați reînnoirea automată sau s-o dezactivați în setările contului dvs. Apple ID în orice moment după cumpărare. Veți putea utiliza ghidurile descărcate prin abonament numai în perioada de valabilitate a acestuia. La expirarea a 30 de zile de la încheierea abonamentului, ghidurile cu toate marcajele vor fi șterse automat.</string>
+	<string name="subscription_terms">Plata va fi percepută din contul dvs. iTunes la confirmarea achiziției. Abonamentul va fi reînnoit în mod automat, cu excepția cazului în care reînnoirea automată este oprită cu cel puțin 24 de ore înainte de sfârșitul perioadei curente. Plata va fi percepută din contul dvs. în conformitate cu planul dvs. de reînnoire într-un interval de timp de 24 de ore înainte de încheierea perioadei curente. Puteți administra sau dezactiva reînnoirea automată din setările contului dvs. Apple ID în orice moment al achiziției.</string>
+	<string name="whatsnew_carplay_title">Autonavigare MAPS.ME în CarPlay!</string>
+	<string name="whatsnew_carplay_message">Marcaje, căutare, camere-radar și setări de ocolire - totul funcționează fără Internet</string>
+	<string name="whatsnew_subscription_title">Descoperă lumea la abonament!</string>
+	<string name="whatsnew_subscription_message">Acces nelimitat la catalogul traseelor sunt mai convenabile decât achizițiile unice</string>
+	<string name="whatsnew_carnavi_fixes_for_android_title">Actualizarea navigării</string>
+	<string name="whatsnew_carnavi_fixes_for_android_message">Am îmbunătățit elaborarea traseelor până la punctele, amplasate departe de drum</string>
+	<string name="avoid_unpaved_carplay_1">Fără neasfal</string>
+	<string name="avoid_unpaved_carplay_2">Fără neasfaltat</string>
+	<string name="avoid_ferry_carplay_1">Fără bacuri</string>
+	<string name="avoid_ferry_carplay_2">Fără bacuri</string>
+	<string name="avoid_tolls_carplay_1">Gratis</string>
+	<string name="avoid_tolls_carplay_2">Gratis</string>
+	<string name="speedcams_alert_title_carplay_1">Cameră video</string>
+	<string name="speedcams_alert_title_carplay_2">Info camere</string>
+	<string name="download_map_carplay">Vă rugăm să descărcați hărțile în aplicația MAPS.ME de pe dispozitivul dvs.</string>
+	<string name="carplay_roundabout_exit">%s ieșire</string>
+	<!-- max. 10 symbols, both iOS and Android -->
+	<string name="sort">Sortați…</string>
+	<!-- Android, title, max 20-22 symbols -->
+	<string name="sort_bookmarks">Sortați inscripțiile</string>
+	<!-- iOS -->
+	<string name="sort_default">Sortați la modul implicit</string>
+	<string name="sort_type">Sortați după dip</string>
+	<string name="sort_distance">Sortați după distanță</string>
+	<string name="sort_date">Sortați după dată</string>
+	<!-- Android -->
+	<string name="by_default">Mod implicit</string>
+	<!-- Android -->
+	<string name="by_type">După tip</string>
+	<!-- Android -->
+	<string name="by_distance">După distanță</string>
+	<!-- Android -->
+	<string name="by_date">După dată</string>
+	<string name="week_ago_sorttype">O săptămână în urmă</string>
+	<string name="month_ago_sorttype">O lună în urmă</string>
+	<string name="moremonth_ago_sorttype">Mai mult de o lună în urmă</string>
+	<string name="moreyear_ago_sorttype">Mai mult de un an în urmă</string>
+	<string name="near_me_sorttype">Alături de mine</string>
+	<string name="others_sorttype">Altele</string>
+	<string name="food_places">Mâncare</string>
+	<string name="tourist_places">Locuri faimoase</string>
+	<string name="museums">Muzeu</string>
+	<string name="parks">Parcuri</string>
+	<string name="swim_places">Înot</string>
+	<string name="mountains">Munți</string>
+	<string name="animals">Animale</string>
+	<string name="hotels">Hoteluri</string>
+	<string name="buildings">Clădiri</string>
+	<string name="money">Bani</string>
+	<string name="shops">Magazine</string>
+	<string name="parkings">Parcări</string>
+	<string name="fuel_places">Benzinării</string>
+	<string name="water">Apă</string>
+	<string name="medicine">Medicină</string>
+	<string name="search_in_the_list">Căutați în listă</string>
+	<string name="view_on_map_bookmarks">Pe hartă</string>
+	<string name="more_bookmarks">Încă…</string>
+	<string name="no_items_found">Nu a fost găsit nimic</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_edit_list">Redactați</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_delete_list">Ștergeți lista</string>
+	<string name="whatsnew_bookmarks_search_sort_title">Ordine în inscripții – comoditate în călătorie</string>
+	<string name="whatsnew_bookmarks_search_sort_message">Sortați locurile preferate după categorie, ora adăugării și geolocalizarea și găsiți rapid inscripțiile după nume</string>
+	<string name="popup_subscription_success_map_title">Ura! Sunteți abonat!</string>
+	<string name="popup_subscription_success_map_message">Explorați acum cele mai faimoase obiective turistice în catalogul MAPS.ME</string>
+	<string name="popup_subscription_success_map_start_button">Uitați-vă</string>
+	<string name="popup_subscription_success_map_not_now_button">Nu acum</string>
+	<string name="religious_places">Locuri sfinte</string>
+	<string name="subscription_terms_android">Plata se va face din contul dvs. Google Play la confirmarea achiziției. Abonamentul se va reînnoi automat, dacă reînnoirea automată nu este oprită cu cel puțin 24 de ore înainte de încheierea perioadei curente. Banii vor fi luați din contul dvs. în conformitate cu planul dvs. de reînnoire în termen de 24 de ore până la sfârșitul perioadei curente. Puteți gestiona reînnoirea automată sau o puteți dezactiva în setările contului dvs. după cumpărare. Veți putea utiliza ghidurile descărcate prin abonament doar în perioada de valabilitate. După 30 de zile de la terminarea abonamentului, ghidurile vor fi șterse automat.</string>
+	<string name="select_list">Alegeți lista</string>
+	<string name="pp_discovery_place_related_header">Acest loc în catalogul ghidurilor</string>
+	<string name="pp_discovery_place_related_header_1">Acest loc poate fi întâlnit în ghid</string>
+	<string name="pp_discovery_place_related_cta_button">De văzut</string>
+	<string name="pp_discovery_place_related_tag_header">Ghiduri după tag „%s”</string>
+	<string name="pp_discovery_place_related_tag_header_1">V-ar putea plăcea de asemenea</string>
+	<string name="buy_btn_for_subscription_version_2">TOATE ghidurile pentru doar %s/lună</string>
+	<string name="buy_btn_for_subscription_version_3">Tot catalogul pentru %s/lună</string>
+	<string name="buy_btn_for_subscription_ios_only_mo_version_2">Acces la catalog pentru %s/lună</string>
+	<string name="buy_btn_for_subscription_ios_only_year_version_2">Acces la catalog pentru %s/an</string>
+	<string name="subscription_screen_native_title_version_2">Acces la ghiduri cu înscripții pe hartă!</string>
+	<string name="subscription_screen_native_message_version_2">Fiți pregătiți pentru orice călătorie în peste 600+ orașe și în peste 100+ țări</string>
+	<string name="catalog_no_internet_title">Fără conexiune la internet</string>
+	<string name="catalog_no_internet_button">Încercați din nou</string>
+	<string name="whatsnew_map_updates_title">Actualizarea reactiva a hărților</string>
+	<string name="whatsnew_map_updates_message">Acum actualizam hărțile de 2 ori mai repede</string>
+	<string name="new_onboarding_button">Mai departe</string>
+	<string name="new_onboarding_button_2">Începeți</string>
+	<string name="new_onboarding_step1_header_2">Asistent universal în călătorii</string>
+	<string name="new_onboarding_step2_header">Visează și planifică</string>
+	<string name="new_onboarding_step2_message">70+ milioane de locuri interesante, un catalog de ghiduri gata pregătite și rezervări de hoteluri de pe hartă – sunteți gata de călătorie!</string>
+	<string name="new_onboarding_step3_message">Hărțile offline detaliate și navigarea offline vă vor ajuta să nu vă pierdeți în locuri necunoscute!</string>
+	<string name="new_onboarding_step4_header">Împărtășiți-vă impresiile</string>
+	<string name="new_onboarding_step4_message">Salvați locurile preferate în favorite și trimiteți-le prietenilor</string>
+	<string name="new_onboarding_step5.1_header">Înainte de a începe…</string>
+	<string name="new_onboarding_step5.1_message">Nu uita să vizitezi noul nostru director de rute pentru a găsi un ghid offline pentru următoarea călătorie!</string>
+	<string name="new_onboarding_step5.1_button">Deschide directorul</string>
+	<string name="new_onboarding_step5.2_message">Abonarea la directorul ghidurilor din MAPS.ME este profitabilă. Obțineți acces complet la ghiduri pentru plimbări prin oraș și alte activități!</string>
+	<string name="new_onboarding_step5.2_button">Vezi termenii</string>
+	<string name="new_onboarding_step5.3_message">Descărcați și evaluați rutele pentru plimbări prin oraș și activități în aer liber, cu o selecție gratuită din MAPS.ME!</string>
+	<string name="new_onboarding_step5.3_button">Descarcă gratuit</string>
+	<string name="new_onboarding_additional_steps_later_button">Nu acum</string>
+	<string name="all_pass_subscription_header">ABONAREA LA CATALOG</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title">30000+\nghiduri\nși rute</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle"><b>Descărcare nelimitată offline</b> de trasee pentru oraș și odihnă activă</string>
+	<!-- \n - for a break between lines. Max. 17 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_2">Profil\naltitudine\ninteractiv</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_2">Toate rutele se încarcă <b>împreună cu altitudinea și informațiile de bază despre traseu</b></string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_3">Locații,\nimagini\nși recomandări</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_3"><b>Aflați totul despre traseul</b>, pe care intenționați să-l parcurgeți</string>
+	<string name="sightseeing_subscription_header_subscription">Abonează-te la ghiduri</string>
+	<string name="sightseeing_subscription_message">700+ orașe și 100+ de țări</string>
+	<string name="sightseeing_subscription_message_2">Disponibile offline</string>
+	<string name="sightseeing_subscription_message_3">Foto și trasee de mers pe jos</string>
+	<string name="subscription_success_dialog_title_sightseeing_pass">Mulțumim pentru abonament!</string>
+	<string name="subscription_success_dialog_message_sightseeing_pass">Acum aveți acces la toate ghidurile orașului din catalog</string>
+	<string name="downloader_main_gallery_header">Hărți și ghiduri</string>
+	<string name="downloader_main_gallery_message">Acum, în această secțiune, puteți descărca nu doar numai hărți, dar puteți alege și ghiduri pentru următoarele călătorii</string>
+	<string name="downloader_main_1_element_gallery_header">Toate ghidurile</string>
+	<string name="downloader_main_1_element_gallery_message">în 100+ de țări</string>
+	<string name="downloader_country_1_element_gallery_header">%s rute</string>
+	<string name="downloader_country_no_guides_gallery_header">Nu există încă ghiduri în această țară</string>
+	<string name="downloader_country_no_guides_gallery_message">Consultați alte rute din 100+ de țări pentru activități în aer liber și oraș</string>
+	<string name="dialog_pedestrian_route_is_long">E prea mult timp ca sa ajungi la vehicul pe jos</string>
+	<string name="whatsnew_outdoor_guides_title">Am adăugat 15000+ de trasee pentru activități în aer liber!</string>
+	<string name="whatsnew_outdoor_guides_message">Rute Outdooractive de vacanță de iarnă și de vară te așteaptă în catalog!</string>
+	<string name="whatsnew_guides_galleries_title">Planificați-vă următoarea călătorie cu MAPS.ME</string>
+	<string name="whatsnew_guides_galleries_message">Acum puteți găsi ghiduri recomandate în cartelele orașelor și atracțiilor populare</string>
+	<string name="new_onboarding_step3_header">Călătoriți</string>
+	<string name="all_pass_screen_best_value">Preț avantajos</string>
+	<string name="buy_btn_for_subscription_3">Tot catalogul pentru %s/an</string>
+	<string name="transit_not_found">Navigarea pentru metrou nu este încă disponibilă în această regiune</string>
+	<string name="dialog_pedestrian_route_is_long_header">Ruta metroului nu a fost găsită</string>
+	<string name="dialog_pedestrian_route_is_long_message">Selectați punctul de început sau de sfârșit al rutei mai aproape de stația de metrou</string>
+	<!-- Failed planning SUBWAY route message in navigation view -->
+	<string name="routing_planning_error_subway_special">Eroare la construirea rutei metroului</string>
+	<string name="whatsnew_isolines_title">Noutatea pentru activități în aer liber – linii de înălțimi offline!</string>
+	<!-- as less symbols as possible -->
+	<string name="whatsnew_isolines_message">Ghidați-vă în zona montană-activați butonul de strat în colțul din stânga sus pe ecran</string>
+	<string name="button_layer_isolines">Înălțimi</string>
+	<string name="tips_map_layers_title_countour">Linii de înălțimi offline pe MAPS.ME!</string>
+	<string name="tips_map_layers_message_countour">Liniile de înălțimi vă vor ajuta să planificați o călătorie în natură și să nu vă pierdeți</string>
+	<string name="isolines_activation_error_dialog">Pentru a utiliza liniile de înălțimi, actualizați sau descărcați harta zonei dorite</string>
+	<string name="isolines_location_error_dialog">Liniile de înălțimi pană ce nu sunt disponibile în această regiune</string>
+	<string name="elevation_profile_diff_level">Nivel de dificultate</string>
+	<string name="elevation_profile_diff_level_easy">Ușor</string>
+	<string name="elevation_profile_diff_level_moderate">Mediu</string>
+	<string name="elevation_profile_diff_level_hard">Dificil</string>
+	<string name="elevation_profile_ascent">Urcare</string>
+	<string name="elevation_profile_descent">Coborâre</string>
+	<string name="elevation_profile_minaltitude">Înălțime min.</string>
+	<string name="elevation_profile_maxaltitude">Înălțime max.</string>
+	<string name="elevation_profile_m">m</string>
+	<string name="elevation_profile_difficulty">Dificultate</string>
+	<string name="elevation_profile_distance">Dist.:</string>
+	<string name="elevation_profile_km">km</string>
+	<string name="elevation_profile_time">Timp:</string>
+	<string name="elevation_profile_hours">ore</string>
+	<string name="elevation_profile_minutes">min</string>
+	<!-- hide the full screen banner and continue working with the app -->
+	<string name="hide_screen_map_update">Ascunde și continuă utilizarea aplicației</string>
+	<string name="view_on_map_downloaded_error">Acest ghid a fost șters de pe dispozitiv</string>
+	<string name="subscription">Abonare</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Stație de teleferic</string>
 	<string name="type.aeroway.aerodrome">Aeroport</string>
 	<string name="type.aeroway.aerodrome.international">Aeroport</string>
 	<string name="type.aeroway.helipad">Heliport</string>
+	<string name="type.amenity">Obiecte ale infrastructurii</string>
+	<string name="type.amenity.arts_centre">Centru de artă</string>
 	<string name="type.amenity.atm">Bancomat</string>
 	<string name="type.amenity.bank">Bancă</string>
 	<string name="type.amenity.bbq">Locații picnic</string>
@@ -1516,14 +1816,15 @@
 	<string name="type.amenity.parking">Parcare</string>
 	<string name="type.amenity.parking.fee">Parcare</string>
 	<string name="type.amenity.parking.multi.storey">Parcare</string>
-	<string name="type.amenity.parking.multi.storey.fee">Parcare</string>
 	<string name="type.amenity.parking.no.access">Parcare</string>
 	<string name="type.amenity.parking.park_and_ride">Parcare</string>
 	<string name="type.amenity.parking.permissive">Parcare</string>
-	<string name="type.amenity.parking.permissive.fee">Parcare</string>
 	<string name="type.amenity.parking.private">Parcare</string>
 	<string name="type.amenity.parking.underground">Parcare</string>
-	<string name="type.amenity.parking.underground.fee">Parcare</string>
+	<string name="type.amenity.parking_space">Loc de parcare</string>
+	<string name="type.amenity.parking_space.permissive">Loc de parcare</string>
+	<string name="type.amenity.parking_space.private">Loc de parcare</string>
+	<string name="type.amenity.parking_space.underground">Loc de parcare</string>
 	<string name="type.amenity.payment_terminal">Terminal de plăți</string>
 	<string name="type.amenity.pharmacy">Farmacie</string>
 	<string name="type.amenity.place_of_worship">Loc de cult</string>
@@ -1536,7 +1837,7 @@
 	<string name="type.amenity.place_of_worship.taoist">Templu</string>
 	<string name="type.amenity.police">Poliție</string>
 	<string name="type.amenity.post_box">Cutie poștală</string>
-	<string name="type.amenity.post_office">Poştă</string>
+	<string name="type.amenity.post_office">Oficiu poștal</string>
 	<string name="type.amenity.public_bookcase">Bibliotecă</string>
 	<string name="type.amenity.recycling">Centru de reciclare</string>
 	<string name="type.amenity.school">Școală</string>
@@ -1550,6 +1851,7 @@
 	<string name="type.amenity.vending_machine.cigarettes">Automat de țigări</string>
 	<string name="type.amenity.vending_machine.drinks">Automat de băuturi</string>
 	<string name="type.amenity.vending_machine.parking_tickets">Parcomat</string>
+	<string name="type.amenity.vending_machine.public_transport_tickets">Automat de vânzare a biletelor pentru transportul public</string>
 	<string name="type.amenity.veterinary">Cabinet veterinar</string>
 	<string name="type.amenity.waste_basket">Pubelă</string>
 	<string name="type.amenity.waste_disposal">Gunoi</string>
@@ -1667,6 +1969,7 @@
 	<string name="type.emergency.phone">Telefon de urgență</string>
 	<string name="type.entrance">Intrare</string>
 	<string name="type.highway.bus_stop">Stație de autobuz</string>
+	<string name="type.highway.construction">Drum în construcție</string>
 	<string name="type.highway.footway">Cale</string>
 	<string name="type.highway.footway.alpine_hiking">Cale</string>
 	<string name="type.highway.footway.area">Cale</string>
@@ -1729,9 +2032,6 @@
 	<string name="type.highway.service.area">Stradă</string>
 	<string name="type.highway.service.bridge">Stradă</string>
 	<string name="type.highway.service.driveway">Stradă</string>
-	<string name="type.highway.service.driveway.area">Stradă</string>
-	<string name="type.highway.service.driveway.bridge">Stradă</string>
-	<string name="type.highway.service.driveway.tunnel">Stradă</string>
 	<string name="type.highway.service.parking_aisle">Stradă</string>
 	<string name="type.highway.service.tunnel">Stradă</string>
 	<string name="type.highway.speed_camera">Detector de viteză</string>
@@ -1750,14 +2050,8 @@
 	<string name="type.highway.track.grade1">Stradă</string>
 	<string name="type.highway.track.grade2">Stradă</string>
 	<string name="type.highway.track.grade3">Stradă</string>
-	<string name="type.highway.track.grade3.no.access">Stradă</string>
-	<string name="type.highway.track.grade3.permissive">Stradă</string>
 	<string name="type.highway.track.grade4">Stradă</string>
-	<string name="type.highway.track.grade4.no.access">Stradă</string>
-	<string name="type.highway.track.grade4.permissive">Stradă</string>
 	<string name="type.highway.track.grade5">Stradă</string>
-	<string name="type.highway.track.grade5.no.access">Stradă</string>
-	<string name="type.highway.track.grade5.permissive">Stradă</string>
 	<string name="type.highway.track.no.access">Stradă</string>
 	<string name="type.highway.track.permissive">Stradă</string>
 	<string name="type.highway.track.tunnel">Stradă</string>
@@ -1786,11 +2080,17 @@
 	<string name="type.landuse.basin">Apă</string>
 	<string name="type.landuse.cemetery">Cimitir</string>
 	<string name="type.landuse.cemetery.christian">Cimitir</string>
+	<string name="type.landuse.churchyard">Curtea Bisericii</string>
+	<string name="type.landuse.farmland">Teren arabil</string>
 	<string name="type.landuse.forest">Pădure</string>
 	<string name="type.landuse.forest.coniferous">Pădure</string>
 	<string name="type.landuse.forest.deciduous">Pădure</string>
 	<string name="type.landuse.forest.mixed">Pădure</string>
+	<string name="type.landuse.grass">Gazon</string>
+	<string name="type.landuse.landfill">Gunoiște</string>
+	<string name="type.landuse.railway">Instalații feroviare</string>
 	<string name="type.landuse.reservoir">Apă</string>
+	<string name="type.leisure.dog_park">Loc de plimbare a câinilor</string>
 	<string name="type.leisure.fitness_centre">Centru fitness</string>
 	<string name="type.leisure.fitness_station">Sală de fitness</string>
 	<string name="type.leisure.garden">Sit arheologic</string>
@@ -1801,9 +2101,7 @@
 	<string name="type.leisure.park.permissive">Parc</string>
 	<string name="type.leisure.park.private">Parc</string>
 	<string name="type.leisure.pitch">Teren de sport</string>
-	<string name="type.leisure.pitch.tennis">Teren de sport</string>
 	<string name="type.leisure.playground">Loc de joacă</string>
-	<string name="type.leisure.playground.tennis">Loc de joacă</string>
 	<string name="type.leisure.sauna">Saună</string>
 	<string name="type.leisure.sports_centre">Sport</string>
 	<string name="type.leisure.sports_centre.climbing">Centru cățărare</string>
@@ -1825,20 +2123,19 @@
 	<string name="type.natural.bay">Golf</string>
 	<string name="type.natural.beach">Plajă</string>
 	<string name="type.natural.cape">Mantie</string>
-	<string name="type.natural.cave_entrance">Intrare peșteră</string>
+	<string name="type.natural.cave_entrance">Peșteră</string>
 	<string name="type.natural.geyser">Gheizer</string>
 	<string name="type.natural.glacier">Ghețar</string>
+	<string name="type.natural.grassland">Câmp</string>
 	<string name="type.natural.lake">Lac</string>
 	<string name="type.natural.peak">Munte</string>
 	<string name="type.natural.pond">Heleșteu</string>
+	<string name="type.natural.scrub">Boschet</string>
 	<string name="type.natural.spring">Primăvară</string>
 	<string name="type.natural.tree">Arbore</string>
 	<string name="type.natural.volcano">Vulcan</string>
 	<string name="type.natural.water">Apă</string>
-	<string name="type.natural.wood">Pădure</string>
-	<string name="type.natural.wood.coniferous">Pădure</string>
-	<string name="type.natural.wood.deciduous">Pădure</string>
-	<string name="type.natural.wood.mixed">Pădure</string>
+	<string name="type.natural.wetland">Loc mlăștinos</string>
 	<string name="type.office">Birou</string>
 	<string name="type.office.company">Sediu companei</string>
 	<string name="type.office.estate_agent">Agent imobiliar</string>
@@ -1877,6 +2174,9 @@
 	<string name="type.power.substation">Stație subterană</string>
 	<string name="type.power.tower">Stâlp de electricitate</string>
 	<string name="type.railway.halt">Feroviar</string>
+	<string name="type.railway.level_crossing">Trecere feroviară</string>
+	<string name="type.railway.monorail">Cale ferată monoșină</string>
+	<string name="type.railway.rail">Cale ferată</string>
 	<string name="type.railway.station">Feroviar</string>
 	<string name="type.railway.station.light_rail">Feroviar</string>
 	<string name="type.railway.station.monorail">Feroviar</string>
@@ -1905,7 +2205,7 @@
 	<string name="type.railway.station.subway.spb">Metrou</string>
 	<string name="type.railway.station.subway.violet">Metrou</string>
 	<string name="type.railway.station.subway.yellow">Metrou</string>
-	<string name="type.railway.subway_entrance">Metrou</string>
+	<string name="type.railway.subway_entrance">Intrare în metro</string>
 	<string name="type.railway.subway_entrance.barcelona">Metrou</string>
 	<string name="type.railway.subway_entrance.berlin">Metrou</string>
 	<string name="type.railway.subway_entrance.kiev">Metrou</string>
@@ -1983,6 +2283,10 @@
 	<string name="type.shop.variety_store">Magazin universal</string>
 	<string name="type.shop.video">Magazin</string>
 	<string name="type.shop.wine">Magazin de băuturi alcolice</string>
+	<string name="type.sport.athletics">Atletica ușoară</string>
+	<string name="type.sport.basketball">Baschetbal</string>
+	<string name="type.sport.equestrian">Sport ecvestru</string>
+	<string name="type.sport.tennis">Teren de tenis</string>
 	<string name="type.tourism.alpine_hut">Cabană de munte</string>
 	<string name="type.tourism.apartment">Apartamente</string>
 	<string name="type.tourism.artwork">Turism</string>
@@ -2018,4 +2322,8 @@
 	<string name="type.waterway.stream.intermittent">Râu</string>
 	<string name="type.waterway.stream.tunnel">Râu</string>
 	<string name="type.waterway.waterfall">Cascadă</string>
+	<string name="type.wheelchair.limited">Parțial utilat pentru invalizi</string>
+	<string name="type.wheelchair.no">Nu este utilat pentru invalizi</string>
+	<string name="type.wheelchair.yes">Utilat pentru invalizi</string>
+	<string name="type.building_part">Clădire</string>
 </resources>

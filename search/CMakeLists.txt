@@ -24,6 +24,7 @@ set(
   bookmarks/processor.cpp
   bookmarks/processor.hpp
   bookmarks/results.hpp
+  bookmarks/types.cpp
   bookmarks/types.hpp
   cancel_exception.hpp
   categories_cache.cpp
@@ -114,6 +115,8 @@ set(
   nested_rects_cache.cpp
   nested_rects_cache.hpp
   point_rect_matcher.hpp
+  postcode_points.cpp
+  postcode_points.hpp
   pre_ranker.cpp
   pre_ranker.hpp
   pre_ranking_info.cpp
@@ -126,14 +129,14 @@ set(
   query_params.hpp
   query_saver.cpp
   query_saver.hpp
-  rank_table_cache.cpp
-  rank_table_cache.hpp
   ranker.cpp
   ranker.hpp
   ranking_info.cpp
   ranking_info.hpp
   ranking_utils.cpp
   ranking_utils.hpp
+  region_address_getter.cpp
+  region_address_getter.hpp
   region_info_getter.cpp
   region_info_getter.hpp
   result.cpp

@@ -1,33 +1,31 @@
 #pragma once
 
-#include "area_info.hpp"
-#include "path_info.hpp"
+#include "software_renderer/area_info.hpp"
+#include "software_renderer/path_info.hpp"
 
-#include "indexer/cell_id.hpp" // CoordPointT
+#include "indexer/cell_id.hpp"
 
 #include "geometry/point2d.hpp"
 #include "geometry/rect2d.hpp"
 #include "geometry/rect_intersect.hpp"
 #include "geometry/screenbase.hpp"
 
-#include "std/list.hpp"
-#include "std/limits.hpp"
-
 #include "base/buffer_vector.hpp"
+
+#include <limits>
+#include <list>
 
 class ScreenBase;
 
 namespace software_renderer
 {
-
 /// @name Base class policies (use by inheritance) for points processing.
 /// Containt next functions:\n
 /// - make_point - convert from Feature point to Screen point
 /// - convert_point - convert point to screen coordinates;\n
 /// - m_rect - clip rect;\n
 
-//@{
-struct base
+struct base_policy
 {
   struct params
   {
@@ -36,7 +34,7 @@ struct base
     {}
   };
 
-  base(params const & p)
+  explicit base_policy(params const & p)
     : m_convertor(p.m_convertor)
   {
   }
@@ -50,7 +48,7 @@ struct base
 };
 
 /// in global coordinates
-struct base_global : public base
+struct base_global : public base_policy
 {
   m2::RectD const * m_rect;
 
@@ -59,39 +57,37 @@ struct base_global : public base
     return g2p(pt);
   }
 
-  struct params : base::params
+  struct params : base_policy::params
   {
     m2::RectD const * m_rect;
     params() : m_rect(0){}
   };
 
-  base_global(params const & p)
-    : base(p), m_rect(p.m_rect)
+  explicit base_global(params const & p)
+    : base_policy(p), m_rect(p.m_rect)
   {
   }
 };
 
 /// in screen coordinates
-struct base_screen : public base
+struct base_screen : public base_policy
 {
   m2::RectD m_rect;
 
-  struct params : base::params
+  struct params : base_policy::params
   {
     m2::RectD const * m_rect;
     params() : m_rect(0)
     {}
   };
 
-  base_screen(params const & p);
+  explicit base_screen(params const & p);
 
   m2::PointD convert_point(m2::PointD const & pt) const
   {
     return pt;
   }
 };
-
-//@}
 
 template <typename TBase>
 struct calc_length : public TBase
@@ -102,7 +98,7 @@ struct calc_length : public TBase
 
   typedef typename TBase::params params;
 
-  calc_length(params const & p) :
+  explicit calc_length(params const & p) :
     TBase(p), m_exist(false), m_length(0)
   {}
 
@@ -130,7 +126,7 @@ struct one_point : public base_global
 
   typedef base_global::params params;
 
-  one_point(params const & p)
+  explicit one_point(params const & p)
     : base_global(p), m_exist(false)
   {
   }
@@ -147,11 +143,11 @@ template <class TInfo, class TBase>
 struct geometry_base : public TBase
 {
 public:
-  list<TInfo> m_points;
+  std::list<TInfo> m_points;
 
   typedef typename TBase::params params;
 
-  geometry_base(params const & p)
+  explicit geometry_base(params const & p)
     : TBase(p)
   {
   }
@@ -184,12 +180,12 @@ struct interval_params : public geometry_base<PathInfo, base_screen>
     params() : m_intervals(0) {}
   };
 
-  interval_params(params const & p);
+  explicit interval_params(params const & p);
 };
 
 struct get_path_intervals : public interval_params
 {
-  get_path_intervals(params const & p) : interval_params(p) {}
+  explicit get_path_intervals(params const & p) : interval_params(p) {}
 
   void operator() (m2::PointD const & pt);
 
@@ -200,7 +196,7 @@ struct cut_path_intervals : public interval_params
 {
   size_t m_pos;
 
-  cut_path_intervals(params const & p) : interval_params(p), m_pos(0) {}
+  explicit cut_path_intervals(params const & p) : interval_params(p), m_pos(0) {}
 
   void operator() (m2::PointD const & p);
 
@@ -239,7 +235,7 @@ public:
     {}
   };
 
-  path_points(params const & p)
+  explicit path_points(params const & p)
     : base_type(p),
       m_newPL(true),
       m_hasPrevPt(false),
@@ -264,7 +260,7 @@ public:
 
   typedef base_type::params params;
 
-  area_base(params const & p)
+  explicit area_base(params const & p)
     : base_type(p)
   {
   }
@@ -276,7 +272,7 @@ class area_tess_points : public area_base
 public:
   typedef area_base::params params;
 
-  area_tess_points(params const & p)
+  explicit area_tess_points(params const & p)
     : area_base(p)
   {
   }
@@ -308,9 +304,9 @@ public:
 
   typedef typename TBase::params params;
 
-  filter_screenpts_adapter(params const & p)
+  explicit filter_screenpts_adapter(params const & p)
     : TBase(p),
-    m_prev(numeric_limits<double>::min(), numeric_limits<double>::min()), m_center(0, 0)
+    m_prev(std::numeric_limits<double>::min(), std::numeric_limits<double>::min()), m_center(0, 0)
   {
   }
 
@@ -339,5 +335,4 @@ public:
   m2::PointD GetCenter() const { return m_center; }
   void SetCenter(m2::PointD const & p) { m_center = this->g2p(p); }
 };
-
-}
+}  // namespace software_renderer

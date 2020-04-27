@@ -9,12 +9,12 @@ set(
   booking_filter_test.cpp
   bookmarks_test.cpp
   chart_generator_tests.cpp
+  check_mwms.cpp
   cloud_tests.cpp
+  countries_names_tests.cpp
   extrapolator_tests.cpp
   feature_getters_tests.cpp
   framework_light_tests.cpp
-  ge0_parser_tests.cpp
-  geourl_test.cpp
   gps_track_collection_test.cpp
   gps_track_storage_test.cpp
   gps_track_test.cpp
@@ -39,6 +39,7 @@ omim_link_libraries(
   generator_tests_support
   generator
   map
+  ge0
   drape_frontend
   shaders
   drape
@@ -55,6 +56,7 @@ omim_link_libraries(
   descriptions
   ugc
   partners_api
+  web_api
   local_ads
   kml
   editor
@@ -79,10 +81,18 @@ omim_link_libraries(
   succinct
   tess2
   stats_client
+  vulkan_wrapper
   ${Qt5Widgets_LIBRARIES}
   ${Qt5Network_LIBRARIES}
   ${LIBZ}
 )
+
+if (PLATFORM_LINUX)
+  omim_link_libraries(
+    ${PROJECT_NAME}
+    dl
+  )
+endif()
 
 link_opengl(${PROJECT_NAME})
 link_qt5_core(${PROJECT_NAME})

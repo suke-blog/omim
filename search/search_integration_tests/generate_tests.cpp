@@ -21,6 +21,7 @@
 #include <string>
 #include <utility>
 
+using namespace feature;
 using namespace generator::tests_support;
 using namespace std;
 
@@ -29,20 +30,21 @@ namespace
 class GenerateTest : public TestWithClassificator
 {
 public:
-  void MakeFeature(TestMwmBuilder & builder, pair<string, string> const & tag,
+  void MakeFeature(TestMwmBuilder & builder, vector<pair<string, string>> const & tags,
                    m2::PointD const & pt)
   {
     OsmElement e;
-    e.AddTag(tag.first, tag.second);
+    for (auto const & tag : tags)
+      e.AddTag(tag.first, tag.second);
 
-    FeatureParams params;
+    FeatureBuilderParams params;
     ftype::GetNameAndType(&e, params);
     params.AddName("en", "xxx");
 
-    FeatureBuilder1 fb;
+    FeatureBuilder fb;
     fb.SetParams(params);
     fb.SetCenter(pt);
-    fb.GetMetadata().Set(feature::Metadata::FMD_TEST_ID, strings::to_string(m_lastId));
+    fb.GetMetadata().Set(Metadata::FMD_TEST_ID, strings::to_string(m_lastId));
     ++m_lastId;
 
     TEST(builder.Add(fb), (fb));
@@ -57,19 +59,18 @@ UNIT_CLASS_TEST(GenerateTest, GenerateDeprecatedTypes)
   auto file = platform::LocalCountryFile::MakeForTesting("testCountry");
 
   {
-    TestMwmBuilder builder(file, feature::DataHeader::country);
+    TestMwmBuilder builder(file, DataHeader::MapType::Country);
 
     // Deprecated types.
-    MakeFeature(builder, {"office", "travel_agent"}, {0, 0});
-    MakeFeature(builder, {"shop", "tailor"}, {1, 1});
-    MakeFeature(builder, {"shop", "estate_agent"}, {2, 2});
+    MakeFeature(builder, {{"leisure", "dog_park"}, {"sport", "tennis"}}, {0.0, 0.0});
+    MakeFeature(builder, {{"leisure", "playground"}, {"sport", "tennis"}}, {1.0, 1.0});
   }
 
   FrozenDataSource dataSource;
   TEST_EQUAL(dataSource.Register(file).second, MwmSet::RegResult::Success, ());
 
   // New types.
-  base::StringIL arr[] = {{"shop"}, {"office"}};
+  base::StringIL arr[] = {{"leisure", "dog_park"}, {"leisure", "playground"}, {"sport", "tennis"}};
 
   Classificator const & cl = classif();
   set<uint32_t> types;
@@ -83,8 +84,8 @@ UNIT_CLASS_TEST(GenerateTest, GenerateDeprecatedTypes)
   };
   dataSource.ForEachInScale(fn, scales::GetUpperScale());
 
-  TEST_EQUAL(count, 3, ());
+  TEST_EQUAL(count, 2, ());
 
-  file.DeleteFromDisk(MapOptions::Map);
+  file.DeleteFromDisk(MapFileType::Map);
 }
 }  // namespace

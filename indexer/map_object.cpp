@@ -1,8 +1,8 @@
 #include "map_object.hpp"
 
-#include "indexer/cuisines.hpp"
 #include "indexer/feature.hpp"
 #include "indexer/feature_algo.hpp"
+#include "indexer/feature_utils.hpp"
 #include "indexer/ftypes_matcher.hpp"
 
 #include "platform/localization.hpp"
@@ -22,6 +22,7 @@ constexpr char const * kWlan = "wlan";
 constexpr char const * kWired = "wired";
 constexpr char const * kYes = "yes";
 constexpr char const * kNo = "no";
+constexpr char const * kFieldsSeparator = " • ";
 
 void SetInetIfNeeded(FeatureType & ft, feature::Metadata & metadata)
 {
@@ -74,16 +75,31 @@ void MapObject::SetFromFeatureType(FeatureType & ft)
   m_name = ft.GetNames();
   m_types = feature::TypesHolder(ft);
   m_metadata = ft.GetMetadata();
+  m_houseNumber = ft.GetHouseNumber();
+  m_roadNumber = ft.GetRoadNumber();
+  m_postcode = ft.GetPostcode();
   m_featureID = ft.GetID();
-  ASSERT(m_featureID.IsValid(), ());
-  m_geomType = ft.GetFeatureType();
+  m_geomType = ft.GetGeomType();
+  if (m_geomType == feature::GeomType::Area)
+  {
+    m_triangles = ft.GetTrianglesAsPoints(FeatureType::BEST_GEOMETRY);
+  }
+  else if (m_geomType == feature::GeomType::Line)
+  {
+    ft.ParseGeometry(FeatureType::BEST_GEOMETRY);
+    m_points.reserve(ft.GetPointsCount());
+    ft.ForEachPoint([this](m2::PointD const & p) { m_points.push_back(p); },
+                    FeatureType::BEST_GEOMETRY);
+  }
 
   SetInetIfNeeded(ft, m_metadata);
 }
 
 FeatureID const & MapObject::GetID() const { return m_featureID; }
-ms::LatLon MapObject::GetLatLon() const { return MercatorBounds::ToLatLon(m_mercator); }
+ms::LatLon MapObject::GetLatLon() const { return mercator::ToLatLon(m_mercator); }
 m2::PointD const & MapObject::GetMercator() const { return m_mercator; }
+vector<m2::PointD> const & MapObject::GetTriangesAsPoints() const { return m_triangles; }
+vector<m2::PointD> const & MapObject::GetPoints() const { return m_points; }
 feature::TypesHolder const & MapObject::GetTypes() const { return m_types; }
 
 string MapObject::GetDefaultName() const
@@ -98,6 +114,10 @@ StringUtf8Multilang const & MapObject::GetNameMultilang() const
   return m_name;
 }
 
+string const & MapObject::GetHouseNumber() const { return m_houseNumber; }
+
+string const & MapObject::GetPostcode() const { return m_postcode; }
+
 string MapObject::GetLocalizedType() const
 {
   ASSERT(!m_types.Empty(), ());
@@ -109,7 +129,16 @@ string MapObject::GetLocalizedType() const
 
 vector<osm::Props> MapObject::AvailableProperties() const
 {
-  return MetadataToProps(m_metadata.GetPresentTypes());
+  auto props = MetadataToProps(m_metadata.GetPresentTypes());
+
+  auto const & isCuisine = ftypes::IsCuisineChecker::Instance();
+  if (any_of(m_types.begin(), m_types.end(), [&](auto const t) { return isCuisine(t); }))
+  {
+    props.push_back(Props::Cuisine);
+    base::SortUnique(props);
+  }
+
+  return props;
 }
 
 string MapObject::GetPhone() const { return m_metadata.Get(feature::Metadata::FMD_PHONE_NUMBER); }
@@ -142,21 +171,27 @@ Internet MapObject::GetInternet() const
   return Internet::Unknown;
 }
 
-vector<string> MapObject::GetCuisines() const
-{
-  vector<string> cuisines;
-  Cuisines::Instance().Parse(m_metadata.Get(feature::Metadata::FMD_CUISINE), cuisines);
-  return cuisines;
-}
+vector<string> MapObject::GetCuisines() const { return feature::GetCuisines(m_types); }
 
 vector<string> MapObject::GetLocalizedCuisines() const
 {
-  vector<string> localized;
-  Cuisines::Instance().ParseAndLocalize(m_metadata.Get(feature::Metadata::FMD_CUISINE), localized);
-  return localized;
+  return feature::GetLocalizedCuisines(m_types);
 }
 
-string MapObject::FormatCuisines() const { return strings::JoinStrings(GetLocalizedCuisines(), " • "); }
+string MapObject::FormatCuisines() const
+{
+  return strings::JoinStrings(GetLocalizedCuisines(), kFieldsSeparator);
+}
+
+vector<string> MapObject::GetRoadShields() const
+{
+  return feature::GetRoadShieldsNames(m_roadNumber);
+}
+
+string MapObject::FormatRoadShields() const
+{
+  return strings::JoinStrings(GetRoadShields(), kFieldsSeparator);
+}
 
 string MapObject::GetOpeningHours() const
 {
@@ -221,7 +256,7 @@ string MapObject::GetAirportIata() const
 }
 
 feature::Metadata const & MapObject::GetMetadata() const { return m_metadata; }
-bool MapObject::IsPointType() const { return m_geomType == feature::EGeomType::GEOM_POINT; }
+bool MapObject::IsPointType() const { return m_geomType == feature::GeomType::Point; }
 bool MapObject::IsBuilding() const { return ftypes::IsBuildingChecker::Instance()(m_types); }
 
 }  // namespace osm

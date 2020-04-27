@@ -4,8 +4,6 @@
 <!-- Language: ja -->
 <resources>
 	<!-- SECTION: Strings -->
-	<!-- About button text (should be short) -->
-	<string name="about">情報</string>
 	<!-- Button text (should be short) -->
 	<string name="back">戻る</string>
 	<!-- Button text (should be short) -->
@@ -66,8 +64,6 @@
 	<string name="touch_to_download">タッチしてダウンロード</string>
 	<!-- Settings/Downloader - 3G download warning dialog confirm button -->
 	<string name="use_cellular_data">はい</string>
-	<!-- Settings/Downloader - No internet connection dialog message -->
-	<string name="use_wifi_recommendation_text">大きなマップをダウンロードする際はWiFiの使用をおすすめします。</string>
 	<!-- Choose measurement on first launch alert - title -->
 	<string name="which_measurement_system">どちらの距離単位を使いますか？</string>
 	<!-- Location services are disabled by user alert - message -->
@@ -253,8 +249,6 @@
 	<string name="my_position_share_sms">私は今ここにいます。リンク: %1$s, %2$s</string>
 	<!-- Subject for emailed bookmark -->
 	<string name="bookmark_share_email_subject">MAPS.MEでピン情報を確認</string>
-	<!-- Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me -->
-	<string name="bookmark_share_email">オフラインマップ MAPS.ME でこの位置にピンを作成しました: %1$s\n\nリンク %2$s または %3$s をクリックするとマップ上で確認できます。</string>
 	<!-- Subject for emailed position -->
 	<string name="my_position_share_email_subject">MAPS.MEで現在地を確認</string>
 	<!-- Share my position using EMail, %1$@ is ge0:// and %2$@ is http://ge0.me link WITHOUT NAME -->
@@ -355,12 +349,6 @@
 	<string name="route">経路</string>
 	<!-- category title -->
 	<string name="routes">ルート</string>
-	<!-- Show on first launch. -->
-	<string name="maps_licence_info">このアプリケーションはOpenStreetMapプロジェクトから取得された地理的データ（地図、ビジネスリスト、興味のある場所、国境と地域など）を使います。OpenStreetMapのデータの整合性、正確さ、完全性や適合性に関して弊社は保証致しかねます。</string>
-	<!-- Show on first launch. -->
-	<string name="agree">同意する</string>
-	<!-- Show on first launch -->
-	<string name="disagree">同意しない</string>
 	<!-- text of notification -->
 	<string name="download_map_notification">あなたがいる場所のマップをダウンロードしよう</string>
 	<!-- text of notification -->
@@ -557,6 +545,22 @@
 	<string name="brown">茶色</string>
 	<!-- pink color -->
 	<string name="pink">ピンク</string>
+	<!-- deep purple color -->
+	<string name="deep_purple">ディープパープル</string>
+	<!-- light blue color -->
+	<string name="light_blue">ライトブルー</string>
+	<!-- cyan color -->
+	<string name="cyan">シアン</string>
+	<!-- teal color -->
+	<string name="teal">ティール</string>
+	<!-- lime color -->
+	<string name="lime">ライム</string>
+	<!-- deep orange color -->
+	<string name="deep_orange">ディープオレンジ</string>
+	<!-- gray color -->
+	<string name="gray">グレイ</string>
+	<!-- blue gray color -->
+	<string name="blue_gray">ブルーグレイ</string>
 	<!-- Wi-Fi available -->
 	<string name="WiFi_available">はい</string>
 
@@ -790,8 +794,6 @@
 	<string name="onboarding_location_message">ナビゲーションやその他の機能の使用のために、アプリがGeolocationにアクセスする必要があります</string>
 	<string name="onboarding_permissions_title">MAPS.ME によるストレージと位置情報へのアクセスを許可する</string>
 	<string name="onboarding_permissions_message">これにより地図のダウンロード、近隣のスポットや交通情報の確認、およびナビゲーションを利用できるようになります。</string>
-	<string name="onboarding_welcome_title">MAPS.ME へようこそ</string>
-	<string name="onboarding_welcome_first_subtitle">ターンバイターン方式のナビゲーションを採用した、完全にオフラインで利用できる無料・高速かつ詳細な地図を提供します。</string>
 	<string name="onboarding_welcome_second_subtitle">アプリケーションを起動することで、&lt;a href="%1$s">利用規約&lt;/a>および&lt;a href="%2$s">プライバシーポリシー&lt;/a>にご同意いただいたものとみなします。</string>
 	<string name="dialog_incorrect_feature_position">位置を変更してください</string>
 	<string name="message_invalid_feature_position">ここにはオブジェクトを配置できません</string>
@@ -873,6 +875,7 @@
 	<string name="minute">分</string>
 	<string name="placepage_place_description">説明</string>
 	<string name="placepage_more_button">さらに詳しく</string>
+	<string name="placepage_more_reviews_button">レビューを更に表示</string>
 	<string name="book_button">予約</string>
 	<string name="placepage_call_button">コール</string>
 	<string name="placepage_edit_bookmark_button">ブックマークを編集</string>
@@ -1026,8 +1029,6 @@
 	<string name="banner_geerbest_message">低価格で 50,000 件を超えるアイテムを素早く検索。</string>
 	<string name="banner_rentalcars_title">オンラインでレンタカーを予約</string>
 	<string name="banner_rentalcars_message">800 社のレンタカー会社による 49,000 カ所を超えるレンタカー店舗をご利用いただけます。</string>
-	<string name="banner_viator_title">オンラインツアー検索</string>
-	<string name="banner_viator_message">世界中から 50,000 件を超えるツアーを検索してください。</string>
 	<!-- december -->
 	<string name="whatsnew_traffic">36か国の交通データ</string>
 	<!-- december -->
@@ -1069,8 +1070,6 @@
 	<string name="whatsnew_smaller_mwm_message">地図が必要とするストレージ容量が最大で 20% 少なくなりました。</string>
 	<string name="whatsnew_waypoints_title">ルート上の経由地</string>
 	<string name="whatsnew_waypoints_message">場所をタップしてルートに経由地を追加します。</string>
-	<string name="whatsnew_viator_title">ツアーの予約</string>
-	<string name="whatsnew_viator_message">世界中の観光都市で人気のツアーを選択してください。</string>
 	<string name="whatsnew_driving_style_title">運転用の新しい地図のスタイル</string>
 	<string name="whatsnew_driving_style_message">カーナビゲーションモードの使用がより簡単になりました。</string>
 	<string name="more_on_bookingcom">さらに Booking.com で表示</string>
@@ -1127,7 +1126,6 @@
 	<string name="settings_card_memory">カードのメモリ</string>
 	<string name="settings_storage_available">%s 使用可能</string>
 	<string name="toast_location_permission_denied">アプリの位置情報へのアクセスが拒否されました</string>
-	<string name="place_page_viator_title">観光地およびツアー</string>
 	<string name="button_use">使う</string>
 	<string name="planning_route_manage_route">ルートを管理</string>
 	<string name="button_plan">計画する</string>
@@ -1142,8 +1140,6 @@
 	<string name="add_my_position">自分の場所を追加</string>
 	<string name="choose_start_point">出発地点を選択</string>
 	<string name="choose_destination">目的地を選択</string>
-	<string name="preloader_viator_title">旅行や通常ではないアクティビティを検知します</string>
-	<string name="preloader_viator_message">旅行、アクティビティ、観光など</string>
 	<string name="preloader_viator_button">詳細情報</string>
 	<string name="whats_new_title_route">自転車と歩行者用のルートが改良されました</string>
 	<string name="whats_new_message_route">エラーの修正を行い、ルート探索速度を数倍に改善し、中間停止地点を追加しました。</string>
@@ -1154,9 +1150,6 @@
 	<string name="placepage_no_reviews">レビューなし</string>
 	<string name="placepage_reviewed">このスポットはすでにレビュー済みです</string>
 	<string name="placepage_summary_rating">評価の概要</string>
-	<plurals name="placepage_summary_rating_description">
-	  <item quantity="other">%d 件のレビューに基づいています</item>
-	</plurals>
 	<string name="placepage_rate_comment">タップしてこのスポットを評価し、レビューします。</string>
 	<string name="placepage_rate_horrible">ひどい</string>
 	<string name="placepage_rate_bad">悪い</string>
@@ -1199,8 +1192,6 @@
 	<string name="discovery_button_subtitle_attractions">観光地</string>
 	<string name="discovery_button_subtitle_eat_and_drink">飲食</string>
 	<string name="discovery_button_subtitle_local_guides">地元のガイド</string>
-	<string name="discovery_button_viator_offline_title">旅行や変わった活動を探します</string>
-	<string name="discovery_button_viator_offline_message">ツアー、活動、観光ツアーなど。</string>
 	<string name="discovery_button_viator_error_title">データの読み込みエラー</string>
 	<string name="discovery_button_other_error_message">データの読み込みエラー</string>
 	<string name="discovery_button_other_loading_message">データを読み込み中です</string>
@@ -1240,12 +1231,10 @@
 	<string name="downloader_percent">%1$s (%2$s / %3$s)</string>
 	<string name="downloader_process">%s をダウンロードしています...</string>
 	<string name="downloader_applying">%s を適用中です...</string>
-	<string name="transit_not_found">この地域での乗り換え案内はまだご利用いただけません</string>
 	<string name="whats_new_title_hotel_filter">新しいホテルのフィルターをご利用いただけます！</string>
 	<string name="whats_new_message_hotel_filter">あなたの日程で空室のあるホテルを予約できます！チェックインおよびチェックアウトフィルターをご利用ください。</string>
 	<string name="whats_new_title_ugc_travel">あなたの体験を他の旅行者に共有してください！</string>
 	<string name="whats_new_message_ugc_travel">訪れた場所の評価やレビューを行ってください！</string>
-	<string name="dialog_pedestrian_route_is_long">歩行ルートが長すぎます</string>
 	<string name="dialog_message_transit_not_found_connection">1 つの交通ネットワーク内でルートを作成</string>
 	<string name="bookmarks_error_message_share_general">アプリケーションエラーのため共有できません</string>
 	<string name="bookmarks_error_title_share_empty">共有エラー</string>
@@ -1349,8 +1338,8 @@
 	<string name="error_already_downloaded">このリストは既にダウンロード済みです</string>
 	<string name="guides">ガイド</string>
 	<string name="guide_downloaded_title">ガイドが正常にダウンロードされました</string>
-	<string name="download_guides">ガイドをダウンロード</string>
-	<string name="cached_guides_placeholder_subtitle">どんな旅にも使える詳細なオフラインガイド。最適なものを選び、マップに直接ダウンロードしてください。ガイドをダウンロードするにはインターネット接続が必要です。</string>
+	<!-- as few symbols as possible -->
+	<string name="download_guides">ガイドを検索</string>
 	<string name="guides_groups_cached">ガイドをダウンロード</string>
 	<string name="subtitle_error_downloading_guide">ガイドがダウンロードされませんでした</string>
 	<string name="error_already_downloaded_guide">このガイドはすでにダウンロードされています</string>
@@ -1389,7 +1378,6 @@
 	<string name="restore_success_alert">サブスクリプションの復元が完了しました</string>
 	<string name="restore_error_alert">サブスクリプションの復元中にエラーが発生しました</string>
 	<string name="restore_no_subscription_alert">有効なサブスクリプションはありません</string>
-	<string name="subscription_terms">ご購入確定時にお客様のiTunesアカウントにお支払いが請求されます。現在のご利用期間が終了する最低でも24時間前に自動更新が解除されなければ、サブスクリプションは自動的に更新されます。現在のご利用期間が終了する24時間以内に、ご利用プランの更新がアカウントに請求されます。ご購入期間中にApple IDアカウント設定より自動更新を管理または解除することができます。</string>
 	<string name="subscriptions_title">サブスクリプション</string>
 	<string name="manage_subscription">サブスクリプション管理</string>
 	<string name="sharing_options">オプションの共有</string>
@@ -1399,7 +1387,6 @@
 	<string name="hide_from_map">マップから隠す</string>
 	<string name="ugc_route_tags_screen_label">タグを選択</string>
 	<string name="ugc_route_tags_progress_msg">タグをロードしています…</string>
-	<string name="ugc_route_tags_desc">他の旅行者があなたのガイドを見つけられるようにタグを選択してください。これは必須です。</string>
 	<string name="public_access">パブリック・アクセス</string>
 	<string name="limited_access">制限されたアクセス</string>
 	<string name="upload_and_publish_desc">このガイドはパブリックのMAPS.MEカタログにアップロードされ、他のユーザーに対して利用可能になります</string>
@@ -1422,7 +1409,7 @@
 	<string name="unable_upload_errorr_title">ファイルのアップロードができませんでした</string>
 	<string name="unable_upload_error_subtitle_edited">このファイルはウェブアプリで編集されました</string>
 	<string name="unable_upload_error_subtitle_broken">このファイルは損傷しており、アップロードできませんでした。別のファイルをアップロードしてください。</string>
-	<string name="buy_btn">%sで購入</string>
+	<string name="buy_btn">%sでこれを購入</string>
 	<string name="download_guide_progress">ガイドをダウンロードしています…</string>
 	<string name="price_error_title">価格を取得できませんでした</string>
 	<string name="price_error_subtitle">数分後にもう一度試してみてください</string>
@@ -1470,12 +1457,326 @@
 	<string name="whatsnew_paid_routes_title">さらなある新たな体験！</string>
 	<string name="whatsnew_paid_routes_message">無料のルートに加え、カタログに3つの有料のルートを追加しました。700を超える新たなルート！</string>
 	<string name="whats_new_ugc_routes_title_android_only">印象を共有するのは簡単です</string>
+	<string name="ugc_thanks_message_auth">あなたのレビューが保存されました</string>
+	<string name="ugc_thanks_message_not_auth">レビューを残すにはログインしてください</string>
+	<string name="notification_leave_review_v2_title">訪れた場所を評価して旅行者を助けましょう！</string>
+	<string name="error_public_not_enought_title">ブックマークが足りません</string>
+	<string name="error_public_not_enought_subtitle">パブリックカタログにあなたのガイドをアップロードするには少なくとも3つのブックマークが必要です</string>
+	<string name="bookmark_public_upload_alert_title">全てのMAPS.MEの旅行者とあなたのブックマークを共有するために必要なステップはあと少しです！</string>
+	<string name="bookmark_public_upload_alert_subtitle">リストに具体的な名前と説明が付されれている事と、全てのブックマークに場所についての情報が記載されている事をお確かめください。こうする事であなたのリストを他の人が発見および利用できるようになります。</string>
+	<string name="bookmark_public_upload_alert_ok_button">はい、その通りです！</string>
+	<string name="name_title">ガイドの名前を入力してください</string>
+	<string name="name_placeholder">ロンドンパブなど</string>
+	<string name="name_comment1">旅行者が簡単に発見できるようにガイドに名前を付けてください：例、「ロンドンパブ」</string>
+	<string name="name_comment2">この名前には特別な記号や含まれていてはなりません。この名前は「マイプレイス」であってはなりません</string>
+	<string name="description_guide">説明</string>
+	<string name="description_title">ガイドの説明を入力してください</string>
+	<string name="description_placeholder">詳しくガイドを説明してください</string>
+	<string name="description_comment1">ガイドの説明には少なくとも30の記号が含まれていなくてはなりません。</string>
+	<string name="ugc_route_tags_desc">他の旅行者があなたのガイドを見つけられるようにタグを選択してください。これは必須です。%sのタグが最大です。</string>
+	<string name="html_format_error_title">あなたのガイドは公開されていません</string>
+	<string name="html_format_error_subtitle">あなたのブックマークの名前と説明が全て有効なフォーマットである事をお確かめください。以下の「オンラインで編集」ボタンをクリックする事でデスクトップブラウザからチェックする事ができます。</string>
+	<string name="web_editor_description">ガイドをアップロードして、デスクトップから編集リンクを取得しましょう</string>
+	<string name="edit_on_web_confirm">オンラインで編集</string>
+	<string name="update_guide">更新をアップロード</string>
+	<string name="direct_link_updating_text">あなたのファイルを更新しています…</string>
+	<string name="direct_link_updating_success">あなたのガイドが更新されました</string>
+	<string name="unable_get_direct_link_desc">パブリックリンクを通じてガイドを共有しています</string>
+	<string name="any_access_update_alert_title">いくつかの変化が発生した可能性があります</string>
+	<string name="any_access_update_alert_message">ブックマークを更新しますか？この新しいバージョンは同一のリンクから利用する事ができます。</string>
+	<string name="any_access_update_alert_update">更新</string>
+	<string name="public_or_limited_access_after_edit_online_error_title">オンラインでブックマークを編集しました</string>
+	<string name="public_or_limited_access_after_edit_online_error_message">将来的には当社のウェブサイトを通じてガイドを編集、公開、もしくは友人と共有してください</string>
+	<string name="power_managment_title">電力節約モード</string>
+	<string name="power_managment_description">自動モードが選択されている場合、このアプリケーションは現在のバッテリーの充電状態に応じてバッテリー消費の激しい機能の無効化を開始します</string>
+	<string name="power_managment_setting_never">無効</string>
+	<string name="power_managment_setting_auto">自動</string>
+	<string name="power_managment_setting_manual_max">最大電力節約</string>
+	<string name="enable_logging_warning_message">このオプションは診断目的でのデータ記録を有効にします。これはこのアプリケーションのトラブルシューティングを担当する当社のサポートスタッフの助けになります。このオプションはMAPS.MEにリクエストされた場合にのみ有効にしてください。</string>
+	<string name="html_error_upload_message_try_again">ネットワーク設定をチェックして、もう一度お試しください</string>
+	<string name="html_error_upload_title_try_again">インターネットに接続していません</string>
+	<string name="notification_leave_review_v2_android_short_title">レビューして旅行者を助けましょう！</string>
+	<string name="notifications_illegal_alert_disable_button">通知を無効化</string>
+	<string name="access_rules_author_only">オンライン編集</string>
+	<string name="privacy_settings_menu">プライバシー設定</string>
+	<string name="gdpr_request_setting">GDPRリクエストのためのIDを取得</string>
+	<string name="gdpr_request_window_title">あなたのID：%s。</string>
+	<string name="gdpr_request_window_message">これをコピーしてsupport\@maps.meにリクエストを送信してください</string>
+	<string name="gdpr_request_window_copy">IDをコピー</string>
+	<string name="unable_upadate_error_title">ファイルが更新できませんでした</string>
+	<string name="unable_upadate_error_message">更新中に何かミスが発生しました。変更を確認して、もう一度お試しください</string>
+	<string name="whats_new_wiki_title">その場所は何ですか？</string>
+	<string name="whats_new_wiki_message">当社はWikipedia.orgの記事を最も人気の観光名所のページに追加しました。これらはオフラインで利用する事ができます</string>
+	<string name="driving_options_title">運転オプション</string>
+	<string name="driving_options_subheader">すべてのルートで回避</string>
+	<string name="avoid_tolls">有料道路</string>
+	<string name="avoid_unpaved">未舗装道路</string>
+	<string name="avoid_ferry">フェリー航路</string>
+	<string name="avoid_motorways">高速道路</string>
+	<string name="unable_to_calc_alert_title">ルートを計算できません</string>
+	<string name="unable_to_calc_alert_subtitle">残念ながら恐らく設定されたオプションのためにルートが見つけられませんでした。設定を変更し、もう一度お試しください</string>
+	<string name="define_to_avoid_btn">回避するために道を設定</string>
+	<string name="change_driving_options_btn">運転オプションはアクティブです</string>
+	<string name="toll_road">有料道路</string>
+	<string name="unpaved_road">未舗装道路</string>
+	<string name="ferry_crossing">フェリー航路</string>
+	<string name="operated_by">\"%s\"で稼働</string>
+	<string name="avoid_toll_roads_placepage">有料道路を回避</string>
+	<string name="avoid_unpaved_roads_placepage">未舗装道路を回避</string>
+	<string name="avoid_ferry_crossing_placepage">フェリー航路を回避</string>
+	<string name="cached_guides_placeholder_subtitle">MAPS.MEはマップに表示されたオフラインで利用できる写真と説明文がついた選択された場所への便利なガイドを提供しています。</string>
+	<string name="guides_catalogue_title">ガイドのカタログ</string>
+	<string name="download_guides_button">カタログへ</string>
+	<plurals name="placepage_summary_rating_description">
+	  <item quantity="one">%dのレビューに基づいて</item>
+	  <item quantity="other">%dのレビューに基づいて</item>
+	</plurals>
+	<string name="type.cuisine.uzbek">ウズベキスタン料理</string>
+	<string name="onboarding_welcome_title">MAPS.MEで計画および旅行</string>
+	<string name="onboarding_welcome_first_subtitle">興味のある場所をブックマークし、ホテルを予約して、オフラインでルートを検索</string>
+	<string name="onboarding_guide_direct_download_title">ガイドはダウンロードできます</string>
+	<string name="onboarding_guide_direct_download_subtitle">これはマップ上に表示され、オフラインでも機能します</string>
+	<string name="onboarding_guide_direct_download_button">ダウンロード</string>
+	<string name="onboarding_bydeeplink_guide_title">MAPS.MEのすぐに利用できるガイド</string>
+	<string name="onboarding_bydeeplink_guide_subtitle">写真と説明文がついたマップ上に表示された名所。オフラインでも機能します。</string>
+	<string name="whats_new_auto_update_bydeeplink_title">ガイドへ進む前に…</string>
+	<string name="whats_new_auto_update_bydeeplink_message">オブジェクトについての情報を最新に保つためにマップをアップデートしましょう!</string>
+	<string name="whats_new_auto_update_and_proceed_button_size">アップデート(%s) して進む</string>
+	<string name="whatsnew_toll_unpaved_title">全てのタイプの道を考慮に入れて自動車ルートをレイアウト</string>
+	<string name="whatsnew_toll_unpaved_message">有料道路、未舗装道路、およびフェリー航路を回避するために迂回路を選択</string>
+	<string name="whatsnew_new_catalogue_title">カタログのページをアップデート</string>
+	<string name="whatsnew_new_catalogue_message">ルートの選択を簡単かつ便利にするためにパートナーのガイドの詳細な情報を追加しました</string>
+	<string name="purchase_please_wait_toast">購入が完了するまでこの画面を閉じないでください</string>
+	<string name="trip_start">レッツゴー</string>
+	<string name="pick_destination">目的地</string>
+	<string name="follow_my_position">リセンター</string>
+	<string name="search_results">検索結果</string>
+	<string name="then_turn">その後</string>
+	<string name="redirect_route_alert">ルートを再構築しますか?</string>
+	<string name="redirect_route_yes">はい</string>
+	<string name="redirect_route_no">いいえ</string>
+	<string name="trip_finished">到着しました!</string>
+	<string name="keyboard_availability_alert">運転中はキーボードを使用する事はできません</string>
+	<string name="dialog_routing_change_start_carplay">現在位置からはルートを構築できません</string>
+	<string name="dialog_routing_change_end_carplay">目的地へのルートは構築できません。別の地点を選択してください</string>
+	<string name="dialog_routing_check_gps_carplay">GPS信号がありません。開けた場所へ移動してください</string>
+	<string name="dialog_routing_unable_locate_route_carplay">ルートが構築できません。別のルート地点を設定して下さい</string>
+	<string name="dialog_routing_download_files_carplay">ルートを作成するには、地図に表示されていない部分を端末でダウンロードします</string>
+	<string name="dialog_routing_system_error_carplay">エラーが発生しました。アプリを再起動してください</string>
+	<string name="dialog_routing_rebuild_from_current_location_carplay">ルートは現在位置から再構築されます</string>
+	<string name="dialog_routing_rebuild_for_vehicle_carplay">ルートは自動車用として修正されます</string>
+	<string name="ok">OK</string>
+	<string name="booking_button_toolbar">マップ上のホテルを選択</string>
+	<string name="popup_booking_download_guides_title">ホテルを予約しましたか？</string>
+	<string name="popup_booking_download_guides_message">MAPS.MEのレディメイドなガイドでルートを計画しましょう</string>
+	<string name="popup_mwm_download_guides_title">オフライン都市ガイド</string>
+	<string name="popup_mwm_download_guides_cta">1つ選択してください</string>
+	<string name="popup_mwm_download_guides_cta_1">ご覧ください</string>
+	<string name="gallery_pp_download_guides_offline_title">MAPS.MEで休暇の計画をたてましょう!</string>
+	<string name="gallery_pp_download_guides_offline_subtitle">熟練の旅行者が作ったガイドをお見逃しなく</string>
+	<string name="gallery_pp_download_guides_offline_cta">インターネットを起動</string>
+	<string name="gallery_pp_download_guides_title">ガイド</string>
+	<string name="native_screen_subscription_title">2000旅行ガイドへの無制限のアクセス！</string>
+	<string name="native_screen_subscription_message">誰とでも何処へ行くにしても忘れられない休暇にしましょう</string>
+	<string name="annual_subscription_title">年ごと</string>
+	<string name="montly_subscription_title">月ごと</string>
+	<string name="annual_subscription_message">12ケ月の無制限アクセス</string>
+	<string name="montly_subscription_message">1ケ月の無制限アクセス</string>
+	<string name="subscription_success_dialog_title">ご登録ありがとうございます！</string>
+	<string name="subscription_success_dialog_message">これで全てのガイドカタログにアクセスできるようになりました</string>
+	<string name="renewal_screen_title">サブスクリプションの期限が切れました</string>
+	<string name="renewal_screen_message">サブスクリプションでダウンロードされた全てのガイドが削除されます。サブスクリプションを継続してガイドを維持しますか？</string>
+	<string name="renewal_screen_button_restore">はい、更新します</string>
+	<string name="renewal_screen_button_cancel">いいえ、ガイドを削除します</string>
+	<string name="subscription_error_ping_title">購入できませんでした</string>
+	<string name="subscription_error_message">このサービスはあなたの地域では現在利用できません。後ほどもう一度お試しください</string>
+	<string name="subscription_error_button">分かりました</string>
+	<string name="timeout_error_title">おっと、時間切れです！</string>
+	<string name="timeout_error_message">当社のサービスが応答しません。インターネット接続を確認して、もう一度お試しください。</string>
+	<string name="per_month">/月</string>
+	<string name="per_year">/年</string>
+	<string name="buy_btn_for_subscription">%sから無制限のアクセス</string>
+	<string name="buy_btn_for_subscription_1">%sで全てのガイドを購入</string>
+	<string name="buy_btn_for_subscription_ios_only_mo">%s/月で無制限のアクセス</string>
+	<string name="buy_btn_for_subscription_ios_only_year">%s/年で無制限のアクセス</string>
+	<string name="subscription_terms_guides">支払いは購入の確認後にiTunesのアカウントに請求されます。サブスクリプションは、現在の有効期限が失効する24時間前までに自動更新機能を無効にしていない限り、自動的に更新されます。あなたのアカウントは現在の有効期限が失効する24時間前までの更新計画に基づいて請求されます。自動更新機能はApple IDのアカウント設定からにいつでも無効化する事ができます。ダウンロードしたガイドはサブスクリプションの失効日までしか利用できません。サブスクリプションの消失から30日でブックマークの付いたガイドは自動的に削除されます。</string>
+	<string name="subscription_terms">ご購入確定時にお客様のiTunesアカウントにお支払いが請求されます。現在のご利用期間が終了する最低でも24時間前に自動更新が解除されなければ、サブスクリプションは自動的に更新されます。現在のご利用期間が終了する24時間以内に、ご利用プランの更新がアカウントに請求されます。ご購入期間中にApple IDアカウント設定より自動更新を管理または解除することができます。</string>
+	<string name="whatsnew_carplay_title">CarPlay対応MAPS.MEのカーナビゲーションです！</string>
+	<string name="whatsnew_carplay_message">ブックマークや、検索、自動速度違反取締装置、運転オプションがオフラインで利用できます</string>
+	<string name="whatsnew_subscription_title">サブスクライブすれば世界中で利用できます！</string>
+	<string name="whatsnew_subscription_message">ガイドのカタログへの無制限のアクセスはワンタイム購入よりもお得です</string>
+	<string name="whatsnew_carnavi_fixes_for_android_title">ナビゲーションの更新</string>
+	<string name="whatsnew_carnavi_fixes_for_android_message">道から遠く離れた地点へのルート計画を改善しました</string>
+	<string name="avoid_unpaved_carplay_1">未舗装道路無し</string>
+	<string name="avoid_unpaved_carplay_2">未舗装道路無し</string>
+	<string name="avoid_ferry_carplay_1">フェリー無し</string>
+	<string name="avoid_ferry_carplay_2">フェリーを回避</string>
+	<string name="avoid_tolls_carplay_1">有料道路無し</string>
+	<string name="avoid_tolls_carplay_2">有料道路を回避</string>
+	<string name="speedcams_alert_title_carplay_1">速度警告</string>
+	<string name="speedcams_alert_title_carplay_2">速度警告</string>
+	<string name="download_map_carplay">あなたの機器のMAPS.MEのアプリにマップをダウンロードしてください</string>
+	<string name="carplay_roundabout_exit">第%s出口</string>
+	<!-- max. 10 symbols, both iOS and Android -->
+	<string name="sort">並び替え中…</string>
+	<!-- Android, title, max 20-22 symbols -->
+	<string name="sort_bookmarks">ブックマークの並び替え</string>
+	<!-- iOS -->
+	<string name="sort_default">デフォルトで並び替え</string>
+	<string name="sort_type">タイプで並び替え</string>
+	<string name="sort_distance">距離で並び替え</string>
+	<string name="sort_date">日付で並び替え</string>
+	<!-- Android -->
+	<string name="by_default">デフォルトで</string>
+	<!-- Android -->
+	<string name="by_type">タイプで</string>
+	<!-- Android -->
+	<string name="by_distance">距離で</string>
+	<!-- Android -->
+	<string name="by_date">日付で</string>
+	<string name="week_ago_sorttype">1週間前</string>
+	<string name="month_ago_sorttype">1ケ月前</string>
+	<string name="moremonth_ago_sorttype">1ケ月以上前</string>
+	<string name="moreyear_ago_sorttype">1年以上前</string>
+	<string name="near_me_sorttype">近隣</string>
+	<string name="others_sorttype">その他</string>
+	<string name="food_places">食べ物</string>
+	<string name="tourist_places">観光地</string>
+	<string name="museums">博物館</string>
+	<string name="parks">公園</string>
+	<string name="swim_places">水泳</string>
+	<string name="mountains">山</string>
+	<string name="animals">動物園</string>
+	<string name="hotels">ホテル</string>
+	<string name="buildings">ビル</string>
+	<string name="money">金銭</string>
+	<string name="shops">ショップ</string>
+	<string name="parkings">駐車場</string>
+	<string name="fuel_places">ガソリンスタンド</string>
+	<string name="water">水</string>
+	<string name="medicine">医薬品</string>
+	<string name="search_in_the_list">リスト内で検索</string>
+	<string name="view_on_map_bookmarks">マップ上</string>
+	<string name="more_bookmarks">更に…</string>
+	<string name="no_items_found">何も見つかりませんでした</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_edit_list">リストの編集</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_delete_list">リストの削除</string>
+	<string name="whatsnew_bookmarks_search_sort_title">ブックマークの順番で快適な旅ができます</string>
+	<string name="whatsnew_bookmarks_search_sort_message">お気に入りの場所をカテゴリーや、位置、時系列順で並び替えたり、名前で素早く特定のブックマークを検索しましょう。</string>
+	<string name="popup_subscription_success_map_title">おめでとうございます、サブスクライブしました!</string>
+	<string name="popup_subscription_success_map_message">MAPS.MEのカタログで最高の観光地を見つけましょう</string>
+	<string name="popup_subscription_success_map_start_button">ブラウジングを開始</string>
+	<string name="popup_subscription_success_map_not_now_button">今はしない</string>
+	<string name="religious_places">宗教に関連した場所</string>
+	<string name="subscription_terms_android">購入を確認すると支払いはGoogle Playのアカウントに請求されます。サブスクリプションは、自動更新機能が現在の有効期限の24時間前までに無効化されない限り自動的に更新されます。現在の有効期限の終了の24時間以内に更新プランに従ってあなたのアカウントに対して請求されます。購入後にアカウント設定から自動更新機能を管理または無効化する事ができます。有効期限までにサブスクリプションでダウンロードしたガイドだけしか利用する事はできません。サブスクリプションの失効から30日が経過するとダウンロードしたガイドは自動的に削除されます。</string>
+	<string name="select_list">リストを選択</string>
+	<string name="pp_discovery_place_related_header">この場所はガイドカタログに記載されています</string>
+	<string name="pp_discovery_place_related_header_1">この場所はガイドで特集されています</string>
+	<string name="pp_discovery_place_related_cta_button">閲覧</string>
+	<string name="pp_discovery_place_related_tag_header">「%s」のタグが付いたガイド</string>
+	<string name="pp_discovery_place_related_tag_header_1">こちらもいかがですか</string>
+	<string name="buy_btn_for_subscription_version_2">全てのガイドがたったの月%s</string>
+	<string name="buy_btn_for_subscription_version_3">カタログ全体が月々%s</string>
+	<string name="buy_btn_for_subscription_ios_only_mo_version_2">カタログへのアクセスが月々%s</string>
+	<string name="buy_btn_for_subscription_ios_only_year_version_2">カタログへのアクセスが年間%s</string>
+	<string name="subscription_screen_native_title_version_2">ブックマーク付きのガイドにアクセスしましょう！</string>
+	<string name="subscription_screen_native_message_version_2">600以上の都市と100以上の国々への旅の準備を整えましょう</string>
+	<string name="catalog_no_internet_title">インターネット接続がありません</string>
+	<string name="catalog_no_internet_button">もう一度お試しください</string>
+	<string name="whatsnew_map_updates_title">高速のマップ更新</string>
+	<string name="whatsnew_map_updates_message">これからは更新速度が二倍になります</string>
+	<string name="new_onboarding_button">次へ</string>
+	<string name="new_onboarding_button_2">開始</string>
+	<string name="new_onboarding_step1_header_2">オールインワンの旅の友</string>
+	<string name="new_onboarding_step2_header">夢を持って計画しましょう</string>
+	<string name="new_onboarding_step2_message">7000万以上の場所と、レディメイドなガイド、そしてホテル予約がマップから直接利用できます－旅行の準備に最適です！</string>
+	<string name="new_onboarding_step3_message">全ての国の詳細なマップとナビゲーションで決して迷う事はありません－全てがオフラインの機能します！</string>
+	<string name="new_onboarding_step4_header">感想を共有しましょう</string>
+	<string name="new_onboarding_step4_message">お気に入り場所にブックマークをして、友人に送信しましょう</string>
+	<string name="new_onboarding_step5.1_header">始める前にもう1点…</string>
+	<string name="new_onboarding_step5.1_message">今後の旅のオフラインのガイドを見つけるために新しいガイドのカタログを見る事をお忘れなく！</string>
+	<string name="new_onboarding_step5.1_button">カタログを開く</string>
+	<string name="new_onboarding_step5.2_message">MAPS.MEのガイドのカタログにサブスクライブすれば多くの利点があります。世界中の都市や戸外のガイドの全てにアクセスする事ができます！</string>
+	<string name="new_onboarding_step5.2_button">規約をご確認ください</string>
+	<string name="new_onboarding_step5.3_message">MAPS.MEの無料セレクションでレディメイドな都市と戸外のルートのサンプルをご覧ください！</string>
+	<string name="new_onboarding_step5.3_button">無料ダウンロード</string>
+	<string name="new_onboarding_additional_steps_later_button">後で</string>
+	<string name="all_pass_subscription_header">カタログにサブスクライブ</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title">30000+の\nガイド&amp;トレイル</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle">都市とアウトドアのルートの<b>オフラインモード</b>への<b>無制限のダウンロード</b></string>
+	<!-- \n - for a break between lines. Max. 17 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_2">インタラクティブな\n高度情報</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_2">各トレイルには<b>ルートの高度と基本情報</b>が含まれています</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_3">ブックマーク、\n写真、そして\nおススメ</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_3">これから旅する<b>ルートの詳細</b></string>
+	<string name="sightseeing_subscription_header_subscription">ガイドのサブスクリプション</string>
+	<string name="sightseeing_subscription_message">700以上の都市と100以上の国</string>
+	<string name="sightseeing_subscription_message_2">オフラインで利用可能</string>
+	<string name="sightseeing_subscription_message_3">写真と歩行経路</string>
+	<string name="subscription_success_dialog_title_sightseeing_pass">ご登録ありがとうございます！</string>
+	<string name="subscription_success_dialog_message_sightseeing_pass">これでカタログ内の全ての観光ガイドにアクセスできるようになりました</string>
+	<string name="downloader_main_gallery_header">マップとガイド</string>
+	<string name="downloader_main_gallery_message">このセクションではマップをダウンロードできるだけでなく、今後の旅のためのガイドをチェックする事もできます</string>
+	<string name="downloader_main_1_element_gallery_header">全てのガイド</string>
+	<string name="downloader_main_1_element_gallery_message">100以上の国の</string>
+	<string name="downloader_country_1_element_gallery_header">%s個のガイド</string>
+	<string name="downloader_country_no_guides_gallery_header">この国にはまだガイドがありません</string>
+	<string name="downloader_country_no_guides_gallery_message">100以上の国の都市と戸外での活動のための他のオフラインガイドをチェックできます</string>
+	<string name="dialog_pedestrian_route_is_long">交通機関の登場ポイントまでの歩行ルートが長すぎます</string>
+	<string name="whatsnew_outdoor_guides_title">15000以上の戸外トレイルを追加しました！</string>
+	<string name="whatsnew_outdoor_guides_message">Outdooractiveが提供する冬と夏の旅のためのルートをカタログから利用できます!</string>
+	<string name="whatsnew_guides_galleries_title">MAPS.MEで今後の旅の計画を立てましょう</string>
+	<string name="whatsnew_guides_galleries_message">人気の観光都市と景色の場所のページでお勧めのガイドを見つける事ができるようになりました</string>
+	<string name="new_onboarding_step3_header">体験しましょう</string>
+	<string name="all_pass_screen_best_value">ベストバリュー</string>
+	<string name="buy_btn_for_subscription_3">カタログ全体が年々%s</string>
+	<string name="transit_not_found">この地域の地下鉄ナビはまだ利用できません</string>
+	<string name="dialog_pedestrian_route_is_long_header">地下鉄ルートが見つかりませんでした</string>
+	<string name="dialog_pedestrian_route_is_long_message">もっと地下鉄駅に近い出発地または目的地を選択してください</string>
+	<!-- Failed planning SUBWAY route message in navigation view -->
+	<string name="routing_planning_error_subway_special">地下鉄ルートの計画ができませんでした</string>
+	<string name="whatsnew_isolines_title">アウトドアの新要素：オフラインのトポグラフィーレイヤー！</string>
+	<!-- as less symbols as possible -->
+	<string name="whatsnew_isolines_message">山地でも安心。左上でレイヤーを起動するだけです</string>
+	<string name="button_layer_isolines">地形</string>
+	<string name="tips_map_layers_title_countour">MAPS.MEの新要素：オフラインのトポグラフィーレイヤー！</string>
+	<string name="tips_map_layers_message_countour">自然の旅で訪れる地域を全てを把握しながら計画を立て楽しみましょう</string>
+	<string name="isolines_activation_error_dialog">トポグラフィーレイヤーを有効化して使用するには、このエリアのマップを更新もしくはダウンロードしてください</string>
+	<string name="isolines_location_error_dialog">トポグラフィーレイヤーはこの地域ではまだ利用できません</string>
+	<string name="elevation_profile_diff_level">難易度</string>
+	<string name="elevation_profile_diff_level_easy">イージー</string>
+	<string name="elevation_profile_diff_level_moderate">ノーマル</string>
+	<string name="elevation_profile_diff_level_hard">ハード</string>
+	<string name="elevation_profile_ascent">上昇</string>
+	<string name="elevation_profile_descent">下降</string>
+	<string name="elevation_profile_minaltitude">最小高度</string>
+	<string name="elevation_profile_maxaltitude">最大高度</string>
+	<string name="elevation_profile_m">m</string>
+	<string name="elevation_profile_difficulty">難易度</string>
+	<string name="elevation_profile_distance">距離：</string>
+	<string name="elevation_profile_km">㎞</string>
+	<string name="elevation_profile_time">時間：</string>
+	<string name="elevation_profile_hours">時間</string>
+	<string name="elevation_profile_minutes">分</string>
+	<!-- hide the full screen banner and continue working with the app -->
+	<string name="hide_screen_map_update">閉じて継続</string>
+	<string name="view_on_map_downloaded_error">このガイドはこの機器から削除されました</string>
+	<string name="subscription">サブスクリプション</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">ケーブルカー駅</string>
 	<string name="type.aeroway.aerodrome">空港</string>
 	<string name="type.aeroway.aerodrome.international">空港</string>
 	<string name="type.aeroway.helipad">ヘリポート</string>
+	<string name="type.amenity">アメニティー</string>
+	<string name="type.amenity.arts_centre">芸術センター</string>
 	<string name="type.amenity.bank">銀行</string>
 	<string name="type.amenity.bar">居酒屋</string>
 	<string name="type.amenity.bbq">ピクニック</string>
@@ -1523,14 +1824,15 @@
 	<string name="type.amenity.parking">駐車場</string>
 	<string name="type.amenity.parking.fee">駐車場</string>
 	<string name="type.amenity.parking.multi.storey">駐車場</string>
-	<string name="type.amenity.parking.multi.storey.fee">駐車場</string>
 	<string name="type.amenity.parking.no.access">駐車場</string>
 	<string name="type.amenity.parking.park_and_ride">駐車場</string>
 	<string name="type.amenity.parking.permissive">駐車場</string>
-	<string name="type.amenity.parking.permissive.fee">駐車場</string>
 	<string name="type.amenity.parking.private">駐車場</string>
 	<string name="type.amenity.parking.underground">駐車場</string>
-	<string name="type.amenity.parking.underground.fee">駐車場</string>
+	<string name="type.amenity.parking_space">駐車スペース</string>
+	<string name="type.amenity.parking_space.permissive">駐車スペース</string>
+	<string name="type.amenity.parking_space.private">駐車スペース</string>
+	<string name="type.amenity.parking_space.underground">駐車スペース</string>
 	<string name="type.amenity.payment_terminal">決済端末</string>
 	<string name="type.amenity.pharmacy">薬局</string>
 	<string name="type.amenity.place_of_worship">礼拝</string>
@@ -1560,6 +1862,7 @@
 	<string name="type.amenity.vending_machine.cigarettes">たばこ自動販売機</string>
 	<string name="type.amenity.vending_machine.drinks">飲料自動販売機</string>
 	<string name="type.amenity.vending_machine.parking_tickets">駐車券支払機</string>
+	<string name="type.amenity.vending_machine.public_transport_tickets">公共交通機関の券売機</string>
 	<string name="type.amenity.veterinary">獣医</string>
 	<string name="type.amenity.waste_basket">くずかご</string>
 	<string name="type.amenity.waste_disposal">ゴミ</string>
@@ -1679,6 +1982,7 @@
 	<string name="type.emergency.phone">緊急電話</string>
 	<string name="type.entrance">エントランス</string>
 	<string name="type.highway.bus_stop">バス停</string>
+	<string name="type.highway.construction">工事中の道路</string>
 	<string name="type.highway.footway">歩道</string>
 	<string name="type.highway.footway.alpine_hiking">歩道</string>
 	<string name="type.highway.footway.area">歩道</string>
@@ -1741,9 +2045,6 @@
 	<string name="type.highway.service.area">ストリート</string>
 	<string name="type.highway.service.bridge">ストリート</string>
 	<string name="type.highway.service.driveway">ストリート</string>
-	<string name="type.highway.service.driveway.area">ストリート</string>
-	<string name="type.highway.service.driveway.bridge">ストリート</string>
-	<string name="type.highway.service.driveway.tunnel">ストリート</string>
 	<string name="type.highway.service.parking_aisle">ストリート</string>
 	<string name="type.highway.service.tunnel">ストリート</string>
 	<string name="type.highway.speed_camera">オービス</string>
@@ -1762,14 +2063,8 @@
 	<string name="type.highway.track.grade1">ストリート</string>
 	<string name="type.highway.track.grade2">ストリート</string>
 	<string name="type.highway.track.grade3">ストリート</string>
-	<string name="type.highway.track.grade3.no.access">ストリート</string>
-	<string name="type.highway.track.grade3.permissive">ストリート</string>
 	<string name="type.highway.track.grade4">ストリート</string>
-	<string name="type.highway.track.grade4.no.access">ストリート</string>
-	<string name="type.highway.track.grade4.permissive">ストリート</string>
 	<string name="type.highway.track.grade5">ストリート</string>
-	<string name="type.highway.track.grade5.no.access">ストリート</string>
-	<string name="type.highway.track.grade5.permissive">ストリート</string>
 	<string name="type.highway.track.no.access">ストリート</string>
 	<string name="type.highway.track.permissive">ストリート</string>
 	<string name="type.highway.track.tunnel">ストリート</string>
@@ -1801,13 +2096,17 @@
 	<string name="type.landuse.basin">水地</string>
 	<string name="type.landuse.cemetery">墓地</string>
 	<string name="type.landuse.cemetery.christian">墓地</string>
+	<string name="type.landuse.churchyard">教会付属墓地</string>
+	<string name="type.landuse.farmland">農地</string>
 	<string name="type.landuse.forest">森林</string>
 	<string name="type.landuse.forest.coniferous">森林</string>
 	<string name="type.landuse.forest.deciduous">森林</string>
 	<string name="type.landuse.forest.mixed">森林</string>
+	<string name="type.landuse.grass">芝生</string>
+	<string name="type.landuse.landfill">埋立地</string>
+	<string name="type.landuse.railway">鉄道施設</string>
 	<string name="type.landuse.reservoir">水地</string>
-	<string name="type.leisure.dog_park">ドッグラン</string>
-	<string name="type.leisure.dog_park.tennis">ドッグラン</string>
+	<string name="type.leisure.dog_park">ドッグエリア</string>
 	<string name="type.leisure.fitness_centre">フィットネスセンター、ジム</string>
 	<string name="type.leisure.fitness_station">フィットネスステーション</string>
 	<string name="type.leisure.garden">庭園</string>
@@ -1818,9 +2117,7 @@
 	<string name="type.leisure.park.permissive">公園</string>
 	<string name="type.leisure.park.private">公園</string>
 	<string name="type.leisure.pitch">運動場</string>
-	<string name="type.leisure.pitch.tennis">運動場</string>
 	<string name="type.leisure.playground">児童公園</string>
-	<string name="type.leisure.playground.tennis">児童公園</string>
 	<string name="type.leisure.sauna">サウナ</string>
 	<string name="type.leisure.sports_centre">スポーツセンター</string>
 	<string name="type.leisure.sports_centre.climbing">クライミングセンター</string>
@@ -1842,20 +2139,19 @@
 	<string name="type.natural.bay">港湾</string>
 	<string name="type.natural.beach">ビーチ</string>
 	<string name="type.natural.cape">岬</string>
-	<string name="type.natural.cave_entrance">洞穴入口</string>
+	<string name="type.natural.cave_entrance">洞窟</string>
 	<string name="type.natural.geyser">間欠泉</string>
 	<string name="type.natural.glacier">氷河</string>
+	<string name="type.natural.grassland">野原</string>
 	<string name="type.natural.lake">湖</string>
 	<string name="type.natural.peak">山頂</string>
 	<string name="type.natural.pond">池</string>
+	<string name="type.natural.scrub">雑木林</string>
 	<string name="type.natural.spring">泉</string>
 	<string name="type.natural.tree">木</string>
 	<string name="type.natural.volcano">火山</string>
 	<string name="type.natural.water">水地</string>
-	<string name="type.natural.wood">森林</string>
-	<string name="type.natural.wood.coniferous">森林</string>
-	<string name="type.natural.wood.deciduous">森林</string>
-	<string name="type.natural.wood.mixed">森林</string>
+	<string name="type.natural.wetland">湿地帯</string>
 	<string name="type.office">オフィス</string>
 	<string name="type.office.company">会社事務所</string>
 	<string name="type.office.estate_agent">不動産業者</string>
@@ -1896,6 +2192,9 @@
 	<string name="type.power.substation">変電所</string>
 	<string name="type.power.tower">電柱</string>
 	<string name="type.railway.halt">鉄道駅</string>
+	<string name="type.railway.level_crossing">踏切</string>
+	<string name="type.railway.monorail">モノレール</string>
+	<string name="type.railway.rail">鉄道</string>
 	<string name="type.railway.station">鉄道駅</string>
 	<string name="type.railway.station.light_rail">鉄道駅</string>
 	<string name="type.railway.station.monorail">鉄道駅</string>
@@ -1924,7 +2223,7 @@
 	<string name="type.railway.station.subway.spb">地下鉄</string>
 	<string name="type.railway.station.subway.violet">地下鉄</string>
 	<string name="type.railway.station.subway.yellow">地下鉄</string>
-	<string name="type.railway.subway_entrance">地下鉄</string>
+	<string name="type.railway.subway_entrance">地下鉄入り口</string>
 	<string name="type.railway.subway_entrance.barcelona">地下鉄</string>
 	<string name="type.railway.subway_entrance.berlin">地下鉄</string>
 	<string name="type.railway.subway_entrance.kiev">地下鉄</string>
@@ -2003,6 +2302,10 @@
 	<string name="type.shop.variety_store">雑貨店</string>
 	<string name="type.shop.video">買い物</string>
 	<string name="type.shop.wine">ワイン</string>
+	<string name="type.sport.athletics">運動競技</string>
+	<string name="type.sport.basketball">バスケットボール</string>
+	<string name="type.sport.equestrian">乗馬スポーツ</string>
+	<string name="type.sport.tennis">テニスコート</string>
 	<string name="type.tourism.alpine_hut">山小屋</string>
 	<string name="type.tourism.apartment">アパート</string>
 	<string name="type.tourism.artwork">イラスト</string>
@@ -2044,6 +2347,10 @@
 	<string name="type.waterway.stream.intermittent">河川</string>
 	<string name="type.waterway.stream.tunnel">河川</string>
 	<string name="type.waterway.waterfall">滝</string>
+	<string name="type.wheelchair.limited">車椅子でのアクセス制限</string>
+	<string name="type.wheelchair.no">車椅子でのアクセスなし</string>
+	<string name="type.wheelchair.yes">車椅子でのアクセスあり</string>
+	<string name="type.building_part">建物</string>
 
 	<!-- SECTION: Brands -->
 	<string name="brand.aiya">藍屋</string>

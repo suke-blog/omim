@@ -4,8 +4,6 @@
 <!-- Language: en -->
 <resources>
 	<!-- SECTION: Strings -->
-	<!-- About button text (should be short) -->
-	<string name="about">About</string>
 	<!-- Button text (should be short) -->
 	<string name="back">Back</string>
 	<!-- Button text (should be short) -->
@@ -53,7 +51,6 @@
 	<string name="miles">Miles</string>
 	<!-- View and button titles for accessibility -->
 	<string name="core_my_position">My Position</string>
-	<string name="ok">OK</string>
 	<!-- Settings/Downloader - No free space dialog message -->
 	<string name="free_disk_space_for_country_x">Please free some space on your device first in order to download %s</string>
 	<!-- Leave Review dialog - Not now button (remind me later) -->
@@ -72,8 +69,6 @@
 	<string name="touch_to_download">Touch to download</string>
 	<!-- Settings/Downloader - 3G download warning dialog confirm button -->
 	<string name="use_cellular_data">Yes</string>
-	<!-- Settings/Downloader - No internet connection dialog message -->
-	<string name="use_wifi_recommendation_text">We recommend using WiFi to download large maps</string>
 	<!-- Choose measurement on first launch alert - title -->
 	<string name="which_measurement_system">Which measurement system do you prefer?</string>
 	<!-- Location services are disabled by user alert - message -->
@@ -263,8 +258,6 @@
 	<string name="my_position_share_sms">Hey, check out my current location in MAPS.ME! %1$s or %2$s Don\'t have offline maps? Download here: http://maps.me/get</string>
 	<!-- Subject for emailed bookmark -->
 	<string name="bookmark_share_email_subject">Hey, check out my pin in MAPS.ME!</string>
-	<!-- Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me -->
-	<string name="bookmark_share_email">Hi,\n\nI pinned: %1$s on the MAPS.ME offline map of the world. Click this link %2$s or this one %3$s to see the place on the map.\n\nThanks.</string>
 	<!-- Subject for emailed position -->
 	<string name="my_position_share_email_subject">Hey, check out my current location on the MAPS.ME map!</string>
 	<!-- Share my position using EMail, %1$@ is ge0:// and %2$@ is http://ge0.me link WITHOUT NAME -->
@@ -377,12 +370,6 @@
 	<string name="route">Route</string>
 	<!-- category title -->
 	<string name="routes">Routes</string>
-	<!-- Show on first launch. -->
-	<string name="maps_licence_info">This applications uses geographical data (including maps, business listings, points of interest, borders of countries and regions, etc.) taken from the OpenStreetMap project. We do not warrant any consistency, accuracy, completeness or applicability of the OpenStreetMap data.</string>
-	<!-- Show on first launch. -->
-	<string name="agree">I agree</string>
-	<!-- Show on first launch -->
-	<string name="disagree">I disagree</string>
 	<!-- text of notification -->
 	<string name="download_map_notification">Download the map of the place where you are</string>
 	<!-- text of notification -->
@@ -579,6 +566,22 @@
 	<string name="brown">Brown</string>
 	<!-- pink color -->
 	<string name="pink">Pink</string>
+	<!-- deep purple color -->
+	<string name="deep_purple">Deep Purple</string>
+	<!-- light blue color -->
+	<string name="light_blue">Light Blue</string>
+	<!-- cyan color -->
+	<string name="cyan">Cyan</string>
+	<!-- teal color -->
+	<string name="teal">Teal</string>
+	<!-- lime color -->
+	<string name="lime">Lime</string>
+	<!-- deep orange color -->
+	<string name="deep_orange">Deep Orange</string>
+	<!-- gray color -->
+	<string name="gray">Gray</string>
+	<!-- blue gray color -->
+	<string name="blue_gray">Blue Gray</string>
 	<!-- Wi-Fi available -->
 	<string name="WiFi_available">Yes</string>
 
@@ -814,8 +817,6 @@
 	<string name="onboarding_location_message">In order for you to use navigation and the other app functions, MAPS.ME needs access to your geoposition.</string>
 	<string name="onboarding_permissions_title">Allow MAPS.ME access to storage and location</string>
 	<string name="onboarding_permissions_message">So you can download maps, see places and traffic near you and use navigation.</string>
-	<string name="onboarding_welcome_title">Welcome to MAPS.ME</string>
-	<string name="onboarding_welcome_first_subtitle">Free, fast, detailed and entirely offline maps with turn-by-turn navigation.</string>
 	<string name="onboarding_welcome_second_subtitle">By launching the application, you agree to &lt;a href="%1$s">Terms of Use&lt;/a> and &lt;a href="%2$s">Privacy Policy&lt;/a>.</string>
 	<string name="dialog_incorrect_feature_position">Change location</string>
 	<string name="message_invalid_feature_position">No object can be located here</string>
@@ -1054,8 +1055,6 @@
 	<string name="banner_geerbest_message">Instant search in over 50,000 items at low prices.</string>
 	<string name="banner_rentalcars_title">Renting cars online</string>
 	<string name="banner_rentalcars_message">800 car rental companies in more than 49,000 car rental locations.</string>
-	<string name="banner_viator_title">Online tour search</string>
-	<string name="banner_viator_message">Search in over 50,000 tours all over the world.</string>
 	<!-- december -->
 	<string name="whatsnew_traffic">Traffic Data in 36 Countries</string>
 	<!-- december -->
@@ -1102,8 +1101,6 @@
 	<string name="whatsnew_smaller_mwm_message">Maps require up to 20% less storage.</string>
 	<string name="whatsnew_waypoints_title">Waypoints in Routing</string>
 	<string name="whatsnew_waypoints_message">Tap places to add waypoints to your route.</string>
-	<string name="whatsnew_viator_title">Book a tour</string>
-	<string name="whatsnew_viator_message">Choose popular tours in tourist cities all over the world.</string>
 	<string name="whatsnew_driving_style_title">New Map Style for Driving</string>
 	<string name="whatsnew_driving_style_message">Car navigation mode got easier to use.</string>
 	<string name="more_on_bookingcom">More on Booking.com</string>
@@ -1162,7 +1159,6 @@
 	<string name="settings_card_memory">Card memory</string>
 	<string name="settings_storage_available">%s available</string>
 	<string name="toast_location_permission_denied">App location permission denied</string>
-	<string name="place_page_viator_title">Attractions and Tours</string>
 	<string name="button_use">Use</string>
 	<string name="planning_route_manage_route">Manage Route</string>
 	<string name="button_plan">Plan</string>
@@ -1185,8 +1181,6 @@
 	<string name="add_my_position">Add my position</string>
 	<string name="choose_start_point">Choose a starting point</string>
 	<string name="choose_destination">Choose a destination</string>
-	<string name="preloader_viator_title">Discover tours and unusual activities</string>
-	<string name="preloader_viator_message">Tours, activities, sightseeing and more</string>
 	<string name="preloader_viator_button">Learn more</string>
 	<string name="whats_new_title_route">Bicycle routes and pedestrian routes were improved</string>
 	<string name="whats_new_message_route">We fixed errors, made route building several times faster, and added intermediate stops</string>
@@ -1197,10 +1191,6 @@
 	<string name="placepage_no_reviews">No reviews</string>
 	<string name="placepage_reviewed">You have already reviewed this place</string>
 	<string name="placepage_summary_rating">Summary rating</string>
-	<plurals name="placepage_summary_rating_description">
-	  <item quantity="one">Based on %d review</item>
-	  <item quantity="other">Based on %d reviews</item>
-	</plurals>
 	<string name="placepage_rate_comment">Tap to rate and review this place.</string>
 	<string name="placepage_rate_horrible">Horrible</string>
 	<string name="placepage_rate_bad">Bad</string>
@@ -1243,8 +1233,6 @@
 	<string name="discovery_button_subtitle_attractions">Attractions</string>
 	<string name="discovery_button_subtitle_eat_and_drink">Eat and drink</string>
 	<string name="discovery_button_subtitle_local_guides">Local Guides</string>
-	<string name="discovery_button_viator_offline_title">Discover tours and unusual things to do</string>
-	<string name="discovery_button_viator_offline_message">Tours, things to do, sightseeing tours and more.</string>
 	<string name="discovery_button_viator_error_title">Error loading data</string>
 	<string name="discovery_button_other_error_message">Error loading data</string>
 	<string name="discovery_button_other_loading_message">Data is loading</string>
@@ -1285,12 +1273,10 @@
 	<string name="downloader_percent">%1$s (%2$s of %3$s)</string>
 	<string name="downloader_process">Downloading %s...</string>
 	<string name="downloader_applying">Applying %s...</string>
-	<string name="transit_not_found">Transit navigation in this region is not yet available</string>
 	<string name="whats_new_title_hotel_filter">New hotel filters available!</string>
 	<string name="whats_new_message_hotel_filter">Book hotels available for your dates! Use check in and check out filters</string>
 	<string name="whats_new_title_ugc_travel">Share your experience with other travellers!</string>
 	<string name="whats_new_message_ugc_travel">Rate and review places you visited!</string>
-	<string name="dialog_pedestrian_route_is_long">The pedestrian route is too long</string>
 	<string name="dialog_message_transit_not_found_connection">Plan a route within one transit network</string>
 	<string name="bookmarks_error_message_share_general">Unable to share due to an application error</string>
 	<string name="bookmarks_error_title_share_empty">Sharing error</string>
@@ -1406,8 +1392,8 @@
 	<string name="bookmarks_downloaded_subtitle">Press ‘View on map’ to explore new places from the list</string>
 	<string name="guides">Guides</string>
 	<string name="guide_downloaded_title">The guide has been downloaded successfully</string>
-	<string name="download_guides">Download guides</string>
-	<string name="cached_guides_placeholder_subtitle">Detailed offline guides for any kind of a journey. Choose the one that suits you best and download it directly to the map. You will need the internet connection to download guides.</string>
+	<!-- as few symbols as possible -->
+	<string name="download_guides">Search guides</string>
 	<string name="guides_groups_cached">Downloaded guides</string>
 	<string name="subtitle_error_downloading_guide">The guide was not downloaded</string>
 	<string name="error_already_downloaded_guide">This guide has already been downloaded</string>
@@ -1447,7 +1433,6 @@
 	<string name="restore_success_alert">The subscription has been successfully restored</string>
 	<string name="restore_error_alert">An error occurred while restoring the subscription</string>
 	<string name="restore_no_subscription_alert">There are no active subscriptions</string>
-	<string name="subscription_terms">Payment will be charged to your iTunes account at confirmation of purchase. The subscription will automatically renew unless auto-renew is turned off at least 24 hours before the end of the current period. Your account will be charged according to your plan for renewal within 24 hours prior to the end of the current period. You can manage or turn off auto-renew in your Apple ID account settings at any time of your purchase.</string>
 	<string name="subscriptions_title">Subscriptions</string>
 	<string name="manage_subscription">Manage subscription</string>
 	<string name="taxi">Taxi</string>
@@ -1458,7 +1443,6 @@
 	<string name="hide_from_map">Hide from map</string>
 	<string name="ugc_route_tags_screen_label">Select tags</string>
 	<string name="ugc_route_tags_progress_msg">Loading tags…</string>
-	<string name="ugc_route_tags_desc">Please select tags to help other travellers find your guide. This is mandatory.</string>
 	<string name="public_access">Public access</string>
 	<string name="limited_access">Limited access</string>
 	<!-- FIXME -->
@@ -1487,7 +1471,7 @@
 	<string name="unable_upload_errorr_title">File upload failed</string>
 	<string name="unable_upload_error_subtitle_edited">This file has been edited via the web app</string>
 	<string name="unable_upload_error_subtitle_broken">This file is damaged and couldn\'t be uploaded. Please upload another file.</string>
-	<string name="buy_btn">Buy for %s</string>
+	<string name="buy_btn">Buy this one for %s</string>
 	<string name="download_guide_progress">Downloading your guide…</string>
 	<string name="price_error_title">Could not get a price</string>
 	<string name="price_error_subtitle">Please try again in a few minutes</string>
@@ -1535,6 +1519,335 @@
 	<string name="whatsnew_paid_routes_title">More new experiences!</string>
 	<string name="whatsnew_paid_routes_message">In addition to the free routes, we have added 3 paid route categories to our catalog. Over 700 new routes!</string>
 	<string name="whats_new_ugc_routes_title_android_only">Easy to share your impressions</string>
+	<string name="ugc_thanks_message_auth">Your review has been saved</string>
+	<string name="ugc_thanks_message_not_auth">Please log in to leave a review</string>
+	<string name="notification_leave_review_v2_title">Rate a visited place and help travellers!</string>
+	<string name="error_public_not_enought_title">Not enough bookmarks</string>
+	<string name="error_public_not_enought_subtitle">You should have at least 3 bookmarks to be able to upload your guide to the public catalogue</string>
+	<string name="bookmark_public_upload_alert_title">You are a few steps away from sharing your bookmarks with all MAPS.ME travellers!</string>
+	<string name="bookmark_public_upload_alert_subtitle">Please make sure you have a specific name and description for your list, and all bookmarks have some info about places. This way your list can be found and used by others.</string>
+	<string name="bookmark_public_upload_alert_ok_button">Yes, I\'m sure!</string>
+	<string name="name_title">Enter your guide\'s name</string>
+	<string name="name_placeholder">e.g. London Pubs</string>
+	<string name="name_comment1">Please name your guide so that travellers can easily find it: for example, \"London Pubs\"</string>
+	<string name="name_comment2">The name shouldn\'t contain special symbols. The name shouldn\'t be \"My places\"</string>
+	<string name="description_guide">Description</string>
+	<string name="description_title">Enter your guide\'s description</string>
+	<string name="description_placeholder">Describe your guide in detail</string>
+	<string name="description_comment1">Your guide description should contain at least 30 symbols.</string>
+	<string name="ugc_route_tags_desc">Please select tags to help other travellers find your guide. This is mandatory. %s tags maximum.</string>
+	<string name="html_format_error_title">Your guide has not been published</string>
+	<string name="html_format_error_subtitle">Please make sure that names and descriptions of your bookmarks all have a valid format. You can check it on a desktop browser by clicking the \"Edit online\" button below.</string>
+	<string name="web_editor_description">Upload your guide and get the edit link from desktop</string>
+	<string name="edit_on_web_confirm">Edit online</string>
+	<string name="update_guide">Upload an update</string>
+	<string name="direct_link_updating_text">Updating your file…</string>
+	<string name="direct_link_updating_success">Your guide has been updated</string>
+	<string name="unable_get_direct_link_desc">You can share your guide via a public link</string>
+	<string name="any_access_update_alert_title">Some changes may have occurred</string>
+	<string name="any_access_update_alert_message">Do you want to update your bookmarks? The new version will be available via the same link.</string>
+	<string name="any_access_update_alert_update">Update</string>
+	<string name="public_or_limited_access_after_edit_online_error_title">You have edited you bookmarks online</string>
+	<string name="public_or_limited_access_after_edit_online_error_message">In the future, please edit, publish or share the guide with you friends via our website</string>
+	<string name="power_managment_title">Power saving mode</string>
+	<string name="power_managment_description">When automatic mode is selected the application starts to disable battery draining features depending on the current battery charge level</string>
+	<string name="power_managment_setting_never">Never</string>
+	<string name="power_managment_setting_auto">Automatic</string>
+	<string name="power_managment_setting_manual_max">Maximum power saving</string>
+	<string name="enable_logging_warning_message">The option turns on logging for diagnostic purposes. It can be helpful for our support staff who are troubleshooting issues with the app. Enable this option only at the request of MAPS.ME support.</string>
+	<string name="html_error_upload_message_try_again">Please check your network settings and try again</string>
+	<string name="html_error_upload_title_try_again">No internet connection</string>
+	<string name="notification_leave_review_v2_android_short_title">Review and help travellers!</string>
+	<string name="megafon">Say goodbye to roaming!</string>
+	<string name="notifications_illegal_alert_disable_button">Turn off notifications</string>
+	<string name="access_rules_author_only">Online editing</string>
+	<string name="privacy_settings_menu">Privacy settings</string>
+	<string name="gdpr_request_setting">Get ID for GDPR request</string>
+	<string name="gdpr_request_window_title">Your ID is %s.</string>
+	<string name="gdpr_request_window_message">Please copy it and send the request to support\@maps.me</string>
+	<string name="gdpr_request_window_copy">Copy the ID</string>
+	<string name="unable_upadate_error_title">File update failed</string>
+	<string name="unable_upadate_error_message">Some errors occurred while updating. Please check the changes and try again</string>
+	<string name="whats_new_wiki_title">What\'s that place?</string>
+	<string name="whats_new_wiki_message">We\'ve added Wikipedia.org articles to the place pages of the most popular tourist attractions. They are available offline</string>
+	<string name="driving_options_title">Routing options</string>
+	<string name="driving_options_subheader">Avoid on every route</string>
+	<string name="avoid_tolls">Toll roads</string>
+	<string name="avoid_unpaved">Unpaved roads</string>
+	<string name="avoid_ferry">Ferry crossings</string>
+	<string name="avoid_motorways">Motorways</string>
+	<string name="unable_to_calc_alert_title">Unable to calculate route</string>
+	<string name="unable_to_calc_alert_subtitle">Unfortunately, we couldn\'t find a route, probably due to the options you have chosen. Please change the settings and try again.</string>
+	<string name="define_to_avoid_btn">Define roads to avoid</string>
+	<string name="change_driving_options_btn">Routing options enabled</string>
+	<string name="toll_road">Toll road</string>
+	<string name="unpaved_road">Unpaved road</string>
+	<string name="ferry_crossing">Ferry crossing</string>
+	<string name="operated_by">Operated by \"%s\"</string>
+	<string name="avoid_toll_roads_placepage">Avoid toll roads</string>
+	<string name="avoid_unpaved_roads_placepage">Avoid unpaved roads</string>
+	<string name="avoid_ferry_crossing_placepage">Avoid ferry crossings</string>
+	<string name="cached_guides_placeholder_subtitle">MAPS.ME ready-made guides are select places with photos and descriptions that are displayed on the map and available offline.</string>
+	<string name="guides_catalogue_title">Guides catalog</string>
+	<string name="download_guides_button">To the catalog</string>
+	<plurals name="placepage_summary_rating_description">
+	  <item quantity="one">Based on %d review</item>
+	  <item quantity="other">Based on %d reviews</item>
+	</plurals>
+	<string name="type.cuisine.uzbek">Uzbek cuisine</string>
+	<string name="onboarding_welcome_title">Plan and travel with MAPS.ME</string>
+	<string name="onboarding_welcome_first_subtitle">Bookmark interesting places, book hotels, calculate routes offline</string>
+	<string name="onboarding_guide_direct_download_title">Guide is ready for download</string>
+	<string name="onboarding_guide_direct_download_subtitle">It will be displayed on the map and work offline</string>
+	<string name="onboarding_guide_direct_download_button">Download</string>
+	<string name="onboarding_bydeeplink_guide_title">Ready-to-use guides in MAPS.ME</string>
+	<string name="onboarding_bydeeplink_guide_subtitle">Best places to visit are displayed on the map with photos and descriptions. Works offline.</string>
+	<string name="whats_new_auto_update_bydeeplink_title">Before you proceed to guides…</string>
+	<string name="whats_new_auto_update_bydeeplink_message">Update maps to keep the information about objects up to date!</string>
+	<string name="whats_new_auto_update_and_proceed_button_size">Update (%s) and proceed</string>
+	<string name="whatsnew_toll_unpaved_title">Consider road type when planning automobile routes</string>
+	<string name="whatsnew_toll_unpaved_message">Choose to avoid toll and unpaved roads and ferry crossings</string>
+	<string name="whatsnew_new_catalogue_title">Updated catalog pages</string>
+	<string name="whatsnew_new_catalogue_message">We added detailed information about partner guides to make the route selection easy and convenient</string>
+	<string name="purchase_please_wait_toast">Please don\'t leave this screen before purchase is completed</string>
+	<string name="trip_start">Let\'s go</string>
+	<string name="pick_destination">Destination</string>
+	<string name="follow_my_position">Re-center</string>
+	<string name="search_results">Search results</string>
+	<string name="then_turn">Then</string>
+	<string name="redirect_route_alert">Do you want to rebuild the route?</string>
+	<string name="redirect_route_yes">Yes</string>
+	<string name="redirect_route_no">No</string>
+	<string name="trip_finished">You have arrived!</string>
+	<string name="keyboard_availability_alert">Keyboard is not available while driving</string>
+	<string name="dialog_routing_change_start_carplay">Unable to build a route from your current location</string>
+	<string name="dialog_routing_change_end_carplay">Unable to build a route to your destination. Please choose another point</string>
+	<string name="dialog_routing_check_gps_carplay">No GPS signal. Please move to an open area</string>
+	<string name="dialog_routing_unable_locate_route_carplay">Unable to build a route. Please specify other route points</string>
+	<string name="dialog_routing_download_files_carplay">To create a route, download missing maps on your device</string>
+	<string name="dialog_routing_system_error_carplay">An error occurred. Please restart the application</string>
+	<string name="dialog_routing_rebuild_from_current_location_carplay">The route will be rebuilt from your current location</string>
+	<string name="dialog_routing_rebuild_for_vehicle_carplay">The route will be converted into an automobile one</string>
+	<string name="ok">Ok</string>
+	<string name="vezet_taxi">Vezet</string>
+	<string name="booking_button_toolbar">Pick a hotel on the map</string>
+	<string name="popup_booking_download_guides_title">Booked a hotel?</string>
+	<string name="popup_booking_download_guides_message">Plan your route with ready-made guides from MAPS.ME</string>
+	<string name="popup_mwm_download_guides_title">Offline city guides</string>
+	<string name="popup_mwm_download_guides_cta">Choose one</string>
+	<string name="popup_mwm_download_guides_cta_1">Take a look</string>
+	<string name="gallery_pp_download_guides_offline_title">Plan your vacation with MAPS.ME!</string>
+	<string name="gallery_pp_download_guides_offline_subtitle">Don\'t miss anything with guides made by experienced travellers</string>
+	<string name="gallery_pp_download_guides_offline_cta">Turn on the Internet</string>
+	<string name="gallery_pp_download_guides_title">Guides</string>
+	<string name="native_screen_subscription_title">Unlimited access to 2000+ travel guides!</string>
+	<string name="native_screen_subscription_message">A great vacation wherever you travel and whoever goes with you</string>
+	<string name="annual_subscription_title">Annual</string>
+	<string name="montly_subscription_title">Monthly</string>
+	<string name="annual_subscription_message">12 months of unlimited access</string>
+	<string name="montly_subscription_message">1 month of unlimited access</string>
+	<string name="annual_save_component">- %d%%</string>
+	<string name="subscription_success_dialog_title">Thanks for subscribing!</string>
+	<string name="subscription_success_dialog_message">Now you have unlimited access to the whole guides catalog</string>
+	<string name="renewal_screen_title">Your subscription has expired</string>
+	<string name="renewal_screen_message">All the guides downloaded by subscription are going to be deleted. Do you want to resume the subscription and keep them?</string>
+	<string name="renewal_screen_button_restore">Yes, renew</string>
+	<string name="renewal_screen_button_cancel">No, delete guides</string>
+	<string name="subscription_error_ping_title">Purchase has failed</string>
+	<string name="subscription_error_message">The service is currently unavailable in your region. Please try again later</string>
+	<string name="subscription_error_button">Got it</string>
+	<string name="timeout_error_title">Oops, time is up!</string>
+	<string name="timeout_error_message">Our servers don\'t respond. Please check the internet connection and try again.</string>
+	<string name="per_month">/mo</string>
+	<string name="per_year">/year</string>
+	<string name="buy_btn_for_subscription">Unlimited access from %s</string>
+	<string name="buy_btn_for_subscription_1">Buy ALL guides for %s</string>
+	<string name="buy_btn_for_subscription_ios_only_mo">Unlimited access for %s/mo</string>
+	<string name="buy_btn_for_subscription_ios_only_year">Unlimited access for %s/year</string>
+	<string name="subscription_terms_guides">Payment will be charged to your iTunes account after purchase confirmation. The subscription will automatically renew unless the auto-renew feature is turned off at least 24 hours before the end of the current period. Your account will be charged according to your plan for renewal within 24 hours prior to the end of the current period. You can manage or turn off the auto-renew feature in your Apple ID account settings at any time of your purchase. You can only use guides downloaded by subscription until its expiration date. After 30 days from the subscription expiry date guides with bookmarks will be automatically deleted.</string>
+	<string name="subscription_terms">Payment will be charged to your iTunes account at confirmation of purchase. The subscription will automatically renew unless auto-renew is turned off at least 24 hours before the end of the current period. Your account will be charged according to your plan for renewal within 24 hours prior to the end of the current period. You can manage or turn off auto-renew in your Apple ID account settings at any time of your purchase.</string>
+	<string name="whatsnew_carplay_title">MAPS.ME car navigation in CarPlay!</string>
+	<string name="whatsnew_carplay_message">Bookmarks, search, speed cameras and routing options are available offline</string>
+	<string name="whatsnew_subscription_title">The whole world by subscription!</string>
+	<string name="whatsnew_subscription_message">Unlimited access to the guides catalog is more profitable than a one-time purchase</string>
+	<string name="whatsnew_carnavi_fixes_for_android_title">Navigation update</string>
+	<string name="whatsnew_carnavi_fixes_for_android_message">We improved route planning to points, which are located far away from roads</string>
+	<string name="avoid_unpaved_carplay_1">No dirt road</string>
+	<string name="avoid_unpaved_carplay_2">Avoid unpaved</string>
+	<string name="avoid_ferry_carplay_1">No ferries</string>
+	<string name="avoid_ferry_carplay_2">Avoid ferries</string>
+	<string name="avoid_tolls_carplay_1">No toll road</string>
+	<string name="avoid_tolls_carplay_2">Avoid toll road</string>
+	<string name="speedcams_alert_title_carplay_1">Speedсams</string>
+	<string name="speedcams_alert_title_carplay_2">Speed warnings</string>
+	<string name="download_map_carplay">Please download maps in MAPS.ME app on your device</string>
+	<string name="carplay_roundabout_exit">%s exit</string>
+	<!-- max. 10 symbols, both iOS and Android -->
+	<string name="sort">Sort…</string>
+	<!-- Android, title, max 20-22 symbols -->
+	<string name="sort_bookmarks">Sort bookmarks</string>
+	<!-- iOS -->
+	<string name="sort_default">Sort by default</string>
+	<string name="sort_type">Sort by type</string>
+	<string name="sort_distance">Sort by distance</string>
+	<string name="sort_date">Sort by date</string>
+	<!-- Android -->
+	<string name="by_default">By default</string>
+	<!-- Android -->
+	<string name="by_type">By type</string>
+	<!-- Android -->
+	<string name="by_distance">By distance</string>
+	<!-- Android -->
+	<string name="by_date">By date</string>
+	<string name="week_ago_sorttype">A week ago</string>
+	<string name="month_ago_sorttype">A month ago</string>
+	<string name="moremonth_ago_sorttype">More than a month ago</string>
+	<string name="moreyear_ago_sorttype">More than a year ago</string>
+	<string name="near_me_sorttype">Near me</string>
+	<string name="others_sorttype">Others</string>
+	<string name="food_places">Food</string>
+	<string name="tourist_places">Sights</string>
+	<string name="museums">Museums</string>
+	<string name="parks">Parks</string>
+	<string name="swim_places">Swim</string>
+	<string name="mountains">Mountains</string>
+	<string name="animals">Animals</string>
+	<string name="hotels">Hotels</string>
+	<string name="buildings">Buildings</string>
+	<string name="money">Money</string>
+	<string name="shops">Shops</string>
+	<string name="parkings">Parkings</string>
+	<string name="fuel_places">Gas stations</string>
+	<string name="water">Water</string>
+	<string name="medicine">Medicine</string>
+	<string name="search_in_the_list">Search in the list</string>
+	<string name="view_on_map_bookmarks">On map</string>
+	<string name="more_bookmarks">More…</string>
+	<string name="no_items_found">No items found</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_edit_list">Edit list</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_delete_list">Delete list</string>
+	<string name="whatsnew_bookmarks_search_sort_title">Good order in bookmarks makes a journey comfortable</string>
+	<string name="whatsnew_bookmarks_search_sort_message">Sort favorite places by category, location, and in chronological order, as well as quickly find specific bookmarks by their name</string>
+	<string name="popup_subscription_success_map_title">Woohoo, you\'re subscribed!</string>
+	<string name="popup_subscription_success_map_message">Now discover the best touristic highlights in MAPS.ME catalog</string>
+	<string name="popup_subscription_success_map_start_button">Start browsing</string>
+	<string name="popup_subscription_success_map_not_now_button">Not now</string>
+	<string name="religious_places">Religious places</string>
+	<string name="subscription_terms_android">When you confirm a purchase, the payment will be charged to your Google Play account. The subscription will automatically renew unless the auto-renew feature is turned off at least 24 hours before the end of the current period. Your account will be charged pursuant to your renewal plan within 24 hours before the end of the current period. You can manage or turn off the auto-renew feature in Account Settings after purchase. You can only use guides downloaded by subscription until the end of the billing period. After 30 days from the subscription expiry date, downloaded guides will be automatically deleted.</string>
+	<string name="select_list">Select list</string>
+	<string name="pp_discovery_place_related_header">This place in the guides catalog</string>
+	<string name="pp_discovery_place_related_header_1">This place is featured in a guide</string>
+	<string name="pp_discovery_place_related_cta_button">View</string>
+	<string name="pp_discovery_place_related_tag_header">Guides by tag “%s”</string>
+	<string name="pp_discovery_place_related_tag_header_1">You may also like</string>
+	<string name="buy_btn_for_subscription_version_2">ALL guides just for %s/mo</string>
+	<string name="buy_btn_for_subscription_version_3">Entire catalog for %s/mo</string>
+	<string name="buy_btn_for_subscription_ios_only_mo_version_2">Access to catalog for %s/mo</string>
+	<string name="buy_btn_for_subscription_ios_only_year_version_2">Access to catalog for %s/year</string>
+	<string name="subscription_screen_native_title_version_2">Access to guides with bookmarks!</string>
+	<string name="subscription_screen_native_message_version_2">Be ready for any journey in 600+ cities and 100+ countries</string>
+	<string name="catalog_no_internet_title">No internet connection</string>
+	<string name="catalog_no_internet_button">Try again</string>
+	<string name="whatsnew_map_updates_title">Lightning-fast map updates</string>
+	<string name="whatsnew_map_updates_message">From now on we update the data twice as fast</string>
+	<string name="new_onboarding_button">Next</string>
+	<string name="new_onboarding_button_2">Get started</string>
+	<string name="new_onboarding_step1_header">MAPS.ME</string>
+	<string name="new_onboarding_step1_header_2">All-in-one travel buddy</string>
+	<string name="new_onboarding_step2_header">Dream and plan</string>
+	<string name="new_onboarding_step2_message">70+ million places, ready-made guides and hotel booking right from the map – you are ready for the trip!</string>
+	<string name="new_onboarding_step3_message">Never get lost with detailed maps of any country and navigation – everything works offline!</string>
+	<string name="new_onboarding_step4_header">Share impressions</string>
+	<string name="new_onboarding_step4_message">Place bookmarks on favorite places and send them to your friends</string>
+	<string name="new_onboarding_step5.1_header">One more thing before you start…</string>
+	<string name="new_onboarding_step5.1_message">Don\'t forget to visit our brand new guides catalog to find an offline guide for your upcoming journey!</string>
+	<string name="new_onboarding_step5.1_button">Open catalog</string>
+	<string name="new_onboarding_step5.2_message">Subscription to MAPS.ME guides catalog is a bargain. Get full access to city and outdoor guides around the world!</string>
+	<string name="new_onboarding_step5.2_button">Check out the terms</string>
+	<string name="new_onboarding_step5.3_message">Check out free samples of ready-made city and outdoor routes with a free selection of MAPS.ME!</string>
+	<string name="new_onboarding_step5.3_button">Free download</string>
+	<string name="new_onboarding_additional_steps_later_button">Later</string>
+	<string name="all_pass_subscription_header">SUBSCRIPTION TO CATALOG</string>
+	<!-- do not translate -->
+	<string name="all_pass_subscription_subheader">City + Outdoor Pass</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title">30000+\nguides &amp; trails</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle"><b>Unlimited downloads</b> of city and outdoor routes <b>to offline mode</b></string>
+	<!-- \n - for a break between lines. Max. 17 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_2">Interactive\nelevation profile</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_2">Each trail contains <b>elevation and basic info about the route</b></string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_3">Bookmarks,\nphotos, and\nrecommendations</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_3"><b>Learn all about the route</b> you are going to take</string>
+	<!-- do not translate -->
+	<string name="sightseeing_subscription_header_sightseeing">City Pass</string>
+	<string name="sightseeing_subscription_header_subscription">Guides Subscription</string>
+	<string name="sightseeing_subscription_message">700+ cities and 100+ countries</string>
+	<string name="sightseeing_subscription_message_2">Available offline</string>
+	<string name="sightseeing_subscription_message_3">Photos and walking tracks</string>
+	<string name="subscription_success_dialog_title_sightseeing_pass">Thanks for subscribing!</string>
+	<string name="subscription_success_dialog_message_sightseeing_pass">Now you have access to all sightseeing guides in the catalog</string>
+	<string name="downloader_main_gallery_header">Maps &amp; guides</string>
+	<string name="downloader_main_gallery_message">From now on in this section you can not only download maps, but also check out guides for your upcoming journey</string>
+	<string name="downloader_main_1_element_gallery_header">All guides</string>
+	<string name="downloader_main_1_element_gallery_message">in 100+ countries</string>
+	<string name="downloader_country_1_element_gallery_header">%s guides</string>
+	<string name="downloader_country_no_guides_gallery_header">There are no guides in this country yet</string>
+	<string name="downloader_country_no_guides_gallery_message">You can check out other offline guides in 100+ countries for city and outdoor activities</string>
+	<string name="dialog_pedestrian_route_is_long">The pedestrian route to the transport boarding point is too long</string>
+	<string name="whatsnew_outdoor_guides_title">We\'ve added 15000+ outdoor trails!</string>
+	<string name="whatsnew_outdoor_guides_message">Routes from Outdooractive for winter and summer journeys are waiting in the catalog!</string>
+	<string name="whatsnew_guides_galleries_title">Plan your upcoming trip with MAPS.ME</string>
+	<string name="whatsnew_guides_galleries_message">Now you can find recommended guides in place pages of popular touristic cities and sights</string>
+	<string name="new_onboarding_step3_header">Experience</string>
+	<string name="all_pass_screen_best_value">Best Value</string>
+	<string name="buy_btn_for_subscription_3">Entire catalog for %s/year</string>
+	<string name="transit_not_found">Subway navigation in this region is not available yet</string>
+	<string name="dialog_pedestrian_route_is_long_header">Subway route is not found</string>
+	<string name="dialog_pedestrian_route_is_long_message">Please choose a start or end point closer to a subway station</string>
+	<!-- Failed planning SUBWAY route message in navigation view -->
+	<string name="routing_planning_error_subway_special">Subway route planning failed</string>
+	<string name="whatsnew_isolines_title">New for outdoors: offline topographic layer!</string>
+	<!-- as less symbols as possible -->
+	<string name="whatsnew_isolines_message">Feel confident in the mountainous area. Just turn on the layer in the upper-left corner</string>
+	<string name="button_layer_isolines">Terrain</string>
+	<string name="tips_map_layers_title_countour">New in MAPS.ME: offline topographic layer!</string>
+	<string name="tips_map_layers_message_countour">Plan and enjoy your nature trips being sure you know everything about the area</string>
+	<string name="isolines_activation_error_dialog">To activate and use the topographic layer please update or download the map of the area</string>
+	<string name="isolines_location_error_dialog">The topographic layer is not yet available in this area</string>
+	<string name="elevation_profile_diff_level">Difficulty level</string>
+	<string name="elevation_profile_diff_level_easy">Easy</string>
+	<string name="elevation_profile_diff_level_moderate">Moderate</string>
+	<string name="elevation_profile_diff_level_hard">Hard</string>
+	<string name="elevation_profile_ascent">Ascent</string>
+	<string name="elevation_profile_descent">Descent</string>
+	<string name="elevation_profile_minaltitude">Min. altitude</string>
+	<string name="elevation_profile_maxaltitude">Max. altitude</string>
+	<string name="elevation_profile_m">m</string>
+	<string name="elevation_profile_difficulty">Difficulty</string>
+	<string name="elevation_profile_distance">Dist.:</string>
+	<string name="elevation_profile_km">km</string>
+	<string name="elevation_profile_time">Time:</string>
+	<string name="elevation_profile_hours">h.</string>
+	<string name="elevation_profile_minutes">min</string>
+	<!-- hide the full screen banner and continue working with the app -->
+	<string name="hide_screen_map_update">Hide and continue</string>
+	<string name="view_on_map_downloaded_error">This guide has been deleted from this device</string>
+	<string name="subscription">Subscription</string>
+	<string name="freenow_taxi_title">FREE NOW</string>
+	<string name="tinkoff_allairlines_map_downloader_title">Карта Тинькофф All Airlines. 3000 миль в подарок</string>
+	<string name="tinkoff_allairlines_map_downloader_cta_button">Оформить карту</string>
+	<string name="tinkoff_insurance_map_downloader_title">Полис Тинькофф со скидкой! Подходит для любых виз.</string>
+	<string name="tinkoff_insurance_map_downloader_cta_button">Промокод</string>
+	<string name="mts_map_downloader_title">Забугорище: интернет и звонки за границей как дома</string>
+	<string name="mts_map_downloader_cta_button">Подключить</string>
+	<string name="skyeng_map_downloader_title">Дарим 4 бесплатных урока английского от Skyeng.</string>
+	<string name="skyeng_map_downloader_cta_button">Подробнее</string>
 
 	<!-- SECTION:  Partners  -->
 	<string name="sponsored_partner1_action">Outlets</string>
@@ -1561,8 +1874,8 @@
 	<string name="type.aeroway.runway">aeroway-runway</string>
 	<string name="type.aeroway.taxiway">aeroway-taxiway</string>
 	<string name="type.aeroway.terminal">aeroway-terminal</string>
-	<string name="type.amenity">amenity</string>
-	<string name="type.amenity.arts_centre">amenity-arts_centre</string>
+	<string name="type.amenity">Amenity</string>
+	<string name="type.amenity.arts_centre">Art center</string>
 	<string name="type.amenity.atm">ATM</string>
 	<string name="type.amenity.bank">Bank</string>
 	<string name="type.amenity.bar">Bar</string>
@@ -1594,7 +1907,7 @@
 	<string name="type.amenity.fast_food">Fast Food</string>
 	<string name="type.amenity.ferry_terminal">Ferry</string>
 	<string name="type.amenity.fire_station">Fire Station</string>
-	<string name="type.amenity.food_court">amenity-food_court</string>
+	<string name="type.amenity.food_court">Food court</string>
 	<string name="type.amenity.fountain">Fountain</string>
 	<string name="type.amenity.fuel">Gas Station</string>
 	<string name="type.amenity.grave_yard">Graveyard</string>
@@ -1612,14 +1925,15 @@
 	<string name="type.amenity.parking">Parking</string>
 	<string name="type.amenity.parking.fee">Parking</string>
 	<string name="type.amenity.parking.multi.storey">Parking</string>
-	<string name="type.amenity.parking.multi.storey.fee">Parking</string>
 	<string name="type.amenity.parking.no.access">Parking</string>
 	<string name="type.amenity.parking.park_and_ride">Parking</string>
 	<string name="type.amenity.parking.permissive">Parking</string>
-	<string name="type.amenity.parking.permissive.fee">Parking</string>
 	<string name="type.amenity.parking.private">Parking</string>
 	<string name="type.amenity.parking.underground">Parking</string>
-	<string name="type.amenity.parking.underground.fee">Parking</string>
+	<string name="type.amenity.parking_space">Parking space</string>
+	<string name="type.amenity.parking_space.permissive">Parking space</string>
+	<string name="type.amenity.parking_space.private">Parking space</string>
+	<string name="type.amenity.parking_space.underground">Parking space</string>
 	<string name="type.amenity.payment_terminal">Payment Terminal</string>
 	<string name="type.amenity.pharmacy">Pharmacy</string>
 	<string name="type.amenity.place_of_worship">Place of Worship</string>
@@ -1632,8 +1946,8 @@
 	<string name="type.amenity.place_of_worship.taoist">Temple</string>
 	<string name="type.amenity.police">Police</string>
 	<string name="type.amenity.post_box">Postbox</string>
-	<string name="type.amenity.post_office">Post</string>
-	<string name="type.amenity.prison">amenity-prison</string>
+	<string name="type.amenity.post_office">Post office</string>
+	<string name="type.amenity.prison">Prison</string>
 	<string name="type.amenity.pub">Pub</string>
 	<string name="type.amenity.public_bookcase">Book Exchange</string>
 	<string name="type.amenity.recycling">Recycling Center</string>
@@ -1646,33 +1960,33 @@
 	<string name="type.amenity.telephone">Phone</string>
 	<string name="type.amenity.theatre">Theatre</string>
 	<string name="type.amenity.toilets">Toilet</string>
-	<string name="type.amenity.townhall">Town Hall</string>
+	<string name="type.amenity.townhall">Town hall</string>
 	<string name="type.amenity.university">University</string>
-	<string name="type.amenity.vending_machine">amenity-vending_machine</string>
-	<string name="type.amenity.vending_machine.cigarettes">Cigarette Dispenser</string>
+	<string name="type.amenity.vending_machine">Vending machine</string>
+	<string name="type.amenity.vending_machine.cigarettes">Cigarette dispenser</string>
 	<string name="type.amenity.vending_machine.drinks">Drink Dispenser</string>
 	<string name="type.amenity.vending_machine.parking_tickets">Parking Tickets</string>
-	<string name="type.amenity.vending_machine.public_transport_tickets">amenity-vending_machine-public_transport_tickets</string>
+	<string name="type.amenity.vending_machine.public_transport_tickets">Vending machine for public transport tickets</string>
 	<string name="type.amenity.veterinary">Veterinary Doctor</string>
 	<string name="type.amenity.waste_basket">Trash Bin</string>
 	<string name="type.amenity.waste_disposal">Dumpster</string>
 	<string name="type.amenity.water_point">Water Point</string>
-	<string name="type.barrier">barrier</string>
+	<string name="type.barrier">Barrier</string>
 	<string name="type.barrier.block">Block</string>
 	<string name="type.barrier.bollard">Pillar</string>
 	<string name="type.barrier.border_control">Border Control</string>
-	<string name="type.barrier.city_wall">barrier-city_wall</string>
-	<string name="type.barrier.cycle_barrier">barrier-cycle_barrier</string>
+	<string name="type.barrier.city_wall">City wall</string>
+	<string name="type.barrier.cycle_barrier">Cycle barrier</string>
 	<string name="type.barrier.entrance">Entrance</string>
-	<string name="type.barrier.fence">barrier-fence</string>
+	<string name="type.barrier.fence">Fence</string>
 	<string name="type.barrier.gate">Gate</string>
-	<string name="type.barrier.hedge">barrier-hedge</string>
-	<string name="type.barrier.lift_gate">Lift Gate</string>
-	<string name="type.barrier.retaining_wall">barrier-retaining_wall</string>
+	<string name="type.barrier.hedge">Hedge</string>
+	<string name="type.barrier.lift_gate">Lift gate</string>
+	<string name="type.barrier.retaining_wall">Retaining wall</string>
 	<string name="type.barrier.stile">Stile</string>
 	<string name="type.barrier.toll_booth">Toll Booth</string>
-	<string name="type.barrier.wall">barrier-wall</string>
-	<string name="type.boundary">boundary</string>
+	<string name="type.barrier.wall">Wall</string>
+	<string name="type.boundary">Boundary</string>
 	<string name="type.boundary.administrative">boundary-administrative</string>
 	<string name="type.boundary.administrative.10">boundary-administrative-10</string>
 	<string name="type.boundary.administrative.11">boundary-administrative-11</string>
@@ -1699,9 +2013,6 @@
 	<string name="type.building.garage">Garage</string>
 	<string name="type.building.has_parts">Building</string>
 	<string name="type.building.train_station">Train Station</string>
-	<string name="type.communication">communication</string>
-	<string name="type.communication.line">communication-line</string>
-	<string name="type.communication.line.underground">communication-line-underground</string>
 	<string name="type.craft">craft</string>
 	<string name="type.craft.brewery">Craft brewery</string>
 	<string name="type.craft.carpenter">Carpenter</string>
@@ -1810,7 +2121,7 @@
 	<string name="type.highway.bridleway.permissive">highway-bridleway-permissive</string>
 	<string name="type.highway.bridleway.tunnel">highway-bridleway-tunnel</string>
 	<string name="type.highway.bus_stop">Bus Stop</string>
-	<string name="type.highway.construction">highway-construction</string>
+	<string name="type.highway.construction">Road under construction</string>
 	<string name="type.highway.cycleway">highway-cycleway</string>
 	<string name="type.highway.cycleway.bridge">highway-cycleway-bridge</string>
 	<string name="type.highway.cycleway.permissive">highway-cycleway-permissive</string>
@@ -1826,7 +2137,7 @@
 	<string name="type.highway.footway.mountain_hiking">Path</string>
 	<string name="type.highway.footway.permissive">Path</string>
 	<string name="type.highway.footway.tunnel">Path</string>
-	<string name="type.highway.ford">highway-ford</string>
+	<string name="type.highway.ford">Ford</string>
 	<string name="type.highway.living_street">Street</string>
 	<string name="type.highway.living_street.bridge">Street</string>
 	<string name="type.highway.living_street.tunnel">Street</string>
@@ -1853,7 +2164,6 @@
 	<string name="type.highway.pedestrian.area">Street</string>
 	<string name="type.highway.pedestrian.bridge">Street</string>
 	<string name="type.highway.pedestrian.tunnel">Street</string>
-	<string name="type.highway.platform">highway-platform</string>
 	<string name="type.highway.primary">Street</string>
 	<string name="type.highway.primary.bridge">Street</string>
 	<string name="type.highway.primary.tunnel">Street</string>
@@ -1880,9 +2190,6 @@
 	<string name="type.highway.service.area">Street</string>
 	<string name="type.highway.service.bridge">Street</string>
 	<string name="type.highway.service.driveway">Street</string>
-	<string name="type.highway.service.driveway.area">Street</string>
-	<string name="type.highway.service.driveway.bridge">Street</string>
-	<string name="type.highway.service.driveway.tunnel">Street</string>
 	<string name="type.highway.service.parking_aisle">Street</string>
 	<string name="type.highway.service.tunnel">Street</string>
 	<string name="type.highway.services">highway-services</string>
@@ -1902,14 +2209,8 @@
 	<string name="type.highway.track.grade1">Street</string>
 	<string name="type.highway.track.grade2">Street</string>
 	<string name="type.highway.track.grade3">Street</string>
-	<string name="type.highway.track.grade3.no.access">Street</string>
-	<string name="type.highway.track.grade3.permissive">Street</string>
 	<string name="type.highway.track.grade4">Street</string>
-	<string name="type.highway.track.grade4.no.access">Street</string>
-	<string name="type.highway.track.grade4.permissive">Street</string>
 	<string name="type.highway.track.grade5">Street</string>
-	<string name="type.highway.track.grade5.no.access">Street</string>
-	<string name="type.highway.track.grade5.permissive">Street</string>
 	<string name="type.highway.track.no.access">Street</string>
 	<string name="type.highway.track.permissive">Street</string>
 	<string name="type.highway.track.tunnel">Street</string>
@@ -1928,7 +2229,7 @@
 	<string name="type.highway.world_towns_level">highway-world_towns_level</string>
 	<string name="type.historic">historic</string>
 	<string name="type.historic.archaeological_site">Archaeological Site</string>
-	<string name="type.historic.battlefield">historic-battlefield</string>
+	<string name="type.historic.battlefield">Battlefield</string>
 	<string name="type.historic.boundary_stone">historic-boundary_stone</string>
 	<string name="type.historic.castle">Castle</string>
 	<string name="type.historic.castle.defensive">Castle</string>
@@ -1963,64 +2264,58 @@
 	<string name="type.junction">junction</string>
 	<string name="type.junction.roundabout">junction-roundabout</string>
 	<string name="type.landuse">landuse</string>
-	<string name="type.landuse.allotments">landuse-allotments</string>
+	<string name="type.landuse.allotments">Allotments</string>
 	<string name="type.landuse.basin">Water</string>
-	<string name="type.landuse.brownfield">landuse-brownfield</string>
+	<string name="type.landuse.brownfield">Brownfield</string>
 	<string name="type.landuse.cemetery">Graveyard</string>
-	<string name="type.landuse.cemetery.christian">Graveyard</string>
+	<string name="type.landuse.cemetery.christian">Christian graveyard</string>
+	<string name="type.landuse.churchyard">Churchyard</string>
 	<string name="type.landuse.commercial">landuse-commercial</string>
-	<string name="type.landuse.construction">landuse-construction</string>
-	<string name="type.landuse.farm">landuse-farm</string>
-	<string name="type.landuse.farmland">landuse-farmland</string>
-	<string name="type.landuse.farmyard">landuse-farmyard</string>
-	<string name="type.landuse.field">landuse-field</string>
+	<string name="type.landuse.construction">Construction</string>
+	<string name="type.landuse.farm">Farm</string>
+	<string name="type.landuse.farmland">Farmland</string>
+	<string name="type.landuse.farmyard">Farmyard</string>
+	<string name="type.landuse.field">Field</string>
 	<string name="type.landuse.forest">Forest</string>
-	<string name="type.landuse.forest.coniferous">Forest</string>
-	<string name="type.landuse.forest.deciduous">Forest</string>
-	<string name="type.landuse.forest.mixed">Forest</string>
-	<string name="type.landuse.garages">landuse-garages</string>
-	<string name="type.landuse.grass">landuse-grass</string>
+	<string name="type.landuse.forest.coniferous">Coniferous forest</string>
+	<string name="type.landuse.forest.deciduous">Deciduous forest</string>
+	<string name="type.landuse.forest.mixed">Mixed forest</string>
+	<string name="type.landuse.garages">Garages</string>
+	<string name="type.landuse.grass">Lawn</string>
 	<string name="type.landuse.greenfield">landuse-greenfield</string>
 	<string name="type.landuse.greenhouse_horticulture">landuse-greenhouse_horticulture</string>
-	<string name="type.landuse.industrial">landuse-industrial</string>
-	<string name="type.landuse.landfill">landuse-landfill</string>
-	<string name="type.landuse.meadow">landuse-meadow</string>
-	<string name="type.landuse.military">landuse-military</string>
-	<string name="type.landuse.orchard">landuse-orchard</string>
-	<string name="type.landuse.quarry">landuse-quarry</string>
-	<string name="type.landuse.railway">landuse-railway</string>
+	<string name="type.landuse.industrial">Industrial land</string>
+	<string name="type.landuse.landfill">Landfill</string>
+	<string name="type.landuse.meadow">Meadow</string>
+	<string name="type.landuse.military">Military area</string>
+	<string name="type.landuse.orchard">Orchard</string>
+	<string name="type.landuse.quarry">Quarry</string>
+	<string name="type.landuse.railway">Railway premises</string>
 	<string name="type.landuse.recreation_ground">landuse-recreation_ground</string>
 	<string name="type.landuse.reservoir">Water</string>
 	<string name="type.landuse.residential">landuse-residential</string>
-	<string name="type.landuse.residential.rural">landuse-residential-rural</string>
-	<string name="type.landuse.residential.urban">landuse-residential-urban</string>
 	<string name="type.landuse.retail">landuse-retail</string>
 	<string name="type.landuse.salt_pond">landuse-salt_pond</string>
 	<string name="type.landuse.village_green">landuse-village_green</string>
-	<string name="type.landuse.vineyard">landuse-vineyard</string>
+	<string name="type.landuse.vineyard">Vineyard</string>
 	<string name="type.leisure">leisure</string>
 	<string name="type.leisure.common">leisure-common</string>
 	<string name="type.leisure.dog_park">Dog area</string>
-	<string name="type.leisure.dog_park.tennis">Dog area</string>
 	<string name="type.leisure.fitness_centre">Fitness Centre</string>
 	<string name="type.leisure.fitness_station">Fitness Station</string>
 	<string name="type.leisure.garden">Garden</string>
 	<string name="type.leisure.golf_course">Golf Course</string>
-	<string name="type.leisure.ice_rink">leisure-ice_rink</string>
-	<string name="type.leisure.landscape_reserve">leisure-landscape_reserve</string>
-	<string name="type.leisure.marina">leisure-marina</string>
-	<string name="type.leisure.nature_reserve">Reserve</string>
+	<string name="type.leisure.ice_rink">Ice rink</string>
+	<string name="type.leisure.landscape_reserve">Landscape reserve</string>
+	<string name="type.leisure.marina">Marina</string>
+	<string name="type.leisure.nature_reserve">Nature reserve</string>
 	<string name="type.leisure.park">Park</string>
 	<string name="type.leisure.park.no.access">Park</string>
 	<string name="type.leisure.park.permissive">Park</string>
 	<string name="type.leisure.park.private">Park</string>
 	<string name="type.leisure.pitch">Sports Ground</string>
-	<string name="type.leisure.pitch.tennis">Sports Ground</string>
 	<string name="type.leisure.playground">Playground</string>
-	<string name="type.leisure.playground.tennis">Playground</string>
-	<string name="type.leisure.playing_fields">leisure-playing_fields</string>
-	<string name="type.leisure.playing_fields.tennis">leisure-playing_fields-tennis</string>
-	<string name="type.leisure.recreation_ground">leisure-recreation_ground</string>
+	<string name="type.leisure.recreation_ground">Recreation ground</string>
 	<string name="type.leisure.sauna">Sauna</string>
 	<string name="type.leisure.slipway">leisure-slipway</string>
 	<string name="type.leisure.sports_centre">Sports Center</string>
@@ -2051,48 +2346,39 @@
 	<string name="type.man_made.works">man_made-works</string>
 	<string name="type.mapswithme">mapswithme</string>
 	<string name="type.mapswithme.grid">mapswithme-grid</string>
-	<string name="type.marking">marking</string>
-	<string name="type.marking.sport">marking-sport</string>
-	<string name="type.marking.sport.black">marking-sport-black</string>
-	<string name="type.marking.sport.blue">marking-sport-blue</string>
-	<string name="type.marking.sport.red">marking-sport-red</string>
-	<string name="type.marking.sport.white">marking-sport-white</string>
 	<string name="type.military">military</string>
 	<string name="type.military.bunker">Bunker</string>
 	<string name="type.natural">natural</string>
-	<string name="type.natural.bare_rock">natural-bare_rock</string>
+	<string name="type.natural.bare_rock">Bare rock</string>
 	<string name="type.natural.bay">Bay</string>
 	<string name="type.natural.beach">Beach</string>
 	<string name="type.natural.cape">Cape</string>
-	<string name="type.natural.cave_entrance">Cave Entrance</string>
-	<string name="type.natural.cliff">natural-cliff</string>
-	<string name="type.natural.coastline">natural-coastline</string>
+	<string name="type.natural.cave_entrance">Cave</string>
+	<string name="type.natural.cliff">Cliff</string>
+	<string name="type.natural.coastline">Coastline</string>
 	<string name="type.natural.geyser">Geyser</string>
 	<string name="type.natural.glacier">Glacier</string>
-	<string name="type.natural.grassland">natural-grassland</string>
-	<string name="type.natural.heath">natural-heath</string>
+	<string name="type.natural.grassland">Field</string>
+	<string name="type.natural.heath">Heath</string>
+	<string name="type.natural.hot_spring">Hot spring</string>
 	<string name="type.natural.lake">Lake</string>
 	<string name="type.natural.land">natural-land</string>
-	<string name="type.natural.meadow">natural-meadow</string>
-	<string name="type.natural.orchard">natural-orchard</string>
+	<string name="type.natural.meadow">Meadow</string>
+	<string name="type.natural.orchard">Orchard</string>
 	<string name="type.natural.peak">Peak</string>
 	<string name="type.natural.pond">Pond</string>
-	<string name="type.natural.rock">natural-rock</string>
-	<string name="type.natural.salt_pond">natural-salt_pond</string>
-	<string name="type.natural.scrub">natural-scrub</string>
+	<string name="type.natural.rock">Rock</string>
+	<string name="type.natural.salt_pond">Salt pond</string>
+	<string name="type.natural.scrub">Scrub</string>
 	<string name="type.natural.spring">Spring</string>
 	<string name="type.natural.tree">Tree</string>
-	<string name="type.natural.tree_row">natural-tree_row</string>
-	<string name="type.natural.vineyard">natural-vineyard</string>
+	<string name="type.natural.tree_row">Tree row</string>
+	<string name="type.natural.vineyard">Vineyard</string>
 	<string name="type.natural.volcano">Volcano</string>
 	<string name="type.natural.water">Water</string>
-	<string name="type.natural.wetland">natural-wetland</string>
-	<string name="type.natural.wetland.bog">natural-wetland-bog</string>
-	<string name="type.natural.wetland.marsh">natural-wetland-marsh</string>
-	<string name="type.natural.wood">Forest</string>
-	<string name="type.natural.wood.coniferous">Forest</string>
-	<string name="type.natural.wood.deciduous">Forest</string>
-	<string name="type.natural.wood.mixed">Forest</string>
+	<string name="type.natural.wetland">Wetland area</string>
+	<string name="type.natural.wetland.bog">Wetland</string>
+	<string name="type.natural.wetland.marsh">Wetland</string>
 	<string name="type.noexit">noexit</string>
 	<string name="type.noexit.motor_vehicle">noexit-motor_vehicle</string>
 	<string name="type.office">Office</string>
@@ -2140,7 +2426,7 @@
 	<string name="type.place.islet">Island</string>
 	<string name="type.place.isolated_dwelling">place-isolated_dwelling</string>
 	<string name="type.place.locality">Locality</string>
-	<string name="type.place.neighbourhood">place-neighbourhood</string>
+	<string name="type.place.neighbourhood">Neighbourhood</string>
 	<string name="type.place.ocean">Ocean</string>
 	<string name="type.place.region">Region</string>
 	<string name="type.place.sea">Sea</string>
@@ -2152,9 +2438,6 @@
 	<string name="type.place.village">Village</string>
 	<string name="type.power">power</string>
 	<string name="type.power.generator">power-generator</string>
-	<string name="type.power.generator.hydro">power-generator-hydro</string>
-	<string name="type.power.generator.photovoltaic">power-generator-photovoltaic</string>
-	<string name="type.power.generator.wind">power-generator-wind</string>
 	<string name="type.power.line">power-line</string>
 	<string name="type.power.line.underground">power-line-underground</string>
 	<string name="type.power.minor_line">power-minor_line</string>
@@ -2187,7 +2470,7 @@
 	<string name="type.railway.light_rail">railway-light_rail</string>
 	<string name="type.railway.light_rail.bridge">railway-light_rail-bridge</string>
 	<string name="type.railway.light_rail.tunnel">railway-light_rail-tunnel</string>
-	<string name="type.railway.monorail">railway-monorail</string>
+	<string name="type.railway.monorail">Monorail</string>
 	<string name="type.railway.monorail.bridge">railway-monorail-bridge</string>
 	<string name="type.railway.monorail.tunnel">railway-monorail-tunnel</string>
 	<string name="type.railway.narrow_gauge">railway-narrow_gauge</string>
@@ -2198,7 +2481,7 @@
 	<string name="type.railway.preserved.bridge">railway-preserved-bridge</string>
 	<string name="type.railway.preserved.tunnel">railway-preserved-tunnel</string>
 	<string name="type.railway.proposed">railway-proposed</string>
-	<string name="type.railway.rail">railway-rail</string>
+	<string name="type.railway.rail">Railway</string>
 	<string name="type.railway.rail.bridge">railway-rail-bridge</string>
 	<string name="type.railway.rail.motor_vehicle">railway-rail-motor_vehicle</string>
 	<string name="type.railway.rail.tunnel">railway-rail-tunnel</string>
@@ -2253,7 +2536,7 @@
 	<string name="type.railway.subway.tunnel">railway-subway-tunnel</string>
 	<string name="type.railway.subway.violet">railway-subway-violet</string>
 	<string name="type.railway.subway.yellow">railway-subway-yellow</string>
-	<string name="type.railway.subway_entrance">Subway</string>
+	<string name="type.railway.subway_entrance">Subway entrance</string>
 	<string name="type.railway.subway_entrance.barcelona">Subway</string>
 	<string name="type.railway.subway_entrance.berlin">Subway</string>
 	<string name="type.railway.subway_entrance.kiev">Subway</string>
@@ -2317,7 +2600,7 @@
 	<string name="type.shop.kiosk">Kiosk</string>
 	<string name="type.shop.laundry">Laundry</string>
 	<string name="type.shop.mall">Mall</string>
-	<string name="type.shop.massage">Massage Parlour</string>
+	<string name="type.shop.massage">Massage salon</string>
 	<string name="type.shop.mobile_phone">Cell Phones</string>
 	<string name="type.shop.money_lender">Shop</string>
 	<string name="type.shop.motorcycle">Motorcycle Shop</string>
@@ -2344,17 +2627,6 @@
 	<string name="type.shop.video">Shop</string>
 	<string name="type.shop.wine">Wine Shop</string>
 	<string name="type.sponsored">sponsored</string>
-	<string name="type.sponsored.banner">sponsored-banner</string>
-	<string name="type.sponsored.banner.deliveryclub">sponsored-banner-deliveryclub</string>
-	<string name="type.sponsored.banner.geerbest_de">sponsored-banner-geerbest_de</string>
-	<string name="type.sponsored.banner.geerbest_fr">sponsored-banner-geerbest_fr</string>
-	<string name="type.sponsored.banner.geerbest_uk">sponsored-banner-geerbest_uk</string>
-	<string name="type.sponsored.banner.lamoda_ru">sponsored-banner-lamoda_ru</string>
-	<string name="type.sponsored.banner.lamoda_ua">sponsored-banner-lamoda_ua</string>
-	<string name="type.sponsored.banner.raileurope">sponsored-banner-raileurope</string>
-	<string name="type.sponsored.banner.rentalcars">sponsored-banner-rentalcars</string>
-	<string name="type.sponsored.banner.tutu">sponsored-banner-tutu</string>
-	<string name="type.sponsored.banner.viator">sponsored-banner-viator</string>
 	<string name="type.sponsored.booking">sponsored-booking</string>
 	<string name="type.sponsored.holiday">Christmas or New Year Celebrations</string>
 	<string name="type.sponsored.opentable">sponsored-opentable</string>
@@ -2378,7 +2650,6 @@
 	<string name="type.sponsored.partner7">sponsored-partner7</string>
 	<string name="type.sponsored.partner8">sponsored-partner8</string>
 	<string name="type.sponsored.partner9">sponsored-partner9</string>
-	<string name="type.sponsored.viator">sponsored-viator</string>
 	<string name="type.sport">sport</string>
 	<string name="type.sport.american_football">sport-american_football</string>
 	<string name="type.sport.archery">sport-archery</string>
@@ -2401,7 +2672,7 @@
 	<string name="type.sport.skiing">sport-skiing</string>
 	<string name="type.sport.soccer">sport-soccer</string>
 	<string name="type.sport.swimming">sport-swimming</string>
-	<string name="type.sport.tennis">sport-tennis</string>
+	<string name="type.sport.tennis">Tennis court</string>
 	<string name="type.tourism">tourism</string>
 	<string name="type.tourism.alpine_hut">Mountains Lodging</string>
 	<string name="type.tourism.apartment">Apartments</string>
@@ -2457,9 +2728,41 @@
 	<string name="type.waterway.waterfall">Waterfall</string>
 	<string name="type.waterway.weir">waterway-weir</string>
 	<string name="type.wheelchair">wheelchair</string>
-	<string name="type.wheelchair.limited">wheelchair-limited</string>
-	<string name="type.wheelchair.no">wheelchair-no</string>
-	<string name="type.wheelchair.yes">wheelchair-yes</string>
+	<string name="type.wheelchair.limited">Limited wheelchair access</string>
+	<string name="type.wheelchair.no">No wheelchair access</string>
+	<string name="type.wheelchair.yes">Full wheelchair access</string>
+	<string name="type.piste_lift">piste:lift</string>
+	<string name="type.piste_lift.j.bar">piste:lift-j-bar</string>
+	<string name="type.piste_lift.magic_carpet">piste:lift-magic_carpet</string>
+	<string name="type.piste_lift.platter">piste:lift-platter</string>
+	<string name="type.piste_lift.rope_tow">piste:lift-rope_tow</string>
+	<string name="type.piste_lift.t.bar">piste:lift-t-bar</string>
+	<string name="type.piste_type">piste:type</string>
+	<string name="type.piste_type.downhill">piste:type-downhill</string>
+	<string name="type.piste_type.downhill.advanced">piste:type-downhill-advanced</string>
+	<string name="type.piste_type.downhill.easy">piste:type-downhill-easy</string>
+	<string name="type.piste_type.downhill.expert">piste:type-downhill-expert</string>
+	<string name="type.piste_type.downhill.freeride">piste:type-downhill-freeride</string>
+	<string name="type.piste_type.downhill.intermediate">piste:type-downhill-intermediate</string>
+	<string name="type.piste_type.downhill.novice">piste:type-downhill-novice</string>
+	<string name="type.piste_type.nordic">piste:type-nordic</string>
+	<string name="type.piste_type.sled">piste:type-sled</string>
+	<string name="type.building_part">Building</string>
+	<string name="type.area_highway.cycleway">area:highway-cycleway</string>
+	<string name="type.area_highway.footway">area:highway-footway</string>
+	<string name="type.area_highway.living_street">area:highway-living_street</string>
+	<string name="type.area_highway.motorway">area:highway-motorway</string>
+	<string name="type.area_highway.path">area:highway-path</string>
+	<string name="type.area_highway.pedestrian">area:highway-pedestrian</string>
+	<string name="type.area_highway.primary">area:highway-primary</string>
+	<string name="type.area_highway.residential">area:highway-residential</string>
+	<string name="type.area_highway.secondary">area:highway-secondary</string>
+	<string name="type.area_highway.service">area:highway-service</string>
+	<string name="type.area_highway.tertiary">area:highway-tertiary</string>
+	<string name="type.area_highway.steps">area:highway-steps</string>
+	<string name="type.area_highway.track">area:highway-track</string>
+	<string name="type.area_highway.trunk">area:highway-trunk</string>
+	<string name="type.area_highway.unclassified">area:highway-unclassified</string>
 
 	<!-- SECTION: Brands -->
 	<string name="brand.aiya">Aiya</string>

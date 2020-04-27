@@ -8,8 +8,6 @@ import android.location.Location;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.View;
@@ -17,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.mapswithme.maps.Framework;
 import com.mapswithme.maps.MwmActivity;
 import com.mapswithme.maps.R;
@@ -29,7 +29,6 @@ import com.mapswithme.maps.settings.SettingsActivity;
 import com.mapswithme.maps.sound.TtsPlayer;
 import com.mapswithme.maps.widget.FlatProgressView;
 import com.mapswithme.maps.widget.menu.NavMenu;
-import com.mapswithme.util.Animations;
 import com.mapswithme.util.Graphics;
 import com.mapswithme.util.StringUtils;
 import com.mapswithme.util.UiUtils;
@@ -79,6 +78,8 @@ public class NavigationController implements TrafficManager.TrafficCallback, Vie
   private final SearchWheel mSearchWheel;
   @NonNull
   private final View mSpeedViewContainer;
+  @NonNull
+  private final View mOnboardingBtn;
 
   private boolean mShowTimeLeft = true;
 
@@ -136,6 +137,7 @@ public class NavigationController implements TrafficManager.TrafficCallback, Vie
 
     mSearchButtonFrame = activity.findViewById(R.id.search_button_frame);
     mSearchWheel = new SearchWheel(mSearchButtonFrame);
+    mOnboardingBtn = activity.findViewById(R.id.onboarding_btn);
 
     ImageView bookmarkButton = (ImageView) mSearchButtonFrame.findViewById(R.id.btn_bookmarks);
     bookmarkButton.setImageDrawable(Graphics.tint(bookmarkButton.getContext(),
@@ -217,10 +219,9 @@ public class NavigationController implements TrafficManager.TrafficCallback, Vie
       info.nextCarDirection.setNextTurnDrawable(mNextNextTurnImage);
   }
 
-  private void updatePedestrian(RoutingInfo info)
+  private void updatePedestrian(RoutingInfo info, @NonNull Location location)
   {
     Location next = info.pedestrianNextDirection;
-    Location location = LocationHelper.INSTANCE.getSavedLocation();
     DistanceAndAzimut da = Framework.nativeGetDistanceAndAzimuthFromLatLon(next.getLatitude(), next.getLongitude(),
                                                                            location.getLatitude(), location.getLongitude(),
                                                                            mNorth);
@@ -248,8 +249,9 @@ public class NavigationController implements TrafficManager.TrafficCallback, Vie
     if (info == null)
       return;
 
-    if (Framework.nativeGetRouter() == Framework.ROUTER_TYPE_PEDESTRIAN)
-      updatePedestrian(info);
+    Location location = LocationHelper.INSTANCE.getSavedLocation();
+    if (Framework.nativeGetRouter() == Framework.ROUTER_TYPE_PEDESTRIAN && location != null)
+      updatePedestrian(info, location);
     else
       updateVehicle(info);
 
@@ -353,25 +355,18 @@ public class NavigationController implements TrafficManager.TrafficCallback, Vie
 
   public void updateSearchButtonsTranslation(float translation)
   {
-    mSearchButtonFrame.setTranslationY(translation);
+    int offset = UiUtils.isVisible(mOnboardingBtn) ? mOnboardingBtn.getHeight() : 0;
+    mSearchButtonFrame.setTranslationY(translation + offset);
   }
 
   public void fadeInSearchButtons()
   {
     UiUtils.show(mSearchButtonFrame);
-    Animations.fadeInView(mSearchButtonFrame, null);
   }
 
   public void fadeOutSearchButtons()
   {
-    Animations.fadeOutView(mSearchButtonFrame, new Runnable()
-    {
-      @Override
-      public void run()
-      {
-        mSearchButtonFrame.setVisibility(View.INVISIBLE);
-      }
-    });
+    UiUtils.invisible(mSearchButtonFrame);
   }
 
   public void show(boolean show)

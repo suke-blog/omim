@@ -107,6 +107,13 @@ class Tree
         m_toDo(v);
     }
 
+    bool DoIfIntersects(Value const & v) const
+    {
+      if (v.IsIntersect(m_rect))
+        return m_toDo(v);
+      return false;
+    }
+
   private:
     m2::RectD const & m_rect;
     ToDo m_toDo;
@@ -205,6 +212,18 @@ public:
   }
 
   template <typename ToDo>
+  bool ForAny(ToDo && toDo) const
+  {
+    for (Value const & v : m_tree)
+    {
+      if (toDo(v.m_val))
+        return true;
+    }
+
+    return false;
+  }
+
+  template <typename ToDo>
   void ForEachEx(ToDo && toDo) const
   {
     for (Value const & v : m_tree)
@@ -221,6 +240,12 @@ public:
     }
 
     return false;
+  }
+
+  template <typename ToDo>
+  bool ForAnyInRect(m2::RectD const & rect, ToDo && toDo) const
+  {
+    return m_tree.for_any(GetFunctor(rect, [&toDo](Value const & v) { return toDo(v.m_val); }));
   }
 
   template <typename ToDo>

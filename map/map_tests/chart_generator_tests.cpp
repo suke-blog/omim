@@ -2,9 +2,13 @@
 
 #include "map/chart_generator.hpp"
 
+#include "geometry/point_with_altitude.hpp"
 #include "base/math.hpp"
 
-#include "std/vector.hpp"
+#include <cstdint>
+#include <vector>
+
+using namespace std;
 
 namespace
 {
@@ -74,7 +78,7 @@ UNIT_TEST(ReflectChartData_Test)
 UNIT_TEST(NormalizeChartData_SmokeTest)
 {
   vector<double> const distanceDataM = {0.0, 0.0, 0.0};
-  feature::TAltitudes const altitudeDataM = {0, 0, 0};
+  geometry::Altitudes const altitudeDataM = {0, 0, 0};
 
   vector<double> uniformAltitudeDataM;
   TEST(maps::NormalizeChartData(distanceDataM, altitudeDataM, 2 /* resultPointCount */, uniformAltitudeDataM),
@@ -87,7 +91,7 @@ UNIT_TEST(NormalizeChartData_SmokeTest)
 UNIT_TEST(NormalizeChartData_NoResultPointTest)
 {
   vector<double> const distanceDataM = {0.0, 0.0, 0.0};
-  feature::TAltitudes const altitudeDataM = {0, 0, 0};
+  geometry::Altitudes const altitudeDataM = {0, 0, 0};
 
   vector<double> uniformAltitudeDataM;
   TEST(maps::NormalizeChartData(distanceDataM, altitudeDataM, 0 /* resultPointCount */, uniformAltitudeDataM),
@@ -99,7 +103,7 @@ UNIT_TEST(NormalizeChartData_NoResultPointTest)
 UNIT_TEST(NormalizeChartData_NoPointTest)
 {
   vector<double> const distanceDataM = {};
-  feature::TAltitudes const altitudeDataM = {};
+  geometry::Altitudes const altitudeDataM = {};
 
   vector<double> uniformAltitudeDataM;
   TEST(maps::NormalizeChartData(distanceDataM, altitudeDataM, 2 /* resultPointCount */, uniformAltitudeDataM),
@@ -111,7 +115,7 @@ UNIT_TEST(NormalizeChartData_NoPointTest)
 UNIT_TEST(NormalizeChartData_Test)
 {
   vector<double> const distanceDataM = {0.0, 2.0, 4.0, 6.0};
-  feature::TAltitudes const altitudeDataM = {-9, 0, 9, 18};
+  geometry::Altitudes const altitudeDataM = {-9, 0, 9, 18};
 
   vector<double> uniformAltitudeDataM;
   TEST(maps::NormalizeChartData(distanceDataM, altitudeDataM, 10 /* resultPointCount */, uniformAltitudeDataM),
@@ -198,7 +202,7 @@ UNIT_TEST(GenerateChart_NoPointsTest)
 {
   size_t constexpr width = 50;
   vector<double> const distanceDataM = {};
-  feature::TAltitudes const & altitudeDataM = {};
+  geometry::Altitudes const & altitudeDataM = {};
   vector<uint8_t> frameBuffer;
 
   TEST(maps::GenerateChart(width, 50 /* height */, distanceDataM, altitudeDataM, MapStyleDark /* mapStyle */,
@@ -213,7 +217,7 @@ UNIT_TEST(GenerateChart_OnePointTest)
   size_t constexpr width = 50;
   size_t constexpr height = 50;
   vector<double> const distanceDataM = {0.0};
-  feature::TAltitudes const & altitudeDataM = {0};
+  geometry::Altitudes const & altitudeDataM = {0};
   vector<uint8_t> frameBuffer;
 
   TEST(maps::GenerateChart(width, height, distanceDataM, altitudeDataM, MapStyleDark /* mapStyle */,
@@ -230,7 +234,7 @@ UNIT_TEST(GenerateChart_EmptyRectTest)
 {
   size_t constexpr width = 0;
   vector<double> const distanceDataM = {};
-  feature::TAltitudes const & altitudeDataM = {};
+  geometry::Altitudes const & altitudeDataM = {};
   vector<uint8_t> frameBuffer;
 
   TEST(!maps::GenerateChart(width, 50 /* height */, distanceDataM, altitudeDataM, MapStyleDark /* mapStyle */,
@@ -243,7 +247,7 @@ UNIT_TEST(GenerateChart_Test)
 {
   size_t constexpr width = 50;
   vector<double> const distanceDataM = {0.0, 100.0};
-  feature::TAltitudes const & altitudeDataM = {0, 1000};
+  geometry::Altitudes const & altitudeDataM = {0, 1000};
   vector<uint8_t> frameBuffer;
 
   TEST(maps::GenerateChart(width, 50 /* height */, distanceDataM, altitudeDataM, MapStyleDark /* mapStyle */,

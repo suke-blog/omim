@@ -6,41 +6,39 @@
 #include "platform/mwm_version.hpp"
 #include "platform/platform_tests_support/scoped_dir.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/file_writer.hpp"
 #include "coding/internal/file_data.hpp"
 #include "coding/writer.hpp"
 
 #include "base/assert.hpp"
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 
-#include "std/sstream.hpp"
+#include <sstream>
 
 namespace platform
 {
 namespace tests_support
 {
-ScopedFile::ScopedFile(string const & relativePath, Mode mode)
+ScopedFile::ScopedFile(std::string const & relativePath, Mode mode)
   : ScopedFile(relativePath, {} /* contents */, mode)
 {
 }
 
-ScopedFile::ScopedFile(string const & relativePath, string const & contents)
+ScopedFile::ScopedFile(std::string const & relativePath, std::string const & contents)
   : ScopedFile(relativePath, contents, Mode::Create)
 {
 }
 
-ScopedFile::ScopedFile(ScopedDir const & dir, CountryFile const & countryFile,
-                       MapOptions mapOptions)
+ScopedFile::ScopedFile(ScopedDir const & dir, CountryFile const & countryFile, MapFileType type)
   : ScopedFile(
-        base::JoinPath(dir.GetRelativePath(), GetFileName(countryFile.GetName(), mapOptions,
-                                                          version::FOR_TESTING_TWO_COMPONENT_MWM1)),
+        base::JoinPath(dir.GetRelativePath(), GetFileName(countryFile.GetName(), type)),
         Mode::Create)
 {
 }
 
-ScopedFile::ScopedFile(string const & relativePath, string const & contents, Mode mode)
-  : m_fullPath(base::JoinFoldersToPath(GetPlatform().WritableDir(), relativePath))
+ScopedFile::ScopedFile(std::string const & relativePath, std::string const & contents, Mode mode)
+  : m_fullPath(base::JoinPath(GetPlatform().WritableDir(), relativePath))
 {
   if (mode == Mode::DoNotCreate)
     return;
@@ -71,9 +69,9 @@ ScopedFile::~ScopedFile()
     LOG(LERROR, ("Can't remove test file:", GetFullPath()));
 }
 
-string DebugPrint(ScopedFile const & file)
+std::string DebugPrint(ScopedFile const & file)
 {
-  ostringstream os;
+  std::ostringstream os;
   os << "ScopedFile [" << file.GetFullPath() << "]";
   return os.str();
 }

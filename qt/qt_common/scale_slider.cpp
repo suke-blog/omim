@@ -20,7 +20,7 @@ namespace
 class MyProxyStyle : public ProxyStyle
 {
 public:
-  MyProxyStyle(QStyle * parent) : ProxyStyle(parent) {}
+  explicit MyProxyStyle(QStyle * parent) : ProxyStyle(parent) {}
 
   int styleHint(StyleHint hint, const QStyleOption * option, const QWidget * widget,
                 QStyleHintReturn * returnData) const override
@@ -67,7 +67,7 @@ void ScaleSlider::SetPosWithBlockedSignals(double pos)
 {
   bool const blocked = signalsBlocked();
   blockSignals(true);
-  setSliderPosition(base::rounds(pos * m_factor));
+  setSliderPosition(base::SignedRound(pos * m_factor));
   blockSignals(blocked);
 }
 

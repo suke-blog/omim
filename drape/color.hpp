@@ -30,14 +30,15 @@ struct Color
 
   Color operator*(float s) const
   {
-    return Color(static_cast<uint8_t>(base::clamp(GetRedF() * s, 0.0f, 1.0f) * 255.0f),
-                 static_cast<uint8_t>(base::clamp(GetGreenF() * s, 0.0f, 1.0f) * 255.0f),
-                 static_cast<uint8_t>(base::clamp(GetBlueF() * s, 0.0f, 1.0f) * 255.0f), GetAlpha());
+    return Color(static_cast<uint8_t>(base::Clamp(GetRedF() * s, 0.0f, 1.0f) * 255.0f),
+                 static_cast<uint8_t>(base::Clamp(GetGreenF() * s, 0.0f, 1.0f) * 255.0f),
+                 static_cast<uint8_t>(base::Clamp(GetBlueF() * s, 0.0f, 1.0f) * 255.0f), GetAlpha());
   }
 
   static Color Black() { return Color(0, 0, 0, 255); }
   static Color White() { return Color(255, 255, 255, 255); }
   static Color Red() { return Color(255, 0, 0, 255); }
+  static Color Blue() { return Color(0, 0, 255, 255); }
   static Color Green() { return Color(0, 255, 0, 255); }
   static Color Yellow() { return Color(255, 255, 0, 255); }
   static Color Transparent() { return Color(0, 0, 0, 0); }

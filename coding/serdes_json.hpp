@@ -14,6 +14,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <deque>
+#include <map>
 #include <memory>
 #include <type_traits>
 #include <unordered_set>
@@ -106,6 +107,8 @@ public:
   void operator()(uint8_t const d, char const * name = nullptr) { ToJsonObjectOrValue(d, name); }
   void operator()(uint32_t const d, char const * name = nullptr) { ToJsonObjectOrValue(d, name); }
   void operator()(uint64_t const d, char const * name = nullptr) { ToJsonObjectOrValue(d, name); }
+  void operator()(int8_t const d, char const * name = nullptr) { ToJsonObjectOrValue(d, name); }
+  void operator()(int32_t const d, char const * name = nullptr) { ToJsonObjectOrValue(d, name); }
   void operator()(int64_t const d, char const * name = nullptr) { ToJsonObjectOrValue(d, name); }
   void operator()(double const d, char const * name = nullptr) { ToJsonObjectOrValue(d, name); }
   void operator()(std::string const & s, char const * name = nullptr) { ToJsonObjectOrValue(s, name); }
@@ -165,9 +168,24 @@ public:
   void operator()(ms::LatLon const & ll, char const * name = nullptr)
   {
     NewScopeWith(base::NewJSONObject(), name, [this, &ll] {
-      (*this)(ll.lat, "lat");
-      (*this)(ll.lon, "lon");
+      (*this)(ll.m_lat, "lat");
+      (*this)(ll.m_lon, "lon");
     });
+  }
+
+  template <typename Key, typename Value>
+  void operator()(std::pair<Key, Value> const & p, char const * name = nullptr)
+  {
+    NewScopeWith(base::NewJSONObject(), name, [this, &p] {
+      (*this)(p.first, "key");
+      (*this)(p.second, "value");
+    });
+  }
+
+  template <typename Optional>
+  void operator()(Optional const & opt, Optional const &, char const * name = nullptr)
+  {
+    (*this)(opt, name);
   }
 
 protected:
@@ -208,8 +226,9 @@ public:
                                     Source>::type * = nullptr>
   explicit DeserializerJson(Source & source)
   {
-    std::string src(source.Size(), '\0');
-    source.Read(static_cast<void *>(&src[0]), source.Size());
+    auto const size = static_cast<size_t>(source.Size());
+    std::string src(size, '\0');
+    source.Read(static_cast<void *>(&src[0]), size);
     m_jsonObject.ParseFrom(src);
     m_json = m_jsonObject.get();
   }
@@ -234,6 +253,8 @@ public:
   void operator()(uint8_t & d, char const * name = nullptr) { FromJsonObjectOrValue(d, name); }
   void operator()(uint32_t & d, char const * name = nullptr) { FromJsonObjectOrValue(d, name); }
   void operator()(uint64_t & d, char const * name = nullptr) { FromJsonObjectOrValue(d, name); }
+  void operator()(int8_t & d, char const * name = nullptr) { FromJsonObjectOrValue(d, name); }
+  void operator()(int32_t & d, char const * name = nullptr) { FromJsonObjectOrValue(d, name); }
   void operator()(int64_t & d, char const * name = nullptr) { FromJsonObjectOrValue(d, name); }
   void operator()(double & d, char const * name = nullptr) { FromJsonObjectOrValue(d, name); }
   void operator()(std::string & s, char const * name = nullptr) { FromJsonObjectOrValue(s, name); }
@@ -267,7 +288,7 @@ public:
       MYTHROW(base::Json::Exception, ("The field", name, "must contain a json array."));
 
     T tmp;
-    size_t size = json_array_size(m_json);
+    size_t const size = json_array_size(m_json);
     dest.reserve(size);
     for (size_t index = 0; index < size; ++index)
     {
@@ -287,13 +308,15 @@ public:
     json_t * outerContext = SaveContext(name);
 
     if (!json_is_array(m_json))
+    {
       MYTHROW(base::Json::Exception,
               ("The field", name, "must contain a json array.", json_dumps(m_json, 0)));
+    }
 
     if (N != json_array_size(m_json))
     {
       MYTHROW(base::Json::Exception, ("The field", name, "must contain a json array of size", N,
-                                    "but size is", json_array_size(m_json)));
+                                      "but size is", json_array_size(m_json)));
     }
 
     for (size_t index = 0; index < N; ++index)
@@ -304,6 +327,40 @@ public:
       RestoreContext(context);
     }
 
+    RestoreContext(outerContext);
+  }
+
+  template <typename Key, typename T>
+  void operator()(std::map<Key, T> & dst, char const * name = nullptr)
+  {
+    json_t * outerContext = SaveContext(name);
+
+    if (!json_is_array(m_json))
+    {
+      MYTHROW(base::Json::Exception,
+              ("The field", name, "must contain a json array.", json_dumps(m_json, 0)));
+    }
+
+    size_t const size = json_array_size(m_json);
+    for (size_t index = 0; index < size; ++index)
+    {
+      json_t * context = SaveContext();
+      m_json = json_array_get(context, index);
+      std::pair<Key, T> tmp;
+      (*this)(tmp);
+      dst.insert(tmp);
+      RestoreContext(context);
+    }
+
+    RestoreContext(outerContext);
+  }
+
+  template <typename Key, typename Value>
+  void operator()(std::pair<Key, Value> & dst, char const * name = nullptr)
+  {
+    json_t * outerContext = SaveContext(name);
+    (*this)(dst.first, "key");
+    (*this)(dst.second, "value");
     RestoreContext(outerContext);
   }
 
@@ -365,9 +422,22 @@ public:
   void operator()(ms::LatLon & ll, char const * name = nullptr)
   {
     json_t * outerContext = SaveContext(name);
-    (*this)(ll.lat, "lat");
-    (*this)(ll.lon, "lon");
+    (*this)(ll.m_lat, "lat");
+    (*this)(ll.m_lon, "lon");
     RestoreContext(outerContext);
+  }
+
+  template <typename Optional>
+  void operator()(Optional & opt, Optional const & defaultValue, char const * name = nullptr)
+  {
+    auto json = base::GetJSONOptionalField(m_json, name);
+    if (!json)
+    {
+      opt = defaultValue;
+      return;
+    }
+
+    (*this)(opt, name);
   }
 
 protected:

@@ -1,27 +1,13 @@
 #import "MWMSearch.h"
-#import <Crashlytics/Crashlytics.h>
 #import "MWMBannerHelpers.h"
 #import "MWMFrameworkListener.h"
-#import "MWMSearchHotelsFilterViewController.h"
-#import "MWMSearchManager+Filter.h"
-#import "MWMSearchManager.h"
+#import "MWMFrameworkObservers.h"
 #import "SwiftBridge.h"
 
-#include "Framework.h"
+#include <CoreApi/Framework.h>
 
-#include "partners_api/booking_availability_params.hpp"
-#include "partners_api/ads_engine.hpp"
-
-#include "map/everywhere_search_params.hpp"
-#include "map/viewport_search_params.hpp"
-
-#include "map/booking_filter_params.hpp"
-
+#include "partners_api/ads/ads_engine.hpp"
 #include "platform/network_policy.hpp"
-
-#include <chrono>
-#include <memory>
-#include <utility>
 
 namespace
 {
@@ -70,7 +56,7 @@ booking::filter::Tasks MakeBookingFilterTasks(booking::filter::Params && availab
 
 @property(nonatomic) NSUInteger lastSearchTimestamp;
 
-@property(nonatomic) MWMSearchFilterViewController * filter;
+@property(nonatomic) MWMHotelParams * filter;
 
 @property(nonatomic) MWMSearchIndex * itemsIndex;
 
@@ -99,7 +85,7 @@ booking::filter::Tasks MakeBookingFilterTasks(booking::filter::Params && availab
   static MWMSearch * manager;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    manager = [[super alloc] initManager];
+    manager = [[self alloc] initManager];
   });
   return manager;
 }
@@ -121,8 +107,8 @@ booking::filter::Tasks MakeBookingFilterTasks(booking::filter::Params && availab
   if (availabilityTaskIt != tasks.end())
   {
     availabilityTaskIt->m_filterParams.m_callback =
-    [self, filterType](shared_ptr<booking::ParamsBase> const & apiParams,
-                        std::vector<FeatureID> const & sortedFeatures)
+    [self, filterType](std::shared_ptr<booking::ParamsBase> const & apiParams,
+                       std::vector<FeatureID> const & sortedFeatures)
     {
       auto & t = self->m_everywhereParams.m_bookingFilterTasks;
       auto const it = t.Find(filterType);
@@ -164,7 +150,7 @@ booking::filter::Tasks MakeBookingFilterTasks(booking::filter::Params && availab
   [self enableCallbackFor:booking::filter::Type::Availability];
   [self enableCallbackFor:booking::filter::Type::Deals];
 
-  GetFramework().SearchEverywhere(m_everywhereParams);
+  GetFramework().GetSearchAPI().SearchEverywhere(m_everywhereParams);
   self.searchCount += 1;
 }
 
@@ -178,12 +164,12 @@ booking::filter::Tasks MakeBookingFilterTasks(booking::filter::Params && availab
     self.searchCount -= 1;
   };
 
-  GetFramework().SearchInViewport(m_viewportParams);
+  GetFramework().GetSearchAPI().SearchInViewport(m_viewportParams);
 }
 
 - (void)updateFilters
 {
-  shared_ptr<search::hotels_filter::Rule> const hotelsRules = self.filter ? [self.filter rules] : nullptr;
+  std::shared_ptr<search::hotels_filter::Rule> const hotelsRules = self.filter ? [self.filter rules] : nullptr;
   m_viewportParams.m_hotelsFilter = hotelsRules;
   m_everywhereParams.m_hotelsFilter = hotelsRules;
   
@@ -236,11 +222,11 @@ booking::filter::Tasks MakeBookingFilterTasks(booking::filter::Params && availab
   if (!query || query.length == 0)
     return;
 
-  string const locale = (!inputLocale || inputLocale.length == 0)
+  std::string const locale = (!inputLocale || inputLocale.length == 0)
                             ? [MWMSearch manager]->m_everywhereParams.m_inputLocale
                             : inputLocale.UTF8String;
-  string const text = query.precomposedStringWithCompatibilityMapping.UTF8String;
-  GetFramework().SaveSearchQuery(make_pair(locale, text));
+  std::string const text = query.precomposedStringWithCompatibilityMapping.UTF8String;
+  GetFramework().GetSearchAPI().SaveSearchQuery(make_pair(locale, text));
 }
 
 + (void)searchQuery:(NSString *)query forInputLocale:(NSString *)inputLocale
@@ -251,22 +237,20 @@ booking::filter::Tasks MakeBookingFilterTasks(booking::filter::Params && availab
   MWMSearch * manager = [MWMSearch manager];
   if (inputLocale.length != 0)
   {
-    string const locale = inputLocale.UTF8String;
+    std::string const locale = inputLocale.UTF8String;
     manager->m_everywhereParams.m_inputLocale = locale;
     manager->m_viewportParams.m_inputLocale = locale;
   }
   manager.lastQuery = query.precomposedStringWithCompatibilityMapping;
-  string const text = manager.lastQuery.UTF8String;
+  std::string const text = manager.lastQuery.UTF8String;
   manager->m_everywhereParams.m_query = text;
   manager->m_viewportParams.m_query = text;
   manager.textChanged = YES;
   auto const & adsEngine = GetFramework().GetAdsEngine();
-  auto const & purchase = GetFramework().GetPurchase();
-  bool const hasSubscription = purchase && !purchase->IsSubscriptionActive(SubscriptionType::RemoveAds);
+  auto const banners = adsEngine.GetSearchBanners();
   
-  if (hasSubscription && adsEngine.HasSearchBanner())
-  {
-    auto coreBanners = banner_helpers::MatchPriorityBanners(adsEngine.GetSearchBanners(), manager.lastQuery);
+  if (!banners.empty()) {
+    auto coreBanners = banner_helpers::MatchPriorityBanners(banners, manager.lastQuery);
     [[MWMBannersCache cache] refreshWithCoreBanners:coreBanners];
   }
   [manager update];
@@ -319,12 +303,16 @@ booking::filter::Tasks MakeBookingFilterTasks(booking::filter::Params && availab
   return [itemsIndex resultContainerIndexWithRow:row];
 }
 
-+ (void)update { [[MWMSearch manager] update]; }
++ (void)updateHotelFilterWithParams:(MWMHotelParams *)params
+{
+  [MWMSearch manager].filter = params;
+  [[MWMSearch manager] update];
+}
 
 - (void)reset
 {
   self.lastSearchTimestamp += 1;
-  GetFramework().CancelAllSearches();
+  GetFramework().GetSearchAPI().CancelAllSearches();
 
   m_everywhereResults.Clear();
   m_viewportResults.Clear();
@@ -375,11 +363,9 @@ booking::filter::Tasks MakeBookingFilterTasks(booking::filter::Params && availab
   return hasRules || hasBookingParams;
 }
 
-+ (MWMSearchFilterViewController *)getFilter
++ (MWMHotelParams *)getFilter
 {
   MWMSearch * manager = [MWMSearch manager];
-  if (!manager.filter && manager.isHotelResults)
-    manager.filter = [MWMSearchHotelsFilterViewController controller];
   return manager.filter;
 }
 
@@ -390,19 +376,6 @@ booking::filter::Tasks MakeBookingFilterTasks(booking::filter::Params && availab
   [manager update];
 }
 
-+ (void)showHotelFilterWithParams:(search_filter::HotelParams &&)params
-                 onFinishCallback:(MWMVoidBlock)callback
-{
-  auto filter =
-  static_cast<MWMSearchHotelsFilterViewController *>([MWMSearchHotelsFilterViewController controller]);
-  auto search = [MWMSearch manager];
-  search.filter = filter;
-  [[MWMSearchManager manager] updateFilter:[filter, callback, params = std::move(params)]() mutable
-  {
-    [filter applyParams:std::move(params) onFinishCallback:callback];
-  }];
-}
-
 - (void)updateItemsIndexWithBannerReload:(BOOL)reloadBanner
 {
   auto const resultsCount = self->m_everywhereResults.GetCount();
@@ -411,24 +384,21 @@ booking::filter::Tasks MakeBookingFilterTasks(booking::filter::Params && availab
   if (resultsCount > 0)
   {
     auto const & adsEngine = GetFramework().GetAdsEngine();
-    auto const & purchase = GetFramework().GetPurchase();
-    bool const hasSubscription = purchase && !purchase->IsSubscriptionActive(SubscriptionType::RemoveAds);
+    auto const banners = adsEngine.GetSearchBanners();
 
-    if (hasSubscription && adsEngine.HasSearchBanner())
-    {
+    if (!banners.empty()) {
       self.banners = [[MWMSearchBanners alloc] initWithSearchIndex:itemsIndex];
       __weak auto weakSelf = self;
-      [[MWMBannersCache cache]
-          getWithCoreBanners:banner_helpers::MatchPriorityBanners(adsEngine.GetSearchBanners(), self.lastQuery)
-                   cacheOnly:YES
-                     loadNew:reloadBanner
-                  completion:^(id<MWMBanner> ad, BOOL isAsync) {
-                    __strong auto self = weakSelf;
-                    if (!self)
-                      return;
-                    NSAssert(isAsync == NO, @"Banner is not from cache!");
-                    [self.banners add:ad];
-                  }];
+      [[MWMBannersCache cache] getWithCoreBanners:banner_helpers::MatchPriorityBanners(banners, self.lastQuery)
+                                        cacheOnly:YES
+                                          loadNew:reloadBanner
+                                       completion:^(id<MWMBanner> ad, BOOL isAsync) {
+                                         __strong auto self = weakSelf;
+                                         if (!self)
+                                           return;
+                                         NSAssert(isAsync == NO, @"Banner is not from cache!");
+                                         [self.banners add:ad];
+                                       }];
     }
   }
   else

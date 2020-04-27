@@ -3,12 +3,15 @@
 #include "indexer/cell_id.hpp"
 #include "indexer/feature_covering.hpp"
 #include "indexer/feature_decl.hpp"
+#include "indexer/ftypes_matcher.hpp"
 
 #include "geometry/mercator.hpp"
 #include "geometry/point2d.hpp"
 
 #include "base/math.hpp"
 #include "base/stl_helpers.hpp"
+
+using namespace std;
 
 namespace search
 {
@@ -25,7 +28,7 @@ void StreetVicinityLoader::SetContext(MwmContext * context)
 
   m_context = context;
   auto const scaleRange = m_context->m_value.GetHeader().GetScaleRange();
-  m_scale = base::clamp(m_scale, scaleRange.first, scaleRange.second);
+  m_scale = base::Clamp(m_scale, scaleRange.first, scaleRange.second);
 }
 
 void StreetVicinityLoader::OnQueryFinished() { m_cache.ClearIfNeeded(); }
@@ -42,19 +45,30 @@ StreetVicinityLoader::Street const & StreetVicinityLoader::GetStreet(uint32_t fe
 
 void StreetVicinityLoader::LoadStreet(uint32_t featureId, Street & street)
 {
-  FeatureType feature;
-  if (!m_context->GetFeature(featureId, feature))
+  auto feature = m_context->GetFeature(featureId);
+  if (!feature)
     return;
 
-  if (feature.GetFeatureType() != feature::GEOM_LINE)
+  bool const isStreet = feature->GetGeomType() == feature::GeomType::Line &&
+                        ftypes::IsWayChecker::Instance()(*feature);
+  bool const isSquareOrSuburb = ftypes::IsSquareChecker::Instance()(*feature) ||
+                                ftypes::IsSuburbChecker::Instance()(*feature);
+  if (!isStreet && !isSquareOrSuburb)
     return;
 
   vector<m2::PointD> points;
-  feature.ForEachPoint(base::MakeBackInsertFunctor(points), FeatureType::BEST_GEOMETRY);
+  if (feature->GetGeomType() == feature::GeomType::Area)
+  {
+    points = feature->GetTrianglesAsPoints(FeatureType::BEST_GEOMETRY);
+  }
+  else
+  {
+    feature->ForEachPoint(base::MakeBackInsertFunctor(points), FeatureType::BEST_GEOMETRY);
+  }
   ASSERT(!points.empty(), ());
 
   for (auto const & point : points)
-    street.m_rect.Add(MercatorBounds::RectByCenterXYAndSizeInMeters(point, m_offsetMeters));
+    street.m_rect.Add(mercator::RectByCenterXYAndSizeInMeters(point, m_offsetMeters));
 
   covering::CoveringGetter coveringGetter(street.m_rect, covering::ViewportWithLowLevels);
   auto const & intervals = coveringGetter.Get<RectId::DEPTH_LEVELS>(m_scale);
@@ -62,5 +76,4 @@ void StreetVicinityLoader::LoadStreet(uint32_t featureId, Street & street)
 
   street.m_calculator = make_unique<ProjectionOnStreetCalculator>(points);
 }
-
 }  // namespace search

@@ -12,7 +12,7 @@
 #include "platform/local_country_file_utils.hpp"
 
 #include "coding/endianness.hpp"
-#include "coding/file_container.hpp"
+#include "coding/files_container.hpp"
 #include "coding/file_writer.hpp"
 #include "coding/memory_region.hpp"
 #include "coding/reader.hpp"
@@ -69,7 +69,7 @@ unique_ptr<CopiedMemoryRegion> GetMemoryRegionForTag(FilesContainerR const & rco
   if (!rcont.IsExist(tag))
     return unique_ptr<CopiedMemoryRegion>();
   FilesContainerR::TReader reader = rcont.GetReader(tag);
-  vector<uint8_t> buffer(reader.Size());
+  vector<uint8_t> buffer(static_cast<size_t>(reader.Size()));
   reader.Read(0, buffer.data(), buffer.size());
   return make_unique<CopiedMemoryRegion>(move(buffer));
 }
@@ -90,7 +90,7 @@ class RankTableV0 : public RankTable
 public:
   RankTableV0() = default;
 
-  RankTableV0(vector<uint8_t> const & ranks) : m_coding(ranks) {}
+  explicit RankTableV0(vector<uint8_t> const & ranks) : m_coding(ranks) {}
 
   // RankTable overrides:
   uint8_t Get(uint64_t i) const override
@@ -126,7 +126,8 @@ public:
     if (!region.get())
       return unique_ptr<RankTableV0>();
 
-    auto const result = CheckEndianness(MemReader(region->ImmutableData(), region->Size()));
+    auto const result =
+        CheckEndianness(MemReader(region->ImmutableData(), static_cast<size_t>(region->Size())));
     if (result != CheckResult::EndiannessMatch)
       return unique_ptr<RankTableV0>();
 
@@ -144,7 +145,8 @@ public:
       return unique_ptr<RankTableV0>();
 
     unique_ptr<RankTableV0> table;
-    switch (CheckEndianness(MemReader(region->ImmutableData(), region->Size())))
+    switch (
+        CheckEndianness(MemReader(region->ImmutableData(), static_cast<size_t>(region->Size()))))
     {
     case CheckResult::CorruptedHeader:
       break;
@@ -245,7 +247,7 @@ uint8_t CalcSearchRank(FeatureType & ft)
   auto const transportRank = CalcTransportRank(ft);
   auto const populationRank = feature::PopulationToRank(ftypes::GetPopulation(ft));
 
-  return base::clamp(eventRank + transportRank + populationRank, 0,
+  return base::Clamp(eventRank + transportRank + populationRank, 0,
                      static_cast<int>(numeric_limits<uint8_t>::max()));
 }
 
@@ -325,7 +327,7 @@ bool SearchRankTableBuilder::CreateIfNotExists(platform::LocalCountryFile const 
 
     unique_ptr<RankTable> table;
     {
-      ModelReaderPtr reader = platform::GetCountryReader(localFile, MapOptions::Map);
+      ModelReaderPtr reader = platform::GetCountryReader(localFile, MapFileType::Map);
       if (!reader.GetPtr())
         return false;
 

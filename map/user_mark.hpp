@@ -9,9 +9,10 @@
 
 #include "base/macros.hpp"
 
-#include "std/string.hpp"
-#include "std/unique_ptr.hpp"
-#include "std/utility.hpp"
+#include <limits>
+#include <memory>
+#include <string>
+#include <utility>
 
 class UserMark : public df::UserPointMark
 {
@@ -29,19 +30,27 @@ public:
     TransitTransfer,
     TransitKeyStop,
     SpeedCamera,
+    RoadWarning,
+    RoadWarningFirstDirty,
+    RoadWarningFirstToll,
+    RoadWarningFirstFerry,
   };
 
-  enum Type: uint32_t
+  enum Type : uint32_t
   {
-    BOOKMARK, // Should always be the first one
+    BOOKMARK,  // Should always be the first one
     API,
     SEARCH,
     STATIC,
     ROUTING,
     SPEED_CAM,
+    ROAD_WARNING,
     TRANSIT,
     LOCAL_ADS,
-    DEBUG_MARK,
+    TRACK_INFO,
+    TRACK_SELECTION,
+    DEBUG_MARK,  // Plain "DEBUG" results in a name collision.
+    COLORED,
     USER_MARK_TYPES_COUNT,
     USER_MARK_TYPES_COUNT_MAX = 1000,
   };
@@ -72,7 +81,7 @@ public:
   uint16_t GetPriority() const override { return static_cast<uint16_t >(Priority::Default); }
   df::SpecialDisplacement GetDisplacement() const override { return df::SpecialDisplacement::UserMark; }
   uint32_t GetIndex() const override { return 0; }
-  bool HasSymbolShapes() const override { return false; }
+  bool SymbolIsPOI() const override { return false; }
   bool HasTitlePriority() const override { return false; }
   int GetMinZoom() const override { return 1; }
   int GetMinTitleZoom() const override { return GetMinZoom(); }
@@ -125,18 +134,19 @@ private:
 class DebugMarkPoint : public UserMark
 {
 public:
-  DebugMarkPoint(m2::PointD const & ptOrg);
+  explicit DebugMarkPoint(m2::PointD const & ptOrg);
 
   drape_ptr<SymbolNameZoomInfo> GetSymbolNames() const override;
 };
 
-class ColoredDebugMarkPoint : public UserMark
+class ColoredMarkPoint : public UserMark
 {
 public:
-  ColoredDebugMarkPoint(m2::PointD const & ptOrg);
+  explicit ColoredMarkPoint(m2::PointD const & ptOrg);
 
   void SetColor(dp::Color const & color);
-  bool HasSymbolShapes() const override { return true; }
+  void SetRadius(float radius);
+  bool SymbolIsPOI() const override { return true; }
   drape_ptr<SymbolNameZoomInfo> GetSymbolNames() const override { return nullptr; }
   drape_ptr<ColoredSymbolZoomInfo> GetColoredSymbols() const override;
 
@@ -144,4 +154,4 @@ private:
   ColoredSymbolZoomInfo m_coloredSymbols;
 };
 
-string DebugPrint(UserMark::Type type);
+std::string DebugPrint(UserMark::Type type);

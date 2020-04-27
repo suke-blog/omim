@@ -1,16 +1,12 @@
 #pragma once
 
 #include "search/bookmarks/processor.hpp"
-#include "search/result.hpp"
 #include "search/search_params.hpp"
 #include "search/suggest.hpp"
 
 #include "indexer/categories_holder.hpp"
 
-#include "coding/reader.hpp"
-
 #include "base/macros.hpp"
-#include "base/mutex.hpp"
 #include "base/thread.hpp"
 
 #include <condition_variable>
@@ -100,8 +96,14 @@ public:
   // Sets default locale on all query processors.
   void SetLocale(std::string const & locale);
 
+  // Returns the number of request-processing threads.
+  size_t GetNumThreads() const;
+
   // Posts request to clear caches to the queue.
   void ClearCaches();
+
+  // Posts requests to load and cache localities from World.mwm.
+  void CacheWorldLocalities();
 
   // Posts request to reload cities boundaries tables.
   void LoadCitiesBoundaries();
@@ -109,9 +111,19 @@ public:
   // Posts request to load countries tree.
   void LoadCountriesTree();
 
+  void EnableIndexingOfBookmarksDescriptions(bool enable);
+  void EnableIndexingOfBookmarkGroup(bookmarks::GroupId const & groupId, bool enable);
+
+  // Clears all bookmarks data and caches for all processors.
+  void ResetBookmarks();
+
   void OnBookmarksCreated(std::vector<std::pair<bookmarks::Id, bookmarks::Doc>> const & marks);
   void OnBookmarksUpdated(std::vector<std::pair<bookmarks::Id, bookmarks::Doc>> const & marks);
   void OnBookmarksDeleted(std::vector<bookmarks::Id> const & marks);
+  void OnBookmarksAttachedToGroup(bookmarks::GroupId const & groupId,
+                                  std::vector<bookmarks::Id> const & marks);
+  void OnBookmarksDetachedFromGroup(bookmarks::GroupId const & groupId,
+                                    std::vector<bookmarks::Id> const & marks);
 
 private:
   struct Message
@@ -133,8 +145,6 @@ private:
     Fn m_fn;
   };
 
-  // alignas() is used here to prevent false-sharing between different
-  // threads.
   struct Context
   {
     // This field *CAN* be accessed by other threads, so |m_mu| must

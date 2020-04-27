@@ -5,16 +5,18 @@
 #include "search/ranking_utils.hpp"
 #include "search/result.hpp"
 
-#include "storage/index.hpp"
+#include "storage/storage_defines.hpp"
 
 #include "indexer/feature_data.hpp"
 
+#include "geometry/point2d.hpp"
+
 #include <cstdint>
 #include <string>
+#include <utility>
 #include <vector>
 
 class FeatureType;
-class CategoriesHolder;
 
 namespace storage
 {
@@ -31,10 +33,12 @@ class ReverseGeocoder;
 class PreRankerResult
 {
 public:
-  PreRankerResult(FeatureID const & id, PreRankingInfo const & info);
+  PreRankerResult(FeatureID const & id, PreRankingInfo const & info,
+                  std::vector<ResultTracer::Branch> const & provenance);
 
-  static bool LessRankAndPopularity(PreRankerResult const & r1, PreRankerResult const & r2);
-  static bool LessDistance(PreRankerResult const & r1, PreRankerResult const & r2);
+  static bool LessRankAndPopularity(PreRankerResult const & lhs, PreRankerResult const & rhs);
+  static bool LessDistance(PreRankerResult const & lhs, PreRankerResult const & rhs);
+  static bool LessByExactMatch(PreRankerResult const & lhs, PreRankerResult const & rhs);
 
   struct CategoriesComparator
   {
@@ -49,14 +53,32 @@ public:
   double GetDistance() const { return m_info.m_distanceToPivot; }
   uint8_t GetRank() const { return m_info.m_rank; }
   uint8_t GetPopularity() const { return m_info.m_popularity; }
-  PreRankingInfo & GetInfo() { return m_info; }
+  std::pair<uint8_t, float> GetRating() const { return m_info.m_rating; }
   PreRankingInfo const & GetInfo() const { return m_info; }
+  std::vector<ResultTracer::Branch> const & GetProvenance() const { return m_provenance; }
+  size_t GetInnermostTokensNumber() const { return m_info.InnermostTokenRange().Size(); }
+  size_t GetMatchedTokensNumber() const { return m_matchedTokensNumber; }
+
+  void SetRank(uint8_t rank) { m_info.m_rank = rank; }
+  void SetPopularity(uint8_t popularity) { m_info.m_popularity = popularity; }
+  void SetRating(std::pair<uint8_t, float> const & rating) { m_info.m_rating = rating; }
+  void SetDistanceToPivot(double distance) { m_info.m_distanceToPivot = distance; }
+  void SetCenter(m2::PointD const & center)
+  {
+    m_info.m_center = center;
+    m_info.m_centerLoaded = true;
+  }
 
 private:
   friend class RankerResult;
 
   FeatureID m_id;
   PreRankingInfo m_info;
+
+  size_t m_matchedTokensNumber = 0;
+
+  // The call path in the Geocoder that leads to this result.
+  std::vector<ResultTracer::Branch> m_provenance;
 };
 
 // Second result class. Objects are created during reading of features.
@@ -64,28 +86,32 @@ private:
 class RankerResult
 {
 public:
-  enum Type
+  enum class Type
   {
-    TYPE_LATLON,
-    TYPE_FEATURE,
-    TYPE_BUILDING  //!< Buildings are not filtered out in duplicates filter.
+    LatLon,
+    Feature,
+    Building,  //!< Buildings are not filtered out in duplicates filter.
+    Postcode
   };
 
-  /// For RESULT_FEATURE and RESULT_BUILDING.
+  /// For Type::Feature and Type::Building.
   RankerResult(FeatureType & f, m2::PointD const & center, m2::PointD const & pivot,
                std::string const & displayName, std::string const & fileName);
 
-  /// For RESULT_LATLON.
+  /// For Type::LatLon.
   RankerResult(double lat, double lon);
+
+  /// For Type::Postcode.
+  RankerResult(m2::PointD const & coord, std::string const & postcode);
 
   bool IsStreet() const;
 
   search::RankingInfo const & GetRankingInfo() const { return m_info; }
 
-  template <typename TInfo>
-  inline void SetRankingInfo(TInfo && info)
+  template <typename Info>
+  inline void SetRankingInfo(Info && info)
   {
-    m_info = std::forward<TInfo>(info);
+    m_info = std::forward<Info>(info);
   }
 
   FeatureID const & GetID() const { return m_id; }
@@ -94,35 +120,37 @@ public:
   Type const & GetResultType() const { return m_resultType; }
   m2::PointD GetCenter() const { return m_region.m_point; }
   double GetDistance() const { return m_distance; }
-  feature::EGeomType GetGeomType() const { return m_geomType; }
-  Result::Metadata GetMetadata() const { return m_metadata; }
+  feature::GeomType GetGeomType() const { return m_geomType; }
+  Result::Details GetDetails() const { return m_details; }
 
   double GetDistanceToPivot() const { return m_info.m_distanceToPivot; }
   double GetLinearModelRank() const { return m_info.GetLinearModelRank(); }
 
   bool GetCountryId(storage::CountryInfoGetter const & infoGetter, uint32_t ftype,
-                    storage::TCountryId & countryId) const;
+                    storage::CountryId & countryId) const;
 
   bool IsEqualCommon(RankerResult const & r) const;
 
   uint32_t GetBestType(std::vector<uint32_t> const & preferredTypes = {}) const;
+
+  std::vector<ResultTracer::Branch> const & GetProvenance() const { return m_provenance; }
 
 private:
   friend class RankerResultMaker;
 
   struct RegionInfo
   {
-    storage::TCountryId m_countryId;
+    storage::CountryId m_countryId;
     m2::PointD m_point;
 
-    void SetParams(storage::TCountryId const & countryId, m2::PointD const & point)
+    void SetParams(storage::CountryId const & countryId, m2::PointD const & point)
     {
       m_countryId = countryId;
       m_point = point;
     }
 
     bool GetCountryId(storage::CountryInfoGetter const & infoGetter,
-                      storage::TCountryId & countryId) const;
+                      storage::CountryId & countryId) const;
   };
 
   RegionInfo m_region;
@@ -132,11 +160,14 @@ private:
   double m_distance;
   Type m_resultType;
   RankingInfo m_info;
-  feature::EGeomType m_geomType;
-  Result::Metadata m_metadata;
+  feature::GeomType m_geomType;
+  Result::Details m_details;
+
+  // The call path in the Geocoder that leads to this result.
+  std::vector<ResultTracer::Branch> m_provenance;
 };
 
-void ProcessMetadata(FeatureType & ft, Result::Metadata & meta);
+void FillDetails(FeatureType & ft, Result::Details & meta);
 
 std::string DebugPrint(RankerResult const & r);
 }  // namespace search

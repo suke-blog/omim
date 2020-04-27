@@ -1,11 +1,11 @@
 package com.mapswithme.util;
 
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
-
 import android.util.Base64;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.mapswithme.maps.BuildConfig;
 import com.mapswithme.maps.Framework;
 import com.mapswithme.util.log.Logger;
@@ -25,11 +25,9 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public final class HttpUploader
+public final class HttpUploader extends AbstractHttpUploader
 {
   private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(LoggerFactory.Type.NETWORK);
   private static final String TAG = HttpUploader.class.getSimpleName();
@@ -37,56 +35,36 @@ public final class HttpUploader
   private static final String CHARSET = "UTF-8";
   private static final int BUFFER = 8192;
   private static final int STATUS_CODE_UNKNOWN = -1;
-  @NonNull
-  private final String mMethod;
-  @NonNull
-  private final String mUrl;
-  @NonNull
-  private final List<KeyValue> mParams;
-  @NonNull
-  private final List<KeyValue> mHeaders;
-  @NonNull
-  private final String mFileKey;
-  @NonNull
-  private final String mFilePath;
+
   @NonNull
   private final String mBoundary;
   @NonNull
   private final String mEndPart;
-  private final boolean mNeedClientAuth;
 
-  public HttpUploader(@NonNull String method, @NonNull String url, @NonNull KeyValue[] params,
-                      @NonNull KeyValue[] headers, @NonNull String fileKey, @NonNull String filePath,
-                      boolean needClientAuth)
+  public HttpUploader(@NonNull HttpPayload payload)
   {
-    mMethod = method;
-    mUrl = url;
-    mFileKey = fileKey;
-    mFilePath = filePath;
+    super(payload);
     mBoundary = "----" + System.currentTimeMillis();
-    mParams = new ArrayList<>(Arrays.asList(params));
-    mHeaders = new ArrayList<>(Arrays.asList(headers));
     mEndPart = LINE_FEED + "--" + mBoundary + "--" + LINE_FEED;
-    mNeedClientAuth = needClientAuth;
   }
 
   public Result upload()
   {
-    int status;
+    int status = STATUS_CODE_UNKNOWN;
     String message;
     PrintWriter writer = null;
     BufferedReader reader = null;
     HttpURLConnection connection = null;
     try
     {
-      URL url = new URL(mUrl);
+      URL url = new URL(getPayload().getUrl());
       connection = (HttpURLConnection) url.openConnection();
       connection.setConnectTimeout(Constants.CONNECTION_TIMEOUT_MS);
       connection.setReadTimeout(Constants.READ_TIMEOUT_MS);
       connection.setUseCaches(false);
-      connection.setRequestMethod(mMethod);
-      connection.setDoOutput(mMethod.equals("POST"));
-      if ("https".equals(connection.getURL().getProtocol()) && mNeedClientAuth)
+      connection.setRequestMethod(getPayload().getMethod());
+      connection.setDoOutput(getPayload().getMethod().equals("POST"));
+      if ("https".equals(connection.getURL().getProtocol()) && getPayload().needClientAuth())
       {
         HttpsURLConnection httpsConnection = (HttpsURLConnection) connection;
         String cert = HttpUploader.nativeUserBindingCertificate();
@@ -96,18 +74,19 @@ public final class HttpUploader
         httpsConnection.setSSLSocketFactory(socketFactory);
       }
 
-      long fileSize = StorageUtils.getFileSize(mFilePath);
+      long fileSize = StorageUtils.getFileSize(getPayload().getFilePath());
       StringBuilder paramsBuilder = new StringBuilder();
       fillBodyParams(paramsBuilder);
-      File file = new File(mFilePath);
-      fillFileParams(paramsBuilder, mFileKey, file);
+      File file = new File(getPayload().getFilePath());
+      fillFileParams(paramsBuilder, getPayload().getFileKey(), file);
       int endPartSize = mEndPart.getBytes().length;
       int paramsSize = paramsBuilder.toString().getBytes().length;
       long bodyLength = paramsSize + fileSize + endPartSize;
       setStreamingMode(connection, bodyLength);
       setHeaders(connection, bodyLength);
       long startTime = System.currentTimeMillis();
-      LOGGER.d(TAG, "Start bookmarks upload on url: '" + Utils.makeUrlSafe(mUrl) + "'");
+      LOGGER.d(
+          TAG, "Start bookmarks upload on url: '" + Utils.makeUrlSafe(getPayload().getUrl()) + "'");
       OutputStream outputStream = connection.getOutputStream();
       writer = new PrintWriter(new OutputStreamWriter(outputStream, CHARSET));
       writeParams(writer, paramsBuilder);
@@ -124,8 +103,7 @@ public final class HttpUploader
     }
     catch (IOException e)
     {
-      status = STATUS_CODE_UNKNOWN;
-      message = "I/O exception '" + Utils.makeUrlSafe(mUrl) + "'";
+      message = "I/O exception '" + Utils.makeUrlSafe(getPayload().getUrl()) + "'";
       if (connection != null)
       {
         String errMsg = readErrorResponse(connection);
@@ -202,18 +180,19 @@ public final class HttpUploader
 
   private void setHeaders(@NonNull URLConnection connection, long bodyLength)
   {
-    mHeaders.add(new KeyValue(HttpClient.HEADER_USER_AGENT, Framework.nativeGetUserAgent()));
-    mHeaders.add(new KeyValue("App-Version", BuildConfig.VERSION_NAME));
-    mHeaders.add(new KeyValue("Content-Type", "multipart/form-data; boundary=" + mBoundary));
-    mHeaders.add(new KeyValue("Content-Length", String.valueOf(bodyLength)));
-    for (KeyValue header : mHeaders)
-      connection.setRequestProperty(header.mKey, header.mValue);
+    List<KeyValue> headers = getPayload().getHeaders();
+    headers.add(new KeyValue(HttpClient.HEADER_USER_AGENT, Framework.nativeGetUserAgent()));
+    headers.add(new KeyValue("App-Version", BuildConfig.VERSION_NAME));
+    headers.add(new KeyValue("Content-Type", "multipart/form-data; boundary=" + mBoundary));
+    headers.add(new KeyValue("Content-Length", String.valueOf(bodyLength)));
+    for (KeyValue header : headers)
+      connection.setRequestProperty(header.getKey(), header.getValue());
   }
 
   private void fillBodyParams(@NonNull StringBuilder builder)
   {
-    for (KeyValue field : mParams)
-      addParam(builder, field.mKey, field.mValue);
+    for (KeyValue field : getPayload().getParams())
+      addParam(builder, field.getKey(), field.getValue());
   }
 
   private void addParam(@NonNull StringBuilder builder, @NonNull String key, @NonNull String value)
@@ -261,7 +240,7 @@ public final class HttpUploader
     writer.flush();
   }
 
-  private static class Result
+  static class Result
   {
     private final int mHttpCode;
     @NonNull
@@ -282,6 +261,15 @@ public final class HttpUploader
     public String getDescription()
     {
       return mDescription;
+    }
+
+    @Override
+    public String toString()
+    {
+      return "Result{" +
+             "mHttpCode=" + mHttpCode +
+             ", mDescription='" + mDescription + '\'' +
+             '}';
     }
   }
 

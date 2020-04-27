@@ -10,9 +10,10 @@
 #include "geometry/point2d.hpp"
 #include "geometry/screenbase.hpp"
 
+#include <vector>
+
 namespace dp
 {
-class UniformValuesStorage;
 class TextureManager;
 }  // namespace dp
 
@@ -31,7 +32,8 @@ public:
     OBJECT_EMPTY,
     OBJECT_POI,
     OBJECT_USER_MARK,
-    OBJECT_MY_POSITION
+    OBJECT_MY_POSITION,
+    OBJECT_TRACK
   };
 
   SelectionShape(ref_ptr<dp::GraphicsContext> context, ref_ptr<dp::TextureManager> mng);
@@ -44,8 +46,14 @@ public:
 
   bool IsVisible(ScreenBase const & screen, m2::PointD & pxPos) const;
   double GetRadius() const { return m_radius; }
+  double GetPositionZ() const { return m_positionZ; }
 
   ESelectedObject GetSelectedObject() const;
+
+  void AddSelectionGeometry(drape_ptr<RenderNode> && renderNode, int recacheId);
+  int GetRecacheId() const { return m_recacheId; }
+  m2::RectD GetSelectionGeometryBoundingBox() const;
+  bool HasSelectionGeometry() const { return !m_selectionGeometry.empty(); }
 
 private:
   m2::PointD m_position;
@@ -55,6 +63,10 @@ private:
   ESelectedObject m_selectedObject;
 
   drape_ptr<RenderNode> m_renderNode;
+  drape_ptr<RenderNode> m_trackRenderNode;
   ValueMapping<float> m_mapping;
+
+  std::vector<drape_ptr<RenderNode>> m_selectionGeometry;
+  int m_recacheId = -1;
 };
 }  // namespace df

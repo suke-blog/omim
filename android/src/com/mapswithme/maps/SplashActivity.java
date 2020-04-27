@@ -5,23 +5,27 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 import com.mapswithme.maps.ads.Banner;
+import com.mapswithme.maps.analytics.AdvertisingObserver;
 import com.mapswithme.maps.analytics.ExternalLibrariesMediator;
 import com.mapswithme.maps.base.BaseActivity;
 import com.mapswithme.maps.base.BaseActivityDelegate;
+import com.mapswithme.maps.base.Detachable;
 import com.mapswithme.maps.downloader.UpdaterDialogFragment;
 import com.mapswithme.maps.editor.ViralFragment;
-import com.mapswithme.maps.news.BaseNewsFragment;
-import com.mapswithme.maps.news.NewsFragment;
-import com.mapswithme.maps.news.WelcomeDialogFragment;
+import com.mapswithme.maps.location.LocationHelper;
+import com.mapswithme.maps.news.OnboardingStep;
+import com.mapswithme.maps.onboarding.BaseNewsFragment;
+import com.mapswithme.maps.onboarding.NewsFragment;
+import com.mapswithme.maps.onboarding.WelcomeDialogFragment;
 import com.mapswithme.maps.permissions.PermissionsDialogFragment;
 import com.mapswithme.maps.permissions.StoragePermissionsDialogFragment;
 import com.mapswithme.util.Config;
@@ -36,19 +40,18 @@ import com.mapswithme.util.statistics.PushwooshHelper;
 import com.my.tracker.MyTracker;
 
 public class SplashActivity extends AppCompatActivity
-    implements BaseNewsFragment.NewsDialogListener, BaseActivity
+    implements BaseNewsFragment.NewsDialogListener, BaseActivity,
+               WelcomeDialogFragment.PolicyAgreementListener,
+               WelcomeDialogFragment.OnboardingStepPassedListener
 {
+  private static final String EXTRA_CURRENT_ONBOARDING_STEP = "extra_current_onboarding_step";
   private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(LoggerFactory.Type.MISC);
   private static final String TAG = SplashActivity.class.getSimpleName();
-  private static final String EXTRA_CORE_INITIALIZED = "extra_core_initialized";
   private static final String EXTRA_ACTIVITY_TO_START = "extra_activity_to_start";
   public static final String EXTRA_INITIAL_INTENT = "extra_initial_intent";
   private static final int REQUEST_PERMISSIONS = 1;
-  private static final long FIRST_START_DELAY = 1000;
+  private static final long FIRST_START_DELAY = 300;
   private static final long DELAY = 100;
-
-  // The first launch of application ever - onboarding screen will be shown.
-  private static boolean sFirstStart;
 
   private View mIvLogo;
   private View mAppName;
@@ -56,6 +59,34 @@ public class SplashActivity extends AppCompatActivity
   private boolean mPermissionsGranted;
   private boolean mNeedStoragePermission;
   private boolean mCanceled;
+  private boolean mWaitForAdvertisingInfo;
+
+  @NonNull
+  private final Runnable mUserAgreementDelayedTask = new Runnable()
+  {
+    @Override
+    public void run()
+    {
+      WelcomeDialogFragment.show(SplashActivity.this);
+    }
+  };
+
+  @NonNull
+  private Runnable mOnboardingStepsTask = new Runnable()
+  {
+    @Override
+    public void run()
+    {
+      if (mCurrentOnboardingStep != null)
+      {
+        WelcomeDialogFragment.showOnboardinStepsStartWith(SplashActivity.this,
+                                                          mCurrentOnboardingStep);
+        return;
+      }
+
+      WelcomeDialogFragment.showOnboardinSteps(SplashActivity.this);
+    }
+  };
 
   @NonNull
   private final Runnable mPermissionsDelayedTask = new Runnable()
@@ -80,12 +111,15 @@ public class SplashActivity extends AppCompatActivity
         return;
       }
 
-      ExternalLibrariesMediator mediator = ((MwmApplication) getApplicationContext()).getMediator();
+      ExternalLibrariesMediator mediator = MwmApplication.from(getApplicationContext()).getMediator();
       if (!mediator.isAdvertisingInfoObtained())
       {
-        UiThread.runLater(mInitCoreDelayedTask, DELAY);
+        LOGGER.i(TAG, "Advertising info not obtained yet, wait...");
+        mWaitForAdvertisingInfo = true;
         return;
       }
+
+      mWaitForAdvertisingInfo = false;
 
       if (!mediator.isLimitAdTrackingEnabled())
       {
@@ -126,6 +160,11 @@ public class SplashActivity extends AppCompatActivity
   @NonNull
   private final BaseActivityDelegate mBaseDelegate = new BaseActivityDelegate(this);
 
+  @NonNull
+  private final AdvertisingInfoObserver mAdvertisingObserver = new AdvertisingInfoObserver();
+  @Nullable
+  private OnboardingStep mCurrentOnboardingStep;
+
   public static void start(@NonNull Context context,
                            @Nullable Class<? extends Activity> activityToStart,
                            @Nullable Intent initialIntent)
@@ -138,24 +177,32 @@ public class SplashActivity extends AppCompatActivity
     context.startActivity(intent);
   }
 
-  public static boolean isFirstStart()
-  {
-    boolean res = sFirstStart;
-    sFirstStart = false;
-    return res;
-  }
-
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
     mBaseDelegate.onCreate();
+    handleOnboardingStep(savedInstanceState);
     handleUpdateMapsFragmentCorrectly(savedInstanceState);
+    UiThread.cancelDelayedTasks(mUserAgreementDelayedTask);
+    UiThread.cancelDelayedTasks(mOnboardingStepsTask);
     UiThread.cancelDelayedTasks(mPermissionsDelayedTask);
     UiThread.cancelDelayedTasks(mInitCoreDelayedTask);
     UiThread.cancelDelayedTasks(mFinalDelayedTask);
     Counters.initCounters(this);
     initView();
+  }
+
+  private void handleOnboardingStep(@Nullable Bundle savedInstanceState)
+  {
+    if (savedInstanceState == null)
+      return;
+
+    if (!savedInstanceState.containsKey(EXTRA_CURRENT_ONBOARDING_STEP))
+      return;
+
+    int step = savedInstanceState.getInt(EXTRA_CURRENT_ONBOARDING_STEP);
+    mCurrentOnboardingStep = OnboardingStep.values()[step];
   }
 
   @Override
@@ -203,6 +250,10 @@ public class SplashActivity extends AppCompatActivity
   {
     super.onStart();
     mBaseDelegate.onStart();
+    mAdvertisingObserver.attach(this);
+    ExternalLibrariesMediator mediator = MwmApplication.from(this).getMediator();
+    LOGGER.d(TAG, "Add advertising observer");
+    mediator.addAdvertisingObserver(mAdvertisingObserver);
   }
 
   @Override
@@ -211,6 +262,48 @@ public class SplashActivity extends AppCompatActivity
     super.onResume();
     mBaseDelegate.onResume();
     mCanceled = false;
+
+    if (Counters.isMigrationNeeded())
+    {
+      Config.migrateCountersToSharedPrefs();
+      Counters.setMigrationExecuted();
+    }
+    
+    final boolean isFirstLaunch = WelcomeDialogFragment.isFirstLaunch(this);
+    if (isFirstLaunch)
+      MwmApplication.from(this).setFirstLaunch(true);
+
+    boolean isWelcomeFragmentOnScreen = false;
+    DialogFragment welcomeFragment = WelcomeDialogFragment.find(this);
+    if (welcomeFragment != null)
+    {
+      isWelcomeFragmentOnScreen = true;
+      welcomeFragment.dismissAllowingStateLoss();
+    }
+
+    if (isFirstLaunch || isWelcomeFragmentOnScreen)
+    {
+      if (WelcomeDialogFragment.isAgreementDeclined(this))
+      {
+        UiThread.runLater(mUserAgreementDelayedTask, FIRST_START_DELAY);
+        return;
+      }
+      else
+      {
+        if (processPermissionGranting())
+        {
+          UiThread.runLater(mOnboardingStepsTask, DELAY);
+          return;
+        }
+      }
+    }
+
+    if (processPermissionGranting())
+      runInitCoreTask();
+  }
+
+  private boolean processPermissionGranting()
+  {
     mPermissionsGranted = PermissionsUtils.isExternalStorageGranted();
     DialogFragment storagePermissionsDialog = StoragePermissionsDialogFragment.find(this);
     DialogFragment permissionsDialog = PermissionsDialogFragment.find(this);
@@ -222,13 +315,13 @@ public class SplashActivity extends AppCompatActivity
           permissionsDialog.dismiss();
         if (storagePermissionsDialog == null)
           StoragePermissionsDialogFragment.show(this);
-        return;
+        return false;
       }
       permissionsDialog = PermissionsDialogFragment.find(this);
       if (permissionsDialog == null)
-        UiThread.runLater(mPermissionsDelayedTask, FIRST_START_DELAY);
+        UiThread.runLater(mPermissionsDelayedTask, DELAY);
 
-      return;
+      return false;
     }
 
     if (permissionsDialog != null)
@@ -237,6 +330,11 @@ public class SplashActivity extends AppCompatActivity
     if (storagePermissionsDialog != null)
       storagePermissionsDialog.dismiss();
 
+    return true;
+  }
+
+  private void runInitCoreTask()
+  {
     UiThread.runLater(mInitCoreDelayedTask, DELAY);
   }
 
@@ -246,6 +344,8 @@ public class SplashActivity extends AppCompatActivity
     super.onPause();
     mBaseDelegate.onPause();
     mCanceled = true;
+    UiThread.cancelDelayedTasks(mUserAgreementDelayedTask);
+    UiThread.cancelDelayedTasks(mOnboardingStepsTask);
     UiThread.cancelDelayedTasks(mPermissionsDelayedTask);
     UiThread.cancelDelayedTasks(mInitCoreDelayedTask);
     UiThread.cancelDelayedTasks(mFinalDelayedTask);
@@ -256,6 +356,18 @@ public class SplashActivity extends AppCompatActivity
   {
     super.onStop();
     mBaseDelegate.onStop();
+    mAdvertisingObserver.detach();
+    ExternalLibrariesMediator mediator = MwmApplication.from(this).getMediator();
+    LOGGER.d(TAG, "Remove advertising observer");
+    mediator.removeAdvertisingObserver(mAdvertisingObserver);
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outState)
+  {
+    super.onSaveInstanceState(outState);
+    if (mCurrentOnboardingStep != null)
+      outState.putInt(EXTRA_CURRENT_ONBOARDING_STEP, mCurrentOnboardingStep.ordinal());
   }
 
   @Override
@@ -274,20 +386,6 @@ public class SplashActivity extends AppCompatActivity
     if (!app.arePlatformAndCoreInitialized())
     {
       showExternalStorageErrorDialog();
-      return;
-    }
-
-    if (Counters.isMigrationNeeded())
-    {
-      Config.migrateCountersToSharedPrefs();
-      Counters.setMigrationExecuted();
-    }
-
-    sFirstStart = WelcomeDialogFragment.showOn(this);
-    if (sFirstStart)
-    {
-      PushwooshHelper.nativeProcessFirstLaunch();
-      UiUtils.hide(mIvLogo, mAppName);
       return;
     }
 
@@ -356,6 +454,41 @@ public class SplashActivity extends AppCompatActivity
     processNavigation();
   }
 
+  @Override
+  public void onPolicyAgreementApplied()
+  {
+    boolean permissionsGranted = processPermissionGranting();
+    if (!permissionsGranted)
+      return;
+
+    boolean isFirstLaunch = WelcomeDialogFragment.isFirstLaunch(this);
+    if (isFirstLaunch)
+    {
+      UiThread.runLater(mOnboardingStepsTask, DELAY);
+      return;
+    }
+
+    runInitCoreTask();
+  }
+
+  @Override
+  public void onLastOnboardingStepPassed()
+  {
+    runInitCoreTask();
+  }
+
+  @Override
+  public void onOnboardingStepCancelled()
+  {
+    finish();
+  }
+
+  @Override
+  public void onOnboardingStepPassed(@NonNull OnboardingStep step)
+  {
+    mCurrentOnboardingStep = step;
+  }
+
   private void initView()
   {
     UiUtils.setupStatusBar(this);
@@ -366,7 +499,15 @@ public class SplashActivity extends AppCompatActivity
 
   private void init()
   {
-    MwmApplication.get().initCore();
+    MwmApplication app = MwmApplication.from(this);
+    boolean success = app.initCore();
+    if (!success || !app.isFirstLaunch())
+      return;
+
+    PushwooshHelper.nativeProcessFirstLaunch();
+    LocationHelper.INSTANCE.onEnteredIntoFirstRun();
+    if (!LocationHelper.INSTANCE.isActive())
+      LocationHelper.INSTANCE.start();
   }
 
   @SuppressWarnings("unchecked")
@@ -408,5 +549,45 @@ public class SplashActivity extends AppCompatActivity
       return R.style.MwmTheme_Night;
 
     throw new IllegalArgumentException("Attempt to apply unsupported theme: " + theme);
+  }
+
+  boolean isWaitForAdvertisingInfo()
+  {
+    return mWaitForAdvertisingInfo;
+  }
+
+  private static class AdvertisingInfoObserver implements AdvertisingObserver,
+                                                          Detachable<SplashActivity>
+  {
+    @Nullable
+    private SplashActivity mActivity;
+
+    @Override
+    public void onAdvertisingInfoObtained()
+    {
+      LOGGER.i(TAG, "Advertising info obtained");
+      if (mActivity == null)
+        return;
+
+      if (!mActivity.isWaitForAdvertisingInfo())
+      {
+        LOGGER.i(TAG, "Advertising info not waited");
+        return;
+      }
+
+      mActivity.runInitCoreTask();
+    }
+
+    @Override
+    public void attach(@NonNull SplashActivity object)
+    {
+      mActivity = object;
+    }
+
+    @Override
+    public void detach()
+    {
+      mActivity = null;
+    }
   }
 }

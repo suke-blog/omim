@@ -1,8 +1,6 @@
 #pragma once
 
-#include "qt/draw_widget.hpp"
-
-#include "storage/index.hpp"
+#include "storage/storage_defines.hpp"
 
 #include "platform/location.hpp"
 #include "platform/location_service.hpp"
@@ -11,6 +9,7 @@
 #include <QtWidgets/QMainWindow>
 
 #include <array>
+#include <string>
 #include <memory>
 
 class Framework;
@@ -24,6 +23,7 @@ namespace search { class Result; }
 namespace qt
 {
 class DrawWidget;
+struct ScreenshotParams;
 
 class MainWindow : public QMainWindow, location::LocationObserver
 {
@@ -35,19 +35,28 @@ class MainWindow : public QMainWindow, location::LocationObserver
   QPushButton * m_retryButton = nullptr;
   QLabel * m_downloadingStatusLabel = nullptr;
 
-  storage::TCountryId m_lastCountry;
+  storage::CountryId m_lastCountry;
 
   std::unique_ptr<location::LocationService> const m_locationService;
+  bool const m_screenshotMode;
 
   QAction * m_pMyPositionAction = nullptr;
   QAction * m_pCreateFeatureAction = nullptr;
   QAction * m_selectionMode = nullptr;
   QAction * m_clearSelection = nullptr;
   QAction * m_pSearchAction = nullptr;
-  QAction * m_trafficEnableAction = nullptr;
+
   QAction * m_bookmarksAction = nullptr;
+  QAction * m_rulerAction = nullptr;
+
+  QToolButton * m_selectLayerButton = nullptr;
+  QAction * m_selectLayerTrafficAction = nullptr;
+  QAction * m_selectLayerTransitAction = nullptr;
+  QAction * m_selectLayerIsolinesAction = nullptr;
+
   QAction * m_selectionCityBoundariesMode = nullptr;
   QAction * m_selectionCityRoadsMode = nullptr;
+  QAction * m_selectionMwmsBordersMode = nullptr;
   QToolButton * m_routePointsToolButton = nullptr;
   QAction * m_selectStartRoutePoint = nullptr;
   QAction * m_selectFinishRoutePoint = nullptr;
@@ -65,12 +74,13 @@ class MainWindow : public QMainWindow, location::LocationObserver
   Q_OBJECT
 
 public:
-  MainWindow(Framework & framework, bool apiOpenGLES3, QString const & mapcssFilePath = QString());
+  MainWindow(Framework & framework, bool apiOpenGLES3, std::unique_ptr<ScreenshotParams> && screenshotParams,
+             QString const & mapcssFilePath = QString());
 
   static void SetDefaultSurfaceFormat(bool apiOpenGLES3);
 
 protected:
-  string GetIniFile();
+  std::string GetIniFile();
 
   void OnLocationError(location::TLocationError errorCode) override;
   void OnLocationUpdated(location::GpsInfo const & info) override;
@@ -110,14 +120,24 @@ protected Q_SLOTS:
   void OnSwitchSelectionMode();
   void OnSwitchCityBoundariesSelectionMode();
   void OnSwitchCityRoadsSelectionMode();
+  void OnSwitchMwmsBordersSelectionMode();
   void OnClearSelection();
 
   void OnTrafficEnabled();
+  void OnTransitEnabled();
+  void OnIsolinesEnabled();
+
+  void SetEnabledTraffic(bool enable);
+  void SetEnabledTransit(bool enable);
+  void SetEnabledIsolines(bool enable);
+
+  void OnRulerEnabled();
   void OnStartPointSelected();
   void OnFinishPointSelected();
   void OnIntermediatePointSelected();
   void OnFollowRoute();
   void OnClearRoute();
+  void OnRoutingSettings();
 
   void OnBookmarksAction();
 

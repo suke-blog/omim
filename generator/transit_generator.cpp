@@ -1,10 +1,10 @@
 #include "generator/transit_generator.hpp"
 
-#include "generator/borders_generator.hpp"
-#include "generator/borders_loader.hpp"
+#include "generator/borders.hpp"
 #include "generator/utils.hpp"
 
 #include "routing/index_router.hpp"
+#include "routing/road_graph.hpp"
 #include "routing/routing_exceptions.hpp"
 #include "routing/vehicle_mask.hpp"
 
@@ -19,15 +19,17 @@
 #include "geometry/rect2d.hpp"
 #include "geometry/region2d.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/file_writer.hpp"
 
+#include "platform/country_file.hpp"
 #include "platform/platform.hpp"
 
 #include "base/assert.hpp"
 #include "base/exception.hpp"
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 
+#include <algorithm>
 #include <vector>
 
 #include "defines.hpp"
@@ -43,23 +45,23 @@ using namespace storage;
 
 namespace
 {
-void LoadBorders(string const & dir, TCountryId const & countryId, vector<m2::RegionD> & borders)
+void LoadBorders(string const & dir, CountryId const & countryId, vector<m2::RegionD> & borders)
 {
   string const polyFile = base::JoinPath(dir, BORDERS_DIR, countryId + BORDERS_EXTENSION);
   borders.clear();
-  osm::LoadBorders(polyFile, borders);
+  borders::LoadBorders(polyFile, borders);
 }
 
 void FillOsmIdToFeatureIdsMap(string const & osmIdToFeatureIdsPath, OsmIdToFeatureIdsMap & mapping)
 {
   CHECK(ForEachOsmId2FeatureId(osmIdToFeatureIdsPath,
-                               [&mapping](base::GeoObjectId const & osmId, uint32_t featureId) {
-                                 mapping[osmId].push_back(featureId);
+                               [&mapping](auto const & compositeId, auto featureId) {
+                                 mapping[compositeId.m_mainId].push_back(featureId);
                                }),
         (osmIdToFeatureIdsPath));
 }
 
-string GetMwmPath(string const & mwmDir, TCountryId const & countryId)
+string GetMwmPath(string const & mwmDir, CountryId const & countryId)
 {
   return base::JoinPath(mwmDir, countryId + DATA_FILE_EXTENSION);
 }
@@ -68,13 +70,13 @@ string GetMwmPath(string const & mwmDir, TCountryId const & countryId)
 /// The result of the calculation is set to |Gate::m_bestPedestrianSegment| of every gate
 /// from |graphData.m_gates|.
 /// \note All gates in |graphData.m_gates| must have a valid |m_point| field before the call.
-void CalculateBestPedestrianSegments(string const & mwmPath, TCountryId const & countryId,
+void CalculateBestPedestrianSegments(string const & mwmPath, CountryId const & countryId,
                                      GraphData & graphData)
 {
   // Creating IndexRouter.
   SingleMwmDataSource dataSource(mwmPath);
 
-  auto infoGetter = storage::CountryInfoReader::CreateCountryInfoReader(GetPlatform());
+  auto infoGetter = storage::CountryInfoReader::CreateCountryInfoGetter(GetPlatform());
   CHECK(infoGetter, ());
 
   auto const countryFileGetter = [&infoGetter](m2::PointD const & pt) {
@@ -104,20 +106,38 @@ void CalculateBestPedestrianSegments(string const & mwmPath, TCountryId const & 
     auto const & gate = gates[i];
     if (countryFileGetter(gate.GetPoint()) != countryId)
       continue;
-    // Note. For pedestrian routing all the segments are considered as twoway segments so
-    // IndexRouter.FindBestSegment() method finds the same segment for |isOutgoing| == true
+
+    // Note. For pedestrian routing all the segments are considered as two way segments so
+    // IndexRouter::FindBestSegments() method finds the same segments for |isOutgoing| == true
     // and |isOutgoing| == false.
-    Segment bestSegment;
+    vector<routing::Edge> bestEdges;
     try
     {
       if (countryFileGetter(gate.GetPoint()) != countryId)
         continue;
-      if (indexRouter.FindBestSegment(gate.GetPoint(), m2::PointD::Zero() /* direction */,
-                                      true /* isOutgoing */, *worldGraph, bestSegment))
+
+      bool dummy = false;
+      if (indexRouter.FindBestEdges(gate.GetPoint(), platform::CountryFile(countryId),
+                                    m2::PointD::Zero() /* direction */, true /* isOutgoing */,
+                                    FeaturesRoadGraph::kClosestEdgesRadiusM,
+                                    *worldGraph, bestEdges, dummy))
       {
-        CHECK_EQUAL(bestSegment.GetMwmId(), 0, ());
+        CHECK(!bestEdges.empty(), ());
+        IndexRouter::BestEdgeComparator bestEdgeComparator(gate.GetPoint(),
+                                                           m2::PointD::Zero() /* direction */);
+        // Looking for the edge which is the closest to |gate.GetPoint()|.
+        // @TODO It should be considered to change the format of transit section to keep all
+        // candidates for every gate.
+        auto const & bestEdge = *min_element(
+            bestEdges.cbegin(), bestEdges.cend(),
+            [&bestEdgeComparator](routing::Edge const & lhs, routing::Edge const & rhs) {
+              return bestEdgeComparator.Compare(lhs, rhs) < 0;
+            });
+
+        CHECK(bestEdge.GetFeatureId().IsValid(), ());
+
         graphData.SetGateBestPedestrianSegment(i, SingleMwmSegment(
-            bestSegment.GetFeatureId(), bestSegment.GetSegmentIdx(), bestSegment.IsForward()));
+            bestEdge.GetFeatureId().m_index, bestEdge.GetSegId(), bestEdge.IsForward()));
       }
     }
     catch (MwmIsNotAliveException const & e)
@@ -171,7 +191,7 @@ void DeserializeFromJson(OsmIdToFeatureIdsMap const & mapping,
   }
 }
 
-void ProcessGraph(string const & mwmPath, TCountryId const & countryId,
+void ProcessGraph(string const & mwmPath, CountryId const & countryId,
                   OsmIdToFeatureIdsMap const & osmIdToFeatureIdsMap, GraphData & data)
 {
   CalculateBestPedestrianSegments(mwmPath, countryId, data);
@@ -179,7 +199,7 @@ void ProcessGraph(string const & mwmPath, TCountryId const & countryId,
   data.CheckValidSortedUnique();
 }
 
-void BuildTransit(string const & mwmDir, TCountryId const & countryId,
+void BuildTransit(string const & mwmDir, CountryId const & countryId,
                   string const & osmIdToFeatureIdsPath, string const & transitDir)
 {
   LOG(LINFO, ("Building transit section for", countryId, "mwmDir:", mwmDir));
@@ -210,8 +230,8 @@ void BuildTransit(string const & mwmDir, TCountryId const & countryId,
   jointData.CheckValidSortedUnique();
 
   FilesContainerW cont(mwmPath, FileWriter::OP_WRITE_EXISTING);
-  FileWriter writer = cont.GetWriter(TRANSIT_FILE_TAG);
-  jointData.Serialize(writer);
+  auto writer = cont.GetWriter(TRANSIT_FILE_TAG);
+  jointData.Serialize(*writer);
 }
 }  // namespace transit
 }  // namespace routing

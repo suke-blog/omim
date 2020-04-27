@@ -3,6 +3,7 @@
 #include "search/bookmarks/results.hpp"
 #include "search/hotels_classifier.hpp"
 #include "search/ranking_info.hpp"
+#include "search/tracer.hpp"
 
 #include "indexer/feature_decl.hpp"
 
@@ -36,11 +37,12 @@ public:
     Feature,
     LatLon,
     PureSuggest,
-    SuggestFromFeature
+    SuggestFromFeature,
+    Postcode
   };
 
-  // Metadata for search results. Considered valid if GetResultType() == Type::Feature.
-  struct Metadata
+  // Search results details. Considered valid if GetResultType() == Type::Feature.
+  struct Details
   {
     // Valid only if not empty, used for restaurants.
     std::string m_cuisine;
@@ -50,6 +52,9 @@ public:
 
     // Valid only if not empty, used for brand name.
     std::string m_brand;
+
+    // Valid only if not empty, used for roads.
+    std::string m_roadShields;
 
     // Following fields are used for hotels only.
     int m_hotelPricing = 0;
@@ -70,10 +75,13 @@ public:
 
   // For Type::Feature.
   Result(FeatureID const & id, m2::PointD const & pt, std::string const & str,
-         std::string const & address, uint32_t featureType, Metadata const & meta);
+         std::string const & address, uint32_t featureType, Details const & meta);
 
   // For Type::LatLon.
   Result(m2::PointD const & pt, std::string const & latlon, std::string const & address);
+
+  // For Type::Postcode.
+  Result(m2::PointD const & pt, std::string const & postcode);
 
   // For Type::PureSuggest.
   Result(std::string const & str, std::string const & suggest);
@@ -85,18 +93,19 @@ public:
 
   std::string const & GetString() const { return m_str; }
   std::string const & GetAddress() const { return m_address; }
-  std::string const & GetCuisine() const { return m_metadata.m_cuisine; }
-  std::string const & GetAirportIata() const { return m_metadata.m_airportIata; }
-  std::string const & GetBrand() const { return m_metadata.m_brand; }
-  float GetHotelRating() const { return m_metadata.m_hotelRating; }
+  std::string const & GetCuisine() const { return m_details.m_cuisine; }
+  std::string const & GetAirportIata() const { return m_details.m_airportIata; }
+  std::string const & GetBrand() const { return m_details.m_brand; }
+  std::string const & GetRoadShields() const { return m_details.m_roadShields; }
+  float GetHotelRating() const { return m_details.m_hotelRating; }
   std::string const & GetHotelApproximatePricing() const
   {
-    return m_metadata.m_hotelApproximatePricing;
+    return m_details.m_hotelApproximatePricing;
   }
-  bool IsHotel() const { return m_metadata.m_isHotel; }
+  bool IsHotel() const { return m_details.m_isHotel; }
 
-  osm::YesNoUnknown IsOpenNow() const { return m_metadata.m_isOpenNow; }
-  int GetStarsCount() const { return m_metadata.m_stars; }
+  osm::YesNoUnknown IsOpenNow() const { return m_details.m_isOpenNow; }
+  int GetStarsCount() const { return m_details.m_stars; }
 
   bool IsSuggest() const;
   bool HasPoint() const;
@@ -130,10 +139,18 @@ public:
 
   RankingInfo const & GetRankingInfo() const { return m_info; }
 
+  std::vector<ResultTracer::Branch> const & GetProvenance() const { return m_provenance; }
+
   template <typename Info>
   void SetRankingInfo(Info && info)
   {
-    m_info = forward<Info>(info);
+    m_info = std::forward<Info>(info);
+  }
+
+  template <typename Prov>
+  void SetProvenance(Prov && prov)
+  {
+    m_provenance = std::forward<Prov>(prov);
   }
 
   // Returns a representation of this result that is sent to the
@@ -158,8 +175,11 @@ private:
   // a search query. -1 if undefined.
   int32_t m_positionInResults = -1;
 
+  std::vector<ResultTracer::Branch> m_provenance;
+
 public:
-  Metadata m_metadata;
+  // Careful when moving: the order of destructors is important.
+  Details m_details;
 };
 
 std::string DebugPrint(search::Result::Type type);
@@ -224,7 +244,7 @@ public:
   template <typename Fn>
   void SortBy(Fn && comparator)
   {
-    sort(begin(), end(), std::forward<Fn>(comparator));
+    std::sort(begin(), end(), std::forward<Fn>(comparator));
     for (int32_t i = 0; i < static_cast<int32_t>(GetCount()); ++i)
       operator[](i).SetPositionInResults(i);
   }
@@ -255,38 +275,4 @@ private:
 };
 
 std::string DebugPrint(search::Results const & results);
-
-struct AddressInfo
-{
-  enum class Type { Default, SearchResult };
-
-  std::string m_country;
-  std::string m_city;
-  std::string m_street;
-  std::string m_house;
-  std::string m_name;
-  std::vector<std::string> m_types;
-  double m_distanceMeters = -1.0;
-
-  std::string GetPinName() const;    // Caroline
-  std::string GetPinType() const;    // shop
-
-  std::string FormatPinText() const; // Caroline (clothes shop)
-  std::string FormatTypes() const;   // clothes shop
-  std::string GetBestType() const;
-  bool IsEmptyName() const;
-
-  // 7 vulica Frunze
-  std::string FormatHouseAndStreet(Type type = Type::Default) const;
-
-  // 7 vulica Frunze, Minsk, Belarus
-  std::string FormatAddress(Type type = Type::Default) const;
-
-  // Caroline, 7 vulica Frunze, Minsk, Belarus
-  std::string FormatNameAndAddress(Type type = Type::Default) const;
-
-  void Clear();
-};
-
-std::string DebugPrint(AddressInfo const & info);
 }  // namespace search

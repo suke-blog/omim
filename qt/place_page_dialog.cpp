@@ -1,8 +1,8 @@
 #include "qt/place_page_dialog.hpp"
 
 #include "map/place_page_info.hpp"
-// For search::AddressInfo.
-#include "search/result.hpp"
+
+#include <string>
 
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QGridLayout>
@@ -10,6 +10,8 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QVBoxLayout>
+
+using namespace std;
 
 string GenerateStars(int count)
 {
@@ -20,7 +22,7 @@ string GenerateStars(int count)
 }
 
 PlacePageDialog::PlacePageDialog(QWidget * parent, place_page::Info const & info,
-                                 search::AddressInfo const & address)
+                                 search::ReverseGeocoder::Address const & address)
   : QDialog(parent)
 {
   QGridLayout * grid = new QGridLayout();
@@ -29,7 +31,7 @@ PlacePageDialog::PlacePageDialog(QWidget * parent, place_page::Info const & info
     grid->addWidget(new QLabel("lat, lon"), row, 0);
     ms::LatLon const ll = info.GetLatLon();
     string const llstr =
-        strings::to_string_dac(ll.lat, 7) + ", " + strings::to_string_dac(ll.lon, 7);
+        strings::to_string_dac(ll.m_lat, 7) + ", " + strings::to_string_dac(ll.m_lon, 7);
     QLabel * label = new QLabel(llstr.c_str());
     label->setTextInteractionFlags(Qt::TextSelectableByMouse);
     grid->addWidget(label, row++, 1);
@@ -79,6 +81,9 @@ PlacePageDialog::PlacePageDialog(QWidget * parent, place_page::Info const & info
   }
   if (info.IsFeature())
   {
+    grid->addWidget(new QLabel("Feature ID"), row, 0);
+    grid->addWidget(new QLabel(QString::fromStdString(DebugPrint(info.GetID()))), row++, 1);
+
     grid->addWidget(new QLabel("Raw Types"), row, 0);
     QLabel * label = new QLabel(QString::fromStdString(DebugPrint(info.GetTypes())));
     label->setTextInteractionFlags(Qt::TextSelectableByMouse);

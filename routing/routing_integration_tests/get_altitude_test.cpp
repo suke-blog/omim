@@ -13,19 +13,22 @@
 #include "routing/routing_helpers.hpp"
 
 #include "geometry/mercator.hpp"
+#include "geometry/point_with_altitude.hpp"
 
 #include "platform/local_country_file.hpp"
 
 #include "base/math.hpp"
 
-#include "std/string.hpp"
-#include "std/unique_ptr.hpp"
-#include "std/utility.hpp"
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace
 {
 using namespace feature;
 using namespace platform;
+using namespace std;
 
 LocalCountryFile GetLocalCountryFileByCountryId(CountryFile const & country)
 {
@@ -40,14 +43,15 @@ LocalCountryFile GetLocalCountryFileByCountryId(CountryFile const & country)
   return {};
 }
 
-void TestAltitudeOfAllMwmFeatures(string const & countryId, TAltitude const altitudeLowerBoundMeters,
-                                  TAltitude const altitudeUpperBoundMeters)
+void TestAltitudeOfAllMwmFeatures(string const & countryId,
+                                  geometry::Altitude const altitudeLowerBoundMeters,
+                                  geometry::Altitude const altitudeUpperBoundMeters)
 {
   FrozenDataSource dataSource;
 
   LocalCountryFile const country = GetLocalCountryFileByCountryId(CountryFile(countryId));
   TEST_NOT_EQUAL(country, LocalCountryFile(), ());
-  TEST_NOT_EQUAL(country.GetFiles(), MapOptions::Nothing, (country));
+  TEST(country.HasFiles(), (country));
 
   pair<MwmSet::MwmId, MwmSet::RegResult> const regResult = dataSource.RegisterMap(country);
   TEST_EQUAL(regResult.second, MwmSet::RegResult::Success, ());
@@ -56,7 +60,7 @@ void TestAltitudeOfAllMwmFeatures(string const & countryId, TAltitude const alti
   unique_ptr<AltitudeLoader> altitudeLoader =
       make_unique<AltitudeLoader>(dataSource, regResult.first /* mwmId */);
 
-  ForEachFromDat(country.GetPath(MapOptions::Map), [&](FeatureType & f, uint32_t const & id) {
+  ForEachFeature(country.GetPath(MapFileType::Map), [&](FeatureType & f, uint32_t const & id) {
     if (!routing::IsRoad(TypesHolder(f)))
       return;
 
@@ -65,13 +69,13 @@ void TestAltitudeOfAllMwmFeatures(string const & countryId, TAltitude const alti
     if (pointsCount == 0)
       return;
 
-    TAltitudes altitudes = altitudeLoader->GetAltitudes(id, pointsCount);
+    geometry::Altitudes altitudes = altitudeLoader->GetAltitudes(id, pointsCount);
     TEST(!altitudes.empty(),
          ("Empty altitude vector. MWM:", countryId, ", feature id:", id, ", altitudes:", altitudes));
 
     for (auto const altitude : altitudes)
     {
-      TEST_EQUAL(base::clamp(altitude, altitudeLowerBoundMeters, altitudeUpperBoundMeters), altitude,
+      TEST_EQUAL(base::Clamp(altitude, altitudeLowerBoundMeters, altitudeUpperBoundMeters), altitude,
                  ("Unexpected altitude. MWM:", countryId, ", feature id:", id, ", altitudes:", altitudes));
     }
   });

@@ -21,7 +21,16 @@ void Context::Clear()
   m_nonFoundResults.clear();
   m_nonFoundResultsEdits.Clear();
 
+  m_sampleEdits.Clear();
+
   m_initialized = false;
+}
+
+void Context::LoadFromSample(search::Sample const & sample)
+{
+  Clear();
+  m_sample = sample;
+  m_sampleEdits.Reset(sample.m_useless);
 }
 
 search::Sample Context::MakeSample(search::FeatureLoader & loader) const
@@ -43,7 +52,6 @@ search::Sample Context::MakeSample(search::FeatureLoader & loader) const
 
   // Iterates over original (loaded from the file with search samples)
   // results first.
-
   size_t k = 0;
   for (size_t i = 0; i < m_sample.m_results.size(); ++i)
   {
@@ -53,7 +61,7 @@ search::Sample Context::MakeSample(search::FeatureLoader & loader) const
     {
       auto const & entry = nonFoundEntries[k++];
       auto const deleted = entry.m_deleted;
-      auto const & curr = entry.m_curr;
+      auto const & curr = entry.m_currRelevance;
       if (!deleted && curr)
       {
         auto result = m_sample.m_results[i];
@@ -63,11 +71,11 @@ search::Sample Context::MakeSample(search::FeatureLoader & loader) const
       continue;
     }
 
-    if (!foundEntries[j].m_curr)
+    if (!foundEntries[j].m_currRelevance)
       continue;
 
     auto result = m_sample.m_results[i];
-    result.m_relevance = *foundEntries[j].m_curr;
+    result.m_relevance = *foundEntries[j].m_currRelevance;
     outResults.push_back(move(result));
   }
 
@@ -81,7 +89,7 @@ search::Sample Context::MakeSample(search::FeatureLoader & loader) const
       continue;
     }
 
-    if (!foundEntries[i].m_curr)
+    if (!foundEntries[i].m_currRelevance)
       continue;
 
     auto const & result = m_foundResults[i];
@@ -89,10 +97,12 @@ search::Sample Context::MakeSample(search::FeatureLoader & loader) const
     if (result.GetResultType() != search::Result::Type::Feature)
       continue;
 
-    FeatureType ft;
-    CHECK(loader.Load(result.GetFeatureID(), ft), ());
-    outResults.push_back(search::Sample::Result::Build(ft, *foundEntries[i].m_curr));
+    auto ft = loader.Load(result.GetFeatureID());
+    CHECK(ft, ());
+    outResults.push_back(search::Sample::Result::Build(*ft, *foundEntries[i].m_currRelevance));
   }
+
+  outSample.m_useless = m_sampleEdits.m_currUseless;
 
   return outSample;
 }
@@ -103,12 +113,15 @@ void Context::ApplyEdits()
     return;
   m_foundResultsEdits.Apply();
   m_nonFoundResultsEdits.Apply();
+  m_sampleEdits.Apply();
 }
 
 // ContextList -------------------------------------------------------------------------------------
-ContextList::ContextList(OnUpdate onResultsUpdate, OnUpdate onNonFoundResultsUpdate)
+ContextList::ContextList(OnResultsUpdate onResultsUpdate, OnResultsUpdate onNonFoundResultsUpdate,
+                         OnSampleUpdate onSampleUpdate)
   : m_onResultsUpdate(onResultsUpdate)
   , m_onNonFoundResultsUpdate(onNonFoundResultsUpdate)
+  , m_onSampleUpdate(onSampleUpdate)
 {
 }
 
@@ -125,15 +138,20 @@ void ContextList::Resize(size_t size)
   for (size_t i = oldSize; i < size; ++i)
   {
     m_contexts.emplace_back(
-        [this, i](Edits::Update const & update) {
+        [this, i](ResultsEdits::Update const & update) {
           OnContextUpdated(i);
           if (m_onResultsUpdate)
             m_onResultsUpdate(i, update);
         },
-        [this, i](Edits::Update const & update) {
+        [this, i](ResultsEdits::Update const & update) {
           OnContextUpdated(i);
           if (m_onNonFoundResultsUpdate)
             m_onNonFoundResultsUpdate(i, update);
+        },
+        [this, i]() {
+          OnContextUpdated(i);
+          if (m_onSampleUpdate)
+            m_onSampleUpdate(i);
         });
   }
 }

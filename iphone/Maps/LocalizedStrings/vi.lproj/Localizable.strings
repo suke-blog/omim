@@ -6,9 +6,6 @@
 
 /********** Strings **********/
 
-/* About button text (should be short) */
-"about" = "Giới thiệu";
-
 /* Button text (should be short) */
 "back" = "Quay lại";
 
@@ -81,8 +78,6 @@
 /* View and button titles for accessibility */
 "core_my_position" = "Vị trí của Tôi";
 
-"ok" = "OK";
-
 /* Settings/Downloader - No free space dialog message */
 "free_disk_space_for_country_x" = "Bạn vui lòng giải phóng dung lượng trên thiết bị của mình để có thể tải xuống %@";
 
@@ -109,9 +104,6 @@
 
 /* Settings/Downloader - 3G download warning dialog confirm button */
 "use_cellular_data" = "Có";
-
-/* Settings/Downloader - No internet connection dialog message */
-"use_wifi_recommendation_text" = "Chúng tôi khuyên bạn nên sử dụng WiFi để tải xuống các bảnđồ lớn.";
 
 /* Choose measurement on first launch alert - title */
 "which_measurement_system" = "Bạn thích sử dụng hệ thống đo lường nào?";
@@ -408,9 +400,6 @@
 /* Subject for emailed bookmark */
 "bookmark_share_email_subject" = "Này, hãy xem ghim của tôi tại MAPS.ME map";
 
-/* Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me */
-"bookmark_share_email" = "Xin chào,\n\nI được gắn: %1$@ tại MAPS.ME, bản đồ thế giới ngoại tuyến. Ấn vào đường dẫn này %2$@ hoặc cái này %3$@ để xem vị trí trên bản đồ.\n\nCám ơn nhiều.";
-
 /* Subject for emailed position */
 "my_position_share_email_subject" = "Này, hãy xem vị trí hiện tại của tôi tại MAPS.ME map!";
 
@@ -588,15 +577,6 @@
 
 /* category title */
 "routes" = "Tuyến đường";
-
-/* Show on first launch. */
-"maps_licence_info" = "Ứng dụng này sử dụng dữ liệu địa lý (bao gồm bản đồ, thông tin doanh nghiệp, các điểm lưu tâm, biên giới quốc gia và khu vực, v.v…) lấy từ dự án OpenStreetMap. Chúng tôi không đảm bảo bất kỳ sự nhất quán, chính xác, toàn vẹn hay phù hợp nào từ các dữ liệu OpenStreetMap.";
-
-/* Show on first launch. */
-"agree" = "Tôi đồng ý";
-
-/* Show on first launch */
-"disagree" = "Tôi không đồng ý";
 
 /* text of notification */
 "download_map_notification" = "Tải xuống bản đồ của vị trí của bạn";
@@ -896,6 +876,30 @@
 
 /* pink color */
 "pink" = "Hồng";
+
+/* deep purple color */
+"deep_purple" = "Tía thẫm";
+
+/* light blue color */
+"light_blue" = "Xanh da trời";
+
+/* cyan color */
+"cyan" = "Xanh lơ";
+
+/* teal color */
+"teal" = "Lục bảo";
+
+/* lime color */
+"lime" = "Màu xanh chanh";
+
+/* deep orange color */
+"deep_orange" = "Cam đậm";
+
+/* gray color */
+"gray" = "Xám";
+
+/* blue gray color */
+"blue_gray" = "Xám xanh da trời";
 
 /* Wi-Fi available */
 "WiFi_available" = "Có";
@@ -1342,10 +1346,6 @@
 
 "onboarding_permissions_message" = "Để bạn có thể tải về các bản đồ, xem các địa điểm và lưu lượng giao thông gần bạn và sử dụng điều hướng.";
 
-"onboarding_welcome_title" = "Chào mừng đến với MAPS.ME";
-
-"onboarding_welcome_first_subtitle" = "Các bản đồ hoàn toàn ngoại tuyến miễn phí, nhanh và chi tiết với điều hướng qua từng khúc quanh.";
-
 "onboarding_welcome_second_subtitle" = "Bằng cách khởi chạy ứng dụng, bạn đồng ý với <a href=\"%s\">Điều khoản Sử dụng</a> và <a href=\"%s\">Chính sách Riêng tư</a>.";
 
 "dialog_incorrect_feature_position" = "Thay đổi địa điểm";
@@ -1500,7 +1500,7 @@
 
 "placepage_more_button" = "Bổ sung";
 
-"placepage_more_reviews_button" = "More Reviews";
+"placepage_more_reviews_button" = "Thêm nhận xét";
 
 "book_button" = "Đặt trước";
 
@@ -1782,10 +1782,6 @@
 
 "banner_rentalcars_message" = "800 công ty thuê ô tô ở hơn 49.000 địa điểm thuê ô tô.";
 
-"banner_viator_title" = "Tìm kiếm tour trực tuyến";
-
-"banner_viator_message" = "Tìm hơn 50.000 trên toàn thế giới.";
-
 /* december */
 "whatsnew_traffic" = "Dữ liệu Giao thông tại 36 Quốc gia";
 
@@ -1860,10 +1856,6 @@
 "whatsnew_waypoints_title" = "Điểm tọa độ trong Lộ trình";
 
 "whatsnew_waypoints_message" = "Chạm vào các điểm để thêm điểm tọa độ vào lộ trình của bạn.";
-
-"whatsnew_viator_title" = "Đặt tour du lịch";
-
-"whatsnew_viator_message" = "Chọn các tour phổ biến trong các thành phố du lịch trên toàn thế giới.";
 
 "whatsnew_driving_style_title" = "Phong cách Bản đồ Mới cho Lái xe";
 
@@ -1977,8 +1969,6 @@
 
 "toast_location_permission_denied" = "Quyền định vị của ứng dụng bị từ chối";
 
-"place_page_viator_title" = "Các điểm tham quan và du lịch";
-
 "button_use" = "Sử dụng";
 
 "planning_route_manage_route" = "Quản lý lộ trình";
@@ -2018,10 +2008,6 @@
 "choose_start_point" = "Chọn một điểm bắt đầu";
 
 "choose_destination" = "Chọn một điểm đến";
-
-"preloader_viator_title" = "Khám phá các tour và hoạt động khác lạ";
-
-"preloader_viator_message" = "Tour, hoạt động, ngắm cảnh, v.v…";
 
 "preloader_viator_button" = "Tìm hiểu thêm";
 
@@ -2127,10 +2113,6 @@
 
 "discovery_button_subtitle_local_guides" = "Hướng dẫn Địa phương";
 
-"discovery_button_viator_offline_title" = "Khám phá các tour du lịch và những điều lạ bạn có thể làm";
-
-"discovery_button_viator_offline_message" = "Tour du lịch, việc có thể làm, tour ngắm cảnh và nhiều hơn thế nữa.";
-
 "discovery_button_viator_error_title" = "Lỗi tải dữ liệu";
 
 "discovery_button_other_error_message" = "Lỗi tải dữ liệu";
@@ -2203,8 +2185,6 @@
 
 "downloader_applying" = "Áp dụng %s...";
 
-"transit_not_found" = "Chưa có tính năng dẫn đường quá cảnh cho khu vực này";
-
 "whats_new_title_hotel_filter" = "Đã có bộ lọc khách sạn mới!";
 
 "whats_new_message_hotel_filter" = "Đặt các khách sạn còn phòng cho ngày của bạn! Sử dụng các bộ lọc nhận phòng và trả phòng";
@@ -2212,8 +2192,6 @@
 "whats_new_title_ugc_travel" = "Chia sẻ trải nghiệm của bạn với những du khách khác!";
 
 "whats_new_message_ugc_travel" = "Cho điểm và đánh giá những nơi bạn đã ghé thăm!";
-
-"dialog_pedestrian_route_is_long" = "Tuyến đường dành cho người đi bộ quá dài";
 
 "dialog_message_transit_not_found_connection" = "Xây dựng lộ trình trong một mạng chuyển tiếp";
 
@@ -2405,9 +2383,8 @@
 
 "guide_downloaded_title" = "Hướng dẫn đã được tải xuống thành công";
 
-"download_guides" = "Tải xuống hướng dẫn";
-
-"cached_guides_placeholder_subtitle" = "Hướng dẫn ngoại tuyến chi tiết cho mọi cuộc hành trình. Chọn hướng dẫn phù hợp với bạn nhất và tải xuống trực tiếp vào bản đồ. Bạn sẽ cần kết nối internet để tải xuống các hướng dẫn.";
+/* as few symbols as possible */
+"download_guides" = "Tìm hướng dẫn";
 
 "guides_groups_cached" = "Đã tải xuống hướng dẫn";
 
@@ -2487,8 +2464,6 @@
 
 "restore_no_subscription_alert" = "Không có đăng ký đang hoạt động";
 
-"subscription_terms" = "Thanh toán sẽ được tính vào tài khoản iTunes của bạn khi xác nhận mua. Đăng ký sẽ tự động gia hạn trừ khi tính năng tự động gia hạn được tắt ít nhất 24 giờ trước khi kết thúc kỳ đăng ký hiện tại. Tài khoản của bạn sẽ được tính phí theo gói gia hạn trong vòng 24 giờ trước khi kết thúc kỳ đăng ký hiện tại. Bạn có thể quản lý hoặc tắt tính năng tự động gia hạn trong cài đặt tài khoản Apple ID của mình bất kỳ lúc nào sau khi mua.";
-
 "subscriptions_title" = "Đăng ký";
 
 "manage_subscription" = "Quản lý đăng ký";
@@ -2508,8 +2483,6 @@
 "ugc_route_tags_screen_label" = "Chọn thẻ";
 
 "ugc_route_tags_progress_msg" = "Đang tải thẻ…";
-
-"ugc_route_tags_desc" = "Vui lòng chọn thẻ để giúp những khách du lịch khác tìm thấy hướng dẫn của bạn. Điều này là bắt buộc.";
 
 "public_access" = "Truy cập công khai";
 
@@ -2564,7 +2537,7 @@
 
 "unable_upload_error_subtitle_broken" = "Tập tin này bị hỏng và không thể tải lên được. Vui lòng tải lên một tập tin khác.";
 
-"buy_btn" = "Mua với %s";
+"buy_btn" = "Mua sách hướng dẫn với %s";
 
 "download_guide_progress" = "Đang tải xuống hướng dẫn của bạn…";
 
@@ -2659,6 +2632,636 @@
 
 "whats_new_ugc_routes_title_android_only" = "Rất dễ để chia sẻ những sự ấn tượng của bạn";
 
+"ugc_thanks_message_auth" = "Ý kiến của bạn đã được bảo lưu";
+
+"ugc_thanks_message_not_auth" = "Hãy đăng ký để có thể để lại ý kiến nhận xét";
+
+"notification_leave_review_v2_title" = "Hãy để lại ý kiến nhận xét và giúp đỡ du khách!";
+
+"error_public_not_enought_title" = "Không đủ thẻ đánh dấu";
+
+"error_public_not_enought_subtitle" = "Trong hướng dẫn tuyến du lịch của bạn phải có ít nhất 3 thẻ đánh dấu để có thể tải lên công khai";
+
+"bookmark_public_upload_alert_title" = "Bạn chỉ cần thêm vài bước nữa là có thể chia sẻ hướng dẫn của mình với tất cả khách du lịch của MAPS.ME!";
+
+"bookmark_public_upload_alert_subtitle" = "Hãy chắc chắn rằng tuyến hướng dẫn của bạn có đầy đủ tên gọi, mô tả, và tất nhiên tất cả thẻ đánh dấu đều có thông tin về các địa điểm. Chính nhờ điều này, người dùng sẽ tìm được tuyến hướng dẫn và có thể áp dụng vào chuyến đi của mình.";
+
+"bookmark_public_upload_alert_ok_button" = "Vâng, tôi chắc chắn!";
+
+"name_title" = "Nhập tên gọi";
+
+"name_placeholder" = "ví dụ, Quán rượu London";
+
+"name_comment1" = "Hãy gọi tên tuyến hướng dẫn một cách cụ thể để người dùng có thể tìm chính xác được nó, ví dụ, \"Quán rượu London\"";
+
+"name_comment2" = "Tên gọi không được chứa những ký tự đặc biệt. Không đăng lên những tuyến hướng dẫn với tên gọi \"Các Địa chỉ của Tôi\"";
+
+"description_guide" = "Mô tả";
+
+"description_title" = "Hãy nhập thông tin mô tả hướng dẫn";
+
+"description_placeholder" = "Hãy mổ tả hướng dẫn của mình một cách cụ thể";
+
+"description_comment1" = "Phần mô tả phải chứa ít nhất 30 ký tự.";
+
+"ugc_route_tags_desc" = "Vui lòng lựa chọn thẻ tag để giúp những khách du lịch khác tìm được hướng dẫn của bạn. Điều này là bắt buộc. Không nhiều hơn %s thẻ tag.";
+
+"html_format_error_title" = "Hướng dẫn của bạn chương được đăng lên";
+
+"html_format_error_subtitle" = "Xin vui lòng kiểm trả chắc chắn để tên gọi và mô tả các thẻ đánh dấu trong hướng dẫn của bạn có định dạng đúng. Bạn có thể kiểm tra điều này trong phần sửa chữa bằng nút \"Chỉnh sửa trực tuyến\" ở dưới.";
+
+"web_editor_description" = "Tải lên hướng dẫn và nhận đường link để chỉnh sửa trên máy tính";
+
+"edit_on_web_confirm" = "Chỉnh sửa trực tuyến";
+
+"update_guide" = "Tải phiên bản mới";
+
+"direct_link_updating_text" = "Cập nhận tuyến hướng dẫn…";
+
+"direct_link_updating_success" = "Tuyến hướng dẫn đã được cập nhật";
+
+"unable_get_direct_link_desc" = "Bạn có thể chia sẻ hướng dẫn của mình bằng đường link công khai";
+
+"any_access_update_alert_title" = "Có thể bạn có bản hướng dẫn mới";
+
+"any_access_update_alert_message" = "Bạn muốn cập nhật thẻ đánh dấu? Bản mới sẽ truy cập được bằng chính đường link này.";
+
+"any_access_update_alert_update" = "Cập nhật";
+
+"public_or_limited_access_after_edit_online_error_title" = "Bạn đã chỉnh sửa tuyến hướng dẫn trực tuyến";
+
+"public_or_limited_access_after_edit_online_error_message" = "Trong tương lại hãy chỉnh sửa, đăng và chia sẻ hướng dẫn cùng bạn bè qua website của chúng tôi";
+
+"power_managment_title" = "Chế độ tiết kiệm năng lượng";
+
+"power_managment_description" = "Nếu chế độ tiết kiệm năng lượng được bật, ứng dụng sẽ tắt các chức năng tiêu thụ năng lượng tùy thuộc vào mức pin hiện tại của điện thoại";
+
+"power_managment_setting_never" = "Không bao giờ";
+
+"power_managment_setting_auto" = "Tự động";
+
+"power_managment_setting_manual_max" = "Tiết kiệm năng lượng tối đa";
+
+"enable_logging_warning_message" = "Tùy chọn này được kích hoạt để ghi nhật ký đăng nhập cho mục đích chẩn đoán. Điều này sẽ giúp nhóm chúng tôi làm rõ các vấn đề liên quan đến ứng dụng. Hãy bật tùy chọn này chỉ khi nào có yêu cầu hỗ trợ từ MAPS.ME.";
+
+"html_error_upload_message_try_again" = "Vui lòng kiểm tra kết nối internet và thử lại";
+
+"html_error_upload_title_try_again" = "Không có kết nối internet";
+
+"notification_leave_review_v2_android_short_title" = "Hãy để lại nhận xét và giúp khách du lịch!";
+
+"megafon" = "Say goodbye to roaming!";
+
+"notifications_illegal_alert_disable_button" = "Tắt thông báo";
+
+"access_rules_author_only" = "Chỉnh sửa trực tuyến";
+
+"privacy_settings_menu" = "Cài đặt bảo mật";
+
+"gdpr_request_setting" = "Nhận ID cho yêu cầu GDPR";
+
+"gdpr_request_window_title" = "ID của bạn: %s.";
+
+"gdpr_request_window_message" = "Xin vui lòng sao chép nó và gửi yêu cầu tới địa chỉ support@maps.me";
+
+"gdpr_request_window_copy" = "Sao chép ID";
+
+"unable_upadate_error_title" = "Cập nhận hướng dẫn không thành công";
+
+"unable_upadate_error_message" = "Xuất hiện lỗi khi cập nhật. Hãy kiểm tra lại những thay đổi và thử lại lần nữa";
+
+"whats_new_wiki_title" = "Địa điểm này là thế nào?";
+
+"whats_new_wiki_message" = "Chúng tôi đã thêm các bài viết về những điểm thu hút khách du lịch phổ biến nhất từ Wikipedia.org vào các trang. Những bài viết này đều có thể truy cập ngoại tuyến";
+
+"driving_options_title" = "Thiết lập đi vòng";
+
+"driving_options_subheader" = "Tránh trên mỗi tuyến";
+
+"avoid_tolls" = "Đường trả phí";
+
+"avoid_unpaved" = "Đường đất";
+
+"avoid_ferry" = "Bến phà";
+
+"avoid_motorways" = "Đường cao tốc";
+
+"unable_to_calc_alert_title" = "Không thể tạo tuyến đường";
+
+"unable_to_calc_alert_subtitle" = "Rất tiếc, chúng không thể tạo tuyến đường với những tùy chọn đã chọn. Hãy thay đổi thiết lập và thử lại";
+
+"define_to_avoid_btn" = "Thiết lập đường đi vòng";
+
+"change_driving_options_btn" = "Thiết lập đường đi tránh đã được bật";
+
+"toll_road" = "Đường trả phí";
+
+"unpaved_road" = "Đường đất";
+
+"ferry_crossing" = "Bến phà";
+
+"operated_by" = "Tạo được \"%s\"";
+
+"avoid_toll_roads_placepage" = "Tránh đường trả phí";
+
+"avoid_unpaved_roads_placepage" = "Tránh đường đất";
+
+"avoid_ferry_crossing_placepage" = "Tránh bến phà";
+
+"cached_guides_placeholder_subtitle" = "Sách hướng dẫn sẵn có trong MAPS.ME – là những điểm được lựa chọn cùng với hình ảnh và mô tả, chúng được hiển thị trên bản đồ và cho phép truy cập ngoại tuyến.";
+
+"guides_catalogue_title" = "Danh mục sách hướng dẫn";
+
+"download_guides_button" = "Chuyển tới danh mục";
+
+"type.cuisine.uzbek" = "Ẩm thực của Uzbekistan";
+
+"onboarding_welcome_title" = "Hãy lên kế hoạch và đi du lịch cùng với MAPS.ME";
+
+"onboarding_welcome_first_subtitle" = "Hãy lưu lại những địa chỉ hấp dẫn, đặt phòng khách sạn và xây dựng lộ trình đi ngoại tuyến";
+
+"onboarding_guide_direct_download_title" = "Sác hướng dẫn đã sẵn sàng cho phép tải xuống";
+
+"onboarding_guide_direct_download_subtitle" = "Nó hiển thị trên bản đồ và sẽ hoạt động ngoại tuyến";
+
+"onboarding_guide_direct_download_button" = "Tải về";
+
+"onboarding_bydeeplink_guide_title" = "Sác hướng dẫn sẵn có trong MAPS.ME";
+
+"onboarding_bydeeplink_guide_subtitle" = "Những địa điểm đã lựa chọn cùng hình ảnh và mô tả được hiển thị trên bản đồ và cho phép truy cập ngoại tuyến.";
+
+"whats_new_auto_update_bydeeplink_title" = "Trước khi chuyển sang hướng dẫn…";
+
+"whats_new_auto_update_bydeeplink_message" = "Hãy cập nhật bản đồ để nhận được những thông tin mới nhất về các đối tượng, chủ thể!";
+
+"whats_new_auto_update_and_proceed_button_size" = "Cập nhận được (%s) và tiếp tục";
+
+"whatsnew_toll_unpaved_title" = "Hãy xây dựng tuyến đường có tính đến tất cả các loại đường";
+
+"whatsnew_toll_unpaved_message" = "Hãy lựa chọn những đường vòng qua đường thu phí, đường đất và các bến phà";
+
+"whatsnew_new_catalogue_title" = "Những trang đã được cập nhật của danh sách";
+
+"whatsnew_new_catalogue_message" = "Chúng tôi đã bổ sung thông tin cụ thể về các sách hướng dẫn đồng hành để việc lựa chọn tuyến đường trở nên đơn giản và thuận tiên";
+
+"purchase_please_wait_toast" = "Vui lòng đừng rời bỏ màn hình đến khi hoàn tất việc mua";
+
+"trip_start" = "Đi nào";
+
+"pick_destination" = "Mục đích";
+
+"follow_my_position" = "Định tâm";
+
+"search_results" = "Kết quả tìm kiếm";
+
+"then_turn" = "Sau đó";
+
+"redirect_route_alert" = "Bạn có muốn tạo lại tuyến không?";
+
+"redirect_route_yes" = "Có";
+
+"redirect_route_no" = "Không";
+
+"trip_finished" = "Bạn đã tới nơi!";
+
+"keyboard_availability_alert" = "Bàn phím không khả dụng trong thời gian di chuyển";
+
+"dialog_routing_change_start_carplay" = "Không thể tạo tuyến đường từ địa điểm hiển tại";
+
+"dialog_routing_change_end_carplay" = "Không thể tạo tuyến đường tới điểm kết cuối. Hãy chọn điểm khác";
+
+"dialog_routing_check_gps_carplay" = "Không có tín hiệu GPS. Hãy đến vị trí có không gian mở";
+
+"dialog_routing_unable_locate_route_carplay" = "Không thể tạo tuyến đường. Hãy chọn những điểm khác cho tuyến đường";
+
+"dialog_routing_download_files_carplay" = "Để tạo tuyến đường, hãy tải xuống các bản đồ còn thiếu về thiết bị";
+
+"dialog_routing_system_error_carplay" = "Đã xảy ra lỗi. Khởi động lại ứng dụng";
+
+"dialog_routing_rebuild_from_current_location_carplay" = "Tuyến đường sẽ được tạo lại từ vị trí hiện tại của bạn";
+
+"dialog_routing_rebuild_for_vehicle_carplay" = "Tuyến đường sẽ được thay đổi thành tuyến dành cho xe ô tô";
+
+"ok" = "Ok";
+
+"vezet_taxi" = "Vezet";
+
+"booking_button_toolbar" = "Lựa chọn khách sạn trên bản đồ";
+
+"popup_booking_download_guides_title" = "Đặt phòng khách sạn?";
+
+"popup_booking_download_guides_message" = "Lên kế hoạch chô lộ trình du lịch cùng với những sách hướng dẫn sẵn có từ MAPS.ME";
+
+"popup_mwm_download_guides_title" = "Hướng dẫn ngoại tuyến";
+
+"popup_mwm_download_guides_cta" = "Lựa chọn";
+
+"popup_mwm_download_guides_cta_1" = "Xem";
+
+"gallery_pp_download_guides_offline_title" = "Lên kết hoạch nghỉ ngơi cùng MAPS.ME!";
+
+"gallery_pp_download_guides_offline_subtitle" = "Đừng bỏ lỡ những thứ quan trọng cùng với các tuyến được những du khách có kinh nghiệm đề xuất";
+
+"gallery_pp_download_guides_offline_cta" = "Bật kết nối Internet";
+
+"gallery_pp_download_guides_title" = "Sách hướng dẫn";
+
+"native_screen_subscription_title" = "Truy cập đầy đủ tới 2000+ sách hướng dẫn!";
+
+"native_screen_subscription_message" = "Một kỳ nghỉ đáng nhớ, ở đâu và cùng với ai bạn sẽ không đi du lịch";
+
+"annual_subscription_title" = "Một năm";
+
+"montly_subscription_title" = "Một tháng";
+
+"annual_subscription_message" = "12 tháng truy cập không giới hạn";
+
+"montly_subscription_message" = "1 tháng truy cập không giới hạn";
+
+"annual_save_component" = "- %d%";
+
+"subscription_success_dialog_title" = "Cảm ơn vì đã đăng ký!";
+
+"subscription_success_dialog_message" = "Giờ thì bạn đã có thể truy cập không giới hạn vào danh mục sách hướng dẫn";
+
+"renewal_screen_title" = "Thời hạn đăng ký đã hết";
+
+"renewal_screen_message" = "Tất cả những sách hướng dẫn đã tải về khi đăng ký sẽ bị xóa hết. Bạn có muốn khôi phục việc đăng ký và lưu chúng lại không?";
+
+"renewal_screen_button_restore" = "Có, khôi phục";
+
+"renewal_screen_button_cancel" = "Không, xóa sách hướng dẫn";
+
+"subscription_error_ping_title" = "Mua không thành công";
+
+"subscription_error_message" = "Hiện tại server không khả dụng tại khu vực của bạn. Xin vui lòng thử lại sau";
+
+"subscription_error_button" = "Đã hiểu";
+
+"timeout_error_title" = "Rất tiếc, đã hết giờ!";
+
+"timeout_error_message" = "Máy chủ của chúng tôi không hồi đáp. Xin vui lòng kiểm tra lại kết nối internet và thử lại.";
+
+"per_month" = "/tháng.";
+
+"per_year" = "/năm";
+
+"buy_btn_for_subscription" = "Truy cập toàn bộ từ %s";
+
+"buy_btn_for_subscription_1" = "Mua TẤT CẢ sách hướng dẫn với %s";
+
+"buy_btn_for_subscription_ios_only_mo" = "Truy cập toàn với %s/tháng";
+
+"buy_btn_for_subscription_ios_only_year" = "Truy cập toàn với %s/năm";
+
+"subscription_terms_guides" = "Thanh toán sẽ được thực hiện từ tài khoản iTunes khi xác nhận mua. Việc đăng ký sẽ tự động gia hạn nếu như tự động gia hạn không bị tắt ít nhất 24h trước khi kết thúc kỳ đăng ký hiện tại. Tiền sẽ được trừ từ tài khoản của bạn tương ứng với gói dịch vụ bạn chọn và kéo dài trong 24h đồng hồ đến khi kết thúc kỳ đăng ký hiện tại. Bạn cũng có thể điều chỉnh việc tự động gia hạn hoặc tắt nó đi trong phần cài đặt tài khoản Apple ID vào bất cứ thời gian nào sau khi mua. Bạn chỉ có thể sử dụng các sách hướng dẫn đã tải khi đăng ký trong thời gian chúng có hiệu lực. Sau thời hạn 30 ngày kể từ khi kết thúc việc đăng ký, các sách hướng dẫn cùng với phần đánh dấu trang sẽ được xóa một cách tự động.";
+
+"subscription_terms" = "Thanh toán sẽ được tính vào tài khoản iTunes của bạn khi xác nhận mua. Đăng ký sẽ tự động gia hạn trừ khi tính năng tự động gia hạn được tắt ít nhất 24 giờ trước khi kết thúc kỳ đăng ký hiện tại. Tài khoản của bạn sẽ được tính phí theo gói gia hạn trong vòng 24 giờ trước khi kết thúc kỳ đăng ký hiện tại. Bạn có thể quản lý hoặc tắt tính năng tự động gia hạn trong cài đặt tài khoản Apple ID của mình bất kỳ lúc nào sau khi mua.";
+
+"whatsnew_carplay_title" = "Điều hướng tự động MAPS.ME trong CarPlay!";
+
+"whatsnew_carplay_message" = "Đánh dấu, tìm kiếm, camera tốc độ và thiết lập đi vòng, đường tránh – tất cả đều hoạt động mà không cần Internet";
+
+"whatsnew_subscription_title" = "Hãy mở cánh cửa thế giới bằng cách đăng ký!";
+
+"whatsnew_subscription_message" = "Truy cập không giới hạn tới cả danh mục các tuyến đường có lợi hơn là mua từng tuyến một";
+
+"whatsnew_carnavi_fixes_for_android_title" = "Cập nhận định hướng";
+
+"whatsnew_carnavi_fixes_for_android_message" = "Chúng tôi đã cải thiện việc xây dựng các tuyến đường tới cả những điểm ở xa các thành phố";
+
+"avoid_unpaved_carplay_1" = "Trừ đườg đất";
+
+"avoid_unpaved_carplay_2" = "Trừ khôg trnhựa";
+
+"avoid_ferry_carplay_1" = "Không có phà";
+
+"avoid_ferry_carplay_2" = "Trừ phà";
+
+"avoid_tolls_carplay_1" = "Khôg đgcóphí";
+
+"avoid_tolls_carplay_2" = "Trừ đg có phí";
+
+"speedcams_alert_title_carplay_1" = "Сam tốc độ";
+
+"speedcams_alert_title_carplay_2" = "Cảnh báo tốc độ";
+
+"download_map_carplay" = "Vui lòng tải xuống bản đồ trong ứng dụng MAPS.ME trên thiết bị của bạn";
+
+"carplay_roundabout_exit" = "Lối ra %s của vòng xuyến";
+
+/* max. 10 symbols, both iOS and Android */
+"sort" = "Sắp xếp…";
+
+/* Android, title, max 20-22 symbols */
+"sort_bookmarks" = "Sắp xếp dấu trang";
+
+/* iOS */
+"sort_default" = "Sắp xếp theo mặc định";
+
+"sort_type" = "Sắp xếp theo kiểu";
+
+"sort_distance" = "Sắp xếp theo khoảng cách";
+
+"sort_date" = "Sắp xếp theo ngày";
+
+/* Android */
+"by_default" = "Theo mặc định";
+
+/* Android */
+"by_type" = "Theo kiểu";
+
+/* Android */
+"by_distance" = "Theo khoảng cách";
+
+/* Android */
+"by_date" = "Theo ngày";
+
+"week_ago_sorttype" = "Tuần trước";
+
+"month_ago_sorttype" = "Tháng trước";
+
+"moremonth_ago_sorttype" = "Hơn một tháng trước";
+
+"moreyear_ago_sorttype" = "Hơn một năm trước";
+
+"near_me_sorttype" = "Ở gần tôi";
+
+"others_sorttype" = "Khác";
+
+"food_places" = "Đồ ăn";
+
+"tourist_places" = "Danh lam thắng cảnh";
+
+"museums" = "Bảo tàng";
+
+"parks" = "Công viên";
+
+"swim_places" = "Bơi lội";
+
+"mountains" = "Núi non";
+
+"animals" = "Động vật";
+
+"hotels" = "Khách sạn";
+
+"buildings" = "Tòa nhà";
+
+"money" = "Tiền";
+
+"shops" = "Cửa hàng";
+
+"parkings" = "Bãi đậu xe";
+
+"fuel_places" = "Trạm xăng dầu";
+
+"water" = "Nước";
+
+"medicine" = "Y tế";
+
+"search_in_the_list" = "Tìm trong danh sách";
+
+"view_on_map_bookmarks" = "Trên bản đồ";
+
+"more_bookmarks" = "Thêm…";
+
+"no_items_found" = "Không tìm thấy gì cả";
+
+/* Android, max 18 symbols */
+"bookmarks_edit_list" = "Chỉnh sửa";
+
+/* Android, max 18 symbols */
+"bookmarks_delete_list" = "Xóa dánh sách";
+
+"whatsnew_bookmarks_search_sort_title" = "Trật tự trong các dấu trang – đó là sự tiện nghi, thoải mái cho chuyến du lịch";
+
+"whatsnew_bookmarks_search_sort_message" = "Hãy sắp xếp các địa điểm yêu thích theo thể loại, thời gian thêm vào và vị trí địa lý, đồng thời bạn cũng sẽ nhanh chóng tìm thấy các dấu trang cụ thể theo tên gọi";
+
+"popup_subscription_success_map_title" = "Ura! Bạn đã đăng ký mua!";
+
+"popup_subscription_success_map_message" = "Bây giờ hãy khám phá những điểm du lịch tốt nhất trong danh mục của MAPS.ME";
+
+"popup_subscription_success_map_start_button" = "Xem xét";
+
+"popup_subscription_success_map_not_now_button" = "Không phải bây giờ";
+
+"religious_places" = "Những nơi tôn nghiêm";
+
+"subscription_terms_android" = "Việc thanh toán sẽ được thực hiện từ tài khoản Google Play của bạn sau khi xác nhận mua. Việc đăng ký mua sẽ được tự động tiếp tục nếu chế độ tự động gia hạn không bị tắt trong thời gian ít nhất 24h trước khi kết thúc kỳ hiện tại. Tiền sẽ được trừ vào tài khoản của bạn tương ứng với gói cước gia hạn đã định trong thời gian 24h trước khi kết thúc kỳ hiện tại. Bạn có thể điều chỉnh tự động gia hạn hoặc tắt chế độ này trong phần thiết lập tài khoản sau khi mua. Bạn chỉ có thể sử dụng hướng dẫn đã tải theo gói cước đã mua trong thời gian nó còn hiệu lực. Sau 30 ngày khi kết thúc đăng ký mua, các hướng dẫn sẽ tự động bị xóa bỏ.";
+
+"select_list" = "Chọn danh sách";
+
+"pp_discovery_place_related_header" = "Địa điểm này trong danh mục hướng dẫn";
+
+"pp_discovery_place_related_header_1" = "Địa điểm này có trong hướng dẫn";
+
+"pp_discovery_place_related_cta_button" = "Xem";
+
+"pp_discovery_place_related_tag_header" = "Hướng dẫn theo thẻ \"%s\"";
+
+"pp_discovery_place_related_tag_header_1" = "Bạn có thể cũng sẽ thích";
+
+"buy_btn_for_subscription_version_2" = "TẤT CẢ hướng dẫn chỉ với %s/tháng";
+
+"buy_btn_for_subscription_version_3" = "Cả danh mục chỉ với %s/tháng";
+
+"buy_btn_for_subscription_ios_only_mo_version_2" = "Truy cập vào danh mục với %s/tháng";
+
+"buy_btn_for_subscription_ios_only_year_version_2" = "Truy cập vào danh mục với %s/năm";
+
+"subscription_screen_native_title_version_2" = "Truy cập vào các hướng dẫn cùng với dấu trang trên bản đồ!";
+
+"subscription_screen_native_message_version_2" = "Hãy sẵn sàng cho mọi chuyến đi tới hơn 600 thành phố và hơn 100 quốc gia";
+
+"catalog_no_internet_title" = "Không có kết nối internet";
+
+"catalog_no_internet_button" = "Thử lại";
+
+"whatsnew_map_updates_title" = "Cập nhật bản đồ siêu nhanh";
+
+"whatsnew_map_updates_message" = "Giờ thì dữ liệu sẽ được cập nhật nhanh hơn gấp 2 lần";
+
+"new_onboarding_button" = "Tiếp theo";
+
+"new_onboarding_button_2" = "Bắt đầu";
+
+"new_onboarding_step1_header" = "MAPS.ME";
+
+"new_onboarding_step1_header_2" = "Người trợ lý độc đáo cho các chuyến du lịch";
+
+"new_onboarding_step2_header" = "Hãy mơ ước và lên kế hoạch nào";
+
+"new_onboarding_step2_message" = "Hơn 70 triệu địa điểm hấp dẫn, danh sách các hướng dẫn đã được chuẩn bị sẵn và đặt phòng khách sạn từ bản đồ – bạn đã sẵn sàng để đi du lịch rồi!";
+
+"new_onboarding_step3_message" = "Bản đồ và điều hướng ngoại tuyến chi tiết sẽ giúp bạn không hề bị lạc ở những nơi xa lạ!";
+
+"new_onboarding_step4_header" = "Hãy chia sẻ cảm tưởng của bạn";
+
+"new_onboarding_step4_message" = "Lưu lại những địa điểm yêu thích và gửi chúng cho bạn bè của mình";
+
+"new_onboarding_step5.1_header" = "Trước khi bắt đầu…";
+
+"new_onboarding_step5.1_message" = "Đừng quên truy cập danh mục tuyến đường mới của chúng tôi để tìm hướng dẫn ngoại tuyến cho chuyến đi tiếp theo của bạn!";
+
+"new_onboarding_step5.1_button" = "Mở danh sách";
+
+"new_onboarding_step5.2_message" = "Việc đăng ký vào thư mục hướng dẫn trong MAPS.ME là một điều có lợi. Người đăng ký nhận được quyền truy cập đầy đủ tới những hướng dẫn cho các chuyến đi ở các thành phố và các hoạt động ngoài trời!";
+
+"new_onboarding_step5.2_button" = "Xem các điều khoản";
+
+"new_onboarding_step5.3_message" = "Tải xuống và đánh giá các tuyến đường cho các chuyến đi trong thành phố và các hoạt động ngoài trời với lựa chọn MAPS.ME miễn phí!";
+
+"new_onboarding_step5.3_button" = "Tải miễn phí";
+
+"new_onboarding_additional_steps_later_button" = "Không phải bây giờ";
+
+"all_pass_subscription_header" = "ĐĂNG KÝ DANH SÁCH";
+
+/* do not translate */
+"all_pass_subscription_subheader" = "City + Outdoor Pass";
+
+/* \n - for a break between lines. Max. 15 characters per 1 line. */
+"all_pass_subscription_message_title" = "30000+\nhướng dẫn\nvà đường mòn";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle" = "<b>Tải xuống không giới hạn</b> các tuyến di chuyển trong thành phố và cho các hoạt động ngoài trời sang <b>chế độ ngoại tuyến</b>";
+
+/* \n - for a break between lines. Max. 17 characters per 1 line. */
+"all_pass_subscription_message_title_2" = "Hồ sơ độ cao\ntương tác";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle_2" = "Tất cả các đường mòn đang được tải có <b>bao gồm độ cao và thông tin chính về tuyến di chuyển</b>";
+
+/* \n - for a break between lines. Max. 15 characters per 1 line. */
+"all_pass_subscription_message_title_3" = "Lựa chọn\nđ.điểm, h.ảnh\nvà các đề xuất";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle_3" = "<b>Tìm hiểu về tất cả các tuyến</b> mà bạn dự định đi qua";
+
+/* do not translate */
+"sightseeing_subscription_header_sightseeing" = "City Pass";
+
+"sightseeing_subscription_header_subscription" = "Đăng ký hướng dẫn";
+
+"sightseeing_subscription_message" = "Hơn 700 thành phố và hơn 100 quốc gia";
+
+"sightseeing_subscription_message_2" = "Truy cập ngoại tuyến";
+
+"sightseeing_subscription_message_3" = "Ảnh và lối qua đường";
+
+"subscription_success_dialog_title_sightseeing_pass" = "Cảm ơn vì đã đăng ký!";
+
+"subscription_success_dialog_message_sightseeing_pass" = "Giờ thì bạn có thể truy cập vào tất cả hướng dẫn của các thành phố trong danh sách";
+
+"downloader_main_gallery_header" = "Bản đồ và hướng dẫn";
+
+"downloader_main_gallery_message" = "Bây giờ, trong mục này ngoài việc tải bản đồ xuống, bạn còn có thể lựa chọn các hướng dẫn cho những chuyến đi sắp tới";
+
+"downloader_main_1_element_gallery_header" = "Tất cả các hướng dẫn";
+
+"downloader_main_1_element_gallery_message" = "ở hơn 100 quốc gia";
+
+"downloader_country_1_element_gallery_header" = "%s tuyến đường";
+
+"downloader_country_no_guides_gallery_header" = "Tạm thời không có hướng dẫn tại quốc gia này";
+
+"downloader_country_no_guides_gallery_message" = "Hãy tìm hiểu các tuyến đường khác ở hơn 100 quốc gia dùng cho khu vực đường phố hay hoạt động ngoài trời";
+
+"dialog_pedestrian_route_is_long" = "ĐI bộ đến phương tiện quá lâu";
+
+"whatsnew_outdoor_guides_title" = "Chúng tôi đã bổ sung hơn 15000 đường mòn cho các hoạt động ngoài trời!";
+
+"whatsnew_outdoor_guides_message" = "Các tuyến đường từ Outdooractive cho kỳ nghỉ mùa đông, mùa hè đang chờ đón bạn trong danh sách!";
+
+"whatsnew_guides_galleries_title" = "Hãy lên kế hoạch cho chuyến đi sắp tới cùng với MAPS.ME";
+
+"whatsnew_guides_galleries_message" = "Bây giờ bạn có thể tìm thấy hướng dẫn được đề xuất trong các thẻ của các thành phố và điểm tham quan nổi tiếng";
+
+"new_onboarding_step3_header" = "Đi du lịch nào";
+
+"all_pass_screen_best_value" = "Giá tốt";
+
+"buy_btn_for_subscription_3" = "Cả danh mục chỉ với %s/năm";
+
+"transit_not_found" = "Điều hướng đến Metro hiện chưa khả dụng cho khu vực này";
+
+"dialog_pedestrian_route_is_long_header" = "Không tìm thấy tuyến Metro";
+
+"dialog_pedestrian_route_is_long_message" = "Hãy chọn điểm đầu hoặc điểm cuối của tuyến gần với bến Metro";
+
+/* Failed planning SUBWAY route message in navigation view */
+"routing_planning_error_subway_special" = "Lỗi xây dựng tuyến Metro";
+
+"whatsnew_isolines_title" = "Tính năng mới cho kỳ nghỉ năng động – đường chỉ độ cao ngoại tuyến!";
+
+/* as less symbols as possible */
+"whatsnew_isolines_message" = "Xác định phương hướng ở vùng đồi núi – hãy bật nút chỉ lớp ở góc trái trên màn hình";
+
+"button_layer_isolines" = "Độ cao";
+
+"tips_map_layers_title_countour" = "Đường độ cao ngoại tuyến trong MAPS.ME!";
+
+"tips_map_layers_message_countour" = "Đường độ cao giúp lên kế hoạch du lịch hòa mình với thiên nhiên và không bị lạc khi di chuyển";
+
+"isolines_activation_error_dialog" = "Để sử dụng các đường chỉ độ cao, hãy cập nhật hoặc tải xuống bản đồ của khu vực bạn mong muốn";
+
+"isolines_location_error_dialog" = "Đường hiển thị độ cao hiện chưa khả dụng tại khu vực này";
+
+"elevation_profile_diff_level" = "Mức độ phức tạp";
+
+"elevation_profile_diff_level_easy" = "Dễ";
+
+"elevation_profile_diff_level_moderate" = "Trung bình";
+
+"elevation_profile_diff_level_hard" = "Khó";
+
+"elevation_profile_ascent" = "Đi lên";
+
+"elevation_profile_descent" = "Đi xuống";
+
+"elevation_profile_minaltitude" = "Độ cao tối thiểu";
+
+"elevation_profile_maxaltitude" = "Độ cao tối đa";
+
+"elevation_profile_m" = "m";
+
+"elevation_profile_difficulty" = "Độ khó";
+
+"elevation_profile_distance" = "Khoảng cách";
+
+"elevation_profile_km" = "km";
+
+"elevation_profile_time" = "Giờ:";
+
+"elevation_profile_hours" = "h.";
+
+"elevation_profile_minutes" = "ph";
+
+/* hide the full screen banner and continue working with the app */
+"hide_screen_map_update" = "Thu gọn và tiếp tục thao tác với ứng dụng";
+
+"view_on_map_downloaded_error" = "Hướng dẫn này đã được xóa khỏi thiết bị";
+
+"subscription" = "Đăng ký";
+
+"freenow_taxi_title" = "FREE NOW";
+
+"tinkoff_allairlines_map_downloader_title" = "Карта Тинькофф All Airlines. 3000 миль в подарок";
+
+"tinkoff_allairlines_map_downloader_cta_button" = "Оформить карту";
+
+"tinkoff_insurance_map_downloader_title" = "Полис Тинькофф со скидкой! Подходит для любых виз.";
+
+"tinkoff_insurance_map_downloader_cta_button" = "Промокод";
+
+"mts_map_downloader_title" = "Забугорище: интернет и звонки за границей как дома";
+
+"mts_map_downloader_cta_button" = "Подключить";
+
+"skyeng_map_downloader_title" = "Дарим 4 бесплатных урока английского от Skyeng.";
+
+"skyeng_map_downloader_cta_button" = "Подробнее";
+
 
 /**********  Partners  **********/
 
@@ -2709,9 +3312,9 @@
 
 "type.aeroway.terminal" = "aeroway-terminal";
 
-"type.amenity" = "amenity";
+"type.amenity" = "Công trình cơ sở hạ tầng";
 
-"type.amenity.arts_centre" = "amenity-arts_centre";
+"type.amenity.arts_centre" = "Trung tâm nghệ thuật";
 
 "type.amenity.atm" = "ATM";
 
@@ -2775,7 +3378,7 @@
 
 "type.amenity.fire_station" = "Trạm cứu hỏa";
 
-"type.amenity.food_court" = "amenity-food_court";
+"type.amenity.food_court" = "Food court";
 
 "type.amenity.fountain" = "Đài phun nước";
 
@@ -2811,21 +3414,23 @@
 
 "type.amenity.parking.multi.storey" = "đỗ xe";
 
-"type.amenity.parking.multi.storey.fee" = "đỗ xe";
-
 "type.amenity.parking.no.access" = "đỗ xe";
 
 "type.amenity.parking.park_and_ride" = "đỗ xe";
 
 "type.amenity.parking.permissive" = "đỗ xe";
 
-"type.amenity.parking.permissive.fee" = "đỗ xe";
-
 "type.amenity.parking.private" = "đỗ xe";
 
 "type.amenity.parking.underground" = "đỗ xe";
 
-"type.amenity.parking.underground.fee" = "đỗ xe";
+"type.amenity.parking_space" = "Chỗ để xe";
+
+"type.amenity.parking_space.permissive" = "Chỗ để xe";
+
+"type.amenity.parking_space.private" = "Chỗ để xe";
+
+"type.amenity.parking_space.underground" = "Chỗ để xe";
 
 "type.amenity.payment_terminal" = "Thiết bị thanh toán";
 
@@ -2851,9 +3456,9 @@
 
 "type.amenity.post_box" = "Hòm thư";
 
-"type.amenity.post_office" = "Bưu điện";
+"type.amenity.post_office" = "Bưu cục";
 
-"type.amenity.prison" = "amenity-prison";
+"type.amenity.prison" = "Prison";
 
 "type.amenity.pub" = "Quán rượu";
 
@@ -2883,7 +3488,7 @@
 
 "type.amenity.university" = "Nhà hát";
 
-"type.amenity.vending_machine" = "amenity-vending_machine";
+"type.amenity.vending_machine" = "Vending machine";
 
 "type.amenity.vending_machine.cigarettes" = "Máy bán thuốc lá";
 
@@ -2891,7 +3496,7 @@
 
 "type.amenity.vending_machine.parking_tickets" = "Máy trả tiền vé đậu xe";
 
-"type.amenity.vending_machine.public_transport_tickets" = "amenity-vending_machine-public_transport_tickets";
+"type.amenity.vending_machine.public_transport_tickets" = "Máy bán vé phương tiện công cộng tự động";
 
 "type.amenity.veterinary" = "Bác sĩ Thú y";
 
@@ -2901,7 +3506,7 @@
 
 "type.amenity.water_point" = "Điểm cấp nước";
 
-"type.barrier" = "barrier";
+"type.barrier" = "Barrier";
 
 "type.barrier.block" = "Khối";
 
@@ -2909,29 +3514,29 @@
 
 "type.barrier.border_control" = "Biên Phòng";
 
-"type.barrier.city_wall" = "barrier-city_wall";
+"type.barrier.city_wall" = "City wall";
 
-"type.barrier.cycle_barrier" = "barrier-cycle_barrier";
+"type.barrier.cycle_barrier" = "Cycle barrier";
 
 "type.barrier.entrance" = "Lối vào";
 
-"type.barrier.fence" = "barrier-fence";
+"type.barrier.fence" = "Fence";
 
 "type.barrier.gate" = "Cổng";
 
-"type.barrier.hedge" = "barrier-hedge";
+"type.barrier.hedge" = "Hedge";
 
 "type.barrier.lift_gate" = "Thanh Chắn";
 
-"type.barrier.retaining_wall" = "barrier-retaining_wall";
+"type.barrier.retaining_wall" = "Retaining wall";
 
 "type.barrier.stile" = "Trụ chắn";
 
 "type.barrier.toll_booth" = "Quầy Soát Vé";
 
-"type.barrier.wall" = "barrier-wall";
+"type.barrier.wall" = "Wall";
 
-"type.boundary" = "boundary";
+"type.boundary" = "Boundary";
 
 "type.boundary.administrative" = "boundary-administrative";
 
@@ -2984,12 +3589,6 @@
 "type.building.has_parts" = "Tòa nhà";
 
 "type.building.train_station" = "Đường tàu hỏa";
-
-"type.communication" = "communication";
-
-"type.communication.line" = "communication-line";
-
-"type.communication.line.underground" = "communication-line-underground";
 
 "type.craft" = "craft";
 
@@ -3207,7 +3806,7 @@
 
 "type.highway.bus_stop" = "Bến xe buýt";
 
-"type.highway.construction" = "highway-construction";
+"type.highway.construction" = "Đường đang thi công";
 
 "type.highway.cycleway" = "highway-cycleway";
 
@@ -3239,7 +3838,7 @@
 
 "type.highway.footway.tunnel" = "Đường";
 
-"type.highway.ford" = "highway-ford";
+"type.highway.ford" = "Ford";
 
 "type.highway.living_street" = "Phố";
 
@@ -3293,8 +3892,6 @@
 
 "type.highway.pedestrian.tunnel" = "Phố";
 
-"type.highway.platform" = "highway-platform";
-
 "type.highway.primary" = "Phố";
 
 "type.highway.primary.bridge" = "Phố";
@@ -3347,12 +3944,6 @@
 
 "type.highway.service.driveway" = "Phố";
 
-"type.highway.service.driveway.area" = "Phố";
-
-"type.highway.service.driveway.bridge" = "Phố";
-
-"type.highway.service.driveway.tunnel" = "Phố";
-
 "type.highway.service.parking_aisle" = "Phố";
 
 "type.highway.service.tunnel" = "Phố";
@@ -3391,21 +3982,9 @@
 
 "type.highway.track.grade3" = "Phố";
 
-"type.highway.track.grade3.no.access" = "Phố";
-
-"type.highway.track.grade3.permissive" = "Phố";
-
 "type.highway.track.grade4" = "Phố";
 
-"type.highway.track.grade4.no.access" = "Phố";
-
-"type.highway.track.grade4.permissive" = "Phố";
-
 "type.highway.track.grade5" = "Phố";
-
-"type.highway.track.grade5.no.access" = "Phố";
-
-"type.highway.track.grade5.permissive" = "Phố";
 
 "type.highway.track.no.access" = "Phố";
 
@@ -3443,7 +4022,7 @@
 
 "type.historic.archaeological_site" = "Điểm khảo cổ";
 
-"type.historic.battlefield" = "historic-battlefield";
+"type.historic.battlefield" = "Battlefield";
 
 "type.historic.boundary_stone" = "historic-boundary_stone";
 
@@ -3513,27 +4092,29 @@
 
 "type.landuse" = "landuse";
 
-"type.landuse.allotments" = "landuse-allotments";
+"type.landuse.allotments" = "Allotments";
 
 "type.landuse.basin" = "Nước";
 
-"type.landuse.brownfield" = "landuse-brownfield";
+"type.landuse.brownfield" = "Brownfield";
 
 "type.landuse.cemetery" = "Bãi tha ma";
 
 "type.landuse.cemetery.christian" = "Bãi tha ma";
 
+"type.landuse.churchyard" = "Nhà thờ";
+
 "type.landuse.commercial" = "landuse-commercial";
 
-"type.landuse.construction" = "landuse-construction";
+"type.landuse.construction" = "Construction";
 
-"type.landuse.farm" = "landuse-farm";
+"type.landuse.farm" = "Farm";
 
-"type.landuse.farmland" = "landuse-farmland";
+"type.landuse.farmland" = "Đất nông nghiệp";
 
-"type.landuse.farmyard" = "landuse-farmyard";
+"type.landuse.farmyard" = "Farmyard";
 
-"type.landuse.field" = "landuse-field";
+"type.landuse.field" = "Field";
 
 "type.landuse.forest" = "Rừng";
 
@@ -3543,27 +4124,27 @@
 
 "type.landuse.forest.mixed" = "Rừng";
 
-"type.landuse.garages" = "landuse-garages";
+"type.landuse.garages" = "Garages";
 
-"type.landuse.grass" = "landuse-grass";
+"type.landuse.grass" = "Thảm cỏ";
 
 "type.landuse.greenfield" = "landuse-greenfield";
 
 "type.landuse.greenhouse_horticulture" = "landuse-greenhouse_horticulture";
 
-"type.landuse.industrial" = "landuse-industrial";
+"type.landuse.industrial" = "Industrial land";
 
-"type.landuse.landfill" = "landuse-landfill";
+"type.landuse.landfill" = "Bãi rác";
 
-"type.landuse.meadow" = "landuse-meadow";
+"type.landuse.meadow" = "Meadow";
 
-"type.landuse.military" = "landuse-military";
+"type.landuse.military" = "Military area";
 
-"type.landuse.orchard" = "landuse-orchard";
+"type.landuse.orchard" = "Orchard";
 
-"type.landuse.quarry" = "landuse-quarry";
+"type.landuse.quarry" = "Quarry";
 
-"type.landuse.railway" = "landuse-railway";
+"type.landuse.railway" = "Cơ sở đường sắt";
 
 "type.landuse.recreation_ground" = "landuse-recreation_ground";
 
@@ -3571,25 +4152,19 @@
 
 "type.landuse.residential" = "landuse-residential";
 
-"type.landuse.residential.rural" = "landuse-residential-rural";
-
-"type.landuse.residential.urban" = "landuse-residential-urban";
-
 "type.landuse.retail" = "landuse-retail";
 
 "type.landuse.salt_pond" = "landuse-salt_pond";
 
 "type.landuse.village_green" = "landuse-village_green";
 
-"type.landuse.vineyard" = "landuse-vineyard";
+"type.landuse.vineyard" = "Vineyard";
 
 "type.leisure" = "leisure";
 
 "type.leisure.common" = "leisure-common";
 
-"type.leisure.dog_park" = "Dog area";
-
-"type.leisure.dog_park.tennis" = "Dog area";
+"type.leisure.dog_park" = "Nơi cho chó đi dạo";
 
 "type.leisure.fitness_centre" = "Phòng Tập";
 
@@ -3599,11 +4174,11 @@
 
 "type.leisure.golf_course" = "Sân gôn";
 
-"type.leisure.ice_rink" = "leisure-ice_rink";
+"type.leisure.ice_rink" = "Ice rink";
 
-"type.leisure.landscape_reserve" = "leisure-landscape_reserve";
+"type.leisure.landscape_reserve" = "Landscape reserve";
 
-"type.leisure.marina" = "leisure-marina";
+"type.leisure.marina" = "Marina";
 
 "type.leisure.nature_reserve" = "Giữ chỗ";
 
@@ -3617,19 +4192,11 @@
 
 "type.leisure.pitch" = "Sân vận động";
 
-"type.leisure.pitch.tennis" = "Sân vận động";
-
 "type.leisure.playground" = "Sân chơi";
 
-"type.leisure.playground.tennis" = "Sân chơi";
+"type.leisure.recreation_ground" = "Recreation ground";
 
-"type.leisure.playing_fields" = "leisure-playing_fields";
-
-"type.leisure.playing_fields.tennis" = "leisure-playing_fields-tennis";
-
-"type.leisure.recreation_ground" = "leisure-recreation_ground";
-
-"type.leisure.sauna" = "Phòng xông hơi";
+"type.leisure.sauna" = "Sauna";
 
 "type.leisure.slipway" = "leisure-slipway";
 
@@ -3689,25 +4256,13 @@
 
 "type.mapswithme.grid" = "mapswithme-grid";
 
-"type.marking" = "marking";
-
-"type.marking.sport" = "marking-sport";
-
-"type.marking.sport.black" = "marking-sport-black";
-
-"type.marking.sport.blue" = "marking-sport-blue";
-
-"type.marking.sport.red" = "marking-sport-red";
-
-"type.marking.sport.white" = "marking-sport-white";
-
 "type.military" = "military";
 
 "type.military.bunker" = "Boongke";
 
 "type.natural" = "natural";
 
-"type.natural.bare_rock" = "natural-bare_rock";
+"type.natural.bare_rock" = "Bare rock";
 
 "type.natural.bay" = "Vịnh";
 
@@ -3715,63 +4270,57 @@
 
 "type.natural.cape" = "Áo choàng";
 
-"type.natural.cave_entrance" = "Cửa Hang";
+"type.natural.cave_entrance" = "Hang động";
 
-"type.natural.cliff" = "natural-cliff";
+"type.natural.cliff" = "Cliff";
 
-"type.natural.coastline" = "natural-coastline";
+"type.natural.coastline" = "Coastline";
 
 "type.natural.geyser" = "Suối nước nóng";
 
 "type.natural.glacier" = "Sông băng";
 
-"type.natural.grassland" = "natural-grassland";
+"type.natural.grassland" = "Cánh đồng";
 
-"type.natural.heath" = "natural-heath";
+"type.natural.heath" = "Heath";
+
+"type.natural.hot_spring" = "Hot spring";
 
 "type.natural.lake" = "Hồ";
 
 "type.natural.land" = "natural-land";
 
-"type.natural.meadow" = "natural-meadow";
+"type.natural.meadow" = "Meadow";
 
-"type.natural.orchard" = "natural-orchard";
+"type.natural.orchard" = "Orchard";
 
 "type.natural.peak" = "Đỉnh";
 
 "type.natural.pond" = "Ao";
 
-"type.natural.rock" = "natural-rock";
+"type.natural.rock" = "Rock";
 
-"type.natural.salt_pond" = "natural-salt_pond";
+"type.natural.salt_pond" = "Salt pond";
 
-"type.natural.scrub" = "natural-scrub";
+"type.natural.scrub" = "Bụi rậm";
 
 "type.natural.spring" = "Suối";
 
 "type.natural.tree" = "Cây";
 
-"type.natural.tree_row" = "natural-tree_row";
+"type.natural.tree_row" = "Tree row";
 
-"type.natural.vineyard" = "natural-vineyard";
+"type.natural.vineyard" = "Vineyard";
 
 "type.natural.volcano" = "Núi lửa";
 
 "type.natural.water" = "Nước";
 
-"type.natural.wetland" = "natural-wetland";
+"type.natural.wetland" = "Khu vực đầm lầy";
 
-"type.natural.wetland.bog" = "natural-wetland-bog";
+"type.natural.wetland.bog" = "Wetland";
 
-"type.natural.wetland.marsh" = "natural-wetland-marsh";
-
-"type.natural.wood" = "Rừng";
-
-"type.natural.wood.coniferous" = "Rừng";
-
-"type.natural.wood.deciduous" = "Rừng";
-
-"type.natural.wood.mixed" = "Rừng";
+"type.natural.wetland.marsh" = "Wetland";
 
 "type.noexit" = "noexit";
 
@@ -3867,7 +4416,7 @@
 
 "type.place.locality" = "Thôn";
 
-"type.place.neighbourhood" = "place-neighbourhood";
+"type.place.neighbourhood" = "Neighbourhood";
 
 "type.place.ocean" = "Đại dương";
 
@@ -3890,12 +4439,6 @@
 "type.power" = "power";
 
 "type.power.generator" = "power-generator";
-
-"type.power.generator.hydro" = "power-generator-hydro";
-
-"type.power.generator.photovoltaic" = "power-generator-photovoltaic";
-
-"type.power.generator.wind" = "power-generator-wind";
 
 "type.power.line" = "power-line";
 
@@ -3953,7 +4496,7 @@
 
 "type.railway.incline.tunnel" = "railway-incline-tunnel";
 
-"type.railway.level_crossing" = "Level Crossing";
+"type.railway.level_crossing" = "Chỗ qua đường sắt";
 
 "type.railway.light_rail" = "railway-light_rail";
 
@@ -3961,7 +4504,7 @@
 
 "type.railway.light_rail.tunnel" = "railway-light_rail-tunnel";
 
-"type.railway.monorail" = "railway-monorail";
+"type.railway.monorail" = "Đường sắt một chiều";
 
 "type.railway.monorail.bridge" = "railway-monorail-bridge";
 
@@ -3983,7 +4526,7 @@
 
 "type.railway.proposed" = "railway-proposed";
 
-"type.railway.rail" = "railway-rail";
+"type.railway.rail" = "Đường sắt";
 
 "type.railway.rail.bridge" = "railway-rail-bridge";
 
@@ -4093,7 +4636,7 @@
 
 "type.railway.subway.yellow" = "railway-subway-yellow";
 
-"type.railway.subway_entrance" = "Ngầm";
+"type.railway.subway_entrance" = "Lỗi vào Metro";
 
 "type.railway.subway_entrance.barcelona" = "Ngầm";
 
@@ -4275,28 +4818,6 @@
 
 "type.sponsored" = "sponsored";
 
-"type.sponsored.banner" = "sponsored-banner";
-
-"type.sponsored.banner.deliveryclub" = "sponsored-banner-deliveryclub";
-
-"type.sponsored.banner.geerbest_de" = "sponsored-banner-geerbest_de";
-
-"type.sponsored.banner.geerbest_fr" = "sponsored-banner-geerbest_fr";
-
-"type.sponsored.banner.geerbest_uk" = "sponsored-banner-geerbest_uk";
-
-"type.sponsored.banner.lamoda_ru" = "sponsored-banner-lamoda_ru";
-
-"type.sponsored.banner.lamoda_ua" = "sponsored-banner-lamoda_ua";
-
-"type.sponsored.banner.raileurope" = "sponsored-banner-raileurope";
-
-"type.sponsored.banner.rentalcars" = "sponsored-banner-rentalcars";
-
-"type.sponsored.banner.tutu" = "sponsored-banner-tutu";
-
-"type.sponsored.banner.viator" = "sponsored-banner-viator";
-
 "type.sponsored.booking" = "sponsored-booking";
 
 "type.sponsored.holiday" = "Christmas or New Year Celebrations";
@@ -4343,21 +4864,19 @@
 
 "type.sponsored.partner9" = "sponsored-partner9";
 
-"type.sponsored.viator" = "sponsored-viator";
-
 "type.sport" = "sport";
 
 "type.sport.american_football" = "sport-american_football";
 
 "type.sport.archery" = "sport-archery";
 
-"type.sport.athletics" = "Athletics";
+"type.sport.athletics" = "Điền kinh";
 
 "type.sport.australian_football" = "sport-australian_football";
 
 "type.sport.baseball" = "sport-baseball";
 
-"type.sport.basketball" = "Basketball";
+"type.sport.basketball" = "Bóng rổ";
 
 "type.sport.bowls" = "sport-bowls";
 
@@ -4367,7 +4886,7 @@
 
 "type.sport.diving" = "sport-diving";
 
-"type.sport.equestrian" = "Equestrian Sports";
+"type.sport.equestrian" = "Thể thao cưỡi ngựa";
 
 "type.sport.football" = "sport-football";
 
@@ -4389,7 +4908,7 @@
 
 "type.sport.swimming" = "sport-swimming";
 
-"type.sport.tennis" = "sport-tennis";
+"type.sport.tennis" = "Sân tenis";
 
 "type.tourism" = "tourism";
 
@@ -4501,11 +5020,75 @@
 
 "type.wheelchair" = "wheelchair";
 
-"type.wheelchair.limited" = "wheelchair-limited";
+"type.wheelchair.limited" = "Được trang bị một phần cho người khuyết tật";
 
-"type.wheelchair.no" = "wheelchair-no";
+"type.wheelchair.no" = "Không trang bị cho người khuyết tật";
 
-"type.wheelchair.yes" = "wheelchair-yes";
+"type.wheelchair.yes" = "Được trang bị cho người khuyết tật";
+
+"type.piste_lift" = "piste:lift";
+
+"type.piste_lift.j.bar" = "piste:lift-j-bar";
+
+"type.piste_lift.magic_carpet" = "piste:lift-magic_carpet";
+
+"type.piste_lift.platter" = "piste:lift-platter";
+
+"type.piste_lift.rope_tow" = "piste:lift-rope_tow";
+
+"type.piste_lift.t.bar" = "piste:lift-t-bar";
+
+"type.piste_type" = "piste:type";
+
+"type.piste_type.downhill" = "piste:type-downhill";
+
+"type.piste_type.downhill.advanced" = "piste:type-downhill-advanced";
+
+"type.piste_type.downhill.easy" = "piste:type-downhill-easy";
+
+"type.piste_type.downhill.expert" = "piste:type-downhill-expert";
+
+"type.piste_type.downhill.freeride" = "piste:type-downhill-freeride";
+
+"type.piste_type.downhill.intermediate" = "piste:type-downhill-intermediate";
+
+"type.piste_type.downhill.novice" = "piste:type-downhill-novice";
+
+"type.piste_type.nordic" = "piste:type-nordic";
+
+"type.piste_type.sled" = "piste:type-sled";
+
+"type.building_part" = "Tòa nhà";
+
+"type.area_highway.cycleway" = "area:highway-cycleway";
+
+"type.area_highway.footway" = "area:highway-footway";
+
+"type.area_highway.living_street" = "area:highway-living_street";
+
+"type.area_highway.motorway" = "area:highway-motorway";
+
+"type.area_highway.path" = "area:highway-path";
+
+"type.area_highway.pedestrian" = "area:highway-pedestrian";
+
+"type.area_highway.primary" = "area:highway-primary";
+
+"type.area_highway.residential" = "area:highway-residential";
+
+"type.area_highway.secondary" = "area:highway-secondary";
+
+"type.area_highway.service" = "area:highway-service";
+
+"type.area_highway.tertiary" = "area:highway-tertiary";
+
+"type.area_highway.steps" = "area:highway-steps";
+
+"type.area_highway.track" = "area:highway-track";
+
+"type.area_highway.trunk" = "area:highway-trunk";
+
+"type.area_highway.unclassified" = "area:highway-unclassified";
 
 
 /********** Brands **********/

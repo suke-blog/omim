@@ -6,6 +6,7 @@
 #include "base/stl_helpers.hpp"
 #include "base/string_utils.hpp"
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -17,7 +18,7 @@
 class WaysParserHelper
 {
 public:
-  WaysParserHelper(std::map<uint64_t, std::string> & ways) : m_ways(ways) {}
+  explicit WaysParserHelper(std::map<uint64_t, std::string> & ways) : m_ways(ways) {}
 
   void ParseStream(std::istream & input)
   {
@@ -42,7 +43,7 @@ private:
 class CapitalsParserHelper
 {
 public:
-  CapitalsParserHelper(std::set<uint64_t> & capitals) : m_capitals(capitals) {}
+  explicit CapitalsParserHelper(std::set<uint64_t> & capitals) : m_capitals(capitals) {}
 
   void ParseStream(std::istream & input)
   {
@@ -78,47 +79,58 @@ private:
 class TagAdmixer
 {
 public:
-  TagAdmixer(std::string const & waysFile, std::string const & capitalsFile) : m_ferryTag("route", "ferry")
+  TagAdmixer() = default;
+
+  explicit TagAdmixer(std::string const & waysFile, std::string const & capitalsFile)
   {
-    try
     {
       std::ifstream reader(waysFile);
       WaysParserHelper parser(m_ways);
       parser.ParseStream(reader);
     }
-    catch (std::ifstream::failure const &)
-    {
-      LOG(LWARNING, ("Can't read the world level ways file! Generating world without roads. Path:", waysFile));
-      return;
-    }
 
-    try
     {
       std::ifstream reader(capitalsFile);
       CapitalsParserHelper parser(m_capitals);
       parser.ParseStream(reader);
     }
-    catch (std::ifstream::failure const &)
-    {
-      LOG(LWARNING, ("Can't read the world level capitals file! Generating world without towns admixing. Path:", capitalsFile));
-      return;
-    }
   }
 
-  void operator()(OsmElement * e)
+  TagAdmixer(TagAdmixer const & other)
+    : m_ways(other.m_ways), m_capitals(other.m_capitals) {}
+
+  TagAdmixer & operator=(TagAdmixer const & other)
   {
-    if (e->type == OsmElement::EntityType::Way && m_ways.find(e->id) != m_ways.end())
+    if (this != &other)
     {
-      // Exclude ferry routes.
-      if (find(e->Tags().begin(), e->Tags().end(), m_ferryTag) == e->Tags().end())
-        e->AddTag("highway", m_ways[e->id]);
+      m_ways = other.m_ways;
+      m_capitals = other.m_capitals;
     }
-    else if (e->type == OsmElement::EntityType::Node && m_capitals.find(e->id) != m_capitals.end())
+
+    return *this;
+  }
+
+  void Process(OsmElement & element) const
+  {
+    if (element.m_type == OsmElement::EntityType::Way)
+    {
+      auto const it = m_ways.find(element.m_id);
+      if (it == m_ways.cend())
+        return;
+
+      // Exclude ferry routes.
+      static OsmElement::Tag const kFerryTag = {"route", "ferry"};
+      auto const & tags = element.Tags();
+      if (std::find(tags.cbegin(), tags.cend(), kFerryTag) == tags.cend())
+        element.AddTag("highway", it->second);
+    }
+    else if (element.m_type == OsmElement::EntityType::Node &&
+             m_capitals.find(element.m_id) != m_capitals.cend())
     {
       // Our goal here - to make some capitals visible in World map.
       // The simplest way is to upgrade population to 45000,
       // according to our visibility rules in mapcss files.
-      e->UpdateTag("population", [] (std::string & v)
+      element.UpdateTag("population", [] (std::string & v)
       {
         uint64_t n;
         if (!strings::to_uint64(v, n) || n < 45000)
@@ -130,66 +142,101 @@ public:
 private:
   std::map<uint64_t, std::string> m_ways;
   std::set<uint64_t> m_capitals;
-  OsmElement::Tag const m_ferryTag;
 };
 
 class TagReplacer
 {
-  std::map<OsmElement::Tag, std::vector<std::string>> m_entries;
 public:
-  TagReplacer(std::string const & filePath)
+  using Replacements = std::map<OsmElement::Tag, std::vector<OsmElement::Tag>>;
+
+  TagReplacer() = default;
+
+  explicit TagReplacer(std::string const & filePath)
   {
     std::ifstream stream(filePath);
 
-    OsmElement::Tag tag;
-    std::vector<std::string> values;
     std::string line;
+    size_t lineNumber = 0;
     while (std::getline(stream, line))
     {
-      if (line.empty())
+      ++lineNumber;
+      strings::Trim(line);
+      if (line.empty() || line[0] == '#')
         continue;
 
-      strings::SimpleTokenizer iter(line, " \t=,:");
-      if (!iter)
-        continue;
-      tag.key = *iter;
-      ++iter;
-      if (!iter)
-        continue;
-      tag.value = *iter;
+      auto keyPos = line.find("=");
+      CHECK(keyPos != std::string::npos, ("Cannot find source tag key in", line));
+      auto key = line.substr(0, keyPos);
+      strings::Trim(key);
 
-      values.clear();
-      while (++iter)
-        values.push_back(*iter);
+      // Skip '='.
+      ++keyPos;
+      auto valuePos = line.find(" : ", keyPos);
+      CHECK(valuePos != std::string::npos, ("Cannot find source tag value in", line));
+      auto value = line.substr(keyPos, valuePos - keyPos);
+      strings::Trim(value);
 
-      if (values.size() >= 2 && values.size() % 2 == 0)
-        m_entries[tag].swap(values);
-    }
-  }
+      // Skip ' : '.
+      valuePos += 3;
 
-  void operator()(OsmElement * p)
-  {
-    for (auto & tag : p->m_tags)
-    {
-      auto it = m_entries.find(tag);
-      if (it != m_entries.end())
+      auto rawReplacements = line.substr(valuePos);
+      strings::Trim(rawReplacements);
+      CHECK(!rawReplacements.empty(), ("Empty replacement in", line));
+
+      auto const replacements = strings::Tokenize(rawReplacements, ",");
+      for (auto const & replacement : replacements)
       {
-        auto const & v = it->second;
-        tag.key = v[0];
-        tag.value = v[1];
-        for (size_t i = 2; i < v.size(); i += 2)
-          p->AddTag(v[i], v[i + 1]);
+        auto kv = strings::Tokenize(replacement, "=");
+        CHECK_EQUAL(kv.size(), 2,
+                    ("Cannot parse replacement tag:", replacement, "in line", lineNumber));
+        strings::Trim(kv[0]);
+        strings::Trim(kv[1]);
+        m_replacements[{key, value}].emplace_back(kv[0], kv[1]);
       }
     }
   }
+
+  TagReplacer(TagReplacer const & other) : m_replacements(other.m_replacements) {}
+
+  TagReplacer & operator=(TagReplacer const & other)
+  {
+    if (this != &other)
+      m_replacements = other.m_replacements;
+
+    return *this;
+  }
+
+  void Process(OsmElement & element) const
+  {
+    std::vector<OsmElement::Tag> add;
+    base::EraseIf(element.m_tags, [&](auto const & tag)
+    {
+      auto const it = m_replacements.find(tag);
+      if (it != m_replacements.end())
+      {
+        for (auto const & replacement : it->second)
+          add.push_back(replacement);
+        return true;
+      }
+      return false;
+    });
+
+    for (auto const & tag : add)
+      element.AddTag(tag);
+  }
+
+  Replacements const & GetReplacementsForTesting() const { return m_replacements; }
+
+private:
+  Replacements m_replacements;
 };
 
 class OsmTagMixer
 {
-  std::map<std::pair<OsmElement::EntityType, uint64_t>, std::vector<OsmElement::Tag>> m_elements;
-
 public:
-  OsmTagMixer(std::string const & filePath)
+  OsmTagMixer() = default;
+
+  explicit OsmTagMixer(std::string const & filePath)
   {
     std::ifstream stream(filePath);
     std::vector<std::string> values;
@@ -217,21 +264,30 @@ public:
       }
 
       if (!tags.empty())
-      {
-        std::pair<OsmElement::EntityType, uint64_t> elementPair = {entityType, id};
-        m_elements[elementPair].swap(tags);
-      }
+        m_elements[{entityType, id}].swap(tags);
     }
   }
 
-  void operator()(OsmElement * p)
+  OsmTagMixer(OsmTagMixer const & other) : m_elements(other.m_elements) {}
+
+  OsmTagMixer & operator=(OsmTagMixer const & other)
   {
-    std::pair<OsmElement::EntityType, uint64_t> elementId = {p->type, p->id};
-    auto elements = m_elements.find(elementId);
+    if (this != &other)
+      m_elements = other.m_elements;
+
+    return *this;
+  }
+
+  void Process(OsmElement & element) const
+  {
+    auto const elements = m_elements.find({element.m_type, element.m_id});
     if (elements != m_elements.end())
     {
-      for (OsmElement::Tag tag : elements->second)
-        p->UpdateTag(tag.key, [&tag](std::string & v) { v = tag.value; });
+      for (OsmElement::Tag const & tag : elements->second)
+        element.UpdateTag(tag.m_key, [&tag](std::string & v) { v = tag.m_value; });
     }
   }
+
+private:
+  std::map<std::pair<OsmElement::EntityType, uint64_t>, std::vector<OsmElement::Tag>> m_elements;
 };

@@ -6,6 +6,8 @@ set(CMAKE_AUTOMOC ON)
 
 set(
   SRC
+  battery_tracker.cpp
+  battery_tracker.hpp
   chunks_download_strategy.cpp
   chunks_download_strategy.hpp
   constants.hpp
@@ -13,6 +15,7 @@ set(
   country_defines.hpp
   country_file.cpp
   country_file.hpp
+  downloader_defines.hpp
   file_logging.cpp
   file_logging.hpp
   get_text_by_id.cpp
@@ -20,10 +23,13 @@ set(
   gui_thread.hpp
   http_client.cpp
   http_client.hpp
+  http_payload.cpp
+  http_payload.hpp
   http_request.cpp
   http_request.hpp
   http_thread_callback.hpp
   http_uploader.hpp
+  http_uploader_background.hpp
   http_user_agent.cpp
   http_user_agent.hpp
   local_country_file.cpp
@@ -103,6 +109,7 @@ else() # neither iPhone nor Android
       http_user_agent_dummy.cpp
       http_thread_qt.cpp
       http_thread_qt.hpp
+      http_uploader_background_dummy.cpp
       http_uploader_dummy.cpp
       marketing_service_dummy.cpp
       platform_win.cpp
@@ -118,6 +125,7 @@ else() # neither iPhone nor Android
       http_thread_apple.h
       http_thread_apple.mm
       http_uploader_apple.mm
+      http_uploader_background_dummy.cpp
       http_user_agent_dummy.cpp
       marketing_service_dummy.cpp
       platform_mac.mm
@@ -125,6 +133,7 @@ else() # neither iPhone nor Android
       platform_unix_impl.hpp
       secure_storage_qt.cpp
       socket_apple.mm
+      http_session_manager.mm
     )
   elseif(${PLATFORM_LINUX})
     append(
@@ -134,6 +143,7 @@ else() # neither iPhone nor Android
       http_thread_qt.cpp
       http_thread_qt.hpp
       http_uploader_dummy.cpp
+      http_uploader_background_dummy.cpp
       http_user_agent_dummy.cpp
       marketing_service_dummy.cpp
       platform_linux.cpp

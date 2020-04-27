@@ -15,14 +15,8 @@
 #include "openlr/openlr_model.hpp"
 #include "openlr/openlr_model_xml.hpp"
 
-#include "coding/file_name_utils.hpp"
-
+#include "base/file_name_utils.hpp"
 #include "base/stl_helpers.hpp"
-
-#include "3party/gflags/src/gflags/gflags.h"
-#include "3party/pugixml/src/pugixml.hpp"
-
-#include "std/unique_ptr.hpp"
 
 #include <algorithm>
 #include <cstdint>
@@ -32,6 +26,9 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+
+#include "3party/gflags/src/gflags/gflags.h"
+#include "3party/pugixml/src/pugixml.hpp"
 
 DEFINE_string(input, "", "Path to OpenLR file.");
 DEFINE_string(spark_output, "", "Path to output file in spark-oriented format");
@@ -73,7 +70,7 @@ void LoadDataSources(std::string const & pathToMWMFolder,
 
   for (auto const & fileName : files)
   {
-    auto const fullFileName = base::JoinFoldersToPath({pathToMWMFolder}, fileName);
+    auto const fullFileName = base::JoinPath(pathToMWMFolder, fileName);
     ModelReaderPtr reader(GetPlatform().GetReader(fullFileName, "f"));
     platform::LocalCountryFile localFile(pathToMWMFolder,
                                          platform::CountryFile(base::FilenameWithoutExt(fileName)),
@@ -110,8 +107,8 @@ bool ValidateLimit(char const * flagname, int32_t value)
 {
   if (value < -1)
   {
-    printf("Invalid value for --%s: %d, must be greater or equal to -1\n", flagname,
-           static_cast<int>(value));
+    LOG(LINFO, ("Valid value for --", std::string(flagname), ":", value,
+                "must be greater or equal to -1."));
     return false;
   }
 
@@ -122,9 +119,8 @@ bool ValidateNumThreads(char const * flagname, int32_t value)
 {
   if (value < kMinNumThreads || value > kMaxNumThreads)
   {
-    printf("Invalid value for --%s: %d, must be between %d and %d inclusively\n", flagname,
-           static_cast<int>(value), static_cast<int>(kMinNumThreads),
-           static_cast<int>(kMaxNumThreads));
+    LOG(LINFO, ("Valid value for --", std::string(flagname), ":", value, "must be between",
+                kMinNumThreads, "and", kMaxNumThreads));
     return false;
   }
 
@@ -135,7 +131,7 @@ bool ValidateMwmPath(char const * flagname, std::string const & value)
 {
   if (value.empty())
   {
-    printf("--%s should be specified\n", flagname);
+    LOG(LINFO, ("--", std::string(flagname), "should be specified."));
     return false;
   }
 
@@ -146,13 +142,13 @@ bool ValidateVersion(char const * flagname, int32_t value)
 {
   if (value == 0)
   {
-    printf("--%s should be specified\n", flagname);
+    LOG(LINFO, ("--", std::string(flagname), "should be specified."));
     return false;
   }
 
-  if (value != 1 && value != 2)
+  if (value != 1 && value != 2 && value != 3)
   {
-    printf("--%s should be one of 1 or 2\n", flagname);
+    LOG(LINFO, ("--", std::string(flagname), "should be one of 1, 2 or 3."));
     return false;
   }
 
@@ -282,7 +278,8 @@ int main(int argc, char * argv[])
   {
   case 1: decoder.DecodeV1(segments, numThreads, paths); break;
   case 2: decoder.DecodeV2(segments, numThreads, paths); break;
-  default: ASSERT(false, ("There should be no way to fall here"));
+  case 3: decoder.DecodeV3(segments, numThreads, paths); break;
+  default: CHECK(false, ("Wrong algorithm version."));
   }
 
   SaveNonMatchedIds(FLAGS_non_matched_ids, paths);

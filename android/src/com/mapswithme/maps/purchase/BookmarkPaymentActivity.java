@@ -2,9 +2,9 @@ package com.mapswithme.maps.purchase;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.mapswithme.maps.base.BaseMwmFragmentActivity;
 import com.mapswithme.maps.bookmarks.data.PaymentData;
@@ -23,9 +23,9 @@ public class BookmarkPaymentActivity extends BaseMwmFragmentActivity
   }
 
   @Override
-  protected void safeOnCreate(@Nullable Bundle savedInstanceState)
+  protected void onSafeCreate(@Nullable Bundle savedInstanceState)
   {
-    super.safeOnCreate(savedInstanceState);
+    super.onSafeCreate(savedInstanceState);
     overridePendingTransition(0, 0);
   }
 

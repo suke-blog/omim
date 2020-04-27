@@ -3,22 +3,23 @@ package com.mapswithme.maps.sound;
 import android.content.Context;
 import android.content.res.Resources;
 import android.speech.tts.TextToSpeech;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.mapswithme.maps.Framework;
 import com.mapswithme.maps.MwmApplication;
 import com.mapswithme.maps.R;
+import com.mapswithme.maps.base.Initializable;
 import com.mapswithme.maps.base.MediaPlayerWrapper;
 import com.mapswithme.util.Config;
 import com.mapswithme.util.log.Logger;
 import com.mapswithme.util.log.LoggerFactory;
 import com.mapswithme.util.statistics.Statistics;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * {@code TtsPlayer} class manages available TTS voice languages.
@@ -35,7 +36,7 @@ import com.mapswithme.util.statistics.Statistics;
  * <p>
  * If no core supported languages can be used by the system, TTS is locked down and can not be enabled and used.
  */
-public enum TtsPlayer
+public enum TtsPlayer implements Initializable<Context>
 {
   INSTANCE;
 
@@ -136,7 +137,8 @@ public enum TtsPlayer
     setEnabled(false);
   }
 
-  public void init(Context context)
+  @Override
+  public void initialize(@Nullable Context context)
   {
     if (mTts != null || mInitializing || mUnavailable)
       return;
@@ -160,6 +162,12 @@ public enum TtsPlayer
         mInitializing = false;
       }
     });
+  }
+
+  @Override
+  public void destroy()
+  {
+    // No op.
   }
 
   public boolean isSpeaking()
@@ -237,7 +245,7 @@ public enum TtsPlayer
         outList.add(new LanguageData(codes[i], names[i], mTts));
       }
       catch (LanguageData.NotAvailableException ignored) {
-        LOGGER.e(TAG, "Failed to get usable languages", ignored);
+        LOGGER.e(TAG, "Failed to get usable languages " + ignored.getMessage());
       }
       catch (IllegalArgumentException e)
       {

@@ -6,6 +6,7 @@ option(UGC_MIGRATION "Build migration file for ugc" OFF)
 
 set(
   SRC
+  ratings_tests.cpp
   serdes_binary_tests.cpp
   serdes_tests.cpp
   storage_tests.cpp
@@ -50,6 +51,8 @@ omim_link_libraries(
   succinct
   opening_hours
   oauthcpp
+  traffic
+  ${CMAKE_DL_LIBS}
   ${LIBZ}
 )
 link_qt5_core(${PROJECT_NAME})

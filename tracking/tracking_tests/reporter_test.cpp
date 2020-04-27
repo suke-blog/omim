@@ -12,8 +12,14 @@
 #include "base/math.hpp"
 #include "base/thread.hpp"
 
-#include "std/cmath.hpp"
+#include <chrono>
+#include <cmath>
+#include <cstdint>
+#include <memory>
+#include <vector>
 
+using namespace std;
+using namespace std::chrono;
 using namespace tracking;
 using namespace platform::tests_support;
 
@@ -66,8 +72,8 @@ void TransferLocation(Reporter & reporter, TestSocket & testSocket, double times
   TEST_EQUAL(points.size(), 1, ());
   auto const & point = points[0];
   TEST_EQUAL(point.m_timestamp, timestamp, ());
-  TEST(base::AlmostEqualAbs(point.m_latLon.lat, latidute, 0.001), ());
-  TEST(base::AlmostEqualAbs(point.m_latLon.lon, longtitude, 0.001), ());
+  TEST(base::AlmostEqualAbs(point.m_latLon.m_lat, latidute, 0.001), ());
+  TEST(base::AlmostEqualAbs(point.m_latLon.m_lon, longtitude, 0.001), ());
 }
 }
 

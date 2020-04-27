@@ -5,21 +5,20 @@ protocol UploadActionCellDelegate: AnyObject {
 enum UploadActionCellState: String {
   case normal
   case inProgress
+  case updating
   case completed
+  case disabled
 }
 
 final class UploadActionCell: MWMTableViewCell {
   @IBOutlet private weak var actionImage: UIImageView!
   @IBOutlet private weak var actionTitle: UILabel!
-  @IBOutlet private weak var progressView: UIView!
   @IBOutlet private weak var shareButton: UIButton!
-  
+  @IBOutlet private weak var progressView: UIView!
+
   weak var delegate: UploadActionCellDelegate?
   private var titles: [UploadActionCellState : String]?
-  private lazy var progress: MWMCircularProgress = {
-    return MWMCircularProgress(parentView: self.progressView)
-  }()
-  
+
   func config(titles: [UploadActionCellState : String], image: UIImage?, delegate: UploadActionCellDelegate?) {
     actionImage.image = image
     self.titles = titles
@@ -31,29 +30,40 @@ final class UploadActionCell: MWMTableViewCell {
     didSet {
       switch cellState {
       case .normal:
-        progress.state = .normal
-        actionImage.tintColor = .linkBlue()
-        actionTitle.textColor = .linkBlue()
-        actionTitle.font = .regular16()
+        progressView.isHidden = true
+        actionImage.setStyleAndApply("MWMBlue")
+        actionTitle.setStyleAndApply("regular16:linkBlueText")
         actionTitle.text = titles?[.normal]
         shareButton.isHidden = true
-        break
+        selectionStyle = .default
       case .inProgress:
-        progress.state = .spinner
-        actionImage.tintColor = .blackSecondaryText()
-        actionTitle.textColor = .blackSecondaryText()
-        actionTitle.font = .italic16()
+        progressView.isHidden = false
+        actionImage.setStyleAndApply("MWMBlack")
+        actionTitle.setStyleAndApply("italic16:blackSecondaryText")
         actionTitle.text = titles?[.inProgress]
         shareButton.isHidden = true
-        break
+        selectionStyle = .none
+      case .updating:
+        progressView.isHidden = false
+        actionImage.setStyleAndApply("MWMBlack")
+        actionTitle.setStyleAndApply("italic16:blackSecondaryText")
+        actionTitle.text = titles?[.updating]
+        shareButton.isHidden = true
+        selectionStyle = .none
       case .completed:
-        progress.state = .completed
-        actionImage.tintColor = .blackSecondaryText()
-        actionTitle.textColor = .blackSecondaryText()
-        actionTitle.font = .regular16()
+        progressView.isHidden = true
+        actionImage.setStyleAndApply("MWMBlack")
+        actionTitle.setStyleAndApply("regular16:blackSecondaryText")
         actionTitle.text = titles?[.completed]
         shareButton.isHidden = false
-        break
+        selectionStyle = .none
+      case .disabled:
+        progressView.isHidden = true
+        actionImage.setStyleAndApply("MWMBlack")
+        actionTitle.setStyleAndApply("regular16:blackSecondaryText")
+        actionTitle.text = titles?[.disabled]
+        shareButton.isHidden = true
+        selectionStyle = .none
       }
     }
   }

@@ -14,14 +14,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.DimenRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -31,10 +23,19 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import androidx.annotation.DimenRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
+import androidx.fragment.app.Fragment;
 import com.mapswithme.maps.BuildConfig;
 import com.mapswithme.maps.MwmApplication;
 import com.mapswithme.maps.R;
 import com.mapswithme.maps.activity.CustomNavigateUpListener;
+import com.mapswithme.maps.analytics.ExternalLibrariesMediator;
 import com.mapswithme.util.concurrency.UiThread;
 import com.mapswithme.util.log.Logger;
 import com.mapswithme.util.log.LoggerFactory;
@@ -246,6 +247,29 @@ public class Utils
     }
   }
 
+  public static boolean openUri(@NonNull Context context, @NonNull Uri uri)
+  {
+    final Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.setData(uri);
+    try
+    {
+      context.startActivity(intent);
+      return true;
+    }
+    catch (ActivityNotFoundException e)
+    {
+      CrashlyticsUtils.logException(e);
+      return false;
+    }
+    catch (AndroidRuntimeException e)
+    {
+      CrashlyticsUtils.logException(e);
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      context.startActivity(intent);
+      return false;
+    }
+  }
+
   private static boolean isHttpOrHttpsScheme(@NonNull String url)
   {
     return url.startsWith("http://") || url.startsWith("https://");
@@ -276,9 +300,16 @@ public class Utils
     }
   }
 
-  public static void sendSupportMail(@NonNull Activity activity, @NonNull String subject)
+  public static void sendBugReport(@NonNull Activity activity, @NonNull String subject)
   {
-    LoggerFactory.INSTANCE.zipLogs(new OnZipCompletedCallback(activity, subject));
+    LoggerFactory.INSTANCE.zipLogs(new SupportInfoWithLogsCallback(activity, subject,
+                                                                   Constants.Email.SUPPORT));
+  }
+
+  public static void sendFeedback(@NonNull Activity activity)
+  {
+    LoggerFactory.INSTANCE.zipLogs(new SupportInfoWithLogsCallback(activity, "Feedback",
+                                                                   Constants.Email.FEEDBACK));
   }
 
   public static void navigateToParent(@Nullable Activity activity)
@@ -348,6 +379,14 @@ public class Utils
       return "";
 
     return installationId;
+  }
+
+  @Nullable
+  public static String getAdvertisingId(@NonNull Context context)
+  {
+    MwmApplication application = MwmApplication.from(context);
+    ExternalLibrariesMediator mediator = application.getMediator();
+    return mediator.getAdvertisingId();
   }
 
   @NonNull
@@ -633,59 +672,6 @@ public class Utils
     return isTargetOrLater(Build.VERSION_CODES.JELLY_BEAN_MR1);
   }
 
-  private  static class OnZipCompletedCallback implements LoggerFactory.OnZipCompletedListener
-  {
-    @NonNull
-    private final WeakReference<Activity> mActivityRef;
-    @NonNull
-    private final String mSubject;
-
-    private OnZipCompletedCallback(@NonNull Activity activity, @NonNull String subject)
-    {
-      mActivityRef = new WeakReference<>(activity);
-      mSubject = subject;
-    }
-
-    @Override
-    public void onCompleted(final boolean success)
-    {
-      UiThread.run(new Runnable()
-      {
-        @Override
-        public void run()
-        {
-          Activity activity = mActivityRef.get();
-          if (activity == null)
-            return;
-
-          final Intent intent = new Intent(Intent.ACTION_SEND);
-          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-          intent.putExtra(Intent.EXTRA_EMAIL, new String[] { Constants.Email.SUPPORT });
-          intent.putExtra(Intent.EXTRA_SUBJECT, "[" + BuildConfig.VERSION_NAME + "] " + mSubject);
-          if (success)
-          {
-            String logsZipFile = StorageUtils.getLogsZipPath(activity.getApplication());
-            if (!TextUtils.isEmpty(logsZipFile))
-            {
-              Uri uri = StorageUtils.getUriForFilePath(activity, logsZipFile);
-              intent.putExtra(Intent.EXTRA_STREAM, uri);
-            }
-          }
-          intent.putExtra(Intent.EXTRA_TEXT, ""); // do this so some email clients don't complain about empty body.
-          intent.setType("message/rfc822");
-          try
-          {
-            activity.startActivity(intent);
-          }
-          catch (ActivityNotFoundException e)
-          {
-            AlohaHelper.logException(e);
-          }
-        }
-      });
-    }
-  }
-
   @NonNull
   public static <T> T[] concatArrays(@Nullable T[] a, T... b)
   {
@@ -767,7 +753,8 @@ public class Utils
     if (TextUtils.isEmpty(type))
       return "";
 
-    String key = "type." + type.replace('-', '.');
+    String key = "type." + type.replace('-', '.')
+                               .replace(':', '_');
     return getLocalizedFeatureByKey(context, key);
   }
 
@@ -781,11 +768,56 @@ public class Utils
     return getLocalizedFeatureByKey(context, key);
   }
 
-  // Called from JNI.
-  @NonNull
-  @SuppressWarnings("unused")
-  public static String getLocalizedFeatureType(@NonNull String type)
+  private static class SupportInfoWithLogsCallback implements LoggerFactory.OnZipCompletedListener
   {
-    return getLocalizedFeatureType(MwmApplication.get(), type);
+    @NonNull
+    private final WeakReference<Activity> mActivityRef;
+    @NonNull
+    private final String mSubject;
+    @NonNull
+    private final String mEmail;
+
+    private SupportInfoWithLogsCallback(@NonNull Activity activity, @NonNull String subject,
+                                        @NonNull String email)
+    {
+      mActivityRef = new WeakReference<>(activity);
+      mSubject = subject;
+      mEmail = email;
+    }
+
+    @Override
+    public void onCompleted(final boolean success)
+    {
+      UiThread.run(() -> {
+        Activity activity = mActivityRef.get();
+        if (activity == null)
+          return;
+
+        final Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[] { mEmail });
+        intent.putExtra(Intent.EXTRA_SUBJECT, "[" + BuildConfig.VERSION_NAME + "] " + mSubject);
+        if (success)
+        {
+          String logsZipFile = StorageUtils.getLogsZipPath(activity.getApplication());
+          if (!TextUtils.isEmpty(logsZipFile))
+          {
+            Uri uri = StorageUtils.getUriForFilePath(activity, logsZipFile);
+            intent.putExtra(Intent.EXTRA_STREAM, uri);
+          }
+        }
+        // Do this so some email clients don't complain about empty body.
+        intent.putExtra(Intent.EXTRA_TEXT, "");
+        intent.setType("message/rfc822");
+        try
+        {
+          activity.startActivity(intent);
+        }
+        catch (ActivityNotFoundException e)
+        {
+          CrashlyticsUtils.logException(e);
+        }
+      });
+    }
   }
 }

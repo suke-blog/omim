@@ -3,6 +3,9 @@
 #import "MWMNavigationController.h"
 
 @class MapViewController;
+@class MWMCarPlayService;
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface MapsAppDelegate : UIResponder<UIApplicationDelegate, DownloadIndicatorProtocol>
 {
@@ -12,14 +15,13 @@
 
 @property(nonatomic) UIWindow * window;
 
+@property(nonatomic, readonly) MWMCarPlayService *carplayService API_AVAILABLE(ios(12.0));
 @property(nonatomic, readonly) MapViewController * mapViewController;
 @property(nonatomic, readonly) BOOL isDrapeEngineCreated;
 
 @property(nonatomic) MWMMyTarget * myTarget;
 
 + (MapsAppDelegate *)theApp;
-
-- (BOOL)hasApiURL;
 
 - (void)enableStandby;
 - (void)disableStandby;
@@ -36,3 +38,5 @@
 - (NSUInteger)badgeNumber;
 
 @end
+
+NS_ASSUME_NONNULL_END

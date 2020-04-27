@@ -1,36 +1,27 @@
+#import "MWMFrameworkObserver.h"
 #import "MWMRouterRecommendation.h"
 
 #include "routing/router.hpp"
 #include "routing/routing_callbacks.hpp"
-#include "storage/index.hpp"
+
 #include "storage/storage.hpp"
+#include "storage/storage_defines.hpp"
+
+#include "platform/downloader_defines.hpp"
 
 using namespace storage;
-
-@protocol MWMFrameworkObserver<NSObject>
-
-@end
 
 @protocol MWMFrameworkRouteBuilderObserver<MWMFrameworkObserver>
 
 - (void)processRouteBuilderEvent:(routing::RouterResultCode)code
-                       countries:(storage::TCountriesVec const &)absentCountries;
+                       countries:(storage::CountriesSet const &)absentCountries;
 
 @optional
 
 - (void)processRouteBuilderProgress:(CGFloat)progress;
 - (void)processRouteRecommendation:(MWMRouterRecommendation)recommendation;
-
-@end
-
-@protocol MWMFrameworkStorageObserver<MWMFrameworkObserver>
-
-- (void)processCountryEvent:(TCountryId const &)countryId;
-
-@optional
-
-- (void)processCountry:(TCountryId const &)countryId
-              progress:(MapFilesDownloader::TProgress const &)progress;
+- (void)speedCameraShowedUpOnRoute:(double)speedLimit;
+- (void)speedCameraLeftVisibleArea;
 
 @end
 
@@ -38,7 +29,7 @@ using namespace storage;
 
 @optional
 
-- (void)processViewportCountryEvent:(TCountryId const &)countryId;
+- (void)processViewportCountryEvent:(storage::CountryId const &)countryId;
 - (void)processViewportChangedEvent;
 
 @end

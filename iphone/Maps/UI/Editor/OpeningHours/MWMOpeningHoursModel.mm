@@ -1,8 +1,6 @@
-#import "MWMOpeningHoursCommon.h"
+#import <CoreApi/MWMOpeningHoursCommon.h>
 #import "MWMOpeningHoursModel.h"
-#import "MWMOpeningHoursSection.h"
 
-#include "editor/opening_hours_ui.hpp"
 #include "editor/ui2oh.hpp"
 
 extern UITableViewRowAnimation const kMWMOpeningHoursEditorRowAnimation = UITableViewRowAnimationFade;
@@ -89,7 +87,7 @@ using namespace osmoh;
   }
 }
 
-- (ui::TTimeTableProxy)timeTableProxy:(NSUInteger)index
+- (ui::TimeTableSet::Proxy)timeTableProxy:(NSUInteger)index
 {
   NSAssert(index < self.count, @"Invalid section index");
   return timeTableSet.Get(index);
@@ -123,7 +121,7 @@ using namespace osmoh;
   return self.sections[section].numberOfRows;
 }
 
-- (ui::TOpeningDays)unhandledDays
+- (ui::OpeningDays)unhandledDays
 {
   return timeTableSet.GetUnhandledDays();
 }

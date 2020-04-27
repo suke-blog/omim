@@ -11,18 +11,9 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.AnyRes;
-import android.support.annotation.AttrRes;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DimenRes;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -38,6 +29,17 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.annotation.AnyRes;
+import androidx.annotation.AttrRes;
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DimenRes;
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import com.google.android.material.textfield.TextInputLayout;
 import com.mapswithme.maps.MwmApplication;
 import com.mapswithme.maps.R;
 
@@ -45,6 +47,7 @@ public final class UiUtils
 {
   private static final int DEFAULT_TINT_COLOR = Color.parseColor("#20000000");
   public static final int NO_ID = -1;
+  public static final String NEW_STRING_DELIMITER = "\n";
   public static final String PHRASE_SEPARATOR = " • ";
   public static final String APPROXIMATE_SYMBOL = "~";
   private static float sScreenDensity;
@@ -53,6 +56,23 @@ public final class UiUtils
   {
     ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
     params.setMargins(0, UiUtils.getStatusBarHeight(view.getContext()), 0, 0);
+  }
+
+  public static void bringViewToFrontOf(@NonNull View frontView, @NonNull View backView)
+  {
+    if (Utils.isLollipopOrLater())
+      frontView.setZ(backView.getZ() + 1);
+    else
+      frontView.bringToFront();
+  }
+
+  public static void linkifyView(@NonNull View view, @IdRes int id, @StringRes int stringId,
+                                 @NonNull String link)
+  {
+    TextView policyView = view.findViewById(id);
+    Resources rs = policyView.getResources();
+    policyView.setText(Html.fromHtml(rs.getString(stringId, link)));
+    policyView.setMovementMethod(LinkMovementMethod.getInstance());
   }
 
   public static class SimpleAnimationListener implements AnimationListener
@@ -270,6 +290,12 @@ public final class UiUtils
   {
     tv.setText(text);
     showIf(!TextUtils.isEmpty(text), tv);
+  }
+
+  public static void clearTextAndHide(TextView tv)
+  {
+    tv.setText("");
+    hide(tv);
   }
 
   public static void showHomeUpButton(Toolbar toolbar)
@@ -518,6 +544,12 @@ public final class UiUtils
                   rect.bottom += bottom;
                   parent.setTouchDelegate(new TouchDelegate(rect, view));
                 });
+  }
+
+  @ColorInt
+  public static int getNotificationColor(@NonNull Context context)
+  {
+    return context.getResources().getColor(R.color.notification);
   }
 
   // utility class

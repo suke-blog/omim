@@ -1,6 +1,7 @@
 #include "drape_frontend/gui/compass.hpp"
 
 #include "drape_frontend/animation/show_hide_animation.hpp"
+#include "drape_frontend/batcher_bucket.hpp"
 #include "drape_frontend/gui/drape_gui.hpp"
 
 #include "shaders/programs.hpp"
@@ -33,8 +34,6 @@ struct CompassVertex
 class CompassHandle : public TappableHandle
 {
   using TBase = TappableHandle;
-  double const kVisibleStartAngle = base::DegToRad(5.0);
-  double const kVisibleEndAngle = base::DegToRad(355.0);
 
 public:
   CompassHandle(uint32_t id, m2::PointF const & pivot, m2::PointF const & size,
@@ -52,6 +51,9 @@ public:
 
   bool Update(ScreenBase const & screen) override
   {
+    static double const kVisibleStartAngle = base::DegToRad(5.0);
+    static double const kVisibleEndAngle = base::DegToRad(355.0);
+
     auto const angle = static_cast<float>(ang::AngleIn2PI(screen.GetAngle()));
 
     bool isVisiblePrev = IsVisible();
@@ -110,6 +112,7 @@ drape_ptr<ShapeRenderer> Compass::Draw(ref_ptr<dp::GraphicsContext> context,
   auto state = df::CreateRenderState(gpu::Program::TexturingGui, df::DepthLayer::GuiLayer);
   state.SetColorTexture(region.GetTexture());
   state.SetDepthTestEnabled(false);
+  state.SetTextureIndex(region.GetTextureIndex());
 
   dp::AttributeProvider provider(1, 4);
   dp::BindingInfo info(2);
@@ -137,6 +140,7 @@ drape_ptr<ShapeRenderer> Compass::Draw(ref_ptr<dp::GraphicsContext> context,
 
   drape_ptr<ShapeRenderer> renderer = make_unique_dp<ShapeRenderer>();
   dp::Batcher batcher(dp::Batcher::IndexPerQuad, dp::Batcher::VertexPerQuad);
+  batcher.SetBatcherHash(static_cast<uint64_t>(df::BatcherBucket::Default));
   dp::SessionGuard guard(context, batcher, std::bind(&ShapeRenderer::AddShape, renderer.get(), _1, _2));
   batcher.InsertTriangleStrip(context, state, make_ref(&provider), std::move(handle));
 

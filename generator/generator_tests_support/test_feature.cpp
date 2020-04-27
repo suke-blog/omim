@@ -23,6 +23,7 @@
 #include <sstream>
 
 using namespace std;
+using namespace feature;
 
 namespace generator
 {
@@ -38,46 +39,57 @@ uint64_t GenUniqueId()
 }  // namespace
 
 // TestFeature -------------------------------------------------------------------------------------
-TestFeature::TestFeature()
-  : m_id(GenUniqueId()), m_center(0, 0), m_type(Type::Unknown), m_name(""), m_lang("")
+TestFeature::TestFeature() : m_id(GenUniqueId()), m_center(0, 0), m_type(Type::Unknown) { Init(); }
+
+TestFeature::TestFeature(string const & name, string const & lang)
+  : m_id(GenUniqueId()), m_center(0, 0), m_type(Type::Unknown)
 {
+  m_names.AddString(lang, name);
+
+  // Names used for search depend on locale. Fill default name cause we need to run tests with
+  // different locales. If you do not need default name to be filled use
+  // TestFeature::TestFeature(StringUtf8Multilang const & name).
+  m_names.AddString("default", name);
   Init();
 }
 
-TestFeature::TestFeature(string const & name, string const & lang)
-  : m_id(GenUniqueId()), m_center(0, 0), m_type(Type::Unknown), m_name(name), m_lang(lang)
+TestFeature::TestFeature(StringUtf8Multilang const & name)
+  : m_id(GenUniqueId()), m_center(0, 0), m_type(Type::Unknown), m_names(name)
 {
-  Init();
 }
 
 TestFeature::TestFeature(m2::PointD const & center, string const & name, string const & lang)
-  : m_id(GenUniqueId()), m_center(center), m_type(Type::Point), m_name(name), m_lang(lang)
+  : m_id(GenUniqueId()), m_center(center), m_type(Type::Point)
 {
+  m_names.AddString(lang, name);
+  m_names.AddString("default", name);
   Init();
 }
 
 TestFeature::TestFeature(vector<m2::PointD> const & boundary, string const & name,
                          string const & lang)
-  : m_id(GenUniqueId()), m_boundary(boundary), m_type(Type::Area), m_name(name), m_lang(lang)
+  : m_id(GenUniqueId()), m_boundary(boundary), m_type(Type::Area)
 {
+  m_names.AddString(lang, name);
+  m_names.AddString("default", name);
   ASSERT(!m_boundary.empty(), ());
   Init();
 }
 
 void TestFeature::Init()
 {
-  m_metadata.Set(feature::Metadata::FMD_TEST_ID, strings::to_string(m_id));
+  m_metadata.Set(Metadata::FMD_TEST_ID, strings::to_string(m_id));
 }
 
 bool TestFeature::Matches(FeatureType & feature) const
 {
-  istringstream is(feature.GetMetadata().Get(feature::Metadata::FMD_TEST_ID));
+  istringstream is(feature.GetMetadata().Get(Metadata::FMD_TEST_ID));
   uint64_t id;
   is >> id;
   return id == m_id;
 }
 
-void TestFeature::Serialize(FeatureBuilder1 & fb) const
+void TestFeature::Serialize(FeatureBuilder & fb) const
 {
   using feature::Metadata;
   // Metadata::EType::FMD_CUISINE is the first enum value.
@@ -111,14 +123,16 @@ void TestFeature::Serialize(FeatureBuilder1 & fb) const
   case Type::Unknown: break;
   }
 
-  if (!m_name.empty())
-  {
-    CHECK(fb.AddName(m_lang, m_name), ("Can't set feature name:", m_name, "(", m_lang, ")"));
-    if (m_lang != "default")
-      CHECK(fb.AddName("default", m_name), ("Can't set feature name:", m_name, "( default )"));
-  }
+  m_names.ForEach([&](int8_t langCode, string const & name) {
+    if (!name.empty())
+    {
+      auto const lang = StringUtf8Multilang::GetLangByCode(langCode);
+      CHECK(fb.AddName(lang, name), ("Can't set feature name:", name, "(", lang, ")"));
+    }
+  });
+
   if (!m_postcode.empty())
-    fb.AddPostcode(m_postcode);
+    fb.GetParams().AddPostcode(m_postcode);
 }
 
 // TestCountry -------------------------------------------------------------------------------------
@@ -127,20 +141,37 @@ TestCountry::TestCountry(m2::PointD const & center, string const & name, string 
 {
 }
 
-void TestCountry::Serialize(FeatureBuilder1 & fb) const
+void TestCountry::Serialize(FeatureBuilder & fb) const
 {
   TestFeature::Serialize(fb);
   auto const & classificator = classif();
   fb.AddType(classificator.GetTypeByPath({"place", "country"}));
-
-  // Localities should have default name too.
-  fb.AddName("default", m_name);
 }
 
-string TestCountry::ToString() const
+string TestCountry::ToDebugString() const
 {
   ostringstream os;
-  os << "TestCountry [" << m_name << ", " << m_lang << ", " << DebugPrint(m_center) << "]";
+  os << "TestCountry [" << DebugPrint(m_names) << ", " << DebugPrint(m_center) << "]";
+  return os.str();
+}
+
+// TestState -------------------------------------------------------------------------------------
+TestState::TestState(m2::PointD const & center, string const & name, string const & lang)
+  : TestFeature(center, name, lang)
+{
+}
+
+void TestState::Serialize(FeatureBuilder & fb) const
+{
+  TestFeature::Serialize(fb);
+  auto const & classificator = classif();
+  fb.AddType(classificator.GetTypeByPath({"place", "state"}));
+}
+
+string TestState::ToDebugString() const
+{
+  ostringstream os;
+  os << "TestState [" << DebugPrint(m_names) << ", " << DebugPrint(m_center) << "]";
   return os.str();
 }
 
@@ -157,7 +188,7 @@ TestCity::TestCity(vector<m2::PointD> const & boundary, string const & name, str
 {
 }
 
-void TestCity::Serialize(FeatureBuilder1 & fb) const
+void TestCity::Serialize(FeatureBuilder & fb) const
 {
   TestFeature::Serialize(fb);
   auto const & classificator = classif();
@@ -165,10 +196,10 @@ void TestCity::Serialize(FeatureBuilder1 & fb) const
   fb.SetRank(m_rank);
 }
 
-string TestCity::ToString() const
+string TestCity::ToDebugString() const
 {
   ostringstream os;
-  os << "TestCity [" << m_name << ", " << m_lang << ", " << DebugPrint(m_center) << "]";
+  os << "TestCity [" << DebugPrint(m_names) << ", " << DebugPrint(m_center) << "]";
   return os.str();
 }
 
@@ -180,7 +211,7 @@ TestVillage::TestVillage(m2::PointD const & center, string const & name, string 
 {
 }
 
-void TestVillage::Serialize(FeatureBuilder1 & fb) const
+void TestVillage::Serialize(FeatureBuilder & fb) const
 {
   TestFeature::Serialize(fb);
   auto const & classificator = classif();
@@ -188,35 +219,70 @@ void TestVillage::Serialize(FeatureBuilder1 & fb) const
   fb.SetRank(m_rank);
 }
 
-string TestVillage::ToString() const
+string TestVillage::ToDebugString() const
 {
   ostringstream os;
-  os << "TestVillage [" << m_name << ", " << m_lang << ", " << DebugPrint(m_center) << "]";
+  os << "TestVillage [" << DebugPrint(m_names) << ", " << DebugPrint(m_center) << "]";
   return os.str();
 }
 
 // TestStreet --------------------------------------------------------------------------------------
 TestStreet::TestStreet(vector<m2::PointD> const & points, string const & name, string const & lang)
-  : TestFeature(name, lang), m_points(points)
+  : TestFeature(name, lang), m_points(points), m_highwayType("living_street")
 {
 }
 
-void TestStreet::Serialize(FeatureBuilder1 & fb) const
+TestStreet::TestStreet(vector<m2::PointD> const & points, StringUtf8Multilang const & name)
+  : TestFeature(name), m_points(points), m_highwayType("living_street")
+{
+}
+
+void TestStreet::Serialize(FeatureBuilder & fb) const
 {
   TestFeature::Serialize(fb);
 
   auto const & classificator = classif();
-  fb.SetType(classificator.GetTypeByPath({"highway", "living_street"}));
+  fb.SetType(classificator.GetTypeByPath({"highway", m_highwayType}));
+
+  fb.GetParams().ref = m_roadNumber;
 
   for (auto const & point : m_points)
     fb.AddPoint(point);
   fb.SetLinear(false /* reverseGeometry */);
 }
 
-string TestStreet::ToString() const
+string TestStreet::ToDebugString() const
 {
   ostringstream os;
-  os << "TestStreet [" << m_name << ", " << m_lang << ", " << ::DebugPrint(m_points) << "]";
+  os << "TestStreet [" << DebugPrint(m_names) << ", " << ::DebugPrint(m_points) << "]";
+  return os.str();
+}
+
+// TestSquare --------------------------------------------------------------------------------------
+TestSquare::TestSquare(m2::RectD const & rect, string const & name, string const & lang)
+  : TestFeature(name, lang), m_rect(rect)
+{
+}
+
+void TestSquare::Serialize(FeatureBuilder & fb) const
+{
+  TestFeature::Serialize(fb);
+
+  auto const & classificator = classif();
+  fb.SetType(classificator.GetTypeByPath({"place", "square"}));
+
+  fb.AddPoint(m_rect.LeftBottom());
+  fb.AddPoint(m_rect.RightBottom());
+  fb.AddPoint(m_rect.RightTop());
+  fb.AddPoint(m_rect.LeftTop());
+  fb.AddPoint(m_rect.LeftBottom());
+  fb.SetArea();
+}
+
+string TestSquare::ToDebugString() const
+{
+  ostringstream os;
+  os << "TestSquare [" << DebugPrint(m_names) << ", " << m_rect << "]";
   return os.str();
 }
 
@@ -245,7 +311,7 @@ pair<TestPOI, FeatureID> TestPOI::AddWithEditor(osm::Editor & editor, MwmSet::Mw
   return {poi, emo.GetID()};
 }
 
-void TestPOI::Serialize(FeatureBuilder1 & fb) const
+void TestPOI::Serialize(FeatureBuilder & fb) const
 {
   TestFeature::Serialize(fb);
   auto const & classificator = classif();
@@ -253,22 +319,31 @@ void TestPOI::Serialize(FeatureBuilder1 & fb) const
   for (auto const & path : m_types)
     fb.AddType(classificator.GetTypeByPath(path));
 
+  auto & params = fb.GetParams();
   if (!m_houseNumber.empty())
-    fb.AddHouseNumber(m_houseNumber);
+    params.AddHouseNumber(m_houseNumber);
   if (!m_streetName.empty())
-    fb.AddStreet(m_streetName);
+    params.AddStreet(m_streetName);
 }
 
-string TestPOI::ToString() const
+string TestPOI::ToDebugString() const
 {
   ostringstream os;
-  os << "TestPOI [" << m_name << ", " << m_lang << ", " << DebugPrint(m_center);
+  os << "TestPOI [" << DebugPrint(m_names) << ", " << DebugPrint(m_center);
   if (!m_houseNumber.empty())
     os << ", " << m_houseNumber;
   if (!m_streetName.empty())
     os << ", " << m_streetName;
   os << "]";
   return os.str();
+}
+
+TypesHolder TestPOI::GetTypes() const
+{
+  TypesHolder types;
+  for (auto const path : m_types)
+    types.Add(classif().GetTypeByPath(path));
+  return types;
 }
 
 // TestMultilingualPOI -----------------------------------------------------------------------------
@@ -278,7 +353,7 @@ TestMultilingualPOI::TestMultilingualPOI(m2::PointD const & center, string const
 {
 }
 
-void TestMultilingualPOI::Serialize(FeatureBuilder1 & fb) const
+void TestMultilingualPOI::Serialize(FeatureBuilder & fb) const
 {
   TestPOI::Serialize(fb);
 
@@ -289,10 +364,10 @@ void TestMultilingualPOI::Serialize(FeatureBuilder1 & fb) const
   }
 }
 
-string TestMultilingualPOI::ToString() const
+string TestMultilingualPOI::ToDebugString() const
 {
   ostringstream os;
-  os << "TestPOI [(" << m_name << ", " << m_lang << "), ";
+  os << "TestPOI [" << DebugPrint(m_names) << ", ";
   for (auto const & kv : m_multilingualNames)
     os << "( " << kv.second << ", " << kv.first << "), ";
   os << DebugPrint(m_center);
@@ -312,31 +387,28 @@ TestBuilding::TestBuilding(m2::PointD const & center, string const & name,
 }
 
 TestBuilding::TestBuilding(m2::PointD const & center, string const & name,
-                           string const & houseNumber, TestStreet const & street,
-                           string const & lang)
-  : TestFeature(center, name, lang)
-  , m_houseNumber(houseNumber)
-  , m_streetName(street.GetName())
+                           string const & houseNumber, string const & street, string const & lang)
+  : TestFeature(center, name, lang), m_houseNumber(houseNumber), m_streetName(street)
 {
 }
 
 TestBuilding::TestBuilding(vector<m2::PointD> const & boundary, string const & name,
-                           string const & houseNumber, TestStreet const & street,
-                           string const & lang)
+                           string const & houseNumber, string const & street, string const & lang)
   : TestFeature(boundary, name, lang)
   , m_boundary(boundary)
   , m_houseNumber(houseNumber)
-  , m_streetName(street.GetName())
+  , m_streetName(street)
 {
 }
 
-void TestBuilding::Serialize(FeatureBuilder1 & fb) const
+void TestBuilding::Serialize(FeatureBuilder & fb) const
 {
   TestFeature::Serialize(fb);
 
-  fb.AddHouseNumber(m_houseNumber);
+  auto & params = fb.GetParams();
+  params.AddHouseNumber(m_houseNumber);
   if (!m_streetName.empty())
-    fb.AddStreet(m_streetName);
+    params.AddStreet(m_streetName);
 
   auto const & classificator = classif();
   fb.AddType(classificator.GetTypeByPath({"building"}));
@@ -344,10 +416,10 @@ void TestBuilding::Serialize(FeatureBuilder1 & fb) const
     fb.AddType(classificator.GetTypeByPath(type));
 }
 
-string TestBuilding::ToString() const
+string TestBuilding::ToDebugString() const
 {
   ostringstream os;
-  os << "TestBuilding [" << m_name << ", " << m_houseNumber << ", " << m_lang << ", "
+  os << "TestBuilding [" << DebugPrint(m_names) << ", " << m_houseNumber << ", "
      << DebugPrint(m_center) << "]";
   return os.str();
 }
@@ -358,7 +430,7 @@ TestPark::TestPark(vector<m2::PointD> const & boundary, string const & name, str
 {
 }
 
-void TestPark::Serialize(FeatureBuilder1 & fb) const
+void TestPark::Serialize(FeatureBuilder & fb) const
 {
   TestFeature::Serialize(fb);
   for (auto const & point : m_boundary)
@@ -369,10 +441,11 @@ void TestPark::Serialize(FeatureBuilder1 & fb) const
   fb.AddType(classificator.GetTypeByPath({"leisure", "park"}));
 }
 
-string TestPark::ToString() const
+string TestPark::ToDebugString() const
 {
   ostringstream os;
-  os << "TestPark [" << m_name << ", " << m_lang << "]";
+  os << "TestPark [" << DebugPrint(m_names) << ", "
+     << "]";
   return os.str();
 }
 
@@ -382,7 +455,7 @@ TestRoad::TestRoad(vector<m2::PointD> const & points, string const & name, strin
 {
 }
 
-void TestRoad::Serialize(FeatureBuilder1 & fb) const
+void TestRoad::Serialize(FeatureBuilder & fb) const
 {
   TestFeature::Serialize(fb);
 
@@ -394,14 +467,14 @@ void TestRoad::Serialize(FeatureBuilder1 & fb) const
   fb.SetLinear(false /* reverseGeometry */);
 }
 
-string TestRoad::ToString() const
+string TestRoad::ToDebugString() const
 {
   ostringstream os;
-  os << "TestRoad [" << m_name << ", " << m_lang << "]";
+  os << "TestRoad [" << DebugPrint(m_names) << "]";
   return os.str();
 }
 
 // Functions ---------------------------------------------------------------------------------------
-string DebugPrint(TestFeature const & feature) { return feature.ToString(); }
+string DebugPrint(TestFeature const & feature) { return feature.ToDebugString(); }
 }  // namespace tests_support
 }  // namespace generator

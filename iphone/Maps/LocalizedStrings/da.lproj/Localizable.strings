@@ -6,9 +6,6 @@
 
 /********** Strings **********/
 
-/* About button text (should be short) */
-"about" = "Om app";
-
 /* Button text (should be short) */
 "back" = "Tilbage";
 
@@ -81,8 +78,6 @@
 /* View and button titles for accessibility */
 "core_my_position" = "Min position";
 
-"ok" = "Ok";
-
 /* Settings/Downloader - No free space dialog message */
 "free_disk_space_for_country_x" = "Frigør venligst noget plads på din telefon først for at downloade %@";
 
@@ -109,9 +104,6 @@
 
 /* Settings/Downloader - 3G download warning dialog confirm button */
 "use_cellular_data" = "Ja";
-
-/* Settings/Downloader - No internet connection dialog message */
-"use_wifi_recommendation_text" = "Vi anbefaler, at du bruger WiFi for at downloade store kort";
 
 /* Choose measurement on first launch alert - title */
 "which_measurement_system" = "Hvilken måleenhed foretrækker du?";
@@ -408,9 +400,6 @@
 /* Subject for emailed bookmark */
 "bookmark_share_email_subject" = "Hey, tjek min knappenål på MAPS.ME kortet ud!";
 
-/* Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me */
-"bookmark_share_email" = "Hej\n\nJeg markerede: %1$@ på MAPS.ME, en verden af offline kort. Klik på dette link %2$@ eller dette %3$@ for at se stedet på kortet.\n\nTak.";
-
 /* Subject for emailed position */
 "my_position_share_email_subject" = "Hey, tjek min nuværende lokation ud på MAPS.ME kortet!";
 
@@ -588,15 +577,6 @@
 
 /* category title */
 "routes" = "Ruter";
-
-/* Show on first launch. */
-"maps_licence_info" = "This applications uses geographical data (including maps, business listings, points of interest, borders of countries and regions, etc.) taken from the OpenStreetMap project. We do not warrant any consistency, accuracy, completeness or applicability of the OpenStreetMap data.";
-
-/* Show on first launch. */
-"agree" = "I agree";
-
-/* Show on first launch */
-"disagree" = "I disagree";
 
 /* text of notification */
 "download_map_notification" = "Download kortet over det sted, hvor du befinder dig";
@@ -886,7 +866,7 @@
 "green" = "Grøn";
 
 /* purple color */
-"purple" = "violet";
+"purple" = "Violet";
 
 /* orange color */
 "orange" = "Orange";
@@ -896,6 +876,30 @@
 
 /* pink color */
 "pink" = "Pink";
+
+/* deep purple color */
+"deep_purple" = "Mørkelilla";
+
+/* light blue color */
+"light_blue" = "Lyseblå";
+
+/* cyan color */
+"cyan" = "Cyan";
+
+/* teal color */
+"teal" = "Blågrøn";
+
+/* lime color */
+"lime" = "Lime";
+
+/* deep orange color */
+"deep_orange" = "Dyb orange";
+
+/* gray color */
+"gray" = "Grå";
+
+/* blue gray color */
+"blue_gray" = "Blågrå";
 
 /* Wi-Fi available */
 "WiFi_available" = "Ja";
@@ -1342,10 +1346,6 @@
 
 "onboarding_permissions_message" = "Så du kan hente kort, se steder og trafik i nærheden af dig og benytte navigation.";
 
-"onboarding_welcome_title" = "Velkommen til MAPS.ME";
-
-"onboarding_welcome_first_subtitle" = "Kort, der er gratis, hurtige, detaljerede og helt igennem offline, med rutenavigation.";
-
 "onboarding_welcome_second_subtitle" = "Ved at åbne appen accepterer du vores <a href=\"%s\">Vilkår for anvendelse</a> og <a href=\"%s\">Fortrolighedspolitik</a>.";
 
 "dialog_incorrect_feature_position" = "Skift lokation";
@@ -1500,7 +1500,7 @@
 
 "placepage_more_button" = "Mere";
 
-"placepage_more_reviews_button" = "More Reviews";
+"placepage_more_reviews_button" = "Flere anmeldelser";
 
 "book_button" = "Book";
 
@@ -1782,10 +1782,6 @@
 
 "banner_rentalcars_message" = "800 biludlejningsselskaber på mere end 49.000 steder.";
 
-"banner_viator_title" = "Online rejsesøgning";
-
-"banner_viator_message" = "Søg blandt mere end 50.000 rejser over hele verden.";
-
 /* december */
 "whatsnew_traffic" = "Trafikdata i 36 lande";
 
@@ -1860,10 +1856,6 @@
 "whatsnew_waypoints_title" = "Vejpunkter i ruteføring";
 
 "whatsnew_waypoints_message" = "Tryk på positioner for at føje vejsteder til din rute.";
-
-"whatsnew_viator_title" = "Bestil en tur";
-
-"whatsnew_viator_message" = "Vælg populære ture i turistbyer over hele verden.";
 
 "whatsnew_driving_style_title" = "Nyt kortformat til kørsel";
 
@@ -1977,8 +1969,6 @@
 
 "toast_location_permission_denied" = "App-position tilladelse nægtet";
 
-"place_page_viator_title" = "Seværdigheder og ture";
-
 "button_use" = "Brug";
 
 "planning_route_manage_route" = "Administrer rute";
@@ -2018,10 +2008,6 @@
 "choose_start_point" = "Vælg et udgangspunkt";
 
 "choose_destination" = "Vælg en destination";
-
-"preloader_viator_title" = "Find ture og usædvanlige aktiviteter";
-
-"preloader_viator_message" = "Ture, aktiviteter, sightseeing med mere";
 
 "preloader_viator_button" = "Flere oplysninger";
 
@@ -2127,10 +2113,6 @@
 
 "discovery_button_subtitle_local_guides" = "Lokale guider";
 
-"discovery_button_viator_offline_title" = "Find ture og nye oplevelser";
-
-"discovery_button_viator_offline_message" = "Ture, oplevelser, sightseeing med mere.";
-
 "discovery_button_viator_error_title" = "Fejl ved indlæsning af data";
 
 "discovery_button_other_error_message" = "Fejl ved indlæsning af data";
@@ -2203,8 +2185,6 @@
 
 "downloader_applying" = "Anvender %s...";
 
-"transit_not_found" = "Transitnavigation i denne region er endnu ikke tilgængelig";
-
 "whats_new_title_hotel_filter" = "Nye hotelfiltre til rådighed!";
 
 "whats_new_message_hotel_filter" = "Book hoteller på dine datoer! Brug filtre for check-in og check-out";
@@ -2212,8 +2192,6 @@
 "whats_new_title_ugc_travel" = "Del dine erfaringer med andre rejsende!";
 
 "whats_new_message_ugc_travel" = "Vurder og anmeld de steder, du har besøgt!";
-
-"dialog_pedestrian_route_is_long" = "Gangstien er for lang";
 
 "dialog_message_transit_not_found_connection" = "Planlæg en rute inden for et transitnetværk";
 
@@ -2405,9 +2383,8 @@
 
 "guide_downloaded_title" = "Vejledningen er blevet downloadet";
 
-"download_guides" = "Download vejledninger";
-
-"cached_guides_placeholder_subtitle" = "Detaljerede offline vejledninger til alle slags rejser. Vælg den der passer dig bedst og download den direkte til dit kort. Du skal bruge en internetforbindelse til at downloade vejledninger.";
+/* as few symbols as possible */
+"download_guides" = "Søgeguide";
 
 "guides_groups_cached" = "Downloadede vejledninger";
 
@@ -2487,8 +2464,6 @@
 
 "restore_no_subscription_alert" = "Der er ingen aktive abonnementer";
 
-"subscription_terms" = "Betalingen opkræves via din iTunes-konto ved bekræftelse af købet. Abonnementet fornys automatisk, medmindre den automatiske fornyelse er slået fra senest 24 timer før udgangen af den aktuelle periode. Din konto debiteres i overensstemmelse med din plan for fornyelse indenfor 24 timer før udgangen af den aktuelle periode. Du kan administrere eller slukke for automatisk fornyelse i dine Apple ID-kontoindstillinger på ethvert tidspunkt af dit køb.";
-
 "subscriptions_title" = "Abonnementer";
 
 "manage_subscription" = "Administrer abonnementet";
@@ -2508,8 +2483,6 @@
 "ugc_route_tags_screen_label" = "Vælg tags";
 
 "ugc_route_tags_progress_msg" = "Indlæser tags…";
-
-"ugc_route_tags_desc" = "Vælg nogle tags for at gøre det nemmere for andre at finde din guide. Dette er obligatorisk.";
 
 "public_access" = "Offentlig adgang";
 
@@ -2564,7 +2537,7 @@
 
 "unable_upload_error_subtitle_broken" = "Denne fil er beskadiget og kunne ikke uploades. Upload venligst en anden fil.";
 
-"buy_btn" = "Køb til %s";
+"buy_btn" = "Køb denne her til %s";
 
 "download_guide_progress" = "Henter din guide…";
 
@@ -2659,6 +2632,636 @@
 
 "whats_new_ugc_routes_title_android_only" = "Det er nemt at dele dine indtryk";
 
+"ugc_thanks_message_auth" = "Din anmeldelse er blevet gemt";
+
+"ugc_thanks_message_not_auth" = "Log ind for efterlade en anmeldelse";
+
+"notification_leave_review_v2_title" = "Vurder et besøgt sted og hjælp rejsende!";
+
+"error_public_not_enought_title" = "Ikke nok bogmærker";
+
+"error_public_not_enought_subtitle" = "Du skal have mindst 3 bogmærker, for at kunne uploade din guide til det offentlige katalog";
+
+"bookmark_public_upload_alert_title" = "Du er et par skridt væk fra at dele dine bogmærker med alle MAPS.ME rejsende!";
+
+"bookmark_public_upload_alert_subtitle" = "Sørg for, at du har et bestemt navn og en beskrivelse til din liste, og at alle bogmærker har oplysninger om stederne. På denne måde kan din liste findes og bruges af andre.";
+
+"bookmark_public_upload_alert_ok_button" = "Ja, jeg er sikker!";
+
+"name_title" = "Indtast navn på din guide";
+
+"name_placeholder" = "f.eks. London Pubs";
+
+"name_comment1" = "Navngiv din guide, så rejsende nemt kan finde det, f.eks. \"London Pubs\"";
+
+"name_comment2" = "Navnet bør ikke indeholde specielle symboler. Navnet skal ikke være \"Mine steder\"";
+
+"description_guide" = "Beskrivelse";
+
+"description_title" = "Indtast beskrivelse til din guide";
+
+"description_placeholder" = "Beskriv din guide i detaljer";
+
+"description_comment1" = "Din guide-beskrivelse skal indeholde mindst 30 symboler.";
+
+"ugc_route_tags_desc" = "Vælg tags for at hjælpe andre rejsende med at finde din guide. Dette er obligatorisk. Maksimum %s tags.";
+
+"html_format_error_title" = "Din guide er ikke blevet udgivet";
+
+"html_format_error_subtitle" = "Sørg for at navne og beskrivelser af dine bogmærker alle har et gyldigt format. Du kan tjekke det, via en browser på skrivebordet, ved at klikke på knappen \"Rediger online\", nedenfor.";
+
+"web_editor_description" = "Upload din guide og få rediger linket fra skrivebordet";
+
+"edit_on_web_confirm" = "Rediger online";
+
+"update_guide" = "Upload en opdatering";
+
+"direct_link_updating_text" = "Opdaterer din fil…";
+
+"direct_link_updating_success" = "Din guide er blevet opdateret";
+
+"unable_get_direct_link_desc" = "Du kan dele din guide via et offentligt link";
+
+"any_access_update_alert_title" = "Nogle ændringer kan have fundet sted";
+
+"any_access_update_alert_message" = "Vil du opdatere dine bogmærker? Den nye version vil være tilgængelig via det samme link.";
+
+"any_access_update_alert_update" = "Opdater";
+
+"public_or_limited_access_after_edit_online_error_title" = "Du har redigeret dine bogmærker online";
+
+"public_or_limited_access_after_edit_online_error_message" = "I fremtiden rediger, udgiv eller del guiden, med dine venner, via vores hjemmeside";
+
+"power_managment_title" = "Strømsparetilstand";
+
+"power_managment_description" = "Når automatisk tilstand er valgt, begynder applikationen at deaktivere funktioner, med højt batteri-strømforbrug, afhængigt af det aktuelle batteriniveau";
+
+"power_managment_setting_never" = "Aldrig";
+
+"power_managment_setting_auto" = "Automatisk";
+
+"power_managment_setting_manual_max" = "Maksimum strømbesparelse";
+
+"enable_logging_warning_message" = "Indstillingen aktiverer logning til diagnostiske formål. Det kan være nyttigt for vores supportere, der fejlfinder problemer med appen. Aktiver kun denne mulighed på anmodning fra MAPS.ME support.";
+
+"html_error_upload_message_try_again" = "Kontroller dine netværksindstillinger, og prøv igen";
+
+"html_error_upload_title_try_again" = "Ingen internetforbindelse";
+
+"notification_leave_review_v2_android_short_title" = "Anmeld og hjælpe rejsende!";
+
+"megafon" = "Say goodbye to roaming!";
+
+"notifications_illegal_alert_disable_button" = "Slå fra meddelelser";
+
+"access_rules_author_only" = "Online redigering";
+
+"privacy_settings_menu" = "Indstillinger for beskyttelse af personlige oplysninger";
+
+"gdpr_request_setting" = "Få ID til GDPR anmodning";
+
+"gdpr_request_window_title" = "Dit ID: %s.";
+
+"gdpr_request_window_message" = "Kopiere det og send anmodningen til support@maps.me";
+
+"gdpr_request_window_copy" = "Kopier ID'et";
+
+"unable_upadate_error_title" = "Fil opdatering fejlede";
+
+"unable_upadate_error_message" = "Der opstod nogle fejl under opdatering. Kontroller ændringerne, og prøv igen";
+
+"whats_new_wiki_title" = "Hvad er det sted?";
+
+"whats_new_wiki_message" = "Vi har tilføjet Wikipedia.org artikler til siderne, af de mest populære turistattraktioner. De er tilgængelige offline";
+
+"driving_options_title" = "Køre muligheder";
+
+"driving_options_subheader" = "Undgå på enhver rute";
+
+"avoid_tolls" = "Betalingsveje";
+
+"avoid_unpaved" = "Grusveje";
+
+"avoid_ferry" = "Færgeoverfarter";
+
+"avoid_motorways" = "Motorveje";
+
+"unable_to_calc_alert_title" = "Det er ikke muligt at beregne rute";
+
+"unable_to_calc_alert_subtitle" = "Desværre kunne vi ikke finde en rute med den aktuelle opsætning. Ændre opsætningen, og prøv igen";
+
+"define_to_avoid_btn" = "Definer veje du vil undgå";
+
+"change_driving_options_btn" = "Køre muligheder aktiveret";
+
+"toll_road" = "Betalingsvej";
+
+"unpaved_road" = "Grusvej";
+
+"ferry_crossing" = "Færgeoverfart";
+
+"operated_by" = "Drives af \"%s\"";
+
+"avoid_toll_roads_placepage" = "Undgå betalingsveje";
+
+"avoid_unpaved_roads_placepage" = "Undgå grusveje";
+
+"avoid_ferry_crossing_placepage" = "Undgå færgeoverfarter";
+
+"cached_guides_placeholder_subtitle" = "MAPS.ME tilbyder færdiglavede guides med fotos og beskrivelser til de udvalgte steder, der vises på kortet, som er tilgængelige offline.";
+
+"guides_catalogue_title" = "Katalog over Guides";
+
+"download_guides_button" = "Gå til Kataloget";
+
+"type.cuisine.uzbek" = "Usbekisk køkken";
+
+"onboarding_welcome_title" = "Planlæg og rejs med MAPS.ME";
+
+"onboarding_welcome_first_subtitle" = "Bookmark interessante steder, book hoteller og beregn ruter offline";
+
+"onboarding_guide_direct_download_title" = "Guide er klar til download";
+
+"onboarding_guide_direct_download_subtitle" = "Det vil blive vist på kort og fungerer offline";
+
+"onboarding_guide_direct_download_button" = "Download";
+
+"onboarding_bydeeplink_guide_title" = "Klar-til-brug guider i MAPS.ME";
+
+"onboarding_bydeeplink_guide_subtitle" = "De bedste steder at besøge er vist på kort med fotos og beskrivelser. Fungerer offline.";
+
+"whats_new_auto_update_bydeeplink_title" = "Før du fortsætter til guider…";
+
+"whats_new_auto_update_bydeeplink_message" = "Opdater kort for at holde informationen opdateret!";
+
+"whats_new_auto_update_and_proceed_button_size" = "Opdater (%s) og fortsæt";
+
+"whatsnew_toll_unpaved_title" = "Layout for kørselsruter medtager alle typer af veje";
+
+"whatsnew_toll_unpaved_message" = "Vælg omveje for at undgå vejbaner, grusveje og færgeoverfarter";
+
+"whatsnew_new_catalogue_title" = "Opdaterede katalogsider";
+
+"whatsnew_new_catalogue_message" = "Vi har tilføjet detaljerede oplysninger om partnerguider, for at gøre valg af rute let og bekvemt";
+
+"purchase_please_wait_toast" = "Forlad ikke denne skærm, før købet er gennemført";
+
+"trip_start" = "Lad os komme i gang";
+
+"pick_destination" = "Destination";
+
+"follow_my_position" = "Centrer igen";
+
+"search_results" = "Søgeresultater";
+
+"then_turn" = "Derefter";
+
+"redirect_route_alert" = "Vil du genopbygge en rute igen?";
+
+"redirect_route_yes" = "Ja";
+
+"redirect_route_no" = "Nej";
+
+"trip_finished" = "Du er ankommet!";
+
+"keyboard_availability_alert" = "Keyboard er ikke tilgængelig under kørsel";
+
+"dialog_routing_change_start_carplay" = "Det er ikke muligt at beregne rute fra din nuværende position";
+
+"dialog_routing_change_end_carplay" = "Det er ikke muligt at beregne rute til din destination. Vælg en anden destination";
+
+"dialog_routing_check_gps_carplay" = "Intet GPS signal. Flyt til et område med dækning";
+
+"dialog_routing_unable_locate_route_carplay" = "Det er ikke muligt at beregne rute. Vælg andre forbindelses-punkter for ruten";
+
+"dialog_routing_download_files_carplay" = "Download manglende kort til din enhed, for at lave ruten";
+
+"dialog_routing_system_error_carplay" = "Der opstod en fejl. Genstart programmet";
+
+"dialog_routing_rebuild_from_current_location_carplay" = "Rute vil blive beregnet igen, ud fra din nuværende position";
+
+"dialog_routing_rebuild_for_vehicle_carplay" = "Rute vil blive ændret til en kørselsrute";
+
+"ok" = "Ok";
+
+"vezet_taxi" = "Vezet";
+
+"booking_button_toolbar" = "Vælg et hotel på kortet";
+
+"popup_booking_download_guides_title" = "Book et hotel?";
+
+"popup_booking_download_guides_message" = "Planlæg din rute med færdiglavede guider fra MAPS.ME";
+
+"popup_mwm_download_guides_title" = "Offline byguides";
+
+"popup_mwm_download_guides_cta" = "Vælg en";
+
+"popup_mwm_download_guides_cta_1" = "Tag et kig";
+
+"gallery_pp_download_guides_offline_title" = "Planlæg din ferie med MAPS.ME!";
+
+"gallery_pp_download_guides_offline_subtitle" = "Gå ikke glip af noget med guider lavet af erfarne rejsende";
+
+"gallery_pp_download_guides_offline_cta" = "Tilslut internettet";
+
+"gallery_pp_download_guides_title" = "Guider";
+
+"native_screen_subscription_title" = "Ubegrænset adgang til 2000+ rejseguider!";
+
+"native_screen_subscription_message" = "En mindeværdig ferie uanset hvor og hvem du rejser med";
+
+"annual_subscription_title" = "Årlig";
+
+"montly_subscription_title" = "Månedlig";
+
+"annual_subscription_message" = "12 måneder med ubegrænset adgang";
+
+"montly_subscription_message" = "1 måned med ubegrænset adgang";
+
+"annual_save_component" = "- %d%";
+
+"subscription_success_dialog_title" = "Tak, fordi du abonnere!";
+
+"subscription_success_dialog_message" = "Nu har du ubegrænset til hele kataloget over guider";
+
+"renewal_screen_title" = "Dit abonnement er udløbet";
+
+"renewal_screen_message" = "Alle guider, der er hentet via abonnement vil blive slettet. Vil du forsætte abonnementet og beholde dem?";
+
+"renewal_screen_button_restore" = "Ja, forny";
+
+"renewal_screen_button_cancel" = "Nej, slet guiderne";
+
+"subscription_error_ping_title" = "Købet mislykkedes";
+
+"subscription_error_message" = "Tjenesten er i øjeblikket ikke tilgængelig i dit område. Prøv igen senere";
+
+"subscription_error_button" = "Forstået";
+
+"timeout_error_title" = "Ups, tiden er udløbet!";
+
+"timeout_error_message" = "Vores servere svarer ikke. Tjek din Internetforbindelse, og prøv igen.";
+
+"per_month" = "/md.";
+
+"per_year" = "/år";
+
+"buy_btn_for_subscription" = "Ubegrænset adgang fra %s";
+
+"buy_btn_for_subscription_1" = "Køb ALLE guider til %s";
+
+"buy_btn_for_subscription_ios_only_mo" = "Ubegrænset adgang til %s/md.";
+
+"buy_btn_for_subscription_ios_only_year" = "Ubegrænset adgang til %s/år";
+
+"subscription_terms_guides" = "Betalingen vil blive opkrævet via din iTunes konto, efter købet er bekræftet. Abonnementet fornys automatisk, medmindre automatisk fornyelse er slået fra mindst 24 timer før udgangen af nuværende periode. Din konto vil blive ændret ifølge din fornyelsesplan, indenfor 24 timer før udgangen af den aktuelle periode. Du kan administrere eller deaktivere automatisk fornyelse i dine Apple ID-kontoindstillinger på ethvert tidspunkt for dit køb. Du kan kun bruge downloadede guider indtil dennes udløbsdato. Efter 30 dage fra abonnementets udløbsdato, vil guider med bookmarks automatisk blive slettet.";
+
+"subscription_terms" = "Betalingen opkræves via din iTunes-konto ved bekræftelse af købet. Abonnementet fornys automatisk, medmindre den automatiske fornyelse er slået fra senest 24 timer før udgangen af den aktuelle periode. Din konto debiteres i overensstemmelse med din plan for fornyelse indenfor 24 timer før udgangen af den aktuelle periode. Du kan administrere eller slukke for automatisk fornyelse i dine Apple ID-kontoindstillinger på ethvert tidspunkt af dit køb.";
+
+"whatsnew_carplay_title" = "MAPS.ME bil navigation i CarPlay!";
+
+"whatsnew_carplay_message" = "Bogmærker, søgning, fartkameraer og køre muligheder er tilgængelige offline";
+
+"whatsnew_subscription_title" = "Hele verdenen via abonnement!";
+
+"whatsnew_subscription_message" = "Ubegrænset adgang til Katalog over Guider er mere rentabelt end et engangskøb";
+
+"whatsnew_carnavi_fixes_for_android_title" = "Opdater navigation";
+
+"whatsnew_carnavi_fixes_for_android_message" = "Vi har forbedret ruteplanlægning til steder, som er lang fra veje";
+
+"avoid_unpaved_carplay_1" = "Ingen grus";
+
+"avoid_unpaved_carplay_2" = "Undgå grus";
+
+"avoid_ferry_carplay_1" = "Ingen færger";
+
+"avoid_ferry_carplay_2" = "Undgå færger";
+
+"avoid_tolls_carplay_1" = "Ingen betal.";
+
+"avoid_tolls_carplay_2" = "Undgå betaling";
+
+"speedcams_alert_title_carplay_1" = "Radarkontrol";
+
+"speedcams_alert_title_carplay_2" = "Radar advarsel";
+
+"download_map_carplay" = "Download kort i MAPS.ME appen, på din enhed";
+
+"carplay_roundabout_exit" = "%s exit";
+
+/* max. 10 symbols, both iOS and Android */
+"sort" = "Sort…";
+
+/* Android, title, max 20-22 symbols */
+"sort_bookmarks" = "Sort (bookmaarks)";
+
+/* iOS */
+"sort_default" = "Sortér (std)";
+
+"sort_type" = "Sort (type)";
+
+"sort_distance" = "Sort (Afs)";
+
+"sort_date" = "Sort (dato)";
+
+/* Android */
+"by_default" = "Som standard";
+
+/* Android */
+"by_type" = "Efter type";
+
+/* Android */
+"by_distance" = "Efter afstand";
+
+/* Android */
+"by_date" = "Efter dato";
+
+"week_ago_sorttype" = "En uge siden";
+
+"month_ago_sorttype" = "En måned siden";
+
+"moremonth_ago_sorttype" = "Mere end en måned siden";
+
+"moreyear_ago_sorttype" = "Mere end et år siden";
+
+"near_me_sorttype" = "I nærheden";
+
+"others_sorttype" = "Andre";
+
+"food_places" = "Mad";
+
+"tourist_places" = "Seværdigheder";
+
+"museums" = "Museer";
+
+"parks" = "Parker";
+
+"swim_places" = "Svøm";
+
+"mountains" = "Bjerge";
+
+"animals" = "Dyr";
+
+"hotels" = "Hoteller";
+
+"buildings" = "Bygninger";
+
+"money" = "Penge";
+
+"shops" = "Butikker";
+
+"parkings" = "Parkering";
+
+"fuel_places" = "Benzintankstationer";
+
+"water" = "Vand";
+
+"medicine" = "Medicin";
+
+"search_in_the_list" = "Søg i listen";
+
+"view_on_map_bookmarks" = "På kort";
+
+"more_bookmarks" = "Mere…";
+
+"no_items_found" = "Der blev ikke fundet nogen elementer";
+
+/* Android, max 18 symbols */
+"bookmarks_edit_list" = "Redigér liste";
+
+/* Android, max 18 symbols */
+"bookmarks_delete_list" = "Slet liste";
+
+"whatsnew_bookmarks_search_sort_title" = "Rækkefølgen i bookmarks gør en rejse behagelig";
+
+"whatsnew_bookmarks_search_sort_message" = "Sortere favoritsteder efter kategori, placering og rækkefølge, samt finde specifikke bogmærker hurtigt, efter deres navn";
+
+"popup_subscription_success_map_title" = "Juuhuu, du har abonnement!";
+
+"popup_subscription_success_map_message" = "Opdag nu de bedste turisthøjdepunkter i MAPS.ME kataloget";
+
+"popup_subscription_success_map_start_button" = "Begynd at udforske";
+
+"popup_subscription_success_map_not_now_button" = "Ikke nu";
+
+"religious_places" = "Religiøse steder";
+
+"subscription_terms_android" = "Når du bekræfter et køb, vil betalingen blive trukket fra din Google Play konto. Abonnementet bliver automatisk fornyet med mindre auto-forny-funktionen er slået fra mindst 24 timer før den nuværende periode slutter. Din konto vil blive trukket i henhold til din fornyelsesplan inden for 24 timer før den nuværende periode slutter. Du kan administrere eller slå auto-fornyelses funktionen fra i Konto Indstillinger efter købet. Du kan kun bruges guides downloaded med abonnementet indtil dets udløbsdato. Efter 30 dage fra abonnementets udløbsdato, bliver downloadede guides automatisk slettet.";
+
+"select_list" = "Væg liste";
+
+"pp_discovery_place_related_header" = "Dette sted er i guide-katalog";
+
+"pp_discovery_place_related_header_1" = "Dette sted er vist i en guide";
+
+"pp_discovery_place_related_cta_button" = "Se";
+
+"pp_discovery_place_related_tag_header" = "Guider ud fra tag „%s“";
+
+"pp_discovery_place_related_tag_header_1" = "Du vil måske også synes godt om";
+
+"buy_btn_for_subscription_version_2" = "ALLE guides for kun %s/mo";
+
+"buy_btn_for_subscription_version_3" = "Hele kataloget for %s/mo";
+
+"buy_btn_for_subscription_ios_only_mo_version_2" = "Adgang til katalog for %s/mo";
+
+"buy_btn_for_subscription_ios_only_year_version_2" = "Adgang til kataloget for %s/year";
+
+"subscription_screen_native_title_version_2" = "Adgang til guides med bogmærker!";
+
+"subscription_screen_native_message_version_2" = "Bliv klar til enhver rejse i 600+ byer og 100+ lande";
+
+"catalog_no_internet_title" = "Ingen internetforbindelse";
+
+"catalog_no_internet_button" = "Prøv igen";
+
+"whatsnew_map_updates_title" = "Reaktive kortopdateringer";
+
+"whatsnew_map_updates_message" = "Fra nu af, opdaterer vi dataerne dobbelt så hurtigt";
+
+"new_onboarding_button" = "Næste";
+
+"new_onboarding_button_2" = "Kom i gang";
+
+"new_onboarding_step1_header" = "MAPS.ME";
+
+"new_onboarding_step1_header_2" = "Alt i en rejsekammerat";
+
+"new_onboarding_step2_header" = "Drøm og planlæg";
+
+"new_onboarding_step2_message" = "70+ millioner steder, færdige guides og hotelbooking lige fra kortet – du er klar til turen!";
+
+"new_onboarding_step3_message" = "Far aldrig vild med detaljerede kort over ethvert land og navigation – alt virker offline!";
+
+"new_onboarding_step4_header" = "Del indtryk";
+
+"new_onboarding_step4_message" = "Placer bogmærker på yndlingssteder og send dem til dine venner";
+
+"new_onboarding_step5.1_header" = "En ting mere før du starter…";
+
+"new_onboarding_step5.1_message" = "Glem ikke at besøge vores helt nye guidekatalog for at en finde en offline guide til din kommende rejse!";
+
+"new_onboarding_step5.1_button" = "Åbent katalog";
+
+"new_onboarding_step5.2_message" = "Abonnement til MAPS.ME guidekataloget har stor værdi. Få fuld adgang til byen og udendørs guides rundt om i verden!";
+
+"new_onboarding_step5.2_button" = "Check betingelserne ud";
+
+"new_onboarding_step5.3_message" = "Check de gratis prøver på færdige by- og udendørsruter med et gratis udvalg af MAPS.ME!";
+
+"new_onboarding_step5.3_button" = "Gratis download";
+
+"new_onboarding_additional_steps_later_button" = "Senere";
+
+"all_pass_subscription_header" = "ABONNEMENT TIL KATALOG";
+
+/* do not translate */
+"all_pass_subscription_subheader" = "City + Outdoor Pass";
+
+/* \n - for a break between lines. Max. 15 characters per 1 line. */
+"all_pass_subscription_message_title" = "30000+\nguide & stier";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle" = "<b>Ubegrænsede downloads</b> af by og udendørs ruter <b>til offline mode</b>";
+
+/* \n - for a break between lines. Max. 17 characters per 1 line. */
+"all_pass_subscription_message_title_2" = "Interaktiv\nhøjdeprofil";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle_2" = "Hver sti indeholder <b>højde og basis info om ruten</b>";
+
+/* \n - for a break between lines. Max. 15 characters per 1 line. */
+"all_pass_subscription_message_title_3" = "Bogmærker,\nbilleder og\nanbefalinger";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle_3" = "<b>Lær alt om ruten</b> du skal til at tage";
+
+/* do not translate */
+"sightseeing_subscription_header_sightseeing" = "City Pass";
+
+"sightseeing_subscription_header_subscription" = "Guides Abonnement";
+
+"sightseeing_subscription_message" = "700+ byer og 100+ lande";
+
+"sightseeing_subscription_message_2" = "Tilgængeligt offline";
+
+"sightseeing_subscription_message_3" = "Fotos og gåture";
+
+"subscription_success_dialog_title_sightseeing_pass" = "Tak for din tilmelding!";
+
+"subscription_success_dialog_message_sightseeing_pass" = "Nu har du adgang til alle sightseeing-guides i kataloget";
+
+"downloader_main_gallery_header" = "Kort & kort";
+
+"downloader_main_gallery_message" = "I denne sektion kan du ikke kun downloade kort, men også checke guides ud til din kommen rejse";
+
+"downloader_main_1_element_gallery_header" = "Alle guides";
+
+"downloader_main_1_element_gallery_message" = "i 100+ lande";
+
+"downloader_country_1_element_gallery_header" = "%s guides";
+
+"downloader_country_no_guides_gallery_header" = "Der er ingen guides i dette land endnu";
+
+"downloader_country_no_guides_gallery_message" = "Du kan checke andre offline guides ud i 100+ lande til by- og udendørsaktiviteter";
+
+"dialog_pedestrian_route_is_long" = "Gåturen til transportens boardingsted er for lang";
+
+"whatsnew_outdoor_guides_title" = "Vi har tilføjet 15000+ udendørs ruter!";
+
+"whatsnew_outdoor_guides_message" = "Ruter fra Outdooractive til vinter- og summerture venter i kataloget!";
+
+"whatsnew_guides_galleries_title" = "Planlæg din kommende tur med MAPS.ME";
+
+"whatsnew_guides_galleries_message" = "Nu kan du finde anbefalede guides på stedsiderne om populære turistbyer og syn";
+
+"new_onboarding_step3_header" = "Oplevelse";
+
+"all_pass_screen_best_value" = "Bedste værdi";
+
+"buy_btn_for_subscription_3" = "Hele kataloget for %s/år";
+
+"transit_not_found" = "Metro-navigation er endnu ikke tilgængelig i denne region";
+
+"dialog_pedestrian_route_is_long_header" = "Metro-rute blev ikke fundet";
+
+"dialog_pedestrian_route_is_long_message" = "Vælg venligst et start- eller stoppunkt, tættere på metrostationen";
+
+/* Failed planning SUBWAY route message in navigation view */
+"routing_planning_error_subway_special" = "Planlægning af metro-rute mislykkedes";
+
+"whatsnew_isolines_title" = "Nyt til udenfor: offline topografiske lag!";
+
+/* as less symbols as possible */
+"whatsnew_isolines_message" = "Følg dig selvsikker i det bjergrige område. Tænd bare for laget i det øverste venstre hjørne";
+
+"button_layer_isolines" = "Terræn";
+
+"tips_map_layers_title_countour" = "Nyt på MAPS.ME: offline topografiske lag!";
+
+"tips_map_layers_message_countour" = "Planlæg og nyd din naturtur ved at være sikker på, at du ved alt om området";
+
+"isolines_activation_error_dialog" = "For at aktivere og bruge de topografiske lag, opdater venligst eller download kortet for området";
+
+"isolines_location_error_dialog" = "Det topografiske lag er endnu ikke tilgængeligt i dette område";
+
+"elevation_profile_diff_level" = "Sværhedsgrad";
+
+"elevation_profile_diff_level_easy" = "Let";
+
+"elevation_profile_diff_level_moderate" = "Middel";
+
+"elevation_profile_diff_level_hard" = "Svær";
+
+"elevation_profile_ascent" = "Stige op";
+
+"elevation_profile_descent" = "Stige ned";
+
+"elevation_profile_minaltitude" = "Min. højde";
+
+"elevation_profile_maxaltitude" = "Maks. højde";
+
+"elevation_profile_m" = "m";
+
+"elevation_profile_difficulty" = "Vanskelighed";
+
+"elevation_profile_distance" = "Afs.:";
+
+"elevation_profile_km" = "km";
+
+"elevation_profile_time" = "Tid:";
+
+"elevation_profile_hours" = "t.";
+
+"elevation_profile_minutes" = "min";
+
+/* hide the full screen banner and continue working with the app */
+"hide_screen_map_update" = "Skjul og fortsæt";
+
+"view_on_map_downloaded_error" = "Denne guide er blevet fjernet fra denne enhed";
+
+"subscription" = "Abonnement";
+
+"freenow_taxi_title" = "FREE NOW";
+
+"tinkoff_allairlines_map_downloader_title" = "Карта Тинькофф All Airlines. 3000 миль в подарок";
+
+"tinkoff_allairlines_map_downloader_cta_button" = "Оформить карту";
+
+"tinkoff_insurance_map_downloader_title" = "Полис Тинькофф со скидкой! Подходит для любых виз.";
+
+"tinkoff_insurance_map_downloader_cta_button" = "Промокод";
+
+"mts_map_downloader_title" = "Забугорище: интернет и звонки за границей как дома";
+
+"mts_map_downloader_cta_button" = "Подключить";
+
+"skyeng_map_downloader_title" = "Дарим 4 бесплатных урока английского от Skyeng.";
+
+"skyeng_map_downloader_cta_button" = "Подробнее";
+
 
 /**********  Partners  **********/
 
@@ -2709,9 +3312,9 @@
 
 "type.aeroway.terminal" = "aeroway-terminal";
 
-"type.amenity" = "amenity";
+"type.amenity" = "Rekreative område";
 
-"type.amenity.arts_centre" = "amenity-arts_centre";
+"type.amenity.arts_centre" = "Kunsthus";
 
 "type.amenity.atm" = "Hæveautomat";
 
@@ -2775,7 +3378,7 @@
 
 "type.amenity.fire_station" = "Brandstation";
 
-"type.amenity.food_court" = "amenity-food_court";
+"type.amenity.food_court" = "Food court";
 
 "type.amenity.fountain" = "Springvand";
 
@@ -2811,21 +3414,23 @@
 
 "type.amenity.parking.multi.storey" = "Parkering";
 
-"type.amenity.parking.multi.storey.fee" = "Parkering";
-
 "type.amenity.parking.no.access" = "Parkering";
 
 "type.amenity.parking.park_and_ride" = "Parkering";
 
 "type.amenity.parking.permissive" = "Parkering";
 
-"type.amenity.parking.permissive.fee" = "Parkering";
-
 "type.amenity.parking.private" = "Parkering";
 
 "type.amenity.parking.underground" = "Parkering";
 
-"type.amenity.parking.underground.fee" = "Parkering";
+"type.amenity.parking_space" = "Parkeringsplads";
+
+"type.amenity.parking_space.permissive" = "Parkeringsplads";
+
+"type.amenity.parking_space.private" = "Parkeringsplads";
+
+"type.amenity.parking_space.underground" = "Parkeringsplads";
 
 "type.amenity.payment_terminal" = "Betalingsautomat";
 
@@ -2851,9 +3456,9 @@
 
 "type.amenity.post_box" = "Postboks";
 
-"type.amenity.post_office" = "Post";
+"type.amenity.post_office" = "Postkontor";
 
-"type.amenity.prison" = "amenity-prison";
+"type.amenity.prison" = "Prison";
 
 "type.amenity.pub" = "Værtshus";
 
@@ -2883,7 +3488,7 @@
 
 "type.amenity.university" = "Universitet";
 
-"type.amenity.vending_machine" = "amenity-vending_machine";
+"type.amenity.vending_machine" = "Vending machine";
 
 "type.amenity.vending_machine.cigarettes" = "Cigaretautomat";
 
@@ -2891,7 +3496,7 @@
 
 "type.amenity.vending_machine.parking_tickets" = "Parkeringsbilletmaskine";
 
-"type.amenity.vending_machine.public_transport_tickets" = "amenity-vending_machine-public_transport_tickets";
+"type.amenity.vending_machine.public_transport_tickets" = "Billetautomat for offentlig transport";
 
 "type.amenity.veterinary" = "Dyrlæge";
 
@@ -2901,7 +3506,7 @@
 
 "type.amenity.water_point" = "Vandstation";
 
-"type.barrier" = "barrier";
+"type.barrier" = "Barrier";
 
 "type.barrier.block" = "Blokering";
 
@@ -2909,29 +3514,29 @@
 
 "type.barrier.border_control" = "Grænsekontrol";
 
-"type.barrier.city_wall" = "barrier-city_wall";
+"type.barrier.city_wall" = "City wall";
 
-"type.barrier.cycle_barrier" = "barrier-cycle_barrier";
+"type.barrier.cycle_barrier" = "Cycle barrier";
 
 "type.barrier.entrance" = "Gennemgang";
 
-"type.barrier.fence" = "barrier-fence";
+"type.barrier.fence" = "Fence";
 
 "type.barrier.gate" = "Port";
 
-"type.barrier.hedge" = "barrier-hedge";
+"type.barrier.hedge" = "Hedge";
 
 "type.barrier.lift_gate" = "Bom";
 
-"type.barrier.retaining_wall" = "barrier-retaining_wall";
+"type.barrier.retaining_wall" = "Retaining wall";
 
 "type.barrier.stile" = "Gærdebro";
 
 "type.barrier.toll_booth" = "Betalingsstation";
 
-"type.barrier.wall" = "barrier-wall";
+"type.barrier.wall" = "Wall";
 
-"type.boundary" = "boundary";
+"type.boundary" = "Boundary";
 
 "type.boundary.administrative" = "boundary-administrative";
 
@@ -2984,12 +3589,6 @@
 "type.building.has_parts" = "Bygning";
 
 "type.building.train_station" = "Togstation";
-
-"type.communication" = "communication";
-
-"type.communication.line" = "communication-line";
-
-"type.communication.line.underground" = "communication-line-underground";
 
 "type.craft" = "craft";
 
@@ -3207,7 +3806,7 @@
 
 "type.highway.bus_stop" = "Busstoppested";
 
-"type.highway.construction" = "highway-construction";
+"type.highway.construction" = "Vej under opbygning";
 
 "type.highway.cycleway" = "highway-cycleway";
 
@@ -3239,7 +3838,7 @@
 
 "type.highway.footway.tunnel" = "Sti";
 
-"type.highway.ford" = "highway-ford";
+"type.highway.ford" = "Ford";
 
 "type.highway.living_street" = "Gade";
 
@@ -3293,8 +3892,6 @@
 
 "type.highway.pedestrian.tunnel" = "Gade";
 
-"type.highway.platform" = "highway-platform";
-
 "type.highway.primary" = "Gade";
 
 "type.highway.primary.bridge" = "Gade";
@@ -3347,12 +3944,6 @@
 
 "type.highway.service.driveway" = "Gade";
 
-"type.highway.service.driveway.area" = "Gade";
-
-"type.highway.service.driveway.bridge" = "Gade";
-
-"type.highway.service.driveway.tunnel" = "Gade";
-
 "type.highway.service.parking_aisle" = "Gade";
 
 "type.highway.service.tunnel" = "Gade";
@@ -3391,21 +3982,9 @@
 
 "type.highway.track.grade3" = "Gade";
 
-"type.highway.track.grade3.no.access" = "Gade";
-
-"type.highway.track.grade3.permissive" = "Gade";
-
 "type.highway.track.grade4" = "Gade";
 
-"type.highway.track.grade4.no.access" = "Gade";
-
-"type.highway.track.grade4.permissive" = "Gade";
-
 "type.highway.track.grade5" = "Gade";
-
-"type.highway.track.grade5.no.access" = "Gade";
-
-"type.highway.track.grade5.permissive" = "Gade";
 
 "type.highway.track.no.access" = "Gade";
 
@@ -3443,7 +4022,7 @@
 
 "type.historic.archaeological_site" = "Arkæologisk sted";
 
-"type.historic.battlefield" = "historic-battlefield";
+"type.historic.battlefield" = "Battlefield";
 
 "type.historic.boundary_stone" = "historic-boundary_stone";
 
@@ -3513,27 +4092,29 @@
 
 "type.landuse" = "landuse";
 
-"type.landuse.allotments" = "landuse-allotments";
+"type.landuse.allotments" = "Allotments";
 
 "type.landuse.basin" = "Vand";
 
-"type.landuse.brownfield" = "landuse-brownfield";
+"type.landuse.brownfield" = "Brownfield";
 
 "type.landuse.cemetery" = "Kirkegård";
 
 "type.landuse.cemetery.christian" = "Kirkegård";
 
+"type.landuse.churchyard" = "Kirkegård";
+
 "type.landuse.commercial" = "landuse-commercial";
 
-"type.landuse.construction" = "landuse-construction";
+"type.landuse.construction" = "Construction";
 
-"type.landuse.farm" = "landuse-farm";
+"type.landuse.farm" = "Farm";
 
-"type.landuse.farmland" = "landuse-farmland";
+"type.landuse.farmland" = "Landbrugsjord";
 
-"type.landuse.farmyard" = "landuse-farmyard";
+"type.landuse.farmyard" = "Farmyard";
 
-"type.landuse.field" = "landuse-field";
+"type.landuse.field" = "Field";
 
 "type.landuse.forest" = "Skov";
 
@@ -3543,27 +4124,27 @@
 
 "type.landuse.forest.mixed" = "Skov";
 
-"type.landuse.garages" = "landuse-garages";
+"type.landuse.garages" = "Garages";
 
-"type.landuse.grass" = "landuse-grass";
+"type.landuse.grass" = "Græsplæne";
 
 "type.landuse.greenfield" = "landuse-greenfield";
 
 "type.landuse.greenhouse_horticulture" = "landuse-greenhouse_horticulture";
 
-"type.landuse.industrial" = "landuse-industrial";
+"type.landuse.industrial" = "Industrial land";
 
-"type.landuse.landfill" = "landuse-landfill";
+"type.landuse.landfill" = "Affaldsplads";
 
-"type.landuse.meadow" = "landuse-meadow";
+"type.landuse.meadow" = "Meadow";
 
-"type.landuse.military" = "landuse-military";
+"type.landuse.military" = "Military area";
 
-"type.landuse.orchard" = "landuse-orchard";
+"type.landuse.orchard" = "Orchard";
 
-"type.landuse.quarry" = "landuse-quarry";
+"type.landuse.quarry" = "Quarry";
 
-"type.landuse.railway" = "landuse-railway";
+"type.landuse.railway" = "Jernbaneanlæg";
 
 "type.landuse.recreation_ground" = "landuse-recreation_ground";
 
@@ -3571,25 +4152,19 @@
 
 "type.landuse.residential" = "landuse-residential";
 
-"type.landuse.residential.rural" = "landuse-residential-rural";
-
-"type.landuse.residential.urban" = "landuse-residential-urban";
-
 "type.landuse.retail" = "landuse-retail";
 
 "type.landuse.salt_pond" = "landuse-salt_pond";
 
 "type.landuse.village_green" = "landuse-village_green";
 
-"type.landuse.vineyard" = "landuse-vineyard";
+"type.landuse.vineyard" = "Vineyard";
 
 "type.leisure" = "leisure";
 
 "type.leisure.common" = "leisure-common";
 
-"type.leisure.dog_park" = "Dog area";
-
-"type.leisure.dog_park.tennis" = "Dog area";
+"type.leisure.dog_park" = "Hundepark";
 
 "type.leisure.fitness_centre" = "Trænings- og motionscenter";
 
@@ -3599,11 +4174,11 @@
 
 "type.leisure.golf_course" = "Golf";
 
-"type.leisure.ice_rink" = "leisure-ice_rink";
+"type.leisure.ice_rink" = "Ice rink";
 
-"type.leisure.landscape_reserve" = "leisure-landscape_reserve";
+"type.leisure.landscape_reserve" = "Landscape reserve";
 
-"type.leisure.marina" = "leisure-marina";
+"type.leisure.marina" = "Marina";
 
 "type.leisure.nature_reserve" = "Reservat";
 
@@ -3617,17 +4192,9 @@
 
 "type.leisure.pitch" = "Sportsplads";
 
-"type.leisure.pitch.tennis" = "Sportsplads";
-
 "type.leisure.playground" = "Legeplads";
 
-"type.leisure.playground.tennis" = "Legeplads";
-
-"type.leisure.playing_fields" = "leisure-playing_fields";
-
-"type.leisure.playing_fields.tennis" = "leisure-playing_fields-tennis";
-
-"type.leisure.recreation_ground" = "leisure-recreation_ground";
+"type.leisure.recreation_ground" = "Recreation ground";
 
 "type.leisure.sauna" = "Sauna";
 
@@ -3689,25 +4256,13 @@
 
 "type.mapswithme.grid" = "mapswithme-grid";
 
-"type.marking" = "marking";
-
-"type.marking.sport" = "marking-sport";
-
-"type.marking.sport.black" = "marking-sport-black";
-
-"type.marking.sport.blue" = "marking-sport-blue";
-
-"type.marking.sport.red" = "marking-sport-red";
-
-"type.marking.sport.white" = "marking-sport-white";
-
 "type.military" = "military";
 
 "type.military.bunker" = "Bunker";
 
 "type.natural" = "natural";
 
-"type.natural.bare_rock" = "natural-bare_rock";
+"type.natural.bare_rock" = "Bare rock";
 
 "type.natural.bay" = "Bugt";
 
@@ -3715,63 +4270,57 @@
 
 "type.natural.cape" = "Tange";
 
-"type.natural.cave_entrance" = "Huleindgang";
+"type.natural.cave_entrance" = "Hule";
 
-"type.natural.cliff" = "natural-cliff";
+"type.natural.cliff" = "Cliff";
 
-"type.natural.coastline" = "natural-coastline";
+"type.natural.coastline" = "Coastline";
 
 "type.natural.geyser" = "Gejser";
 
 "type.natural.glacier" = "Gletsjer";
 
-"type.natural.grassland" = "natural-grassland";
+"type.natural.grassland" = "Mark";
 
-"type.natural.heath" = "natural-heath";
+"type.natural.heath" = "Heath";
+
+"type.natural.hot_spring" = "Hot spring";
 
 "type.natural.lake" = "Sø";
 
 "type.natural.land" = "natural-land";
 
-"type.natural.meadow" = "natural-meadow";
+"type.natural.meadow" = "Meadow";
 
-"type.natural.orchard" = "natural-orchard";
+"type.natural.orchard" = "Orchard";
 
 "type.natural.peak" = "Bjerg";
 
 "type.natural.pond" = "Dam";
 
-"type.natural.rock" = "natural-rock";
+"type.natural.rock" = "Rock";
 
-"type.natural.salt_pond" = "natural-salt_pond";
+"type.natural.salt_pond" = "Salt pond";
 
-"type.natural.scrub" = "natural-scrub";
+"type.natural.scrub" = "Kratbevokset område";
 
 "type.natural.spring" = "Kilde";
 
 "type.natural.tree" = "Træ";
 
-"type.natural.tree_row" = "natural-tree_row";
+"type.natural.tree_row" = "Tree row";
 
-"type.natural.vineyard" = "natural-vineyard";
+"type.natural.vineyard" = "Vineyard";
 
 "type.natural.volcano" = "Vulkan";
 
 "type.natural.water" = "Vand";
 
-"type.natural.wetland" = "natural-wetland";
+"type.natural.wetland" = "Vådområde";
 
-"type.natural.wetland.bog" = "natural-wetland-bog";
+"type.natural.wetland.bog" = "Wetland";
 
-"type.natural.wetland.marsh" = "natural-wetland-marsh";
-
-"type.natural.wood" = "Skov";
-
-"type.natural.wood.coniferous" = "Skov";
-
-"type.natural.wood.deciduous" = "Skov";
-
-"type.natural.wood.mixed" = "Skov";
+"type.natural.wetland.marsh" = "Wetland";
 
 "type.noexit" = "noexit";
 
@@ -3867,7 +4416,7 @@
 
 "type.place.locality" = "Lokalitet";
 
-"type.place.neighbourhood" = "place-neighbourhood";
+"type.place.neighbourhood" = "Neighbourhood";
 
 "type.place.ocean" = "Ocean";
 
@@ -3890,12 +4439,6 @@
 "type.power" = "power";
 
 "type.power.generator" = "power-generator";
-
-"type.power.generator.hydro" = "power-generator-hydro";
-
-"type.power.generator.photovoltaic" = "power-generator-photovoltaic";
-
-"type.power.generator.wind" = "power-generator-wind";
 
 "type.power.line" = "power-line";
 
@@ -3953,7 +4496,7 @@
 
 "type.railway.incline.tunnel" = "railway-incline-tunnel";
 
-"type.railway.level_crossing" = "Jernbaneoverskæring";
+"type.railway.level_crossing" = "Niveauskæring";
 
 "type.railway.light_rail" = "railway-light_rail";
 
@@ -3961,7 +4504,7 @@
 
 "type.railway.light_rail.tunnel" = "railway-light_rail-tunnel";
 
-"type.railway.monorail" = "railway-monorail";
+"type.railway.monorail" = "Monorail";
 
 "type.railway.monorail.bridge" = "railway-monorail-bridge";
 
@@ -3983,7 +4526,7 @@
 
 "type.railway.proposed" = "railway-proposed";
 
-"type.railway.rail" = "railway-rail";
+"type.railway.rail" = "Jernbane";
 
 "type.railway.rail.bridge" = "railway-rail-bridge";
 
@@ -4093,7 +4636,7 @@
 
 "type.railway.subway.yellow" = "railway-subway-yellow";
 
-"type.railway.subway_entrance" = "Metro";
+"type.railway.subway_entrance" = "Indgang til undergrundsbane";
 
 "type.railway.subway_entrance.barcelona" = "Metro";
 
@@ -4275,28 +4818,6 @@
 
 "type.sponsored" = "sponsored";
 
-"type.sponsored.banner" = "sponsored-banner";
-
-"type.sponsored.banner.deliveryclub" = "sponsored-banner-deliveryclub";
-
-"type.sponsored.banner.geerbest_de" = "sponsored-banner-geerbest_de";
-
-"type.sponsored.banner.geerbest_fr" = "sponsored-banner-geerbest_fr";
-
-"type.sponsored.banner.geerbest_uk" = "sponsored-banner-geerbest_uk";
-
-"type.sponsored.banner.lamoda_ru" = "sponsored-banner-lamoda_ru";
-
-"type.sponsored.banner.lamoda_ua" = "sponsored-banner-lamoda_ua";
-
-"type.sponsored.banner.raileurope" = "sponsored-banner-raileurope";
-
-"type.sponsored.banner.rentalcars" = "sponsored-banner-rentalcars";
-
-"type.sponsored.banner.tutu" = "sponsored-banner-tutu";
-
-"type.sponsored.banner.viator" = "sponsored-banner-viator";
-
 "type.sponsored.booking" = "sponsored-booking";
 
 "type.sponsored.holiday" = "Christmas or New Year Celebrations";
@@ -4343,15 +4864,13 @@
 
 "type.sponsored.partner9" = "sponsored-partner9";
 
-"type.sponsored.viator" = "sponsored-viator";
-
 "type.sport" = "sport";
 
 "type.sport.american_football" = "sport-american_football";
 
 "type.sport.archery" = "sport-archery";
 
-"type.sport.athletics" = "Athletics";
+"type.sport.athletics" = "Atletik";
 
 "type.sport.australian_football" = "sport-australian_football";
 
@@ -4367,7 +4886,7 @@
 
 "type.sport.diving" = "sport-diving";
 
-"type.sport.equestrian" = "Equestrian Sports";
+"type.sport.equestrian" = "Ridesport";
 
 "type.sport.football" = "sport-football";
 
@@ -4389,7 +4908,7 @@
 
 "type.sport.swimming" = "sport-swimming";
 
-"type.sport.tennis" = "sport-tennis";
+"type.sport.tennis" = "Tennisbane";
 
 "type.tourism" = "tourism";
 
@@ -4501,11 +5020,75 @@
 
 "type.wheelchair" = "wheelchair";
 
-"type.wheelchair.limited" = "wheelchair-limited";
+"type.wheelchair.limited" = "Begrænset tilgængelighed for kørestol";
 
-"type.wheelchair.no" = "wheelchair-no";
+"type.wheelchair.no" = "Ingen tilgængelighed for kørestol";
 
-"type.wheelchair.yes" = "wheelchair-yes";
+"type.wheelchair.yes" = "Fuld tilgængelighed for kørestol";
+
+"type.piste_lift" = "piste:lift";
+
+"type.piste_lift.j.bar" = "piste:lift-j-bar";
+
+"type.piste_lift.magic_carpet" = "piste:lift-magic_carpet";
+
+"type.piste_lift.platter" = "piste:lift-platter";
+
+"type.piste_lift.rope_tow" = "piste:lift-rope_tow";
+
+"type.piste_lift.t.bar" = "piste:lift-t-bar";
+
+"type.piste_type" = "piste:type";
+
+"type.piste_type.downhill" = "piste:type-downhill";
+
+"type.piste_type.downhill.advanced" = "piste:type-downhill-advanced";
+
+"type.piste_type.downhill.easy" = "piste:type-downhill-easy";
+
+"type.piste_type.downhill.expert" = "piste:type-downhill-expert";
+
+"type.piste_type.downhill.freeride" = "piste:type-downhill-freeride";
+
+"type.piste_type.downhill.intermediate" = "piste:type-downhill-intermediate";
+
+"type.piste_type.downhill.novice" = "piste:type-downhill-novice";
+
+"type.piste_type.nordic" = "piste:type-nordic";
+
+"type.piste_type.sled" = "piste:type-sled";
+
+"type.building_part" = "Bygning";
+
+"type.area_highway.cycleway" = "area:highway-cycleway";
+
+"type.area_highway.footway" = "area:highway-footway";
+
+"type.area_highway.living_street" = "area:highway-living_street";
+
+"type.area_highway.motorway" = "area:highway-motorway";
+
+"type.area_highway.path" = "area:highway-path";
+
+"type.area_highway.pedestrian" = "area:highway-pedestrian";
+
+"type.area_highway.primary" = "area:highway-primary";
+
+"type.area_highway.residential" = "area:highway-residential";
+
+"type.area_highway.secondary" = "area:highway-secondary";
+
+"type.area_highway.service" = "area:highway-service";
+
+"type.area_highway.tertiary" = "area:highway-tertiary";
+
+"type.area_highway.steps" = "area:highway-steps";
+
+"type.area_highway.track" = "area:highway-track";
+
+"type.area_highway.trunk" = "area:highway-trunk";
+
+"type.area_highway.unclassified" = "area:highway-unclassified";
 
 
 /********** Brands **********/

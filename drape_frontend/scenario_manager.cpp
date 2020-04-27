@@ -68,7 +68,7 @@ bool ScenarioManager::IsRunning()
 
 void ScenarioManager::ThreadRoutine()
 {
-  string const scenarioName = m_scenarioData.m_name;
+  std::string const scenarioName = m_scenarioData.m_name;
   if (m_onStartHandler != nullptr)
     m_onStartHandler(scenarioName);
 
@@ -92,7 +92,8 @@ void ScenarioManager::ThreadRoutine()
         m_frontendRenderer->AddUserEvent(make_unique_dp<SetCenterEvent>(centerViewportAction->GetCenter(),
                                                                         centerViewportAction->GetZoomLevel(),
                                                                         true /* isAnim */,
-                                                                        false /* trackVisibleViewport */));
+                                                                        false /* trackVisibleViewport */,
+                                                                        nullptr /* parallelAnimCreator */));
         break;
       }
 

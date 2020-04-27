@@ -21,13 +21,11 @@
 #include "base/geo_object_id.hpp"
 
 #include <cstdint>
-#include <limits>
 #include <map>
+#include <optional>
 #include <string>
 #include <utility>
 #include <vector>
-
-#include "boost/optional.hpp"
 
 namespace generator
 {
@@ -42,7 +40,7 @@ public:
 private:
   struct Camera
   {
-    static double constexpr kCoordEqualityEps = 1e-5;
+    inline static double constexpr kCoordEqualityEps = 1e-5;
 
     Camera(m2::PointD const & center, uint8_t maxSpeed, std::vector<routing::SpeedCameraMwmPosition> && ways)
       : m_data(center, maxSpeed, std::move(ways))
@@ -65,24 +63,25 @@ private:
     bool FindClosestSegmentInInnerWays(FrozenDataSource const & dataSource, MwmSet::MwmId const & mwmId);
 
     /// \brief Use when |m_ways| is empty. Try to FindClosestSegment using geometry index.
-    void FindClosestSegmentWithGeometryIndex(FrozenDataSource const & dataSource, MwmSet::MwmId const & mwmId);
+    void FindClosestSegmentWithGeometryIndex(FrozenDataSource const & dataSource);
 
     // Returns empty object, if current feature - |wayId| is not the car road.
     // Otherwise returns id of segment from feature with id - |wayId|, which starts (or ends) at camera's
     // center and coefficient - where it placed at the segment: 0.0 (or 1.0).
-    boost::optional<std::pair<double, uint32_t>> FindMyself(
-      uint32_t wayFeatureId, FrozenDataSource const & dataSource, MwmSet::MwmId const & mwmId) const;
+    std::optional<std::pair<double, uint32_t>> FindMyself(uint32_t wayFeatureId,
+                                                          FrozenDataSource const & dataSource,
+                                                          MwmSet::MwmId const & mwmId) const;
 
     void Serialize(FileWriter & writer, uint32_t & prevFeatureId) const;
 
     routing::SpeedCameraMetadata m_data;
   };
 
-  static double constexpr kMaxDistFromCameraToClosestSegmentMeters = 20.0;
-  static double constexpr kSearchCameraRadiusMeters = 10.0;
+  inline static double constexpr kMaxDistFromCameraToClosestSegmentMeters = 20.0;
+  inline static double constexpr kSearchCameraRadiusMeters = 10.0;
 
   bool ParseIntermediateInfo(std::string const & camerasInfoPath,
-                             std::map<base::GeoObjectId, uint32_t> const & osmIdToFeatureId);
+                             routing::OsmIdToFeatureIds const & osmIdToFeatureIds);
 
   std::vector<Camera> m_cameras;
 };

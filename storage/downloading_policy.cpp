@@ -2,6 +2,8 @@
 
 #include "platform/platform.hpp"
 
+using namespace std::chrono;
+
 void StorageDownloadingPolicy::EnableCellularDownload(bool enabled)
 {
   m_cellularDownloadEnabled = enabled;
@@ -22,7 +24,7 @@ bool StorageDownloadingPolicy::IsDownloadingAllowed()
            !IsCellularDownloadEnabled());
 }
 
-void StorageDownloadingPolicy::ScheduleRetry(storage::TCountriesSet const & failedCountries,
+void StorageDownloadingPolicy::ScheduleRetry(storage::CountriesSet const & failedCountries,
                                              TProcessFunc const & func)
 {
   if (IsDownloadingAllowed() && !failedCountries.empty() && m_autoRetryCounter > 0)

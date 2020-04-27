@@ -10,13 +10,18 @@
 #include "base/logging.hpp"
 #include "base/string_utils.hpp"
 
-#include "std/limits.hpp"
+#include <cstdint>
+#include <cstring>
+#include <limits>
+#include <memory>
+
+using namespace std;
 
 namespace
 {
 char constexpr kSettingsKey[] = "UserQueries";
-using TLength = uint16_t;
-TLength constexpr kMaxSuggestionsCount = 10;
+using Length = uint16_t;
+Length constexpr kMaxSuggestionsCount = 10;
 
 // Reader from memory that throws exceptions.
 class SecureMemReader : public Reader
@@ -61,7 +66,6 @@ private:
   char const * m_pData;
   size_t m_size;
 };
-
 }  // namespace
 
 namespace search
@@ -71,19 +75,18 @@ QuerySaver::QuerySaver()
   Load();
 }
 
-void QuerySaver::Add(TSearchRequest const & query)
+void QuerySaver::Add(SearchRequest const & query)
 {
   // This change was made just before release, so we don't use untested search normalization methods.
   //TODO (ldragunov) Rewrite to normalized requests.
-  TSearchRequest trimmedQuery(query);
+  SearchRequest trimmedQuery(query);
   strings::Trim(trimmedQuery.first);
   strings::Trim(trimmedQuery.second);
-  auto trimmedComparator = [&trimmedQuery](TSearchRequest request)
-    {
-      strings::Trim(request.first);
-      strings::Trim(request.second);
-      return trimmedQuery == request;
-    };
+  auto trimmedComparator = [&trimmedQuery](SearchRequest request) {
+    strings::Trim(request.first);
+    strings::Trim(request.second);
+    return trimmedQuery == request;
+  };
   // Remove items if needed.
   auto const it = find_if(m_topQueries.begin(), m_topQueries.end(), trimmedComparator);
   if (it != m_topQueries.end())
@@ -106,7 +109,7 @@ void QuerySaver::Serialize(string & data) const
 {
   vector<uint8_t> rawData;
   MemWriter<vector<uint8_t>> writer(rawData);
-  TLength size = m_topQueries.size();
+  Length size = m_topQueries.size();
   WriteToSink(writer, size);
   for (auto const & query : m_topQueries)
   {
@@ -126,15 +129,15 @@ void QuerySaver::Deserialize(string const & data)
   SecureMemReader rawReader(decodedData.c_str(), decodedData.size());
   ReaderSource<SecureMemReader> reader(rawReader);
 
-  TLength queriesCount = ReadPrimitiveFromSource<TLength>(reader);
+  Length queriesCount = ReadPrimitiveFromSource<Length>(reader);
   queriesCount = min(queriesCount, kMaxSuggestionsCount);
 
-  for (TLength i = 0; i < queriesCount; ++i)
+  for (Length i = 0; i < queriesCount; ++i)
   {
-    TLength localeLength = ReadPrimitiveFromSource<TLength>(reader);
+    Length localeLength = ReadPrimitiveFromSource<Length>(reader);
     vector<char> locale(localeLength);
     reader.Read(&locale[0], localeLength);
-    TLength stringLength = ReadPrimitiveFromSource<TLength>(reader);
+    Length stringLength = ReadPrimitiveFromSource<Length>(reader);
     vector<char> str(stringLength);
     reader.Read(&str[0], stringLength);
     m_topQueries.emplace_back(make_pair(string(&locale[0], localeLength),

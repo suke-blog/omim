@@ -6,14 +6,15 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import com.mapswithme.maps.MwmActivity;
 import com.mapswithme.maps.R;
 import com.mapswithme.util.StringUtils;
+import com.mapswithme.util.UiUtils;
 import com.mapswithme.util.statistics.Statistics;
 
 import java.lang.annotation.Retention;
@@ -32,7 +33,7 @@ public final class Notifier
   private final Application mContext;
 
   @Retention(RetentionPolicy.SOURCE)
-  @IntDef({ ID_NONE, ID_DOWNLOAD_FAILED, ID_IS_NOT_AUTHENTICATED })
+  @IntDef({ ID_NONE, ID_DOWNLOAD_FAILED, ID_IS_NOT_AUTHENTICATED, ID_LEAVE_REVIEW })
   public @interface NotificationId
   {
   }
@@ -80,9 +81,9 @@ public final class Notifier
     Statistics.INSTANCE.trackEvent(Statistics.EventName.UGC_NOT_AUTH_NOTIFICATION_SHOWN);
   }
 
-  void notifyLeaveReview(@NonNull NotificationCandidate.MapObject mapObject)
+  void notifyLeaveReview(@NonNull NotificationCandidate.UgcReview source)
   {
-    Intent reviewIntent = MwmActivity.createLeaveReviewIntent(mContext, mapObject);
+    Intent reviewIntent = MwmActivity.createLeaveReviewIntent(mContext, source);
     reviewIntent.putExtra(EXTRA_CANCEL_NOTIFICATION, Notifier.ID_LEAVE_REVIEW);
     reviewIntent.putExtra(EXTRA_NOTIFICATION_CLICKED,
                           Statistics.EventName.UGC_REVIEW_NOTIFICATION_CLICKED);
@@ -91,14 +92,18 @@ public final class Notifier
         PendingIntent.getActivity(mContext, 0, reviewIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
     String channel = NotificationChannelFactory.createProvider(mContext).getUGCChannel();
-    NotificationCompat.Builder builder =
-        getBuilder(mContext.getString(R.string.notification_leave_review_title,
-                                      mapObject.getReadableName()),
-                   mContext.getString(R.string.notification_leave_review_content,
-                                      mapObject.getReadableName()),
-                   pi, channel);
+    String content = source.getAddress().isEmpty()
+                     ? source.getReadableName()
+                     : source.getReadableName() + ", " + source.getAddress();
 
-    builder.addAction(0, mContext.getString(R.string.leave_a_review), pi);
+    NotificationCompat.Builder builder =
+        getBuilder(mContext.getString(R.string.notification_leave_review_v2_android_short_title),
+                   content, pi, channel)
+        .setStyle(new NotificationCompat.BigTextStyle()
+                       .setBigContentTitle(
+                         mContext.getString(R.string.notification_leave_review_v2_title))
+                       .bigText(content))
+        .addAction(0, mContext.getString(R.string.leave_a_review), pi);
 
     getNotificationManager().notify(ID_LEAVE_REVIEW, builder.build());
 
@@ -147,8 +152,8 @@ public final class Notifier
 
     return new NotificationCompat.Builder(mContext, channel)
         .setAutoCancel(true)
-        .setSmallIcon(R.drawable.ic_notification)
-        .setColor(mContext.getResources().getColor(R.color.base_accent))
+        .setSmallIcon(R.drawable.pw_notification)
+        .setColor(UiUtils.getNotificationColor(mContext))
         .setContentTitle(title)
         .setContentText(content)
         .setTicker(getTicker(title, content))

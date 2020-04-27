@@ -1,9 +1,10 @@
 package com.mapswithme.maps.purchase;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.SkuDetails;
@@ -39,8 +40,11 @@ abstract class AbstractPurchaseController<V, B, UiCallback extends PurchaseCallb
   }
 
   @Override
-  public final void initialize(@NonNull Activity activity)
+  public final void initialize(@Nullable Activity activity)
   {
+    if (activity == null)
+      throw new AssertionError("Activity must be non-null");
+
     mBillingManager.initialize(activity);
     onInitialize(activity);
   }
@@ -83,7 +87,7 @@ abstract class AbstractPurchaseController<V, B, UiCallback extends PurchaseCallb
   }
 
   @Override
-  public void queryPurchaseDetails()
+  public void queryProductDetails()
   {
     if (mProductIds == null)
       throw new IllegalStateException("Product ids must be non-null!");
@@ -128,6 +132,18 @@ abstract class AbstractPurchaseController<V, B, UiCallback extends PurchaseCallb
 
   abstract void onDestroy();
 
+  @Override
+  public void onSave(@NonNull Bundle outState)
+  {
+    mValidator.onSave(outState);
+  }
+
+  @Override
+  public void onRestore(@NonNull Bundle inState)
+  {
+    mValidator.onRestore(inState);
+  }
+
   abstract class AbstractPlayStoreBillingCallback implements PlayStoreBillingCallback
   {
     @Override
@@ -145,7 +161,7 @@ abstract class AbstractPurchaseController<V, B, UiCallback extends PurchaseCallb
     }
 
     @Override
-    public void onPurchaseDetailsLoaded(@NonNull List<SkuDetails> details)
+    public void onProductDetailsLoaded(@NonNull List<SkuDetails> details)
     {
       if (getUiCallback() != null)
         getUiCallback().onProductDetailsLoaded(details);
@@ -159,7 +175,7 @@ abstract class AbstractPurchaseController<V, B, UiCallback extends PurchaseCallb
     }
 
     @Override
-    public void onPurchaseDetailsFailure()
+    public void onProductDetailsFailure()
     {
       if (getUiCallback() != null)
         getUiCallback().onProductDetailsFailure();

@@ -2,7 +2,6 @@ project(indexer_tests)
 
 set(
   SRC
-  borders_test.cpp
   bounds.hpp
   brands_tests.cpp
   categories_test.cpp
@@ -12,19 +11,23 @@ set(
   checker_test.cpp
   cities_boundaries_serdes_tests.cpp
   classificator_tests.cpp
+  complex_serdes_tests.cpp
+  complex_serdes_utils_tests.cpp
   data_source_test.cpp
   drules_selector_parser_test.cpp
   editable_map_object_test.cpp
   feature_metadata_test.cpp
   feature_names_test.cpp
+  feature_to_osm_tests.cpp
   features_offsets_table_test.cpp
   features_vector_test.cpp
   index_builder_test.cpp
   interval_index_test.cpp
-  locality_index_test.cpp
   mwm_set_test.cpp
   postcodes_matcher_tests.cpp
+  postcodes_tests.cpp
   rank_table_test.cpp
+  read_features_tests.cpp
   scale_index_reading_tests.cpp
   scales_test.cpp
   search_string_utils_test.cpp
@@ -33,6 +36,7 @@ set(
   succinct_trie_test.cpp
   test_mwm_set.hpp
   test_type.cpp
+  tree_node_tests.cpp
   trie_test.cpp
   ugc_types_test.cpp
   visibility_test.cpp
@@ -66,6 +70,8 @@ omim_link_libraries(
   opening_hours
   oauthcpp
   pugixml
+  traffic
+  ${CMAKE_DL_LIBS}
   ${LIBZ}
 )
 

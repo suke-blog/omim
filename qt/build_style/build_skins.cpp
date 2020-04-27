@@ -1,15 +1,18 @@
-#include "build_skins.h"
-#include "build_common.h"
+#include "qt/build_style/build_skins.h"
+
+#include "qt/build_style/build_common.h"
 
 #include "platform/platform.hpp"
 
-#include <array>
 #include <algorithm>
+#include <array>
 #include <exception>
+#include <fstream>
+#include <functional>
+#include <string>
 #include <tuple>
 #include <unordered_map>
 #include <utility>
-#include <fstream>
 
 #include <QtCore/QDir>
 
@@ -67,25 +70,26 @@ class RAII
 public:
   RAII(std::function<void()> && f) : m_f(std::move(f)) {}
   ~RAII() { m_f(); }
+
 private:
-  function<void()> const m_f;
+  std::function<void()> const m_f;
 };
 
 std::string trim(std::string && s)
 {
   s.erase(std::remove_if(s.begin(), s.end(), &isspace), s.end());
-  return s;
+  return std::move(s);
 }
 }  // namespace
 
 namespace build_style
 {
-std::unordered_map<string, int> GetSkinSizes(QString const & file)
+std::unordered_map<std::string, int> GetSkinSizes(QString const & file)
 {
-  std::unordered_map<string, int> skinSizes;
+  std::unordered_map<std::string, int> skinSizes;
 
   for (SkinType s : g_skinTypes)
-    skinSizes.insert(make_pair(SkinSuffix(s), SkinSize(s)));
+    skinSizes.insert(std::make_pair(SkinSuffix(s), SkinSize(s)));
 
   try
   {
@@ -123,7 +127,7 @@ std::unordered_map<string, int> GetSkinSizes(QString const & file)
 void BuildSkinImpl(QString const & styleDir, QString const & suffix,
                    int size, bool colorCorrection, QString const & outputDir)
 {
-  QString const symbolsDir = JoinFoldersToPath({styleDir, "symbols"});
+  QString const symbolsDir = JoinPathQt({styleDir, "symbols"});
 
   // Check symbols directory exists
   if (!QDir(symbolsDir).exists())
@@ -139,7 +143,7 @@ void BuildSkinImpl(QString const & styleDir, QString const & suffix,
 
   // Create symbolic link for symbols/png
   QString const pngOriginDir = styleDir + suffix;
-  QString const pngDir = JoinFoldersToPath({styleDir, "symbols", "png"});
+  QString const pngDir = JoinPathQt({styleDir, "symbols", "png"});
   QFile::remove(pngDir);
   if (!QFile::link(pngOriginDir, pngDir))
     throw std::runtime_error("Unable to create symbols/png link");
@@ -148,10 +152,10 @@ void BuildSkinImpl(QString const & styleDir, QString const & suffix,
   // Prepare command line
   QStringList params;
   params << GetSkinGeneratorPath() <<
-          "--symbolWidth" << to_string(size).c_str() <<
-          "--symbolHeight" << to_string(size).c_str() <<
+          "--symbolWidth" << std::to_string(size).c_str() <<
+          "--symbolHeight" << std::to_string(size).c_str() <<
           "--symbolsDir" << symbolsDir <<
-          "--skinName" << JoinFoldersToPath({outputDir, "basic"}) <<
+          "--skinName" << JoinPathQt({outputDir, "basic"}) <<
           "--skinSuffix=\"\"";
   if (colorCorrection)
     params << "--colorCorrection true";
@@ -163,15 +167,15 @@ void BuildSkinImpl(QString const & styleDir, QString const & suffix,
   // If script returns non zero then it is error
   if (res.first != 0)
   {
-    QString msg = QString("System error ") + to_string(res.first).c_str();
+    QString msg = QString("System error ") + std::to_string(res.first).c_str();
     if (!res.second.isEmpty())
       msg = msg + "\n" + res.second;
     throw std::runtime_error(to_string(msg));
   }
 
   // Check files were created
-  if (QFile(JoinFoldersToPath({outputDir, "symbols.png"})).size() == 0 ||
-      QFile(JoinFoldersToPath({outputDir, "symbols.sdf"})).size() == 0)
+  if (QFile(JoinPathQt({outputDir, "symbols.png"})).size() == 0 ||
+      QFile(JoinPathQt({outputDir, "symbols.sdf"})).size() == 0)
   {
     throw std::runtime_error("Skin files have not been created");
   }
@@ -179,14 +183,14 @@ void BuildSkinImpl(QString const & styleDir, QString const & suffix,
 
 void BuildSkins(QString const & styleDir, QString const & outputDir)
 {
-  QString const resolutionFilePath = JoinFoldersToPath({styleDir, "resolutions.txt"});
+  QString const resolutionFilePath = JoinPathQt({styleDir, "resolutions.txt"});
 
   auto const resolution2size = GetSkinSizes(resolutionFilePath);
 
   for (SkinType s : g_skinTypes)
   {
     QString const suffix = SkinSuffix(s);
-    QString const outputSkinDir = JoinFoldersToPath({outputDir, "resources-" + suffix + "_design"});
+    QString const outputSkinDir = JoinPathQt({outputDir, "resources-" + suffix + "_design"});
     int const size = resolution2size.at(to_string(suffix)); // SkinSize(s);
     bool const colorCorrection = SkinCoorrectColor(s);
 
@@ -201,16 +205,16 @@ void ApplySkins(QString const & outputDir)
   for (SkinType s : g_skinTypes)
   {
     QString const suffix = SkinSuffix(s);
-    QString const outputSkinDir = JoinFoldersToPath({outputDir, "resources-" + suffix + "_design"});
-    QString const resourceSkinDir = JoinFoldersToPath({resourceDir, "resources-" + suffix + "_design"});
+    QString const outputSkinDir = JoinPathQt({outputDir, "resources-" + suffix + "_design"});
+    QString const resourceSkinDir = JoinPathQt({resourceDir, "resources-" + suffix + "_design"});
 
     if (!QFileInfo::exists(resourceSkinDir) && !QDir().mkdir(resourceSkinDir))
       throw std::runtime_error("Cannot create resource skin directory: " + resourceSkinDir.toStdString());
 
-    if (!CopyFile(JoinFoldersToPath({outputSkinDir, "symbols.png"}),
-                  JoinFoldersToPath({resourceSkinDir, "symbols.png"})) ||
-        !CopyFile(JoinFoldersToPath({outputSkinDir, "symbols.sdf"}),
-                  JoinFoldersToPath({resourceSkinDir, "symbols.sdf"})))
+    if (!CopyFile(JoinPathQt({outputSkinDir, "symbols.png"}),
+                  JoinPathQt({resourceSkinDir, "symbols.png"})) ||
+        !CopyFile(JoinPathQt({outputSkinDir, "symbols.sdf"}),
+                  JoinPathQt({resourceSkinDir, "symbols.sdf"})))
     {
       throw std::runtime_error("Cannot copy skins files");
     }

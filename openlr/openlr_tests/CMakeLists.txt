@@ -15,6 +15,7 @@ omim_link_libraries(
   generator
   routing
   search
+  storage
   openlr
   editor
   indexer
@@ -32,6 +33,8 @@ omim_link_libraries(
   succinct
   protobuf
   icu
+  traffic
+  ${CMAKE_DL_LIBS}
   ${Qt5Core_LIBRARIES}
   ${LIBZ}
 )

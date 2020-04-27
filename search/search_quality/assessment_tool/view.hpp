@@ -9,10 +9,11 @@
 #include "geometry/rect2d.hpp"
 
 #include <cstddef>
+#include <optional>
 #include <string>
 #include <vector>
 
-class Edits;
+class ResultsEdits;
 class Model;
 
 class View
@@ -31,18 +32,20 @@ public:
   virtual void SetSamples(ContextList::SamplesSlice const & samples) = 0;
   virtual void OnSearchStarted() = 0;
   virtual void OnSearchCompleted() = 0;
-  virtual void ShowSample(size_t index, search::Sample const & sample, bool positionAvailable,
-                          m2::PointD const & position, bool hasEdits) = 0;
+  virtual void ShowSample(size_t index, search::Sample const & sample,
+                          std::optional<m2::PointD> const & position, bool isUseless,
+                          bool hasEdits) = 0;
 
   virtual void AddFoundResults(search::Results::ConstIter begin,
                                search::Results::ConstIter end) = 0;
   virtual void ShowNonFoundResults(std::vector<search::Sample::Result> const & results,
-                                   std::vector<Edits::Entry> const & entries) = 0;
+                                   std::vector<ResultsEdits::Entry> const & entries) = 0;
 
+  virtual void ShowMarks(Context const & context) = 0;
   virtual void ShowFoundResultsMarks(search::Results::ConstIter begin,
                                      search::Results::ConstIter end) = 0;
   virtual void ShowNonFoundResultsMarks(std::vector<search::Sample::Result> const & results,
-                                        std::vector<Edits::Entry> const & entries) = 0;
+                                        std::vector<ResultsEdits::Entry> const & entries) = 0;
   virtual void ClearSearchResultMarks() = 0;
 
   virtual void MoveViewportToResult(search::Result const & result) = 0;
@@ -50,9 +53,10 @@ public:
   virtual void MoveViewportToRect(m2::RectD const & rect) = 0;
 
   virtual void OnResultChanged(size_t sampleIndex, ResultType type,
-                               Edits::Update const & update) = 0;
-  virtual void SetEdits(size_t index, Edits & foundResultsEdits, Edits & nonFoundResultsEdits) = 0;
-  virtual void OnSampleChanged(size_t sampleIndex, bool hasEdits) = 0;
+                               ResultsEdits::Update const & update) = 0;
+  virtual void SetResultsEdits(size_t index, ResultsEdits & foundResultsEdits,
+                               ResultsEdits & nonFoundResultsEdits) = 0;
+  virtual void OnSampleChanged(size_t sampleIndex, bool isUseless, bool hasEdits) = 0;
   virtual void OnSamplesChanged(bool hasEdits) = 0;
 
   virtual void ShowError(std::string const & msg) = 0;

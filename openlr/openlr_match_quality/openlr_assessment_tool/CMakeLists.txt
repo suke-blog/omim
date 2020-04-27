@@ -34,6 +34,7 @@ omim_link_libraries(
   ${PROJECT_NAME}
   qt_common
   map
+  ge0
   drape_frontend
   shaders
   routing
@@ -48,6 +49,7 @@ omim_link_libraries(
   ugc
   drape
   partners_api
+  web_api
   local_ads
   kml
   editor
@@ -75,9 +77,17 @@ omim_link_libraries(
   stats_client
   stb_image
   succinct
+  vulkan_wrapper
   ${Qt5Widgets_LIBRARIES}
   ${LIBZ}
 )
+
+if (PLATFORM_LINUX)
+  omim_link_libraries(
+    ${PROJECT_NAME}
+    dl
+  )
+endif()
 
 link_opengl(${PROJECT_NAME})
 link_qt5_core(${PROJECT_NAME})

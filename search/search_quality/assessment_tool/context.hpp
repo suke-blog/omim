@@ -19,8 +19,18 @@ class FeatureLoader;
 
 struct Context
 {
-  Context(Edits::OnUpdate onFoundResultsUpdate, Edits::OnUpdate onNonFoundResultsUpdate)
-    : m_foundResultsEdits(onFoundResultsUpdate), m_nonFoundResultsEdits(onNonFoundResultsUpdate)
+  enum class SearchState
+  {
+    Untouched,
+    InQueue,
+    Completed
+  };
+
+  Context(ResultsEdits::OnUpdate onFoundResultsUpdate,
+          ResultsEdits::OnUpdate onNonFoundResultsUpdate, SampleEdits::OnUpdate onSampleUpdate)
+    : m_foundResultsEdits(onFoundResultsUpdate)
+    , m_nonFoundResultsEdits(onNonFoundResultsUpdate)
+    , m_sampleEdits(onSampleUpdate)
   {
   }
 
@@ -35,14 +45,20 @@ struct Context
     m_nonFoundResultsEdits.Add(result.m_relevance);
   }
 
+  bool IsUseless() const { return m_sampleEdits.m_currUseless; }
+
   bool HasChanges() const
   {
+    if (m_sampleEdits.HasChanges())
+      return true;
     if (!m_initialized)
       return false;
     return m_foundResultsEdits.HasChanges() || m_nonFoundResultsEdits.HasChanges();
   }
 
   void Clear();
+
+  void LoadFromSample(search::Sample const & sample);
 
   // Makes sample in accordance with uncommited edits.
   search::Sample MakeSample(search::FeatureLoader & loader) const;
@@ -52,13 +68,17 @@ struct Context
 
   search::Sample m_sample;
   search::Results m_foundResults;
-  Edits m_foundResultsEdits;
+  ResultsEdits m_foundResultsEdits;
 
   std::vector<size_t> m_goldenMatching;
   std::vector<size_t> m_actualMatching;
 
   std::vector<search::Sample::Result> m_nonFoundResults;
-  Edits m_nonFoundResultsEdits;
+  ResultsEdits m_nonFoundResultsEdits;
+
+  SampleEdits m_sampleEdits;
+
+  SearchState m_searchState = SearchState::Untouched;
 
   bool m_initialized = false;
 };
@@ -81,15 +101,24 @@ public:
 
     bool IsChanged(size_t index) const { return (*m_contexts)[index].HasChanges(); }
 
+    Context::SearchState GetSearchState(size_t index) const
+    {
+      return (*m_contexts)[index].m_searchState;
+    }
+
+    bool IsUseless(size_t index) const { return (*m_contexts)[index].m_sampleEdits.m_currUseless; }
+
     size_t Size() const { return m_contexts->Size(); }
 
   private:
     ContextList const * m_contexts = nullptr;
   };
 
-  using OnUpdate = std::function<void(size_t index, Edits::Update const & update)>;
+  using OnResultsUpdate = std::function<void(size_t index, ResultsEdits::Update const & update)>;
+  using OnSampleUpdate = std::function<void(size_t index)>;
 
-  ContextList(OnUpdate onResultsUpdate, OnUpdate onNonFoundResultsUpdate);
+  ContextList(OnResultsUpdate onResultsUpdate, OnResultsUpdate onNonFoundResultsUpdate,
+              OnSampleUpdate onSampleUpdate);
 
   void Resize(size_t size);
   size_t Size() const { return m_contexts.size(); }
@@ -112,6 +141,7 @@ private:
   std::vector<bool> m_hasChanges;
   size_t m_numChanges = 0;
 
-  OnUpdate m_onResultsUpdate;
-  OnUpdate m_onNonFoundResultsUpdate;
+  OnResultsUpdate m_onResultsUpdate;
+  OnResultsUpdate m_onNonFoundResultsUpdate;
+  OnSampleUpdate m_onSampleUpdate;
 };

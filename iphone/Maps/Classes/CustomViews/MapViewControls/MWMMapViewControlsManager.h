@@ -1,22 +1,15 @@
-#import "MWMBottomMenuViewController.h"
+#import "MWMBottomMenuState.h"
 #import "MWMMapDownloaderMode.h"
 #import "MWMNavigationDashboardManager.h"
 #import "MWMSearchManager.h"
 
-#include "geometry/point2d.hpp"
-
 @class MapViewController;
+@class BottomTabBarViewController;
 @protocol MWMFeatureHolder;
-@protocol MWMBookingInfoHolder;
-
-namespace place_page
-{
-class Info;
-}  // namespace place_page
 
 @interface MWMMapViewControlsManager : NSObject
 
-+ (MWMMapViewControlsManager *)manager;
++ (MWMMapViewControlsManager *)manager NS_SWIFT_NAME(manager());
 
 @property(nonatomic) BOOL hidden;
 @property(nonatomic) BOOL zoomHidden;
@@ -25,6 +18,7 @@ class Info;
 @property(nonatomic) MWMBottomMenuState menuState;
 @property(nonatomic) MWMBottomMenuState menuRestoreState;
 @property(nonatomic) BOOL isDirectionViewHidden;
+@property(nonatomic) BottomTabBarViewController *tabBarController;
 
 - (instancetype)init __attribute__((unavailable("init is not available")));
 - (instancetype)initWithParentController:(MapViewController *)controller;
@@ -35,23 +29,18 @@ class Info;
 
 - (UIView *)anchorView;
 
-- (void)mwm_refreshUI;
-
 - (void)viewWillTransitionToSize:(CGSize)size
        withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator;
 
 #pragma mark - MWMPlacePageViewManager
 
-- (void)dismissPlacePage;
-- (void)showPlacePage:(place_page::Info const &)info;
-- (void)showPlacePageReview:(place_page::Info const &)info;
-- (void)addPlace:(BOOL)isBusiness hasPoint:(BOOL)hasPoint point:(m2::PointD const &)point;
+- (void)showPlacePageReview;
 
 #pragma mark - MWMNavigationDashboardManager
 
 - (void)onRoutePrepare;
 - (void)onRouteRebuild;
-- (void)onRouteReady;
+- (void)onRouteReady:(BOOL)hasWarnings;
 - (void)onRouteStart;
 - (void)onRouteStop;
 
@@ -66,10 +55,6 @@ class Info;
 
 - (id<MWMFeatureHolder>)featureHolder;
 
-#pragma mark - MWMBookingInfoHolder
-
-- (id<MWMBookingInfoHolder>)bookingInfoHolder;
-
-- (void)showTutorialIfNeeded;
+- (void)showAdditionalViewsIfNeeded;
 
 @end

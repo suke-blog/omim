@@ -11,6 +11,7 @@
 #include <cmath>
 #include <cstdint>
 #include <limits>
+#include <map>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -46,13 +47,12 @@ public:
   }
 
   void AddTransition(CrossMwmId const & crossMwmId, uint32_t featureId, uint32_t segmentIdx, bool oneWay,
-                     bool forwardIsEnter, m2::PointD const & backPoint,
-                     m2::PointD const & frontPoint)
+                     bool forwardIsEnter)
   {
     featureId += m_featureNumerationOffset;
 
     Transition<CrossMwmId> transition(connector::kFakeIndex, connector::kFakeIndex, crossMwmId,
-                                      oneWay, forwardIsEnter, backPoint, frontPoint);
+                                      oneWay, forwardIsEnter);
 
     if (forwardIsEnter)
     {
@@ -81,6 +81,19 @@ public:
 
     m_transitions[Key(featureId, segmentIdx)] = transition;
     m_crossMwmIdToFeatureId.emplace(crossMwmId, featureId);
+    m_transitFeatureIdToSegmentId[featureId].emplace_back(segmentIdx);
+  }
+
+  bool IsFeatureCrossMwmConnector(uint32_t featureId) const
+  {
+    return m_transitFeatureIdToSegmentId.find(featureId) != m_transitFeatureIdToSegmentId.cend();
+  }
+
+  std::vector<uint32_t> const & GetTransitSegmentId(uint32_t featureId) const
+  {
+    auto it = m_transitFeatureIdToSegmentId.find(featureId);
+    CHECK(it != m_transitFeatureIdToSegmentId.cend(), ());
+    return it->second;
   }
 
   bool IsTransition(Segment const & segment, bool isOutgoing) const
@@ -121,35 +134,39 @@ public:
       return nullptr;
 
     auto const & transition = tIt->second;
-    CHECK_EQUAL(transition.m_crossMwmId, crossMwmId,
-                ("feature:", featureId, ", segment:", segmentIdx,
-                 ", point:", MercatorBounds::ToLatLon(transition.m_frontPoint)));
+    CHECK_EQUAL(transition.m_crossMwmId, crossMwmId, ("fId:", featureId, ", segId:", segmentIdx));
     bool const isForward = transition.m_forwardIsEnter == isEnter;
     if (transition.m_oneWay && !isForward)
       return nullptr;
 
     Segment const & segment =
         isEnter ? GetEnter(transition.m_enterIdx) : GetExit(transition.m_exitIdx);
-    CHECK_EQUAL(segment.IsForward(), isForward,
-                ("crossMwmId:", crossMwmId, ", segment:", segment,
-                 ", point:", MercatorBounds::ToLatLon(transition.m_frontPoint)));
-    return &segment;
-  }
+    CHECK_EQUAL(segment.IsForward(), isForward, ("fId:", featureId, ", segId:", segmentIdx));
 
-  m2::PointD const & GetPoint(Segment const & segment, bool front) const
-  {
-    auto const & transition = GetTransition(segment);
-    return segment.IsForward() == front ? transition.m_frontPoint : transition.m_backPoint;
+    return &segment;
   }
 
   void GetOutgoingEdgeList(Segment const & segment, std::vector<SegmentEdge> & edges) const
   {
     auto const & transition = GetTransition(segment);
     CHECK_NOT_EQUAL(transition.m_enterIdx, connector::kFakeIndex, ());
+    auto const enterIdx = transition.m_enterIdx;
     for (size_t exitIdx = 0; exitIdx < m_exits.size(); ++exitIdx)
     {
-      auto const weight = GetWeight(base::asserted_cast<size_t>(transition.m_enterIdx), exitIdx);
+      auto const weight = GetWeight(enterIdx, exitIdx);
       AddEdge(m_exits[exitIdx], weight, edges);
+    }
+  }
+
+  void GetIngoingEdgeList(Segment const & segment, std::vector<SegmentEdge> & edges) const
+  {
+    auto const & transition = GetTransition(segment);
+    CHECK_NOT_EQUAL(transition.m_exitIdx, connector::kFakeIndex, ());
+    auto const exitIdx = transition.m_exitIdx;
+    for (size_t enterIdx = 0; enterIdx < m_enters.size(); ++enterIdx)
+    {
+      auto const weight = GetWeight(enterIdx, exitIdx);
+      AddEdge(m_enters[enterIdx], weight, edges);
     }
   }
 
@@ -234,12 +251,10 @@ private:
     Transition() = default;
 
     Transition(uint32_t enterIdx, uint32_t exitIdx, CrossMwmIdInner const & crossMwmId, bool oneWay,
-               bool forwardIsEnter, m2::PointD const & backPoint, m2::PointD const & frontPoint)
+               bool forwardIsEnter)
       : m_enterIdx(enterIdx)
       , m_exitIdx(exitIdx)
       , m_crossMwmId(crossMwmId)
-      , m_backPoint(backPoint)
-      , m_frontPoint(frontPoint)
       , m_oneWay(oneWay)
       , m_forwardIsEnter(forwardIsEnter)
     {
@@ -248,11 +263,6 @@ private:
     uint32_t m_enterIdx = 0;
     uint32_t m_exitIdx = 0;
     CrossMwmIdInner m_crossMwmId = CrossMwmIdInner();
-    // Endpoints of transition segment.
-    // m_backPoint = points[segmentIdx]
-    // m_frontPoint = points[segmentIdx + 1]
-    m2::PointD m_backPoint = m2::PointD::Zero();
-    m2::PointD m_frontPoint = m2::PointD::Zero();
     bool m_oneWay = false;
     // Transition represents both forward and backward segments with same featureId, segmentIdx.
     // m_forwardIsEnter == true means: forward segment is enter to mwm:
@@ -291,6 +301,7 @@ private:
   NumMwmId const m_mwmId;
   std::vector<Segment> m_enters;
   std::vector<Segment> m_exits;
+  std::map<uint32_t, std::vector<uint32_t>> m_transitFeatureIdToSegmentId;
   std::unordered_map<Key, Transition<CrossMwmId>, HashKey> m_transitions;
   std::unordered_map<CrossMwmId, uint32_t, connector::HashKey> m_crossMwmIdToFeatureId;
   connector::WeightsLoadState m_weightsLoadState = connector::WeightsLoadState::Unknown;

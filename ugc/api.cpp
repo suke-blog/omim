@@ -54,14 +54,14 @@ void Api::SendingCompleted()
   m_thread.Push([this] { SendingCompletedImpl(); });
 }
 
-void Api::SaveUGCOnDisk()
-{
-  m_thread.Push([this] { SaveUGCOnDiskImpl(); });
-}
-
 Loader & Api::GetLoader()
 {
   return m_loader;
+}
+
+void Api::ValidateStorage()
+{
+  m_thread.Push([this] { m_storage.Validate(); });
 }
 
 void Api::GetUGCImpl(FeatureID const & id, UGCCallbackUnsafe const & callback)
@@ -100,10 +100,5 @@ void Api::HasUGCForPlaceImpl(uint32_t bestType, m2::PointD const & point,
 void Api::SendingCompletedImpl()
 {
   m_storage.MarkAllAsSynchronized();
-}
-
-void Api::SaveUGCOnDiskImpl()
-{
-  m_storage.SaveIndex();
 }
 }  // namespace ugc

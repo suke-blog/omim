@@ -5,6 +5,8 @@ set(
   bindings.cpp
 )
 
+include_directories(${CMAKE_BINARY_DIR})
+
 omim_add_library(${PROJECT_NAME} MODULE ${SRC})
 
 if (PLATFORM_MAC)
@@ -39,6 +41,7 @@ omim_link_libraries(
   protobuf
   pugixml
   opening_hours
+  succinct
   icu
   ${PYTHON_LIBRARIES}
   ${Boost_LIBRARIES}

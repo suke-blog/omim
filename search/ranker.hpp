@@ -1,6 +1,7 @@
 #pragma once
 
 #include "search/cancel_exception.hpp"
+#include "search/emitter.hpp"
 #include "search/geocoder.hpp"
 #include "search/intermediate_result.hpp"
 #include "search/keyword_lang_matcher.hpp"
@@ -21,10 +22,11 @@
 
 #include "base/string_utils.hpp"
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <iterator>
 #include <string>
-#include <utility>
 #include <vector>
 
 class CategoriesHolder;
@@ -38,7 +40,6 @@ class CountryInfoGetter;
 namespace search
 {
 class CitiesBoundariesTable;
-class Emitter;
 class RankerResultMaker;
 class VillagesCache;
 
@@ -50,7 +51,7 @@ public:
     int8_t m_currentLocaleCode = CategoriesHolder::kEnglishCode;
     m2::RectD m_viewport;
     m2::PointD m_pivot;
-    string m_pivotRegion;
+    std::string m_pivotRegion;
     std::vector<uint32_t> m_preferredTypes;
     bool m_suggestsEnabled = false;
     bool m_needAddress = false;
@@ -72,8 +73,8 @@ public:
 
     Locales m_categoryLocales;
 
-    // Default batch size. Override if needed.
-    size_t m_batchSize = 10;
+    // The maximum number of results in a single emit.
+    size_t m_batchSize = 0;
 
     // The maximum total number of results to be emitted in all batches.
     size_t m_limit = 0;
@@ -90,6 +91,8 @@ public:
 
   void Finish(bool cancelled);
 
+  bool IsFull() const { return m_emitter.GetResults().GetCount() >= m_params.m_limit; }
+
   // Makes the final result that is shown to the user from a ranker's result.
   // |needAddress| and |needHighlighting| enable filling of optional fields
   // that may take a considerable amount of time to compute.
@@ -97,9 +100,10 @@ public:
 
   void SuggestStrings();
 
-  virtual void SetPreRankerResults(std::vector<PreRankerResult> && preRankerResults)
+  virtual void AddPreRankerResults(std::vector<PreRankerResult> && preRankerResults)
   {
-    m_preRankerResults = std::move(preRankerResults);
+    std::move(preRankerResults.begin(), preRankerResults.end(),
+              std::back_inserter(m_preRankerResults));
   }
 
   virtual void UpdateResults(bool lastUpdate);
@@ -131,7 +135,6 @@ private:
   KeywordLangMatcher & m_keywordsScorer;
 
   mutable LocalityFinder m_localities;
-  int8_t m_localeCode;
   RegionInfoGetter m_regionInfoGetter;
 
   DataSource const & m_dataSource;

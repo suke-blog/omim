@@ -1,7 +1,7 @@
 package com.mapswithme.maps.bookmarks;
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import android.text.TextUtils;
 
 import com.mapswithme.maps.R;
@@ -23,7 +23,7 @@ public enum BookmarksPageFactory
         @Override
         public int getTitle()
         {
-          return R.string.bookmarks_page_my;
+          return R.string.bookmarks;
         }
       },
 
@@ -41,7 +41,7 @@ public enum BookmarksPageFactory
         @Override
         public int getTitle()
         {
-          return R.string.downloader_downloaded_subtitle;
+          return R.string.guides;
         }
       };
 

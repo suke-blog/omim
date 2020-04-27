@@ -10,6 +10,7 @@ std::string GetLocalizedTypeName(std::string const & type)
 {
   auto key = "type." + type;
   std::replace(key.begin(), key.end(), '-', '.');
+  std::replace(key.begin(), key.end(), ':', '_');
 
   return [NSLocalizedString(@(key.c_str()), @"") UTF8String];
 }
@@ -17,6 +18,11 @@ std::string GetLocalizedTypeName(std::string const & type)
 std::string GetLocalizedBrandName(std::string const & brand)
 {
   auto const key = "brand." + brand;
+  return [NSLocalizedString(@(key.c_str()), @"") UTF8String];
+}
+
+std::string GetLocalizedString(std::string const & key)
+{
   return [NSLocalizedString(@(key.c_str()), @"") UTF8String];
 }
 }  // namespace platform

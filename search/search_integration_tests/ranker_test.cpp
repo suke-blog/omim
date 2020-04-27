@@ -25,12 +25,12 @@ UNIT_CLASS_TEST(RankerTest, ErrorsInStreets)
   TestStreet mazurova(
       vector<m2::PointD>{m2::PointD(-0.001, -0.001), m2::PointD(0, 0), m2::PointD(0.001, 0.001)},
       "Мазурова", "ru");
-  TestBuilding mazurova14(m2::PointD(-0.001, -0.001), "", "14", mazurova, "ru");
+  TestBuilding mazurova14(m2::PointD(-0.001, -0.001), "", "14", mazurova.GetName("ru"), "ru");
 
   TestStreet masherova(
       vector<m2::PointD>{m2::PointD(-0.001, 0.001), m2::PointD(0, 0), m2::PointD(0.001, -0.001)},
       "Машерова", "ru");
-  TestBuilding masherova14(m2::PointD(0.001, 0.001), "", "14", masherova, "ru");
+  TestBuilding masherova14(m2::PointD(0.001, 0.001), "", "14", masherova.GetName("ru"), "ru");
 
   auto id = BuildCountry("Belarus", [&](TestMwmBuilder & builder) {
     builder.Add(mazurova);
@@ -45,7 +45,7 @@ UNIT_CLASS_TEST(RankerTest, ErrorsInStreets)
     auto request = MakeRequest("Мазурова 14");
     auto const & results = request->Results();
 
-    TRules rules = {ExactMatch(id, mazurova14), ExactMatch(id, masherova14)};
+    Rules rules = {ExactMatch(id, mazurova14), ExactMatch(id, masherova14)};
     TEST(ResultsMatch(results, rules), ());
 
     TEST_EQUAL(results.size(), 2, ());
@@ -86,15 +86,15 @@ UNIT_CLASS_TEST(RankerTest, UniteSameResults)
     auto request = MakeRequest("eat ");
     auto const & results = request->Results();
 
-    TRules barRules;
+    Rules barRules;
     for (auto const & b : bars)
       barRules.push_back(ExactMatch(id, b));
 
-    TRules cafeRules;
+    Rules cafeRules;
     for (auto const & c : cafes)
       cafeRules.push_back(ExactMatch(id, c));
 
-    TRules fastfoodRules;
+    Rules fastfoodRules;
     for (auto const & f : fastfoods)
       fastfoodRules.push_back(ExactMatch(id, f));
 
@@ -102,6 +102,43 @@ UNIT_CLASS_TEST(RankerTest, UniteSameResults)
                       {AlternativesMatch(move(barRules)), AlternativesMatch(move(cafeRules)),
                        AlternativesMatch(move(fastfoodRules))}),
          ());
+  }
+}
+
+UNIT_CLASS_TEST(RankerTest, PreferCountry)
+{
+  TestCountry wonderland(m2::PointD(10.0, 10.0), "Wonderland", "en");
+  TestPOI cafe(m2::PointD(0.0, 0.0), "Wonderland", "en");
+  auto worldId = BuildWorld([&](TestMwmBuilder & builder) {
+    builder.Add(wonderland);
+    builder.Add(cafe);
+  });
+
+  SetViewport(m2::RectD(m2::PointD(0.0, 0.0), m2::PointD(1.0, 1.0)));
+  {
+    // Country which exactly matches the query should be preferred even if cafe is much closer to
+    // viewport center.
+    auto request = MakeRequest("Wonderland");
+    auto const & results = request->Results();
+
+    Rules rules = {ExactMatch(worldId, wonderland), ExactMatch(worldId, cafe)};
+    TEST(ResultsMatch(results, rules), ());
+
+    TEST_EQUAL(results.size(), 2, ());
+    TEST(ResultsMatch({results[0]}, {rules[0]}), ());
+    TEST(ResultsMatch({results[1]}, {rules[1]}), ());
+  }
+  {
+    // Country name does not exactly match, we should prefer cafe.
+    auto request = MakeRequest("Wanderland");
+    auto const & results = request->Results();
+
+    Rules rules = {ExactMatch(worldId, wonderland), ExactMatch(worldId, cafe)};
+    TEST(ResultsMatch(results, rules), ());
+
+    TEST_EQUAL(results.size(), 2, ());
+    TEST(ResultsMatch({results[0]}, {rules[1]}), ());
+    TEST(ResultsMatch({results[1]}, {rules[0]}), ());
   }
 }
 }  // namespace

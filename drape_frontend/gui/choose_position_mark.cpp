@@ -1,6 +1,8 @@
 #include "drape_frontend/gui/choose_position_mark.hpp"
 #include "drape_frontend/gui/drape_gui.hpp"
 
+#include "drape_frontend/batcher_bucket.hpp"
+
 #include "shaders/programs.hpp"
 
 #include "drape/utils/vertex_decl.hpp"
@@ -63,6 +65,7 @@ drape_ptr<ShapeRenderer> ChoosePositionMark::Draw(ref_ptr<dp::GraphicsContext> c
   auto state = df::CreateRenderState(gpu::Program::TexturingGui, df::DepthLayer::GuiLayer);
   state.SetColorTexture(region.GetTexture());
   state.SetDepthTestEnabled(false);
+  state.SetTextureIndex(region.GetTextureIndex());
 
   dp::AttributeProvider provider(1 /*streamCount*/, 4 /*vertexCount*/);
   dp::BindingInfo info(2 /*count*/);
@@ -89,6 +92,7 @@ drape_ptr<ShapeRenderer> ChoosePositionMark::Draw(ref_ptr<dp::GraphicsContext> c
 
   drape_ptr<ShapeRenderer> renderer = make_unique_dp<ShapeRenderer>();
   dp::Batcher batcher(dp::Batcher::IndexPerQuad, dp::Batcher::VertexPerQuad);
+  batcher.SetBatcherHash(static_cast<uint64_t>(df::BatcherBucket::Default));
   dp::SessionGuard guard(context, batcher, std::bind(&ShapeRenderer::AddShape, renderer.get(), _1, _2));
   batcher.InsertTriangleStrip(context, state, make_ref(&provider), std::move(handle));
 

@@ -15,9 +15,11 @@ final class FilterCollectionHolderCell: MWMTableViewCell {
   private func layout() {
     collectionView.setNeedsLayout()
     collectionView.layoutIfNeeded()
-    if collectionViewHeight.constant != collectionView.contentSize.height {
-      collectionViewHeight.constant = collectionView.contentSize.height
-      frame.size.height = collectionViewHeight.constant
+    if abs(collectionViewHeight.constant - collectionView.contentSize.height) > 2.0 {
+      let newHeight = collectionView.contentSize.height
+      collectionViewHeight.constant = newHeight
+      frame.size.height = newHeight
+      tableView?.reloadData()
     }
   }
 
@@ -25,13 +27,13 @@ final class FilterCollectionHolderCell: MWMTableViewCell {
     self.tableView = tableView
     layout()
     collectionView.allowsMultipleSelection = true
+    collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     collectionView.reloadData()
   }
 
   override func awakeFromNib() {
     super.awakeFromNib()
     isSeparatorHidden = true
-    backgroundColor = UIColor.clear
   }
 
   override func layoutSubviews() {

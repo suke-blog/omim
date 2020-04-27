@@ -294,14 +294,16 @@ public:
 
   void operator()(std::vector<std::vector<CityBoundary>> & boundaries)
   {
-    auto const size = ReadVarUint<uint64_t>(m_source);
-    boundaries.resize(size);
+    {
+      auto const size = static_cast<size_t>(ReadVarUint<uint64_t>(m_source));
+      boundaries.resize(size);
+    }
 
     {
       BitReader<Source> reader(m_source);
       for (auto & bs : boundaries)
       {
-        auto const size = coding::GammaCoder::Decode(reader);
+        auto const size = static_cast<size_t>(coding::GammaCoder::Decode(reader));
         ASSERT_GREATER_OR_EQUAL(size, 1, ());
         bs.resize(size - 1);
       }
@@ -390,7 +392,7 @@ struct CitiesBoundariesSerDes
     visitor(header);
 
     serial::GeometryCodingParams const params(
-        header.m_coordBits, m2::PointD(MercatorBounds::kMinX, MercatorBounds::kMinY));
+        header.m_coordBits, m2::PointD(mercator::Bounds::kMinX, mercator::Bounds::kMinY));
     CitiesBoundariesEncoder<Sink> encoder(sink, params);
     encoder(boundaries);
   }
@@ -409,12 +411,12 @@ struct CitiesBoundariesSerDes
     HeaderV0 header;
     visitor(header);
 
-    auto const wx = MercatorBounds::kRangeX;
-    auto const wy = MercatorBounds::kRangeY;
+    auto const wx = mercator::Bounds::kRangeX;
+    auto const wy = mercator::Bounds::kRangeY;
     precision = std::max(wx, wy) / pow(2, header.m_coordBits);
 
     serial::GeometryCodingParams const params(
-        header.m_coordBits, m2::PointD(MercatorBounds::kMinX, MercatorBounds::kMinY));
+        header.m_coordBits, m2::PointD(mercator::Bounds::kMinX, mercator::Bounds::kMinY));
     CitiesBoundariesDecoderV0<Source> decoder(source, params);
     decoder(boundaries);
   }

@@ -2,23 +2,29 @@
 
 #include "map/gps_track_collection.hpp"
 
+#include "geometry/latlon.hpp"
+
 #include "base/logging.hpp"
 
-#include "std/map.hpp"
+#include <chrono>
+#include <ctime>
+#include <map>
+#include <utility>
+
+using namespace std;
+using namespace std::chrono;
 
 namespace
 {
-
 location::GpsTrackInfo MakeGpsTrackInfo(double timestamp, ms::LatLon const & ll, double speed)
 {
   location::GpsTrackInfo info;
   info.m_timestamp = timestamp;
   info.m_speed = speed;
-  info.m_latitude = ll.lat;
-  info.m_longitude = ll.lon;
+  info.m_latitude = ll.m_lat;
+  info.m_longitude = ll.m_lon;
   return info;
 }
-
 } // namespace
 
 UNIT_TEST(GpsTrackCollection_Simple)

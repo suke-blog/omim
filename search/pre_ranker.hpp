@@ -9,14 +9,14 @@
 
 #include "base/macros.hpp"
 
-#include "std/algorithm.hpp"
-#include "std/cstdint.hpp"
-#include "std/random.hpp"
-#include "std/set.hpp"
-#include "std/utility.hpp"
-#include "std/vector.hpp"
-
-#include <boost/optional.hpp>
+#include <algorithm>
+#include <cstddef>
+#include <optional>
+#include <random>
+#include <set>
+#include <string>
+#include <utility>
+#include <vector>
 
 class DataSource;
 
@@ -41,7 +41,7 @@ public:
     // compute the distance from a feature to the pivot.
     m2::PointD m_accuratePivotCenter;
 
-    boost::optional<m2::PointD> m_position;
+    std::optional<m2::PointD> m_position;
     m2::RectD m_viewport;
 
     int m_scale = 0;
@@ -53,6 +53,8 @@ public:
 
     bool m_viewportSearch = false;
     bool m_categorialRequest = false;
+
+    size_t m_numQueryTokens = 0;
   };
 
   PreRanker(DataSource const & dataSource, Ranker & ranker);
@@ -61,12 +63,17 @@ public:
 
   void Finish(bool cancelled);
 
-  template <typename... TArgs>
-  void Emplace(TArgs &&... args)
+  bool IsFull() const { return m_numSentResults >= Limit() || m_ranker.IsFull(); }
+
+  template <typename... Args>
+  void Emplace(Args &&... args)
   {
-    if (m_numSentResults >= Limit())
+    if (IsFull())
       return;
-    m_results.emplace_back(forward<TArgs>(args)...);
+
+    m_results.emplace_back(std::forward<Args>(args)...);
+    if (m_results.back().GetInfo().m_allTokensUsed)
+      m_haveFullyMatchedResult = true;
   }
 
   // Computes missing fields for all pre-results.
@@ -78,15 +85,16 @@ public:
   // Use |lastUpdate| to indicate that no more results will be added.
   void UpdateResults(bool lastUpdate);
 
-  inline size_t Size() const { return m_results.size(); }
-  inline size_t BatchSize() const { return m_params.m_batchSize; }
-  inline size_t NumSentResults() const { return m_numSentResults; }
-  inline size_t Limit() const { return m_params.m_limit; }
+  size_t Size() const { return m_results.size(); }
+  size_t BatchSize() const { return m_params.m_batchSize; }
+  size_t NumSentResults() const { return m_numSentResults; }
+  bool HaveFullyMatchedResult() const { return m_haveFullyMatchedResult; }
+  size_t Limit() const { return m_params.m_limit; }
 
-  template <typename TFn>
-  void ForEach(TFn && fn)
+  template <typename Fn>
+  void ForEach(Fn && fn)
   {
-    for_each(m_results.begin(), m_results.end(), forward<TFn>(fn));
+    std::for_each(m_results.begin(), m_results.end(), std::forward<Fn>(fn));
   }
 
   void ClearCaches();
@@ -94,27 +102,33 @@ public:
 private:
   void FilterForViewportSearch();
 
+  void FilterRelaxedResults(bool lastUpdate);
+
   DataSource const & m_dataSource;
   Ranker & m_ranker;
-  vector<PreRankerResult> m_results;
+  std::vector<PreRankerResult> m_results;
+  std::vector<PreRankerResult> m_relaxedResults;
   Params m_params;
 
   // Amount of results sent up the pipeline.
   size_t m_numSentResults = 0;
 
+  // True iff there is at least one result with all tokens used (not relaxed).
+  bool m_haveFullyMatchedResult = false;
+
   // Cache of nested rects used to estimate distance from a feature to the pivot.
   NestedRectsCache m_pivotFeatures;
 
   // A set of ids for features that are emitted during the current search session.
-  set<FeatureID> m_currEmit;
+  std::set<FeatureID> m_currEmit;
 
   // A set of ids for features that were emitted during the previous
   // search session.  They're used for filtering of current search in
   // viewport results, because we need to give more priority to
   // results that were on map previously.
-  set<FeatureID> m_prevEmit;
+  std::set<FeatureID> m_prevEmit;
 
-  minstd_rand m_rng;
+  std::minstd_rand m_rng;
 
   DISALLOW_COPY_AND_MOVE(PreRanker);
 };

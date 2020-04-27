@@ -4,6 +4,7 @@
 #include "generator/routing_helpers.hpp"
 
 #include "routing/maxspeeds_serialization.hpp"
+#include "routing/routing_helpers.hpp"
 
 #include "routing_common/maxspeed_conversion.hpp"
 
@@ -11,7 +12,7 @@
 #include "indexer/feature_data.hpp"
 #include "indexer/feature_processor.hpp"
 
-#include "coding/file_container.hpp"
+#include "coding/files_container.hpp"
 #include "coding/file_writer.hpp"
 
 #include "platform/measurement_utils.hpp"
@@ -78,7 +79,7 @@ MaxspeedsMwmCollector::MaxspeedsMwmCollector(
   OsmIdToMaxspeed osmIdToMaxspeed;
   CHECK(ParseMaxspeeds(maxspeedCsvPath, osmIdToMaxspeed), (maxspeedCsvPath));
 
-  ForEachFromDat(dataPath, [&](FeatureType & ft, uint32_t fid) {
+  ForEachFeature(dataPath, [&](FeatureType & ft, uint32_t fid) {
     if (!routing::IsCarRoad(TypesHolder(ft)))
       return;
 
@@ -165,9 +166,9 @@ void SerializeMaxspeeds(string const & dataPath, vector<FeatureMaxspeed> && spee
     return;
 
   FilesContainerW cont(dataPath, FileWriter::OP_WRITE_EXISTING);
-  FileWriter writer = cont.GetWriter(MAXSPEEDS_FILE_TAG);
+  auto writer = cont.GetWriter(MAXSPEEDS_FILE_TAG);
 
-  MaxspeedsSerializer::Serialize(speeds, writer);
+  MaxspeedsSerializer::Serialize(speeds, *writer);
   LOG(LINFO, ("SerializeMaxspeeds(", dataPath, ", ...) serialized:", speeds.size(), "maxspeed tags."));
 }
 
@@ -185,7 +186,7 @@ void BuildMaxspeedsSection(string const & dataPath, string const & osmToFeatureP
   LOG(LINFO, ("BuildMaxspeedsSection(", dataPath, ",", osmToFeaturePath, ",", maxspeedsFilename, ")"));
 
   map<uint32_t, base::GeoObjectId> featureIdToOsmId;
-  CHECK(ParseFeatureIdToOsmIdMapping(osmToFeaturePath, featureIdToOsmId), ());
+  CHECK(ParseWaysFeatureIdToOsmIdMapping(osmToFeaturePath, featureIdToOsmId), ());
   BuildMaxspeedsSection(dataPath, featureIdToOsmId, maxspeedsFilename);
 }
 }  // namespace routing

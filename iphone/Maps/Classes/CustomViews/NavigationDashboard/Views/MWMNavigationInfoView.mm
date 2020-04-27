@@ -10,6 +10,7 @@
 #import "MapViewController.h"
 #import "SwiftBridge.h"
 #import "UIImageView+Coloring.h"
+#import "location_util.h"
 
 #include "geometry/angles.hpp"
 
@@ -28,21 +29,21 @@ CGFloat const kShiftedTurnsTopOffset = 8;
 
 NSTimeInterval constexpr kCollapseSearchTimeout = 5.0;
 
-map<NavigationSearchState, NSString *> const kSearchStateButtonImageNames{
+std::map<NavigationSearchState, NSString *> const kSearchStateButtonImageNames{
     {NavigationSearchState::Maximized, @"ic_routing_search"},
     {NavigationSearchState::MinimizedNormal, @"ic_routing_search"},
     {NavigationSearchState::MinimizedSearch, @"ic_routing_search_off"},
     {NavigationSearchState::MinimizedGas, @"ic_routing_fuel_off"},
     {NavigationSearchState::MinimizedParking, @"ic_routing_parking_off"},
+    {NavigationSearchState::MinimizedEat, @"ic_routing_eat_off"},
     {NavigationSearchState::MinimizedFood, @"ic_routing_food_off"},
-    {NavigationSearchState::MinimizedShop, @"ic_routing_shop_off"},
     {NavigationSearchState::MinimizedATM, @"ic_routing_atm_off"}};
 
-map<NavigationSearchState, NSString *> const kSearchButtonRequest{
+std::map<NavigationSearchState, NSString *> const kSearchButtonRequest{
     {NavigationSearchState::MinimizedGas, L(@"fuel")},
     {NavigationSearchState::MinimizedParking, L(@"parking")},
+    {NavigationSearchState::MinimizedEat, L(@"eat")},
     {NavigationSearchState::MinimizedFood, L(@"food")},
-    {NavigationSearchState::MinimizedShop, L(@"shop")},
     {NavigationSearchState::MinimizedATM, L(@"atm")}};
 
 BOOL defaultOrientation(CGSize const & size)
@@ -77,8 +78,8 @@ BOOL defaultOrientation(CGSize const & size)
 @property(weak, nonatomic) IBOutlet NSLayoutConstraint * searchButtonsSideSize;
 @property(weak, nonatomic) IBOutlet MWMButton * searchGasButton;
 @property(weak, nonatomic) IBOutlet MWMButton * searchParkingButton;
+@property(weak, nonatomic) IBOutlet MWMButton * searchEatButton;
 @property(weak, nonatomic) IBOutlet MWMButton * searchFoodButton;
-@property(weak, nonatomic) IBOutlet MWMButton * searchShopButton;
 @property(weak, nonatomic) IBOutlet MWMButton * searchATMButton;
 @property(weak, nonatomic) IBOutlet NSLayoutConstraint * turnsTopOffset;
 
@@ -196,8 +197,8 @@ BOOL defaultOrientation(CGSize const & size)
   case NavigationSearchState::MinimizedSearch:
   case NavigationSearchState::MinimizedGas:
   case NavigationSearchState::MinimizedParking:
+  case NavigationSearchState::MinimizedEat:
   case NavigationSearchState::MinimizedFood:
-  case NavigationSearchState::MinimizedShop:
   case NavigationSearchState::MinimizedATM:
     [MWMSearch clear];
     [MWMSearchManager manager].state = MWMSearchManagerStateHidden;
@@ -220,10 +221,10 @@ BOOL defaultOrientation(CGSize const & size)
     body(NavigationSearchState::MinimizedGas);
   else if (sender == self.searchParkingButton)
     body(NavigationSearchState::MinimizedParking);
+  else if (sender == self.searchEatButton)
+    body(NavigationSearchState::MinimizedEat);
   else if (sender == self.searchFoodButton)
     body(NavigationSearchState::MinimizedFood);
-  else if (sender == self.searchShopButton)
-    body(NavigationSearchState::MinimizedShop);
   else if (sender == self.searchATMButton)
     body(NavigationSearchState::MinimizedATM);
 }
@@ -289,7 +290,6 @@ BOOL defaultOrientation(CGSize const & size)
   {
     [self setTurnsViewVisible:YES];
     self.nextTurnImageView.image = info.turnImage;
-    self.nextTurnImageView.mwm_coloring = MWMImageColoringWhite;
 
     if (info.roundExitNumber == 0)
     {
@@ -323,7 +323,6 @@ BOOL defaultOrientation(CGSize const & size)
     {
       self.secondTurnView.hidden = NO;
       self.secondTurnImageView.image = info.nextTurnImage;
-      self.secondTurnImageView.mwm_coloring = MWMImageColoringBlack;
     }
     else
     {
@@ -339,20 +338,21 @@ BOOL defaultOrientation(CGSize const & size)
 
 #pragma mark - MWMLocationObserver
 
-- (void)onLocationUpdate:(location::GpsInfo const &)gpsInfo
+- (void)onLocationUpdate:(CLLocation *)location
 {
   BOOL const hasLocation = ([MWMLocationManager lastLocation] != nil);
   if (self.hasLocation != hasLocation)
     [self updateToastView];
 }
 
-- (void)onHeadingUpdate:(location::CompassInfo const &)info
+- (void)onHeadingUpdate:(CLHeading *)heading
 {
   auto transform = CATransform3DIdentity;
   auto lastLocation = [MWMLocationManager lastLocation];
   if (lastLocation && self.state == MWMNavigationInfoViewStateNavigation &&
       [MWMRouter type] == MWMRouterTypePedestrian)
   {
+    auto const info = location_util::compassInfoFromHeading(heading);
     auto const angle = ang::AngleTo(lastLocation.mercator,
                                     self.navigationInfo.pedestrianDirectionPosition.mercator);
     transform = CATransform3DMakeRotation(M_PI_2 - angle - info.m_bearing, 0, 0, 1);
@@ -523,7 +523,6 @@ BOOL defaultOrientation(CGSize const & size)
   [self setNeedsLayout];
   if (isVisible)
   {
-    self.bookmarksButton.imageName = @"ic_routing_bookmark";
     [self setSearchState:NavigationSearchState::MinimizedNormal animated:NO];
     self.turnsWidth.constant = IPAD ? kTurnsiPadWidth : kTurnsiPhoneWidth;
     UIView * sv = self.ownerView;
@@ -560,4 +559,10 @@ BOOL defaultOrientation(CGSize const & size)
       }];
 }
 
+//MARK: Update Theme
+- (void)applyTheme
+{
+  [self setSearchState:_searchState];
+
+}
 @end

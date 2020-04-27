@@ -1,17 +1,21 @@
 #pragma once
 
-#include "generator/emitter_interface.hpp"
 #include "generator/generate_info.hpp"
-#include "generator/osm_element.hpp"
+#include "generator/intermediate_data.hpp"
+#include "generator/osm_o5m_source.hpp"
+#include "generator/osm_xml_source.hpp"
+#include "generator/translator_interface.hpp"
+
+#include "coding/parse_xml.hpp"
 
 #include <functional>
 #include <iostream>
 #include <memory>
+#include <queue>
 #include <sstream>
 #include <string>
-#include <vector>
 
-class FeatureBuilder1;
+struct OsmElement;
 class FeatureParams;
 
 namespace generator
@@ -39,12 +43,46 @@ public:
   uint64_t Read(char * buffer, uint64_t bufferSize);
 };
 
-bool GenerateFeatures(feature::GenerateInfo & info, std::shared_ptr<EmitterInterface> emitter);
-bool GenerateRegionFeatures(feature::GenerateInfo & info);
-bool GenerateGeoObjectsFeatures(feature::GenerateInfo & info);
-
 bool GenerateIntermediateData(feature::GenerateInfo & info);
 
 void ProcessOsmElementsFromO5M(SourceReader & stream, std::function<void(OsmElement *)> processor);
 void ProcessOsmElementsFromXML(SourceReader & stream, std::function<void(OsmElement *)> processor);
+
+class ProcessorOsmElementsInterface
+{
+public:
+  virtual ~ProcessorOsmElementsInterface() = default;
+
+  virtual bool TryRead(OsmElement & element) = 0;
+};
+
+class ProcessorOsmElementsFromO5M : public ProcessorOsmElementsInterface
+{
+public:
+  explicit ProcessorOsmElementsFromO5M(SourceReader & stream);
+
+  // ProcessorOsmElementsInterface overrides:
+  bool TryRead(OsmElement & element) override;
+
+private:
+  SourceReader & m_stream;
+  osm::O5MSource m_dataset;
+  osm::O5MSource::Iterator m_pos;
+};
+
+class ProcessorOsmElementsFromXml : public ProcessorOsmElementsInterface
+{
+public:
+  explicit ProcessorOsmElementsFromXml(SourceReader & stream);
+
+  // ProcessorOsmElementsInterface overrides:
+  bool TryRead(OsmElement & element) override;
+
+private:
+  bool TryReadFromQueue(OsmElement & element);
+
+  XMLSource m_xmlSource;
+  XMLSequenceParser<SourceReader, XMLSource> m_parser;
+  std::queue<OsmElement> m_queue;
+};
 }  // namespace generator

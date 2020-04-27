@@ -1,8 +1,10 @@
 #pragma once
 
+#include "search/cancel_exception.hpp"
 #include "search/features_layer.hpp"
 #include "search/intersection_result.hpp"
 
+#include <utility>
 #include <vector>
 
 #if defined(DEBUG)
@@ -70,12 +72,14 @@ public:
     LOG(LINFO, ("Found:", results.size(), "elapsed:", timer.ElapsedSeconds(), "seconds"));
 #endif  // defined(DEBUG)
 
-    for_each(results.begin(), results.end(), forward<TFn>(fn));
+    for_each(results.begin(), results.end(), std::forward<TFn>(fn));
   }
 
   static void SetModeForTesting(Mode mode) { m_mode = mode; }
 
 private:
+  void BailIfCancelled() { ::search::BailIfCancelled(m_cancellable); }
+
   void FindReachableVertices(FeaturesLayerMatcher & matcher,
                              std::vector<FeaturesLayer const *> const & layers,
                              std::vector<IntersectionResult> & results);

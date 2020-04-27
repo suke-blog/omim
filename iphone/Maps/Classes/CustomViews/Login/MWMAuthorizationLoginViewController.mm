@@ -4,7 +4,7 @@
 #import "MWMAuthorizationWebViewLoginViewController.h"
 #import "Statistics.h"
 
-#include "Framework.h"
+#include <CoreApi/Framework.h>
 
 namespace
 {
@@ -63,11 +63,7 @@ using namespace osm_auth_ios;
   self.loginGoogleButton.enabled = isConnected;
   self.loginFacebookButton.enabled = isConnected;
   self.signupButton.enabled = isConnected;
-
-  AuthorizationConfigButton(self.loginGoogleButton, AuthorizationButtonType::AuthorizationButtonTypeGoogle);
-  AuthorizationConfigButton(self.loginFacebookButton, AuthorizationButtonType::AuthorizationButtonTypeFacebook);
-  AuthorizationConfigButton(self.loginOSMButton, AuthorizationButtonType::AuthorizationButtonTypeOSM);
-
+  
   if (!isConnected)
   {
     self.loginGoogleButton.layer.borderColor = UIColor.clearColor.CGColor;
@@ -179,7 +175,7 @@ using namespace osm_auth_ios;
   int32_t rank;
   if (stats.GetRank(rank))
     self.rankLabel.text = @(rank).stringValue;
-  string levelUpFeat;
+  std::string levelUpFeat;
   if (stats.GetLevelUpRequiredFeat(levelUpFeat))
   {
     self.yourPlaceLabelCenterYAlignment.priority = UILayoutPriorityDefaultLow;

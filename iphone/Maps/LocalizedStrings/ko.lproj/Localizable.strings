@@ -6,9 +6,6 @@
 
 /********** Strings **********/
 
-/* About button text (should be short) */
-"about" = "소개";
-
 /* Button text (should be short) */
 "back" = "뒤로";
 
@@ -81,8 +78,6 @@
 /* View and button titles for accessibility */
 "core_my_position" = "나의 위치";
 
-"ok" = "승인";
-
 /* Settings/Downloader - No free space dialog message */
 "free_disk_space_for_country_x" = "먼저 귀하의 장치에 어느 정도의 공간을 확보하여 %@를 다운로드하여 주십시요.";
 
@@ -109,9 +104,6 @@
 
 /* Settings/Downloader - 3G download warning dialog confirm button */
 "use_cellular_data" = "네";
-
-/* Settings/Downloader - No internet connection dialog message */
-"use_wifi_recommendation_text" = "WiFi를 이용하여 큰 지도를 다운로드하는 것을 권하여 드립니다.";
 
 /* Choose measurement on first launch alert - title */
 "which_measurement_system" = "어느 측정 시스템을 선호하십니까?";
@@ -408,9 +400,6 @@
 /* Subject for emailed bookmark */
 "bookmark_share_email_subject" = "MAPS.ME 지도에서 내 핀 보기";
 
-/* Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me */
-"bookmark_share_email" = "안녕하세요.\n\n다음 위치에 표시를 하였습니다: 오프라인 세계 지도인 MAPS.ME에서 %1$@. %2$@ 또는 %3$@ 링크를 클릭하여 지도상에서 해당 장소를 살펴보시기 바랍니다.\n\n감사합니다.";
-
 /* Subject for emailed position */
 "my_position_share_email_subject" = "MAPS.ME 지도에서 제 현재 위치를 살펴 보시기 바랍니다";
 
@@ -588,15 +577,6 @@
 
 /* category title */
 "routes" = "경로";
-
-/* Show on first launch. */
-"maps_licence_info" = "This applications uses geographical data (including maps, business listings, points of interest, borders of countries and regions, etc.) taken from the OpenStreetMap project. We do not warrant any consistency, accuracy, completeness or applicability of the OpenStreetMap data.";
-
-/* Show on first launch. */
-"agree" = "I agree";
-
-/* Show on first launch */
-"disagree" = "I disagree";
 
 /* text of notification */
 "download_map_notification" = "당신이 있는 장소의지도를 다운로드 하십시오";
@@ -896,6 +876,30 @@
 
 /* pink color */
 "pink" = "분홍색";
+
+/* deep purple color */
+"deep_purple" = "진보라색";
+
+/* light blue color */
+"light_blue" = "하늘색";
+
+/* cyan color */
+"cyan" = "시안";
+
+/* teal color */
+"teal" = "틸";
+
+/* lime color */
+"lime" = "라임";
+
+/* deep orange color */
+"deep_orange" = "진주황색";
+
+/* gray color */
+"gray" = "회색";
+
+/* blue gray color */
+"blue_gray" = "청회색";
 
 /* Wi-Fi available */
 "WiFi_available" = "네";
@@ -1342,10 +1346,6 @@
 
 "onboarding_permissions_message" = "따라서 지도를 다운로드하고, 근처의 장소와 교통 상황을 보고, 네비게이션을 사용할 수 있습니다.";
 
-"onboarding_welcome_title" = "MAPS.ME입니다.";
-
-"onboarding_welcome_first_subtitle" = "턴-바이-턴 네비게이션을 이용하는 빠르고 상세하며 완전히 오프라인으로 이용 가능한 무료 지도입니다.";
-
 "onboarding_welcome_second_subtitle" = "애플리케이션을 시작하면, <a href=\"%s\">이용 약관</a> 및 <a href=\"%s\">개인정보취급방침</a>에 동의하는 것입니다.";
 
 "dialog_incorrect_feature_position" = "위치 변경";
@@ -1500,7 +1500,7 @@
 
 "placepage_more_button" = "자세히";
 
-"placepage_more_reviews_button" = "More Reviews";
+"placepage_more_reviews_button" = "더 많은 리뷰";
 
 "book_button" = "예약";
 
@@ -1782,10 +1782,6 @@
 
 "banner_rentalcars_message" = "800개의 자동차 렌트 회사와 49,000곳 이상의 자동차 렌트 지점";
 
-"banner_viator_title" = "온라인 투어 검색";
-
-"banner_viator_message" = "전 세계 50,000개 이상의 투어에서 검색하세요.";
-
 /* december */
 "whatsnew_traffic" = "36개국의 교통 데이터";
 
@@ -1860,10 +1856,6 @@
 "whatsnew_waypoints_title" = "경로의 중간 지점";
 
 "whatsnew_waypoints_message" = "경로에 중간 지점을 추가할 위치를 탭하세요.";
-
-"whatsnew_viator_title" = "투어 예약";
-
-"whatsnew_viator_message" = "전 세계 관광 도시에서 인기 투어를 선택하세요.";
 
 "whatsnew_driving_style_title" = "운전을 위한 새로운 지도 스타일";
 
@@ -1977,8 +1969,6 @@
 
 "toast_location_permission_denied" = "앱 위치 권한 거부됨";
 
-"place_page_viator_title" = "관광 명소 및 투어";
-
 "button_use" = "사용";
 
 "planning_route_manage_route" = "경로 관리";
@@ -2018,10 +2008,6 @@
 "choose_start_point" = "시작 지점 선택";
 
 "choose_destination" = "목적지 선택";
-
-"preloader_viator_title" = "투어와 특별한 활동 알아보기";
-
-"preloader_viator_message" = "투어, 활동, 관광 등";
 
 "preloader_viator_button" = "자세히 알아보기";
 
@@ -2127,10 +2113,6 @@
 
 "discovery_button_subtitle_local_guides" = "지역 가이드";
 
-"discovery_button_viator_offline_title" = "투어 그리고 기억에 남을 일 알아보기";
-
-"discovery_button_viator_offline_message" = "투어, 할 일, 관광 투어 등.";
-
 "discovery_button_viator_error_title" = "데이터 로드 중에 오류 발생";
 
 "discovery_button_other_error_message" = "데이터 로드 중에 오류 발생";
@@ -2203,8 +2185,6 @@
 
 "downloader_applying" = "%s 적용 중...";
 
-"transit_not_found" = "이 지역에서 대중교통 내비게이션은 아직 사용 가능하지 않습니다.";
-
 "whats_new_title_hotel_filter" = "새로운 호텔 필터 사용 가능!";
 
 "whats_new_message_hotel_filter" = "해당 날짜에 이용 가능한 호텔을 예약하세요! 체크인 및 체크아웃 필터를 사용하세요.";
@@ -2212,8 +2192,6 @@
 "whats_new_title_ugc_travel" = "다른 여행자와 함께 경험을 나누세요!";
 
 "whats_new_message_ugc_travel" = "방문한 장소를 평가하고 리뷰를 남기세요!";
-
-"dialog_pedestrian_route_is_long" = "보행자 루트가 너무 깁니다";
 
 "dialog_message_transit_not_found_connection" = "대중 교통망 내에서 하나의 경로를 계획하세요";
 
@@ -2405,9 +2383,8 @@
 
 "guide_downloaded_title" = "안내를 성공적으로 다운로드 하였습니다.";
 
-"download_guides" = "안내 다운로드";
-
-"cached_guides_placeholder_subtitle" = "모든 여행을 위한 자세한 오프라인 안내. 여러분에게 가장 적합한 것을 골라 지도로 직접 다운로드하세요. 안내를 다운로드하려면 인터넷을 연결해야 합니다.";
+/* as few symbols as possible */
+"download_guides" = "가이드 찾기";
 
 "guides_groups_cached" = "다운로드한 안내";
 
@@ -2487,8 +2464,6 @@
 
 "restore_no_subscription_alert" = "활성화 된 구독이 없습니다";
 
-"subscription_terms" = "결제 확인시 iTunes 계정에 요금이 부과됩니다. 현재 구독 기간 종료 최소 24 시간 전에 자동 갱신을 해제하지 않을 경우, 구독은 자동으로 갱신됩니다. 현재 구독 기간 종료 최소 24 시간 이전에 갱신하신 플랜의 상세 정보에 따라 계정의 비용이 청구될 것입니다. 구입 시 Apple ID 계정 설정에서 자동 갱신을 관리하거나 해제할 수 있습니다.";
-
 "subscriptions_title" = "구독";
 
 "manage_subscription" = "구독 관리";
@@ -2508,8 +2483,6 @@
 "ugc_route_tags_screen_label" = "태그 선택하기";
 
 "ugc_route_tags_progress_msg" = "태그 불러오는 중…";
-
-"ugc_route_tags_desc" = "당신의 가이드에서 다른 여행객을 돕기 위한 태그를 선택하세요. 필수입니다.";
 
 "public_access" = "일반 접근";
 
@@ -2564,7 +2537,7 @@
 
 "unable_upload_error_subtitle_broken" = "파일이 망가져서 업로드를 할 수 없습니다. 다른 파일을 업로드하세요.";
 
-"buy_btn" = "%s 구매";
+"buy_btn" = "%s 에 이 것을 구매하기";
 
 "download_guide_progress" = "당신의 가이드를 다운로드 중…";
 
@@ -2659,6 +2632,636 @@
 
 "whats_new_ugc_routes_title_android_only" = "당신의 감동을 공유하기 좋습니다";
 
+"ugc_thanks_message_auth" = "리뷰가 저장되었습니다";
+
+"ugc_thanks_message_not_auth" = "리뷰를 남기시려면 로그인을 하세요";
+
+"notification_leave_review_v2_title" = "방문하신 장소를 평가하셔서 여행객들을 도와주세요!";
+
+"error_public_not_enought_title" = "즐겨찾기가 충분하지 않습니다";
+
+"error_public_not_enought_subtitle" = "공공 카탈로그에 가이드를 업로드를 하시려면 적어도 3개의 즐겨찾기를 갖고 계셔야 합니다";
+
+"bookmark_public_upload_alert_title" = "모든 MAPS.ME 여행객들과 즐겨찾기를 공유하기까지 몇 단계 밖에 남지 않았습니다!";
+
+"bookmark_public_upload_alert_subtitle" = "귀하의 목록을 위한 특정한 이름과 설명이 있는지 확인해주세요. 모든 즐겨찾기는 장소에 대한 정보를 갖고 있습니다. 귀하의 목록이 다른 사용자들에게 발견되고 사용됩니다.";
+
+"bookmark_public_upload_alert_ok_button" = "네, 물론입니다!";
+
+"name_title" = "귀하의 가이드 이름을 입력하세요";
+
+"name_placeholder" = "예) 런던의 술집들";
+
+"name_comment1" = "여행객들이 쉽게 발견할 수 있도록 귀하의 가이드 이름을 지어주세요. 예시, \"런던의 술집들\"";
+
+"name_comment2" = "이름은 특정한 심볼들을 포함할 수 없습니다. \"내 장소\"는 이름이 될 수 없습니다";
+
+"description_guide" = "묘사";
+
+"description_title" = "가이드의 묘사를 입력해주세요";
+
+"description_placeholder" = "가이드를 자세히 묘사해주세요";
+
+"description_comment1" = "가이드 묘사는 적어도 30자 이상이 들어가야합니다.";
+
+"ugc_route_tags_desc" = "다른 여행객들이 귀하의 가이드를 발견할 수 있도록 태그를 선택해 주세요 필수입니다. %s 태그가 최대치입니다.";
+
+"html_format_error_title" = "가이드가 게재되지 않았습니다";
+
+"html_format_error_subtitle" = "올바른 형식의 즐겨찾기묘사와 이름인지 확인해주세요 밑의 \"온라인 수정\" 버튼을 눌러서 데스크탑 브라우져에서 확인 하실 수 있습니다.";
+
+"web_editor_description" = "가이드를 올리시고 데스크탑에서 수정 링크를 받으세요";
+
+"edit_on_web_confirm" = "온라인 수정";
+
+"update_guide" = "업데이트 올리기";
+
+"direct_link_updating_text" = "귀하의 파일을 업데이트 중입니다…";
+
+"direct_link_updating_success" = "업데이트 되었습니다";
+
+"unable_get_direct_link_desc" = "공공 링크를 동해 귀하의 가이드를 공유하실 수 있습니다";
+
+"any_access_update_alert_title" = "약간의 수정 사항이 발생할 수 있습니다";
+
+"any_access_update_alert_message" = "즐겨찻기를 업데이트하시길 원하십니까? 같은 링크를 통해 새로운 버전이 사용 가능하게 됩니다.";
+
+"any_access_update_alert_update" = "업데이트";
+
+"public_or_limited_access_after_edit_online_error_title" = "귀하의 즐겨찾기 온라인을 수정하셨습니다";
+
+"public_or_limited_access_after_edit_online_error_message" = "미래에, 우리의 웹사이트를 동해 친구들과 가이드를 수정, 게재 혹은 공유해보세요";
+
+"power_managment_title" = "전력 절약 모드";
+
+"power_managment_description" = "자동 모드가 선택되면 어플리케이션은 현재 배터리 충전 정도에 따라 배터리를 많이 쓰는 기능이 불가하게 됩니다";
+
+"power_managment_setting_never" = "안함";
+
+"power_managment_setting_auto" = "자동";
+
+"power_managment_setting_manual_max" = "최대 전력 절약";
+
+"enable_logging_warning_message" = "이 옵션은 진단을 목적으로 로그를 엽니다 이를 통해 앱에 대한 문제를 분석하는 우리의 스탭을 도울 수 있습니다 이 옵션은 오직 MAPS.ME 지원 요청에서만 가능합니다.";
+
+"html_error_upload_message_try_again" = "네트워크 설정을 확인하신 후 다시 시도해주세요";
+
+"html_error_upload_title_try_again" = "인터넷이 연결되지 않았습니다";
+
+"notification_leave_review_v2_android_short_title" = "리뷰하고 여행객들을 도우세요!";
+
+"megafon" = "Say goodbye to roaming!";
+
+"notifications_illegal_alert_disable_button" = "알림 끄기";
+
+"access_rules_author_only" = "온라인 수정";
+
+"privacy_settings_menu" = "개인정보 설정";
+
+"gdpr_request_setting" = "GDPR 요청을 위해 ID 만들기";
+
+"gdpr_request_window_title" = "귀하의 ID: %s.";
+
+"gdpr_request_window_message" = "복사하신 뒤 support@maps.me 에 요청을 보내세요";
+
+"gdpr_request_window_copy" = "ID 복사하기";
+
+"unable_upadate_error_title" = "파일 업데이트 실패";
+
+"unable_upadate_error_message" = "업데이트 중 무언가 실수가 일어났습니다. 변경점들을 확인하시고 다시 시도해주세요";
+
+"whats_new_wiki_title" = "이 장소는 뭐지?";
+
+"whats_new_wiki_message" = "Wikipedia.org 의 관광객들에게 가장 매력적인 장소 페이지들의 내용들을 추가했습니다. 오프라인에서 가능합니다";
+
+"driving_options_title" = "운전 옵션";
+
+"driving_options_subheader" = "모든 길에서 피하기";
+
+"avoid_tolls" = "유로 도로";
+
+"avoid_unpaved" = "비포장 도로";
+
+"avoid_ferry" = "여객선 교차로";
+
+"avoid_motorways" = "고속도로";
+
+"unable_to_calc_alert_title" = "루트를 계산할 수 없습니다";
+
+"unable_to_calc_alert_subtitle" = "아쉽게도 귀하가 정의한 옵션으로는 루트를 찾을 수가 없습니다. 설정을 바꾸신다음 다시 시도해주세요";
+
+"define_to_avoid_btn" = "피할 도로 정의하기";
+
+"change_driving_options_btn" = "운전 옵션이 가능합니다";
+
+"toll_road" = "유료 도로";
+
+"unpaved_road" = "비포장 도로";
+
+"ferry_crossing" = "여객선 횡단길";
+
+"operated_by" = "\"%s\" 로 운용됨";
+
+"avoid_toll_roads_placepage" = "유료 도로 피하기";
+
+"avoid_unpaved_roads_placepage" = "비포장 도로 피하기";
+
+"avoid_ferry_crossing_placepage" = "여객선 횡단길 피하기";
+
+"cached_guides_placeholder_subtitle" = "MAPS.ME는 선택된 장소의 사진과 묘사가 지도에 표시되는 미리 만들어진 가이드를 제공하고 오프라인에서도 사용이 가능합니다.";
+
+"guides_catalogue_title" = "가이드 카탈로그";
+
+"download_guides_button" = "카탈로그로";
+
+"type.cuisine.uzbek" = "우즈벡 요리";
+
+"onboarding_welcome_title" = "MAPS.ME와 계획하고 여행하세요";
+
+"onboarding_welcome_first_subtitle" = "흥미로운 장소들 즐겨찾기, 호텔 예약 하기, 루트 계산하기를 오프라인으로";
+
+"onboarding_guide_direct_download_title" = "가이드 다운로드가 준비가 되었습니다";
+
+"onboarding_guide_direct_download_subtitle" = "지도에 표시가 되고 오프라인에서도 작동합니다";
+
+"onboarding_guide_direct_download_button" = "다운로드";
+
+"onboarding_bydeeplink_guide_title" = "MAPS.ME의 가이드가 사용 준비되었습니다";
+
+"onboarding_bydeeplink_guide_subtitle" = "사진과 묘사가 있는 지도에 방문하기에 최고의 장소가 표시됩니다. 오프라인으로 작동하기.";
+
+"whats_new_auto_update_bydeeplink_title" = "가이드를 진행하시기 전에…";
+
+"whats_new_auto_update_bydeeplink_message" = "맵들을 업데이트하셔서 최신 사항에 대한 정보를 유지하세요!";
+
+"whats_new_auto_update_and_proceed_button_size" = "(%s) 업데이트 그리고 진행";
+
+"whatsnew_toll_unpaved_title" = "모든 도로를 고려한 자동차 노선 배치";
+
+"whatsnew_toll_unpaved_message" = "유료도로, 비포장 도로, 여객선 횡단길 우회 선택";
+
+"whatsnew_new_catalogue_title" = "업데이트된 카탈로그 페이지들";
+
+"whatsnew_new_catalogue_message" = "우리는 루티 선택을 쉽고 편리하게 하려고 파트너 가이드에 대한 자세한 정보를 추가했습니다";
+
+"purchase_please_wait_toast" = "구매가 완료되기 전에 이 화면을 떠나지 마세요";
+
+"trip_start" = "가자";
+
+"pick_destination" = "목적지";
+
+"follow_my_position" = "내 위치 조정하기";
+
+"search_results" = "검색 결과";
+
+"then_turn" = "그 다음";
+
+"redirect_route_alert" = "루트를 재구축하길 원하시나요?";
+
+"redirect_route_yes" = "네";
+
+"redirect_route_no" = "아니오";
+
+"trip_finished" = "도착했습니다!";
+
+"keyboard_availability_alert" = "운전 중에는 키보드를 사용할 수 없습니다";
+
+"dialog_routing_change_start_carplay" = "현재 위치에서 루트를 만들 수 없습니다";
+
+"dialog_routing_change_end_carplay" = "목적지 경로를 만들 수 없습니다. 다른 지점을 선택해주세요";
+
+"dialog_routing_check_gps_carplay" = "GPS 신호가 없습니다. 열린 장소로 이동해주세요";
+
+"dialog_routing_unable_locate_route_carplay" = "루트를 만들 수 없습니다. 또 다른 루트 지점을 지정해주세요";
+
+"dialog_routing_download_files_carplay" = "루트를 만들려면, 빠진 맵을 기기에 다운로드하세요";
+
+"dialog_routing_system_error_carplay" = "오류 발생. 어플리케이션을 재실행해주시길 바랍니다";
+
+"dialog_routing_rebuild_from_current_location_carplay" = "루트가 귀하의 현재 위치로부터 재생성됩니다";
+
+"dialog_routing_rebuild_for_vehicle_carplay" = "루트가 차량에 맞춰 수정됩니다";
+
+"ok" = "OK";
+
+"vezet_taxi" = "Vezet";
+
+"booking_button_toolbar" = "지도에서 호텔을 고르세요";
+
+"popup_booking_download_guides_title" = "호텔을 예약하셨나요?";
+
+"popup_booking_download_guides_message" = "귀하의 루트를 MAPS.ME의 준비된 가이드들로 계획해보세요";
+
+"popup_mwm_download_guides_title" = "오프라인 도시 가이드";
+
+"popup_mwm_download_guides_cta" = "하나를 고르세요";
+
+"popup_mwm_download_guides_cta_1" = "살펴보세요";
+
+"gallery_pp_download_guides_offline_title" = "휴가를 MAPS.ME와 함께 계획해보세요!";
+
+"gallery_pp_download_guides_offline_subtitle" = "경험 많은 여행자들이 만든 가이드의 모든 것을 놓치지 마세요";
+
+"gallery_pp_download_guides_offline_cta" = "인터넷 키기";
+
+"gallery_pp_download_guides_title" = "가이드들";
+
+"native_screen_subscription_title" = "2000개가 넘는 여행 가이드에 무제한 액세스!";
+
+"native_screen_subscription_message" = "누구와 어딜가든 기억에 남는 여행";
+
+"annual_subscription_title" = "매년";
+
+"montly_subscription_title" = "매월";
+
+"annual_subscription_message" = "12개월의 무제한 액세스";
+
+"montly_subscription_message" = "한달 무제한 액세스";
+
+"annual_save_component" = "- %d%";
+
+"subscription_success_dialog_title" = "구독에 감사드립니다!";
+
+"subscription_success_dialog_message" = "이제 모든 가이드 카탈로그에 무제한으로 액세스하실 수 있습니다";
+
+"renewal_screen_title" = "구독이 만료되었습니다";
+
+"renewal_screen_message" = "구독으로 다운로드된 모든 가이드들이 지워집니다. 구독을 유지하시고 가이드들을 보관하시겠습니까?";
+
+"renewal_screen_button_restore" = "네, 유지합니다";
+
+"renewal_screen_button_cancel" = "아니오, 제거합니다";
+
+"subscription_error_ping_title" = "구매가 실패했습니다";
+
+"subscription_error_message" = "이 서비스는 현재 귀하의 지역에서 사용할 수 없습니다. 후에 다시 시도하세요";
+
+"subscription_error_button" = "알겠습니다";
+
+"timeout_error_title" = "이런, 시간이 지났습니다!";
+
+"timeout_error_message" = "서버가 응답하지 않습니다. 인터넷 연결 확인 후 다시 시도해보세요.";
+
+"per_month" = "/달";
+
+"per_year" = "/년";
+
+"buy_btn_for_subscription" = "%s 로 무제한 액세스";
+
+"buy_btn_for_subscription_1" = "%s 으로 모든 가이드 구매하기";
+
+"buy_btn_for_subscription_ios_only_mo" = "%s/달 으로 무제한 액세스";
+
+"buy_btn_for_subscription_ios_only_year" = "%s/년 으로 무제한 액세스";
+
+"subscription_terms_guides" = "구매 확인 후 비용이 귀하의 iTunes 계정에 청구됩니다. 현재 기한 종료 전 적어도 24시간 전에 자동 갱신 기능이 꺼져있어야 합니다. 그렇지 않으면 구독은 자동 갱신됩니다. 현재 기한 종료 후 24시간 이내에 갱신에 대한 귀하의 계획에 따라 계정에 비용이 청구됩니다. 귀하가 구매 시 아무 때나 귀하의 Apple ID 계정에서 자동 갱신 기능을 끄거나 관리할 수 있습니다. 구독 만료 기간까지만 구독 시 다운로드한 가이드를 사용할 수 있습니다. 구독 만료일에서 30일이 지나면 북마크와 가이드는 자동으로 삭제됩니다.";
+
+"subscription_terms" = "결제 확인시 iTunes 계정에 요금이 부과됩니다. 현재 구독 기간 종료 최소 24 시간 전에 자동 갱신을 해제하지 않을 경우, 구독은 자동으로 갱신됩니다. 현재 구독 기간 종료 최소 24 시간 이전에 갱신하신 플랜의 상세 정보에 따라 계정의 비용이 청구될 것입니다. 구입 시 Apple ID 계정 설정에서 자동 갱신을 관리하거나 해제할 수 있습니다.";
+
+"whatsnew_carplay_title" = "CarPlay의 MAPS.ME 자동차 내비게이션!";
+
+"whatsnew_carplay_message" = "북마크, 찾기, 속도 감시 카메라 및 루트 옵션이 오프라인에서 가능합니다";
+
+"whatsnew_subscription_title" = "구독으로 전 세계를 알게 됩니다!";
+
+"whatsnew_subscription_message" = "안내 카탈로그의 무제한 액세스는 한번 구매보다 더 이득입니다";
+
+"whatsnew_carnavi_fixes_for_android_title" = "내비게이션 업데이트";
+
+"whatsnew_carnavi_fixes_for_android_message" = "도로로부터 멀리 떨어져 있는 지점들에 대한 루트 계획을 개선했습니다";
+
+"avoid_unpaved_carplay_1" = "비포장 도로 없음";
+
+"avoid_unpaved_carplay_2" = "비포장 도로 없음";
+
+"avoid_ferry_carplay_1" = "여객선 없음";
+
+"avoid_ferry_carplay_2" = "여객선 없음";
+
+"avoid_tolls_carplay_1" = "유료 도로 없음";
+
+"avoid_tolls_carplay_2" = "유료 도로 없음";
+
+"speedcams_alert_title_carplay_1" = "속도단속 카메라";
+
+"speedcams_alert_title_carplay_2" = "속도단속 카메라";
+
+"download_map_carplay" = "MAPS.ME 앱 안의 지도들을 디바이스에 다운로드하세요";
+
+"carplay_roundabout_exit" = "%s번 출구";
+
+/* max. 10 symbols, both iOS and Android */
+"sort" = "분류…";
+
+/* Android, title, max 20-22 symbols */
+"sort_bookmarks" = "북마크 분류하기";
+
+/* iOS */
+"sort_default" = "기본 값으로 분류";
+
+"sort_type" = "유형으로 분류";
+
+"sort_distance" = "거리로 분류";
+
+"sort_date" = "날짜로 분류";
+
+/* Android */
+"by_default" = "기본 값";
+
+/* Android */
+"by_type" = "유형 별";
+
+/* Android */
+"by_distance" = "거리 별";
+
+/* Android */
+"by_date" = "날짜 별";
+
+"week_ago_sorttype" = "일주일 전";
+
+"month_ago_sorttype" = "한달 전";
+
+"moremonth_ago_sorttype" = "한달 그 이상 전";
+
+"moreyear_ago_sorttype" = "1년 그 이상 전";
+
+"near_me_sorttype" = "나와 가까운 곳";
+
+"others_sorttype" = "기타";
+
+"food_places" = "음식";
+
+"tourist_places" = "명소";
+
+"museums" = "박물관";
+
+"parks" = "공원";
+
+"swim_places" = "수영";
+
+"mountains" = "산";
+
+"animals" = "동물원";
+
+"hotels" = "호텔";
+
+"buildings" = "빌딩";
+
+"money" = "돈";
+
+"shops" = "상점";
+
+"parkings" = "주차장";
+
+"fuel_places" = "주유소";
+
+"water" = "물";
+
+"medicine" = "의료";
+
+"search_in_the_list" = "리스트에서 검색";
+
+"view_on_map_bookmarks" = "맵에서";
+
+"more_bookmarks" = "더…";
+
+"no_items_found" = "발견 없음";
+
+/* Android, max 18 symbols */
+"bookmarks_edit_list" = "리스트 수정";
+
+/* Android, max 18 symbols */
+"bookmarks_delete_list" = "리스트 삭제";
+
+"whatsnew_bookmarks_search_sort_title" = "북마크를 정리하시고 편안한 여행되세요";
+
+"whatsnew_bookmarks_search_sort_message" = "카테고리, 위치, 추가한 시간대 별로 좋아하는 장소를 분류하세요. 이름으로 특정한 북마크를 빠르게 찾으실 수도 있습니다";
+
+"popup_subscription_success_map_title" = "우후, 구독을 하셨군요!";
+
+"popup_subscription_success_map_message" = "지금 MAPS.ME 카탈로그와 함께 최고의 여행 명소를 찾아보세요";
+
+"popup_subscription_success_map_start_button" = "보기 시작";
+
+"popup_subscription_success_map_not_now_button" = "지금은 아님";
+
+"religious_places" = "종교적 장소";
+
+"subscription_terms_android" = "구매를 확정하시면 귀하의 구글 플레이 어카운트에 비용이 청구될 것 입니다. 구독은 현재 기한이 끝나기 전 적어도 24시간 전에 자동 갱신 기능을 꺼놓지 않는다면 자동으로 갱신됩니다. 귀하의 계정에 현재 기간이 끝나기 24시간 전에 갱신 계획에 따라 청구됩니다. 구매 후 계정 설정에서 자동 갱신 기능을 관리하거나 끄실 수 있습니다. 구독으로 다운로드한 가이드는 만료일까지만 사용할 수 있습니다. 구독 만료일로부터 30일이 지나면 다운로드한 가이드는 자동으로 삭제됩니다.";
+
+"select_list" = "목록 선택";
+
+"pp_discovery_place_related_header" = "이 장소는 카탈로그 가이드에 있습니다";
+
+"pp_discovery_place_related_header_1" = "이 장소는 가이드에 실려있습니다";
+
+"pp_discovery_place_related_cta_button" = "보기";
+
+"pp_discovery_place_related_tag_header" = "태그 \"%s\"로 찾은 가이드";
+
+"pp_discovery_place_related_tag_header_1" = "추천된 가이드";
+
+"buy_btn_for_subscription_version_2" = "모든 가이드가 단 돈 %s/월";
+
+"buy_btn_for_subscription_version_3" = "모든 카탈로그가 %s/월";
+
+"buy_btn_for_subscription_ios_only_mo_version_2" = "카탈로그 접근권이 %s/월";
+
+"buy_btn_for_subscription_ios_only_year_version_2" = "카탈로그 접근권이 %s/년";
+
+"subscription_screen_native_title_version_2" = "북마크가 있는 가이드에 엑세스하세요!";
+
+"subscription_screen_native_message_version_2" = "600개 이상의 도시와 100 곳 이상의 나라에 언제라도 갈 수 있습니다";
+
+"catalog_no_internet_title" = "인터넷 연결이 되어있지 않습니다";
+
+"catalog_no_internet_button" = "다시 시도";
+
+"whatsnew_map_updates_title" = "매우 빠른 맵 업데이트";
+
+"whatsnew_map_updates_message" = "이제부터데이터를 2배로 업데이트 합니다";
+
+"new_onboarding_button" = "다음";
+
+"new_onboarding_button_2" = "시작하기";
+
+"new_onboarding_step1_header" = "MAPS.ME";
+
+"new_onboarding_step1_header_2" = "여행 친구는 이 친구 하나면 됩니다";
+
+"new_onboarding_step2_header" = "꿈을 꾸고 계획을 세우세요";
+
+"new_onboarding_step2_message" = "7천만 곳 이상의 장소들, 준비된 가이드들과 맵에서 즉시 호텔 예약이 가능합니다. 이미 여행 준비가 다 되어있습니다!";
+
+"new_onboarding_step3_message" = "어느 나라를 가도 자세한 지도로 길을 절대로 잃어버리지 않습니다. 그리고 내비게이션까지 – 모든 기능이 오프라인에서 작동합니다!";
+
+"new_onboarding_step4_header" = "감동을 나누세요";
+
+"new_onboarding_step4_message" = "좋아하는 장소들을 북마크에 넣고 친구들에게 공유하세요";
+
+"new_onboarding_step5.1_header" = "시작하기 전에 한 가지 더…";
+
+"new_onboarding_step5.1_message" = "우리의 새로운 가이드 카탈로그를 살펴보는 것을 잊지마세요. 다가오는 여행을 위한 오프라인 가이드를 찾아볼 수 있습니다!";
+
+"new_onboarding_step5.1_button" = "카탈로그 열기";
+
+"new_onboarding_step5.2_message" = "MAPS.ME 가이드 카탈로그 구독은 정말 가치가 있습니다. 전 세계의 도시와 야외의 가이드들을 완벽하게 접해보세요!";
+
+"new_onboarding_step5.2_button" = "약관 확인하기";
+
+"new_onboarding_step5.3_message" = "MAPS.ME의 무료 모음집에서 미리 준비된 도시 및 야외 경로의 무료 샘플을 확인하세요!";
+
+"new_onboarding_step5.3_button" = "무료 다운로드";
+
+"new_onboarding_additional_steps_later_button" = "나중에";
+
+"all_pass_subscription_header" = "카탈로그 구독";
+
+/* do not translate */
+"all_pass_subscription_subheader" = "City + Outdoor Pass";
+
+/* \n - for a break between lines. Max. 15 characters per 1 line. */
+"all_pass_subscription_message_title" = "30000개 이상의\n가이드 및 길들";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle" = "<b>오프라인 모드</b>에서 도시 및 아웃도어 경로를 <b>무제한 다운로드</b>";
+
+/* \n - for a break between lines. Max. 17 characters per 1 line. */
+"all_pass_subscription_message_title_2" = "상호작용형\n고도 단면도";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle_2" = "각 산길들은 <b>경로의 고도 및 기본 정보를 포함하고 있습니다</b>";
+
+/* \n - for a break between lines. Max. 15 characters per 1 line. */
+"all_pass_subscription_message_title_3" = "즐겨찾기,\n사진 및\n추천글";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle_3" = "가려는 곳의 <b>길에 대한 모든 것을 알 수 있습니다</b>";
+
+/* do not translate */
+"sightseeing_subscription_header_sightseeing" = "City Pass";
+
+"sightseeing_subscription_header_subscription" = "가이드 구독";
+
+"sightseeing_subscription_message" = "700개 이상 도시와 100곳 이상의 나라";
+
+"sightseeing_subscription_message_2" = "오프라인에서 사용 가능";
+
+"sightseeing_subscription_message_3" = "사진과 산책로";
+
+"subscription_success_dialog_title_sightseeing_pass" = "구독에 감사드립니다!";
+
+"subscription_success_dialog_message_sightseeing_pass" = "이제 카탈로그에 있는 모든 관광 가이드에 접근하실 수 있습니다";
+
+"downloader_main_gallery_header" = "맵 & 가이드";
+
+"downloader_main_gallery_message" = "이제 이 섹션에서 지도를 다운로드할 수 있을 뿐만 아니라 다가오는 여행에 대한 가이드도 확인할 수 있습니다";
+
+"downloader_main_1_element_gallery_header" = "모든 가이드";
+
+"downloader_main_1_element_gallery_message" = "100곳 이상의 나라들에서";
+
+"downloader_country_1_element_gallery_header" = "%s 가이드";
+
+"downloader_country_no_guides_gallery_header" = "이 나라에는 아직 가이드가 없습니다";
+
+"downloader_country_no_guides_gallery_message" = "도시 및 야외 활동을 위해 100개 이상의 국가의 다른 오프라인 가이드가 확인 가능합니다";
+
+"dialog_pedestrian_route_is_long" = "교통 탑승지까지 보행자 경로는 너무 기네요";
+
+"whatsnew_outdoor_guides_title" = "1만 5천개 이상의 야외 길을 추가했습니다!";
+
+"whatsnew_outdoor_guides_message" = "여름과 겨울 여행을 위한 Outdooractive에서 온 경로들이 카탈로그에서 기다리고 있습니다!";
+
+"whatsnew_guides_galleries_title" = "MAPS.ME와 함께 앞으로의 여행을 계획해보세요";
+
+"whatsnew_guides_galleries_message" = "이제 인기 있는 관광 도시와 명소들의 장소 페이지에서 추천 가이드를 찾을 수 있습니다";
+
+"new_onboarding_step3_header" = "경험하세요";
+
+"all_pass_screen_best_value" = "최고가치";
+
+"buy_btn_for_subscription_3" = "모든 카탈로그가 %s/년";
+
+"transit_not_found" = "이 지역의 지하철 노선 기능이 아직 없습니다";
+
+"dialog_pedestrian_route_is_long_header" = "지하철 루트가 발견되지 않았습니다";
+
+"dialog_pedestrian_route_is_long_message" = "지하철역에서 가까운 출발점 또는 종점을 선택하세요";
+
+/* Failed planning SUBWAY route message in navigation view */
+"routing_planning_error_subway_special" = "지하철 루트 계획 생성 실패";
+
+"whatsnew_isolines_title" = "아웃도어용 새 기능: 오프라인 지형 레이어!";
+
+/* as less symbols as possible */
+"whatsnew_isolines_message" = "산 지형에서도 자신감 있게. 왼쪽 구성 상단의 레이어를 키세요";
+
+"button_layer_isolines" = "지형";
+
+"tips_map_layers_title_countour" = "MAPS.ME의 새 기능: 오프라인 지형 레이어!";
+
+"tips_map_layers_message_countour" = "이 지역에 대한 모든 것을 알고 있는지 확인하면서 자연 여행을 계획하고 즐기세요";
+
+"isolines_activation_error_dialog" = "지형 레이어를 활성화하고 사용하려면 해당 지역의 지도를 업데이트하거나 다운로드하십시오";
+
+"isolines_location_error_dialog" = "이 지역의 지형 레이어는 아직 사용할 수 없습니다";
+
+"elevation_profile_diff_level" = "난이도";
+
+"elevation_profile_diff_level_easy" = "쉬움";
+
+"elevation_profile_diff_level_moderate" = "보통";
+
+"elevation_profile_diff_level_hard" = "어려움";
+
+"elevation_profile_ascent" = "올라가기";
+
+"elevation_profile_descent" = "내려가기";
+
+"elevation_profile_minaltitude" = "산 최소 높이";
+
+"elevation_profile_maxaltitude" = "산 최대 높이";
+
+"elevation_profile_m" = "m";
+
+"elevation_profile_difficulty" = "난이도";
+
+"elevation_profile_distance" = "거리:";
+
+"elevation_profile_km" = "km";
+
+"elevation_profile_time" = "소비 시간:";
+
+"elevation_profile_hours" = "시간";
+
+"elevation_profile_minutes" = "분";
+
+/* hide the full screen banner and continue working with the app */
+"hide_screen_map_update" = "숨기고 계속하기";
+
+"view_on_map_downloaded_error" = "이 가이드는 이 장치에서 제거되었습니다";
+
+"subscription" = "구독";
+
+"freenow_taxi_title" = "FREE NOW";
+
+"tinkoff_allairlines_map_downloader_title" = "Карта Тинькофф All Airlines. 3000 миль в подарок";
+
+"tinkoff_allairlines_map_downloader_cta_button" = "Оформить карту";
+
+"tinkoff_insurance_map_downloader_title" = "Полис Тинькофф со скидкой! Подходит для любых виз.";
+
+"tinkoff_insurance_map_downloader_cta_button" = "Промокод";
+
+"mts_map_downloader_title" = "Забугорище: интернет и звонки за границей как дома";
+
+"mts_map_downloader_cta_button" = "Подключить";
+
+"skyeng_map_downloader_title" = "Дарим 4 бесплатных урока английского от Skyeng.";
+
+"skyeng_map_downloader_cta_button" = "Подробнее";
+
 
 /**********  Partners  **********/
 
@@ -2709,9 +3312,9 @@
 
 "type.aeroway.terminal" = "aeroway-terminal";
 
-"type.amenity" = "amenity";
+"type.amenity" = "생활 편의시설";
 
-"type.amenity.arts_centre" = "amenity-arts_centre";
+"type.amenity.arts_centre" = "예술 회관";
 
 "type.amenity.atm" = "ATM";
 
@@ -2775,7 +3378,7 @@
 
 "type.amenity.fire_station" = "소방서";
 
-"type.amenity.food_court" = "amenity-food_court";
+"type.amenity.food_court" = "Food court";
 
 "type.amenity.fountain" = "분수";
 
@@ -2811,21 +3414,23 @@
 
 "type.amenity.parking.multi.storey" = "주차";
 
-"type.amenity.parking.multi.storey.fee" = "주차";
-
 "type.amenity.parking.no.access" = "주차";
 
 "type.amenity.parking.park_and_ride" = "주차";
 
 "type.amenity.parking.permissive" = "주차";
 
-"type.amenity.parking.permissive.fee" = "주차";
-
 "type.amenity.parking.private" = "주차";
 
 "type.amenity.parking.underground" = "주차";
 
-"type.amenity.parking.underground.fee" = "주차";
+"type.amenity.parking_space" = "주차장";
+
+"type.amenity.parking_space.permissive" = "주차장";
+
+"type.amenity.parking_space.private" = "주차장";
+
+"type.amenity.parking_space.underground" = "주차장";
 
 "type.amenity.payment_terminal" = "결제 단말기";
 
@@ -2851,9 +3456,9 @@
 
 "type.amenity.post_box" = "포스트 박스";
 
-"type.amenity.post_office" = "우편";
+"type.amenity.post_office" = "우체국";
 
-"type.amenity.prison" = "amenity-prison";
+"type.amenity.prison" = "Prison";
 
 "type.amenity.pub" = "술집";
 
@@ -2883,7 +3488,7 @@
 
 "type.amenity.university" = "대학";
 
-"type.amenity.vending_machine" = "amenity-vending_machine";
+"type.amenity.vending_machine" = "Vending machine";
 
 "type.amenity.vending_machine.cigarettes" = "담배자판기";
 
@@ -2891,7 +3496,7 @@
 
 "type.amenity.vending_machine.parking_tickets" = "주차티켓판매기";
 
-"type.amenity.vending_machine.public_transport_tickets" = "amenity-vending_machine-public_transport_tickets";
+"type.amenity.vending_machine.public_transport_tickets" = "대중교통표 자동판매기";
 
 "type.amenity.veterinary" = "수의학 박사";
 
@@ -2901,7 +3506,7 @@
 
 "type.amenity.water_point" = "상수도";
 
-"type.barrier" = "barrier";
+"type.barrier" = "Barrier";
 
 "type.barrier.block" = "블록";
 
@@ -2909,29 +3514,29 @@
 
 "type.barrier.border_control" = "국경통제소";
 
-"type.barrier.city_wall" = "barrier-city_wall";
+"type.barrier.city_wall" = "City wall";
 
-"type.barrier.cycle_barrier" = "barrier-cycle_barrier";
+"type.barrier.cycle_barrier" = "Cycle barrier";
 
 "type.barrier.entrance" = "입구";
 
-"type.barrier.fence" = "barrier-fence";
+"type.barrier.fence" = "Fence";
 
 "type.barrier.gate" = "게이트";
 
-"type.barrier.hedge" = "barrier-hedge";
+"type.barrier.hedge" = "Hedge";
 
 "type.barrier.lift_gate" = "차량차단기";
 
-"type.barrier.retaining_wall" = "barrier-retaining_wall";
+"type.barrier.retaining_wall" = "Retaining wall";
 
 "type.barrier.stile" = "디딤대";
 
 "type.barrier.toll_booth" = "톨게이트";
 
-"type.barrier.wall" = "barrier-wall";
+"type.barrier.wall" = "Wall";
 
-"type.boundary" = "boundary";
+"type.boundary" = "Boundary";
 
 "type.boundary.administrative" = "boundary-administrative";
 
@@ -2984,12 +3589,6 @@
 "type.building.has_parts" = "건물";
 
 "type.building.train_station" = "기차역";
-
-"type.communication" = "communication";
-
-"type.communication.line" = "communication-line";
-
-"type.communication.line.underground" = "communication-line-underground";
 
 "type.craft" = "craft";
 
@@ -3207,7 +3806,7 @@
 
 "type.highway.bus_stop" = "운송선";
 
-"type.highway.construction" = "highway-construction";
+"type.highway.construction" = "공사 중 도로";
 
 "type.highway.cycleway" = "highway-cycleway";
 
@@ -3239,7 +3838,7 @@
 
 "type.highway.footway.tunnel" = "경로";
 
-"type.highway.ford" = "highway-ford";
+"type.highway.ford" = "Ford";
 
 "type.highway.living_street" = "거리";
 
@@ -3293,8 +3892,6 @@
 
 "type.highway.pedestrian.tunnel" = "거리";
 
-"type.highway.platform" = "highway-platform";
-
 "type.highway.primary" = "거리";
 
 "type.highway.primary.bridge" = "거리";
@@ -3347,12 +3944,6 @@
 
 "type.highway.service.driveway" = "거리";
 
-"type.highway.service.driveway.area" = "거리";
-
-"type.highway.service.driveway.bridge" = "거리";
-
-"type.highway.service.driveway.tunnel" = "거리";
-
 "type.highway.service.parking_aisle" = "거리";
 
 "type.highway.service.tunnel" = "거리";
@@ -3391,21 +3982,9 @@
 
 "type.highway.track.grade3" = "거리";
 
-"type.highway.track.grade3.no.access" = "거리";
-
-"type.highway.track.grade3.permissive" = "거리";
-
 "type.highway.track.grade4" = "거리";
 
-"type.highway.track.grade4.no.access" = "거리";
-
-"type.highway.track.grade4.permissive" = "거리";
-
 "type.highway.track.grade5" = "거리";
-
-"type.highway.track.grade5.no.access" = "거리";
-
-"type.highway.track.grade5.permissive" = "거리";
 
 "type.highway.track.no.access" = "거리";
 
@@ -3443,7 +4022,7 @@
 
 "type.historic.archaeological_site" = "발굴";
 
-"type.historic.battlefield" = "historic-battlefield";
+"type.historic.battlefield" = "Battlefield";
 
 "type.historic.boundary_stone" = "historic-boundary_stone";
 
@@ -3513,27 +4092,29 @@
 
 "type.landuse" = "landuse";
 
-"type.landuse.allotments" = "landuse-allotments";
+"type.landuse.allotments" = "Allotments";
 
 "type.landuse.basin" = "연못";
 
-"type.landuse.brownfield" = "landuse-brownfield";
+"type.landuse.brownfield" = "Brownfield";
 
 "type.landuse.cemetery" = "묘소";
 
 "type.landuse.cemetery.christian" = "묘소";
 
+"type.landuse.churchyard" = "교회";
+
 "type.landuse.commercial" = "landuse-commercial";
 
-"type.landuse.construction" = "landuse-construction";
+"type.landuse.construction" = "Construction";
 
-"type.landuse.farm" = "landuse-farm";
+"type.landuse.farm" = "Farm";
 
-"type.landuse.farmland" = "landuse-farmland";
+"type.landuse.farmland" = "농지";
 
-"type.landuse.farmyard" = "landuse-farmyard";
+"type.landuse.farmyard" = "Farmyard";
 
-"type.landuse.field" = "landuse-field";
+"type.landuse.field" = "Field";
 
 "type.landuse.forest" = "숲";
 
@@ -3543,27 +4124,27 @@
 
 "type.landuse.forest.mixed" = "숲";
 
-"type.landuse.garages" = "landuse-garages";
+"type.landuse.garages" = "Garages";
 
-"type.landuse.grass" = "landuse-grass";
+"type.landuse.grass" = "잔디";
 
 "type.landuse.greenfield" = "landuse-greenfield";
 
 "type.landuse.greenhouse_horticulture" = "landuse-greenhouse_horticulture";
 
-"type.landuse.industrial" = "landuse-industrial";
+"type.landuse.industrial" = "Industrial land";
 
-"type.landuse.landfill" = "landuse-landfill";
+"type.landuse.landfill" = "쓰레기 매립지";
 
-"type.landuse.meadow" = "landuse-meadow";
+"type.landuse.meadow" = "Meadow";
 
-"type.landuse.military" = "landuse-military";
+"type.landuse.military" = "Military area";
 
-"type.landuse.orchard" = "landuse-orchard";
+"type.landuse.orchard" = "Orchard";
 
-"type.landuse.quarry" = "landuse-quarry";
+"type.landuse.quarry" = "Quarry";
 
-"type.landuse.railway" = "landuse-railway";
+"type.landuse.railway" = "차량 기지";
 
 "type.landuse.recreation_ground" = "landuse-recreation_ground";
 
@@ -3571,25 +4152,19 @@
 
 "type.landuse.residential" = "landuse-residential";
 
-"type.landuse.residential.rural" = "landuse-residential-rural";
-
-"type.landuse.residential.urban" = "landuse-residential-urban";
-
 "type.landuse.retail" = "landuse-retail";
 
 "type.landuse.salt_pond" = "landuse-salt_pond";
 
 "type.landuse.village_green" = "landuse-village_green";
 
-"type.landuse.vineyard" = "landuse-vineyard";
+"type.landuse.vineyard" = "Vineyard";
 
 "type.leisure" = "leisure";
 
 "type.leisure.common" = "leisure-common";
 
-"type.leisure.dog_park" = "Dog area";
-
-"type.leisure.dog_park.tennis" = "Dog area";
+"type.leisure.dog_park" = "애완견 지역";
 
 "type.leisure.fitness_centre" = "피트니스센터";
 
@@ -3599,11 +4174,11 @@
 
 "type.leisure.golf_course" = "골프장";
 
-"type.leisure.ice_rink" = "leisure-ice_rink";
+"type.leisure.ice_rink" = "Ice rink";
 
-"type.leisure.landscape_reserve" = "leisure-landscape_reserve";
+"type.leisure.landscape_reserve" = "Landscape reserve";
 
-"type.leisure.marina" = "leisure-marina";
+"type.leisure.marina" = "Marina";
 
 "type.leisure.nature_reserve" = "천연보호구역";
 
@@ -3617,17 +4192,9 @@
 
 "type.leisure.pitch" = "경기장";
 
-"type.leisure.pitch.tennis" = "경기장";
-
 "type.leisure.playground" = "운동장";
 
-"type.leisure.playground.tennis" = "운동장";
-
-"type.leisure.playing_fields" = "leisure-playing_fields";
-
-"type.leisure.playing_fields.tennis" = "leisure-playing_fields-tennis";
-
-"type.leisure.recreation_ground" = "leisure-recreation_ground";
+"type.leisure.recreation_ground" = "Recreation ground";
 
 "type.leisure.sauna" = "사우나";
 
@@ -3689,25 +4256,13 @@
 
 "type.mapswithme.grid" = "mapswithme-grid";
 
-"type.marking" = "marking";
-
-"type.marking.sport" = "marking-sport";
-
-"type.marking.sport.black" = "marking-sport-black";
-
-"type.marking.sport.blue" = "marking-sport-blue";
-
-"type.marking.sport.red" = "marking-sport-red";
-
-"type.marking.sport.white" = "marking-sport-white";
-
 "type.military" = "military";
 
 "type.military.bunker" = "벙커";
 
 "type.natural" = "natural";
 
-"type.natural.bare_rock" = "natural-bare_rock";
+"type.natural.bare_rock" = "Bare rock";
 
 "type.natural.bay" = "만";
 
@@ -3715,63 +4270,57 @@
 
 "type.natural.cape" = "곶";
 
-"type.natural.cave_entrance" = "동굴입구";
+"type.natural.cave_entrance" = "동굴";
 
-"type.natural.cliff" = "natural-cliff";
+"type.natural.cliff" = "Cliff";
 
-"type.natural.coastline" = "natural-coastline";
+"type.natural.coastline" = "Coastline";
 
 "type.natural.geyser" = "온천";
 
 "type.natural.glacier" = "빙하";
 
-"type.natural.grassland" = "natural-grassland";
+"type.natural.grassland" = "밭";
 
-"type.natural.heath" = "natural-heath";
+"type.natural.heath" = "Heath";
+
+"type.natural.hot_spring" = "Hot spring";
 
 "type.natural.lake" = "호수";
 
 "type.natural.land" = "natural-land";
 
-"type.natural.meadow" = "natural-meadow";
+"type.natural.meadow" = "Meadow";
 
-"type.natural.orchard" = "natural-orchard";
+"type.natural.orchard" = "Orchard";
 
 "type.natural.peak" = "피크";
 
 "type.natural.pond" = "연못이";
 
-"type.natural.rock" = "natural-rock";
+"type.natural.rock" = "Rock";
 
-"type.natural.salt_pond" = "natural-salt_pond";
+"type.natural.salt_pond" = "Salt pond";
 
-"type.natural.scrub" = "natural-scrub";
+"type.natural.scrub" = "관목지";
 
 "type.natural.spring" = "샘";
 
 "type.natural.tree" = "나무";
 
-"type.natural.tree_row" = "natural-tree_row";
+"type.natural.tree_row" = "Tree row";
 
-"type.natural.vineyard" = "natural-vineyard";
+"type.natural.vineyard" = "Vineyard";
 
 "type.natural.volcano" = "화산";
 
 "type.natural.water" = "연못";
 
-"type.natural.wetland" = "natural-wetland";
+"type.natural.wetland" = "습지 구역";
 
-"type.natural.wetland.bog" = "natural-wetland-bog";
+"type.natural.wetland.bog" = "Wetland";
 
-"type.natural.wetland.marsh" = "natural-wetland-marsh";
-
-"type.natural.wood" = "숲";
-
-"type.natural.wood.coniferous" = "숲";
-
-"type.natural.wood.deciduous" = "숲";
-
-"type.natural.wood.mixed" = "숲";
+"type.natural.wetland.marsh" = "Wetland";
 
 "type.noexit" = "noexit";
 
@@ -3867,7 +4416,7 @@
 
 "type.place.locality" = "장소";
 
-"type.place.neighbourhood" = "place-neighbourhood";
+"type.place.neighbourhood" = "Neighbourhood";
 
 "type.place.ocean" = "대양";
 
@@ -3890,12 +4439,6 @@
 "type.power" = "power";
 
 "type.power.generator" = "power-generator";
-
-"type.power.generator.hydro" = "power-generator-hydro";
-
-"type.power.generator.photovoltaic" = "power-generator-photovoltaic";
-
-"type.power.generator.wind" = "power-generator-wind";
 
 "type.power.line" = "power-line";
 
@@ -3953,7 +4496,7 @@
 
 "type.railway.incline.tunnel" = "railway-incline-tunnel";
 
-"type.railway.level_crossing" = "Level Crossing";
+"type.railway.level_crossing" = "철도 건널목";
 
 "type.railway.light_rail" = "railway-light_rail";
 
@@ -3961,7 +4504,7 @@
 
 "type.railway.light_rail.tunnel" = "railway-light_rail-tunnel";
 
-"type.railway.monorail" = "railway-monorail";
+"type.railway.monorail" = "모노레일";
 
 "type.railway.monorail.bridge" = "railway-monorail-bridge";
 
@@ -3983,7 +4526,7 @@
 
 "type.railway.proposed" = "railway-proposed";
 
-"type.railway.rail" = "railway-rail";
+"type.railway.rail" = "철로";
 
 "type.railway.rail.bridge" = "railway-rail-bridge";
 
@@ -4093,7 +4636,7 @@
 
 "type.railway.subway.yellow" = "railway-subway-yellow";
 
-"type.railway.subway_entrance" = "지하철";
+"type.railway.subway_entrance" = "지하철 입구";
 
 "type.railway.subway_entrance.barcelona" = "지하철";
 
@@ -4275,28 +4818,6 @@
 
 "type.sponsored" = "sponsored";
 
-"type.sponsored.banner" = "sponsored-banner";
-
-"type.sponsored.banner.deliveryclub" = "sponsored-banner-deliveryclub";
-
-"type.sponsored.banner.geerbest_de" = "sponsored-banner-geerbest_de";
-
-"type.sponsored.banner.geerbest_fr" = "sponsored-banner-geerbest_fr";
-
-"type.sponsored.banner.geerbest_uk" = "sponsored-banner-geerbest_uk";
-
-"type.sponsored.banner.lamoda_ru" = "sponsored-banner-lamoda_ru";
-
-"type.sponsored.banner.lamoda_ua" = "sponsored-banner-lamoda_ua";
-
-"type.sponsored.banner.raileurope" = "sponsored-banner-raileurope";
-
-"type.sponsored.banner.rentalcars" = "sponsored-banner-rentalcars";
-
-"type.sponsored.banner.tutu" = "sponsored-banner-tutu";
-
-"type.sponsored.banner.viator" = "sponsored-banner-viator";
-
 "type.sponsored.booking" = "sponsored-booking";
 
 "type.sponsored.holiday" = "Christmas or New Year Celebrations";
@@ -4343,21 +4864,19 @@
 
 "type.sponsored.partner9" = "sponsored-partner9";
 
-"type.sponsored.viator" = "sponsored-viator";
-
 "type.sport" = "sport";
 
 "type.sport.american_football" = "sport-american_football";
 
 "type.sport.archery" = "sport-archery";
 
-"type.sport.athletics" = "Athletics";
+"type.sport.athletics" = "육상 경기장";
 
 "type.sport.australian_football" = "sport-australian_football";
 
 "type.sport.baseball" = "sport-baseball";
 
-"type.sport.basketball" = "Basketball";
+"type.sport.basketball" = "야구";
 
 "type.sport.bowls" = "sport-bowls";
 
@@ -4367,7 +4886,7 @@
 
 "type.sport.diving" = "sport-diving";
 
-"type.sport.equestrian" = "Equestrian Sports";
+"type.sport.equestrian" = "승마 경기장";
 
 "type.sport.football" = "sport-football";
 
@@ -4389,7 +4908,7 @@
 
 "type.sport.swimming" = "sport-swimming";
 
-"type.sport.tennis" = "sport-tennis";
+"type.sport.tennis" = "테니스 코트";
 
 "type.tourism" = "tourism";
 
@@ -4501,11 +5020,75 @@
 
 "type.wheelchair" = "wheelchair";
 
-"type.wheelchair.limited" = "wheelchair-limited";
+"type.wheelchair.limited" = "휠체어 접근 제한";
 
-"type.wheelchair.no" = "wheelchair-no";
+"type.wheelchair.no" = "휠체어 접근 금지";
 
-"type.wheelchair.yes" = "wheelchair-yes";
+"type.wheelchair.yes" = "휠체어 접근 가능";
+
+"type.piste_lift" = "piste:lift";
+
+"type.piste_lift.j.bar" = "piste:lift-j-bar";
+
+"type.piste_lift.magic_carpet" = "piste:lift-magic_carpet";
+
+"type.piste_lift.platter" = "piste:lift-platter";
+
+"type.piste_lift.rope_tow" = "piste:lift-rope_tow";
+
+"type.piste_lift.t.bar" = "piste:lift-t-bar";
+
+"type.piste_type" = "piste:type";
+
+"type.piste_type.downhill" = "piste:type-downhill";
+
+"type.piste_type.downhill.advanced" = "piste:type-downhill-advanced";
+
+"type.piste_type.downhill.easy" = "piste:type-downhill-easy";
+
+"type.piste_type.downhill.expert" = "piste:type-downhill-expert";
+
+"type.piste_type.downhill.freeride" = "piste:type-downhill-freeride";
+
+"type.piste_type.downhill.intermediate" = "piste:type-downhill-intermediate";
+
+"type.piste_type.downhill.novice" = "piste:type-downhill-novice";
+
+"type.piste_type.nordic" = "piste:type-nordic";
+
+"type.piste_type.sled" = "piste:type-sled";
+
+"type.building_part" = "건물";
+
+"type.area_highway.cycleway" = "area:highway-cycleway";
+
+"type.area_highway.footway" = "area:highway-footway";
+
+"type.area_highway.living_street" = "area:highway-living_street";
+
+"type.area_highway.motorway" = "area:highway-motorway";
+
+"type.area_highway.path" = "area:highway-path";
+
+"type.area_highway.pedestrian" = "area:highway-pedestrian";
+
+"type.area_highway.primary" = "area:highway-primary";
+
+"type.area_highway.residential" = "area:highway-residential";
+
+"type.area_highway.secondary" = "area:highway-secondary";
+
+"type.area_highway.service" = "area:highway-service";
+
+"type.area_highway.tertiary" = "area:highway-tertiary";
+
+"type.area_highway.steps" = "area:highway-steps";
+
+"type.area_highway.track" = "area:highway-track";
+
+"type.area_highway.trunk" = "area:highway-trunk";
+
+"type.area_highway.unclassified" = "area:highway-unclassified";
 
 
 /********** Brands **********/

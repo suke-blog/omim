@@ -28,7 +28,8 @@ public:
   {
     Facebook,
     Google,
-    Phone
+    Phone,
+    Apple
   };
 
   struct Subscriber
@@ -54,7 +55,8 @@ public:
 
   User();
   void Authenticate(std::string const & socialToken, SocialTokenType socialTokenType,
-                    bool privacyAccepted, bool termsAccepted, bool promoAccepted);
+                    bool privacyAccepted, bool termsAccepted, bool promoAccepted,
+                    std::string const & firstName = "", std::string const & lastName = "");
   bool IsAuthenticated() const;
   void ResetAccessToken();
   void UpdateUserDetails();
@@ -99,10 +101,11 @@ private:
   std::string m_accessToken;
   std::string m_userName;
   std::string m_userId;
-  mutable std::mutex m_mutex;
   bool m_authenticationInProgress = false;
   Details m_details;
   std::vector<std::unique_ptr<Subscriber>> m_subscribers;
+
+  mutable std::mutex m_mutex;
 };
 
 namespace lightweight

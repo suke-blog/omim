@@ -22,6 +22,7 @@ template <class T, size_t N> class buffer_vector
 {
 private:
   enum { USE_DYNAMIC = N + 1 };
+  // TODO (@gmoryes) consider std::aligned_storage
   T m_static[N];
   size_t m_size;
   std::vector<T> m_dynamic;
@@ -408,6 +409,19 @@ public:
     iterator i = std::remove_if(b, e, std::forward<Fn>(fn));
     if (i != e)
       resize(std::distance(b, i));
+  }
+
+  void erase(iterator first, iterator last)
+  {
+    if (first == last)
+      return;
+
+    auto const numToErase = std::distance(first, last);
+    for (; first != end() - numToErase; ++first)
+    {
+      Swap(*first, *(first + numToErase));
+    }
+    resize(std::distance(begin(), first));
   }
 
 private:

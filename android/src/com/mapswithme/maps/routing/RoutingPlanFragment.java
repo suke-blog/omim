@@ -1,8 +1,8 @@
 package com.mapswithme.maps.routing;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +27,11 @@ public class RoutingPlanFragment extends BaseMwmFragment
     RoutingBottomMenuListener listener = null;
     if (getActivity() instanceof RoutingBottomMenuListener)
       listener = (RoutingBottomMenuListener) getActivity();
-    mPlanController = new RoutingPlanController(res, getActivity(), listener);
+
+
+    RoutingPlanInplaceController.RoutingPlanListener planListener =
+        (RoutingPlanInplaceController.RoutingPlanListener) requireActivity();
+    mPlanController = new RoutingPlanController(res, getActivity(), planListener, listener);
     return res;
   }
 

@@ -141,7 +141,7 @@ public:
       case EntityType::Sync:      s << "O5M_CMD_SYNC";
       case EntityType::Jump:      s << "O5M_CMD_JUMP";
       case EntityType::Reset:     s << "O5M_CMD_RESET";
-      default: return s << "Unknown command: " << std::hex << base::Key(type);
+      default: return s << "Unknown command: " << std::hex << base::Underlying(type);
     }
     return s;
   }
@@ -215,7 +215,8 @@ public:
         NextValue();
       }
 
-      bool operator!=(Iterator const & iter) { return m_reader != iter.m_reader; }
+      bool operator==(Iterator const & iter) { return m_reader == iter.m_reader; }
+      bool operator!=(Iterator const & iter) { return !(*this == iter); }
 
       Iterator & operator++() { NextValue(); return *this; }
 
@@ -567,7 +568,8 @@ public:
       NextValue();
     }
 
-    bool operator!=(Iterator const & iter) { return m_reader != iter.m_reader; }
+    bool operator==(Iterator const & iter) { return m_reader == iter.m_reader; }
+    bool operator!=(Iterator const & iter) { return !(*this == iter); }
     Iterator & operator++() { NextValue(); return *this; }
 
     void NextValue() { m_reader = m_reader->ReadEntity(&m_entity) ? m_reader : nullptr; }

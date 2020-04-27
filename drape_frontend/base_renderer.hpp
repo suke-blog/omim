@@ -17,32 +17,38 @@
 
 namespace df
 {
+using OnGraphicsContextInitialized = std::function<void()>;
+
 class BaseRenderer : public MessageAcceptor
 {
 public:
   struct Params
   {
     Params(dp::ApiVersion apiVersion, ref_ptr<ThreadsCommutator> commutator,
-           ref_ptr<dp::GraphicsContextFactory> factory, ref_ptr<dp::TextureManager> texMng)
+           ref_ptr<dp::GraphicsContextFactory> factory, ref_ptr<dp::TextureManager> texMng,
+           OnGraphicsContextInitialized const & onGraphicsContextInitialized)
       : m_apiVersion(apiVersion)
       , m_commutator(commutator)
       , m_oglContextFactory(factory)
       , m_texMng(texMng)
-    {
-    }
+      , m_onGraphicsContextInitialized(onGraphicsContextInitialized)
+    {}
 
     dp::ApiVersion m_apiVersion;
     ref_ptr<ThreadsCommutator> m_commutator;
     ref_ptr<dp::GraphicsContextFactory> m_oglContextFactory;
     ref_ptr<dp::TextureManager> m_texMng;
+    OnGraphicsContextInitialized m_onGraphicsContextInitialized;
   };
 
   BaseRenderer(ThreadsCommutator::ThreadName name, Params const & params);
 
   bool CanReceiveMessages();
+  
+  void IterateRenderLoop();
 
   void SetRenderingEnabled(ref_ptr<dp::GraphicsContextFactory> contextFactory);
-  void SetRenderingDisabled(bool const destroyContext);
+  void SetRenderingDisabled(bool const destroySurface);
 
   bool IsRenderingEnabled() const;
 
@@ -56,9 +62,13 @@ protected:
   void StartThread();
   void StopThread();
 
-  void CheckRenderingEnabled();
+  void CreateContext();
 
+  void CheckRenderingEnabled();
+  
   virtual std::unique_ptr<threads::IRoutine> CreateRoutine() = 0;
+  
+  virtual void RenderFrame() = 0;
 
   virtual void OnContextCreate() = 0;
   virtual void OnContextDestroy() = 0;
@@ -68,6 +78,8 @@ protected:
 
 private:
   using TCompletionHandler = std::function<void()>;
+  
+  void IterateRenderLoopImpl();
 
   threads::Thread m_selfThread;
   ThreadsCommutator::ThreadName m_threadName;
@@ -79,6 +91,9 @@ private:
   std::mutex m_completionHandlerMutex;
   bool m_wasNotified;
   std::atomic<bool> m_wasContextReset;
+
+  OnGraphicsContextInitialized m_onGraphicsContextInitialized;
+  static std::atomic<uint8_t> m_contextCounter;
 
   bool FilterContextDependentMessage(ref_ptr<Message> msg);
   void SetRenderingEnabled(bool const isEnabled);

@@ -8,20 +8,21 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import com.cocosw.bottomsheet.BottomSheet;
 import com.google.gson.Gson;
 import com.mapswithme.maps.MwmApplication;
 import com.mapswithme.maps.R;
+import com.mapswithme.maps.base.Initializable;
 import com.mapswithme.maps.bookmarks.data.BookmarkManager;
 import com.mapswithme.maps.bookmarks.data.BookmarkSharingResult;
-import com.mapswithme.util.BottomSheetHelper;
 import com.mapswithme.maps.dialog.DialogUtils;
+import com.mapswithme.util.BottomSheetHelper;
 import com.mapswithme.util.concurrency.ThreadPool;
 import com.mapswithme.util.concurrency.UiThread;
 import com.mapswithme.util.log.Logger;
@@ -36,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public enum SharingHelper
+public enum SharingHelper implements Initializable<Void>
 {
   INSTANCE;
 
@@ -53,7 +54,8 @@ public enum SharingHelper
   @Nullable
   private ProgressDialog mProgressDialog;
 
-  public void initialize()
+  @Override
+  public void initialize(@Nullable Void aVoid)
   {
     ThreadPool.getStorage().execute(
         () ->
@@ -68,6 +70,12 @@ public enum SharingHelper
               INSTANCE.mItems.put(item.packageName, item);
           }
         });
+  }
+
+  @Override
+  public void destroy()
+  {
+    // No op.
   }
 
   private static SharingTarget[] parse(String json)
@@ -225,7 +233,7 @@ public enum SharingHelper
       case BookmarkSharingResult.FILE_ERROR:
         DialogUtils.showAlertDialog(context, R.string.dialog_routing_system_error,
                                     R.string.bookmarks_error_message_share_general);
-        String catName = BookmarkManager.INSTANCE.getCategoryName(result.getCategoryId());
+        String catName = BookmarkManager.INSTANCE.getCategoryById(result.getCategoryId()).getName();
         LOGGER.e(TAG, "Failed to share bookmark category '" + catName + "', error code: "
                       + result.getCode());
         break;

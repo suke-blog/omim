@@ -4,8 +4,6 @@
 <!-- Language: tr -->
 <resources>
 	<!-- SECTION: Strings -->
-	<!-- About button text (should be short) -->
-	<string name="about">Hakkında</string>
 	<!-- Button text (should be short) -->
 	<string name="back">Geri</string>
 	<!-- Button text (should be short) -->
@@ -52,7 +50,6 @@
 	<string name="miles">Mil</string>
 	<!-- View and button titles for accessibility -->
 	<string name="core_my_position">Konumum</string>
-	<string name="ok">Tamam</string>
 	<!-- Settings/Downloader - No free space dialog message -->
 	<string name="free_disk_space_for_country_x">%s indirmek için lütfen ilk önce cihazınızda biraz alan boşaltın</string>
 	<!-- Leave Review dialog - Not now button (remind me later) -->
@@ -71,8 +68,6 @@
 	<string name="touch_to_download">İndirmek için dokunun</string>
 	<!-- Settings/Downloader - 3G download warning dialog confirm button -->
 	<string name="use_cellular_data">Evet</string>
-	<!-- Settings/Downloader - No internet connection dialog message -->
-	<string name="use_wifi_recommendation_text">Büyük haritaları indirmek için WiFi kullanmanızı öneriyoruz</string>
 	<!-- Choose measurement on first launch alert - title -->
 	<string name="which_measurement_system">Hangi ölçü sistemini tercih edersiniz?</string>
 	<!-- Location services are disabled by user alert - message -->
@@ -260,8 +255,6 @@
 	<string name="my_position_share_sms">Hey, MAPS.ME’de geçerli konumumu incele! %1$s veya %2$s Çevrimiçi haritalar sende yok mu? Buradan indir: http://maps.me/get</string>
 	<!-- Subject for emailed bookmark -->
 	<string name="bookmark_share_email_subject">Hey, MAPS.ME haritasında pinimi incele!</string>
-	<!-- Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me -->
-	<string name="bookmark_share_email">Merhaba,\n\nDünyanın çevrimdışı haritaları MAPS.ME’d: %1$s pinledim. Yeri haritadan görmek için bu bağlantıya %2$s veya şuna %3$s tıkla.\n\nTeşekkürler.</string>
 	<!-- Subject for emailed position -->
 	<string name="my_position_share_email_subject">Hey, MAPS.ME’de geçerli konumumu incele!</string>
 	<!-- Share my position using EMail, %1$@ is ge0:// and %2$@ is http://ge0.me link WITHOUT NAME -->
@@ -564,6 +557,22 @@
 	<string name="brown">Kahverengi</string>
 	<!-- pink color -->
 	<string name="pink">Pembe</string>
+	<!-- deep purple color -->
+	<string name="deep_purple">Koyu Mor</string>
+	<!-- light blue color -->
+	<string name="light_blue">Açık Mavi</string>
+	<!-- cyan color -->
+	<string name="cyan">Cam Göbeği</string>
+	<!-- teal color -->
+	<string name="teal">Deniz Mavisi</string>
+	<!-- lime color -->
+	<string name="lime">Çim Rengi</string>
+	<!-- deep orange color -->
+	<string name="deep_orange">Koyu Turuncu</string>
+	<!-- gray color -->
+	<string name="gray">Gri</string>
+	<!-- blue gray color -->
+	<string name="blue_gray">Mavi Gri</string>
 	<!-- Wi-Fi available -->
 	<string name="WiFi_available">Evet</string>
 
@@ -797,8 +806,6 @@
 	<string name="onboarding_location_message">Navigasyon ve diğer özellikleri kullanmak için konum belirlemenize erişmeye ihtiyacımız var.</string>
 	<string name="onboarding_permissions_title">MAPS.ME\'nin depolama alanına ve konum bilgilerine erişmesine izin verin</string>
 	<string name="onboarding_permissions_message">Böylece haritaları indirebilir, size yakın olan yerleri ve trafik bilgilerini görebilir ve navigasyonu kullanabilirsiniz.</string>
-	<string name="onboarding_welcome_title">MAPS.ME\'ye Hoş Geldiniz</string>
-	<string name="onboarding_welcome_first_subtitle">Gideceğiniz yeri adım adım gösteren navigasyon ile birlikte ücretsiz, hızlı, detaylı ve tamamen çevrimdışı haritalar.</string>
 	<string name="onboarding_welcome_second_subtitle">Uygulamayı başlatarak &lt;a href="%1$s">Kullanım Koşullarını&lt;/a> ve &lt;a href="%2$s">Gizlilik Politikasını&lt;/a> kabul etmiş sayılırsınız.</string>
 	<string name="dialog_incorrect_feature_position">Konumu değiştir</string>
 	<string name="message_invalid_feature_position">Buraya bir nesne konumlandırılamıyor</string>
@@ -880,6 +887,7 @@
 	<string name="minute">dk</string>
 	<string name="placepage_place_description">Açıklama</string>
 	<string name="placepage_more_button">Diğer</string>
+	<string name="placepage_more_reviews_button">Diğer yorumlar</string>
 	<string name="book_button">Rezervasyon</string>
 	<string name="placepage_call_button">Çağrı</string>
 	<string name="placepage_edit_bookmark_button">Yer İmini Düzenle</string>
@@ -1033,8 +1041,6 @@
 	<string name="banner_geerbest_message">En uygun fiyatlarla 50.000\'den fazla ürün için hızlı arama yapın.</string>
 	<string name="banner_rentalcars_title">Çevrimiçi araba kiralama</string>
 	<string name="banner_rentalcars_message">49.000\'den fazla araç kiralama bölgesinde yer alan 800 araç kiralama şirketi.</string>
-	<string name="banner_viator_title">Çevrimiçi tur arama</string>
-	<string name="banner_viator_message">Dünyanın her yerinden 50.000\'den fazla tur içinden arama yapın.</string>
 	<!-- december -->
 	<string name="whatsnew_traffic">36 Ülkeden Trafik Verileri</string>
 	<!-- december -->
@@ -1076,8 +1082,6 @@
 	<string name="whatsnew_smaller_mwm_message">Artık haritalar %20\'ye kadar daha az depolama alanı gerektiriyor.</string>
 	<string name="whatsnew_waypoints_title">Güzergâhtaki Yol Noktaları</string>
 	<string name="whatsnew_waypoints_message">Güzergâhınıza yol noktası olarak eklemek istediğiniz yerlere dokunun.</string>
-	<string name="whatsnew_viator_title">Tur rezervasyonu</string>
-	<string name="whatsnew_viator_message">Dünyanın dört bir yanındaki turistik şehirleri kapsayan popüler turları seçin.</string>
 	<string name="whatsnew_driving_style_title">Sürüş İçin Yeni Harita Stili</string>
 	<string name="whatsnew_driving_style_message">Araç navigasyon modunu kullanmak şimdi çok daha kolay.</string>
 	<string name="more_on_bookingcom">Booking.com hakkında daha fazla</string>
@@ -1134,7 +1138,6 @@
 	<string name="settings_card_memory">Kart belleği</string>
 	<string name="settings_storage_available">%s kullanılabilir</string>
 	<string name="toast_location_permission_denied">Uygulamanın konum bilgilerine erişim isteği reddedildi</string>
-	<string name="place_page_viator_title">Geziler ve turlar</string>
 	<string name="button_use">Kullan</string>
 	<string name="planning_route_manage_route">Güzergâhı yönet</string>
 	<string name="button_plan">Plan</string>
@@ -1149,8 +1152,6 @@
 	<string name="add_my_position">Konumumu ekle</string>
 	<string name="choose_start_point">Bir başlangıç noktası seçin</string>
 	<string name="choose_destination">Bir hedef seçin</string>
-	<string name="preloader_viator_title">Turları ve sıra dışı etkinlikleri keşfedin</string>
-	<string name="preloader_viator_message">Turlar, etkinlikler, geziler ve çok daha fazlası</string>
 	<string name="preloader_viator_button">Daha fazla bilgi edinin</string>
 	<string name="whats_new_title_route">Bisiklet ve yaya güzergahları iyileştirildi</string>
 	<string name="whats_new_message_route">Hataları düzelttik, güzergah oluşturmayı daha hızlı hale getirdik ve ara duraklar ekledik</string>
@@ -1161,9 +1162,6 @@
 	<string name="placepage_no_reviews">Değerlendirme yok</string>
 	<string name="placepage_reviewed">Bu yer için zaten yorum eklediniz</string>
 	<string name="placepage_summary_rating">Değerlendirme özeti</string>
-	<plurals name="placepage_summary_rating_description">
-	  <item quantity="other">%d değerlendirmeye göre</item>
-	</plurals>
 	<string name="placepage_rate_comment">Bu yeri değerlendirmek ve oylamak için dokunun.</string>
 	<string name="placepage_rate_horrible">Korkunç</string>
 	<string name="placepage_rate_bad">Kötü</string>
@@ -1206,8 +1204,6 @@
 	<string name="discovery_button_subtitle_attractions">Cazibe Merkezleri</string>
 	<string name="discovery_button_subtitle_eat_and_drink">Yeme-içme</string>
 	<string name="discovery_button_subtitle_local_guides">Yerel Rehberler</string>
-	<string name="discovery_button_viator_offline_title">Turları ve sıra dışı şeyleri keşfedin</string>
-	<string name="discovery_button_viator_offline_message">Turlar, etkinlikler, şehir gezileri ve daha fazlası.</string>
 	<string name="discovery_button_viator_error_title">Veri yükleme hatası</string>
 	<string name="discovery_button_other_error_message">Veri yükleme hatası</string>
 	<string name="discovery_button_other_loading_message">Veriler yükleniyor</string>
@@ -1247,12 +1243,10 @@
 	<string name="downloader_percent">%1$s (%2$s / %3$s)</string>
 	<string name="downloader_process">%s indiriliyor...</string>
 	<string name="downloader_applying">%s uygulanıyor...</string>
-	<string name="transit_not_found">Transit navigasyon henüz bu bölgede kullanılamıyor</string>
 	<string name="whats_new_title_hotel_filter">Yeni otel filtreleri kullanımda!</string>
 	<string name="whats_new_message_hotel_filter">İstediğiniz tarihte otel rezervasyonu yapın! Check-in ve check-out filtrelerini kullanın</string>
 	<string name="whats_new_title_ugc_travel">Deneyimlerinizi diğer gezginlerle paylaşın!</string>
 	<string name="whats_new_message_ugc_travel">Son ziyaret ettiğiniz yerleri değerlendirin ve görüşlerinizi paylaşın!</string>
-	<string name="dialog_pedestrian_route_is_long">Yaya rotası çok uzun</string>
 	<string name="dialog_message_transit_not_found_connection">Tek transit bir ağda bir rota planla</string>
 	<string name="bookmarks_error_message_share_general">Bir uygulama hatasından dolayı paylaşılamıyor</string>
 	<string name="bookmarks_error_title_share_empty">Paylaşma hatası</string>
@@ -1356,8 +1350,8 @@
 	<string name="error_already_downloaded">Bu liste zaten indirildi</string>
 	<string name="guides">El kitapları</string>
 	<string name="guide_downloaded_title">El kitabı başarılı bir şekilde indirildi</string>
-	<string name="download_guides">El kitaplarını indir</string>
-	<string name="cached_guides_placeholder_subtitle">Her çeşit yolculuk için ayrıntılı çevrimdışı el kitapları. Sana en uygun olanı seç ve doğrudan haritaya indir. El kitaplarını indirmek için internet bağlantısına ihtiyacın olacak.</string>
+	<!-- as few symbols as possible -->
+	<string name="download_guides">Yol rehberlerini bul</string>
 	<string name="guides_groups_cached">İndirilen el kitapları</string>
 	<string name="subtitle_error_downloading_guide">El kitabı indirilmedi</string>
 	<string name="error_already_downloaded_guide">Bu el kitabı zaten indirildi</string>
@@ -1396,7 +1390,6 @@
 	<string name="restore_success_alert">Abonelik başarılı bir şekilde geri yüklendi</string>
 	<string name="restore_error_alert">Abonelik geri yüklenirken bir hata oluştu</string>
 	<string name="restore_no_subscription_alert">Aktif abonelik yok</string>
-	<string name="subscription_terms">Ödeme, satın alma onayında iTunes hesabınızdan alınacaktır. Otomatik yenileme geçerli dönemin sona ermesinden en az 24 saat önce kapatılmadıkça abonelik otomatik olarak yenilenecektir. Hesabınızdan, geçerli dönemin sona ermesinden önce 24 saat içinde planınıza göre yenileme için ücret alınacaktır. Otomatik yenilemeyi satın alma işleminizde dilediğiniz zaman Apple ID hesap ayarlarınızda yönetebilir veya kapatabilirsiniz.</string>
 	<string name="subscriptions_title">Abonelikler</string>
 	<string name="manage_subscription">Aboneliği yönet</string>
 	<string name="sharing_options">Paylaşma seçenekleri</string>
@@ -1406,7 +1399,6 @@
 	<string name="hide_from_map">Haritadan gizle</string>
 	<string name="ugc_route_tags_screen_label">Etiketleri seç</string>
 	<string name="ugc_route_tags_progress_msg">Etiketler yükleniyor…</string>
-	<string name="ugc_route_tags_desc">Diğer gezginlerin kılavuzunuzu bulmasına yardımcı olmak için lütfen etiketleri seçin. Bu zorunludur.</string>
 	<string name="public_access">Genel erişim</string>
 	<string name="limited_access">Sınırlı erişim</string>
 	<string name="upload_and_publish_desc">Bu kılavuz, herkese açık MAPS.ME kataloğuna yüklenecek ve diğer kullanıcılara sunulacaktır</string>
@@ -1429,7 +1421,7 @@
 	<string name="unable_upload_errorr_title">Dosya yükleme başarısız</string>
 	<string name="unable_upload_error_subtitle_edited">Bu dosya web uygulamasıyla düzenlendi</string>
 	<string name="unable_upload_error_subtitle_broken">Bu dosya bozuk olduğundan yüklenemedi. Lütfen başka bir dosya yükleyin.</string>
-	<string name="buy_btn">%s \'ye satın alın</string>
+	<string name="buy_btn">Bunu %s karşılığında satın alın</string>
 	<string name="download_guide_progress">Kılavuzunuz indiriliyor…</string>
 	<string name="price_error_title">Fiyat alınamadı</string>
 	<string name="price_error_subtitle">Lütfen birkaç dakika içinde tekrar deneyin</string>
@@ -1477,12 +1469,326 @@
 	<string name="whatsnew_paid_routes_title">Daha fazla yeni deneyimler!</string>
 	<string name="whatsnew_paid_routes_message">Ücretsiz rotalara ek olarak, kataloğumuza 3 ücretli rota kategorisi ekledik. 700\'den fazla yeni rota!</string>
 	<string name="whats_new_ugc_routes_title_android_only">İzlenimlerinizi paylaşmak çok kolay</string>
+	<string name="ugc_thanks_message_auth">Yorumunuz kaydedildi</string>
+	<string name="ugc_thanks_message_not_auth">Yorum yapmak için lütfen giriş yapınız</string>
+	<string name="notification_leave_review_v2_title">Ziyaret edilen bir yere puan verin ve gezginlere yardım edin!</string>
+	<string name="error_public_not_enought_title">Yeterli yer imi yok</string>
+	<string name="error_public_not_enought_subtitle">Kılavuzunuzu genel kataloğa yükleyebilmek için en az 3 yer iminiz olmalı</string>
+	<string name="bookmark_public_upload_alert_title">Yer imlerinizi tüm MAPS.ME gezginleriyle paylaşmanıza az kaldı!</string>
+	<string name="bookmark_public_upload_alert_subtitle">Lütfen listeniz için belirli bir ad ve açıklamanız olduğundan ve tüm yer imlerinde yerler hakkında biraz bilgi bulunduğundan emin olun. Bu şekilde listeniz başkaları tarafından bulunabilir ve kullanılabilir.</string>
+	<string name="bookmark_public_upload_alert_ok_button">Evet, eminim!</string>
+	<string name="name_title">Kılavuzunuzun adını girin</string>
+	<string name="name_placeholder">örneğin: Londra Barları</string>
+	<string name="name_comment1">Lütfen kılavuzunuzu gezginlerin kolayca bulabilmesi için adlandırın: örneğin, \"Londra Pubs\"</string>
+	<string name="name_comment2">Koyduğunuz ad, özel sembol içermemelidir. Ad, \"Yerlerim\" olmamalı</string>
+	<string name="description_guide">Açıklama</string>
+	<string name="description_title">Kılavuzunuzun açıklamasını girin</string>
+	<string name="description_placeholder">Kılavuzunuzu ayrıntılı olarak tanımlayın</string>
+	<string name="description_comment1">Kılavuz açıklamanız en az 30 karakter içermelidir.</string>
+	<string name="ugc_route_tags_desc">Diğer gezginlerin kılavuzunuzu bulmasına yardımcı olmak için lütfen etiketleri seçin. Bu zorunludur. En fazla %s etiket.</string>
+	<string name="html_format_error_title">Kılavuzunuz yayınlanmadı</string>
+	<string name="html_format_error_subtitle">Lütfen yer imlerinizin adlarının ve açıklamalarının geçerli bir biçimde olduğundan emin olun. Aşağıdaki \"Çevrimiçi düzenle\" butonuna tıklayarak bir masaüstü tarayıcısında kontrol edebilirsiniz.</string>
+	<string name="web_editor_description">Kılavuzunuzu yükleyin ve düzenleme bağlantısını masaüstünden alın</string>
+	<string name="edit_on_web_confirm">Çevrimiçi düzenle</string>
+	<string name="update_guide">Güncelleme yükle</string>
+	<string name="direct_link_updating_text">Dosyanız güncelleniyor…</string>
+	<string name="direct_link_updating_success">Kılavuzunuz güncellendi</string>
+	<string name="unable_get_direct_link_desc">Kılavuzunuzu genel bir bağlantı yoluyla paylaşabilirsiniz</string>
+	<string name="any_access_update_alert_title">Bazı değişiklikler olmuş olabilir</string>
+	<string name="any_access_update_alert_message">Yer imlerinizi güncellemek ister misiniz? Yeni sürüm aynı link üzerinden erişilebilecektir.</string>
+	<string name="any_access_update_alert_update">Güncelleştirme</string>
+	<string name="public_or_limited_access_after_edit_online_error_title">Yer imlerinizi çevrimiçi düzenlediniz</string>
+	<string name="public_or_limited_access_after_edit_online_error_message">Gelecekte lütfen web sitemiz üzerinden kılavuzu düzenleyin, yayınlayın veya arkadaşlarınızla paylaşın</string>
+	<string name="power_managment_title">Güç tasarrufu modu</string>
+	<string name="power_managment_description">Otomatik mod seçildiğinde, uygulama geçerli pil seviyesine bağlı olarak şarj harcayan özellikleri devre dışı bırakmaya başlar</string>
+	<string name="power_managment_setting_never">Asla</string>
+	<string name="power_managment_setting_auto">Otomatik</string>
+	<string name="power_managment_setting_manual_max">Maksimum güç tasarrufu</string>
+	<string name="enable_logging_warning_message">Seçenek tanı amaçlı, günlüğe kaydetmeyi açar. Uygulamayla ilgili sorunları gideren destek ekibimiz için yardımcı olabilir. Bu seçeneği yalnızca MAPS.ME desteğinin isteği üzerine etkinleştirin.</string>
+	<string name="html_error_upload_message_try_again">Lütfen ağ ayarlarınızı kontrol edip tekrar deneyin</string>
+	<string name="html_error_upload_title_try_again">İnternet bağlantısı yok</string>
+	<string name="notification_leave_review_v2_android_short_title">İnceleyin ve gezginlere yardım edin!</string>
+	<string name="notifications_illegal_alert_disable_button">Bildirimleri kapat</string>
+	<string name="access_rules_author_only">Çevrimiçi düzenleme</string>
+	<string name="privacy_settings_menu">Gizlilik ayarları</string>
+	<string name="gdpr_request_setting">GDPR isteği için kimlik al</string>
+	<string name="gdpr_request_window_title">Kimliğiniz: %s.</string>
+	<string name="gdpr_request_window_message">Lütfen kopyalayın ve talebi support\@maps.me adresine gönderin</string>
+	<string name="gdpr_request_window_copy">Kimliği kopyala</string>
+	<string name="unable_upadate_error_title">Dosya güncellemesi başarısız oldu</string>
+	<string name="unable_upadate_error_message">Güncelleme sırasında bazı hatalar oluştu. Lütfen değişiklikleri kontrol edip tekrar deneyin</string>
+	<string name="whats_new_wiki_title">O yer neresi?</string>
+	<string name="whats_new_wiki_message">En popüler turistik mekanların sayfalarına Wikipedia.org makaleleri ekledik. Çevrimdışı kullanılabilirler</string>
+	<string name="driving_options_title">Sürüş seçenekleri</string>
+	<string name="driving_options_subheader">Her rotada kaçının</string>
+	<string name="avoid_tolls">Paralı yollar</string>
+	<string name="avoid_unpaved">Asfaltsız yollar</string>
+	<string name="avoid_ferry">Feribot geçişleri</string>
+	<string name="avoid_motorways">Otoyollar</string>
+	<string name="unable_to_calc_alert_title">Rota hesaplanamıyor</string>
+	<string name="unable_to_calc_alert_subtitle">Maalesef, muhtemelen belirlediğiniz seçeneklerden dolayı bir rota bulamadık. Lütfen seçenekleri değiştirin ve tekrar deneyin</string>
+	<string name="define_to_avoid_btn">Kaçınılması gereken yolları tanımlayın</string>
+	<string name="change_driving_options_btn">Sürüş seçenekleri etkinleştirildi</string>
+	<string name="toll_road">Paralı yol</string>
+	<string name="unpaved_road">Asfaltsız yol</string>
+	<string name="ferry_crossing">Feribot geçişi</string>
+	<string name="operated_by">\"%s\" tarafından işletiliyor</string>
+	<string name="avoid_toll_roads_placepage">Paralı yollardan kaçın</string>
+	<string name="avoid_unpaved_roads_placepage">Asfaltsız yollardan kaçın</string>
+	<string name="avoid_ferry_crossing_placepage">Feribot geçişlerinden kaçın</string>
+	<string name="cached_guides_placeholder_subtitle">MAPS.ME, harita üzerinde görüntülenen ve çevrimdışı kullanılabilen, fotoğraf ve açıklamaların bulunduğu seçili yerler için hazır rehberler sunar.</string>
+	<string name="guides_catalogue_title">Rehber kataloğu</string>
+	<string name="download_guides_button">Kataloğa</string>
+	<plurals name="placepage_summary_rating_description">
+	  <item quantity="one">%d incelemeye göre</item>
+	  <item quantity="other">%d incelemeye göre</item>
+	</plurals>
+	<string name="type.cuisine.uzbek">Özbek mutfağı</string>
+	<string name="onboarding_welcome_title">MAPS.ME ile planlayın ve seyahat edin</string>
+	<string name="onboarding_welcome_first_subtitle">İlginç yerleri işaretleyin, otel rezervasyonu yapın, çevrimdışıyken rota hesaplayın</string>
+	<string name="onboarding_guide_direct_download_title">Rehber indirmeye hazır</string>
+	<string name="onboarding_guide_direct_download_subtitle">Haritada görüntülenecek ve çevrimdışı kullanılabilecek</string>
+	<string name="onboarding_guide_direct_download_button">İndir</string>
+	<string name="onboarding_bydeeplink_guide_title">MAPS.ME’de kullanıma hazır rehberler</string>
+	<string name="onboarding_bydeeplink_guide_subtitle">Ziyaret edilecek en iyi yerler fotoğraf ve açıklamalarla birlikte haritada görüntülenir. Çevrimdışı kullanın.</string>
+	<string name="whats_new_auto_update_bydeeplink_title">Rehberlere geçmeden önce…</string>
+	<string name="whats_new_auto_update_bydeeplink_message">Nesneler hakkındaki bilgileri güncel tutmak için haritaları güncelleyin!</string>
+	<string name="whats_new_auto_update_and_proceed_button_size">(%s) güncelle ve devam et</string>
+	<string name="whatsnew_toll_unpaved_title">Her türlü yolu göz önünde bulundurarak otomobil rotalarını düzenleyin</string>
+	<string name="whatsnew_toll_unpaved_message">Paralı yollar, toprak yollar ve feribot seferlerine göre gideceğiniz dolambaçlı yolları seçin</string>
+	<string name="whatsnew_new_catalogue_title">Katalog sayfaları güncellendi</string>
+	<string name="whatsnew_new_catalogue_message">Rota seçimini kolay ve rahat hale getirmek için ortak rehnerleri hakkında ayrıntılı bilgiler ekledik</string>
+	<string name="purchase_please_wait_toast">Lütfen satın alma işlemi tamamlanmadan önce bu ekrandan çıkmayın</string>
+	<string name="trip_start">Hadi gidelim</string>
+	<string name="pick_destination">Hedef</string>
+	<string name="follow_my_position">Tekrar ortala</string>
+	<string name="search_results">Arama sonuçları</string>
+	<string name="then_turn">Sonra</string>
+	<string name="redirect_route_alert">Yeniden bir rota oluşturmak ister misiniz?</string>
+	<string name="redirect_route_yes">Evet</string>
+	<string name="redirect_route_no">Hayır</string>
+	<string name="trip_finished">Vardınız!</string>
+	<string name="keyboard_availability_alert">Klavye, sürüş sırasında kullanılamaz</string>
+	<string name="dialog_routing_change_start_carplay">Mevcut konumunuzdan rota oluşturulamıyor</string>
+	<string name="dialog_routing_change_end_carplay">Hedefinize rota oluşturulamıyor. Lütfen başka bir nokta seçin</string>
+	<string name="dialog_routing_check_gps_carplay">GPS sinyali yok. Lütfen açık bir alana geçin</string>
+	<string name="dialog_routing_unable_locate_route_carplay">Rota oluşturulamıyor. Lütfen başka bir rota noktası belirtin</string>
+	<string name="dialog_routing_download_files_carplay">Rota oluşturmak için cihazınızdaki eksik haritaları indirin</string>
+	<string name="dialog_routing_system_error_carplay">Hata oluştu. Lütfen uygulamayı yeniden başlatın</string>
+	<string name="dialog_routing_rebuild_from_current_location_carplay">Rota, mevcut konumunuzdan yeniden oluşturulacak</string>
+	<string name="dialog_routing_rebuild_for_vehicle_carplay">Rota, bir arabalı seyahat rotasına dönüştürülecek</string>
+	<string name="ok">Tamam</string>
+	<string name="booking_button_toolbar">Haritada bir otel seçin</string>
+	<string name="popup_booking_download_guides_title">Otel rezervasyonu yaptırdınız mı?</string>
+	<string name="popup_booking_download_guides_message">MAPS.ME adresinden, hazır rehberler ile rotanızı planlayın</string>
+	<string name="popup_mwm_download_guides_title">Çevrimdışı şehir rehberleri</string>
+	<string name="popup_mwm_download_guides_cta">Birini seçin</string>
+	<string name="popup_mwm_download_guides_cta_1">Bir göz atın</string>
+	<string name="gallery_pp_download_guides_offline_title">Tatilinizi MAPS.ME ile planlayın!</string>
+	<string name="gallery_pp_download_guides_offline_subtitle">Deneyimli gezginler tarafından yapılan rehberlerle, hiçbir şeyi kaçırmayın</string>
+	<string name="gallery_pp_download_guides_offline_cta">İnterneti aç</string>
+	<string name="gallery_pp_download_guides_title">Rehberler</string>
+	<string name="native_screen_subscription_title">2000+ seyahat rehberine sınırsız erişim!</string>
+	<string name="native_screen_subscription_message">Nerede ve kiminle seyahat ediyorsanız, unutulmaz bir tatil fırsatı</string>
+	<string name="annual_subscription_title">Yıllık</string>
+	<string name="montly_subscription_title">Aylık</string>
+	<string name="annual_subscription_message">12 aylık sınırsız erişim</string>
+	<string name="montly_subscription_message">1 aylık sınırsız erişim</string>
+	<string name="subscription_success_dialog_title">Abone olduğun için teşekkürler!</string>
+	<string name="subscription_success_dialog_message">Artık, tüm rehber kataloguna sınırsız erişim hakkınız var</string>
+	<string name="renewal_screen_title">Aboneliğinizin süresi doldu</string>
+	<string name="renewal_screen_message">Abonelik süresince indirilen tüm rehberler silinecek. Aboneliği devam ettirmek ve saklamak ister misiniz?</string>
+	<string name="renewal_screen_button_restore">Evet, yenile</string>
+	<string name="renewal_screen_button_cancel">Hayır, rehberleri sil</string>
+	<string name="subscription_error_ping_title">Satın alma başarısız oldu</string>
+	<string name="subscription_error_message">Hizmet şu anda bölgenizde kullanılamıyor. Lütfen, daha sonra tekrar deneyiniz</string>
+	<string name="subscription_error_button">Anladım</string>
+	<string name="timeout_error_title">Hata! Zaman doldu!</string>
+	<string name="timeout_error_message">Sunucularımız cevap vermiyor. Lütfen, internet bağlantısını kontrol edip tekrar deneyin.</string>
+	<string name="per_month">/ay</string>
+	<string name="per_year">/yıl</string>
+	<string name="buy_btn_for_subscription">%s üzerinden sınırsız erişim</string>
+	<string name="buy_btn_for_subscription_1">%s için TÜM rehberleri satın al</string>
+	<string name="buy_btn_for_subscription_ios_only_mo">%s/ay için sınırsız erişim</string>
+	<string name="buy_btn_for_subscription_ios_only_year">%s/yıl için sınırsız erişim</string>
+	<string name="subscription_terms_guides">Satın alma onayından sonra, ödeme iTunes hesabınızdan ücretlendirilecektir. Otomatik yenileme özelliği, geçerli dönemin sona ermesinden en az 24 saat önce kapatılmadıkça, abonelik otomatik olarak yenilenecektir. Hesabınız cari dönem sonundan önce, 24 saat içinde yenileme planınıza göre tahsil edilecektir. Apple ID hesap ayarlarınızdaki otomatik yenileme özelliğini, satın aldığınız her an, yönetebilir veya kapatabilirsiniz. Abonelikle indirilen rehberleri yalnızca son kullanma tarihine kadar kullanabilirsiniz. Abonelik bitiminden 30 gün sonra, son kullanma tarihi geçmiş yer imleri olan rehberler, otomatik olarak silinir.</string>
+	<string name="subscription_terms">Ödeme, satın alma onayında iTunes hesabınızdan alınacaktır. Otomatik yenileme geçerli dönemin sona ermesinden en az 24 saat önce kapatılmadıkça abonelik otomatik olarak yenilenecektir. Hesabınızdan, geçerli dönemin sona ermesinden önce 24 saat içinde planınıza göre yenileme için ücret alınacaktır. Otomatik yenilemeyi satın alma işleminizde dilediğiniz zaman Apple ID hesap ayarlarınızda yönetebilir veya kapatabilirsiniz.</string>
+	<string name="whatsnew_carplay_title">CarPlay\'de MAPS.ME araç navigasyonu!</string>
+	<string name="whatsnew_carplay_message">Yer imleri, arama, hız kameraları ve sürüş seçenekleri çevrimdışı da mevcut</string>
+	<string name="whatsnew_subscription_title">Tüm dünya abonelikle elinizin altında!</string>
+	<string name="whatsnew_subscription_message">Rehber kataloğuna sınırsız erişim, bir kerelik satın almadan daha karlıdır</string>
+	<string name="whatsnew_carnavi_fixes_for_android_title">Navigasyon güncellemesi</string>
+	<string name="whatsnew_carnavi_fixes_for_android_message">Güzergah planlamayı yollardan uzakta bulunan noktalara erişecek kadar iyileştirdik</string>
+	<string name="avoid_unpaved_carplay_1">Stabilizesiz</string>
+	<string name="avoid_unpaved_carplay_2">Asfaltsız hariç</string>
+	<string name="avoid_ferry_carplay_1">Feribotsuz</string>
+	<string name="avoid_ferry_carplay_2">Feribot hariç</string>
+	<string name="avoid_tolls_carplay_1">Paralı yok</string>
+	<string name="avoid_tolls_carplay_2">Paralı hariç</string>
+	<string name="speedcams_alert_title_carplay_1">Hız kamerası</string>
+	<string name="speedcams_alert_title_carplay_2">Hız uyarıları</string>
+	<string name="download_map_carplay">Lütfen haritaları cihazınıza MAPS.ME uygulamasından indirin</string>
+	<string name="carplay_roundabout_exit">%s çıkış</string>
+	<!-- max. 10 symbols, both iOS and Android -->
+	<string name="sort">Sırala…</string>
+	<!-- Android, title, max 20-22 symbols -->
+	<string name="sort_bookmarks">Yer imlerini sırala</string>
+	<!-- iOS -->
+	<string name="sort_default">Varsayılana göre sırala</string>
+	<string name="sort_type">Türe göre sırala</string>
+	<string name="sort_distance">Mesafeye göre sırala</string>
+	<string name="sort_date">Tarihe göre sırala</string>
+	<!-- Android -->
+	<string name="by_default">Varsayılana göre</string>
+	<!-- Android -->
+	<string name="by_type">Türe göre</string>
+	<!-- Android -->
+	<string name="by_distance">Mesafeye göre</string>
+	<!-- Android -->
+	<string name="by_date">Tarihe göre</string>
+	<string name="week_ago_sorttype">Bir hafta önce</string>
+	<string name="month_ago_sorttype">Bir ay önce</string>
+	<string name="moremonth_ago_sorttype">Bir aydan daha önce</string>
+	<string name="moreyear_ago_sorttype">Bir yıldan daha önce</string>
+	<string name="near_me_sorttype">Bana yakın</string>
+	<string name="others_sorttype">Diğerleri</string>
+	<string name="food_places">Yiyecek</string>
+	<string name="tourist_places">Görülecek yerler</string>
+	<string name="museums">Müzeler</string>
+	<string name="parks">Parklar</string>
+	<string name="swim_places">Yüzme</string>
+	<string name="mountains">Dağlar</string>
+	<string name="animals">Hayvanlar</string>
+	<string name="hotels">Oteller</string>
+	<string name="buildings">Binalar</string>
+	<string name="money">Para</string>
+	<string name="shops">Mağazalar</string>
+	<string name="parkings">Otoparklar</string>
+	<string name="fuel_places">Benzin istasyonları</string>
+	<string name="water">Su</string>
+	<string name="medicine">İlaç</string>
+	<string name="search_in_the_list">Listede ara</string>
+	<string name="view_on_map_bookmarks">Haritada</string>
+	<string name="more_bookmarks">Daha fazla…</string>
+	<string name="no_items_found">Hiç bir öğe bulunamadı</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_edit_list">Listeyi düzenle</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_delete_list">Listeyi sil</string>
+	<string name="whatsnew_bookmarks_search_sort_title">Yer imlerine göre sıralamak yolculuğunuzu rahatlaştırır</string>
+	<string name="whatsnew_bookmarks_search_sort_message">Favori yerleri kategori, konum ve kronolojik sıraya göre sıralayın ve belirli yer imlerini isimleriyle hızlı bir şekilde bulun</string>
+	<string name="popup_subscription_success_map_title">Yaşasın, abone oldun!</string>
+	<string name="popup_subscription_success_map_message">Şimdi MAPS.ME kataloğunda en iyi turistik yerleri keşfedin</string>
+	<string name="popup_subscription_success_map_start_button">Göz atmaya başla</string>
+	<string name="popup_subscription_success_map_not_now_button">Şimdi değil</string>
+	<string name="religious_places">Dini yerler</string>
+	<string name="subscription_terms_android">Bir satın alma işlemini onayladığınızda, ödeme Google Play hesabınızdan tahsil edilecektir. Otomatik yenileme özelliği, geçerli dönemin sona ermesinden en az 24 saat önce kapatılmadıkça abonelik otomatik olarak yenilenecektir. Hesabınız cari dönemin bitiminden 24 saat önce yenileme planınıza uygun olarak ücretlendirilecektir. Satın alma işleminden sonra otomatik yenileme özelliğini Hesap Ayarları bölümünden yönetebilir veya kapatabilirsiniz. Abonelikle indirilen rehberlerinizi yalnızca son kullanma tarihine kadar kullanabilirsiniz. Abonelik sona erme tarihinden 30 gün sonra, indirilen rehberlerini otomatik olarak silinir.</string>
+	<string name="select_list">Liste seç</string>
+	<string name="pp_discovery_place_related_header">Bu yer, rehber kataloğunda</string>
+	<string name="pp_discovery_place_related_header_1">Bu mekana kılavuzda yer verilmekte</string>
+	<string name="pp_discovery_place_related_cta_button">Gör</string>
+	<string name="pp_discovery_place_related_tag_header">“%s” etiketli kılavuzlar</string>
+	<string name="pp_discovery_place_related_tag_header_1">Şunları da beğenebilirsiniz</string>
+	<string name="buy_btn_for_subscription_version_2">TÜM rehber sadece %s/ay</string>
+	<string name="buy_btn_for_subscription_version_3">Tüm katalog %s/ay</string>
+	<string name="buy_btn_for_subscription_ios_only_mo_version_2">Kataloğa erişim %s/ay</string>
+	<string name="buy_btn_for_subscription_ios_only_year_version_2">Kataloğa erişim %s/yıl</string>
+	<string name="subscription_screen_native_title_version_2">Yer imleri ile rehberlere erişin!</string>
+	<string name="subscription_screen_native_message_version_2">600\'den fazla şehir ve 100\'den fazla ülkede seyahat etmeye hazır olun</string>
+	<string name="catalog_no_internet_title">İnternet bağlantısı yok</string>
+	<string name="catalog_no_internet_button">Tekrar deneyin</string>
+	<string name="whatsnew_map_updates_title">Daha hızlı harita güncellemeleri</string>
+	<string name="whatsnew_map_updates_message">Artık verilerimizi iki kat daha hızlı güncelliyoruz</string>
+	<string name="new_onboarding_button">İleri</string>
+	<string name="new_onboarding_button_2">Başla</string>
+	<string name="new_onboarding_step1_header_2">Her şey dahil seyahat arkadaşı</string>
+	<string name="new_onboarding_step2_header">Düşle ve planla</string>
+	<string name="new_onboarding_step2_message">70 milyondan fazla yer, haritadan hazır rehberler ve otel rezervasyonuyla seyahate hazırsın!</string>
+	<string name="new_onboarding_step3_message">Tüm ülkelerin ayrıntılı haritaları ve navigasyonuyla asla kaybolmayın. Ayrıca her şey çevrimdışı da çalışıyor!</string>
+	<string name="new_onboarding_step4_header">İzlenimlerini paylaş</string>
+	<string name="new_onboarding_step4_message">Yer imlerini favori yerlere yerleştir ve arkadaşlarına gönder</string>
+	<string name="new_onboarding_step5.1_header">Başlamadan önce bir şey daha…</string>
+	<string name="new_onboarding_step5.1_message">Yaklaşan seyahatiniz için çevrimdışı bir rehber bulmak adına yeni rehber kataloğumuzu ziyaret etmeyi unutmayın!</string>
+	<string name="new_onboarding_step5.1_button">Kataloğu aç</string>
+	<string name="new_onboarding_step5.2_message">MAPS.ME rehber kataloğuna abone olmak çok karlıdır. Dünyanın her yerindeki şehir ve açık hava rehberlerine tam erişim elde edin!</string>
+	<string name="new_onboarding_step5.2_button">Şartlara göz at</string>
+	<string name="new_onboarding_step5.3_message">Ücretsiz MAPS.ME seçeneği ile hazır şehir ve açık hava güzergahlarından ücretsiz örnekleri inceleyin!</string>
+	<string name="new_onboarding_step5.3_button">Ücretsiz indir</string>
+	<string name="new_onboarding_additional_steps_later_button">Sonra</string>
+	<string name="all_pass_subscription_header">KATALOĞA ABONELİK</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title">30000+\nrehberler\nve yollar</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle"><b>Sınırsız çevrimdışı indirme</b> şehir ve açık hava etkinlikleri için yollar</string>
+	<!-- \n - for a break between lines. Max. 17 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_2">Etkileşimli\nyükseklik profili</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_2">Tüm yollar <b>yükseklik ve temel rota bilgileri ile</b> yüklenir</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_3">Favori\nyerler, fotolar\nve öneriler</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_3">Gitmek üzere olduğunuz <b>rota hakkında her şeyi öğrenin</b></string>
+	<string name="sightseeing_subscription_header_subscription">Rehber Aboneliği</string>
+	<string name="sightseeing_subscription_message">700+ şehir ve 100+ ülke</string>
+	<string name="sightseeing_subscription_message_2">Çevrimdışı kullanılabilir</string>
+	<string name="sightseeing_subscription_message_3">Fotoğraflar ve yürüme güzergahları</string>
+	<string name="subscription_success_dialog_title_sightseeing_pass">Abone olduğunuz için teşekkürler!</string>
+	<string name="subscription_success_dialog_message_sightseeing_pass">Artık katalogdaki tüm gezi rehberlerine erişim hakkınız var</string>
+	<string name="downloader_main_gallery_header">Haritalar ve rehberler</string>
+	<string name="downloader_main_gallery_message">Artık bu bölümde yalnızca haritaları indirmekle kalmayacak, aynı zamanda yaklaşan yolculuğun için rehberlere de göz atabileceksin</string>
+	<string name="downloader_main_1_element_gallery_header">Tüm rehberler</string>
+	<string name="downloader_main_1_element_gallery_message">100\'den fazla şehirde</string>
+	<string name="downloader_country_1_element_gallery_header">%s rehber</string>
+	<string name="downloader_country_no_guides_gallery_header">Bu ülkede henüz rehber yok</string>
+	<string name="downloader_country_no_guides_gallery_message">Şehir ve açık hava etkinlikleri için 100\'den fazla ülkedeki diğer çevrimdışı kılavuzlara göz atabilirsiniz</string>
+	<string name="dialog_pedestrian_route_is_long">Araç biniş noktasına giden yaya yolu çok uzun</string>
+	<string name="whatsnew_outdoor_guides_title">15000\'den fazla açık hava güzergahı ekledik!</string>
+	<string name="whatsnew_outdoor_guides_message">Outdooractive\'in kış ve yaz seyahatleri için güzergahlar katalogda bekliyor!</string>
+	<string name="whatsnew_guides_galleries_title">Yaklaşan seyahatinizi MAPS.ME ile planlayın</string>
+	<string name="whatsnew_guides_galleries_message">Artık popüler turistik şehirlerin ve turistik mekanların yer sayfalarında önerilen rehberleri bulabilirsiniz</string>
+	<string name="new_onboarding_step3_header">Deneyimle</string>
+	<string name="all_pass_screen_best_value">En İyi Teklif</string>
+	<string name="buy_btn_for_subscription_3">Tüm katalog %s/yıl</string>
+	<string name="transit_not_found">Metro navigasyonu bu bölgede henüz mevcut değil</string>
+	<string name="dialog_pedestrian_route_is_long_header">Metro güzergahı bulunamadı</string>
+	<string name="dialog_pedestrian_route_is_long_message">Metro istasyonuna en yakın rotanın başlangıç veya bitiş noktasını seçin</string>
+	<!-- Failed planning SUBWAY route message in navigation view -->
+	<string name="routing_planning_error_subway_special">Metro güzergahı oluşturma hatası</string>
+	<string name="whatsnew_isolines_title">Açık hava etkinlikleri için yenilik – yükseklik çizgileri çevrimdışı!</string>
+	<!-- as less symbols as possible -->
+	<string name="whatsnew_isolines_message">Dağlık alanda kendinizi yönlendirin – ekranın sol üst köşesindeki düğmeyi kullanarak katmanı açın</string>
+	<string name="button_layer_isolines">Yükseklikler</string>
+	<string name="tips_map_layers_title_countour">MAPS.ME\'de yükseklik çizgileri çevrimdışı!</string>
+	<string name="tips_map_layers_message_countour">Yükseklik çizgileri, doğaya bir gezi planlamanıza ve arazide kaybolmamanıza yardımcı olacaktır</string>
+	<string name="isolines_activation_error_dialog">Yükseklik çizgilerini kullanmak için, istediğiniz arazinin haritasını güncelleyin veya indirin</string>
+	<string name="isolines_location_error_dialog">Bu bölgede henüz yükseklik çizgileri mevcut değil</string>
+	<string name="elevation_profile_diff_level">Zorluk seviyesi</string>
+	<string name="elevation_profile_diff_level_easy">Kolay</string>
+	<string name="elevation_profile_diff_level_moderate">Orta</string>
+	<string name="elevation_profile_diff_level_hard">Karmaşık</string>
+	<string name="elevation_profile_ascent">Tırmanış</string>
+	<string name="elevation_profile_descent">İniş</string>
+	<string name="elevation_profile_minaltitude">Min. rakım</string>
+	<string name="elevation_profile_maxaltitude">Maks. rakım</string>
+	<string name="elevation_profile_m">m</string>
+	<string name="elevation_profile_difficulty">Zorluk</string>
+	<string name="elevation_profile_distance">Mesafe:</string>
+	<string name="elevation_profile_km">km</string>
+	<string name="elevation_profile_time">Süre:</string>
+	<string name="elevation_profile_hours">sa.</string>
+	<string name="elevation_profile_minutes">dk.</string>
+	<!-- hide the full screen banner and continue working with the app -->
+	<string name="hide_screen_map_update">Gizle ve devam et</string>
+	<string name="view_on_map_downloaded_error">Bu rehber cihazdan kaldırıldı</string>
+	<string name="subscription">Abone</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Remontées mécaniques</string>
 	<string name="type.aeroway.aerodrome">Havaalanıuçak</string>
 	<string name="type.aeroway.aerodrome.international">Havaalanıuçak</string>
 	<string name="type.aeroway.helipad">Hélisurface</string>
+	<string name="type.amenity">Tesis</string>
+	<string name="type.amenity.arts_centre">Sanat merkezi</string>
 	<string name="type.amenity.atm">Bankamatik</string>
 	<string name="type.amenity.bank">Banka</string>
 	<string name="type.amenity.bbq">Piknik alanı</string>
@@ -1528,14 +1834,15 @@
 	<string name="type.amenity.parking">Otopark</string>
 	<string name="type.amenity.parking.fee">Otopark</string>
 	<string name="type.amenity.parking.multi.storey">Otopark</string>
-	<string name="type.amenity.parking.multi.storey.fee">Otopark</string>
 	<string name="type.amenity.parking.no.access">Otopark</string>
 	<string name="type.amenity.parking.park_and_ride">Otopark</string>
 	<string name="type.amenity.parking.permissive">Otopark</string>
-	<string name="type.amenity.parking.permissive.fee">Otopark</string>
 	<string name="type.amenity.parking.private">Otopark</string>
 	<string name="type.amenity.parking.underground">Otopark</string>
-	<string name="type.amenity.parking.underground.fee">Otopark</string>
+	<string name="type.amenity.parking_space">Park alanı</string>
+	<string name="type.amenity.parking_space.permissive">Park alanı</string>
+	<string name="type.amenity.parking_space.private">Park alanı</string>
+	<string name="type.amenity.parking_space.underground">Park alanı</string>
 	<string name="type.amenity.payment_terminal">Ödeme Noktası</string>
 	<string name="type.amenity.pharmacy">Eczane</string>
 	<string name="type.amenity.place_of_worship">Ibadet yerleri</string>
@@ -1548,7 +1855,7 @@
 	<string name="type.amenity.place_of_worship.taoist">Tapınak</string>
 	<string name="type.amenity.police">Polis</string>
 	<string name="type.amenity.post_box">Posta kutusu</string>
-	<string name="type.amenity.post_office">Posta</string>
+	<string name="type.amenity.post_office">Postane</string>
 	<string name="type.amenity.public_bookcase">Kütüphane</string>
 	<string name="type.amenity.recycling">Geri dönüşüm merkezi</string>
 	<string name="type.amenity.restaurant">Restoran</string>
@@ -1564,6 +1871,7 @@
 	<string name="type.amenity.vending_machine.cigarettes">Distributeur de cigarettes</string>
 	<string name="type.amenity.vending_machine.drinks">Distributeur de boissons</string>
 	<string name="type.amenity.vending_machine.parking_tickets">Horodateur</string>
+	<string name="type.amenity.vending_machine.public_transport_tickets">Toplu taşıma biletleri için otomatlar</string>
 	<string name="type.amenity.veterinary">Veteriner</string>
 	<string name="type.amenity.waste_basket">Poubelle</string>
 	<string name="type.amenity.waste_disposal">Çöplüğü</string>
@@ -1682,6 +1990,7 @@
 	<string name="type.emergency.phone">Acil telefon</string>
 	<string name="type.entrance">Entrée</string>
 	<string name="type.highway.bus_stop">Otobüs durağı</string>
+	<string name="type.highway.construction">Yol yapım aşamasında</string>
 	<string name="type.highway.footway">Yol</string>
 	<string name="type.highway.footway.alpine_hiking">Yol</string>
 	<string name="type.highway.footway.area">Yol</string>
@@ -1744,9 +2053,6 @@
 	<string name="type.highway.service.area">Cadde</string>
 	<string name="type.highway.service.bridge">Cadde</string>
 	<string name="type.highway.service.driveway">Cadde</string>
-	<string name="type.highway.service.driveway.area">Cadde</string>
-	<string name="type.highway.service.driveway.bridge">Cadde</string>
-	<string name="type.highway.service.driveway.tunnel">Cadde</string>
 	<string name="type.highway.service.parking_aisle">Cadde</string>
 	<string name="type.highway.service.tunnel">Cadde</string>
 	<string name="type.highway.speed_camera">Hız Kamerası</string>
@@ -1765,14 +2071,8 @@
 	<string name="type.highway.track.grade1">Cadde</string>
 	<string name="type.highway.track.grade2">Cadde</string>
 	<string name="type.highway.track.grade3">Cadde</string>
-	<string name="type.highway.track.grade3.no.access">Cadde</string>
-	<string name="type.highway.track.grade3.permissive">Cadde</string>
 	<string name="type.highway.track.grade4">Cadde</string>
-	<string name="type.highway.track.grade4.no.access">Cadde</string>
-	<string name="type.highway.track.grade4.permissive">Cadde</string>
 	<string name="type.highway.track.grade5">Cadde</string>
-	<string name="type.highway.track.grade5.no.access">Cadde</string>
-	<string name="type.highway.track.grade5.permissive">Cadde</string>
 	<string name="type.highway.track.no.access">Cadde</string>
 	<string name="type.highway.track.permissive">Cadde</string>
 	<string name="type.highway.track.tunnel">Cadde</string>
@@ -1802,20 +2102,29 @@
 	<string name="type.landuse.basin">Su</string>
 	<string name="type.landuse.cemetery">Mezarlık</string>
 	<string name="type.landuse.cemetery.christian">Mezarlık</string>
+	<string name="type.landuse.churchyard">Kilise Bölgesi</string>
+	<string name="type.landuse.farmland">Tarım arazileri</string>
 	<string name="type.landuse.forest">Orman</string>
 	<string name="type.landuse.forest.coniferous">Orman</string>
 	<string name="type.landuse.forest.deciduous">Orman</string>
 	<string name="type.landuse.forest.mixed">Orman</string>
+	<string name="type.landuse.grass">Çim</string>
+	<string name="type.landuse.landfill">Çöp sahası</string>
+	<string name="type.landuse.railway">Demiryolu binası</string>
 	<string name="type.landuse.reservoir">Su</string>
+	<string name="type.leisure.dog_park">Köpek alanı</string>
 	<string name="type.leisure.fitness_centre">Centre fitness</string>
 	<string name="type.leisure.fitness_station">Fitness Salonu</string>
 	<string name="type.leisure.garden">Bahçe</string>
 	<string name="type.leisure.golf_course">Golf sahası</string>
 	<string name="type.leisure.nature_reserve">Doğal koruma alanı</string>
+	<string name="type.leisure.park">Park</string>
+	<string name="type.leisure.park.no.access">Park</string>
+	<string name="type.leisure.park.permissive">Park</string>
+	<string name="type.leisure.park.private">Park</string>
 	<string name="type.leisure.pitch">Spor sahası</string>
-	<string name="type.leisure.pitch.tennis">Spor sahası</string>
 	<string name="type.leisure.playground">Oyun alanı</string>
-	<string name="type.leisure.playground.tennis">Oyun alanı</string>
+	<string name="type.leisure.sauna">Sauna</string>
 	<string name="type.leisure.sports_centre">Spor</string>
 	<string name="type.leisure.sports_centre.climbing">Tırmanma Merkezi</string>
 	<string name="type.leisure.sports_centre.shooting">Poligon</string>
@@ -1835,20 +2144,19 @@
 	<string name="type.natural.bay">Koy</string>
 	<string name="type.natural.beach">Plaj</string>
 	<string name="type.natural.cape">Burun</string>
-	<string name="type.natural.cave_entrance">Entrée de la cave</string>
+	<string name="type.natural.cave_entrance">Mağara</string>
 	<string name="type.natural.geyser">Gayzer</string>
 	<string name="type.natural.glacier">Buzul</string>
+	<string name="type.natural.grassland">Yeşillik</string>
 	<string name="type.natural.lake">Göl</string>
 	<string name="type.natural.peak">Zirve</string>
 	<string name="type.natural.pond">Gölet</string>
+	<string name="type.natural.scrub">Çalılık</string>
 	<string name="type.natural.spring">Pınar</string>
 	<string name="type.natural.tree">Arbre</string>
 	<string name="type.natural.volcano">Volcan</string>
 	<string name="type.natural.water">Su</string>
-	<string name="type.natural.wood">Orman</string>
-	<string name="type.natural.wood.coniferous">Orman</string>
-	<string name="type.natural.wood.deciduous">Orman</string>
-	<string name="type.natural.wood.mixed">Orman</string>
+	<string name="type.natural.wetland">Sulak alan</string>
 	<string name="type.office">Ofis</string>
 	<string name="type.office.company">Şirket bürosu</string>
 	<string name="type.office.estate_agent">Agent immobilier</string>
@@ -1889,6 +2197,9 @@
 	<string name="type.power.substation">Sous-station</string>
 	<string name="type.power.tower">Poteau électrique</string>
 	<string name="type.railway.halt">Gar</string>
+	<string name="type.railway.level_crossing">Hemzemin Geçit</string>
+	<string name="type.railway.monorail">Monoray</string>
+	<string name="type.railway.rail">Demiryolu</string>
 	<string name="type.railway.station">Gar</string>
 	<string name="type.railway.station.light_rail">Gar</string>
 	<string name="type.railway.station.monorail">Gar</string>
@@ -1917,7 +2228,7 @@
 	<string name="type.railway.station.subway.spb">Metro</string>
 	<string name="type.railway.station.subway.violet">Metro</string>
 	<string name="type.railway.station.subway.yellow">Metro</string>
-	<string name="type.railway.subway_entrance">Metro</string>
+	<string name="type.railway.subway_entrance">Metro girişi</string>
 	<string name="type.railway.subway_entrance.barcelona">Metro</string>
 	<string name="type.railway.subway_entrance.berlin">Metro</string>
 	<string name="type.railway.subway_entrance.kiev">Metro</string>
@@ -1995,6 +2306,10 @@
 	<string name="type.shop.variety_store">Ucuz Ürünler Mağazası</string>
 	<string name="type.shop.video">Mağaza</string>
 	<string name="type.shop.wine">Caviste</string>
+	<string name="type.sport.athletics">Atletizm</string>
+	<string name="type.sport.basketball">Basketbol</string>
+	<string name="type.sport.equestrian">Binicilik Sporları</string>
+	<string name="type.sport.tennis">Tenis kortu</string>
 	<string name="type.tourism.alpine_hut">Dağda konaklama</string>
 	<string name="type.tourism.apartment">Apart otel</string>
 	<string name="type.tourism.artwork">Turizm</string>
@@ -2034,4 +2349,8 @@
 	<string name="type.waterway.stream.intermittent">Nehir</string>
 	<string name="type.waterway.stream.tunnel">Nehir</string>
 	<string name="type.waterway.waterfall">Şelale</string>
+	<string name="type.wheelchair.limited">Kısıtlı tekerlekli sandalye erişimi</string>
+	<string name="type.wheelchair.no">Tekerlekli sandalye erişimi yok</string>
+	<string name="type.wheelchair.yes">Tam tekerlekli sandalye erişimi</string>
+	<string name="type.building_part">Bina</string>
 </resources>

@@ -1,11 +1,14 @@
 #pragma once
 
 #include "base/buffer_vector.hpp"
+#include "base/checked_cast.hpp"
 #include "base/macros.hpp"
 #include "base/stl_helpers.hpp"
 
 #include <algorithm>
+#include <cerrno>
 #include <cstdint>
+#include <cstdlib>
 #include <iterator>
 #include <limits>
 #include <regex>
@@ -32,9 +35,8 @@ public:
   UniString() {}
   explicit UniString(size_t n, UniChar c = UniChar()) : BaseT(n, c) {}
 
-  template <class IterT>
-  UniString(IterT b, IterT e)
-    : BaseT(b, e)
+  template <typename Iter>
+  UniString(Iter b, Iter e) : BaseT(b, e)
   {
   }
 
@@ -51,6 +53,26 @@ public:
     UniString result(*this);
     result += rhs;
     return result;
+  }
+
+  template <class Iter>
+  void Replace(iterator first, iterator last, Iter first2, Iter last2)
+  {
+    auto it = first;
+    auto it2 = first2;
+    for (; it < last && it2 < last2; ++it, ++it2)
+      *it = *it2;
+
+    if (it == last && it2 == last2)
+      return;
+
+    if (it == last)
+    {
+      insert(it, it2, last2);
+      return;
+    }
+
+    erase(it, last);
   }
 };
 
@@ -91,6 +113,8 @@ void Trim(std::string & s, char const * anyOf);
 // to - A substitute string
 bool ReplaceFirst(std::string & str, std::string const & from, std::string const & to);
 
+bool ReplaceLast(std::string & str, std::string const & from, std::string const & to);
+
 void MakeLowerCaseInplace(std::string & s);
 std::string MakeLowerCase(std::string const & s);
 bool EqualNoCase(std::string const & s1, std::string const & s2);
@@ -99,12 +123,13 @@ UniString MakeUniString(std::string const & utf8s);
 std::string ToUtf8(UniString const & s);
 bool IsASCIIString(std::string const & str);
 bool IsASCIIDigit(UniChar c);
+bool IsASCIINumeric(std::string const & str);
 bool IsASCIISpace(UniChar c);
 bool IsASCIILatin(UniChar c);
 
 inline std::string DebugPrint(UniString const & s) { return ToUtf8(s); }
 
-template <typename TDelimFn, typename TIt = UniString::const_iterator, bool KeepEmptyTokens = false>
+template <typename DelimFn, typename Iter = UniString::const_iterator, bool KeepEmptyTokens = false>
 class TokenizeIterator
 {
 public:
@@ -115,14 +140,14 @@ public:
   using iterator_category = std::input_iterator_tag;
 
   // *NOTE* |s| must be not temporary!
-  TokenizeIterator(std::string const & s, TDelimFn const & delimFn)
+  TokenizeIterator(std::string const & s, DelimFn const & delimFn)
     : m_start(s.begin()), m_end(s.begin()), m_finish(s.end()), m_delimFn(delimFn)
   {
     Move();
   }
 
   // *NOTE* |s| must be not temporary!
-  TokenizeIterator(UniString const & s, TDelimFn const & delimFn)
+  TokenizeIterator(UniString const & s, DelimFn const & delimFn)
     : m_start(s.begin()), m_end(s.begin()), m_finish(s.end()), m_delimFn(delimFn)
   {
     Move();
@@ -180,17 +205,17 @@ private:
   //
   // This version of TokenizeIterator iterates over all tokens and
   // keeps the invariant above.
-  TIt m_start;
-  TIt m_end;
+  Iter m_start;
+  Iter m_end;
 
   // The end of the string the iterator iterates over.
-  TIt m_finish;
+  Iter m_finish;
 
-  TDelimFn m_delimFn;
+  DelimFn m_delimFn;
 };
 
-template <typename TDelimFn, typename TIt>
-class TokenizeIterator<TDelimFn, TIt, true /* KeepEmptyTokens */>
+template <typename DelimFn, typename Iter>
+class TokenizeIterator<DelimFn, Iter, true /* KeepEmptyTokens */>
 {
 public:
   using difference_type = std::ptrdiff_t;
@@ -200,7 +225,7 @@ public:
   using iterator_category = std::input_iterator_tag;
 
   // *NOTE* |s| must be not temporary!
-  TokenizeIterator(std::string const & s, TDelimFn const & delimFn)
+  TokenizeIterator(std::string const & s, DelimFn const & delimFn)
     : m_start(s.begin()), m_end(s.begin()), m_finish(s.end()), m_delimFn(delimFn), m_finished(false)
   {
     while (m_end != m_finish && !m_delimFn(*m_end))
@@ -208,7 +233,7 @@ public:
   }
 
   // *NOTE* |s| must be not temporary!
-  TokenizeIterator(UniString const & s, TDelimFn const & delimFn)
+  TokenizeIterator(UniString const & s, DelimFn const & delimFn)
     : m_start(s.begin()), m_end(s.begin()), m_finish(s.end()), m_delimFn(delimFn), m_finished(false)
   {
     while (m_end != m_finish && !m_delimFn(*m_end))
@@ -277,13 +302,13 @@ private:
   //
   // This version of TokenizeIterator iterates over all tokens and
   // keeps the invariant above.
-  TIt m_start;
-  TIt m_end;
+  Iter m_start;
+  Iter m_end;
 
   // The end of the string the iterator iterates over.
-  TIt m_finish;
+  Iter m_finish;
 
-  TDelimFn m_delimFn;
+  DelimFn m_delimFn;
 
   // When true, iterator is at the end position and is not valid
   // anymore.
@@ -321,7 +346,7 @@ void Tokenize(std::string const & str, char const * delims, TFunctor && f)
   }
 }
 
-template <template <typename ...> class Collection = std::vector>
+template <template <typename...> class Collection = std::vector>
 Collection<std::string> Tokenize(std::string const & str, char const * delims)
 {
   Collection<std::string> c;
@@ -339,40 +364,137 @@ void ParseCSVRow(std::string const & s, char const delimiter, std::vector<std::s
 /// @return code of last symbol in string or 0 if s is empty
 UniChar LastUniChar(std::string const & s);
 
-template <class T, size_t N, class TT>
-bool IsInArray(T(&arr)[N], TT const & t)
-{
-  for (size_t i = 0; i < N; ++i)
-    if (arr[i] == t)
-      return true;
-  return false;
-}
-
 /// @name From string to numeric.
 //@{
-WARN_UNUSED_RESULT bool to_int(char const * s, int & i, int base = 10);
-WARN_UNUSED_RESULT bool to_uint(char const * s, unsigned int & i, int base = 10);
-WARN_UNUSED_RESULT bool to_uint64(char const * s, uint64_t & i);
-WARN_UNUSED_RESULT bool to_int64(char const * s, int64_t & i);
+namespace internal
+{
+template <typename T, typename = std::enable_if_t<std::is_signed<T>::value &&
+                                                  sizeof(T) < sizeof(long long)>>
+long IntConverter(char const * start, char ** stop, int base)
+{
+  return std::strtol(start, stop, base);
+}
+
+template <typename T, typename = std::enable_if_t<std::is_unsigned<T>::value &&
+                                                  sizeof(T) < sizeof(unsigned long long)>>
+unsigned long IntConverter(char const * start, char ** stop, int base)
+{
+  return std::strtoul(start, stop, base);
+}
+
+template <typename T, typename = std::enable_if_t<std::is_signed<T>::value &&
+                                                  sizeof(T) == sizeof(long long)>>
+long long IntConverter(char const * start, char ** stop, int base)
+{
+#ifdef OMIM_OS_WINDOWS_NATIVE
+  return _strtoi64(start, &stop, base);
+#else
+  return std::strtoll(start, stop, base);
+#endif
+}
+
+template <typename T, typename = std::enable_if_t<std::is_unsigned<T>::value &&
+                                                  sizeof(T) == sizeof(unsigned long long)>>
+unsigned long long IntConverter(char const * start, char ** stop, int base)
+{
+#ifdef OMIM_OS_WINDOWS_NATIVE
+  return _strtoui64(start, &stop, base);
+#else
+  return std::strtoull(start, stop, base);
+#endif
+}
+
+template <typename T,
+          typename = std::enable_if_t<std::is_integral<T>::value>>
+bool ToInteger(char const * start, T & result, int base = 10)
+{
+  char * stop;
+  errno = 0;  // Library functions do not reset it.
+
+  auto const v = IntConverter<T>(start, &stop, base);
+
+  if (errno == EINVAL || errno == ERANGE || *stop != 0 || start == stop ||
+      !base::IsCastValid<T>(v))
+  {
+    errno = 0;
+    return false;
+  }
+
+  result = static_cast<T>(v);
+  return true;
+}
+}  // namespace internal
+
+WARN_UNUSED_RESULT inline bool to_int(char const * s, int & i, int base = 10)
+{
+  return internal::ToInteger(s, i, base);
+}
+
+WARN_UNUSED_RESULT inline bool to_uint(char const * s, unsigned int & i, int base = 10)
+{
+  return internal::ToInteger(s, i, base);
+}
+
+// Note: negative values will be converted too.
+// For ex.:
+//  "-1" converts to std::numeric_limits<uint64_t>::max();
+//  "-2" converts to std::numeric_limits<uint64_t>::max() - 1;
+//  "-3" converts to std::numeric_limits<uint64_t>::max() - 2;
+//  ...
+// negative std::numeric_limits<uint64_t>::max() converts to 1.
+// Values lower than negative std::numeric_limits<uint64_t>::max()
+// are not convertible (method returns false).
+WARN_UNUSED_RESULT inline bool to_uint64(char const * s, uint64_t & i, int base = 10)
+{
+  return internal::ToInteger(s, i, base);
+}
+
+WARN_UNUSED_RESULT inline bool to_int64(char const * s, int64_t & i)
+{
+  return internal::ToInteger(s, i);
+}
+
+WARN_UNUSED_RESULT bool to_size_t(char const * s, size_t & i, int base = 10);
 WARN_UNUSED_RESULT bool to_float(char const * s, float & f);
 WARN_UNUSED_RESULT bool to_double(char const * s, double & d);
 
 WARN_UNUSED_RESULT inline bool is_number(std::string const & s)
 {
-  int64_t dummy;
-  return to_int64(s.c_str(), dummy);
+  uint64_t dummy;
+  return to_uint64(s.c_str(), dummy);
 }
 
-WARN_UNUSED_RESULT inline bool to_int(std::string const & s, int & i, int base = 10) { return to_int(s.c_str(), i, base); }
+WARN_UNUSED_RESULT inline bool to_int(std::string const & s, int & i, int base = 10)
+{
+  return to_int(s.c_str(), i, base);
+}
 WARN_UNUSED_RESULT inline bool to_uint(std::string const & s, unsigned int & i, int base = 10)
 {
   return to_uint(s.c_str(), i, base);
 }
 
-WARN_UNUSED_RESULT inline bool to_uint64(std::string const & s, uint64_t & i) { return to_uint64(s.c_str(), i); }
-WARN_UNUSED_RESULT inline bool to_int64(std::string const & s, int64_t & i) { return to_int64(s.c_str(), i); }
-WARN_UNUSED_RESULT inline bool to_float(std::string const & s, float & f) { return to_float(s.c_str(), f); }
-WARN_UNUSED_RESULT inline bool to_double(std::string const & s, double & d) { return to_double(s.c_str(), d); }
+// Note: negative values will be converted too.
+// For ex. "-1" converts to uint64_t max value.
+WARN_UNUSED_RESULT inline bool to_uint64(std::string const & s, uint64_t & i, int base = 10)
+{
+  return to_uint64(s.c_str(), i, base);
+}
+WARN_UNUSED_RESULT inline bool to_int64(std::string const & s, int64_t & i)
+{
+  return to_int64(s.c_str(), i);
+}
+WARN_UNUSED_RESULT inline bool to_size_t(std::string const & s, size_t & i)
+{
+  return to_size_t(s.c_str(), i);
+}
+WARN_UNUSED_RESULT inline bool to_float(std::string const & s, float & f)
+{
+  return to_float(s.c_str(), f);
+}
+WARN_UNUSED_RESULT inline bool to_double(std::string const & s, double & d)
+{
+  return to_double(s.c_str(), d);
+}
 //@}
 
 /// @name From numeric to string.
@@ -387,10 +509,26 @@ std::string to_string(T t)
   return ss.str();
 }
 
-WARN_UNUSED_RESULT inline bool to_any(std::string const & s, int & i) { return to_int(s, i); }
-WARN_UNUSED_RESULT inline bool to_any(std::string const & s, unsigned int & i) { return to_uint(s, i); }
-WARN_UNUSED_RESULT inline bool to_any(std::string const & s, uint64_t & i) { return to_uint64(s, i); }
-WARN_UNUSED_RESULT inline bool to_any(std::string const & s, int64_t & i) { return to_int64(s, i); }
+template <typename T>
+struct ToStringConverter { std::string operator()(T const & v) { return to_string(v); } };
+
+template <typename T,
+          typename = std::enable_if_t<std::is_integral<T>::value && sizeof(T) < sizeof(long long)>>
+WARN_UNUSED_RESULT inline bool to_any(std::string const & s, T & i)
+{
+  return internal::ToInteger(s.c_str(), i);
+}
+
+WARN_UNUSED_RESULT inline bool to_any(std::string const & s, uint64_t & i)
+{
+  return internal::ToInteger(s.c_str(), i);
+}
+
+WARN_UNUSED_RESULT inline bool to_any(std::string const & s, int64_t & i)
+{
+  return internal::ToInteger(s.c_str(), i);
+}
+
 WARN_UNUSED_RESULT inline bool to_any(std::string const & s, float & f) { return to_float(s, f); }
 WARN_UNUSED_RESULT inline bool to_any(std::string const & s, double & d) { return to_double(s, d); }
 WARN_UNUSED_RESULT inline bool to_any(std::string const & s, std::string & result)
@@ -455,7 +593,7 @@ std::string to_string_unsigned(T i)
   char * beg = to_string_digits(end, i);
   return std::string(beg, end - beg);
 }
-}
+}  // namespace impl
 
 inline std::string to_string(int32_t i) { return impl::to_string_signed(i); }
 inline std::string to_string(int64_t i) { return impl::to_string_signed(i); }
@@ -463,7 +601,10 @@ inline std::string to_string(uint64_t i) { return impl::to_string_unsigned(i); }
 /// Use this function to get string with fixed count of
 /// "Digits after comma".
 std::string to_string_dac(double d, int dac);
-inline std::string to_string_with_digits_after_comma(double d, int dac) { return to_string_dac(d, dac); }
+inline std::string to_string_with_digits_after_comma(double d, int dac)
+{
+  return to_string_dac(d, dac);
+}
 //@}
 
 template <typename IterT1, typename IterT2>
@@ -483,6 +624,8 @@ bool StartsWith(std::string const & s1, char const * s2);
 
 bool StartsWith(std::string const & s1, std::string const & s2);
 
+bool EndsWith(UniString const & s1, UniString const & s2);
+
 bool EndsWith(std::string const & s1, char const * s2);
 
 bool EndsWith(std::string const & s1, std::string const & s2);
@@ -493,15 +636,14 @@ bool IsHTML(std::string const & utf8);
 /// Compare str1 and str2 and return if they are equal except for mismatchedSymbolsNum symbols
 bool AlmostEqual(std::string const & str1, std::string const & str2, size_t mismatchedCount);
 
-template <typename TIterator, typename TDelimiter>
-typename TIterator::value_type JoinStrings(TIterator begin, TIterator end,
-                                           TDelimiter const & delimiter)
+template <typename Iterator, typename Delimiter>
+typename Iterator::value_type JoinStrings(Iterator begin, Iterator end, Delimiter const & delimiter)
 {
   if (begin == end)
     return {};
 
   auto result = *begin++;
-  for (TIterator it = begin; it != end; ++it)
+  for (Iterator it = begin; it != end; ++it)
   {
     result += delimiter;
     result += *it;
@@ -510,15 +652,43 @@ typename TIterator::value_type JoinStrings(TIterator begin, TIterator end,
   return result;
 }
 
-template <typename TContainer, typename TDelimiter>
-typename TContainer::value_type JoinStrings(TContainer const & container,
-                                            TDelimiter const & delimiter)
+template <typename Container, typename Delimiter>
+typename Container::value_type JoinStrings(Container const & container, Delimiter const & delimiter)
 {
-  return JoinStrings(container.begin(), container.end(), delimiter);
+  return JoinStrings(begin(container), end(container), delimiter);
 }
 
-template <typename TFn>
-void ForEachMatched(std::string const & s, std::regex const & regex, TFn && fn)
+template <typename Iterator, typename Delimiter>
+std::string JoinAny(Iterator first, Iterator last, Delimiter const & delimiter,
+                    std::function<
+                      std::string (typename Iterator::value_type const & v)> const & converter)
+{
+  if (first == last)
+    return {};
+
+  std::string result(converter(*first));
+  ++first;
+
+  for (; first != last; ++first)
+  {
+    result += delimiter;
+    result += converter(*first);
+  }
+  return result;
+}
+
+template <typename Container, typename Delimiter = char const>
+std::string JoinAny(Container const & container,
+                    Delimiter const & delimiter = ',',
+                    std::function<
+                        std::string (typename Container::value_type const & v)> const & converter =
+                          ToStringConverter<typename Container::value_type>())
+{
+  return JoinAny(std::cbegin(container), std::cend(container), delimiter, converter);
+}
+
+template <typename Fn>
+void ForEachMatched(std::string const & s, std::regex const & regex, Fn && fn)
 {
   for (std::sregex_token_iterator cur(s.begin(), s.end(), regex), end; cur != end; ++cur)
     fn(*cur);
@@ -533,8 +703,8 @@ void ForEachMatched(std::string const & s, std::regex const & regex, TFn && fn)
 // [b1, e1) and the other is [b2, e2). The iterator form is chosen to
 // fit both std::string and strings::UniString.  This function does
 // not normalize either of the strings.
-template <typename TIter>
-size_t EditDistance(TIter const & b1, TIter const & e1, TIter const & b2, TIter const & e2)
+template <typename Iter>
+size_t EditDistance(Iter const & b1, Iter const & e1, Iter const & b2, Iter const & e2)
 {
   size_t const n = std::distance(b1, e1);
   size_t const m = std::distance(b2, e2);

@@ -4,15 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.ColorRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.CallSuper;
+import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StyleRes;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.mapswithme.maps.MwmApplication;
@@ -30,6 +30,7 @@ public abstract class BaseMwmFragmentActivity extends AppCompatActivity
                                   implements BaseActivity
 {
   private final BaseActivityDelegate mBaseDelegate = new BaseActivityDelegate(this);
+  private boolean mSafeCreated;
 
   @Override
   @NonNull
@@ -55,12 +56,13 @@ public abstract class BaseMwmFragmentActivity extends AppCompatActivity
    * Shows splash screen and initializes the core in case when it was not initialized.
    *
    * Do not override this method!
-   * Use {@link #safeOnCreate(Bundle savedInstanceState)}
+   * Use {@link #onSafeCreate(Bundle savedInstanceState)}
    */
   @CallSuper
   @Override
   protected final void onCreate(@Nullable Bundle savedInstanceState)
   {
+    mBaseDelegate.onCreate();
     // An intent that was skipped due to core wasn't initialized has to be used
     // as a target intent for this activity, otherwise all input extras will be lost
     // in a splash activity loop.
@@ -76,10 +78,9 @@ public abstract class BaseMwmFragmentActivity extends AppCompatActivity
       return;
     }
 
-    mBaseDelegate.onCreate();
     super.onCreate(savedInstanceState);
 
-    safeOnCreate(savedInstanceState);
+    onSafeCreate(savedInstanceState);
   }
 
   /**
@@ -87,7 +88,7 @@ public abstract class BaseMwmFragmentActivity extends AppCompatActivity
    * When this method is called, the core is already initialized.
    */
   @CallSuper
-  protected void safeOnCreate(@Nullable Bundle savedInstanceState)
+  protected void onSafeCreate(@Nullable Bundle savedInstanceState)
   {
     setVolumeControlStream(AudioManager.STREAM_MUSIC);
     final int layoutId = getContentLayoutResId();
@@ -107,6 +108,8 @@ public abstract class BaseMwmFragmentActivity extends AppCompatActivity
     }
 
     attachDefaultFragment();
+    mBaseDelegate.onSafeCreate();
+    mSafeCreated = true;
   }
 
   @ColorRes
@@ -150,10 +153,27 @@ public abstract class BaseMwmFragmentActivity extends AppCompatActivity
 
   @CallSuper
   @Override
-  protected void onDestroy()
+  protected final void onDestroy()
   {
     super.onDestroy();
     mBaseDelegate.onDestroy();
+
+    if (!mSafeCreated)
+      return;
+
+    onSafeDestroy();
+  }
+
+  /**
+   * Use this safe method instead of {@link #onDestroy()}.
+   * When this method is called, the core is already initialized and
+   * {@link #onSafeCreate(Bundle savedInstanceState)} was called.
+   */
+  @CallSuper
+  protected void onSafeDestroy()
+  {
+    mBaseDelegate.onSafeDestroy();
+    mSafeCreated = false;
   }
 
   @CallSuper

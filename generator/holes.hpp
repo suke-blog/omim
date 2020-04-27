@@ -13,33 +13,34 @@ namespace generator
 {
 namespace cache
 {
-class IntermediateDataReader;
+class IntermediateDataReaderInterface;
 }  // namespace cache
 
 class HolesAccumulator
 {
 public:
-  explicit HolesAccumulator(cache::IntermediateDataReader & holder);
+  explicit HolesAccumulator(std::shared_ptr<cache::IntermediateDataReaderInterface> const & cache);
 
   void operator() (uint64_t id) { m_merger.AddWay(id); }
-  FeatureBuilder1::Geometry & GetHoles();
+  feature::FeatureBuilder::Geometry & GetHoles();
 
 private:
   AreaWayMerger m_merger;
-  FeatureBuilder1::Geometry m_holes;
+  feature::FeatureBuilder::Geometry m_holes;
 };
 
 /// Find holes for way with 'id' in first relation.
 class HolesProcessor
 {
 public:
-  explicit HolesProcessor(uint64_t id, cache::IntermediateDataReader & holder);
+  explicit HolesProcessor(uint64_t id,
+                          std::shared_ptr<cache::IntermediateDataReaderInterface> const & cache);
 
   /// 1. relations process function
   base::ControlFlow operator() (uint64_t /* id */, RelationElement const & e);
   /// 2. "ways in relation" process function
   void operator() (uint64_t id, std::string const & role);
-  FeatureBuilder1::Geometry & GetHoles() { return m_holes.GetHoles(); }
+  feature::FeatureBuilder::Geometry & GetHoles() { return m_holes.GetHoles(); }
 
 private:
   uint64_t m_id;      ///< id of way to find it's holes
@@ -49,10 +50,10 @@ private:
 class HolesRelation
 {
 public:
-  explicit HolesRelation(cache::IntermediateDataReader & holder);
+  explicit HolesRelation(std::shared_ptr<cache::IntermediateDataReaderInterface> const & cache);
 
   void Build(OsmElement const * p);
-  FeatureBuilder1::Geometry & GetHoles() { return m_holes.GetHoles(); }
+  feature::FeatureBuilder::Geometry & GetHoles() { return m_holes.GetHoles(); }
   AreaWayMerger & GetOuter() { return m_outer; }
 
 private:

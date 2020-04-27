@@ -5,16 +5,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.multidex.MultiDex;
-import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.multidex.MultiDex;
 import com.appsflyer.AppsFlyerLib;
 import com.mapswithme.maps.analytics.ExternalLibrariesMediator;
 import com.mapswithme.maps.background.AppBackgroundTracker;
 import com.mapswithme.maps.background.NotificationChannelFactory;
 import com.mapswithme.maps.background.NotificationChannelProvider;
 import com.mapswithme.maps.background.Notifier;
+import com.mapswithme.maps.base.MediaPlayerWrapper;
 import com.mapswithme.maps.bookmarks.data.BookmarkManager;
 import com.mapswithme.maps.downloader.CountryItem;
 import com.mapswithme.maps.downloader.MapManager;
@@ -23,12 +23,13 @@ import com.mapswithme.maps.geofence.GeofenceRegistry;
 import com.mapswithme.maps.geofence.GeofenceRegistryImpl;
 import com.mapswithme.maps.location.LocationHelper;
 import com.mapswithme.maps.location.TrackRecorder;
+import com.mapswithme.maps.maplayer.isolines.IsolinesManager;
 import com.mapswithme.maps.maplayer.subway.SubwayManager;
 import com.mapswithme.maps.maplayer.traffic.TrafficManager;
-import com.mapswithme.maps.base.MediaPlayerWrapper;
 import com.mapswithme.maps.routing.RoutingController;
 import com.mapswithme.maps.scheduling.ConnectivityJobScheduler;
 import com.mapswithme.maps.scheduling.ConnectivityListener;
+import com.mapswithme.maps.search.SearchEngine;
 import com.mapswithme.maps.sound.TtsPlayer;
 import com.mapswithme.maps.ugc.UGC;
 import com.mapswithme.util.Config;
@@ -45,10 +46,12 @@ import com.mapswithme.util.statistics.Statistics;
 import java.util.HashMap;
 import java.util.List;
 
-public class MwmApplication extends Application
+public class MwmApplication extends Application implements AppBackgroundTracker.OnTransitionListener
 {
+  @SuppressWarnings("NullableProblems")
+  @NonNull
   private Logger mLogger;
-  private final static String TAG = "MwmApplication";
+  public final static String TAG = "MwmApplication";
 
   private static MwmApplication sSelf;
   private SharedPreferences mPrefs;
@@ -56,6 +59,10 @@ public class MwmApplication extends Application
   @SuppressWarnings("NullableProblems")
   @NonNull
   private SubwayManager mSubwayManager;
+
+  @SuppressWarnings("NullableProblems")
+  @NonNull
+  private IsolinesManager mIsolinesManager;
 
   private boolean mFrameworkInitialized;
   private boolean mPlatformInitialized;
@@ -84,11 +91,18 @@ public class MwmApplication extends Application
   @SuppressWarnings("NullableProblems")
   @NonNull
   private GeofenceRegistry mGeofenceRegistry;
+  private boolean mFirstLaunch;
 
   @NonNull
   public SubwayManager getSubwayManager()
   {
     return mSubwayManager;
+  }
+
+  @NonNull
+  public IsolinesManager getIsolinesManager()
+  {
+    return mIsolinesManager;
   }
 
   public MwmApplication()
@@ -97,10 +111,19 @@ public class MwmApplication extends Application
     sSelf = this;
   }
 
+  /**
+   * Use the {@link #from(Context)} method instead.
+   */
   @Deprecated
   public static MwmApplication get()
   {
     return sSelf;
+  }
+
+  @NonNull
+  public static MwmApplication from(@NonNull Context context)
+  {
+    return (MwmApplication) context.getApplicationContext();
   }
 
   /**
@@ -151,10 +174,10 @@ public class MwmApplication extends Application
   public void onCreate()
   {
     super.onCreate();
-    mBackgroundListener = new TransitionListener(this);
     LoggerFactory.INSTANCE.initialize(this);
     mLogger = LoggerFactory.INSTANCE.getLogger(LoggerFactory.Type.MISC);
-    mLogger.d(TAG, "Application is created");
+    mBackgroundListener = new AppBaseTransitionListener(this);
+    getLogger().d(TAG, "Application is created");
     mMainLoopHandler = new Handler(getMainLooper());
     mMediator = new ExternalLibrariesMediator(this);
     mMediator.initSensitiveDataToleranceLibraries();
@@ -167,6 +190,7 @@ public class MwmApplication extends Application
     mBackgroundTracker = new AppBackgroundTracker();
     mBackgroundTracker.addListener(mVisibleAppLaunchListener);
     mSubwayManager = new SubwayManager(this);
+    mIsolinesManager = new IsolinesManager(this);
     mConnectivityListener = new ConnectivityJobScheduler(this);
     mConnectivityListener.listen();
 
@@ -206,11 +230,11 @@ public class MwmApplication extends Application
     final boolean isInstallationIdFound = mMediator.setInstallationIdToCrashlytics();
 
     final String settingsPath = StorageUtils.getSettingsPath();
-    mLogger.d(TAG, "onCreate(), setting path = " + settingsPath);
+    getLogger().d(TAG, "onCreate(), setting path = " + settingsPath);
     final String filesPath = StorageUtils.getFilesPath(this);
-    mLogger.d(TAG, "onCreate(), files path = " + filesPath);
+    getLogger().d(TAG, "onCreate(), files path = " + filesPath);
     final String tempPath = StorageUtils.getTempPath(this);
-    mLogger.d(TAG, "onCreate(), temp path = " + tempPath);
+    getLogger().d(TAG, "onCreate(), temp path = " + tempPath);
 
     // If platform directories are not created it means that native part of app will not be able
     // to work at all. So, we just ignore native part initialization in this case, e.g. when the
@@ -259,14 +283,17 @@ public class MwmApplication extends Application
     MapManager.nativeSubscribe(mStorageCallbacks);
 
     initNativeStrings();
+    SearchEngine.INSTANCE.initialize(null);
     BookmarkManager.loadBookmarks();
-    TtsPlayer.INSTANCE.init(this);
+    TtsPlayer.INSTANCE.initialize(this);
     ThemeSwitcher.restart(false);
-    LocationHelper.INSTANCE.initialize();
-    RoutingController.get().initialize();
-    TrafficManager.INSTANCE.initialize();
-    SubwayManager.from(this).initialize();
-    mPurchaseOperationObservable.initialize();
+    LocationHelper.INSTANCE.initialize(null);
+    RoutingController.get().initialize(null);
+    TrafficManager.INSTANCE.initialize(null);
+    SubwayManager.from(this).initialize(null);
+    IsolinesManager.from(this).initialize(null);
+    mPurchaseOperationObservable.initialize(null);
+    mBackgroundTracker.addListener(this);
     mFrameworkInitialized = true;
   }
 
@@ -277,6 +304,7 @@ public class MwmApplication extends Application
     nativeAddLocalization("core_my_places", getString(R.string.core_my_places));
     nativeAddLocalization("core_my_position", getString(R.string.core_my_position));
     nativeAddLocalization("core_placepage_unknown_place", getString(R.string.core_placepage_unknown_place));
+    nativeAddLocalization("postal_code", getString(R.string.postal_code));
     nativeAddLocalization("wifi", getString(R.string.wifi));
   }
 
@@ -301,12 +329,11 @@ public class MwmApplication extends Application
   {
     HashMap<String, Object> paramsMap = new HashMap<>();
     for (KeyValue p : params)
-      paramsMap.put(p.mKey, p.mValue);
+      paramsMap.put(p.getKey(), p.getValue());
     AppsFlyerLib.getInstance().trackEvent(this, tag, paramsMap);
   }
 
-  @SuppressWarnings("unused")
-  void sendPushWooshTags(String tag, String[] values)
+  public void sendPushWooshTags(String tag, String[] values)
   {
     getMediator().getEventLogger().sendTags(tag, values);
   }
@@ -367,6 +394,29 @@ public class MwmApplication extends Application
   private static native void nativeInitFramework();
   private static native void nativeProcessTask(long taskPointer);
   private static native void nativeAddLocalization(String name, String value);
+  private static native void nativeOnTransit(boolean foreground);
+
+  @NonNull
+  public Logger getLogger()
+  {
+    return mLogger;
+  }
+
+  public void setFirstLaunch(boolean isFirstLaunch)
+  {
+    mFirstLaunch = isFirstLaunch;
+  }
+
+  public boolean isFirstLaunch()
+  {
+    return mFirstLaunch;
+  }
+
+  @Override
+  public void onTransit(boolean foreground)
+  {
+    nativeOnTransit(foreground);
+  }
 
   private static class VisibleAppLaunchListener implements AppBackgroundTracker.OnVisibleAppLaunchListener
   {
@@ -398,26 +448,5 @@ public class MwmApplication extends Application
 
     @Override
     public void onProgress(String countryId, long localSize, long remoteSize) {}
-  }
-
-  private static class TransitionListener implements AppBackgroundTracker.OnTransitionListener
-  {
-    @NonNull
-    private final MwmApplication mApplication;
-
-    TransitionListener(@NonNull MwmApplication application)
-    {
-      mApplication = application;
-    }
-
-    @Override
-    public void onTransit(boolean foreground)
-    {
-      if (!foreground && LoggerFactory.INSTANCE.isFileLoggingEnabled())
-      {
-        Log.i(TAG, "The app goes to background. All logs are going to be zipped.");
-        LoggerFactory.INSTANCE.zipLogs(null);
-      }
-    }
   }
 }

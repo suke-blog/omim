@@ -1,15 +1,22 @@
 #include "testing/testing.hpp"
 
-#include "map/feature_vec_model.hpp"
+#include "map/features_fetcher.hpp"
 
 #include "indexer/scales.hpp"
 
 #include "base/macros.hpp"
 #include "base/thread.hpp"
+#include "base/thread_pool.hpp"
+
+#include <algorithm>
+#include <memory>
+#include <random>
+
+using namespace std;
 
 namespace
 {
-  typedef model::FeaturesFetcher SourceT;
+  using SourceT = FeaturesFetcher;
 
   class FeaturesLoader : public threads::IRoutine
   {
@@ -35,7 +42,7 @@ namespace
     }
 
   public:
-    FeaturesLoader(SourceT const & src) : m_src(src) {}
+    explicit FeaturesLoader(SourceT const & src) : m_src(src) {}
 
     virtual void Do()
     {
@@ -66,7 +73,7 @@ namespace
     m2::RectD const r = src.GetWorldRect();
     TEST ( r.IsValid(), () );
 
-    m2::RectD world(MercatorBounds::FullRect());
+    m2::RectD world(mercator::Bounds::FullRect());
     world.Inflate(-10.0, -10.0);
 
     TEST ( world.IsRectInside(r), () );
@@ -74,7 +81,7 @@ namespace
     srand(666);
 
     size_t const count = 20;
-    threads::SimpleThreadPool pool(count);
+    base::thread_pool::routine_simple::ThreadPool pool(count);
 
     for (size_t i = 0; i < count; ++i)
       pool.Add(make_unique<FeaturesLoader>(src));

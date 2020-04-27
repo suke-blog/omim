@@ -3,18 +3,19 @@
 #include "platform/local_country_file.hpp"
 
 #include "coding/base64.hpp"
-#include "coding/file_name_utils.hpp"
 #include "coding/internal/file_data.hpp"
+#include "coding/sha1.hpp"
 #include "coding/writer.hpp"
 
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 #include "base/string_utils.hpp"
+
+#include "std/target_os.hpp"
 
 #include <algorithm>
 #include <random>
 #include <thread>
-
-#include "std/target_os.hpp"
 
 #include "private.h"
 
@@ -83,6 +84,11 @@ Platform::EError Platform::ErrnoToError()
   }
 }
 
+std::string Platform::UniqueIdHash() const
+{
+  return coding::SHA1::CalculateBase64ForString(UniqueClientId());
+}
+
 // static
 bool Platform::RmDirRecursively(string const & dirName)
 {
@@ -95,7 +101,7 @@ bool Platform::RmDirRecursively(string const & dirName)
   GetFilesByRegExp(dirName, ".*", allFiles);
   for (string const & file : allFiles)
   {
-    string const path = base::JoinFoldersToPath(dirName, file);
+    string const path = base::JoinPath(dirName, file);
 
     EFileType type;
     if (GetFileType(path, type) != ERR_OK)
@@ -215,7 +221,7 @@ void Platform::GetFilesByType(string const & directory, unsigned typeMask,
   for (string const & file : allFiles)
   {
     EFileType type;
-    if (GetFileType(base::JoinFoldersToPath(directory, file), type) != ERR_OK)
+    if (GetFileType(base::JoinPath(directory, file), type) != ERR_OK)
       continue;
     if (typeMask & type)
       outFiles.emplace_back(file, type);
@@ -329,21 +335,26 @@ unsigned Platform::CpuCores() const
 void Platform::ShutdownThreads()
 {
   ASSERT(m_networkThread && m_fileThread && m_backgroundThread, ());
+  ASSERT(!m_networkThread->IsShutDown(), ());
+  ASSERT(!m_fileThread->IsShutDown(), ());
+  ASSERT(!m_backgroundThread->IsShutDown(), ());
+
+  m_batteryTracker.UnsubscribeAll();
+
   m_networkThread->ShutdownAndJoin();
   m_fileThread->ShutdownAndJoin();
   m_backgroundThread->ShutdownAndJoin();
-
-  m_networkThread.reset();
-  m_fileThread.reset();
-  m_backgroundThread.reset();
 }
 
 void Platform::RunThreads()
 {
-  ASSERT(!m_networkThread && !m_fileThread && !m_backgroundThread, ());
-  m_networkThread = make_unique<base::WorkerThread>();
-  m_fileThread = make_unique<base::WorkerThread>();
-  m_backgroundThread = make_unique<base::WorkerThread>();
+  ASSERT(!m_networkThread || (m_networkThread && m_networkThread->IsShutDown()), ());
+  ASSERT(!m_fileThread || (m_fileThread && m_fileThread->IsShutDown()), ());
+  ASSERT(!m_backgroundThread || (m_backgroundThread && m_backgroundThread->IsShutDown()), ());
+
+  m_networkThread = make_unique<base::thread_pool::delayed::ThreadPool>();
+  m_fileThread = make_unique<base::thread_pool::delayed::ThreadPool>();
+  m_backgroundThread = make_unique<base::thread_pool::delayed::ThreadPool>();
 }
 
 string DebugPrint(Platform::EError err)

@@ -11,7 +11,7 @@
   <FrameLayout android:layout_width="match_parent"
                android:layout_height="wrap_content">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
       android:id="@+id/toolbar"
       style="@style/MwmWidget.ToolbarStyle"
       android:theme="@style/MwmWidget.ToolbarTheme"
@@ -148,7 +148,49 @@
 
       </RelativeLayout>
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
+  </FrameLayout>
+
+  <FrameLayout
+    android:background="?attr/drivingOptionsViewBg"
+    android:id="@+id/driving_options_btn_container"
+    android:visibility="gone"
+    android:foreground="@drawable/shadow_top"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+      android:id="@+id/driving_options_btn"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:layout_width="match_parent"
+      android:gravity="center"
+      android:minHeight="@dimen/height_block_base"
+      android:layout_height="wrap_content">
+      <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+          android:id="@+id/driving_options_btn_img"
+          android:src="@drawable/ic_error_white"
+          android:layout_marginRight="@dimen/margin_half_plus_eight"
+          android:layout_marginEnd="@dimen/margin_half_plus_eight"
+          android:layout_gravity="center"
+          android:layout_width="@dimen/margin_base_plus"
+          android:layout_height="@dimen/margin_base_plus"/>
+        <TextView
+          android:id="@+id/driving_options_btn_title"
+          android:textAppearance="?android:attr/textAppearanceSmall"
+          android:textColor="@color/tips_and_triks_primary_text"
+          android:textAllCaps="true"
+          android:layout_gravity="center"
+          android:gravity="center"
+          android:fontFamily="@string/robotoMedium"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          tools:ignore="UnusedAttribute"/>
+      </LinearLayout>
+
+    </RelativeLayout>
+
   </FrameLayout>
   <FrameLayout
     style="@style/MwmWidget.FrameLayout.Elevation"

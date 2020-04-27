@@ -4,19 +4,23 @@
 
 #include "map/framework.hpp"
 
+#include "platform/downloader_defines.hpp"
 #include "platform/http_request.hpp"
 #include "platform/local_country_file_utils.hpp"
 #include "platform/platform.hpp"
 #include "platform/platform_tests_support/writable_dir_changer.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/internal/file_data.hpp"
 
 #include "storage/storage.hpp"
 
-#include "std/unique_ptr.hpp"
+#include "base/file_name_utils.hpp"
+
+#include <memory>
+#include <string>
 
 using namespace platform;
+using namespace std;
 using namespace storage;
 
 namespace
@@ -25,11 +29,11 @@ static FrameworkParams const kFrameworkParams(false /* m_enableLocalAds */, fals
 
 string const kCountriesTxtFile = COUNTRIES_FILE;
 
-string const kMwmVersion1 = "160316";
-size_t const kCountriesTxtFileSize1 = 353091;
+string const kMwmVersion1 = "190830";
+size_t const kCountriesTxtFileSize1 = 420632;
 
-string const kMwmVersion2 = "160317";
-size_t const kCountriesTxtFileSize2 = 348972;
+string const kMwmVersion2 = "190910";
+size_t const kCountriesTxtFileSize2 = 420634;
 
 string const kGroupCountryId = "Belarus";
 
@@ -39,14 +43,14 @@ bool DownloadFile(string const & url,
 {
   using namespace downloader;
 
-  HttpRequest::Status httpStatus;
+  DownloadStatus httpStatus;
   bool finished = false;
 
   unique_ptr<HttpRequest> request(HttpRequest::GetFile({url}, filePath, fileSize,
                                   [&](HttpRequest & request)
   {
-    HttpRequest::Status const s = request.GetStatus();
-    if (s != HttpRequest::Status::InProgress)
+    DownloadStatus const s = request.GetStatus();
+    if (s != DownloadStatus::InProgress)
     {
       httpStatus = s;
       finished = true;
@@ -56,7 +60,7 @@ bool DownloadFile(string const & url,
 
   testing::RunEventLoop();
 
-  return httpStatus == HttpRequest::Status::Completed;
+  return httpStatus == DownloadStatus::Completed;
 }
 
 string GetCountriesTxtWebUrl(string const version)
@@ -66,13 +70,12 @@ string GetCountriesTxtWebUrl(string const version)
 
 string GetCountriesTxtFilePath()
 {
-  return base::JoinFoldersToPath(GetPlatform().WritableDir(), kCountriesTxtFile);
+  return base::JoinPath(GetPlatform().WritableDir(), kCountriesTxtFile);
 }
 
-string GetMwmFilePath(string const & version, TCountryId const & countryId)
+string GetMwmFilePath(string const & version, CountryId const & countryId)
 {
-  return base::JoinFoldersToPath({GetPlatform().WritableDir(), version},
-                                 countryId + DATA_FILE_EXTENSION);
+  return base::JoinPath(GetPlatform().WritableDir(), version, countryId + DATA_FILE_EXTENSION);
 }
 
 } // namespace
@@ -83,7 +86,7 @@ UNIT_TEST(SmallMwms_Update_Test)
 
   Platform & platform = GetPlatform();
 
-  auto onProgressFn = [&](TCountryId const & countryId, TLocalAndRemoteSize const & mapSize) {};
+  auto onProgressFn = [&](CountryId const & countryId, LocalAndRemoteSize const & mapSize) {};
 
   // Download countries.txt for version 1
   TEST(DownloadFile(GetCountriesTxtWebUrl(kMwmVersion1), GetCountriesTxtFilePath(), kCountriesTxtFileSize1), ());
@@ -92,17 +95,15 @@ UNIT_TEST(SmallMwms_Update_Test)
     Framework f(kFrameworkParams);
     auto & storage = f.GetStorage();
     string const version = strings::to_string(storage.GetCurrentDataVersion());
-    TEST(version::IsSingleMwm(storage.GetCurrentDataVersion()), ());
     TEST_EQUAL(version, kMwmVersion1, ());
-    auto onChangeCountryFn = [&](TCountryId const & countryId)
-    {
+    auto onChangeCountryFn = [&](CountryId const & countryId) {
       if (!storage.IsDownloadInProgress())
         testing::StopEventLoop();
     };
     storage.Subscribe(onChangeCountryFn, onProgressFn);
-    storage.SetDownloadingUrlsForTesting({kTestWebServer});
+    storage.SetDownloadingServersForTesting({kTestWebServer});
 
-    TCountriesVec children;
+    CountriesVec children;
     storage.GetChildren(kGroupCountryId, children);
 
     // Download group
@@ -130,17 +131,15 @@ UNIT_TEST(SmallMwms_Update_Test)
     Framework f(kFrameworkParams);
     auto & storage = f.GetStorage();
     string const version = strings::to_string(storage.GetCurrentDataVersion());
-    TEST(version::IsSingleMwm(storage.GetCurrentDataVersion()), ());
     TEST_EQUAL(version, kMwmVersion2, ());
-    auto onChangeCountryFn = [&](TCountryId const & countryId)
-    {
+    auto onChangeCountryFn = [&](CountryId const & countryId) {
       if (!storage.IsDownloadInProgress())
         testing::StopEventLoop();
     };
     storage.Subscribe(onChangeCountryFn, onProgressFn);
-    storage.SetDownloadingUrlsForTesting({kTestWebServer});
+    storage.SetDownloadingServersForTesting({kTestWebServer});
 
-    TCountriesVec children;
+    CountriesVec children;
     storage.GetChildren(kGroupCountryId, children);
 
     // Check group node status is EOnDiskOutOfDate

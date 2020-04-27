@@ -1,9 +1,17 @@
 #pragma once
 
 #include "storage/map_files_downloader.hpp"
+#include "storage/queued_country.hpp"
+
+#include "platform/downloader_defines.hpp"
+
 #include "coding/file_writer.hpp"
+
 #include "base/thread_checker.hpp"
-#include "std/unique_ptr.hpp"
+
+#include <cstdint>
+#include <memory>
+#include <vector>
 
 namespace storage
 {
@@ -23,32 +31,34 @@ public:
 
   FakeMapFilesDownloader(TaskRunner & taskRunner);
 
-  virtual ~FakeMapFilesDownloader();
+  ~FakeMapFilesDownloader();
 
   // MapFilesDownloader overrides:
-  void GetServersList(TServersListCallback const & callback) override;
-
-  void DownloadMapFile(vector<string> const & urls, string const & path, int64_t size,
-                       TFileDownloadedCallback const & onDownloaded,
-                       TDownloadingProgressCallback const & onProgress) override;
-  TProgress GetDownloadingProgress() override;
+  downloader::Progress GetDownloadingProgress() override;
   bool IsIdle() override;
-  void Reset() override;
+  void Pause() override;
+  void Resume() override;
+  void Remove(CountryId const & id) override;
+  void Clear() override;
+  Queue const & GetQueue() const override;
 
 private:
+  // MapFilesDownloader overrides:
+  void Download(QueuedCountry & queuedCountry) override;
+
+  void Download();
   void DownloadNextChunk(uint64_t requestId);
+  void OnFileDownloaded(QueuedCountry const & queuedCountry,
+                        downloader::DownloadStatus const & status);
 
-  vector<string> m_servers;
-  TProgress m_progress;
-  bool m_idle;
+  downloader::Progress m_progress;
 
-  unique_ptr<FileWriter> m_writer;
-  TFileDownloadedCallback m_onDownloaded;
-  TDownloadingProgressCallback m_onProgress;
+  std::unique_ptr<FileWriter> m_writer;
 
   uint64_t m_timestamp;
 
   TaskRunner & m_taskRunner;
   ThreadChecker m_checker;
+  Queue m_queue;
 };
 }  // namespace storage

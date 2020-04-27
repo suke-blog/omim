@@ -2,7 +2,7 @@ project(mwm_diff_tests)
 
 set(
   SRC
-  diff_test.cpp
+  diff_tests.cpp
 )
 
 omim_add_test(${PROJECT_NAME} ${SRC})
@@ -15,6 +15,7 @@ omim_link_libraries(
   coding
   base
   stats_client
+  oauthcpp
   ${LIBZ}
 )
 

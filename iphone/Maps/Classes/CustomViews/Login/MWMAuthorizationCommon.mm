@@ -1,4 +1,3 @@
-#import "MWMCommon.h"
 #import "MWMAuthorizationCommon.h"
 #import "UIButton+RuntimeAttributes.h"
 
@@ -13,7 +12,7 @@ NSString * const kOSMRequestSecret = @"OSMRequestSecret";
 NSString * const kAuthNeedCheck = @"AuthNeedCheck";
 NSString * const kOSMUserName = @"UDOsmUserName";
 
-void SetOSMUserNameWithCredentials(osm::TKeySecret const & keySecret)
+void SetOSMUserNameWithCredentials(osm::KeySecret const & keySecret)
 {
   using namespace osm;
   dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^
@@ -39,43 +38,7 @@ void SetEmptyOSMUserName()
   [ud synchronize];
 }
 
-UIColor * AuthorizationButtonTextColor(AuthorizationButtonType type)
-{
-  switch (type)
-  {
-  case AuthorizationButtonType::AuthorizationButtonTypeGoogle: return UIColor.blackColor;
-  case AuthorizationButtonType::AuthorizationButtonTypeFacebook: return UIColor.whiteColor;
-  case AuthorizationButtonType::AuthorizationButtonTypeOSM: return [UIColor white];
-  }
-  return UIColor.clearColor;
-}
-
-UIColor * AuthorizationButtonBackgroundColor(AuthorizationButtonType type)
-{
-  switch (type)
-  {
-  case AuthorizationButtonType::AuthorizationButtonTypeGoogle: return UIColor.whiteColor;
-  case AuthorizationButtonType::AuthorizationButtonTypeFacebook:
-    return [UIColor colorWithRed:72. / 255. green:97. / 255. blue:163. / 255. alpha:1.];
-  case AuthorizationButtonType::AuthorizationButtonTypeOSM: return [UIColor linkBlue];
-  }
-  return UIColor.clearColor;
-}
-
-void AuthorizationConfigButton(UIButton * btn, AuthorizationButtonType type)
-{
-  UIColor * txtCol = AuthorizationButtonTextColor(type);
-  UIColor * bgCol = AuthorizationButtonBackgroundColor(type);
-
-  CGFloat const highlightedAlpha = 0.3;
-  [btn setTitleColor:txtCol forState:UIControlStateNormal];
-  [btn setTitleColor:[txtCol colorWithAlphaComponent:highlightedAlpha] forState:UIControlStateHighlighted];
-
-  [btn setBackgroundColor:bgCol forState:UIControlStateNormal];
-  [btn setBackgroundColor:[bgCol colorWithAlphaComponent:highlightedAlpha] forState:UIControlStateHighlighted];
-}
-
-void AuthorizationStoreCredentials(osm::TKeySecret const & keySecret)
+void AuthorizationStoreCredentials(osm::KeySecret const & keySecret)
 {
   NSUserDefaults * ud = NSUserDefaults.standardUserDefaults;
   if (keySecret.first.empty() || keySecret.second.empty())
@@ -101,13 +64,13 @@ BOOL AuthorizationHaveCredentials()
   return requestToken && requestSecret;
 }
 
-osm::TKeySecret AuthorizationGetCredentials()
+osm::KeySecret AuthorizationGetCredentials()
 {
   NSUserDefaults * ud = NSUserDefaults.standardUserDefaults;
   NSString * requestToken = [ud stringForKey:kOSMRequestToken];
   NSString * requestSecret = [ud stringForKey:kOSMRequestSecret];
   if (requestToken && requestSecret)
-    return osm::TKeySecret(requestToken.UTF8String, requestSecret.UTF8String);
+    return osm::KeySecret(requestToken.UTF8String, requestSecret.UTF8String);
   return {};
 }
 

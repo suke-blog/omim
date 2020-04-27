@@ -12,6 +12,7 @@
 
 #include <functional>
 #include <map>
+#include <vector>
 
 namespace dp
 {
@@ -60,15 +61,17 @@ public:
                                drape_ptr<OverlayHandle> && handle);
 
   void InsertLineRaw(ref_ptr<GraphicsContext> context, RenderState const & state,
-                     ref_ptr<AttributeProvider> params, vector<int> const & indices);
+                     ref_ptr<AttributeProvider> params, std::vector<int> const & indices);
   IndicesRange InsertLineRaw(ref_ptr<GraphicsContext> context, RenderState const & state,
-                             ref_ptr<AttributeProvider> params, vector<int> const & indices,
+                             ref_ptr<AttributeProvider> params, std::vector<int> const & indices,
                              drape_ptr<OverlayHandle> && handle);
 
   using TFlushFn = std::function<void (RenderState const &, drape_ptr<RenderBucket> &&)>;
   void StartSession(TFlushFn const & flusher);
   void EndSession(ref_ptr<GraphicsContext> context);
   void ResetSession();
+
+  void SetBatcherHash(uint64_t batcherHash);
 
   void SetFeatureMinZoom(int minZoom);
 
@@ -86,13 +89,15 @@ private:
   void FinalizeBucket(ref_ptr<GraphicsContext> context, RenderState const & state);
   void Flush(ref_ptr<GraphicsContext> context);
 
+  uint32_t const m_indexBufferSize;
+  uint32_t const m_vertexBufferSize;
+
+  uint64_t m_batcherHash = 0;
+
   TFlushFn m_flushInterface;
 
   using TBuckets = std::map<RenderState, drape_ptr<RenderBucket>>;
   TBuckets m_buckets;
-
-  uint32_t m_indexBufferSize;
-  uint32_t m_vertexBufferSize;
 
   int m_featureMinZoom = 0;
 };

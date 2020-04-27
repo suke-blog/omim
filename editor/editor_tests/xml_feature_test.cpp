@@ -3,14 +3,16 @@
 #include "editor/xml_feature.hpp"
 
 #include "indexer/classificator_loader.hpp"
-#include "indexer/feature.hpp"
+#include "indexer/editable_map_object.hpp"
 
 #include "geometry/mercator.hpp"
 
 #include "base/timer.hpp"
 
-#include "std/map.hpp"
-#include "std/sstream.hpp"
+#include <map>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #include "3party/pugixml/src/pugixml.hpp"
 
@@ -40,7 +42,7 @@ UNIT_TEST(XMLFeature_RawGetSet)
 </node>
 )";
 
-  stringstream sstr;
+  std::stringstream sstr;
   feature.Save(sstr);
   TEST_EQUAL(expected, sstr.str(), ());
 }
@@ -50,7 +52,7 @@ UNIT_TEST(XMLFeature_Setters)
 {
   XMLFeature feature(XMLFeature::Type::Node);
 
-  feature.SetCenter(MercatorBounds::FromLatLon(55.7978998, 37.4745280));
+  feature.SetCenter(mercator::FromLatLon(55.7978998, 37.4745280));
   feature.SetModificationTime(base::StringToTimestamp("2015-11-27T21:13:32Z"));
 
   feature.SetName("Gorki Park");
@@ -59,10 +61,11 @@ UNIT_TEST(XMLFeature_Setters)
   feature.SetName("int_name", "Gorky Park");
 
   feature.SetHouse("10");
+  feature.SetPostcode("127001");
   feature.SetTagValue("opening_hours", "Mo-Fr 08:15-17:30");
   feature.SetTagValue("amenity", "atm");
 
-  stringstream sstr;
+  std::stringstream sstr;
   feature.Save(sstr);
 
   auto const expectedString = R"(<?xml version="1.0"?>
@@ -72,6 +75,7 @@ UNIT_TEST(XMLFeature_Setters)
   <tag k="name:ru" v="Парк Горького" />
   <tag k="int_name" v="Gorky Park" />
   <tag k="addr:housenumber" v="10" />
+  <tag k="addr:postcode" v="127001" />
   <tag k="opening_hours" v="Mo-Fr 08:15-17:30" />
   <tag k="amenity" v="atm" />
 </node>
@@ -84,13 +88,13 @@ UNIT_TEST(XMLFeature_UintLang)
 {
   XMLFeature feature(XMLFeature::Type::Node);
 
-  feature.SetCenter(MercatorBounds::FromLatLon(55.79, 37.47));
+  feature.SetCenter(mercator::FromLatLon(55.79, 37.47));
   feature.SetModificationTime(base::StringToTimestamp("2015-11-27T21:13:32Z"));
 
   feature.SetName(StringUtf8Multilang::kDefaultCode, "Gorki Park");
   feature.SetName(StringUtf8Multilang::GetLangIndex("ru"), "Парк Горького");
   feature.SetName(StringUtf8Multilang::kInternationalCode, "Gorky Park");
-  stringstream sstr;
+  std::stringstream sstr;
   feature.Save(sstr);
 
   auto const expectedString = R"(<?xml version="1.0"?>
@@ -117,7 +121,7 @@ UNIT_TEST(XMLFeature_UintLang)
 UNIT_TEST(XMLFeature_ToOSMString)
 {
   XMLFeature feature(XMLFeature::Type::Node);
-  feature.SetCenter(MercatorBounds::FromLatLon(55.7978998, 37.4745280));
+  feature.SetCenter(mercator::FromLatLon(55.7978998, 37.4745280));
   feature.SetName("OSM");
   feature.SetTagValue("amenity", "atm");
 
@@ -165,6 +169,7 @@ auto const kTestNode = R"(<?xml version="1.0"?>
   <tag k="name:ru" v="Парк Горького" />
   <tag k="int_name" v="Gorky Park" />
   <tag k="addr:housenumber" v="10" />
+  <tag k="addr:postcode" v="127001" />
   <tag k="opening_hours" v="Mo-Fr 08:15-17:30" />
   <tag k="amenity" v="atm" />
 </node>
@@ -174,7 +179,7 @@ UNIT_TEST(XMLFeature_FromXml)
 {
   XMLFeature feature(kTestNode);
 
-  stringstream sstr;
+  std::stringstream sstr;
   feature.Save(sstr);
   TEST_EQUAL(kTestNode, sstr.str(), ());
 
@@ -184,6 +189,7 @@ UNIT_TEST(XMLFeature_FromXml)
   TEST(!feature.HasKey("FooBarBaz"), ());
 
   TEST_EQUAL(feature.GetHouse(), "10", ());
+  TEST_EQUAL(feature.GetPostcode(), "127001", ());
   TEST_EQUAL(feature.GetCenter(), ms::LatLon(55.7978998, 37.4745280), ());
   TEST_EQUAL(feature.GetName(), "Gorki Park", ());
   TEST_EQUAL(feature.GetName("default"), "Gorki Park", ());
@@ -200,15 +206,14 @@ UNIT_TEST(XMLFeature_FromXml)
 UNIT_TEST(XMLFeature_ForEachName)
 {
   XMLFeature feature(kTestNode);
-  map<string, string> names;
+  std::map<std::string, std::string> names;
 
-  feature.ForEachName([&names](string const & lang, string const & name)
-                      {
-                        names.emplace(lang, name);
-                      });
+  feature.ForEachName(
+      [&names](std::string const & lang, std::string const & name) { names.emplace(lang, name); });
 
-  TEST_EQUAL(names, (map<string, string>{
-                        {"default", "Gorki Park"}, {"en", "Gorki Park"}, {"ru", "Парк Горького"}}),
+  TEST_EQUAL(names,
+             (std::map<std::string, std::string>{
+                 {"default", "Gorki Park"}, {"en", "Gorki Park"}, {"ru", "Парк Горького"}}),
              ());
 }
 
@@ -233,7 +238,7 @@ UNIT_TEST(XMLFeature_FromOSM)
   TEST_ANY_THROW(XMLFeature::FromOSM("<?xml version=\"1.0\"?>"), ());
   TEST_NO_THROW(XMLFeature::FromOSM("<?xml version=\"1.0\"?><osm></osm>"), ());
   TEST_ANY_THROW(XMLFeature::FromOSM("<?xml version=\"1.0\"?><osm><node lat=\"11.11\"/></osm>"), ());
-  vector<XMLFeature> features;
+  std::vector<XMLFeature> features;
   TEST_NO_THROW(features = XMLFeature::FromOSM(kTestNodeWay), ());
   TEST_EQUAL(3, features.size(), ());
   XMLFeature const & node = features[0];
@@ -264,7 +269,8 @@ UNIT_TEST(XMLFeature_FromXmlNode)
 
 UNIT_TEST(XMLFeature_Geometry)
 {
-  vector<m2::PointD> const geometry = {
+  std::vector<m2::PointD> const geometry =
+  {
     {28.7206411, 3.7182409},
     {46.7569003, 47.0774689},
     {22.5909217, 41.6994874},
@@ -309,7 +315,7 @@ UNIT_TEST(XMLFeature_ApplyPatch)
     hasMainTag.ApplyPatch(XMLFeature(kPatch));
     TEST_EQUAL(hasMainTag.GetTagValue("website"), "maps.me", ());
     size_t tagsCount = 0;
-    hasMainTag.ForEachTag([&tagsCount](string const &, string const &){ ++tagsCount; });
+    hasMainTag.ForEachTag([&tagsCount](std::string const &, std::string const &) { ++tagsCount; });
     TEST_EQUAL(2, tagsCount, ("website should be replaced, not duplicated."));
   }
 
@@ -353,12 +359,13 @@ UNIT_TEST(XMLFeature_FromXMLAndBackToXML)
 {
   classificator::Load();
 
-  string const xmlNoTypeStr = R"(<?xml version="1.0"?>
+  std::string const xmlNoTypeStr = R"(<?xml version="1.0"?>
   <node lat="55.7978998" lon="37.474528" timestamp="2015-11-27T21:13:32Z">
   <tag k="name" v="Gorki Park" />
   <tag k="name:en" v="Gorki Park" />
   <tag k="name:ru" v="Парк Горького" />
   <tag k="addr:housenumber" v="10" />
+  <tag k="addr:postcode" v="127001" />
   </node>
   )";
 
@@ -368,13 +375,13 @@ UNIT_TEST(XMLFeature_FromXMLAndBackToXML)
   editor::XMLFeature xmlWithType = xmlNoType;
   xmlWithType.SetTagValue("amenity", "atm");
 
-  FeatureType ft;
-  editor::FromXML(xmlWithType, ft);
-  auto fromFtWithType = editor::ToXML(ft, true);
+  osm::EditableMapObject emo;
+  editor::FromXML(xmlWithType, emo);
+  auto fromFtWithType = editor::ToXML(emo, true);
   fromFtWithType.SetAttribute("timestamp", kTimestamp);
   TEST_EQUAL(fromFtWithType, xmlWithType, ());
 
-  auto fromFtWithoutType = editor::ToXML(ft, false);
+  auto fromFtWithoutType = editor::ToXML(emo, false);
   fromFtWithoutType.SetAttribute("timestamp", kTimestamp);
   TEST_EQUAL(fromFtWithoutType, xmlNoType, ());
 }

@@ -18,6 +18,7 @@
 
 #include <string>
 
+using namespace feature;
 using namespace generator::tests_support;
 using namespace search::tests_support;
 using namespace std;
@@ -35,13 +36,18 @@ public:
   }
 
   // TestFeature overrides:
-  void Serialize(FeatureBuilder1 & fb) const override
+  void Serialize(FeatureBuilder & fb) const override
   {
-    fb.GetMetadata().Set(feature::Metadata::FMD_TEST_ID, strings::to_string(m_id));
+    fb.GetMetadata().Set(Metadata::FMD_TEST_ID, strings::to_string(m_id));
     fb.SetCenter(m_center);
 
-    if (!m_name.empty())
-      CHECK(fb.AddName(m_lang, m_name), ("Can't set feature name:", m_name, "(", m_lang, ")"));
+    m_names.ForEach([&](int8_t langCode, string const & name) {
+      if (!name.empty())
+      {
+        auto const lang = StringUtf8Multilang::GetLangByCode(langCode);
+        CHECK(fb.AddName(lang, name), ("Can't set feature name:", name, "(", lang, ")"));
+      }
+    });
 
     auto const & classificator = classif();
     fb.AddType(classificator.GetTypeByPath({"place", "country"}));
@@ -97,7 +103,7 @@ UNIT_CLASS_TEST(SmokeTest, Smoke)
   AlcoShop brandyShop(m2::PointD(0, 1), "Brandy shop", "en");
   AlcoShop vodkaShop(m2::PointD(1, 1), "Russian vodka shop", "en");
 
-  auto id = BuildMwm(kCountryName, feature::DataHeader::country, [&](TestMwmBuilder & builder) {
+  auto id = BuildMwm(kCountryName, DataHeader::MapType::Country, [&](TestMwmBuilder & builder) {
     builder.Add(wineShop);
     builder.Add(tequilaShop);
     builder.Add(brandyShop);
@@ -109,13 +115,13 @@ UNIT_CLASS_TEST(SmokeTest, Smoke)
 
   SetViewport(m2::RectD(m2::PointD(0, 0), m2::PointD(100, 100)));
   {
-    TRules rules = {ExactMatch(id, wineShop)};
+    Rules rules = {ExactMatch(id, wineShop)};
     TEST(ResultsMatch("wine ", rules), ());
   }
 
   {
-    TRules rules = {ExactMatch(id, wineShop), ExactMatch(id, tequilaShop),
-                    ExactMatch(id, brandyShop), ExactMatch(id, vodkaShop)};
+    Rules rules = {ExactMatch(id, wineShop), ExactMatch(id, tequilaShop),
+                   ExactMatch(id, brandyShop), ExactMatch(id, vodkaShop)};
     TEST(ResultsMatch("shop ", rules), ());
   }
 }
@@ -127,14 +133,14 @@ UNIT_CLASS_TEST(SmokeTest, DeepCategoryTest)
   SubwayStation redStation(m2::PointD(0, 0), "red", "en");
   SubwayStationMoscow blueStation(m2::PointD(1, 1), "blue", "en");
 
-  auto id = BuildMwm(kCountryName, feature::DataHeader::country, [&](TestMwmBuilder & builder) {
+  auto id = BuildMwm(kCountryName, DataHeader::MapType::Country, [&](TestMwmBuilder & builder) {
     builder.Add(redStation);
     builder.Add(blueStation);
   });
 
   SetViewport(m2::RectD(m2::PointD(0, 0), m2::PointD(1, 1)));
   {
-    TRules rules = {ExactMatch(id, redStation), ExactMatch(id, blueStation)};
+    Rules rules = {ExactMatch(id, redStation), ExactMatch(id, blueStation)};
     TEST(ResultsMatch("Subway ", rules), ());
   }
 }
@@ -142,17 +148,15 @@ UNIT_CLASS_TEST(SmokeTest, DeepCategoryTest)
 UNIT_CLASS_TEST(SmokeTest, CategoriesTest)
 {
   // todo(@t.yan): fix some or delete category.
-  vector<vector<string>> const invisibleAsPointTags = {{"amenity", "driving_school"},
-                                                       {"military", "bunker"},
-                                                       {"waterway", "canal"},
+  vector<vector<string>> const invisibleAsPointTags = {{"waterway", "canal"},
                                                        {"waterway", "river"},
                                                        {"waterway", "riverbank"},
                                                        {"waterway", "stream"},
                                                        {"landuse", "basin"},
                                                        {"place", "county"},
                                                        {"place", "islet"},
-                                                       {"power", "pole"},
                                                        {"highway", "footway"},
+                                                       {"highway", "cycleway"},
                                                        {"highway", "living_street"},
                                                        {"highway", "motorway"},
                                                        {"highway", "motorway_link"},
@@ -175,14 +179,12 @@ UNIT_CLASS_TEST(SmokeTest, CategoriesTest)
                                                        {"highway", "trunk"},
                                                        {"highway", "trunk_link"},
                                                        {"highway", "unclassified"},
-                                                       {"man_made", "surveillance"},
                                                        {"man_made", "tower"},
                                                        {"man_made", "water_tower"},
                                                        {"man_made", "water_well"},
                                                        {"natural", "glacier"},
                                                        {"natural", "pond"},
-                                                       {"natural", "tree"},
-                                                       {"natural", "wood"}};
+                                                       {"natural", "tree"}};
   set<uint32_t> invisibleTypes;
   for (auto const & tags : invisibleAsPointTags)
     invisibleTypes.insert(classif().GetTypeByPath(tags));
@@ -218,14 +220,14 @@ UNIT_CLASS_TEST(SmokeTest, CategoriesTest)
     TestPOI poi(m2::PointD(1.0, 1.0), "poi", "en");
     poi.SetTypes({strings::Tokenize(classif().GetFullObjectName(type), "|")});
 
-    auto id = BuildMwm(countryName, feature::DataHeader::country,
+    auto id = BuildMwm(countryName, DataHeader::MapType::Country,
                        [&](TestMwmBuilder & builder) { builder.Add(poi); });
 
     SetViewport(m2::RectD(m2::PointD(0.0, 0.0), m2::PointD(2.0, 2.0)));
     {
-      TRules rules = {ExactMatch(id, poi)};
+      Rules rules = {ExactMatch(id, poi)};
       auto const query = holder.GetReadableFeatureType(type, CategoriesHolder::kEnglishCode) + " ";
-      TEST(ResultsMatch(query, categoryIsSearchable ? rules : TRules{}), ());
+      TEST(ResultsMatch(query, categoryIsSearchable ? rules : Rules{}), ());
     }
     DeregisterMap(countryName);
   };
@@ -237,7 +239,7 @@ UNIT_CLASS_TEST(SmokeTest, NotPrefixFreeNames)
 {
   char const kCountryName[] = "ATown";
 
-  auto id = BuildMwm(kCountryName, feature::DataHeader::country, [&](TestMwmBuilder & builder) {
+  auto id = BuildMwm(kCountryName, DataHeader::MapType::Country, [&](TestMwmBuilder & builder) {
     builder.Add(TestPOI(m2::PointD(0, 0), "a", "en"));
     builder.Add(TestPOI(m2::PointD(0, 1), "aa", "en"));
     builder.Add(TestPOI(m2::PointD(1, 1), "aa", "en"));
@@ -283,17 +285,17 @@ UNIT_CLASS_TEST(SmokeTest, PoiWithAddress)
   TestStreet mainStreet({m2::PointD(0.0, 0.0), m2::PointD(1.0, 1.0), m2::PointD(2.0, 2.0)},
                         "Main Street", "en");
   TestCafe cafe(m2::PointD(1.0, 1.0), "Starbucks", "en");
-  cafe.SetStreet(mainStreet);
+  cafe.SetStreetName(mainStreet.GetName("en"));
   cafe.SetHouseNumber("27");
 
-  auto id = BuildMwm(kCountryName, feature::DataHeader::country, [&](TestMwmBuilder & builder) {
+  auto id = BuildMwm(kCountryName, DataHeader::MapType::Country, [&](TestMwmBuilder & builder) {
     builder.Add(mainStreet);
     builder.Add(cafe);
   });
 
   SetViewport(m2::RectD(m2::PointD(0.0, 0.0), m2::PointD(2.0, 2.0)));
   {
-    TRules rules = {ExactMatch(id, cafe)};
+    Rules rules = {ExactMatch(id, cafe)};
     TEST(ResultsMatch("Starbucks ", rules), ());
     TEST(ResultsMatch("Main street 27 ", rules), ());
     TEST(ResultsMatch("Main street 27 Starbucks ", rules), ());

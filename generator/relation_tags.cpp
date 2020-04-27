@@ -2,13 +2,11 @@
 
 #include "generator/osm_element.hpp"
 
+#include "base/stl_helpers.hpp"
+
 namespace generator
 {
-RelationTagsBase::RelationTagsBase(routing::TagsProcessor & tagsProcessor) :
-  m_routingTagsProcessor(tagsProcessor),
-  m_cache(14 /* logCacheSize */)
-{
-}
+RelationTagsBase::RelationTagsBase() : m_cache(14 /* logCacheSize */) {}
 
 void RelationTagsBase::Reset(uint64_t fID, OsmElement * p)
 {
@@ -25,19 +23,12 @@ bool RelationTagsBase::IsSkipRelation(std::string const & type)
 bool RelationTagsBase::IsKeyTagExists(std::string const & key) const
 {
   auto const & tags = m_current->m_tags;
-  return std::any_of(std::begin(tags), std::end(tags), [&](OsmElement::Tag const & p) {
-    return p.key == key;
-  });
+  return base::AnyOf(tags, [&](OsmElement::Tag const & p) { return p.m_key == key; });
 }
 
 void RelationTagsBase::AddCustomTag(std::pair<std::string, std::string> const & p)
 {
   m_current->AddTag(p.first, p.second);
-}
-
-RelationTagsNode::RelationTagsNode(routing::TagsProcessor & tagsProcessor) :
-  RelationTagsBase(tagsProcessor)
-{
 }
 
 void RelationTagsNode::Process(RelationElement const & e)
@@ -46,16 +37,10 @@ void RelationTagsNode::Process(RelationElement const & e)
   if (Base::IsSkipRelation(type))
     return;
 
-  if (type == "restriction")
-  {
-    m_routingTagsProcessor.m_restrictionWriter.Write(e);
-    return;
-  }
-
   bool const processAssociatedStreet = type == "associatedStreet" &&
                                        Base::IsKeyTagExists("addr:housenumber") &&
                                        !Base::IsKeyTagExists("addr:street");
-  for (auto const & p : e.tags)
+  for (auto const & p : e.m_tags)
   {
     // - used in railway station processing
     // - used in routing information
@@ -71,11 +56,6 @@ void RelationTagsNode::Process(RelationElement const & e)
     else if (p.first == "name" && processAssociatedStreet)
       Base::AddCustomTag({"addr:street", p.second});
   }
-}
-
-RelationTagsWay::RelationTagsWay(routing::TagsProcessor & routingTagsProcessor) :
-  RelationTagsBase(routingTagsProcessor)
-{
 }
 
 bool RelationTagsWay::IsAcceptBoundary(RelationElement const & e) const
@@ -117,16 +97,10 @@ void RelationTagsWay::Process(RelationElement const & e)
     return;
   }
 
-  if (type == "restriction")
-  {
-    m_routingTagsProcessor.m_restrictionWriter.Write(e);
-    return;
-  }
-
   if (type == "building")
   {
     // If this way has "outline" role, add [building=has_parts] type.
-    if (e.GetWayRole(m_current->id) == "outline")
+    if (e.GetWayRole(m_current->m_id) == "outline")
       Base::AddCustomTag({"building", "has_parts"});
     return;
   }
@@ -137,7 +111,7 @@ void RelationTagsWay::Process(RelationElement const & e)
                                        !Base::IsKeyTagExists("addr:street");
   bool const isHighway = Base::IsKeyTagExists("highway");
 
-  for (auto const & p : e.tags)
+  for (auto const & p : e.m_tags)
   {
     /// @todo Skip common key tags.
     if (p.first == "type" || p.first == "route" || p.first == "area")

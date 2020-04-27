@@ -16,6 +16,7 @@ omim_link_libraries(
   ${PROJECT_NAME}
   generator
   routing
+  traffic
   routing_common
   indexer
   platform
@@ -27,8 +28,10 @@ omim_link_libraries(
   jansson
   minizip
   oauthcpp
+  opening_hours
   protobuf
   stats_client
+  succinct
   ${LIBZ}
 )
 

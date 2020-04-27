@@ -4,8 +4,6 @@
 <!-- Language: da -->
 <resources>
 	<!-- SECTION: Strings -->
-	<!-- About button text (should be short) -->
-	<string name="about">Om app</string>
 	<!-- Button text (should be short) -->
 	<string name="back">Tilbage</string>
 	<!-- Button text (should be short) -->
@@ -50,7 +48,6 @@
 	<string name="miles">Mil</string>
 	<!-- View and button titles for accessibility -->
 	<string name="core_my_position">Min position</string>
-	<string name="ok">Ok</string>
 	<!-- Settings/Downloader - No free space dialog message -->
 	<string name="free_disk_space_for_country_x">Frigør venligst noget plads på din telefon først for at downloade %s</string>
 	<!-- Leave Review dialog - Not now button (remind me later) -->
@@ -69,8 +66,6 @@
 	<string name="touch_to_download">Tryk for at downloade</string>
 	<!-- Settings/Downloader - 3G download warning dialog confirm button -->
 	<string name="use_cellular_data">Ja</string>
-	<!-- Settings/Downloader - No internet connection dialog message -->
-	<string name="use_wifi_recommendation_text">Vi anbefaler, at du bruger WiFi for at downloade store kort</string>
 	<!-- Choose measurement on first launch alert - title -->
 	<string name="which_measurement_system">Hvilken måleenhed foretrækker du?</string>
 	<!-- Location services are disabled by user alert - message -->
@@ -258,8 +253,6 @@
 	<string name="my_position_share_sms">Hey, tjek min nuværende lokation ud på MAPS.ME! %1$s or %2$s. Har du ikke offline kort? Download her: http://maps.me/get</string>
 	<!-- Subject for emailed bookmark -->
 	<string name="bookmark_share_email_subject">Hey, tjek min knappenål på MAPS.ME kortet ud!</string>
-	<!-- Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me -->
-	<string name="bookmark_share_email">Hej\n\nJeg markerede: %1$s på MAPS.ME, en verden af offline kort. Klik på dette link %2$s eller dette %3$s for at se stedet på kortet.\n\nTak.</string>
 	<!-- Subject for emailed position -->
 	<string name="my_position_share_email_subject">Hey, tjek min nuværende lokation ud på MAPS.ME kortet!</string>
 	<!-- Share my position using EMail, %1$@ is ge0:// and %2$@ is http://ge0.me link WITHOUT NAME -->
@@ -555,13 +548,29 @@
 	<!-- green color -->
 	<string name="green">Grøn</string>
 	<!-- purple color -->
-	<string name="purple">violet</string>
+	<string name="purple">Violet</string>
 	<!-- orange color -->
 	<string name="orange">Orange</string>
 	<!-- brown color -->
 	<string name="brown">Brun</string>
 	<!-- pink color -->
 	<string name="pink">Pink</string>
+	<!-- deep purple color -->
+	<string name="deep_purple">Mørkelilla</string>
+	<!-- light blue color -->
+	<string name="light_blue">Lyseblå</string>
+	<!-- cyan color -->
+	<string name="cyan">Cyan</string>
+	<!-- teal color -->
+	<string name="teal">Blågrøn</string>
+	<!-- lime color -->
+	<string name="lime">Lime</string>
+	<!-- deep orange color -->
+	<string name="deep_orange">Dyb orange</string>
+	<!-- gray color -->
+	<string name="gray">Grå</string>
+	<!-- blue gray color -->
+	<string name="blue_gray">Blågrå</string>
 	<!-- Wi-Fi available -->
 	<string name="WiFi_available">Ja</string>
 
@@ -795,8 +804,6 @@
 	<string name="onboarding_location_message">For at bruge navigering og andre funktioner skal vi have adgang til din geolokation.</string>
 	<string name="onboarding_permissions_title">Giv MAPS.ME adgang til lager og position</string>
 	<string name="onboarding_permissions_message">Så du kan hente kort, se steder og trafik i nærheden af dig og benytte navigation.</string>
-	<string name="onboarding_welcome_title">Velkommen til MAPS.ME</string>
-	<string name="onboarding_welcome_first_subtitle">Kort, der er gratis, hurtige, detaljerede og helt igennem offline, med rutenavigation.</string>
 	<string name="onboarding_welcome_second_subtitle">Ved at åbne appen accepterer du vores &lt;a href="%1$s">Vilkår for anvendelse&lt;/a> og &lt;a href="%2$s">Fortrolighedspolitik&lt;/a>.</string>
 	<string name="dialog_incorrect_feature_position">Skift lokation</string>
 	<string name="message_invalid_feature_position">Et objekt kan ikke placeres her</string>
@@ -878,6 +885,7 @@
 	<string name="minute">min</string>
 	<string name="placepage_place_description">Beskrivelse</string>
 	<string name="placepage_more_button">Mere</string>
+	<string name="placepage_more_reviews_button">Flere anmeldelser</string>
 	<string name="book_button">Book</string>
 	<string name="placepage_call_button">Ring</string>
 	<string name="placepage_edit_bookmark_button">Rediger bogmærke</string>
@@ -1031,8 +1039,6 @@
 	<string name="banner_geerbest_message">Hurtig søgning blandt over 50.000 varer til lave priser.</string>
 	<string name="banner_rentalcars_title">Udlejning biler online</string>
 	<string name="banner_rentalcars_message">800 biludlejningsselskaber på mere end 49.000 steder.</string>
-	<string name="banner_viator_title">Online rejsesøgning</string>
-	<string name="banner_viator_message">Søg blandt mere end 50.000 rejser over hele verden.</string>
 	<!-- december -->
 	<string name="whatsnew_traffic">Trafikdata i 36 lande</string>
 	<!-- december -->
@@ -1074,8 +1080,6 @@
 	<string name="whatsnew_smaller_mwm_message">Maps kræver op til 20% mindre lager.</string>
 	<string name="whatsnew_waypoints_title">Vejpunkter i ruteføring</string>
 	<string name="whatsnew_waypoints_message">Tryk på positioner for at føje vejsteder til din rute.</string>
-	<string name="whatsnew_viator_title">Bestil en tur</string>
-	<string name="whatsnew_viator_message">Vælg populære ture i turistbyer over hele verden.</string>
 	<string name="whatsnew_driving_style_title">Nyt kortformat til kørsel</string>
 	<string name="whatsnew_driving_style_message">Bilnavigationstilstand er blevet lettere at bruge.</string>
 	<string name="more_on_bookingcom">Mere på Booking.com</string>
@@ -1132,7 +1136,6 @@
 	<string name="settings_card_memory">Kortets hukommelse</string>
 	<string name="settings_storage_available">%s tilgængelig</string>
 	<string name="toast_location_permission_denied">App-position tilladelse nægtet</string>
-	<string name="place_page_viator_title">Seværdigheder og ture</string>
 	<string name="button_use">Brug</string>
 	<string name="planning_route_manage_route">Administrer rute</string>
 	<string name="button_plan">Planlæg</string>
@@ -1147,8 +1150,6 @@
 	<string name="add_my_position">Tilføj min position</string>
 	<string name="choose_start_point">Vælg et udgangspunkt</string>
 	<string name="choose_destination">Vælg en destination</string>
-	<string name="preloader_viator_title">Find ture og usædvanlige aktiviteter</string>
-	<string name="preloader_viator_message">Ture, aktiviteter, sightseeing med mere</string>
 	<string name="preloader_viator_button">Flere oplysninger</string>
 	<string name="whats_new_title_route">Cykelruter og vandreruter blev forbedret</string>
 	<string name="whats_new_message_route">Vi rettede fejl, gjorte ruteoprettelse flere gange hurtigere og tilføjede mellemliggende stop</string>
@@ -1159,9 +1160,6 @@
 	<string name="placepage_no_reviews">Ingen anmeldelser</string>
 	<string name="placepage_reviewed">Du har allerede anmeldt dette sted</string>
 	<string name="placepage_summary_rating">Sammenfattende vurdering</string>
-	<plurals name="placepage_summary_rating_description">
-	  <item quantity="other">Baseret på %d anmeldelser</item>
-	</plurals>
 	<string name="placepage_rate_comment">Tryk for at vurdere og anmelde dette sted.</string>
 	<string name="placepage_rate_horrible">Forfærdeligt</string>
 	<string name="placepage_rate_bad">Dårligt</string>
@@ -1204,8 +1202,6 @@
 	<string name="discovery_button_subtitle_attractions">Seværdigheder</string>
 	<string name="discovery_button_subtitle_eat_and_drink">Spise og drikke</string>
 	<string name="discovery_button_subtitle_local_guides">Lokale guider</string>
-	<string name="discovery_button_viator_offline_title">Find ture og nye oplevelser</string>
-	<string name="discovery_button_viator_offline_message">Ture, oplevelser, sightseeing med mere.</string>
 	<string name="discovery_button_viator_error_title">Fejl ved indlæsning af data</string>
 	<string name="discovery_button_other_error_message">Fejl ved indlæsning af data</string>
 	<string name="discovery_button_other_loading_message">Data indlæses</string>
@@ -1245,12 +1241,10 @@
 	<string name="downloader_percent">%1$s (%2$s af %3$s)</string>
 	<string name="downloader_process">Downloader %s...</string>
 	<string name="downloader_applying">Anvender %s...</string>
-	<string name="transit_not_found">Transitnavigation i denne region er endnu ikke tilgængelig</string>
 	<string name="whats_new_title_hotel_filter">Nye hotelfiltre til rådighed!</string>
 	<string name="whats_new_message_hotel_filter">Book hoteller på dine datoer! Brug filtre for check-in og check-out</string>
 	<string name="whats_new_title_ugc_travel">Del dine erfaringer med andre rejsende!</string>
 	<string name="whats_new_message_ugc_travel">Vurder og anmeld de steder, du har besøgt!</string>
-	<string name="dialog_pedestrian_route_is_long">Gangstien er for lang</string>
 	<string name="dialog_message_transit_not_found_connection">Planlæg en rute inden for et transitnetværk</string>
 	<string name="bookmarks_error_message_share_general">Ikke i stand til at dele på grund af en programfejl</string>
 	<string name="bookmarks_error_title_share_empty">Delingsfejl</string>
@@ -1355,8 +1349,8 @@
 	<string name="error_already_downloaded">Denne liste er allerede blevet downloadet</string>
 	<string name="guides">Vejledninger</string>
 	<string name="guide_downloaded_title">Vejledningen er blevet downloadet</string>
-	<string name="download_guides">Download vejledninger</string>
-	<string name="cached_guides_placeholder_subtitle">Detaljerede offline vejledninger til alle slags rejser. Vælg den der passer dig bedst og download den direkte til dit kort. Du skal bruge en internetforbindelse til at downloade vejledninger.</string>
+	<!-- as few symbols as possible -->
+	<string name="download_guides">Søgeguide</string>
 	<string name="guides_groups_cached">Downloadede vejledninger</string>
 	<string name="subtitle_error_downloading_guide">Vejledningen blev ikke downloadet</string>
 	<string name="error_already_downloaded_guide">Denne vejledning er allerede blevet downloadet</string>
@@ -1395,7 +1389,6 @@
 	<string name="restore_success_alert">Abonnementet er blevet genoprettet</string>
 	<string name="restore_error_alert">Der er sket en fejl under genoprettelsen af abonnementet</string>
 	<string name="restore_no_subscription_alert">Der er ingen aktive abonnementer</string>
-	<string name="subscription_terms">Betalingen opkræves via din iTunes-konto ved bekræftelse af købet. Abonnementet fornys automatisk, medmindre den automatiske fornyelse er slået fra senest 24 timer før udgangen af den aktuelle periode. Din konto debiteres i overensstemmelse med din plan for fornyelse indenfor 24 timer før udgangen af den aktuelle periode. Du kan administrere eller slukke for automatisk fornyelse i dine Apple ID-kontoindstillinger på ethvert tidspunkt af dit køb.</string>
 	<string name="subscriptions_title">Abonnementer</string>
 	<string name="manage_subscription">Administrer abonnementet</string>
 	<string name="sharing_options">Deling</string>
@@ -1405,7 +1398,6 @@
 	<string name="hide_from_map">Skjul på kort</string>
 	<string name="ugc_route_tags_screen_label">Vælg tags</string>
 	<string name="ugc_route_tags_progress_msg">Indlæser tags…</string>
-	<string name="ugc_route_tags_desc">Vælg nogle tags for at gøre det nemmere for andre at finde din guide. Dette er obligatorisk.</string>
 	<string name="public_access">Offentlig adgang</string>
 	<string name="limited_access">Begrænset adgang</string>
 	<string name="upload_and_publish_desc">Denne guide vil blive uploadet til det offentlige MAPS.ME katalog, hvor den vil være tilgængelig for andre brugere</string>
@@ -1428,7 +1420,7 @@
 	<string name="unable_upload_errorr_title">Upload af fil fejlede</string>
 	<string name="unable_upload_error_subtitle_edited">Denne fil er redigeret ved hjælp af web-appen</string>
 	<string name="unable_upload_error_subtitle_broken">Denne fil er beskadiget og kunne ikke uploades. Upload venligst en anden fil.</string>
-	<string name="buy_btn">Køb til %s</string>
+	<string name="buy_btn">Køb denne her til %s</string>
 	<string name="download_guide_progress">Henter din guide…</string>
 	<string name="price_error_title">Kunne ikke finde en pris</string>
 	<string name="price_error_subtitle">Prøv igen om lidt</string>
@@ -1476,12 +1468,326 @@
 	<string name="whatsnew_paid_routes_title">Flere nye oplevelser!</string>
 	<string name="whatsnew_paid_routes_message">Udover de gratis ruter har vi tilføjet 3 betalte rutekategorier til vores katalog. Over 700 nye ruter!</string>
 	<string name="whats_new_ugc_routes_title_android_only">Det er nemt at dele dine indtryk</string>
+	<string name="ugc_thanks_message_auth">Din anmeldelse er blevet gemt</string>
+	<string name="ugc_thanks_message_not_auth">Log ind for efterlade en anmeldelse</string>
+	<string name="notification_leave_review_v2_title">Vurder et besøgt sted og hjælp rejsende!</string>
+	<string name="error_public_not_enought_title">Ikke nok bogmærker</string>
+	<string name="error_public_not_enought_subtitle">Du skal have mindst 3 bogmærker, for at kunne uploade din guide til det offentlige katalog</string>
+	<string name="bookmark_public_upload_alert_title">Du er et par skridt væk fra at dele dine bogmærker med alle MAPS.ME rejsende!</string>
+	<string name="bookmark_public_upload_alert_subtitle">Sørg for, at du har et bestemt navn og en beskrivelse til din liste, og at alle bogmærker har oplysninger om stederne. På denne måde kan din liste findes og bruges af andre.</string>
+	<string name="bookmark_public_upload_alert_ok_button">Ja, jeg er sikker!</string>
+	<string name="name_title">Indtast navn på din guide</string>
+	<string name="name_placeholder">f.eks. London Pubs</string>
+	<string name="name_comment1">Navngiv din guide, så rejsende nemt kan finde det, f.eks. \"London Pubs\"</string>
+	<string name="name_comment2">Navnet bør ikke indeholde specielle symboler. Navnet skal ikke være \"Mine steder\"</string>
+	<string name="description_guide">Beskrivelse</string>
+	<string name="description_title">Indtast beskrivelse til din guide</string>
+	<string name="description_placeholder">Beskriv din guide i detaljer</string>
+	<string name="description_comment1">Din guide-beskrivelse skal indeholde mindst 30 symboler.</string>
+	<string name="ugc_route_tags_desc">Vælg tags for at hjælpe andre rejsende med at finde din guide. Dette er obligatorisk. Maksimum %s tags.</string>
+	<string name="html_format_error_title">Din guide er ikke blevet udgivet</string>
+	<string name="html_format_error_subtitle">Sørg for at navne og beskrivelser af dine bogmærker alle har et gyldigt format. Du kan tjekke det, via en browser på skrivebordet, ved at klikke på knappen \"Rediger online\", nedenfor.</string>
+	<string name="web_editor_description">Upload din guide og få rediger linket fra skrivebordet</string>
+	<string name="edit_on_web_confirm">Rediger online</string>
+	<string name="update_guide">Upload en opdatering</string>
+	<string name="direct_link_updating_text">Opdaterer din fil…</string>
+	<string name="direct_link_updating_success">Din guide er blevet opdateret</string>
+	<string name="unable_get_direct_link_desc">Du kan dele din guide via et offentligt link</string>
+	<string name="any_access_update_alert_title">Nogle ændringer kan have fundet sted</string>
+	<string name="any_access_update_alert_message">Vil du opdatere dine bogmærker? Den nye version vil være tilgængelig via det samme link.</string>
+	<string name="any_access_update_alert_update">Opdater</string>
+	<string name="public_or_limited_access_after_edit_online_error_title">Du har redigeret dine bogmærker online</string>
+	<string name="public_or_limited_access_after_edit_online_error_message">I fremtiden rediger, udgiv eller del guiden, med dine venner, via vores hjemmeside</string>
+	<string name="power_managment_title">Strømsparetilstand</string>
+	<string name="power_managment_description">Når automatisk tilstand er valgt, begynder applikationen at deaktivere funktioner, med højt batteri-strømforbrug, afhængigt af det aktuelle batteriniveau</string>
+	<string name="power_managment_setting_never">Aldrig</string>
+	<string name="power_managment_setting_auto">Automatisk</string>
+	<string name="power_managment_setting_manual_max">Maksimum strømbesparelse</string>
+	<string name="enable_logging_warning_message">Indstillingen aktiverer logning til diagnostiske formål. Det kan være nyttigt for vores supportere, der fejlfinder problemer med appen. Aktiver kun denne mulighed på anmodning fra MAPS.ME support.</string>
+	<string name="html_error_upload_message_try_again">Kontroller dine netværksindstillinger, og prøv igen</string>
+	<string name="html_error_upload_title_try_again">Ingen internetforbindelse</string>
+	<string name="notification_leave_review_v2_android_short_title">Anmeld og hjælpe rejsende!</string>
+	<string name="notifications_illegal_alert_disable_button">Slå fra meddelelser</string>
+	<string name="access_rules_author_only">Online redigering</string>
+	<string name="privacy_settings_menu">Indstillinger for beskyttelse af personlige oplysninger</string>
+	<string name="gdpr_request_setting">Få ID til GDPR anmodning</string>
+	<string name="gdpr_request_window_title">Dit ID: %s.</string>
+	<string name="gdpr_request_window_message">Kopiere det og send anmodningen til support\@maps.me</string>
+	<string name="gdpr_request_window_copy">Kopier ID\'et</string>
+	<string name="unable_upadate_error_title">Fil opdatering fejlede</string>
+	<string name="unable_upadate_error_message">Der opstod nogle fejl under opdatering. Kontroller ændringerne, og prøv igen</string>
+	<string name="whats_new_wiki_title">Hvad er det sted?</string>
+	<string name="whats_new_wiki_message">Vi har tilføjet Wikipedia.org artikler til siderne, af de mest populære turistattraktioner. De er tilgængelige offline</string>
+	<string name="driving_options_title">Køre muligheder</string>
+	<string name="driving_options_subheader">Undgå på enhver rute</string>
+	<string name="avoid_tolls">Betalingsveje</string>
+	<string name="avoid_unpaved">Grusveje</string>
+	<string name="avoid_ferry">Færgeoverfarter</string>
+	<string name="avoid_motorways">Motorveje</string>
+	<string name="unable_to_calc_alert_title">Det er ikke muligt at beregne rute</string>
+	<string name="unable_to_calc_alert_subtitle">Desværre kunne vi ikke finde en rute med den aktuelle opsætning. Ændre opsætningen, og prøv igen</string>
+	<string name="define_to_avoid_btn">Definer veje du vil undgå</string>
+	<string name="change_driving_options_btn">Køre muligheder aktiveret</string>
+	<string name="toll_road">Betalingsvej</string>
+	<string name="unpaved_road">Grusvej</string>
+	<string name="ferry_crossing">Færgeoverfart</string>
+	<string name="operated_by">Drives af \"%s\"</string>
+	<string name="avoid_toll_roads_placepage">Undgå betalingsveje</string>
+	<string name="avoid_unpaved_roads_placepage">Undgå grusveje</string>
+	<string name="avoid_ferry_crossing_placepage">Undgå færgeoverfarter</string>
+	<string name="cached_guides_placeholder_subtitle">MAPS.ME tilbyder færdiglavede guides med fotos og beskrivelser til de udvalgte steder, der vises på kortet, som er tilgængelige offline.</string>
+	<string name="guides_catalogue_title">Katalog over Guides</string>
+	<string name="download_guides_button">Gå til Kataloget</string>
+	<plurals name="placepage_summary_rating_description">
+	  <item quantity="one">Baseret på %d anmeldelse</item>
+	  <item quantity="other">Baseret på %d anmeldelser</item>
+	</plurals>
+	<string name="type.cuisine.uzbek">Usbekisk køkken</string>
+	<string name="onboarding_welcome_title">Planlæg og rejs med MAPS.ME</string>
+	<string name="onboarding_welcome_first_subtitle">Bookmark interessante steder, book hoteller og beregn ruter offline</string>
+	<string name="onboarding_guide_direct_download_title">Guide er klar til download</string>
+	<string name="onboarding_guide_direct_download_subtitle">Det vil blive vist på kort og fungerer offline</string>
+	<string name="onboarding_guide_direct_download_button">Download</string>
+	<string name="onboarding_bydeeplink_guide_title">Klar-til-brug guider i MAPS.ME</string>
+	<string name="onboarding_bydeeplink_guide_subtitle">De bedste steder at besøge er vist på kort med fotos og beskrivelser. Fungerer offline.</string>
+	<string name="whats_new_auto_update_bydeeplink_title">Før du fortsætter til guider…</string>
+	<string name="whats_new_auto_update_bydeeplink_message">Opdater kort for at holde informationen opdateret!</string>
+	<string name="whats_new_auto_update_and_proceed_button_size">Opdater (%s) og fortsæt</string>
+	<string name="whatsnew_toll_unpaved_title">Layout for kørselsruter medtager alle typer af veje</string>
+	<string name="whatsnew_toll_unpaved_message">Vælg omveje for at undgå vejbaner, grusveje og færgeoverfarter</string>
+	<string name="whatsnew_new_catalogue_title">Opdaterede katalogsider</string>
+	<string name="whatsnew_new_catalogue_message">Vi har tilføjet detaljerede oplysninger om partnerguider, for at gøre valg af rute let og bekvemt</string>
+	<string name="purchase_please_wait_toast">Forlad ikke denne skærm, før købet er gennemført</string>
+	<string name="trip_start">Lad os komme i gang</string>
+	<string name="pick_destination">Destination</string>
+	<string name="follow_my_position">Centrer igen</string>
+	<string name="search_results">Søgeresultater</string>
+	<string name="then_turn">Derefter</string>
+	<string name="redirect_route_alert">Vil du genopbygge en rute igen?</string>
+	<string name="redirect_route_yes">Ja</string>
+	<string name="redirect_route_no">Nej</string>
+	<string name="trip_finished">Du er ankommet!</string>
+	<string name="keyboard_availability_alert">Keyboard er ikke tilgængelig under kørsel</string>
+	<string name="dialog_routing_change_start_carplay">Det er ikke muligt at beregne rute fra din nuværende position</string>
+	<string name="dialog_routing_change_end_carplay">Det er ikke muligt at beregne rute til din destination. Vælg en anden destination</string>
+	<string name="dialog_routing_check_gps_carplay">Intet GPS signal. Flyt til et område med dækning</string>
+	<string name="dialog_routing_unable_locate_route_carplay">Det er ikke muligt at beregne rute. Vælg andre forbindelses-punkter for ruten</string>
+	<string name="dialog_routing_download_files_carplay">Download manglende kort til din enhed, for at lave ruten</string>
+	<string name="dialog_routing_system_error_carplay">Der opstod en fejl. Genstart programmet</string>
+	<string name="dialog_routing_rebuild_from_current_location_carplay">Rute vil blive beregnet igen, ud fra din nuværende position</string>
+	<string name="dialog_routing_rebuild_for_vehicle_carplay">Rute vil blive ændret til en kørselsrute</string>
+	<string name="ok">Ok</string>
+	<string name="booking_button_toolbar">Vælg et hotel på kortet</string>
+	<string name="popup_booking_download_guides_title">Book et hotel?</string>
+	<string name="popup_booking_download_guides_message">Planlæg din rute med færdiglavede guider fra MAPS.ME</string>
+	<string name="popup_mwm_download_guides_title">Offline byguides</string>
+	<string name="popup_mwm_download_guides_cta">Vælg en</string>
+	<string name="popup_mwm_download_guides_cta_1">Tag et kig</string>
+	<string name="gallery_pp_download_guides_offline_title">Planlæg din ferie med MAPS.ME!</string>
+	<string name="gallery_pp_download_guides_offline_subtitle">Gå ikke glip af noget med guider lavet af erfarne rejsende</string>
+	<string name="gallery_pp_download_guides_offline_cta">Tilslut internettet</string>
+	<string name="gallery_pp_download_guides_title">Guider</string>
+	<string name="native_screen_subscription_title">Ubegrænset adgang til 2000+ rejseguider!</string>
+	<string name="native_screen_subscription_message">En mindeværdig ferie uanset hvor og hvem du rejser med</string>
+	<string name="annual_subscription_title">Årlig</string>
+	<string name="montly_subscription_title">Månedlig</string>
+	<string name="annual_subscription_message">12 måneder med ubegrænset adgang</string>
+	<string name="montly_subscription_message">1 måned med ubegrænset adgang</string>
+	<string name="subscription_success_dialog_title">Tak, fordi du abonnere!</string>
+	<string name="subscription_success_dialog_message">Nu har du ubegrænset til hele kataloget over guider</string>
+	<string name="renewal_screen_title">Dit abonnement er udløbet</string>
+	<string name="renewal_screen_message">Alle guider, der er hentet via abonnement vil blive slettet. Vil du forsætte abonnementet og beholde dem?</string>
+	<string name="renewal_screen_button_restore">Ja, forny</string>
+	<string name="renewal_screen_button_cancel">Nej, slet guiderne</string>
+	<string name="subscription_error_ping_title">Købet mislykkedes</string>
+	<string name="subscription_error_message">Tjenesten er i øjeblikket ikke tilgængelig i dit område. Prøv igen senere</string>
+	<string name="subscription_error_button">Forstået</string>
+	<string name="timeout_error_title">Ups, tiden er udløbet!</string>
+	<string name="timeout_error_message">Vores servere svarer ikke. Tjek din Internetforbindelse, og prøv igen.</string>
+	<string name="per_month">/md.</string>
+	<string name="per_year">/år</string>
+	<string name="buy_btn_for_subscription">Ubegrænset adgang fra %s</string>
+	<string name="buy_btn_for_subscription_1">Køb ALLE guider til %s</string>
+	<string name="buy_btn_for_subscription_ios_only_mo">Ubegrænset adgang til %s/md.</string>
+	<string name="buy_btn_for_subscription_ios_only_year">Ubegrænset adgang til %s/år</string>
+	<string name="subscription_terms_guides">Betalingen vil blive opkrævet via din iTunes konto, efter købet er bekræftet. Abonnementet fornys automatisk, medmindre automatisk fornyelse er slået fra mindst 24 timer før udgangen af nuværende periode. Din konto vil blive ændret ifølge din fornyelsesplan, indenfor 24 timer før udgangen af den aktuelle periode. Du kan administrere eller deaktivere automatisk fornyelse i dine Apple ID-kontoindstillinger på ethvert tidspunkt for dit køb. Du kan kun bruge downloadede guider indtil dennes udløbsdato. Efter 30 dage fra abonnementets udløbsdato, vil guider med bookmarks automatisk blive slettet.</string>
+	<string name="subscription_terms">Betalingen opkræves via din iTunes-konto ved bekræftelse af købet. Abonnementet fornys automatisk, medmindre den automatiske fornyelse er slået fra senest 24 timer før udgangen af den aktuelle periode. Din konto debiteres i overensstemmelse med din plan for fornyelse indenfor 24 timer før udgangen af den aktuelle periode. Du kan administrere eller slukke for automatisk fornyelse i dine Apple ID-kontoindstillinger på ethvert tidspunkt af dit køb.</string>
+	<string name="whatsnew_carplay_title">MAPS.ME bil navigation i CarPlay!</string>
+	<string name="whatsnew_carplay_message">Bogmærker, søgning, fartkameraer og køre muligheder er tilgængelige offline</string>
+	<string name="whatsnew_subscription_title">Hele verdenen via abonnement!</string>
+	<string name="whatsnew_subscription_message">Ubegrænset adgang til Katalog over Guider er mere rentabelt end et engangskøb</string>
+	<string name="whatsnew_carnavi_fixes_for_android_title">Opdater navigation</string>
+	<string name="whatsnew_carnavi_fixes_for_android_message">Vi har forbedret ruteplanlægning til steder, som er lang fra veje</string>
+	<string name="avoid_unpaved_carplay_1">Ingen grus</string>
+	<string name="avoid_unpaved_carplay_2">Undgå grus</string>
+	<string name="avoid_ferry_carplay_1">Ingen færger</string>
+	<string name="avoid_ferry_carplay_2">Undgå færger</string>
+	<string name="avoid_tolls_carplay_1">Ingen betal.</string>
+	<string name="avoid_tolls_carplay_2">Undgå betaling</string>
+	<string name="speedcams_alert_title_carplay_1">Radarkontrol</string>
+	<string name="speedcams_alert_title_carplay_2">Radar advarsel</string>
+	<string name="download_map_carplay">Download kort i MAPS.ME appen, på din enhed</string>
+	<string name="carplay_roundabout_exit">%s exit</string>
+	<!-- max. 10 symbols, both iOS and Android -->
+	<string name="sort">Sort…</string>
+	<!-- Android, title, max 20-22 symbols -->
+	<string name="sort_bookmarks">Sort (bookmaarks)</string>
+	<!-- iOS -->
+	<string name="sort_default">Sortér (std)</string>
+	<string name="sort_type">Sort (type)</string>
+	<string name="sort_distance">Sort (Afs)</string>
+	<string name="sort_date">Sort (dato)</string>
+	<!-- Android -->
+	<string name="by_default">Som standard</string>
+	<!-- Android -->
+	<string name="by_type">Efter type</string>
+	<!-- Android -->
+	<string name="by_distance">Efter afstand</string>
+	<!-- Android -->
+	<string name="by_date">Efter dato</string>
+	<string name="week_ago_sorttype">En uge siden</string>
+	<string name="month_ago_sorttype">En måned siden</string>
+	<string name="moremonth_ago_sorttype">Mere end en måned siden</string>
+	<string name="moreyear_ago_sorttype">Mere end et år siden</string>
+	<string name="near_me_sorttype">I nærheden</string>
+	<string name="others_sorttype">Andre</string>
+	<string name="food_places">Mad</string>
+	<string name="tourist_places">Seværdigheder</string>
+	<string name="museums">Museer</string>
+	<string name="parks">Parker</string>
+	<string name="swim_places">Svøm</string>
+	<string name="mountains">Bjerge</string>
+	<string name="animals">Dyr</string>
+	<string name="hotels">Hoteller</string>
+	<string name="buildings">Bygninger</string>
+	<string name="money">Penge</string>
+	<string name="shops">Butikker</string>
+	<string name="parkings">Parkering</string>
+	<string name="fuel_places">Benzintankstationer</string>
+	<string name="water">Vand</string>
+	<string name="medicine">Medicin</string>
+	<string name="search_in_the_list">Søg i listen</string>
+	<string name="view_on_map_bookmarks">På kort</string>
+	<string name="more_bookmarks">Mere…</string>
+	<string name="no_items_found">Der blev ikke fundet nogen elementer</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_edit_list">Redigér liste</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_delete_list">Slet liste</string>
+	<string name="whatsnew_bookmarks_search_sort_title">Rækkefølgen i bookmarks gør en rejse behagelig</string>
+	<string name="whatsnew_bookmarks_search_sort_message">Sortere favoritsteder efter kategori, placering og rækkefølge, samt finde specifikke bogmærker hurtigt, efter deres navn</string>
+	<string name="popup_subscription_success_map_title">Juuhuu, du har abonnement!</string>
+	<string name="popup_subscription_success_map_message">Opdag nu de bedste turisthøjdepunkter i MAPS.ME kataloget</string>
+	<string name="popup_subscription_success_map_start_button">Begynd at udforske</string>
+	<string name="popup_subscription_success_map_not_now_button">Ikke nu</string>
+	<string name="religious_places">Religiøse steder</string>
+	<string name="subscription_terms_android">Når du bekræfter et køb, vil betalingen blive trukket fra din Google Play konto. Abonnementet bliver automatisk fornyet med mindre auto-forny-funktionen er slået fra mindst 24 timer før den nuværende periode slutter. Din konto vil blive trukket i henhold til din fornyelsesplan inden for 24 timer før den nuværende periode slutter. Du kan administrere eller slå auto-fornyelses funktionen fra i Konto Indstillinger efter købet. Du kan kun bruges guides downloaded med abonnementet indtil dets udløbsdato. Efter 30 dage fra abonnementets udløbsdato, bliver downloadede guides automatisk slettet.</string>
+	<string name="select_list">Væg liste</string>
+	<string name="pp_discovery_place_related_header">Dette sted er i guide-katalog</string>
+	<string name="pp_discovery_place_related_header_1">Dette sted er vist i en guide</string>
+	<string name="pp_discovery_place_related_cta_button">Se</string>
+	<string name="pp_discovery_place_related_tag_header">Guider ud fra tag „%s“</string>
+	<string name="pp_discovery_place_related_tag_header_1">Du vil måske også synes godt om</string>
+	<string name="buy_btn_for_subscription_version_2">ALLE guides for kun %s/mo</string>
+	<string name="buy_btn_for_subscription_version_3">Hele kataloget for %s/mo</string>
+	<string name="buy_btn_for_subscription_ios_only_mo_version_2">Adgang til katalog for %s/mo</string>
+	<string name="buy_btn_for_subscription_ios_only_year_version_2">Adgang til kataloget for %s/year</string>
+	<string name="subscription_screen_native_title_version_2">Adgang til guides med bogmærker!</string>
+	<string name="subscription_screen_native_message_version_2">Bliv klar til enhver rejse i 600+ byer og 100+ lande</string>
+	<string name="catalog_no_internet_title">Ingen internetforbindelse</string>
+	<string name="catalog_no_internet_button">Prøv igen</string>
+	<string name="whatsnew_map_updates_title">Reaktive kortopdateringer</string>
+	<string name="whatsnew_map_updates_message">Fra nu af, opdaterer vi dataerne dobbelt så hurtigt</string>
+	<string name="new_onboarding_button">Næste</string>
+	<string name="new_onboarding_button_2">Kom i gang</string>
+	<string name="new_onboarding_step1_header_2">Alt i en rejsekammerat</string>
+	<string name="new_onboarding_step2_header">Drøm og planlæg</string>
+	<string name="new_onboarding_step2_message">70+ millioner steder, færdige guides og hotelbooking lige fra kortet – du er klar til turen!</string>
+	<string name="new_onboarding_step3_message">Far aldrig vild med detaljerede kort over ethvert land og navigation – alt virker offline!</string>
+	<string name="new_onboarding_step4_header">Del indtryk</string>
+	<string name="new_onboarding_step4_message">Placer bogmærker på yndlingssteder og send dem til dine venner</string>
+	<string name="new_onboarding_step5.1_header">En ting mere før du starter…</string>
+	<string name="new_onboarding_step5.1_message">Glem ikke at besøge vores helt nye guidekatalog for at en finde en offline guide til din kommende rejse!</string>
+	<string name="new_onboarding_step5.1_button">Åbent katalog</string>
+	<string name="new_onboarding_step5.2_message">Abonnement til MAPS.ME guidekataloget har stor værdi. Få fuld adgang til byen og udendørs guides rundt om i verden!</string>
+	<string name="new_onboarding_step5.2_button">Check betingelserne ud</string>
+	<string name="new_onboarding_step5.3_message">Check de gratis prøver på færdige by- og udendørsruter med et gratis udvalg af MAPS.ME!</string>
+	<string name="new_onboarding_step5.3_button">Gratis download</string>
+	<string name="new_onboarding_additional_steps_later_button">Senere</string>
+	<string name="all_pass_subscription_header">ABONNEMENT TIL KATALOG</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title">30000+\nguide &amp; stier</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle"><b>Ubegrænsede downloads</b> af by og udendørs ruter <b>til offline mode</b></string>
+	<!-- \n - for a break between lines. Max. 17 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_2">Interaktiv\nhøjdeprofil</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_2">Hver sti indeholder <b>højde og basis info om ruten</b></string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_3">Bogmærker,\nbilleder og\nanbefalinger</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_3"><b>Lær alt om ruten</b> du skal til at tage</string>
+	<string name="sightseeing_subscription_header_subscription">Guides Abonnement</string>
+	<string name="sightseeing_subscription_message">700+ byer og 100+ lande</string>
+	<string name="sightseeing_subscription_message_2">Tilgængeligt offline</string>
+	<string name="sightseeing_subscription_message_3">Fotos og gåture</string>
+	<string name="subscription_success_dialog_title_sightseeing_pass">Tak for din tilmelding!</string>
+	<string name="subscription_success_dialog_message_sightseeing_pass">Nu har du adgang til alle sightseeing-guides i kataloget</string>
+	<string name="downloader_main_gallery_header">Kort &amp; kort</string>
+	<string name="downloader_main_gallery_message">I denne sektion kan du ikke kun downloade kort, men også checke guides ud til din kommen rejse</string>
+	<string name="downloader_main_1_element_gallery_header">Alle guides</string>
+	<string name="downloader_main_1_element_gallery_message">i 100+ lande</string>
+	<string name="downloader_country_1_element_gallery_header">%s guides</string>
+	<string name="downloader_country_no_guides_gallery_header">Der er ingen guides i dette land endnu</string>
+	<string name="downloader_country_no_guides_gallery_message">Du kan checke andre offline guides ud i 100+ lande til by- og udendørsaktiviteter</string>
+	<string name="dialog_pedestrian_route_is_long">Gåturen til transportens boardingsted er for lang</string>
+	<string name="whatsnew_outdoor_guides_title">Vi har tilføjet 15000+ udendørs ruter!</string>
+	<string name="whatsnew_outdoor_guides_message">Ruter fra Outdooractive til vinter- og summerture venter i kataloget!</string>
+	<string name="whatsnew_guides_galleries_title">Planlæg din kommende tur med MAPS.ME</string>
+	<string name="whatsnew_guides_galleries_message">Nu kan du finde anbefalede guides på stedsiderne om populære turistbyer og syn</string>
+	<string name="new_onboarding_step3_header">Oplevelse</string>
+	<string name="all_pass_screen_best_value">Bedste værdi</string>
+	<string name="buy_btn_for_subscription_3">Hele kataloget for %s/år</string>
+	<string name="transit_not_found">Metro-navigation er endnu ikke tilgængelig i denne region</string>
+	<string name="dialog_pedestrian_route_is_long_header">Metro-rute blev ikke fundet</string>
+	<string name="dialog_pedestrian_route_is_long_message">Vælg venligst et start- eller stoppunkt, tættere på metrostationen</string>
+	<!-- Failed planning SUBWAY route message in navigation view -->
+	<string name="routing_planning_error_subway_special">Planlægning af metro-rute mislykkedes</string>
+	<string name="whatsnew_isolines_title">Nyt til udenfor: offline topografiske lag!</string>
+	<!-- as less symbols as possible -->
+	<string name="whatsnew_isolines_message">Følg dig selvsikker i det bjergrige område. Tænd bare for laget i det øverste venstre hjørne</string>
+	<string name="button_layer_isolines">Terræn</string>
+	<string name="tips_map_layers_title_countour">Nyt på MAPS.ME: offline topografiske lag!</string>
+	<string name="tips_map_layers_message_countour">Planlæg og nyd din naturtur ved at være sikker på, at du ved alt om området</string>
+	<string name="isolines_activation_error_dialog">For at aktivere og bruge de topografiske lag, opdater venligst eller download kortet for området</string>
+	<string name="isolines_location_error_dialog">Det topografiske lag er endnu ikke tilgængeligt i dette område</string>
+	<string name="elevation_profile_diff_level">Sværhedsgrad</string>
+	<string name="elevation_profile_diff_level_easy">Let</string>
+	<string name="elevation_profile_diff_level_moderate">Middel</string>
+	<string name="elevation_profile_diff_level_hard">Svær</string>
+	<string name="elevation_profile_ascent">Stige op</string>
+	<string name="elevation_profile_descent">Stige ned</string>
+	<string name="elevation_profile_minaltitude">Min. højde</string>
+	<string name="elevation_profile_maxaltitude">Maks. højde</string>
+	<string name="elevation_profile_m">m</string>
+	<string name="elevation_profile_difficulty">Vanskelighed</string>
+	<string name="elevation_profile_distance">Afs.:</string>
+	<string name="elevation_profile_km">km</string>
+	<string name="elevation_profile_time">Tid:</string>
+	<string name="elevation_profile_hours">t.</string>
+	<string name="elevation_profile_minutes">min</string>
+	<!-- hide the full screen banner and continue working with the app -->
+	<string name="hide_screen_map_update">Skjul og fortsæt</string>
+	<string name="view_on_map_downloaded_error">Denne guide er blevet fjernet fra denne enhed</string>
+	<string name="subscription">Abonnement</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Kabelbanestation</string>
 	<string name="type.aeroway.aerodrome">Lufthavn</string>
 	<string name="type.aeroway.aerodrome.international">Lufthavn</string>
 	<string name="type.aeroway.helipad">Helikopterlandingsplads</string>
+	<string name="type.amenity">Rekreative område</string>
+	<string name="type.amenity.arts_centre">Kunsthus</string>
 	<string name="type.amenity.atm">Hæveautomat</string>
 	<string name="type.amenity.bbq">Picnic</string>
 	<string name="type.amenity.bench">Bænk</string>
@@ -1526,14 +1832,15 @@
 	<string name="type.amenity.parking">Parkering</string>
 	<string name="type.amenity.parking.fee">Parkering</string>
 	<string name="type.amenity.parking.multi.storey">Parkering</string>
-	<string name="type.amenity.parking.multi.storey.fee">Parkering</string>
 	<string name="type.amenity.parking.no.access">Parkering</string>
 	<string name="type.amenity.parking.park_and_ride">Parkering</string>
 	<string name="type.amenity.parking.permissive">Parkering</string>
-	<string name="type.amenity.parking.permissive.fee">Parkering</string>
 	<string name="type.amenity.parking.private">Parkering</string>
 	<string name="type.amenity.parking.underground">Parkering</string>
-	<string name="type.amenity.parking.underground.fee">Parkering</string>
+	<string name="type.amenity.parking_space">Parkeringsplads</string>
+	<string name="type.amenity.parking_space.permissive">Parkeringsplads</string>
+	<string name="type.amenity.parking_space.private">Parkeringsplads</string>
+	<string name="type.amenity.parking_space.underground">Parkeringsplads</string>
 	<string name="type.amenity.payment_terminal">Betalingsautomat</string>
 	<string name="type.amenity.pharmacy">Apotek</string>
 	<string name="type.amenity.place_of_worship">Tempel</string>
@@ -1546,6 +1853,7 @@
 	<string name="type.amenity.place_of_worship.taoist">Tempel</string>
 	<string name="type.amenity.police">Politi</string>
 	<string name="type.amenity.post_box">Postboks</string>
+	<string name="type.amenity.post_office">Postkontor</string>
 	<string name="type.amenity.pub">Værtshus</string>
 	<string name="type.amenity.public_bookcase">Bog udveksling</string>
 	<string name="type.amenity.recycling">Genbrugsplads</string>
@@ -1558,6 +1866,7 @@
 	<string name="type.amenity.vending_machine.cigarettes">Cigaretautomat</string>
 	<string name="type.amenity.vending_machine.drinks">Automat for drikkevarer</string>
 	<string name="type.amenity.vending_machine.parking_tickets">Parkeringsbilletmaskine</string>
+	<string name="type.amenity.vending_machine.public_transport_tickets">Billetautomat for offentlig transport</string>
 	<string name="type.amenity.veterinary">Dyrlæge</string>
 	<string name="type.amenity.waste_basket">Skraldespand</string>
 	<string name="type.amenity.waste_disposal">Bortskaffelse af affald</string>
@@ -1676,6 +1985,7 @@
 	<string name="type.emergency.phone">Nødtelefon</string>
 	<string name="type.entrance">Indgang</string>
 	<string name="type.highway.bus_stop">Busstoppested</string>
+	<string name="type.highway.construction">Vej under opbygning</string>
 	<string name="type.highway.footway">Sti</string>
 	<string name="type.highway.footway.alpine_hiking">Sti</string>
 	<string name="type.highway.footway.area">Sti</string>
@@ -1738,9 +2048,6 @@
 	<string name="type.highway.service.area">Gade</string>
 	<string name="type.highway.service.bridge">Gade</string>
 	<string name="type.highway.service.driveway">Gade</string>
-	<string name="type.highway.service.driveway.area">Gade</string>
-	<string name="type.highway.service.driveway.bridge">Gade</string>
-	<string name="type.highway.service.driveway.tunnel">Gade</string>
 	<string name="type.highway.service.parking_aisle">Gade</string>
 	<string name="type.highway.service.tunnel">Gade</string>
 	<string name="type.highway.speed_camera">Automatisk Trafikkontrol</string>
@@ -1759,14 +2066,8 @@
 	<string name="type.highway.track.grade1">Gade</string>
 	<string name="type.highway.track.grade2">Gade</string>
 	<string name="type.highway.track.grade3">Gade</string>
-	<string name="type.highway.track.grade3.no.access">Gade</string>
-	<string name="type.highway.track.grade3.permissive">Gade</string>
 	<string name="type.highway.track.grade4">Gade</string>
-	<string name="type.highway.track.grade4.no.access">Gade</string>
-	<string name="type.highway.track.grade4.permissive">Gade</string>
 	<string name="type.highway.track.grade5">Gade</string>
-	<string name="type.highway.track.grade5.no.access">Gade</string>
-	<string name="type.highway.track.grade5.permissive">Gade</string>
 	<string name="type.highway.track.no.access">Gade</string>
 	<string name="type.highway.track.permissive">Gade</string>
 	<string name="type.highway.track.tunnel">Gade</string>
@@ -1795,20 +2096,29 @@
 	<string name="type.landuse.basin">Vand</string>
 	<string name="type.landuse.cemetery">Kirkegård</string>
 	<string name="type.landuse.cemetery.christian">Kirkegård</string>
+	<string name="type.landuse.churchyard">Kirkegård</string>
+	<string name="type.landuse.farmland">Landbrugsjord</string>
 	<string name="type.landuse.forest">Skov</string>
 	<string name="type.landuse.forest.coniferous">Skov</string>
 	<string name="type.landuse.forest.deciduous">Skov</string>
 	<string name="type.landuse.forest.mixed">Skov</string>
+	<string name="type.landuse.grass">Græsplæne</string>
+	<string name="type.landuse.landfill">Affaldsplads</string>
+	<string name="type.landuse.railway">Jernbaneanlæg</string>
 	<string name="type.landuse.reservoir">Vand</string>
+	<string name="type.leisure.dog_park">Hundepark</string>
 	<string name="type.leisure.fitness_centre">Trænings- og motionscenter</string>
 	<string name="type.leisure.fitness_station">Fitness-station</string>
 	<string name="type.leisure.garden">Have</string>
 	<string name="type.leisure.golf_course">Golf</string>
 	<string name="type.leisure.nature_reserve">Reservat</string>
+	<string name="type.leisure.park">Park</string>
+	<string name="type.leisure.park.no.access">Park</string>
+	<string name="type.leisure.park.permissive">Park</string>
+	<string name="type.leisure.park.private">Park</string>
 	<string name="type.leisure.pitch">Sportsplads</string>
-	<string name="type.leisure.pitch.tennis">Sportsplads</string>
 	<string name="type.leisure.playground">Legeplads</string>
-	<string name="type.leisure.playground.tennis">Legeplads</string>
+	<string name="type.leisure.sauna">Sauna</string>
 	<string name="type.leisure.sports_centre">Idrætscenter</string>
 	<string name="type.leisure.sports_centre.climbing">Klatrecenter</string>
 	<string name="type.leisure.sports_centre.shooting">Skydebane</string>
@@ -1827,20 +2137,19 @@
 	<string name="type.natural.bay">Bugt</string>
 	<string name="type.natural.beach">Strand</string>
 	<string name="type.natural.cape">Tange</string>
-	<string name="type.natural.cave_entrance">Huleindgang</string>
+	<string name="type.natural.cave_entrance">Hule</string>
 	<string name="type.natural.geyser">Gejser</string>
 	<string name="type.natural.glacier">Gletsjer</string>
+	<string name="type.natural.grassland">Mark</string>
 	<string name="type.natural.lake">Sø</string>
 	<string name="type.natural.peak">Bjerg</string>
 	<string name="type.natural.pond">Dam</string>
+	<string name="type.natural.scrub">Kratbevokset område</string>
 	<string name="type.natural.spring">Kilde</string>
 	<string name="type.natural.tree">Træ</string>
 	<string name="type.natural.volcano">Vulkan</string>
 	<string name="type.natural.water">Vand</string>
-	<string name="type.natural.wood">Skov</string>
-	<string name="type.natural.wood.coniferous">Skov</string>
-	<string name="type.natural.wood.deciduous">Skov</string>
-	<string name="type.natural.wood.mixed">Skov</string>
+	<string name="type.natural.wetland">Vådområde</string>
 	<string name="type.office">Kontor</string>
 	<string name="type.office.company">Selskabskontor</string>
 	<string name="type.office.estate_agent">Ejendomsmægler</string>
@@ -1879,7 +2188,9 @@
 	<string name="type.power.substation">Transformerstation</string>
 	<string name="type.power.tower">El-pol</string>
 	<string name="type.railway.halt">Togstation</string>
-	<string name="type.railway.level_crossing">Jernbaneoverskæring</string>
+	<string name="type.railway.level_crossing">Niveauskæring</string>
+	<string name="type.railway.monorail">Monorail</string>
+	<string name="type.railway.rail">Jernbane</string>
 	<string name="type.railway.station">Togstation</string>
 	<string name="type.railway.station.light_rail">Togstation</string>
 	<string name="type.railway.station.monorail">Togstation</string>
@@ -1908,7 +2219,7 @@
 	<string name="type.railway.station.subway.spb">Metro</string>
 	<string name="type.railway.station.subway.violet">Metro</string>
 	<string name="type.railway.station.subway.yellow">Metro</string>
-	<string name="type.railway.subway_entrance">Metro</string>
+	<string name="type.railway.subway_entrance">Indgang til undergrundsbane</string>
 	<string name="type.railway.subway_entrance.barcelona">Metro</string>
 	<string name="type.railway.subway_entrance.berlin">Metro</string>
 	<string name="type.railway.subway_entrance.kiev">Metro</string>
@@ -1985,6 +2296,10 @@
 	<string name="type.shop.variety_store">Småtingsbutik</string>
 	<string name="type.shop.video">Butik</string>
 	<string name="type.shop.wine">Vinhandel</string>
+	<string name="type.sport.athletics">Atletik</string>
+	<string name="type.sport.basketball">Basketball</string>
+	<string name="type.sport.equestrian">Ridesport</string>
+	<string name="type.sport.tennis">Tennisbane</string>
 	<string name="type.tourism.alpine_hut">Bjerg logi</string>
 	<string name="type.tourism.apartment">Lejligheder</string>
 	<string name="type.tourism.artwork">Kunstværk</string>
@@ -2019,4 +2334,8 @@
 	<string name="type.waterway.stream.intermittent">Flod</string>
 	<string name="type.waterway.stream.tunnel">Flod</string>
 	<string name="type.waterway.waterfall">Vandfald</string>
+	<string name="type.wheelchair.limited">Begrænset tilgængelighed for kørestol</string>
+	<string name="type.wheelchair.no">Ingen tilgængelighed for kørestol</string>
+	<string name="type.wheelchair.yes">Fuld tilgængelighed for kørestol</string>
+	<string name="type.building_part">Bygning</string>
 </resources>

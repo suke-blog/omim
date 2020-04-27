@@ -1,9 +1,9 @@
 package com.mapswithme.util;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.preference.PreferenceManager;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
@@ -39,14 +39,14 @@ public final class Counters
     return MwmApplication.prefs().getInt(KEY_APP_FIRST_INSTALL_VERSION, 0);
   }
 
-  public static boolean isFirstStartDialogSeen()
+  public static boolean isFirstStartDialogSeen(@NonNull Context context)
   {
-    return MwmApplication.prefs().getBoolean(KEY_MISC_FIRST_START_DIALOG_SEEN, false);
+    return MwmApplication.prefs(context).getBoolean(KEY_MISC_FIRST_START_DIALOG_SEEN, false);
   }
 
-  public static void setFirstStartDialogSeen()
+  public static void setFirstStartDialogSeen(@NonNull Context context)
   {
-    MwmApplication.prefs()
+    MwmApplication.prefs(context)
                   .edit()
                   .putBoolean(KEY_MISC_FIRST_START_DIALOG_SEEN, true)
                   .apply();

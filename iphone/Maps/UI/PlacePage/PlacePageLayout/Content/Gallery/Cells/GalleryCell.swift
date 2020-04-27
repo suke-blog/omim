@@ -1,17 +1,16 @@
-import AlamofireImage
-
 final class GalleryCell: UICollectionViewCell {
-  typealias Model = GalleryItemModel
-
   @IBOutlet weak var imageView: UIImageView!
 
-  var model: Model! {
+  var photoUrl: HotelPhotoUrl! {
     didSet {
-      imageView.af_setImage(withURL: model.imageURL, imageTransition: .crossDissolve(kDefaultAnimationDuration))
+      guard let url = URL(string: photoUrl.original) else { return }
+      imageView.wi_setImage(with: url, transitionDuration: kDefaultAnimationDuration)
     }
   }
 
   override func prepareForReuse() {
-    imageView.af_cancelImageRequest()
+    super.prepareForReuse()
+    imageView.wi_cancelImageRequest()
+    imageView.image = nil;
   }
 }

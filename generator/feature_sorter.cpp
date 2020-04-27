@@ -1,6 +1,6 @@
 #include "generator/feature_sorter.hpp"
 
-#include "generator/borders_loader.hpp"
+#include "generator/borders.hpp"
 #include "generator/feature_builder.hpp"
 #include "generator/feature_generator.hpp"
 #include "generator/gen_mwm_info.hpp"
@@ -8,32 +8,40 @@
 #include "generator/region_meta.hpp"
 #include "generator/tesselator.hpp"
 
-#include "indexer/data_header.hpp"
+#include "routing/routing_helpers.hpp"
+#include "routing/speed_camera_prohibition.hpp"
+
+#include "indexer/classificator.hpp"
+#include "indexer/dat_section_header.hpp"
 #include "indexer/feature_algo.hpp"
 #include "indexer/feature_impl.hpp"
 #include "indexer/feature_processor.hpp"
 #include "indexer/feature_visibility.hpp"
+#include "indexer/meta_idx.hpp"
 #include "indexer/scales.hpp"
 #include "indexer/scales_patch.hpp"
 
+#include "platform/country_file.hpp"
 #include "platform/mwm_version.hpp"
+#include "platform/platform.hpp"
 
-#include "coding/file_container.hpp"
-#include "coding/file_name_utils.hpp"
+#include "coding/files_container.hpp"
 #include "coding/internal/file_data.hpp"
 #include "coding/point_coding.hpp"
+#include "coding/succinct_mapper.hpp"
 
 #include "geometry/polygon.hpp"
 
 #include "base/assert.hpp"
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 #include "base/scope_guard.hpp"
 #include "base/string_utils.hpp"
 
 #include "defines.hpp"
 
-#include <list>
 #include <limits>
+#include <list>
 #include <memory>
 #include <vector>
 
@@ -44,10 +52,10 @@ namespace feature
 class FeaturesCollector2 : public FeaturesCollector
 {
 public:
-  FeaturesCollector2(string const & fName, DataHeader const & header, RegionData const & regionData,
-                     uint32_t versionDate)
-    : FeaturesCollector(fName + DATA_FILE_TAG)
-    , m_writer(fName)
+  FeaturesCollector2(string const & filename, DataHeader const & header,
+                     RegionData const & regionData, uint32_t versionDate)
+    : FeaturesCollector(filename + FEATURES_FILE_TAG)
+    , m_filename(filename)
     , m_header(header)
     , m_regionData(regionData)
     , m_versionDate(versionDate)
@@ -55,19 +63,18 @@ public:
     for (size_t i = 0; i < m_header.GetScalesCount(); ++i)
     {
       string const postfix = strings::to_string(i);
-      m_geoFile.push_back(make_unique<TmpFile>(fName + GEOMETRY_FILE_TAG + postfix));
-      m_trgFile.push_back(make_unique<TmpFile>(fName + TRIANGLE_FILE_TAG + postfix));
+      m_geoFile.push_back(make_unique<TmpFile>(filename + GEOMETRY_FILE_TAG + postfix));
+      m_trgFile.push_back(make_unique<TmpFile>(filename + TRIANGLE_FILE_TAG + postfix));
     }
 
-    m_helperFile.resize(FILES_COUNT);
-    m_helperFile[METADATA] = make_unique<TmpFile>(fName + METADATA_FILE_TAG);
-    m_helperFile[SEARCH_TOKENS] = make_unique<TmpFile>(fName + SEARCH_TOKENS_FILE_TAG);
+    m_metadataFile = make_unique<TmpFile>(filename + METADATA_FILE_TAG);
+    m_addrFile = make_unique<FileWriter>(filename + TEMP_ADDR_FILENAME);
   }
 
   ~FeaturesCollector2()
   {
     // Check file size.
-    auto const unused = CheckedFilePosCast(m_datFile);
+    auto const unused = CheckedFilePosCast(m_dataFile);
     UNUSED_VALUE(unused);
   }
 
@@ -75,33 +82,60 @@ public:
   {
     // write version information
     {
-      FileWriter w = m_writer.GetWriter(VERSION_FILE_TAG);
-      version::WriteVersion(w, m_versionDate);
+      FilesContainerW writer(m_filename);
+      auto w = writer.GetWriter(VERSION_FILE_TAG);
+      version::WriteVersion(*w, m_versionDate);
     }
 
     // write own mwm header
     m_header.SetBounds(m_bounds);
     {
-      FileWriter w = m_writer.GetWriter(HEADER_FILE_TAG);
-      m_header.Save(w);
+      FilesContainerW writer(m_filename, FileWriter::OP_WRITE_EXISTING);
+      auto w = writer.GetWriter(HEADER_FILE_TAG);
+      m_header.Save(*w);
     }
 
     // write region info
     {
-      FileWriter w = m_writer.GetWriter(REGION_INFO_FILE_TAG);
-      m_regionData.Serialize(w);
+      FilesContainerW writer(m_filename, FileWriter::OP_WRITE_EXISTING);
+      auto w = writer.GetWriter(REGION_INFO_FILE_TAG);
+      m_regionData.Serialize(*w);
     }
 
     // assume like we close files
     Flush();
 
-    m_writer.Write(m_datFile.GetName(), DATA_FILE_TAG);
+    {
+      FilesContainerW writer(m_filename, FileWriter::OP_WRITE_EXISTING);
+      auto w = writer.GetWriter(FEATURES_FILE_TAG);
 
-    // File Writer finalization function with appending to the main mwm file.
+      size_t const startOffset = w->Pos();
+      CHECK(coding::IsAlign8(startOffset), ());
+
+      feature::DatSectionHeader header;
+      header.Serialize(*w);
+
+      uint64_t bytesWritten = static_cast<uint64_t>(w->Pos());
+      coding::WritePadding(*w, bytesWritten);
+
+      header.m_featuresOffset = base::asserted_cast<uint32_t>(w->Pos() - startOffset);
+      ReaderSource<ModelReaderPtr> src(make_unique<FileReader>(m_dataFile.GetName()));
+      rw::ReadAndWrite(src, *w);
+      header.m_featuresSize =
+          base::asserted_cast<uint32_t>(w->Pos() - header.m_featuresOffset - startOffset);
+
+      auto const endOffset = w->Pos();
+      w->Seek(startOffset);
+      header.Serialize(*w);
+      w->Seek(endOffset);
+    }
+
+    // File Writer finalization function with adding section to the main mwm file.
     auto const finalizeFn = [this](unique_ptr<TmpFile> w, string const & tag,
-        string const & postfix = string()) {
+                                   string const & postfix = string()) {
       w->Flush();
-      m_writer.Write(w->GetName(), tag + postfix);
+      FilesContainerW writer(m_filename, FileWriter::OP_WRITE_EXISTING);
+      writer.Write(w->GetName(), tag + postfix);
     };
 
     for (size_t i = 0; i < m_header.GetScalesCount(); ++i)
@@ -111,34 +145,33 @@ public:
       finalizeFn(move(m_trgFile[i]), TRIANGLE_FILE_TAG, postfix);
     }
 
+    finalizeFn(move(m_metadataFile), METADATA_FILE_TAG);
+
     {
-      /// @todo Replace this mapping vector with succint structure.
-      FileWriter w = m_writer.GetWriter(METADATA_INDEX_FILE_TAG);
+      FilesContainerW writer(m_filename, FileWriter::OP_WRITE_EXISTING);
+      auto w = writer.GetWriter(METADATA_INDEX_FILE_TAG);
+
+      MetadataIndexBuilder metaIdxBuilder;
       for (auto const & v : m_metadataOffset)
-      {
-        WriteToSink(w, v.first);
-        WriteToSink(w, v.second);
-      }
+        metaIdxBuilder.Put(v.first, v.second);
+
+      metaIdxBuilder.Freeze(*w);
     }
 
-    finalizeFn(move(m_helperFile[METADATA]), METADATA_FILE_TAG);
-    finalizeFn(move(m_helperFile[SEARCH_TOKENS]), SEARCH_TOKENS_FILE_TAG);
-
-    m_writer.Finish();
-
-    if (m_header.GetType() == DataHeader::country || m_header.GetType() == DataHeader::world)
+    if (m_header.GetType() == DataHeader::MapType::Country ||
+        m_header.GetType() == DataHeader::MapType::World)
     {
-      FileWriter osm2ftWriter(m_writer.GetFileName() + OSM2FEATURE_FILE_EXTENSION);
-      m_osm2ft.Flush(osm2ftWriter);
+      FileWriter osm2ftWriter(m_filename + OSM2FEATURE_FILE_EXTENSION);
+      m_osm2ft.Write(osm2ftWriter);
     }
   }
 
   void SetBounds(m2::RectD bounds) { m_bounds = bounds; }
 
-  uint32_t operator()(FeatureBuilder2 & fb)
+  uint32_t operator()(FeatureBuilder & fb)
   {
     GeometryHolder holder([this](int i) -> FileWriter & { return *m_geoFile[i]; },
-    [this](int i) -> FileWriter & { return *m_trgFile[i]; }, fb, m_header);
+                          [this](int i) -> FileWriter & { return *m_trgFile[i]; }, fb, m_header);
 
     bool const isLine = fb.IsLine();
     bool const isArea = fb.IsArea();
@@ -156,7 +189,7 @@ public:
         Points points;
 
         // Do not change linear geometry for the upper scale.
-        if (isLine && i == scalesStart && IsCountry() && fb.IsRoad())
+        if (isLine && i == scalesStart && IsCountry() && routing::IsRoad(fb.GetTypes()))
           points = holder.GetSourcePoints();
         else
           SimplifyPoints(level, isCoast, rect, holder.GetSourcePoints(), points);
@@ -214,30 +247,25 @@ public:
 
     uint32_t featureId = kInvalidFeatureId;
     auto & buffer = holder.GetBuffer();
-    if (fb.PreSerializeAndRemoveUselessNames(buffer))
+    if (fb.PreSerializeAndRemoveUselessNamesForMwm(buffer))
     {
-      fb.Serialize(buffer, m_header.GetDefGeometryCodingParams());
+      fb.SerializeForMwm(buffer, m_header.GetDefGeometryCodingParams());
 
       featureId = WriteFeatureBase(buffer.m_buffer, fb);
 
-      fb.GetAddressData().Serialize(*(m_helperFile[SEARCH_TOKENS]));
+      fb.GetAddressData().Serialize(*m_addrFile);
 
       if (!fb.GetMetadata().Empty())
       {
-        auto const & w = m_helperFile[METADATA];
-
-        uint64_t const offset = w->Pos();
+        uint64_t const offset = m_metadataFile->Pos();
         ASSERT_LESS_OR_EQUAL(offset, numeric_limits<uint32_t>::max(), ());
 
         m_metadataOffset.emplace_back(featureId, static_cast<uint32_t>(offset));
-        fb.GetMetadata().Serialize(*w);
+        fb.GetMetadata().Serialize(*m_metadataFile);
       }
 
-      if (!fb.GetOsmIds().empty())
-      {
-        base::GeoObjectId const osmId = fb.GetMostGenericOsmId();
-        m_osm2ft.Add(make_pair(osmId, featureId));
-      }
+      if (fb.HasOsmIds())
+        m_osm2ft.AddIds(generator::MakeCompositeId(fb), featureId);
     };
     return featureId;
   }
@@ -255,13 +283,6 @@ private:
 
   using TmpFiles = vector<unique_ptr<TmpFile>>;
 
-  enum
-  {
-    METADATA = 0,
-    SEARCH_TOKENS = 1,
-    FILES_COUNT = 2
-  };
-
   static bool IsGoodArea(Points const & poly, int level)
   {
     // Area has the same first and last points. That's why minimal number of points for
@@ -275,7 +296,7 @@ private:
     return scales::IsGoodForLevel(level, r);
   }
 
-  bool IsCountry() const { return m_header.GetType() == feature::DataHeader::country; }
+  bool IsCountry() const { return m_header.GetType() == feature::DataHeader::MapType::Country; }
 
   void SimplifyPoints(int level, bool isCoast, m2::RectD const & rect, Points const & in,
                       Points & out)
@@ -291,8 +312,13 @@ private:
     }
   }
 
-  FilesContainerW m_writer;
-  TmpFiles m_helperFile;
+  string m_filename;
+
+  // File used for postcodes and search sections build.
+  unique_ptr<FileWriter> m_addrFile;
+
+  // Temporary files for sections.
+  unique_ptr<TmpFile> m_metadataFile;
   TmpFiles m_geoFile, m_trgFile;
 
   // Mapping from feature id to offset in file section with the correspondent metadata.
@@ -302,55 +328,44 @@ private:
   RegionData m_regionData;
   uint32_t m_versionDate;
 
-  gen::OsmID2FeatureID m_osm2ft;
+  generator::OsmID2FeatureID m_osm2ft;
 
   DISALLOW_COPY_AND_MOVE(FeaturesCollector2);
 };
 
-/// Simplify geometry for the upper scale.
-FeatureBuilder2 & GetFeatureBuilder2(FeatureBuilder1 & fb)
-{
-  return static_cast<FeatureBuilder2 &>(fb);
-}
-
-bool GenerateFinalFeatures(feature::GenerateInfo const & info, string const & name, int mapType)
+bool GenerateFinalFeatures(feature::GenerateInfo const & info, string const & name,
+                           feature::DataHeader::MapType mapType)
 {
   string const srcFilePath = info.GetTmpFileName(name);
-  string const datFilePath = info.GetTargetFileName(name);
+  string const dataFilePath = info.GetTargetFileName(name);
 
-  // stores cellIds for middle points
+  // Store cellIds for middle points.
   CalculateMidPoints midPoints;
-  ForEachFromDatRawFormat(srcFilePath, midPoints);
+  ForEachFeatureRawFormat(srcFilePath, [&midPoints](FeatureBuilder const & fb, uint64_t pos) {
+    midPoints(fb, pos);
+  });
 
-  // sort features by their middle point
+  // Sort features by their middle point.
   midPoints.Sort();
 
-  // store sorted features
+  // Store sorted features.
   {
     FileReader reader(srcFilePath);
-
-    bool const isWorld = (mapType != DataHeader::country);
-
     // Fill mwm header.
     DataHeader header;
 
+    bool const isWorldOrWorldCoasts = (mapType != DataHeader::MapType::Country);
     uint8_t coordBits = kFeatureSorterPointCoordBits;
-    if (isWorld)
+    if (isWorldOrWorldCoasts)
       coordBits -= ((scales::GetUpperScale() - scales::GetUpperWorldScale()) / 2);
 
-    // coding params
+    header.SetType(static_cast<DataHeader::MapType>(mapType));
     header.SetGeometryCodingParams(serial::GeometryCodingParams(coordBits, midPoints.GetCenter()));
-
-    // scales
-    if (isWorld)
+    if (isWorldOrWorldCoasts)
       header.SetScales(g_arrWorldScales);
     else
       header.SetScales(g_arrCountryScales);
 
-    // type
-    header.SetType(static_cast<DataHeader::MapType>(mapType));
-
-    // region data
     RegionData regionData;
     if (!ReadRegionData(name, regionData))
       LOG(LWARNING, ("No extra data for country:", name));
@@ -358,18 +373,19 @@ bool GenerateFinalFeatures(feature::GenerateInfo const & info, string const & na
     // Transform features from raw format to optimized format.
     try
     {
-      FeaturesCollector2 collector(datFilePath, header, regionData, info.m_versionDate);
+      // FeaturesCollector2 will create temporary file `dataFilePath + FEATURES_FILE_TAG`.
+      // We cannot remove it in ~FeaturesCollector2(), we need to remove it in SCOPE_GUARD.
+      SCOPE_GUARD(_, [&]() { Platform::RemoveFileIfExists(dataFilePath + FEATURES_FILE_TAG); });
+      FeaturesCollector2 collector(dataFilePath, header, regionData, info.m_versionDate);
 
       for (auto const & point : midPoints.GetVector())
       {
         ReaderSource<FileReader> src(reader);
         src.Skip(point.second);
 
-        FeatureBuilder1 f;
-        ReadFromSourceRawFormat(src, f);
-
-        // emit the feature
-        collector(GetFeatureBuilder2(f));
+        FeatureBuilder fb;
+        ReadFromSourceRawFormat(src, fb);
+        collector(fb);
       }
 
       // Update bounds with the limit rect corresponding to region borders.
@@ -385,13 +401,9 @@ bool GenerateFinalFeatures(feature::GenerateInfo const & info, string const & na
     catch (RootException const & ex)
     {
       LOG(LCRITICAL, ("MWM writing error:", ex.Msg()));
+      return false;
     }
-
-    // at this point files should be closed
   }
-
-  // remove old not-sorted dat file
-  FileWriter::DeleteFileX(datFilePath + DATA_FILE_TAG);
 
   return true;
 }

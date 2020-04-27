@@ -6,10 +6,10 @@
 
 @property (nonatomic) BOOL zoomHidden;
 @property (nonatomic) BOOL hidden;
+@property (nonatomic, readonly) UIView *view;
 
 - (instancetype)init __attribute__((unavailable("init is not available")));
 - (instancetype)initWithParentView:(UIView *)view;
-- (void)mwm_refreshUI;
 
 - (void)processMyPositionStateModeEvent:(MWMMyPositionMode)mode;
 

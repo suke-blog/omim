@@ -31,12 +31,15 @@
 #include "base/math.hpp"
 #include "base/stl_helpers.hpp"
 
-#include "std/algorithm.hpp"
-#include "std/iterator.hpp"
-#include "std/vector.hpp"
+#include <algorithm>
+#include <cstddef>
+#include <cstdint>
+#include <iterator>
+#include <vector>
 
 using namespace generator::tests_support;
 using namespace search::tests_support;
+using namespace std;
 
 class DataSource;
 
@@ -55,17 +58,21 @@ public:
   TestRanker(DataSource & dataSource, storage::CountryInfoGetter & infoGetter,
              CitiesBoundariesTable const & boundariesTable, KeywordLangMatcher & keywordsScorer,
              Emitter & emitter, vector<Suggest> const & suggests, VillagesCache & villagesCache,
-             base::Cancellable const & cancellable, vector<PreRankerResult> & results)
+             base::Cancellable const & cancellable, size_t limit, vector<PreRankerResult> & results)
     : Ranker(dataSource, boundariesTable, infoGetter, keywordsScorer, emitter,
              GetDefaultCategories(), suggests, villagesCache, cancellable)
     , m_results(results)
   {
+    Ranker::Params rankerParams;
+    Geocoder::Params geocoderParams;
+    rankerParams.m_limit = limit;
+    Init(rankerParams, geocoderParams);
   }
 
   inline bool Finished() const { return m_finished; }
 
   // Ranker overrides:
-  void SetPreRankerResults(vector<PreRankerResult> && preRankerResults) override
+  void AddPreRankerResults(vector<PreRankerResult> && preRankerResults) override
   {
     CHECK(!Finished(), ());
     move(preRankerResults.begin(), preRankerResults.end(), back_inserter(m_results));
@@ -125,8 +132,9 @@ UNIT_CLASS_TEST(PreRankerTest, Smoke)
   CitiesBoundariesTable boundariesTable(m_dataSource);
   VillagesCache villagesCache(m_cancellable);
   KeywordLangMatcher keywordsScorer(0 /* maxLanguageTiers */);
+
   TestRanker ranker(m_dataSource, m_engine.GetCountryInfoGetter(), boundariesTable, keywordsScorer,
-                    emitter, m_suggests, villagesCache, m_cancellable, results);
+                    emitter, m_suggests, villagesCache, m_cancellable, pois.size(), results);
 
   PreRanker preRanker(m_dataSource, ranker);
   PreRanker::Params params;
@@ -141,13 +149,14 @@ UNIT_CLASS_TEST(PreRankerTest, Smoke)
   vector<double> distances(pois.size());
   vector<bool> emit(pois.size());
 
-  FeaturesVectorTest fv(mwmId.GetInfo()->GetLocalFile().GetPath(MapOptions::Map));
+  FeaturesVectorTest fv(mwmId.GetInfo()->GetLocalFile().GetPath(MapFileType::Map));
   fv.GetVector().ForEach([&](FeatureType & ft, uint32_t index) {
     FeatureID id(mwmId, index);
-    preRanker.Emplace(id, PreRankingInfo(Model::TYPE_POI, TokenRange(0, 1)));
+    ResultTracer::Provenance provenance;
+    preRanker.Emplace(id, PreRankingInfo(Model::TYPE_POI, TokenRange(0, 1)), provenance);
 
     TEST_LESS(index, pois.size(), ());
-    distances[index] = MercatorBounds::DistanceOnEarth(feature::GetCenter(ft), kPivot);
+    distances[index] = mercator::DistanceOnEarth(feature::GetCenter(ft), kPivot);
     emit[index] = true;
   });
 
@@ -164,7 +173,7 @@ UNIT_CLASS_TEST(PreRankerTest, Smoke)
     TEST_LESS(index, pois.size(), ());
 
     TEST(!checked[index], (index));
-    TEST(base::AlmostEqualAbs(distances[index], results[i].GetDistance(), 1e-3),
+    TEST(base::AlmostEqualAbs(distances[index], results[i].GetDistance(), 1.0),
          (distances[index], results[i].GetDistance()));
     checked[index] = true;
   }

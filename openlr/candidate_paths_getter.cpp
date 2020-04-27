@@ -10,6 +10,7 @@
 #include "platform/location.hpp"
 
 #include "geometry/angles.hpp"
+#include "geometry/point_with_altitude.hpp"
 
 #include <algorithm>
 #include <iterator>
@@ -24,87 +25,19 @@ namespace openlr
 {
 namespace
 {
-// TODO(mgsergio): Maybe add a penalty if this value deviates, not just throw it away.
-int const kFRCThreshold = 3;
-
 int const kNumBuckets = 256;
 double const kAnglesInBucket = 360.0 / kNumBuckets;
-
-m2::PointD PointAtSegmentM(m2::PointD const & p1, m2::PointD const & p2, double const distanceM)
-{
-  auto const v = p2 - p1;
-  auto const l = v.Length();
-  auto const L = MercatorBounds::DistanceOnEarth(p1, p2);
-  auto const delta = distanceM * l / L;
-  return PointAtSegment(p1, p2, delta);
-}
 
 uint32_t Bearing(m2::PointD const & a, m2::PointD const & b)
 {
   auto const angle = location::AngleToBearing(base::RadToDeg(ang::AngleTo(a, b)));
   CHECK_LESS_OR_EQUAL(angle, 360, ("Angle should be less than or equal to 360."));
   CHECK_GREATER_OR_EQUAL(angle, 0, ("Angle should be greater than or equal to 0"));
-  return base::clamp(angle / kAnglesInBucket, 0.0, 255.0);
+  return base::Clamp(angle / kAnglesInBucket, 0.0, 255.0);
 }
-
-// This class is used to get correct points for further bearing calculations.
-// Depending on |isLastPoint| it either calculates those points straightforwardly
-// or reverses directions and then calculates.
-class BearingPointsSelector
-{
-public:
-  BearingPointsSelector(uint32_t const bearDistM, bool const isLastPoint)
-    : m_bearDistM(bearDistM), m_isLastPoint(isLastPoint)
-  {
-  }
-
-  m2::PointD GetBearingStartPoint(Graph::Edge const & e) const
-  {
-    return m_isLastPoint ? e.GetEndPoint() : e.GetStartPoint();
-  }
-
-  m2::PointD GetBearingEndPoint(Graph::Edge const & e, double const distanceM)
-  {
-    if (distanceM < m_bearDistM && m_bearDistM <= distanceM + EdgeLength(e))
-    {
-      auto const edgeLen = EdgeLength(e);
-      auto const edgeBearDist = min(m_bearDistM - distanceM, edgeLen);
-      ASSERT_LESS_OR_EQUAL(edgeBearDist, edgeLen, ());
-      return m_isLastPoint ? PointAtSegmentM(e.GetEndPoint(), e.GetStartPoint(),
-                                             static_cast<double>(edgeBearDist))
-                           : PointAtSegmentM(e.GetStartPoint(), e.GetEndPoint(),
-                                             static_cast<double>(edgeBearDist));
-    }
-    return m_isLastPoint ? e.GetStartPoint() : e.GetEndPoint();
-  }
-
-private:
-  double m_bearDistM;
-  bool m_isLastPoint;
-};
 }  // namespace
 
 // CandidatePathsGetter::Link ----------------------------------------------------------------------
-bool CandidatePathsGetter::Link::operator<(Link const & o) const
-{
-  if (m_distanceM != o.m_distanceM)
-    return m_distanceM < o.m_distanceM;
-
-  if (m_edge != o.m_edge)
-    return m_edge < o.m_edge;
-
-  if (m_parent == o.m_parent)
-    return false;
-
-  if (m_parent && o.m_parent)
-    return *m_parent < *o.m_parent;
-
-  if (!m_parent)
-    return true;
-
-  return false;
-}
-
 Graph::Edge CandidatePathsGetter::Link::GetStartEdge() const
 {
   auto * start = this;
@@ -114,11 +47,11 @@ Graph::Edge CandidatePathsGetter::Link::GetStartEdge() const
   return start->m_edge;
 }
 
-bool CandidatePathsGetter::Link::IsJunctionInPath(routing::Junction const & j) const
+bool CandidatePathsGetter::Link::IsPointOnPath(geometry::PointWithAltitude const & point) const
 {
   for (auto * l = this; l; l = l->m_parent.get())
   {
-    if (l->m_edge.GetEndJunction() == j)
+    if (l->m_edge.GetEndJunction() == point)
     {
       LOG(LDEBUG, ("A loop detected, skipping..."));
       return true;
@@ -138,7 +71,7 @@ bool CandidatePathsGetter::GetLineCandidatesForPoints(
     if (i != points.size() - 1 && points[i].m_distanceToNextPoint == 0)
     {
       LOG(LINFO, ("Distance to next point is zero. Skipping the whole segment"));
-      ++m_stats.m_dnpIsZero;
+      ++m_stats.m_zeroDistToNextPointCount;
       return false;
     }
 
@@ -148,7 +81,7 @@ bool CandidatePathsGetter::GetLineCandidatesForPoints(
         (isLastPoint ? points[i - 1] : points[i]).m_distanceToNextPoint;
 
     vector<m2::PointD> pointCandidates;
-    m_pointsGetter.GetCandidatePoints(MercatorBounds::FromLatLon(points[i].m_latLon),
+    m_pointsGetter.GetCandidatePoints(mercator::FromLatLon(points[i].m_latLon),
                                       pointCandidates);
     GetLineCandidates(points[i], isLastPoint, distanceToNextPointM, pointCandidates,
                       lineCandidates.back());
@@ -172,9 +105,9 @@ void CandidatePathsGetter::GetStartLines(vector<m2::PointD> const & points, bool
   for (auto const & pc : points)
   {
     if (!isLastPoint)
-      m_graph.GetOutgoingEdges(Junction(pc, 0 /* altitude */), edges);
+      m_graph.GetOutgoingEdges(geometry::PointWithAltitude(pc, 0 /* altitude */), edges);
     else
-      m_graph.GetIngoingEdges(Junction(pc, 0 /* altitude */), edges);
+      m_graph.GetIngoingEdges(geometry::PointWithAltitude(pc, 0 /* altitude */), edges);
   }
 
   // Same edges may start on different points if those points are close enough.
@@ -182,9 +115,9 @@ void CandidatePathsGetter::GetStartLines(vector<m2::PointD> const & points, bool
 }
 
 void CandidatePathsGetter::GetAllSuitablePaths(Graph::EdgeVector const & startLines,
-                                               bool const isLastPoint, double const bearDistM,
-                                               FunctionalRoadClass const frc,
-                                               vector<LinkPtr> & allPaths)
+                                               bool isLastPoint, double bearDistM,
+                                               FunctionalRoadClass functionalRoadClass,
+                                               FormOfWay formOfWay, vector<LinkPtr> & allPaths)
 {
   queue<LinkPtr> q;
 
@@ -228,12 +161,12 @@ void CandidatePathsGetter::GetAllSuitablePaths(Graph::EdgeVector const & startLi
 
       ASSERT(currentEdge.HasRealPart(), ());
 
-      if (!PassesRestriction(e, frc, kFRCThreshold, m_infoGetter))
+      if (!PassesRestriction(e, functionalRoadClass, formOfWay, 2 /* kFRCThreshold */, m_infoGetter))
         continue;
 
       // TODO(mgsergio): Should we check form of way as well?
 
-      if (u->IsJunctionInPath(e.GetEndJunction()))
+      if (u->IsPointOnPath(e.GetEndJunction()))
         continue;
 
       auto const p = make_shared<Link>(u, e, u->m_distanceM + currentEdgeLen);
@@ -252,8 +185,8 @@ void CandidatePathsGetter::GetBestCandidatePaths(
   BearingPointsSelector pointsSelector(bearDistM, isLastPoint);
   for (auto const & l : allPaths)
   {
-    auto const bearStartPoint = pointsSelector.GetBearingStartPoint(l->GetStartEdge());
-    auto const startPointsDistance = MercatorBounds::DistanceOnEarth(bearStartPoint, startPoint);
+    auto const bearStartPoint = pointsSelector.GetStartPoint(l->GetStartEdge());
+    auto const startPointsDistance = mercator::DistanceOnEarth(bearStartPoint, startPoint);
 
     // Number of edges counting from the last one to check bearing on. Accorfing to OpenLR spec
     // we have to check bearing on a point that is no longer than 25 meters traveling down the path.
@@ -276,7 +209,7 @@ void CandidatePathsGetter::GetBestCandidatePaths(
       --traceBackIterationsLeft;
 
       auto const bearEndPoint =
-          pointsSelector.GetBearingEndPoint(part->m_edge, part->m_distanceM);
+          pointsSelector.GetEndPoint(part->m_edge, part->m_distanceM);
 
       auto const bearing = Bearing(bearStartPoint, bearEndPoint);
       auto const bearingDiff = AbsDifference(bearing, requiredBearing);
@@ -340,10 +273,11 @@ void CandidatePathsGetter::GetLineCandidates(openlr::LocationReferencePoint cons
   for (auto const & e : startLines)
     LOG(LDEBUG, (LogAs2GisPath(e)));
 
-  auto const startPoint = MercatorBounds::FromLatLon(p.m_latLon);
+  auto const startPoint = mercator::FromLatLon(p.m_latLon);
 
   vector<LinkPtr> allPaths;
-  GetAllSuitablePaths(startLines, isLastPoint, bearDistM, p.m_functionalRoadClass, allPaths);
+  GetAllSuitablePaths(startLines, isLastPoint, bearDistM, p.m_functionalRoadClass, p.m_formOfWay,
+                      allPaths);
   GetBestCandidatePaths(allPaths, isLastPoint, p.m_bearing, bearDistM, startPoint, candidates);
   LOG(LDEBUG, (candidates.size(), "candidate paths found for point (LatLon)", p.m_latLon));
 }

@@ -2,8 +2,8 @@ package com.mapswithme.maps.ugc.routes;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -94,12 +94,6 @@ public class UgcRouteEditSettingsFragment extends BaseMwmToolbarFragment
   private void openSharingOptionsScreen()
   {
     UgcRouteSharingOptionsActivity.startForResult(getActivity(), mCategory);
-  }
-
-  @Override
-  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
-  {
-    super.onViewCreated(view, savedInstanceState);
   }
 
   @Override

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "routing/road_graph.hpp"
+#include "routing/routing_callbacks.hpp"
 
 #include "routing_common/maxspeed_conversion.hpp"
 #include "routing_common/vehicle_model.hpp"
@@ -10,12 +11,16 @@
 #include "indexer/mwm_set.hpp"
 
 #include "geometry/point2d.hpp"
+#include "geometry/point_with_altitude.hpp"
 
 #include "base/cache.hpp"
 
-#include "std/map.hpp"
-#include "std/unique_ptr.hpp"
-#include "std/vector.hpp"
+#include <map>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <utility>
+#include <vector>
 
 class DataSource;
 class FeatureType;
@@ -28,13 +33,13 @@ private:
   class CrossCountryVehicleModel : public VehicleModelInterface
   {
   public:
-    CrossCountryVehicleModel(shared_ptr<VehicleModelFactoryInterface> vehicleModelFactory);
+    CrossCountryVehicleModel(std::shared_ptr<VehicleModelFactoryInterface> vehicleModelFactory);
 
     // VehicleModelInterface overrides:
-    VehicleModelInterface::SpeedKMpH GetSpeed(FeatureType & f,
-                                              SpeedParams const & speedParams) const override;
+    SpeedKMpH GetSpeed(FeatureType & f, SpeedParams const & speedParams) const override;
+    HighwayType GetHighwayType(FeatureType & f) const override;
     double GetMaxWeightSpeed() const override { return m_maxSpeed; };
-    double GetOffroadSpeed() const override;
+    SpeedKMpH const & GetOffroadSpeed() const override;
     bool IsOneWay(FeatureType & f) const override;
     bool IsRoad(FeatureType & f) const override;
     bool IsPassThroughAllowed(FeatureType & f) const override;
@@ -44,11 +49,11 @@ private:
   private:
     VehicleModelInterface * GetVehicleModel(FeatureID const & featureId) const;
 
-    shared_ptr<VehicleModelFactoryInterface> const m_vehicleModelFactory;
+    std::shared_ptr<VehicleModelFactoryInterface> const m_vehicleModelFactory;
     double const m_maxSpeed;
-    double const m_offroadSpeedKMpH;
+    SpeedKMpH const m_offroadSpeedKMpH;
 
-    mutable map<MwmSet::MwmId, shared_ptr<VehicleModelInterface>> m_cache;
+    mutable std::map<MwmSet::MwmId, std::shared_ptr<VehicleModelInterface>> m_cache;
   };
 
   class RoadInfoCache
@@ -60,12 +65,16 @@ private:
 
   private:
     using TMwmFeatureCache = base::Cache<uint32_t, RoadInfo>;
-    map<MwmSet::MwmId, TMwmFeatureCache> m_cache;
+
+    std::mutex m_mutexCache;
+    std::map<MwmSet::MwmId, TMwmFeatureCache> m_cache;
   };
 
 public:
+  static double constexpr kClosestEdgesRadiusM = 150.0;
+
   FeaturesRoadGraph(DataSource const & dataSource, IRoadGraph::Mode mode,
-                    shared_ptr<VehicleModelFactoryInterface> vehicleModelFactory);
+                    std::shared_ptr<VehicleModelFactoryInterface> vehicleModelFactory);
 
   static int GetStreetReadScale();
 
@@ -75,14 +84,19 @@ public:
   double GetMaxSpeedKMpH() const override;
   void ForEachFeatureClosestToCross(m2::PointD const & cross,
                                     ICrossEdgesLoader & edgesLoader) const override;
-  void FindClosestEdges(m2::PointD const & point, uint32_t count,
-                        vector<pair<Edge, Junction>> & vicinities) const override;
+  void FindClosestEdges(
+      m2::RectD const & rect, uint32_t count,
+      std::vector<std::pair<Edge, geometry::PointWithAltitude>> & vicinities) const override;
+  std::vector<IRoadGraph::FullRoadInfo>
+  FindRoads(m2::RectD const & rect, IsGoodFeatureFn const & isGoodFeature) const override;
   void GetFeatureTypes(FeatureID const & featureId, feature::TypesHolder & types) const override;
-  void GetJunctionTypes(Junction const & junction, feature::TypesHolder & types) const override;
+  void GetJunctionTypes(geometry::PointWithAltitude const & junction,
+                        feature::TypesHolder & types) const override;
   IRoadGraph::Mode GetMode() const override;
   void ClearState() override;
 
   bool IsRoad(FeatureType & ft) const;
+  IRoadGraph::PointWithAltitudeVec GetRoadGeom(FeatureType & ft) const;
 
 private:
   friend class CrossFeaturesLoader;
@@ -95,7 +109,7 @@ private:
     bool IsAlive() const { return m_mwmHandle.IsAlive(); }
 
     MwmSet::MwmHandle m_mwmHandle;
-    unique_ptr<feature::AltitudeLoader> m_altitudeLoader;
+    std::unique_ptr<feature::AltitudeLoader> m_altitudeLoader;
   };
 
   bool IsOneWay(FeatureType & ft) const;
@@ -117,12 +131,11 @@ private:
   IRoadGraph::Mode const m_mode;
   mutable RoadInfoCache m_cache;
   mutable CrossCountryVehicleModel m_vehicleModel;
-  mutable map<MwmSet::MwmId, Value> m_mwmLocks;
+  mutable std::map<MwmSet::MwmId, Value> m_mwmLocks;
 };
 
 // @returns a distance d such as that for a given point p any edge
 // with start point s such as that |s - p| < d, and edge is considered outgouing from p.
 // Symmetrically for ingoing edges.
 double GetRoadCrossingRadiusMeters();
-
 }  // namespace routing

@@ -28,10 +28,6 @@ class MwmInfo;
 
 namespace search
 {
-size_t GetMaxErrorsForToken(strings::UniString const & token);
-
-strings::LevenshteinDFA BuildLevenshteinDFA(strings::UniString const & s);
-
 template <typename ToDo>
 void ForEachCategoryType(StringSliceBase const & slice, Locales const & locales,
                          CategoriesHolder const & categories, ToDo && todo)
@@ -81,18 +77,15 @@ void ForEachCategoryTypeFuzzy(StringSliceBase const & slice, Locales const & loc
 }
 
 // Returns |true| and fills |types| if request specified by |slice| is categorial
-// in any of the |locales| and |false| otherwise. We expect that categorial requests should
-// mostly arise from clicking on a category button in the UI.
-// It is assumed that typing a word that matches a category's name
-// and a space after it means that no errors were made.
+// in any of the |locales| and |false| otherwise.
+// We expect that categorial requests should mostly arise from clicking on a category
+// button in the UI but also allow typing the category name without errors manually
+// and not adding a space.
 template <typename T>
 bool FillCategories(QuerySliceOnRawStrings<T> const & slice, Locales const & locales,
                     CategoriesHolder const & catHolder, std::vector<uint32_t> & types)
 {
   types.clear();
-  if (slice.HasPrefixToken())
-    return false;
-
   catHolder.ForEachNameAndType(
       [&](CategoriesHolder::Category::Name const & categorySynonym, uint32_t type) {
         if (!locales.Contains(static_cast<uint64_t>(categorySynonym.m_locale)))
@@ -122,12 +115,21 @@ bool FillCategories(QuerySliceOnRawStrings<T> const & slice, Locales const & loc
 std::vector<uint32_t> GetCategoryTypes(std::string const & name, std::string const & locale,
                                        CategoriesHolder const & categories);
 
-MwmSet::MwmHandle FindWorld(DataSource const & dataSource,
-                            std::vector<std::shared_ptr<MwmInfo>> const & infos);
-MwmSet::MwmHandle FindWorld(DataSource const & dataSource);
-
 using FeatureIndexCallback = std::function<void(FeatureID const &)>;
 // Applies |fn| to each feature index of type from |types| in |rect|.
 void ForEachOfTypesInRect(DataSource const & dataSource, std::vector<uint32_t> const & types,
                           m2::RectD const & rect, FeatureIndexCallback const & fn);
+
+// Returns true iff |query| contains |categoryEn| synonym.
+bool IsCategorialRequestFuzzy(std::string const & query, std::string const & categoryName);
+
+template <typename DFA>
+void FillRequestFromToken(QueryParams::Token const & token, SearchTrieRequest<DFA> & request)
+{
+  request.m_names.emplace_back(BuildLevenshteinDFA(token.GetOriginal()));
+  // Allow misprints for original token only.
+  token.ForEachSynonym([&request](strings::UniString const & s) {
+    request.m_names.emplace_back(strings::LevenshteinDFA(s, 0 /* maxErrors */));
+  });
+}
 }  // namespace search

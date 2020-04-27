@@ -1,6 +1,7 @@
 #pragma once
 
 #include "routing/road_graph.hpp"
+#include "routing/routing_options.hpp"
 #include "routing/routing_settings.hpp"
 #include "routing/segment.hpp"
 #include "routing/transit_info.hpp"
@@ -12,6 +13,9 @@
 
 #include "indexer/feature_altitude.hpp"
 
+#include "platform/country_file.hpp"
+
+#include "geometry/point_with_altitude.hpp"
 #include "geometry/polyline2d.hpp"
 
 #include "base/assert.hpp"
@@ -62,9 +66,10 @@ public:
     uint8_t m_maxSpeedKmPH = 0;
   };
 
-  RouteSegment(Segment const & segment, turns::TurnItem const & turn, Junction const & junction,
-               std::string const & street, double distFromBeginningMeters,
-               double distFromBeginningMerc, double timeFromBeginningS, traffic::SpeedGroup traffic,
+  RouteSegment(Segment const & segment, turns::TurnItem const & turn,
+               geometry::PointWithAltitude const & junction, std::string const & street,
+               double distFromBeginningMeters, double distFromBeginningMerc,
+               double timeFromBeginningS, traffic::SpeedGroup traffic,
                std::unique_ptr<TransitInfo> transitInfo)
     : m_segment(segment)
     , m_turn(turn)
@@ -84,7 +89,8 @@ public:
   }
 
   Segment const & GetSegment() const { return m_segment; }
-  Junction const & GetJunction() const { return m_junction; }
+  Segment & GetSegment() { return m_segment; }
+  geometry::PointWithAltitude const & GetJunction() const { return m_junction; }
   std::string const & GetStreet() const { return m_street; }
   traffic::SpeedGroup GetTraffic() const { return m_traffic; }
   turns::TurnItem const & GetTurn() const { return m_turn; }
@@ -97,8 +103,10 @@ public:
   TransitInfo const & GetTransitInfo() const { return m_transitInfo.Get(); }
 
   void SetSpeedCameraInfo(std::vector<SpeedCamera> && data) { m_speedCameras = std::move(data); }
-  bool IsRealSegment() const { return m_segment.IsRealSegment(); }
   std::vector<SpeedCamera> const & GetSpeedCams() const { return m_speedCameras; }
+
+  RoutingOptions GetRoadTypes() const { return m_roadTypes; }
+  void SetRoadTypes(RoutingOptions types) { m_roadTypes = types; }
 
 private:
   Segment m_segment;
@@ -108,7 +116,7 @@ private:
   turns::TurnItem m_turn;
 
   /// The furthest point of the segment from the beginning of the route along the route.
-  Junction m_junction;
+  geometry::PointWithAltitude m_junction;
 
   /// Street name of |m_segment| if any. Otherwise |m_street| is empty.
   std::string m_street;
@@ -131,6 +139,8 @@ private:
   // Stored coefficients where they placed at the segment (numbers from 0 to 1)
   // and theirs' max speed.
   std::vector<SpeedCamera> m_speedCameras;
+
+  RoutingOptions m_roadTypes;
 };
 
 class Route
@@ -147,7 +157,8 @@ public:
   public:
     SubrouteAttrs() = default;
 
-    SubrouteAttrs(Junction const & start, Junction const & finish, size_t beginSegmentIdx,
+    SubrouteAttrs(geometry::PointWithAltitude const & start,
+                  geometry::PointWithAltitude const & finish, size_t beginSegmentIdx,
                   size_t endSegmentIdx)
       : m_start(start)
       , m_finish(finish)
@@ -165,8 +176,8 @@ public:
     {
     }
 
-    Junction const & GetStart() const { return m_start; }
-    Junction const & GetFinish() const { return m_finish; }
+    geometry::PointWithAltitude const & GetStart() const { return m_start; }
+    geometry::PointWithAltitude const & GetFinish() const { return m_finish; }
 
     size_t GetBeginSegmentIdx() const { return m_beginSegmentIdx; }
     size_t GetEndSegmentIdx() const { return m_endSegmentIdx; }
@@ -174,9 +185,8 @@ public:
     size_t GetSize() const { return m_endSegmentIdx - m_beginSegmentIdx; }
 
   private:
-
-    Junction m_start;
-    Junction m_finish;
+    geometry::PointWithAltitude m_start;
+    geometry::PointWithAltitude m_finish;
 
     // Index of the first subroute segment in the whole route.
     size_t m_beginSegmentIdx = 0;
@@ -237,24 +247,11 @@ public:
     }
   }
 
-  template <class SI>
-  void SetRouteSegments(SI && v)
-  {
-    m_routeSegments = std::forward<SI>(v);
-
-    m_haveAltitudes = true;
-    for (auto const & s : m_routeSegments)
-    {
-      if (s.GetJunction().GetAltitude() == feature::kInvalidAltitude)
-      {
-        m_haveAltitudes = false;
-        return;
-      }
-    }
-  }
+  void SetRouteSegments(std::vector<RouteSegment> && routeSegments);
 
   std::vector<RouteSegment> & GetRouteSegments() { return m_routeSegments; }
   std::vector<RouteSegment> const & GetRouteSegments() const { return m_routeSegments; }
+  RoutingSettings const & GetCurrentRoutingSettings() const { return m_routingSettings; }
 
   void SetCurrentSubrouteIdx(size_t currentSubrouteIdx) { m_currentSubrouteIdx = currentSubrouteIdx; }
 
@@ -315,11 +312,13 @@ public:
   bool GetNextTurns(std::vector<turns::TurnItemDist> & turns) const;
 
   void GetCurrentDirectionPoint(m2::PointD & pt) const;
-
-  /// @return true  If position was updated successfully (projection within gps error radius).
+  
   bool MoveIterator(location::GpsInfo const & info);
 
-  void MatchLocationToRoute(location::GpsInfo & location, location::RouteMatchingInfo & routeMatchingInfo) const;
+  /// \brief Finds projection of |location| to the nearest route and sets |routeMatchingInfo|
+  /// fields accordingly.
+  bool MatchLocationToRoute(location::GpsInfo & location,
+                            location::RouteMatchingInfo & routeMatchingInfo) const;
 
   /// Add country name if we have no country filename to make route
   void AddAbsentCountry(std::string const & name);
@@ -362,7 +361,7 @@ public:
   /// after the route is removed.
   void SetSubrouteUid(size_t segmentIdx, SubrouteUid subrouteUid);
 
-  void GetAltitudes(feature::TAltitudes & altitudes) const;
+  void GetAltitudes(geometry::Altitudes & altitudes) const;
   bool HaveAltitudes() const { return m_haveAltitudes; }
   traffic::SpeedGroup GetTraffic(size_t segmentIdx) const;
 
@@ -371,6 +370,16 @@ public:
 
   /// \returns Length of the route segment with |segIdx| in meters.
   double GetSegLenMeters(size_t segIdx) const;
+
+  void SetMwmsPartlyProhibitedForSpeedCams(std::vector<platform::CountryFile> && mwms);
+
+  /// \returns true if the route crosses at least one mwm where there are restrictions on warning
+  /// about speed cameras.
+  bool CrossMwmsPartlyProhibitedForSpeedCams() const;
+
+  /// \returns mwm list which is crossed by the route and where there are restrictions on warning
+  /// about speed cameras.
+  std::vector<platform::CountryFile> const & GetMwmsPartlyProhibitedForSpeedCams() const;
 
 private:
   friend std::string DebugPrint(Route const & r);
@@ -402,5 +411,8 @@ private:
   std::vector<SubrouteAttrs> m_subrouteAttrs;
   // Route identifier. It's unique within single program session.
   uint64_t m_routeId = 0;
+
+  // Mwms which are crossed by the route where speed cameras are prohibited.
+  std::vector<platform::CountryFile> m_speedCamPartlyProhibitedMwms;
 };
 } // namespace routing

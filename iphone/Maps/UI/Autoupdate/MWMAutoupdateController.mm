@@ -1,23 +1,25 @@
 #import "MWMAutoupdateController.h"
 #import "MWMCircularProgress.h"
-#import "MWMCommon.h"
-#import "MWMFrameworkListener.h"
-#import "MWMStorage.h"
+#import "MWMStorage+UI.h"
 #import "Statistics.h"
 #import "SwiftBridge.h"
-#import "UIButton+RuntimeAttributes.h"
 
+#include "platform/downloader_defines.hpp"
+
+#include <string>
 #include <unordered_set>
 
 namespace
 {
-string RootId() { return GetFramework().GetStorage().GetRootId(); }
+NSString *RootId() { return @(GetFramework().GetStorage().GetRootId().c_str()); }
 enum class State
 {
   Downloading,
   Waiting
 };
 }  // namespace
+
+using namespace storage;
 
 @interface MWMAutoupdateView : UIView
 
@@ -65,6 +67,14 @@ enum class State
   [self layoutIfNeeded];
 }
 
+-(void)setUpdateSize:(NSString *)updateSize
+{
+  _updateSize = updateSize;
+  self.primaryButton.localizedText =
+      [NSString stringWithCoreFormat:L(@"whats_new_auto_update_button_size")
+                           arguments:@[self.updateSize]];
+}
+
 - (void)stateDownloading
 {
   self.state = State::Downloading;
@@ -79,9 +89,6 @@ enum class State
   [self stopSpinner];
   self.primaryButton.hidden = NO;
   self.secondaryButton.localizedText = L(@"whats_new_auto_update_button_later");
-  self.primaryButton.localizedText =
-      [NSString stringWithCoreFormat:L(@"whats_new_auto_update_button_size")
-                           arguments:@[self.updateSize]];
 }
 
 - (void)startSpinner
@@ -134,13 +141,13 @@ enum class State
 
 @end
 
-@interface MWMAutoupdateController () <MWMCircularProgressProtocol, MWMFrameworkStorageObserver>
+@interface MWMAutoupdateController () <MWMCircularProgressProtocol, MWMStorageObserver>
 {
-  std::unordered_set<TCountryId> m_updatingCountries;
+  std::unordered_set<CountryId> m_updatingCountries;
 }
 
 @property(nonatomic) Framework::DoAfterUpdate todo;
-@property(nonatomic) TMwmSize sizeInMB;
+@property(nonatomic) MwmSize sizeInMB;
 @property(nonatomic) NodeErrorCode errorCode;
 @property(nonatomic) BOOL progressFinished;
 
@@ -155,14 +162,8 @@ enum class State
   controller.todo = todo;
   auto view = static_cast<MWMAutoupdateView *>(controller.view);
   view.delegate = controller;
-  auto & f = GetFramework();
-  auto const & s = f.GetStorage();
-  storage::Storage::UpdateInfo updateInfo;
-  s.GetUpdateInfo(s.GetRootId(), updateInfo);
-  TMwmSize const updateSizeInBytes = updateInfo.m_totalUpdateSizeInBytes;
-  view.updateSize = formattedSize(updateSizeInBytes);
-  controller.sizeInMB = updateSizeInBytes / MB;
-  [MWMFrameworkListener addObserver:controller];
+  [[MWMStorage sharedStorage] addObserver:controller];
+  [controller updateSize];
   return controller;
 }
 
@@ -172,11 +173,14 @@ enum class State
   self.progressFinished = NO;
   [Statistics logEvent:kStatDownloaderOnStartScreenShow
         withParameters:@{kStatMapDataSize : @(self.sizeInMB)}];
-  auto view = static_cast<MWMAutoupdateView *>(self.view);
+  MWMAutoupdateView *view = (MWMAutoupdateView *)self.view;
   if (self.todo == Framework::DoAfterUpdate::AutoupdateMaps)
   {
     [view stateDownloading];
-    [MWMStorage updateNode:RootId()];
+    [[MWMStorage sharedStorage] updateNode:RootId() onCancel:^{
+      [self updateSize];
+      [view stateWaiting];
+    }];
     [Statistics logEvent:kStatDownloaderOnStartScreenAutoDownload
           withParameters:@{kStatMapDataSize : @(self.sizeInMB)}];
   }
@@ -190,14 +194,30 @@ enum class State
 {
   [static_cast<MWMAutoupdateView *>(self.view) stopSpinner];
   [self dismissViewControllerAnimated:YES completion:^{
-    [MWMFrameworkListener removeObserver:self];
+    [[MWMStorage sharedStorage] removeObserver:self];
   }];
+}
+
+- (void)updateSize
+{
+  auto containerView = static_cast<MWMAutoupdateView *>(self.view);
+  auto & f = GetFramework();
+  auto const & s = f.GetStorage();
+  storage::Storage::UpdateInfo updateInfo;
+  s.GetUpdateInfo(s.GetRootId(), updateInfo);
+  MwmSize const updateSizeInBytes = updateInfo.m_totalUpdateSizeInBytes;
+  containerView.updateSize = formattedSize(updateSizeInBytes);
+  _sizeInMB = updateSizeInBytes / MB;
 }
 
 - (IBAction)updateTap
 {
-  [static_cast<MWMAutoupdateView *>(self.view) stateDownloading];
-  [MWMStorage updateNode:RootId()];
+  MWMAutoupdateView *view = (MWMAutoupdateView *)self.view;
+  [view stateDownloading];
+  [[MWMStorage sharedStorage] updateNode:RootId() onCancel:^{
+    [self updateSize];
+    [view stateWaiting];
+  }];
   [Statistics logEvent:kStatDownloaderOnStartScreenManualDownload
         withParameters:@{kStatMapDataSize : @(self.sizeInMB)}];
 }
@@ -216,7 +236,7 @@ enum class State
       [UIAlertAction actionWithTitle:L(@"cancel_download")
                                style:UIAlertActionStyleDestructive
                              handler:^(UIAlertAction * action) {
-                               [MWMStorage cancelDownloadNode:RootId()];
+                               [[MWMStorage sharedStorage] cancelDownloadNode:RootId()];
                                [self dismiss];
                                [Statistics logEvent:view.state == State::Downloading
                                                         ? kStatDownloaderOnStartScreenCancelDownload
@@ -241,11 +261,11 @@ enum class State
   } completion:nil];
 }
 
-- (void)updateProcessStatus:(TCountryId const &)countryId
+- (void)updateProcessStatus:(CountryId const &)countryId
 {
   auto const & s = GetFramework().GetStorage();
   NodeAttrs nodeAttrs;
-  s.GetNodeAttrs(RootId(), nodeAttrs);
+  s.GetNodeAttrs(RootId().UTF8String, nodeAttrs);
   auto view = static_cast<MWMAutoupdateView *>(self.view);
   NSString * nodeName = @(s.GetNodeLocalName(countryId).c_str());
   [view setStatusForNodeName:nodeName rootAttributes:nodeAttrs];
@@ -257,12 +277,12 @@ enum class State
 
 - (void)progressButtonPressed:(MWMCircularProgress *)progress { [self cancel]; }
 
-#pragma mark - MWMFrameworkStorageObserver
+#pragma mark - MWMStorageObserver
 
-- (void)processCountryEvent:(TCountryId const &)countryId
+- (void)processCountryEvent:(NSString *)countryId
 {
   NodeStatuses nodeStatuses;
-  GetFramework().GetStorage().GetNodeStatuses(countryId, nodeStatuses);
+  GetFramework().GetStorage().GetNodeStatuses(countryId.UTF8String, nodeStatuses);
   if (nodeStatuses.m_status == NodeStatus::Error)
   {
     self.errorCode = nodeStatuses.m_error;
@@ -276,21 +296,22 @@ enum class State
     switch (nodeStatuses.m_status)
     {
     case NodeStatus::Error:
-    case NodeStatus::OnDisk: m_updatingCountries.erase(countryId); break;
-    default: m_updatingCountries.insert(countryId);
+    case NodeStatus::OnDisk: m_updatingCountries.erase(countryId.UTF8String); break;
+    default: m_updatingCountries.insert(countryId.UTF8String);
     }
   }
   
   if (self.progressFinished && m_updatingCountries.empty())
     [self dismiss];
   else
-    [self updateProcessStatus:countryId];
+    [self updateProcessStatus:countryId.UTF8String];
 }
 
 - (void)processError
 {
+  [self updateSize];
   [static_cast<MWMAutoupdateView *>(self.view) stateWaiting];
-  [MWMStorage cancelDownloadNode:RootId()];
+  [[MWMStorage sharedStorage] cancelDownloadNode:RootId()];
   auto errorType = ^NSString * (NodeErrorCode code)
   {
     switch (code)
@@ -311,11 +332,12 @@ enum class State
         withParameters:@{kStatMapDataSize : @(self.sizeInMB), kStatType : errorType}];
 }
 
-- (void)processCountry:(TCountryId const &)countryId
-              progress:(MapFilesDownloader::TProgress const &)progress
+- (void)processCountry:(NSString *)countryId
+       downloadedBytes:(uint64_t)downloadedBytes
+            totalBytes:(uint64_t)totalBytes
 {
-  if (m_updatingCountries.find(countryId) != m_updatingCountries.end())
-    [self updateProcessStatus:countryId];
+  if (m_updatingCountries.find(countryId.UTF8String) != m_updatingCountries.end())
+    [self updateProcessStatus:countryId.UTF8String];
 }
 
 @end

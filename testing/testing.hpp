@@ -11,7 +11,7 @@
 
 #define UNIT_TEST(name)                                                  \
   void UnitTest_##name();                                                \
-  TestRegister g_TestRegister_##name(#name, __FILE__, &UnitTest_##name); \
+  TestRegister g_testRegister_##name(#name, __FILE__, &UnitTest_##name); \
   void UnitTest_##name()
 
 #define UNIT_CLASS_TEST(CLASS, NAME)               \
@@ -184,6 +184,20 @@ CommandLineOptions const & GetTestingOptions();
       ::base::OnTestFailed(SRC(), ::base::Message("TEST(!base::AlmostEqualULPs(" #X ", " #Y ")", \
                                                   ::base::Message(X, Y), ::base::Message msg));  \
     }                                                                                            \
+  } while (0)
+
+#define TEST_ALMOST_EQUAL_ABS(X, Y, eps, msg)                                                      \
+  do                                                                                               \
+  {                                                                                                \
+    if (::base::AlmostEqualAbs(X, Y, eps))                                                         \
+    {                                                                                              \
+    }                                                                                              \
+    else                                                                                           \
+    {                                                                                              \
+      ::base::OnTestFailed(SRC(),                                                                  \
+                           ::base::Message("TEST(!base::AlmostEqualAbs(" #X ", " #Y ", " #eps ")", \
+                           ::base::Message(X, Y, eps), ::base::Message msg));                      \
+    }                                                                                              \
   } while (0)
 
 // TODO(AlexZ): Add more cool macroses (or switch all unit tests to gtest).

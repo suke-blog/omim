@@ -404,7 +404,7 @@ m2::PointD GetPointForTurn(IRoutingResult const & result, size_t outgoingSegment
     if (point == nextPoint && outgoingSegmentIndex + 1 == segments.size())
       return nextPoint;
 
-    curDistanceMeters += MercatorBounds::DistanceOnEarth(point, nextPoint);
+    curDistanceMeters += mercator::DistanceOnEarth(point, nextPoint);
     if (curDistanceMeters > maxDistMeters || ++count >= maxPointsCount)
       return nextPoint;
 
@@ -569,13 +569,14 @@ bool GetNextRoutePointIndex(IRoutingResult const & result, RoutePointIndex const
 }
 
 RouterResultCode MakeTurnAnnotation(IRoutingResult const & result, NumMwmIds const & numMwmIds,
-                                       RouterDelegate const & delegate,
-                                       vector<Junction> & junctions, Route::TTurns & turnsDir,
-                                       Route::TStreets & streets, vector<Segment> & segments)
+                                    base::Cancellable const & cancellable,
+                                    vector<geometry::PointWithAltitude> & junctions,
+                                    Route::TTurns & turnsDir, Route::TStreets & streets,
+                                    vector<Segment> & segments)
 {
   LOG(LDEBUG, ("Shortest th length:", result.GetPathLength()));
 
-  if (delegate.IsCancelled())
+  if (cancellable.IsCancelled())
     return RouterResultCode::Cancelled;
   // Annotate turns.
   size_t skipTurnSegments = 0;
@@ -620,12 +621,13 @@ RouterResultCode MakeTurnAnnotation(IRoutingResult const & result, NumMwmIds con
     // Path geometry.
     CHECK_GREATER_OR_EQUAL(loadedSegmentIt->m_path.size(), 2, ());
     // Note. Every LoadedPathSegment in TUnpackedPathSegments contains LoadedPathSegment::m_path
-    // of several Junctions. Last Junction in a LoadedPathSegment::m_path is equal to first junction
-    // in next LoadedPathSegment::m_path in vector TUnpackedPathSegments:
+    // of several Junctions. Last PointWithAltitude in a LoadedPathSegment::m_path is equal to first
+    // junction in next LoadedPathSegment::m_path in vector TUnpackedPathSegments:
     // *---*---*---*---*       *---*           *---*---*---*
     //                 *---*---*   *---*---*---*
-    // To prevent having repetitions in |junctions| list it's necessary to take the first point only from the
-    // first item of |loadedSegments|. The beginning should be ignored for the rest |m_path|.
+    // To prevent having repetitions in |junctions| list it's necessary to take the first point only
+    // from the first item of |loadedSegments|. The beginning should be ignored for the rest
+    // |m_path|.
     junctions.insert(junctions.end(), loadedSegmentIt == loadedSegments.cbegin()
                                           ? loadedSegmentIt->m_path.cbegin()
                                           : loadedSegmentIt->m_path.cbegin() + 1,
@@ -671,7 +673,7 @@ double CalculateMercatorDistanceAlongPath(uint32_t startPointIndex, uint32_t end
   return mercatorDistanceBetweenTurns;
 }
 
-void FixupTurns(vector<Junction> const & junctions, Route::TTurns & turnsDir)
+void FixupTurns(vector<geometry::PointWithAltitude> const & junctions, Route::TTurns & turnsDir)
 {
   double const kMergeDistMeters = 30.0;
   // For turns that are not EnterRoundAbout exitNum is always equal to zero.
@@ -687,7 +689,7 @@ void FixupTurns(vector<Junction> const & junctions, Route::TTurns & turnsDir)
   {
     double res = 0.0;
     for (uint32_t i = start + 1; i < end; ++i)
-      res += MercatorBounds::DistanceOnEarth(junctions[i - 1].GetPoint(), junctions[i].GetPoint());
+      res += mercator::DistanceOnEarth(junctions[i - 1].GetPoint(), junctions[i].GetPoint());
     return res;
   };
 
@@ -887,8 +889,8 @@ void GetTurnDirection(IRoutingResult const & result, size_t outgoingSegmentIndex
 
   ASSERT(!turnInfo.m_ingoing.m_path.empty(), ());
   ASSERT(!turnInfo.m_outgoing.m_path.empty(), ());
-  ASSERT_LESS(MercatorBounds::DistanceOnEarth(turnInfo.m_ingoing.m_path.back().GetPoint(),
-                                              turnInfo.m_outgoing.m_path.front().GetPoint()),
+  ASSERT_LESS(mercator::DistanceOnEarth(turnInfo.m_ingoing.m_path.back().GetPoint(),
+                                        turnInfo.m_outgoing.m_path.front().GetPoint()),
               kFeaturesNearTurnMeters, ());
 
   m2::PointD const junctionPoint = turnInfo.m_ingoing.m_path.back().GetPoint();

@@ -16,6 +16,7 @@ omim_add_executable(${PROJECT_NAME} ${SRC})
 omim_link_libraries(
   ${PROJECT_NAME}
   routing_quality
+  routes_builder
   routing
   routing_common
   kml
@@ -31,7 +32,9 @@ omim_link_libraries(
   expat
   oauthcpp
   protobuf
+  opening_hours
   stats_client
+  succinct
   gflags
   ${LIBZ}
 )

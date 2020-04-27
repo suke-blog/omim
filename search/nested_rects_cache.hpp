@@ -4,8 +4,9 @@
 
 #include "geometry/point2d.hpp"
 
-#include "std/map.hpp"
-#include "std/vector.hpp"
+#include <cstdint>
+#include <map>
+#include <vector>
 
 class DataSource;
 
@@ -42,10 +43,10 @@ private:
   m2::PointD m_position;
   bool m_valid;
 
-  using TFeatures = vector<uint32_t>;
-  using TBucket = map<MwmSet::MwmId, TFeatures>;
+  using Features = std::vector<uint32_t>;
+  using Bucket = std::map<MwmSet::MwmId, Features>;
 
   // Sorted lists of features.
-  TBucket m_buckets[RECT_SCALE_COUNT];
+  Bucket m_buckets[RECT_SCALE_COUNT];
 };
 }  // namespace search

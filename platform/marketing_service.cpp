@@ -1,8 +1,9 @@
 #include "platform/marketing_service.hpp"
 
+#include "base/gmtime.hpp"
+
 namespace marketing
 {
-
 // Tags.
 char const * const kMapVersionMin = "map_version_min";
 char const * const kMapVersionMax = "map_version_max";
@@ -25,6 +26,16 @@ char const * const kEditorEditDiscovered = "editor_edit_discovered";
 char const * const kTrafficDiscovered = "traffic_discovered";
 char const * const kDiscoveryButtonDiscovered = "discovery_button_discovered";
 char const * const kBookHotelOnBookingComDiscovered = "hotel_book_bcom_discovered";
+char const * const kSubscriptionBookmarksAllEnabled =
+  "bookmark_catalog_subscription_city_outdoor_enabled";
+char const * const kSubscriptionBookmarksAllDisabled =
+  "bookmark_catalog_subscription_city_outdoor_disabled";
+char const * const kSubscriptionBookmarksSightsEnabled =
+  "bookmark_catalog_subscription_city_enabled";
+char const * const kSubscriptionBookmarksSightsDisabled =
+  "bookmark_catalog_subscription_city_disabled";
+char const * const kRemoveAdsSubscriptionEnabled = "remove_ads_subscription_enabled";
+char const * const kRemoveAdsSubscriptionDisabled = "remove_ads_subscription_disabled";
 
 // Events.
 char const * const kDownloaderMapActionFinished = "Downloader_Map_action_finished";
@@ -33,8 +44,6 @@ char const * const kBookmarksBookmarkAction = "Bookmarks_Bookmark_action";
 char const * const kPlacepageHotelBook = "Placepage_Hotel_book";
 char const * const kEditorAddStart = "EditorAdd_start";
 char const * const kEditorEditStart = "EditorEdit_start";
-char const * const kDiffSchemeFallback = "Downloader_DiffScheme_OnStart_fallback";
-char const * const kDiffSchemeError = "Downloader_DiffScheme_error";
 
 // Settings.
 char const * const kFrom = "utm_source";
@@ -48,7 +57,7 @@ void MarketingService::ProcessFirstLaunch()
 {
   // Send initial value for "discovered" tags.
   using namespace marketing;
-  vector<string> tags =
+  std::vector<std::string> tags =
   {
     kMapDownloadDiscovered,
 
@@ -66,5 +75,13 @@ void MarketingService::ProcessFirstLaunch()
   };
 
   for (auto const & tag : tags)
-    SendPushWooshTag(tag, vector<string>{"0"});
+    SendPushWooshTag(tag, std::vector<std::string>{"0"});
+}
+
+std::string MarketingService::GetPushWooshTimestamp()
+{
+  char nowStr[18]{};
+  auto const now = base::GmTime(time(nullptr));
+  strftime(nowStr, sizeof(nowStr), "%Y-%m-%d %H:%M", &now);
+  return std::string(nowStr);
 }

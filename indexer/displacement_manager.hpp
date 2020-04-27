@@ -179,7 +179,7 @@ private:
 
       float const kMinDepth = -100000.0f;
       float const kMaxDepth = 100000.0f;
-      float const d = base::clamp(depth, kMinDepth, kMaxDepth) - kMinDepth;
+      float const d = base::Clamp(depth, kMinDepth, kMaxDepth) - kMinDepth;
       uint8_t rank = ft.GetRank();
       m_priority = (static_cast<uint32_t>(d) << 8) | rank;
     }
@@ -198,7 +198,7 @@ private:
   static bool IsDisplaceable(Feature & ft)
   {
     feature::TypesHolder const types(ft);
-    return types.GetGeoType() == feature::GEOM_POINT;
+    return types.GetGeomType() == feature::GeomType::Point;
   }
 
   float CalculateDeltaForZoom(int32_t zoom) const

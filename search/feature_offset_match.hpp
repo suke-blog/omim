@@ -80,7 +80,8 @@ bool MatchInTrie(trie::Iterator<ValueList> const & trieRoot, strings::UniChar co
 
     if (dfaIt.Accepts())
     {
-      trieIt->m_values.ForEach(toDo);
+      trieIt->m_values.ForEach(
+          [&dfaIt, &toDo](auto const & v) { toDo(v, dfaIt.ErrorsMade() == 0); });
       found = true;
     }
 
@@ -102,43 +103,47 @@ bool MatchInTrie(trie::Iterator<ValueList> const & trieRoot, strings::UniChar co
 template <typename Filter, typename Value>
 class OffsetIntersector
 {
-  using Set = std::unordered_set<Value>;
+  using Values = std::unordered_map<Value, bool>;
 
   Filter const & m_filter;
-  std::unique_ptr<Set> m_prevSet;
-  std::unique_ptr<Set> m_set;
+  std::unique_ptr<Values> m_prevValues;
+  std::unique_ptr<Values> m_values;
 
 public:
   explicit OffsetIntersector(Filter const & filter)
-    : m_filter(filter), m_set(std::make_unique<Set>())
+    : m_filter(filter), m_values(std::make_unique<Values>())
   {
   }
 
-  void operator()(Value const & v)
+  void operator()(Value const & v, bool exactMatch)
   {
-    if (m_prevSet && !m_prevSet->count(v))
+    if (m_prevValues && !m_prevValues->count(v))
       return;
 
     if (m_filter(v))
-      m_set->insert(v);
+    {
+      auto res = m_values->emplace(v, exactMatch);
+      if (!res.second)
+        res.first->second = res.first->second || exactMatch;
+    }
   }
 
   void NextStep()
   {
-    if (!m_prevSet)
-      m_prevSet = std::make_unique<Set>();
+    if (!m_prevValues)
+      m_prevValues = std::make_unique<Values>();
 
-    m_prevSet.swap(m_set);
-    m_set->clear();
+    m_prevValues.swap(m_values);
+    m_values->clear();
   }
 
   template <class ToDo>
   void ForEachResult(ToDo && toDo) const
   {
-    if (!m_prevSet)
+    if (!m_prevValues)
       return;
-    for (auto const & value : *m_prevSet)
-      toDo(value);
+    for (auto const & value : *m_prevValues)
+      toDo(value.first, value.second);
   }
 };
 }  // namespace impl
@@ -175,21 +180,21 @@ class TrieValuesHolder
 public:
   TrieValuesHolder(Filter const & filter) : m_filter(filter) {}
 
-  void operator()(Value const & v)
+  void operator()(Value const & v, bool exactMatch)
   {
     if (m_filter(v))
-      m_values.push_back(v);
+      m_values.emplace_back(v, exactMatch);
   }
 
   template <class ToDo>
   void ForEachValue(ToDo && toDo) const
   {
     for (auto const & value : m_values)
-      toDo(value);
+      toDo(value.first, value.second);
   }
 
 private:
-  std::vector<Value> m_values;
+  std::vector<std::pair<Value, bool>> m_values;
   Filter const & m_filter;
 };
 
@@ -304,7 +309,7 @@ void MatchFeaturesInTrie(SearchTrieRequest<DFA> const & request,
     categoriesHolder.ForEachValue(intersector);
 
   intersector.NextStep();
-  intersector.ForEachResult(forward<ToDo>(toDo));
+  intersector.ForEachResult(std::forward<ToDo>(toDo));
 }
 
 template <typename ValueList, typename Filter, typename ToDo>
@@ -324,18 +329,13 @@ void MatchPostcodesInTrie(TokenSlice const & slice, trie::Iterator<ValueList> co
   impl::OffsetIntersector<Filter, Value> intersector(filter);
   for (size_t i = 0; i < slice.Size(); ++i)
   {
-    if (slice.IsPrefix(i))
-    {
-      std::vector<PrefixDFAModifier<UniStringDFA>> dfas;
-      slice.Get(i).ForEach([&dfas](UniString const & s) { dfas.emplace_back(UniStringDFA(s)); });
-      MatchInTrie(dfas, TrieRootPrefix<ValueList>(*postcodesRoot, edge), intersector);
-    }
-    else
-    {
-      std::vector<UniStringDFA> dfas;
-      slice.Get(i).ForEach([&dfas](UniString const & s) { dfas.emplace_back(s); });
-      MatchInTrie(dfas, TrieRootPrefix<ValueList>(*postcodesRoot, edge), intersector);
-    }
+    // Full match required even for prefix token. Reasons:
+    // 1. For postcode every symbol is important, partial matching can lead to wrong results.
+    // 2. For prefix match query like "streetname 40" where |streetname| is located in 40xxx
+    // postcode zone will give all street vicinity as the result which is wrong.
+    std::vector<UniStringDFA> dfas;
+    slice.Get(i).ForOriginalAndSynonyms([&dfas](UniString const & s) { dfas.emplace_back(s); });
+    MatchInTrie(dfas, TrieRootPrefix<ValueList>(*postcodesRoot, edge), intersector);
 
     intersector.NextStep();
   }

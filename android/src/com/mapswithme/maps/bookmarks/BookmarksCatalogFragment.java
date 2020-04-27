@@ -2,14 +2,17 @@ package com.mapswithme.maps.bookmarks;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.SslErrorHandler;
@@ -20,34 +23,54 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.android.billingclient.api.SkuDetails;
 import com.mapswithme.maps.Framework;
+import com.mapswithme.maps.PrivateVariables;
 import com.mapswithme.maps.R;
 import com.mapswithme.maps.auth.BaseWebViewMwmFragment;
 import com.mapswithme.maps.auth.TargetFragmentCallback;
+import com.mapswithme.maps.bookmarks.data.BookmarkManager;
 import com.mapswithme.maps.dialog.AlertDialog;
+import com.mapswithme.maps.dialog.AlertDialogCallback;
+import com.mapswithme.maps.dialog.ConfirmationDialogFactory;
 import com.mapswithme.maps.metrics.UserActionsLogger;
+import com.mapswithme.maps.purchase.AbstractProductDetailsLoadingCallback;
+import com.mapswithme.maps.purchase.BillingManager;
+import com.mapswithme.maps.purchase.BookmarksAllSubscriptionActivity;
+import com.mapswithme.maps.purchase.BookmarksSightsSubscriptionActivity;
 import com.mapswithme.maps.purchase.FailedPurchaseChecker;
+import com.mapswithme.maps.purchase.PlayStoreBillingCallback;
 import com.mapswithme.maps.purchase.PurchaseController;
 import com.mapswithme.maps.purchase.PurchaseFactory;
+import com.mapswithme.maps.purchase.PurchaseUtils;
+import com.mapswithme.maps.purchase.SubscriptionType;
 import com.mapswithme.util.ConnectionState;
+import com.mapswithme.util.CrashlyticsUtils;
 import com.mapswithme.util.HttpClient;
+import com.mapswithme.util.KeyValue;
 import com.mapswithme.util.UiUtils;
 import com.mapswithme.util.Utils;
 import com.mapswithme.util.log.Logger;
 import com.mapswithme.util.log.LoggerFactory;
 import com.mapswithme.util.statistics.Statistics;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.util.Collections;
+import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BookmarksCatalogFragment extends BaseWebViewMwmFragment
-    implements TargetFragmentCallback
+    implements TargetFragmentCallback, AlertDialogCallback
 {
   public static final String EXTRA_BOOKMARKS_CATALOG_URL = "bookmarks_catalog_url";
   private static final String FAILED_PURCHASE_DIALOG_TAG = "failed_purchase_dialog_tag";
-
+  private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(LoggerFactory.Type.BILLING);
+  private static final String TAG = BookmarksCatalogFragment.class.getSimpleName();
   @SuppressWarnings("NullableProblems")
   @NonNull
   private WebViewBookmarksCatalogClient mWebViewClient;
@@ -68,7 +91,16 @@ public class BookmarksCatalogFragment extends BaseWebViewMwmFragment
   private FailedPurchaseChecker mPurchaseChecker;
   @SuppressWarnings("NullableProblems")
   @NonNull
+  private BillingManager<PlayStoreBillingCallback> mProductDetailsLoadingManager;
+  @SuppressWarnings("NullableProblems")
+  @NonNull
+  private PlayStoreBillingCallback mProductDetailsLoadingCallback;
+  @SuppressWarnings("NullableProblems")
+  @NonNull
   private BookmarksDownloadFragmentDelegate mDelegate;
+  @SuppressWarnings("NullableProblems")
+  @NonNull
+  private AlertDialogCallback mInvalidSubsDialogCallback;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState)
@@ -76,6 +108,7 @@ public class BookmarksCatalogFragment extends BaseWebViewMwmFragment
     super.onCreate(savedInstanceState);
     mDelegate = new BookmarksDownloadFragmentDelegate(this);
     mDelegate.onCreate(savedInstanceState);
+    mInvalidSubsDialogCallback = new InvalidSubscriptionAlertDialogCallback(this);
   }
 
   @Override
@@ -83,7 +116,20 @@ public class BookmarksCatalogFragment extends BaseWebViewMwmFragment
   {
     super.onStart();
     mDelegate.onStart();
-    mFailedPurchaseController.addCallback(mPurchaseChecker);
+  }
+
+  @Override
+  public void onResume()
+  {
+    super.onResume();
+    mDelegate.onResume();
+  }
+
+  @Override
+  public void onPause()
+  {
+    super.onPause();
+    mDelegate.onPause();
   }
 
   @Override
@@ -91,15 +137,18 @@ public class BookmarksCatalogFragment extends BaseWebViewMwmFragment
   {
     super.onStop();
     mDelegate.onStop();
-    mFailedPurchaseController.removeCallback();
   }
 
   @Override
   public void onDestroyView()
   {
     super.onDestroyView();
+    mDelegate.onDestroyView();
     mWebViewClient.clear();
+    mFailedPurchaseController.removeCallback();
     mFailedPurchaseController.destroy();
+    mProductDetailsLoadingManager.removeCallback(mProductDetailsLoadingCallback);
+    mProductDetailsLoadingManager.destroy();
   }
 
   @Nullable
@@ -107,36 +156,48 @@ public class BookmarksCatalogFragment extends BaseWebViewMwmFragment
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState)
   {
-    mFailedPurchaseController = PurchaseFactory.createFailedBookmarkPurchaseController(getContext());
-    mFailedPurchaseController.initialize(getActivity());
-    mFailedPurchaseController.validateExistingPurchases();
-    mPurchaseChecker = new FailedBookmarkPurchaseChecker();
+    setHasOptionsMenu(true);
+
     View root = inflater.inflate(R.layout.fragment_bookmarks_catalog, container, false);
     mWebView = root.findViewById(getWebViewResId());
     mRetryBtn = root.findViewById(R.id.retry_btn);
     mProgressView = root.findViewById(R.id.progress);
-    initWebView(mWebView);
+    initWebView();
+
+    mFailedPurchaseController = PurchaseFactory.createFailedBookmarkPurchaseController(requireContext());
+    mFailedPurchaseController.initialize(requireActivity());
+    mPurchaseChecker = new FailedBookmarkPurchaseChecker();
+    mFailedPurchaseController.addCallback(mPurchaseChecker);
+    mFailedPurchaseController.validateExistingPurchases();
+
+    mProductDetailsLoadingManager = PurchaseFactory.createInAppBillingManager();
+    mProductDetailsLoadingManager.initialize(requireActivity());
+    mProductDetailsLoadingCallback = new ProductDetailsLoadingCallback();
+    mProductDetailsLoadingManager.addCallback(mProductDetailsLoadingCallback);
+
     mRetryBtn.setOnClickListener(v -> onRetryClick());
+    mDelegate.onCreateView(savedInstanceState);
     return root;
   }
 
   private void onRetryClick()
   {
     mWebViewClient.retry();
-    UiUtils.hide(mRetryBtn);
+    UiUtils.hide(mRetryBtn, mWebView);
     UiUtils.show(mProgressView);
     mFailedPurchaseController.validateExistingPurchases();
   }
 
   @SuppressLint("SetJavaScriptEnabled")
-  private void initWebView(@NonNull WebView webView)
+  private void initWebView()
   {
     mWebViewClient = new WebViewBookmarksCatalogClient(this);
-    webView.setWebViewClient(mWebViewClient);
-    final WebSettings webSettings = webView.getSettings();
-    webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+    mWebView.setWebViewClient(mWebViewClient);
+    final WebSettings webSettings = mWebView.getSettings();
     webSettings.setJavaScriptEnabled(true);
     webSettings.setUserAgentString(Framework.nativeGetUserAgent());
+    if (Utils.isLollipopOrLater())
+      webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
   }
 
   @NonNull
@@ -147,7 +208,7 @@ public class BookmarksCatalogFragment extends BaseWebViewMwmFragment
 
     if (result == null)
     {
-      result = getActivity().getIntent().getStringExtra(EXTRA_BOOKMARKS_CATALOG_URL);
+      result = requireActivity().getIntent().getStringExtra(EXTRA_BOOKMARKS_CATALOG_URL);
     }
 
     if (result == null)
@@ -172,6 +233,50 @@ public class BookmarksCatalogFragment extends BaseWebViewMwmFragment
   {
     super.onActivityResult(requestCode, resultCode, data);
     mDelegate.onActivityResult(requestCode, resultCode, data);
+
+    if (resultCode != Activity.RESULT_OK)
+      return;
+
+
+    if (requestCode == PurchaseUtils.REQ_CODE_PAY_SUBSCRIPTION)
+    {
+      mWebView.reload();
+      showSubscriptionSuccessDialog();
+      return;
+    }
+
+    if (requestCode == PurchaseUtils.REQ_CODE_PAY_BOOKMARK)
+      mWebView.reload();
+  }
+
+  private void showSubscriptionSuccessDialog()
+  {
+    AlertDialog dialog = new AlertDialog.Builder()
+        .setTitleId(R.string.subscription_success_dialog_title)
+        .setMessageId(R.string.subscription_success_dialog_message)
+        .setPositiveBtnId(R.string.subscription_error_button)
+        .setReqCode(PurchaseUtils.REQ_CODE_BMK_SUBS_SUCCESS_DIALOG)
+        .setFragManagerStrategyType(AlertDialog.FragManagerStrategyType.ACTIVITY_FRAGMENT_MANAGER)
+        .setDialogViewStrategyType(AlertDialog.DialogViewStrategyType.CONFIRMATION_DIALOG)
+        .setDialogFactory(new ConfirmationDialogFactory())
+        .build();
+    dialog.setTargetFragment(this, PurchaseUtils.REQ_CODE_BMK_SUBS_SUCCESS_DIALOG);
+    dialog.show(this, PurchaseUtils.DIALOG_TAG_BMK_SUBSCRIPTION_SUCCESS);
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+  {
+    inflater.inflate(R.menu.menu_bookmark_catalog, menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item)
+  {
+    if (item.getItemId() == R.id.close)
+      requireActivity().finish();
+
+    return super.onOptionsItemSelected(item);
   }
 
   @Override
@@ -186,9 +291,68 @@ public class BookmarksCatalogFragment extends BaseWebViewMwmFragment
     return mDelegate.isTargetAdded();
   }
 
+  private void loadCatalog(@Nullable String productDetailsBundle)
+  {
+    String token = Framework.nativeGetAccessToken();
+    final Map<String, String> headers = new HashMap<>();
+
+    if (!TextUtils.isEmpty(token))
+      headers.put(HttpClient.HEADER_AUTHORIZATION, HttpClient.HEADER_BEARER_PREFFIX + token);
+
+    if (!TextUtils.isEmpty(productDetailsBundle))
+      headers.put(HttpClient.HEADER_BUNDLE_TIERS, productDetailsBundle);
+
+    for (KeyValue header : BookmarkManager.INSTANCE.getCatalogHeaders())
+    {
+      if (!TextUtils.isEmpty(header.getValue()))
+        headers.put(header.getKey(), header.getValue());
+    }
+
+    mWebView.loadUrl(getCatalogUrlOrThrow(), headers);
+    UserActionsLogger.logBookmarksCatalogShownEvent();
+  }
+
+  @Override
+  public void onAlertDialogPositiveClick(int requestCode, int which)
+  {
+    switch (requestCode)
+    {
+      case PurchaseUtils.REQ_CODE_CHECK_INVALID_SUBS_DIALOG:
+        mInvalidSubsDialogCallback.onAlertDialogPositiveClick(requestCode, which);
+        break;
+      case PurchaseUtils.REQ_CODE_BMK_SUBS_SUCCESS_DIALOG:
+        onRetryClick();
+        break;
+    }
+  }
+
+  @Override
+  public void onAlertDialogNegativeClick(int requestCode, int which)
+  {
+    if (requestCode == PurchaseUtils.REQ_CODE_CHECK_INVALID_SUBS_DIALOG)
+    {
+      mInvalidSubsDialogCallback.onAlertDialogNegativeClick(requestCode, which);
+    }
+  }
+
+  @Override
+  public void onAlertDialogCancel(int requestCode)
+  {
+    switch (requestCode)
+    {
+      case PurchaseUtils.REQ_CODE_CHECK_INVALID_SUBS_DIALOG:
+        mInvalidSubsDialogCallback.onAlertDialogCancel(requestCode);
+        break;
+      case PurchaseUtils.REQ_CODE_BMK_SUBS_SUCCESS_DIALOG:
+        onRetryClick();
+        break;
+    }
+  }
+
   private static class WebViewBookmarksCatalogClient extends WebViewClient
   {
-    private final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(LoggerFactory.Type.MISC);
+    private static final String SUBSCRIBE_PATH_SEGMENT = "subscribe";
+    private final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(LoggerFactory.Type.BILLING);
     private final String TAG = WebViewBookmarksCatalogClient.class.getSimpleName();
 
     @NonNull
@@ -209,7 +373,36 @@ public class BookmarksCatalogFragment extends BaseWebViewMwmFragment
       if (fragment == null)
         return false;
 
-      return fragment.downloadBookmark(url);
+      boolean result = fragment.downloadBookmark(url);
+
+      Uri uri = Uri.parse(url);
+      List<String> pathSegments = uri.getPathSegments();
+      for (String each : pathSegments)
+      {
+        if (TextUtils.equals(each, SUBSCRIBE_PATH_SEGMENT))
+        {
+          String group = PurchaseUtils.getTargetBookmarkGroupFromUri(uri);
+          openSubscriptionScreen(SubscriptionType.getTypeByBookmarksGroup(group));
+          return true;
+        }
+      }
+      return result;
+    }
+
+    private void openSubscriptionScreen(@NonNull SubscriptionType type)
+    {
+      BookmarksCatalogFragment frag = mReference.get();
+      if (frag == null || frag.getActivity() == null)
+        return;
+
+      if (type.equals(SubscriptionType.BOOKMARKS_ALL))
+        BookmarksAllSubscriptionActivity.startForResult(frag,
+                                                        PurchaseUtils.REQ_CODE_PAY_SUBSCRIPTION,
+                                                        Statistics.ParamValue.WEBVIEW);
+      else
+        BookmarksSightsSubscriptionActivity.startForResult(frag,
+                                                           PurchaseUtils.REQ_CODE_PAY_SUBSCRIPTION,
+                                                           Statistics.ParamValue.WEBVIEW);
     }
 
     @Override
@@ -305,10 +498,8 @@ public class BookmarksCatalogFragment extends BaseWebViewMwmFragment
 
       UiUtils.show(mProgressView);
       UiUtils.hide(mRetryBtn);
-      String token = Framework.nativeGetAccessToken();
-      mWebView.loadUrl(getCatalogUrlOrThrow(), TextUtils.isEmpty(token) ? Collections.emptyMap()
-                                                                        : makeHeaders(token));
-      UserActionsLogger.logBookmarksCatalogShownEvent();
+
+      mProductDetailsLoadingManager.queryProductDetails(Arrays.asList(PrivateVariables.bookmarkInAppIds()));
     }
 
     @Override
@@ -316,13 +507,55 @@ public class BookmarksCatalogFragment extends BaseWebViewMwmFragment
     {
       mDelegate.authorize(() -> mFailedPurchaseController.validateExistingPurchases());
     }
+
+    @Override
+    public void onStoreConnectionFailed()
+    {
+      LOGGER.e(TAG, "Failed to check failed bookmarks due play store connection failure");
+      loadCatalog(null);
+    }
   }
 
-  @NonNull
-  private static Map<String, String> makeHeaders(@NonNull String token)
+  private class ProductDetailsLoadingCallback extends AbstractProductDetailsLoadingCallback
   {
-    Map<String, String> headers = new HashMap<>();
-    headers.put(HttpClient.HEADER_AUTHORIZATION, HttpClient.HEADER_BEARER_PREFFIX + token);
-    return headers;
+    @Override
+    public void onProductDetailsLoaded(@NonNull List<SkuDetails> details)
+    {
+      if (details.isEmpty())
+      {
+        LOGGER.i(TAG, "Product details not found.");
+        loadCatalog(null);
+        return;
+      }
+
+      LOGGER.i(TAG, "Product details for web catalog loaded: " + details);
+      loadCatalog(toDetailsBundle(details));
+    }
+
+    @Nullable
+    private String toDetailsBundle(@NonNull List<SkuDetails> details)
+    {
+      String bundle = PurchaseUtils.toProductDetailsBundle(details);
+      String encodedBundle = null;
+      try
+      {
+        encodedBundle = URLEncoder.encode(bundle, "UTF-8");
+      }
+      catch (UnsupportedEncodingException e)
+      {
+        String msg = "Failed to encode details bundle '" + bundle + "': ";
+        LOGGER.e(TAG, msg, e);
+        CrashlyticsUtils.logException(new RuntimeException(msg, e));
+      }
+
+      return encodedBundle;
+    }
+
+    @Override
+    public void onProductDetailsFailure()
+    {
+      LOGGER.e(TAG, "Failed to load product details for web catalog");
+      loadCatalog(null);
+    }
   }
 }

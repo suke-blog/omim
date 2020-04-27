@@ -2,10 +2,11 @@
 
 #include "indexer/classificator.hpp"
 
-#include "geometry/mercator.hpp"
-
 #include "coding/hex.hpp"
+#include "coding/point_coding.hpp"
 #include "coding/string_utf8_multilang.hpp"
+
+#include "geometry/mercator.hpp"
 
 #include "base/assert.hpp"
 #include "base/stl_helpers.hpp"
@@ -65,14 +66,21 @@ static std::string const kIndent10 = Indent(10);
 
 std::string PointToString(m2::PointD const & org)
 {
-  double const lon = MercatorBounds::XToLon(org.x);
-  double const lat = MercatorBounds::YToLat(org.y);
+  double const lon = mercator::XToLon(org.x);
+  double const lat = mercator::YToLat(org.y);
 
   std::ostringstream ss;
   ss.precision(8);
 
   ss << lon << "," << lat;
   return ss.str();
+}
+
+std::string PointToString(geometry::PointWithAltitude const & pt)
+{
+  if (pt.GetAltitude() != geometry::kInvalidAltitude)
+    return PointToString(pt.GetPoint()) + "," + strings::to_string(pt.GetAltitude());
+  return PointToString(pt.GetPoint());
 }
 
 std::string GetLocalizableString(LocalizableString const & s, int8_t lang)
@@ -101,6 +109,22 @@ PredefinedColor ExtractPlacemarkPredefinedColor(std::string const & s)
     return PredefinedColor::Green;
   if (s == "#placemark-orange")
     return PredefinedColor::Orange;
+  if (s == "#placemark-deeppurple")
+    return PredefinedColor::DeepPurple;
+  if (s == "#placemark-lightblue")
+    return PredefinedColor::LightBlue;
+  if (s == "#placemark-cyan")
+    return PredefinedColor::Cyan;
+  if (s == "#placemark-teal")
+    return PredefinedColor::Teal;
+  if (s == "#placemark-lime")
+    return PredefinedColor::Lime;
+  if (s == "#placemark-deeporange")
+    return PredefinedColor::DeepOrange;
+  if (s == "#placemark-gray")
+    return PredefinedColor::Gray;
+  if (s == "#placemark-bluegray")
+    return PredefinedColor::BlueGray;
 
   // Default color.
   return PredefinedColor::Red;
@@ -118,6 +142,14 @@ std::string GetStyleForPredefinedColor(PredefinedColor color)
   case PredefinedColor::Brown: return "placemark-brown";
   case PredefinedColor::Green: return "placemark-green";
   case PredefinedColor::Orange: return "placemark-orange";
+  case PredefinedColor::DeepPurple: return "placemark-deeppurple";
+  case PredefinedColor::LightBlue: return "placemark-lightblue";
+  case PredefinedColor::Cyan: return "placemark-cyan";
+  case PredefinedColor::Teal: return "placemark-teal";
+  case PredefinedColor::Lime: return "placemark-lime";
+  case PredefinedColor::DeepOrange: return "placemark-deeporange";
+  case PredefinedColor::Gray: return "placemark-gray";
+  case PredefinedColor::BlueGray: return "placemark-bluegray";
   case PredefinedColor::None:
   case PredefinedColor::Count:
     return {};
@@ -130,7 +162,7 @@ BookmarkIcon GetIcon(std::string const & iconName)
   for (size_t i = 0; i < static_cast<size_t>(BookmarkIcon::Count); ++i)
   {
     auto const icon = static_cast<BookmarkIcon>(i);
-    if (iconName == DebugPrint(icon))
+    if (iconName == ToString(icon))
       return icon;
   }
   return BookmarkIcon::None;
@@ -217,23 +249,6 @@ void SaveStringsArray(KmlWriter::WriterWrapper & writer,
   writer << offsetStr << "</mwm:" << tagName << ">\n";
 }
 
-void SavePointsArray(KmlWriter::WriterWrapper & writer,
-                     std::vector<m2::PointD> const & pointsArray,
-                     std::string const & tagName, std::string const & offsetStr)
-{
-  if (pointsArray.empty())
-    return;
-
-  writer << offsetStr << "<mwm:" << tagName << ">\n";
-  for (auto const & p : pointsArray)
-  {
-    writer << offsetStr << kIndent2 << "<mwm:value>";
-    writer << PointToString(p);
-    writer << "</mwm:value>\n";
-  }
-  writer << offsetStr << "</mwm:" << tagName << ">\n";
-}
-
 void SaveStringsMap(KmlWriter::WriterWrapper & writer,
                     std::map<std::string, std::string> const & stringsMap,
                     std::string const & tagName, std::string const & offsetStr)
@@ -297,7 +312,7 @@ void SaveCategoryExtendedData(KmlWriter::WriterWrapper & writer, CategoryData co
 
   SaveStringsArray(writer, categoryData.m_tags, "tags", kIndent4);
 
-  SavePointsArray(writer, categoryData.m_cities, "cities", kIndent4);
+  SaveStringsArray(writer, categoryData.m_toponyms, "toponyms", kIndent4);
 
   std::vector<std::string> languageCodes;
   languageCodes.reserve(categoryData.m_languageCodes.size());
@@ -317,7 +332,7 @@ void SaveCategoryExtendedData(KmlWriter::WriterWrapper & writer, CategoryData co
 void SaveCategoryData(KmlWriter::WriterWrapper & writer, CategoryData const & categoryData,
                       std::string const & extendedServerId)
 {
-  for (uint8_t i = 0; i < base::Key(PredefinedColor::Count); ++i)
+  for (uint8_t i = 0; i < base::Underlying(PredefinedColor::Count); ++i)
     SaveStyle(writer, GetStyleForPredefinedColor(static_cast<PredefinedColor>(i)));
 
   // Use CDATA if we have special symbols in the name.
@@ -338,17 +353,12 @@ void SaveCategoryData(KmlWriter::WriterWrapper & writer, CategoryData const & ca
 
 void SaveBookmarkExtendedData(KmlWriter::WriterWrapper & writer, BookmarkData const & bookmarkData)
 {
-  if (bookmarkData.m_name.empty() && bookmarkData.m_description.empty() &&
-      bookmarkData.m_customName.empty() && bookmarkData.m_viewportScale == 0 &&
-      bookmarkData.m_icon == BookmarkIcon::None && bookmarkData.m_featureTypes.empty() &&
-      bookmarkData.m_boundTracks.empty())
-  {
-    return;
-  }
-
   writer << kIndent4 << kExtendedDataHeader;
-  SaveLocalizableString(writer, bookmarkData.m_name, "name", kIndent6);
-  SaveLocalizableString(writer, bookmarkData.m_description, "description", kIndent6);
+  if (!bookmarkData.m_name.empty())
+    SaveLocalizableString(writer, bookmarkData.m_name, "name", kIndent6);
+
+  if (!bookmarkData.m_description.empty())
+    SaveLocalizableString(writer, bookmarkData.m_description, "description", kIndent6);
 
   if (!bookmarkData.m_featureTypes.empty())
   {
@@ -371,14 +381,29 @@ void SaveBookmarkExtendedData(KmlWriter::WriterWrapper & writer, BookmarkData co
     auto const scale = strings::to_string(static_cast<double>(bookmarkData.m_viewportScale));
     writer << kIndent6 << "<mwm:scale>" << scale << "</mwm:scale>\n";
   }
-  if (bookmarkData.m_icon != BookmarkIcon::None)
-    writer << kIndent6 << "<mwm:icon>" << DebugPrint(bookmarkData.m_icon) << "</mwm:icon>\n";
 
-  std::vector<std::string> boundTracks;
-  boundTracks.reserve(bookmarkData.m_boundTracks.size());
-  for (auto const & t : bookmarkData.m_boundTracks)
-    boundTracks.push_back(strings::to_string(static_cast<uint32_t>(t)));
-  SaveStringsArray(writer, boundTracks, "boundTracks", kIndent6);
+  if (bookmarkData.m_icon != BookmarkIcon::None)
+    writer << kIndent6 << "<mwm:icon>" << ToString(bookmarkData.m_icon) << "</mwm:icon>\n";
+
+  if (!bookmarkData.m_boundTracks.empty())
+  {
+    std::vector<std::string> boundTracks;
+    boundTracks.reserve(bookmarkData.m_boundTracks.size());
+    for (auto const & t : bookmarkData.m_boundTracks)
+      boundTracks.push_back(strings::to_string(static_cast<uint32_t>(t)));
+    SaveStringsArray(writer, boundTracks, "boundTracks", kIndent6);
+  }
+
+  writer << kIndent6 << "<mwm:visibility>" << (bookmarkData.m_visible ? "1" : "0") << "</mwm:visibility>\n";
+
+  if (!bookmarkData.m_nearestToponym.empty())
+  {
+    writer << kIndent6 << "<mwm:nearestToponym>";
+    SaveStringWithCDATA(writer, bookmarkData.m_nearestToponym);
+    writer << "</mwm:nearestToponym>\n";
+  }
+
+  SaveStringsMap(writer, bookmarkData.m_properties, "properties", kIndent6);
 
   writer << kIndent4 << kExtendedDataFooter;
 }
@@ -441,6 +466,11 @@ void SaveTrackExtendedData(KmlWriter::WriterWrapper & writer, TrackData const & 
   }
   writer << kIndent6 << "</mwm:additionalStyle>\n";
 
+  writer << kIndent6 << "<mwm:visibility>" << (trackData.m_visible ? "1" : "0") << "</mwm:visibility>\n";
+
+  SaveStringsArray(writer, trackData.m_nearestToponyms, "nearestToponyms", kIndent6);
+  SaveStringsMap(writer, trackData.m_properties, "properties", kIndent6);
+
   writer << kIndent4 << kExtendedDataFooter;
 }
 
@@ -473,10 +503,10 @@ void SaveTrackData(KmlWriter::WriterWrapper & writer, TrackData const & trackDat
   }
 
   writer << kIndent4 << "<LineString><coordinates>";
-  for (size_t i = 0; i < trackData.m_points.size(); ++i)
+  for (size_t i = 0; i < trackData.m_pointsWithAltitudes.size(); ++i)
   {
-    writer << PointToString(trackData.m_points[i]);
-    if (i + 1 != trackData.m_points.size())
+    writer << PointToString(trackData.m_pointsWithAltitudes[i]);
+    if (i + 1 != trackData.m_pointsWithAltitudes.size())
       writer << " ";
   }
   writer << "</coordinates></LineString>\n";
@@ -484,6 +514,50 @@ void SaveTrackData(KmlWriter::WriterWrapper & writer, TrackData const & trackDat
   SaveTrackExtendedData(writer, trackData);
 
   writer << kIndent2 << "</Placemark>\n";
+}
+
+bool ParsePoint(std::string const & s, char const * delim, m2::PointD & pt,
+                geometry::Altitude & altitude)
+{
+  // Order in string is: lon, lat, z.
+  strings::SimpleTokenizer iter(s, delim);
+  if (!iter)
+    return false;
+
+  double lon;
+  if (strings::to_double(*iter, lon) && mercator::ValidLon(lon) && ++iter)
+  {
+    double lat;
+    if (strings::to_double(*iter, lat) && mercator::ValidLat(lat))
+    {
+      pt = mercator::FromLatLon(lat, lon);
+
+      double rawAltitude;
+      if (++iter && strings::to_double(*iter, rawAltitude))
+        altitude = static_cast<geometry::Altitude>(round(rawAltitude));
+
+      return true;
+    }
+  }
+  return false;
+}
+
+bool ParsePoint(std::string const & s, char const * delim, m2::PointD & pt)
+{
+  geometry::Altitude dummyAltitude;
+  return ParsePoint(s, delim, pt, dummyAltitude);
+}
+
+bool ParsePointWithAltitude(std::string const & s, char const * delim,
+                            geometry::PointWithAltitude & point)
+{
+  geometry::Altitude altitude = geometry::kInvalidAltitude;
+  m2::PointD pt;
+  auto result = ParsePoint(s, delim, pt, altitude);
+  point.SetPoint(std::move(pt));
+  point.SetAltitude(altitude);
+
+  return result;
 }
 }  // namespace
 
@@ -535,33 +609,17 @@ void KmlParser::ResetPoint()
   m_featureTypes.clear();
   m_customName.clear();
   m_boundTracks.clear();
+  m_visible = true;
+  m_nearestToponym.clear();
+  m_nearestToponyms.clear();
+  m_properties.clear();
   m_localId = 0;
   m_trackLayers.clear();
   m_trackWidth = kDefaultTrackWidth;
   m_icon = BookmarkIcon::None;
 
-  m_points.clear();
+  m_pointsWithAltitudes.clear();
   m_geometryType = GEOMETRY_TYPE_UNKNOWN;
-}
-
-bool KmlParser::ParsePoint(std::string const & s, char const * delim, m2::PointD & pt)
-{
-  // Order in string is: lon, lat, z.
-  strings::SimpleTokenizer iter(s, delim);
-  if (!iter)
-    return false;
-
-  double lon;
-  if (strings::to_double(*iter, lon) && MercatorBounds::ValidLon(lon) && ++iter)
-  {
-    double lat;
-    if (strings::to_double(*iter, lat) && MercatorBounds::ValidLat(lat))
-    {
-      pt = MercatorBounds::FromLatLon(lat, lon);
-      return true;
-    }
-  }
-  return false;
 }
 
 void KmlParser::SetOrigin(std::string const & s)
@@ -581,11 +639,14 @@ void KmlParser::ParseLineCoordinates(std::string const & s, char const * blockSe
   strings::SimpleTokenizer tupleIter(s, blockSeparator);
   while (tupleIter)
   {
-    m2::PointD pt;
-    if (ParsePoint(*tupleIter, coordSeparator, pt))
+    geometry::PointWithAltitude point;
+    if (ParsePointWithAltitude(*tupleIter, coordSeparator, point))
     {
-      if (m_points.empty() || !pt.EqualDxDy(m_points.back(), 1e-5 /* eps */))
-        m_points.push_back(std::move(pt));
+      if (m_pointsWithAltitudes.empty() ||
+          !AlmostEqualAbs(m_pointsWithAltitudes.back(), point, kMwmPointAccuracy))
+      {
+        m_pointsWithAltitudes.emplace_back(std::move(point));
+      }
     }
     ++tupleIter;
   }
@@ -595,7 +656,7 @@ bool KmlParser::MakeValid()
 {
   if (GEOMETRY_TYPE_POINT == m_geometryType)
   {
-    if (MercatorBounds::ValidX(m_org.x) && MercatorBounds::ValidY(m_org.y))
+    if (mercator::ValidX(m_org.x) && mercator::ValidY(m_org.y))
     {
       // Set default name.
       if (m_name.empty() && m_featureTypes.empty())
@@ -611,7 +672,7 @@ bool KmlParser::MakeValid()
   }
   else if (GEOMETRY_TYPE_LINE == m_geometryType)
   {
-    return m_points.size() > 1;
+    return m_pointsWithAltitudes.size() > 1;
   }
 
   return false;
@@ -713,6 +774,9 @@ void KmlParser::Pop(std::string const & tag)
         data.m_featureTypes = std::move(m_featureTypes);
         data.m_customName = std::move(m_customName);
         data.m_boundTracks = std::move(m_boundTracks);
+        data.m_visible = m_visible;
+        data.m_nearestToponym = std::move(m_nearestToponym);
+        data.m_properties = std::move(m_properties);
 
         // Here we set custom name from 'name' field for KML-files exported from 3rd-party services.
         if (data.m_name.size() == 1 && data.m_name.begin()->first == kDefaultLangCode &&
@@ -731,7 +795,10 @@ void KmlParser::Pop(std::string const & tag)
         data.m_description = std::move(m_description);
         data.m_layers = std::move(m_trackLayers);
         data.m_timestamp = m_timestamp;
-        data.m_points = m_points;
+        data.m_pointsWithAltitudes = m_pointsWithAltitudes;
+        data.m_visible = m_visible;
+        data.m_nearestToponyms = std::move(m_nearestToponyms);
+        data.m_properties = std::move(m_properties);
         m_data.m_tracksData.push_back(std::move(data));
       }
     }
@@ -817,6 +884,8 @@ void KmlParser::CharData(std::string value)
           m_data.m_categoryData.m_accessRules = AccessRules::Paid;
         else if (value == "Public")
           m_data.m_categoryData.m_accessRules = AccessRules::Public;
+        else if (value == "AuthorOnly")
+          m_data.m_categoryData.m_accessRules = AccessRules::AuthorOnly;
       }
       else if (currTag == "mwm:imageUrl")
       {
@@ -853,11 +922,9 @@ void KmlParser::CharData(std::string value)
       {
         m_data.m_categoryData.m_tags.push_back(value);
       }
-      else if (prevTag == "mwm:cities")
+      else if (prevTag == "mwm:toponyms")
       {
-        m2::PointD pt;
-        if (ParsePoint(value, ", \n\r\t", pt))
-          m_data.m_categoryData.m_cities.push_back(pt);
+        m_data.m_categoryData.m_toponyms.push_back(value);
       }
       else if (prevTag == "mwm:languageCodes")
       {
@@ -978,6 +1045,14 @@ void KmlParser::CharData(std::string value)
         {
           m_icon = GetIcon(value);
         }
+        else if (currTag == "mwm:visibility")
+        {
+          m_visible = value != "0";
+        }
+        else if (currTag == "mwm:nearestToponym")
+        {
+          m_nearestToponym = value;
+        }
       }
       else if (prevTag == "TimeStamp")
       {
@@ -1047,7 +1122,18 @@ void KmlParser::CharData(std::string value)
           }
         }
         else if (prevTag == "mwm:boundTracks" && strings::to_uint(value, i))
+        {
           m_boundTracks.push_back(static_cast<LocalId>(i));
+        }
+        else if (prevTag == "mwm:nearestToponyms")
+        {
+          m_nearestToponyms.push_back(value);
+        }
+        else if (prevTag == "mwm:properties" && !m_attrKey.empty())
+        {
+          m_properties[m_attrKey] = value;
+          m_attrKey.clear();
+        }
       }
     }
   }

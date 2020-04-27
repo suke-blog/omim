@@ -7,9 +7,13 @@
 #include "base/logging.hpp"
 #include "base/string_utils.hpp"
 
-#include "std/cstdarg.hpp"
-#include "std/string.hpp"
-#include "std/vector.hpp"
+#include <cstdarg>
+#include <cstdint>
+#include <string>
+#include <utility>
+#include <vector>
+
+using namespace std;
 
 namespace
 {
@@ -49,7 +53,7 @@ class CheckRange
   TestResultVector const & m_results;
 
 public:
-  CheckRange(TestResultVector const & results) : m_idx(0), m_results(results) {}
+  explicit CheckRange(TestResultVector const & results) : m_idx(0), m_results(results) {}
 
   ~CheckRange() { TEST_EQUAL(m_idx, m_results.size(), ()); }
 

@@ -1,5 +1,4 @@
 #import "MWMAuthorizationWebViewLoginViewController.h"
-#import "MWMCommon.h"
 #import "MWMAlertViewController.h"
 #import "MWMAuthorizationCommon.h"
 #import "MWMCircularProgress.h"
@@ -48,7 +47,7 @@ NSString * getVerifier(NSString * urlString)
 
 @implementation MWMAuthorizationWebViewLoginViewController
 {
-  TRequestToken m_requestToken;
+  RequestToken m_requestToken;
 }
 
 - (void)viewDidLoad
@@ -77,7 +76,7 @@ NSString * getVerifier(NSString * urlString)
     OsmOAuth const auth = OsmOAuth::ServerAuth();
     try
     {
-      OsmOAuth::TUrlRequestToken urt;
+      OsmOAuth::UrlRequestToken urt;
       switch (self.authType)
       {
       case MWMWebViewAuthorizationTypeGoogle: urt = auth.GetGoogleOAuthURL(); break;
@@ -133,7 +132,7 @@ NSString * getVerifier(NSString * urlString)
   [self startSpinner];
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
     OsmOAuth const auth = OsmOAuth::ServerAuth();
-    TKeySecret ks;
+    KeySecret ks;
     try
     {
       ks = auth.FinishAuthorization(self->m_requestToken, verifier.UTF8String);

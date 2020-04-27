@@ -3,9 +3,9 @@ package com.mapswithme.util;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
-import android.support.annotation.IntDef;
-import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
+import androidx.annotation.IntDef;
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
 
 import com.mapswithme.maps.MwmApplication;
 
@@ -37,10 +37,16 @@ public final class BatteryState
     return new State(getLevel(batteryStatus), getChargingStatus(batteryStatus));
   }
 
+  @IntRange(from=0, to=100)
+  public static int getLevel()
+  {
+    return getState().getLevel();
+  }
+
   @ChargingStatus
   public static int getChargingStatus()
   {
-    return getState().mChargingStatus;
+    return getState().getChargingStatus();
   }
 
   @IntRange(from=0, to=100)

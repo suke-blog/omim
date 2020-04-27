@@ -1,38 +1,39 @@
 package com.mapswithme.maps.search;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 
 import com.mapswithme.maps.Framework;
 import com.mapswithme.maps.R;
+import com.mapswithme.util.ConnectionState;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public enum PromoCategory
 {
-  RUTAXI
+  MEGAFON
       {
         @NonNull
         @Override
         String getKey()
         {
-          return "taxi";
+          return "megafon";
         }
 
         @Override
         int getStringId()
         {
-          return R.string.taxi;
+          return R.string.megafon;
         }
 
         @NonNull
         @Override
         String getProvider()
         {
-          return "RuTaxi";
+          return "Megafon";
         }
 
         @Override
@@ -45,13 +46,19 @@ public enum PromoCategory
         @Override
         PromoCategoryProcessor createProcessor(@NonNull Activity activity)
         {
-          return new RutaxiPromoProcessor(activity);
+          return new MegafonPromoProcessor(activity);
         }
 
         @Override
         boolean isSupported()
         {
-          return Framework.nativeHasRuTaxiCategoryBanner();
+          return ConnectionState.isConnected() && Framework.nativeHasMegafonCategoryBanner();
+        }
+
+        @Override
+        int getCallToActionText()
+        {
+          return R.string.details;
         }
       };
 
@@ -67,6 +74,9 @@ public enum PromoCategory
   abstract int getPosition();
 
   abstract boolean isSupported();
+
+  @StringRes
+  abstract int getCallToActionText();
 
   @NonNull
   abstract PromoCategoryProcessor createProcessor(@NonNull Activity activity);

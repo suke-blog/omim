@@ -24,9 +24,9 @@ auto constexpr kMapObjectEventsExpirePeriod = std::chrono::hours(24 * 30 * 3);
 auto constexpr kEventCooldown = std::chrono::seconds(2);
 
 std::array<std::string, 7> const kMapEventSupportedTypes = {{"amenity-bar", "amenity-cafe",
-                                                            "amenity-pub", "amenity-restaurant",
-                                                            "amenity-fast_food", "amenity-biergarden",
-                                                            "shop-bakery"}};
+                                                             "amenity-pub", "amenity-restaurant",
+                                                             "amenity-fast_food", "amenity-biergarden",
+                                                             "shop-bakery"}};
 
 void Load(Info & info)
 {
@@ -34,7 +34,9 @@ void Load(Info & info)
 
   std::vector<int8_t> infoFileData;
   std::vector<int8_t> mapObjectsFileData;
-  if (!Storage::LoadInfo(infoFileData) && !Storage::LoadMapObjects(mapObjectsFileData))
+  auto const isInfoLoaded = Storage::LoadInfo(infoFileData);
+  auto const isMapObjectsLoaded = Storage::LoadMapObjects(mapObjectsFileData);
+  if (!isInfoLoaded && !isMapObjectsLoaded)
   {
     info = {};
     return;
@@ -391,6 +393,45 @@ void Eye::RegisterMapObjectEvent(MapObject const & mapObject, MapObject::Event::
   });
 }
 
+void Eye::RegisterTransitionToBooking(m2::PointD const & hotelPos)
+{
+  auto const info = m_info.Get();
+  auto editableInfo = std::make_shared<Info>(*info);
+
+  editableInfo->m_promo.m_transitionToBookingTime = Clock::now();
+  if (!Save(editableInfo))
+    return;
+
+  GetPlatform().RunTask(Platform::Thread::Gui, [this, hotelPos]
+  {
+    for (auto subscriber : m_subscribers)
+    {
+      subscriber->OnTransitionToBooking(hotelPos);
+    }
+  });
+}
+
+void Eye::RegisterPromoAfterBookingShown(std::string const & cityId)
+{
+  auto const info = m_info.Get();
+  auto editableInfo = std::make_shared<Info>(*info);
+  auto const now = Clock::now();
+
+  editableInfo->m_promo.m_lastTimeShownAfterBooking = now;
+  editableInfo->m_promo.m_lastTimeShownAfterBookingCityId = cityId;
+
+  if (!Save(editableInfo))
+    return;
+
+  GetPlatform().RunTask(Platform::Thread::Gui, [this, now, cityId]
+  {
+    for (auto subscriber : m_subscribers)
+    {
+      subscriber->OnPromoAfterBookingShown(now, cityId);
+    }
+  });
+}
+
 // Eye::Event methods ------------------------------------------------------------------------------
 // static
 void Eye::Event::TipClicked(Tip::Type type, Tip::Event event)
@@ -468,6 +509,24 @@ void Eye::Event::MapObjectEvent(MapObject const & mapObject, MapObject::Event::T
   GetPlatform().RunTask(Platform::Thread::File, [type, mapObject, userPos]
   {
     Instance().RegisterMapObjectEvent(mapObject, type, userPos);
+  });
+}
+
+// static
+void Eye::Event::TransitionToBooking(m2::PointD const & hotelPos)
+{
+  GetPlatform().RunTask(Platform::Thread::File, [hotelPos]
+  {
+    Instance().RegisterTransitionToBooking(hotelPos);
+  });
+}
+
+// static
+void Eye::Event::PromoAfterBookingShown(std::string const & cityId)
+{
+  GetPlatform().RunTask(Platform::Thread::File, [cityId]
+  {
+    Instance().RegisterPromoAfterBookingShown(cityId);
   });
 }
 }  // namespace eye

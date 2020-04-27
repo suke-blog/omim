@@ -1,41 +1,55 @@
-enum class EButton  // Required button's order
-{
-  Booking,
-  BookingSearch,
-  Bookmark,
-  Call,
-  Download,
-  More,
-  Opentable,
-  Partner,
-  RouteAddStop,
-  RouteFrom,
-  RouteRemoveStop,
-  RouteTo,
-  Share
-};
+typedef NS_ENUM(NSInteger, MWMActionBarButtonType) {
+  MWMActionBarButtonTypeBooking,
+  MWMActionBarButtonTypeBookingSearch,
+  MWMActionBarButtonTypeBookmark,
+  MWMActionBarButtonTypeCall,
+  MWMActionBarButtonTypeDownload,
+  MWMActionBarButtonTypeMore,
+  MWMActionBarButtonTypeOpentable,
+  MWMActionBarButtonTypePartner,
+  MWMActionBarButtonTypeRouteAddStop,
+  MWMActionBarButtonTypeRouteFrom,
+  MWMActionBarButtonTypeRouteRemoveStop,
+  MWMActionBarButtonTypeRouteTo,
+  MWMActionBarButtonTypeShare,
+  MWMActionBarButtonTypeAvoidToll,
+  MWMActionBarButtonTypeAvoidDirty,
+  MWMActionBarButtonTypeAvoidFerry
+} NS_SWIFT_NAME(ActionBarButtonType);
 
-NSString * titleForButton(EButton type, int partnerIndex, BOOL isSelected);
+NS_ASSUME_NONNULL_BEGIN
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+NSString * titleForButton(MWMActionBarButtonType type, NSInteger partnerIndex, BOOL isSelected);
+#ifdef __cplusplus
+}
+#endif
 
 @class MWMActionBarButton;
 @class MWMCircularProgress;
 
+NS_SWIFT_NAME(ActionBarButtonDelegate)
 @protocol MWMActionBarButtonDelegate <NSObject>
 
-- (void)tapOnButtonWithType:(EButton)type;
+- (void)tapOnButtonWithType:(MWMActionBarButtonType)type;
 
 @end
 
+NS_SWIFT_NAME(ActionBarButton)
 @interface MWMActionBarButton : UIView
 
+@property(nonatomic, readonly) MWMActionBarButtonType type;
+@property(nonatomic, readonly, nullable) MWMCircularProgress *mapDownloadProgress;
+@property(nonatomic, readonly) NSInteger partnerIndex;
+
 + (MWMActionBarButton *)buttonWithDelegate:(id<MWMActionBarButtonDelegate>)delegate
-                                buttonType:(EButton)type
-                              partnerIndex:(int)partnerIndex
+                                buttonType:(MWMActionBarButtonType)type
+                              partnerIndex:(NSInteger)partnerIndex
                                 isSelected:(BOOL)isSelected
                                 isDisabled:(BOOL)isDisabled;
 
-- (EButton)type;
-- (MWMCircularProgress *)mapDownloadProgress;
-- (int)partnerIndex;
-
 @end
+
+NS_ASSUME_NONNULL_END

@@ -7,9 +7,9 @@
 
 #include "base/assert.hpp"
 
-#include "std/cstdint.hpp"
-#include "std/string.hpp"
-#include "std/vector.hpp"
+#include <cstddef>
+#include <string>
+#include <vector>
 
 namespace search
 {
@@ -56,7 +56,7 @@ public:
 
 private:
   QueryParams const & m_params;
-  vector<size_t> m_indexes;
+  std::vector<size_t> m_indexes;
 };
 
 class QuerySlice : public StringSliceBase
@@ -65,7 +65,7 @@ public:
   QuerySlice(TokenSlice const & slice) : m_slice(slice) {}
 
   // QuerySlice overrides:
-  QueryParams::String const & Get(size_t i) const override { return m_slice.Get(i).m_original; }
+  QueryParams::String const & Get(size_t i) const override { return m_slice.Get(i).GetOriginal(); }
   size_t Size() const override { return m_slice.Size(); }
 
 private:
@@ -97,8 +97,7 @@ private:
   QueryParams::String const & m_prefix;
 };
 
-string DebugPrint(TokenSlice const & slice);
+std::string DebugPrint(TokenSlice const & slice);
 
-string DebugPrint(TokenSliceNoCategories const & slice);
-
+std::string DebugPrint(TokenSliceNoCategories const & slice);
 }  // namespace search

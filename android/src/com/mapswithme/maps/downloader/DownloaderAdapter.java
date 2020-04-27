@@ -5,16 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.location.Location;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -23,10 +16,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.cocosw.bottomsheet.BottomSheet;
+import com.mapswithme.maps.Framework;
 import com.mapswithme.maps.MwmActivity;
 import com.mapswithme.maps.MwmApplication;
 import com.mapswithme.maps.R;
+import com.mapswithme.maps.intent.Factory;
 import com.mapswithme.maps.location.LocationHelper;
 import com.mapswithme.maps.routing.RoutingController;
 import com.mapswithme.util.BottomSheetHelper;
@@ -180,7 +183,7 @@ class DownloaderAdapter extends RecyclerView.Adapter<DownloaderAdapter.ViewHolde
       {
         Intent intent = new Intent(adapter.mActivity, MwmActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        intent.putExtra(MwmActivity.EXTRA_TASK, new MwmActivity.ShowCountryTask(item.id));
+        intent.putExtra(MwmActivity.EXTRA_TASK, new Factory.ShowCountryTask(item.id));
         adapter.mActivity.startActivity(intent);
 
         if (!(adapter.mActivity instanceof MwmActivity))
@@ -560,20 +563,24 @@ class DownloaderAdapter extends RecyclerView.Adapter<DownloaderAdapter.ViewHolde
     {
       super.bind(item);
 
+      String found = null;
       if (mSearchResultsMode)
       {
         mName.setMaxLines(1);
         mName.setText(mItem.name);
 
-        String found = mItem.searchResultName.toLowerCase();
-        SpannableStringBuilder builder = new SpannableStringBuilder(mItem.searchResultName);
-        int start = found.indexOf(mSearchQuery);
-        int end = start + mSearchQuery.length();
+        String searchResultName = mItem.searchResultName;
+        if (!TextUtils.isEmpty(searchResultName))
+        {
+          found = searchResultName.toLowerCase();
+          SpannableStringBuilder builder = new SpannableStringBuilder(searchResultName);
+          int start = found.indexOf(mSearchQuery);
+          int end = start + mSearchQuery.length();
+          if (start > -1)
+            builder.setSpan(new StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        if (start > -1)
-          builder.setSpan(new StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        mFoundName.setText(builder);
+          mFoundName.setText(builder);
+        }
 
         if (!mItem.isExpandable())
           UiUtils.setTextAndHideIfEmpty(mSubtitle, mItem.topmostParentName);
@@ -593,7 +600,7 @@ class DownloaderAdapter extends RecyclerView.Adapter<DownloaderAdapter.ViewHolde
                                                                                                                      mItem.totalChildCount)));
       }
 
-      UiUtils.showIf(mSearchResultsMode, mFoundName);
+      UiUtils.showIf(mSearchResultsMode && !TextUtils.isEmpty(found), mFoundName);
 
       long size;
       if (mItem.status == CountryItem.STATUS_ENQUEUED ||
@@ -912,7 +919,7 @@ class DownloaderAdapter extends RecyclerView.Adapter<DownloaderAdapter.ViewHolde
     mFragment.update();
   }
 
-  private boolean canGoUpwards()
+  boolean canGoUpwards()
   {
     return !mPath.isEmpty();
   }
@@ -963,6 +970,7 @@ class DownloaderAdapter extends RecyclerView.Adapter<DownloaderAdapter.ViewHolde
   /**
    * Loads banner if:
    * <ul>
+   *   <li>There is not active ads removal subscription</li>
    *   <li>Not in `my maps` mode;</li>
    *   <li>Currently at root level;</li>
    *   <li>Day mode is active;</li>
@@ -972,6 +980,10 @@ class DownloaderAdapter extends RecyclerView.Adapter<DownloaderAdapter.ViewHolde
   private void loadAds()
   {
     mShowAds = false;
+
+    if (Framework.nativeHasActiveSubscription(Framework.SUBSCRIPTION_TYPE_REMOVE_ADS))
+      return;
+
     if (mAdsLoading)
       return;
 

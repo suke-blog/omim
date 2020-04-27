@@ -2,26 +2,32 @@
 
 #include "defines.hpp"
 
-#include "coding/file_name_utils.hpp"
-#include "coding/internal/file_data.hpp"
-#include "coding/reader_streambuf.hpp"
-#include "coding/url_encode.hpp"
+#include "storage/map_files_downloader.hpp"
+#include "storage/storage.hpp"
 
-#include "platform/platform.hpp"
+#include "platform/downloader_defines.hpp"
 #include "platform/http_request.hpp"
+#include "platform/platform.hpp"
 #include "platform/servers_list.hpp"
 
+#include "coding/internal/file_data.hpp"
+#include "coding/reader_streambuf.hpp"
+
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 #include "base/string_utils.hpp"
 
 #include "com/mapswithme/core/jni_helper.hpp"
 
 #include <functional>
+#include <iostream>
 #include <memory>
 #include <string>
 #include <vector>
 
 using namespace downloader;
+using namespace storage;
+
 using namespace std::placeholders;
 
 /// Special error codes to notify GUI about free space
@@ -68,7 +74,7 @@ extern "C"
         return ERR_NOT_ENOUGH_FREE_SPACE;
 
       default:
-        return fileSize;
+        return static_cast<int>(fileSize);
     }
   }
 
@@ -102,7 +108,7 @@ extern "C"
     std::string const path = pl.WritableDir();
 
     ReaderStreamBuf buffer(pl.GetReader(EXTERNAL_RESOURCES_FILE));
-    istream in(&buffer);
+    std::istream in(&buffer);
 
     std::string name;
     int size;
@@ -144,10 +150,10 @@ extern "C"
   static void DownloadFileFinished(std::shared_ptr<jobject> obj, HttpRequest const & req)
   {
     auto const status = req.GetStatus();
-    ASSERT_NOT_EQUAL(status, HttpRequest::Status::InProgress, ());
+    ASSERT_NOT_EQUAL(status, DownloadStatus::InProgress, ());
 
     int errorCode = ERR_DOWNLOAD_ERROR;
-    if (status == HttpRequest::Status::Completed)
+    if (status == DownloadStatus::Completed)
       errorCode = ERR_DOWNLOAD_SUCCESS;
 
     g_currentRequest.reset();
@@ -171,8 +177,6 @@ extern "C"
 
   static void DownloadFileProgress(std::shared_ptr<jobject> listener, HttpRequest const & req)
   {
-    FileToDownload & curFile = g_filesToDownload.back();
-
     JNIEnv * env = jni::GetEnv();
     static jmethodID methodID = jni::GetMethodID(env, *listener, "onProgress", "(I)V");
     env->CallVoidMethod(*listener, methodID, static_cast<jint>(g_totalDownloadedBytes + req.GetProgress().first));
@@ -184,12 +188,14 @@ extern "C"
 
     LOG(LINFO, ("Finished URL list download for", curFile.m_fileName));
 
-    GetServerListFromRequest(req, curFile.m_urls);
+    GetServersList(req, curFile.m_urls);
 
-    storage::Storage const & storage = g_framework->GetStorage();
+    Storage const & storage = g_framework->GetStorage();
     for (size_t i = 0; i < curFile.m_urls.size(); ++i)
     {
-      curFile.m_urls[i] = storage.GetFileDownloadUrl(curFile.m_urls[i], curFile.m_fileName);
+      curFile.m_urls[i] = MapFilesDownloader::MakeFullUrlLegacy(curFile.m_urls[i],
+                                                                curFile.m_fileName,
+                                                                storage.GetCurrentDataVersion());
       LOG(LDEBUG, (curFile.m_urls[i]));
     }
 

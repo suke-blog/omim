@@ -39,12 +39,21 @@ omim_link_libraries(
   base
   expat
   stats_client
+  oauthcpp
   freetype
   stb_image
   sdf_image
   icu
+  vulkan_wrapper
   ${LIBZ}
 )
+
+if (PLATFORM_LINUX)
+  omim_link_libraries(
+    ${PROJECT_NAME}
+    dl
+  )
+endif()
 
 link_opengl(${PROJECT_NAME})
 link_qt5_core(${PROJECT_NAME})

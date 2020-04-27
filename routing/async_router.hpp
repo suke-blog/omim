@@ -16,6 +16,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <set>
 #include <string>
 #include <utility>
 
@@ -36,8 +37,8 @@ public:
   /// @param fetcher pointer to a online fetcher
   void SetRouter(std::unique_ptr<IRouter> && router, std::unique_ptr<IOnlineFetcher> && fetcher);
 
-  /// Main method to calulate new route from startPt to finalPt with start direction
-  /// Processed result will be passed to callback. Callback will called at GUI thread.
+  /// Main method to calculate new route from startPt to finalPt with start direction
+  /// Processed result will be passed to callback. Callback will be called at the GUI thread.
   ///
   /// @param checkpoints start, finish and intermadiate points
   /// @param direction start direction for routers with high cost of the turnarounds
@@ -52,10 +53,14 @@ public:
                       NeedMoreMapsCallback const & needMoreMapsCallback,
                       RemoveRouteCallback const & removeRouteCallback,
                       ProgressCallback const & progressCallback,
-                      uint32_t timeoutSec);
+                      uint32_t timeoutSec = RouterDelegate::kNoTimeout);
 
+  void SetGuidesTracks(GuidesTracks && guides);
   /// Interrupt routing and clear buffers
   void ClearState();
+
+  bool FindClosestProjectionToRoad(m2::PointD const & point, m2::PointD const & direction,
+                                   double radius, EdgeProj & proj);
 
 private:
   /// Worker thread function
@@ -78,7 +83,7 @@ private:
                         uint32_t timeoutSec);
 
     void OnReady(std::shared_ptr<Route> route, RouterResultCode resultCode);
-    void OnNeedMoreMaps(uint64_t routeId, vector<std::string> const & absentCounties);
+    void OnNeedMoreMaps(uint64_t routeId, std::set<std::string> const & absentCounties);
     void OnRemoveRoute(RouterResultCode resultCode);
     void Cancel();
 
@@ -86,7 +91,7 @@ private:
 
   private:
     void OnProgress(float progress);
-    void OnPointCheck(m2::PointD const & pt);
+    void OnPointCheck(ms::LatLon const & pt);
 
     std::mutex m_guard;
     ReadyCallbackOwnership const m_onReadyOwnership;
@@ -112,9 +117,11 @@ private:
   /// Current request parameters
   bool m_clearState = false;
   Checkpoints m_checkpoints;
+  GuidesTracks m_guides;
+
   m2::PointD m_startDirection = m2::PointD::Zero();
   bool m_adjustToPrevRoute = false;
-  std::shared_ptr<RouterDelegateProxy> m_delegate;
+  std::shared_ptr<RouterDelegateProxy> m_delegateProxy;
   std::shared_ptr<IOnlineFetcher> m_absentFetcher;
   std::shared_ptr<IRouter> m_router;
 

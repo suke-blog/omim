@@ -1,3 +1,4 @@
+
 final class TagCollectionViewCell: UICollectionViewCell {
   
   @IBOutlet private weak var title: UILabel!
@@ -10,16 +11,25 @@ final class TagCollectionViewCell: UICollectionViewCell {
     }
   }
   
-  override var isSelected: Bool{
+  override var isSelected: Bool {
     didSet {
-      containerView.backgroundColor = isSelected ? color : .white()
-      title.textColor = isSelected ? .whitePrimaryText() : color
+      updateSelectedState()
     }
   }
   
-  func update(with tag: MWMTag) {
+  func update(with tag: MWMTag, enabled: Bool) {
     title.text = tag.name
-    color = tag.color
+    if enabled {
+      color = tag.color
+      updateSelectedState()
+    } else {
+      color = .blackDividers()
+    }
+  }
+  
+  func updateSelectedState() {
+    containerView.backgroundColor = isSelected ? color : .white()
+    title.textColor = isSelected ? .whitePrimaryText() : color
   }
   
   override func prepareForReuse() {

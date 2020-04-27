@@ -2,18 +2,18 @@
 
 #include "platform/platform.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/file_reader.hpp"
 #include "coding/file_writer.hpp"
 #include "coding/internal/file_data.hpp"
 
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 
 namespace
 {
 bool Save(std::string const & filename, std::vector<int8_t> const & src)
 {
-  return base::WriteToTempAndRenameToFile(filename, [&src](string const & fileName)
+  return base::WriteToTempAndRenameToFile(filename, [&src](std::string const & fileName)
   {
     try
     {
@@ -37,7 +37,7 @@ bool Load(std::string const & filename, std::vector<int8_t> & dst)
     FileReader reader(filename);
 
     dst.clear();
-    dst.resize(reader.Size());
+    dst.resize(static_cast<size_t>(reader.Size()));
 
     reader.Read(0, dst.data(), dst.size());
   }

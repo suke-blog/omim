@@ -1,17 +1,20 @@
 package com.mapswithme.maps.downloader;
 
 import android.location.Location;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.mapswithme.maps.Framework;
 import com.mapswithme.maps.MwmActivity;
 import com.mapswithme.maps.R;
 import com.mapswithme.maps.background.Notifier;
+import com.mapswithme.maps.bookmarks.BookmarkCategoriesActivity;
+import com.mapswithme.maps.bookmarks.BookmarksCatalogActivity;
 import com.mapswithme.maps.location.LocationHelper;
 import com.mapswithme.maps.routing.RoutingController;
 import com.mapswithme.maps.widget.WheelProgressView;
@@ -37,10 +40,20 @@ public class OnmapDownloader implements MwmActivity.LeftAnimationTrackListener
   private final WheelProgressView mProgress;
   private final Button mButton;
 
+  @NonNull
+  private final View mCatalogCallToActionContainer;
+  @NonNull
+  private final View mBannerContainer;
+  @NonNull
+  private final View mPromoContentDivider;
+
   private int mStorageSubscriptionSlot;
 
   @Nullable
   private CountryItem mCurrentCountry;
+
+  @Nullable
+  private DownloaderPromoBanner mPromoBanner;
 
   private final MapManager.StorageCallback mStorageCallback = new MapManager.StorageCallback()
   {
@@ -61,7 +74,7 @@ public class OnmapDownloader implements MwmActivity.LeftAnimationTrackListener
         if (mCurrentCountry.id.equals(item.countryId))
         {
           mCurrentCountry.update();
-          updateState(false);
+          updateProgressState(false);
 
           return;
         }
@@ -74,7 +87,7 @@ public class OnmapDownloader implements MwmActivity.LeftAnimationTrackListener
       if (mCurrentCountry != null && mCurrentCountry.id.equals(countryId))
       {
         mCurrentCountry.update();
-        updateState(false);
+        updateProgressState(false);
       }
     }
   };
@@ -90,6 +103,35 @@ public class OnmapDownloader implements MwmActivity.LeftAnimationTrackListener
   };
 
   public void updateState(boolean shouldAutoDownload)
+  {
+    updateStateInternal(shouldAutoDownload);
+
+    if (mPromoBanner == null || !isMapDownloading(mCurrentCountry))
+      return;
+
+    Statistics.ParameterBuilder builder =
+            Statistics.makeDownloaderBannerParamBuilder(mPromoBanner.getType().toStatisticValue(),
+                    mCurrentCountry.id);
+
+    Statistics.INSTANCE.trackEvent(Statistics.EventName.DOWNLOADER_BANNER_SHOW, builder);
+  }
+
+  private static boolean isMapDownloading(@Nullable CountryItem country)
+  {
+    if (country == null) return false;
+
+    boolean enqueued = country.status == CountryItem.STATUS_ENQUEUED;
+    boolean progress = country.status == CountryItem.STATUS_PROGRESS;
+    boolean applying = country.status == CountryItem.STATUS_APPLYING;
+    return enqueued || progress || applying;
+  }
+
+  private void updateProgressState(boolean shouldAutoDownload)
+  {
+    updateStateInternal(shouldAutoDownload);
+  }
+
+  private void updateStateInternal(boolean shouldAutoDownload)
   {
     boolean showFrame = (mCurrentCountry != null &&
                          !mCurrentCountry.present &&
@@ -134,13 +176,12 @@ public class OnmapDownloader implements MwmActivity.LeftAnimationTrackListener
           }
           else
           {
-            sizeText = (MapManager.nativeIsLegacyMode() ? "" : StringUtils.getFileSizeString(mCurrentCountry.totalSize));
+            sizeText = StringUtils.getFileSizeString(mCurrentCountry.totalSize);
 
             if (shouldAutoDownload &&
                 Config.isAutodownloadEnabled() &&
                 !sAutodownloadLocked &&
                 !failed &&
-                !MapManager.nativeIsLegacyMode() &&
                 ConnectionState.isWifiConnected())
             {
               Location loc = LocationHelper.INSTANCE.getSavedLocation();
@@ -191,6 +232,9 @@ public class OnmapDownloader implements MwmActivity.LeftAnimationTrackListener
       @Override
       public void onClick(View v)
       {
+        if (mCurrentCountry == null)
+          return;
+
         MapManager.nativeCancel(mCurrentCountry.id);
         Statistics.INSTANCE.trackEvent(Statistics.EventName.DOWNLOADER_CANCEL,
                                        Statistics.params().add(Statistics.EventParam.FROM, "map"));
@@ -203,13 +247,7 @@ public class OnmapDownloader implements MwmActivity.LeftAnimationTrackListener
       @Override
       public void onClick(View v)
       {
-        if (MapManager.nativeIsLegacyMode())
-        {
-          mActivity.showDownloader(false);
-          return;
-        }
-
-        MapManager.warnOn3g(mActivity, mCurrentCountry.id, new Runnable()
+        MapManager.warnOn3g(mActivity, mCurrentCountry == null ? null : mCurrentCountry.id, new Runnable()
         {
           @Override
           public void run()
@@ -237,8 +275,25 @@ public class OnmapDownloader implements MwmActivity.LeftAnimationTrackListener
      });
 
     mFrame.findViewById(R.id.banner_button).setOnClickListener(v -> {
-      Utils.openUrl(mActivity, Framework.nativeGetMegafonDownloaderBannerUrl());
+      if (mPromoBanner == null)
+        return;
+
+      Utils.openUrl(mActivity, mPromoBanner.getUrl());
+
+      if (mCurrentCountry == null)
+        return;
+
+      Statistics.ParameterBuilder builder =
+          Statistics.makeDownloaderBannerParamBuilder(mPromoBanner.getType().toStatisticValue(),
+                                                      mCurrentCountry.id);
+      Statistics.INSTANCE.trackEvent(Statistics.EventName.DOWNLOADER_BANNER_CLICK, builder);
     });
+
+    View downloadGuidesBtn = mFrame.findViewById(R.id.catalog_call_to_action_btn);
+    mCatalogCallToActionContainer = mFrame.findViewById(R.id.catalog_call_to_action_container);
+    downloadGuidesBtn.setOnClickListener(new CatalogCallToActionListener());
+    mPromoContentDivider = mFrame.findViewById(R.id.onmap_downloader_divider);
+    mBannerContainer = mFrame.findViewById(R.id.banner);
   }
 
   private void updateBannerVisibility()
@@ -246,14 +301,23 @@ public class OnmapDownloader implements MwmActivity.LeftAnimationTrackListener
     if (mCurrentCountry == null || TextUtils.isEmpty(mCurrentCountry.id))
       return;
 
-    if (!Framework.nativeHasMegafonDownloaderBanner(mCurrentCountry.id))
+    mPromoBanner = Framework.nativeGetDownloaderPromoBanner(mCurrentCountry.id);
+    boolean isPromoFound = mPromoBanner != null;
+
+    if (!isMapDownloading(mCurrentCountry) || !isPromoFound)
+    {
+      UiUtils.hide(mPromoContentDivider, mBannerContainer, mCatalogCallToActionContainer);
       return;
+    }
+    UiUtils.show(mPromoContentDivider);
 
-    boolean enqueued = mCurrentCountry.status == CountryItem.STATUS_ENQUEUED;
-    boolean progress = mCurrentCountry.status == CountryItem.STATUS_PROGRESS;
-    boolean applying = mCurrentCountry.status == CountryItem.STATUS_APPLYING;
+    boolean hasCatalogPromo = mPromoBanner.getType() == DownloaderBannerType.BOOKMARK_CATALOG;
 
-    UiUtils.showIf(enqueued || progress || applying, mFrame, R.id.banner);
+    View bannerView = hasCatalogPromo ? mCatalogCallToActionContainer : mBannerContainer;
+    mPromoBanner.getType().getViewConfigStrategy().configureView(bannerView, R.id.icon, R.id.text,
+                                                                 R.id.banner_button);
+    UiUtils.showIf(!hasCatalogPromo, mBannerContainer);
+    UiUtils.showIf(hasCatalogPromo, mCatalogCallToActionContainer);
   }
 
   @Override
@@ -292,5 +356,26 @@ public class OnmapDownloader implements MwmActivity.LeftAnimationTrackListener
   public static void setAutodownloadLocked(boolean locked)
   {
     sAutodownloadLocked = locked;
+  }
+
+  private class CatalogCallToActionListener implements View.OnClickListener
+  {
+    @Override
+    public void onClick(View v)
+    {
+      if (mPromoBanner == null)
+        return;
+
+      BookmarksCatalogActivity.startForResult(mActivity, BookmarkCategoriesActivity.REQ_CODE_DOWNLOAD_BOOKMARK_CATEGORY,
+                                              mPromoBanner.getUrl());
+
+      if (mCurrentCountry == null)
+        return;
+
+      Statistics.ParameterBuilder builder =
+          Statistics.makeDownloaderBannerParamBuilder(mPromoBanner.getType().toStatisticValue(),
+                                                      mCurrentCountry.id);
+      Statistics.INSTANCE.trackEvent(Statistics.EventName.DOWNLOADER_BANNER_CLICK, builder);
+    }
   }
 }

@@ -245,30 +245,42 @@ Java_com_mapswithme_maps_editor_Editor_nativeSaveEditedFeature(JNIEnv *, jclass)
 JNIEXPORT jboolean JNICALL
 Java_com_mapswithme_maps_editor_Editor_nativeShouldShowEditPlace(JNIEnv *, jclass)
 {
+  ::Framework * frm = g_framework->NativeFramework();
+  if (!frm->HasPlacePageInfo())
+    return static_cast<jboolean>(false);
+
   return g_framework->GetPlacePageInfo().ShouldShowEditPlace();
 }
 
 JNIEXPORT jboolean JNICALL
 Java_com_mapswithme_maps_editor_Editor_nativeShouldShowAddPlace(JNIEnv *, jclass)
 {
+  ::Framework * frm = g_framework->NativeFramework();
+  if (!frm->HasPlacePageInfo())
+    return static_cast<jboolean>(false);
+
   return g_framework->GetPlacePageInfo().ShouldShowAddPlace();
 }
 
 JNIEXPORT jboolean JNICALL
 Java_com_mapswithme_maps_editor_Editor_nativeShouldShowAddBusiness(JNIEnv *, jclass)
 {
+  ::Framework * frm = g_framework->NativeFramework();
+  if (!frm->HasPlacePageInfo())
+    return static_cast<jboolean>(false);
+
   return g_framework->GetPlacePageInfo().ShouldShowAddBusiness();
 }
 
 JNIEXPORT jintArray JNICALL
-Java_com_mapswithme_maps_editor_Editor_nativeGetEditableFields(JNIEnv * env, jclass clazz)
+Java_com_mapswithme_maps_editor_Editor_nativeGetEditableProperties(JNIEnv * env, jclass clazz)
 {
-  auto const & editable = g_editableMapObject.GetEditableFields();
-  int const size = editable.size();
-  jintArray jEditableFields = env->NewIntArray(size);
+  auto const & editable = g_editableMapObject.GetEditableProperties();
+  size_t const size = editable.size();
+  jintArray jEditableFields = env->NewIntArray(static_cast<jsize>(size));
   jint * arr = env->GetIntArrayElements(jEditableFields, 0);
-  for (int i = 0; i < size; ++i)
-    arr[i] = editable[i];
+  for (size_t i = 0; i < size; ++i)
+    arr[i] = base::Underlying(editable[i]);
   env->ReleaseIntArrayElements(jEditableFields, arr, 0);
 
   return jEditableFields;
@@ -304,7 +316,7 @@ Java_com_mapswithme_maps_editor_Editor_nativeGetNamesDataSource(JNIEnv * env, jc
   auto const namesDataSource = g_editableMapObject.GetNamesDataSource(needFakes);
 
   jobjectArray names = jni::ToJavaArray(env, g_localNameClazz, namesDataSource.names, ToJavaName);
-  jint mandatoryNamesCount = namesDataSource.mandatoryNamesCount;
+  jsize const mandatoryNamesCount = static_cast<jsize>(namesDataSource.mandatoryNamesCount);
 
   return env->NewObject(g_namesDataSourceClassID, g_namesDataSourceConstructorID, names, mandatoryNamesCount);
 }
@@ -401,7 +413,8 @@ Java_com_mapswithme_maps_editor_Editor_nativeGetStats(JNIEnv * env, jclass clazz
 {
   auto const stats = Editor::Instance().GetStats();
   jlongArray result = env->NewLongArray(3);
-  jlong buf[] = {stats.m_edits.size(), stats.m_uploadedCount, stats.m_lastUploadTimestamp};
+  jlong buf[] = {static_cast<jlong>(stats.m_edits.size()), static_cast<jlong>(stats.m_uploadedCount),
+                 stats.m_lastUploadTimestamp};
   env->SetLongArrayRegion(result, 0, 3, buf);
   return result;
 }
@@ -416,6 +429,9 @@ JNIEXPORT void JNICALL
 Java_com_mapswithme_maps_editor_Editor_nativeStartEdit(JNIEnv *, jclass)
 {
   ::Framework * frm = g_framework->NativeFramework();
+  if (!frm->HasPlacePageInfo())
+    return;
+
   place_page::Info const & info = g_framework->GetPlacePageInfo();
   CHECK(frm->GetEditableMapObject(info.GetID(), g_editableMapObject), ("Invalid feature in the place page."));
 }

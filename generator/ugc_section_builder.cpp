@@ -1,19 +1,19 @@
 #include "generator/ugc_section_builder.hpp"
 
-#include "generator/gen_mwm_info.hpp"
 #include "generator/ugc_translator.hpp"
+#include "generator/utils.hpp"
 
 #include "ugc/binary/index_ugc.hpp"
 #include "ugc/binary/serdes.hpp"
 
 #include "indexer/feature_data.hpp"
 #include "indexer/feature_processor.hpp"
-#include "indexer/ftraits.hpp"
 
 #include "base/geo_object_id.hpp"
 
 #include <unordered_map>
 #include <utility>
+#include <vector>
 
 namespace generator
 {
@@ -24,36 +24,22 @@ bool BuildUgcMwmSection(std::string const & srcDbFilename, std::string const & m
 
   LOG(LINFO, ("Build UGC section"));
 
-  gen::OsmID2FeatureID osmIdsToFeatureIds;
-  if (!osmIdsToFeatureIds.ReadFromFile(osmToFeatureFilename))
-    return false;
-
   std::unordered_map<uint32_t, base::GeoObjectId> featureToOsmId;
-  osmIdsToFeatureIds.ForEach([&featureToOsmId](gen::OsmID2FeatureID::ValueT const & p) {
-    featureToOsmId.emplace(p.second /* feature id */, p.first /* osm id */);
-  });
+  if (!ParseFeatureIdToOsmIdMapping(osmToFeatureFilename, featureToOsmId))
+    return false;
 
   UGCTranslator translator(srcDbFilename);
 
   std::vector<IndexUGC> content;
 
-  feature::ForEachFromDat(mwmFile, [&](FeatureType & f, uint32_t featureId) {
-    auto const optItem = ftraits::UGC::GetValue(feature::TypesHolder(f));
-    if (!optItem)
-      return;
-
-    if (!ftraits::UGC::IsUGCAvailable(optItem->m_mask))
-      return;
-
+  feature::ForEachFeature(mwmFile, [&](FeatureType & f, uint32_t featureId) {
     auto const it = featureToOsmId.find(featureId);
-    CHECK(it != featureToOsmId.cend(),
-          ("FeatureID", featureId, "is not found in", osmToFeatureFilename));
+    // Non-OSM features (coastlines, sponsored objects) are not used.
+    if (it == featureToOsmId.cend())
+      return;
 
     ugc::UGC result;
-    if (!translator.TranslateUGC(it->second, result))
-      return;
-
-    if (result.IsEmpty())
+    if (!GetUgcForFeature(it->second, feature::TypesHolder(f), translator, result))
       return;
 
     content.emplace_back(featureId, result);
@@ -63,9 +49,9 @@ bool BuildUgcMwmSection(std::string const & srcDbFilename, std::string const & m
     return true;
 
   FilesContainerW cont(mwmFile, FileWriter::OP_WRITE_EXISTING);
-  FileWriter writer = cont.GetWriter(UGC_FILE_TAG);
+  auto writer = cont.GetWriter(UGC_FILE_TAG);
   ugc::binary::UGCSeriaizer serializer(std::move(content));
-  serializer.Serialize(writer);
+  serializer.Serialize(*writer);
 
   return true;
 }

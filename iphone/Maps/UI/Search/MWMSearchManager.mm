@@ -1,23 +1,15 @@
 #import "MWMSearchManager.h"
-#import "MWMCommon.h"
 #import "MWMFrameworkListener.h"
 #import "MWMMapViewControlsManager.h"
 #import "MWMNoMapsViewController.h"
 #import "MWMRoutePoint+CPP.h"
 #import "MWMRouter.h"
 #import "MWMSearchChangeModeView.h"
-#import "MWMSearchFilterTransitioningManager.h"
 #import "MWMSearchManager+Filter.h"
 #import "MWMSearchManager+Layout.h"
-#import "MWMSearchTabButtonsView.h"
-#import "MWMSearchTabbedViewController.h"
-#import "MWMSearchTableViewController.h"
 #import "MapViewController.h"
 #import "Statistics.h"
-#import "3party/Alohalytics/src/alohalytics_objc.h"
-
-extern NSString * const kAlohalyticsTapEventKey;
-extern NSString * const kSearchStateKey = @"SearchStateKey";
+#import "SwiftBridge.h"
 
 namespace
 {
@@ -37,11 +29,11 @@ using Observers = NSHashTable<Observer>;
 
 @end
 
-@interface MWMSearchManager ()<MWMSearchTableViewProtocol, MWMSearchTabbedViewProtocol,
-                               MWMSearchTabButtonsViewProtocol, UITextFieldDelegate,
-                               MWMFrameworkStorageObserver, MWMSearchObserver>
+@interface MWMSearchManager ()<MWMSearchTableViewProtocol, MWMSearchTabViewControllerDelegate,
+                               UITextFieldDelegate, MWMStorageObserver, MWMSearchObserver>
 
 @property(weak, nonatomic, readonly) UIViewController * ownerController;
+@property(weak, nonatomic, readonly) UIView * actionBarContainer;
 
 @property(nonatomic) IBOutlet UIView * searchBarView;
 
@@ -60,16 +52,9 @@ using Observers = NSHashTable<Observer>;
 
 @property(nonatomic) NSLayoutConstraint * actionBarViewBottom;
 
-@property(nonatomic) IBOutletCollection(MWMSearchTabButtonsView) NSArray * tabButtons;
-@property(weak, nonatomic) IBOutlet NSLayoutConstraint * scrollIndicatorOffset;
-@property(weak, nonatomic) IBOutlet UIView * scrollIndicator;
-
 @property(nonatomic) UINavigationController * navigationController;
-@property(nonatomic) MWMSearchTabbedViewController * tabbedController;
 @property(nonatomic) MWMSearchTableViewController * tableViewController;
 @property(nonatomic) MWMNoMapsViewController * noMapsController;
-
-@property(nonatomic) MWMSearchFilterTransitioningManager * filterTransitioningManager;
 
 @property(nonatomic) Observers * observers;
 
@@ -89,17 +74,6 @@ using Observers = NSHashTable<Observer>;
     _observers = [Observers weakObjectsHashTable];
   }
   return self;
-}
-
-- (void)mwm_refreshUI
-{
-  [self.searchBarView mwm_refreshUI];
-  [self.actionBarView mwm_refreshUI];
-  [self.tabbedController mwm_refreshUI];
-  [self.tableViewController mwm_refreshUI];
-  [self.noMapsController mwm_refreshUI];
-  if ([MWMSearch hasFilter])
-    [[MWMSearch getFilter] mwm_refreshUI];
 }
 
 - (void)beginSearch
@@ -144,12 +118,6 @@ using Observers = NSHashTable<Observer>;
   [Statistics logEvent:kStatEventName(kStatSearch, kStatCancel)];
   [Alohalytics logEvent:kAlohalyticsTapEventKey withValue:@"searchCancel"];
   self.state = MWMSearchManagerStateHidden;
-}
-
-- (void)tabButtonPressed:(MWMSearchTabButtonsView *)sender
-{
-  [self.searchTextField resignFirstResponder];
-  [self.tabbedController tabButtonPressed:sender];
 }
 
 #pragma mark - Layout
@@ -207,17 +175,17 @@ using Observers = NSHashTable<Observer>;
     else
       [MWMRouter buildToPoint:point bestRouter:NO];
   }
-  if (!IPAD || [MWMNavigationDashboardManager manager].state != MWMNavigationDashboardStateHidden)
+  if (!IPAD || [MWMNavigationDashboardManager sharedManager].state != MWMNavigationDashboardStateHidden)
     self.state = MWMSearchManagerStateHidden;
 }
 
-#pragma mark - MWMFrameworkStorageObserver
+#pragma mark - MWMStorageObserver
 
-- (void)processCountryEvent:(storage::TCountryId const &)countryId
+- (void)processCountryEvent:(NSString *)countryId
 {
   using namespace storage;
   NodeStatuses nodeStatuses{};
-  GetFramework().GetStorage().GetNodeStatuses(countryId, nodeStatuses);
+  GetFramework().GetStorage().GetNodeStatuses(countryId.UTF8String, nodeStatuses);
   if (nodeStatuses.m_status != NodeStatus::OnDisk)
     return;
   [self updateTopController];
@@ -236,7 +204,7 @@ using Observers = NSHashTable<Observer>;
 - (void)updateTopController
 {
   UIViewController * selfTopVC = self.topController;
-  if ([selfTopVC isEqual:self.navigationController.topViewController])
+  if (!selfTopVC || [selfTopVC isEqual:self.navigationController.topViewController])
     return;
   NSMutableArray * viewControllers = [self.navigationController.viewControllers mutableCopy];
   viewControllers[0] = selfTopVC;
@@ -247,30 +215,21 @@ using Observers = NSHashTable<Observer>;
 {
   self.routingTooltipSearch = MWMSearchManagerRoutingTooltipSearchNone;
   [self endSearch];
-  [self.tabbedController resetSelectedTab];
 
   [self viewHidden:YES];
 }
 
 - (void)changeToDefaultState
 {
-  [self.tabbedController resetCategories];
   [self.navigationController popToRootViewControllerAnimated:NO];
 
   [self animateConstraints:^{
     self.actionBarViewBottom.priority = UILayoutPriorityDefaultLow;
   }];
   [self viewHidden:NO];
-
-  if (self.topController != self.noMapsController)
-  {
-    self.actionBarState = MWMSearchManagerActionBarStateTabBar;
-    [self.searchTextField becomeFirstResponder];
-  }
-  else
-  {
-    self.actionBarState = MWMSearchManagerActionBarStateHidden;
-  }
+  self.actionBarState = MWMSearchManagerActionBarStateHidden;
+  [self.searchTextField becomeFirstResponder];
+  [self.searchBarView applyTheme];
 }
 
 - (void)changeToTableSearchState
@@ -297,7 +256,7 @@ using Observers = NSHashTable<Observer>;
       self.actionBarViewBottom.priority = UILayoutPriorityDefaultHigh;
     }];
   }
-  auto const navigationManagerState = [MWMNavigationDashboardManager manager].state;
+  auto const navigationManagerState = [MWMNavigationDashboardManager sharedManager].state;
   [self viewHidden:navigationManagerState != MWMNavigationDashboardStateHidden];
   [MWMSearch setSearchOnMap:YES];
   [self.tableViewController reloadData];
@@ -308,7 +267,6 @@ using Observers = NSHashTable<Observer>;
   if (navigationManagerState == MWMNavigationDashboardStateNavigation)
   {
     self.searchTextField.text = @"";
-    [self.tabbedController resetSelectedTab];
   }
 }
 
@@ -331,6 +289,13 @@ using Observers = NSHashTable<Observer>;
      return;
   [self.tableViewController onSearchCompleted];
   [self updateTableSearchActionBar];
+}
+
+- (void)onSearchStarted
+{
+  if (self.state != MWMSearchManagerStateTableSearch)
+    return;
+  self.actionBarState = MWMSearchManagerActionBarStateModeFilter;
 }
 
 - (void)onSearchResultsUpdated
@@ -395,8 +360,7 @@ using Observers = NSHashTable<Observer>;
 {
   if (!_navigationController)
   {
-    _navigationController =
-        [[UINavigationController alloc] initWithRootViewController:self.topController];
+    _navigationController = [[UINavigationController alloc] init];
     [self.contentView addSubview:_navigationController.view];
     _navigationController.navigationBarHidden = YES;
   }
@@ -405,34 +369,30 @@ using Observers = NSHashTable<Observer>;
 
 - (UIViewController *)topController
 {
-  [MWMFrameworkListener removeObserver:self];
+  [[MWMStorage sharedStorage] removeObserver:self];
   self.noMapsController = nil;
   switch (self.state)
   {
-  case MWMSearchManagerStateHidden: return self.tabbedController;
-  case MWMSearchManagerStateDefault:
-    if (GetFramework().GetStorage().HaveDownloadedCountries())
-      return self.tabbedController;
-    self.noMapsController = [MWMNoMapsViewController controller];
-    [MWMFrameworkListener addObserver:self];
-    return self.noMapsController;
-  case MWMSearchManagerStateTableSearch:
-    return self.tableViewController;
-  case MWMSearchManagerStateMapSearch: return self.tableViewController;
+    case MWMSearchManagerStateHidden: return nil;
+    case MWMSearchManagerStateDefault:
+    {
+      if (GetFramework().GetStorage().HaveDownloadedCountries()) {
+        MWMSearchTabViewController * tabViewController = [MWMSearchTabViewController new];
+        tabViewController.delegate = self;
+        return tabViewController;
+      }
+      self.noMapsController = [MWMNoMapsViewController controller];
+      [[MWMStorage sharedStorage] addObserver:self];
+      return self.noMapsController;
+    }
+    case MWMSearchManagerStateTableSearch: return self.tableViewController;
+    case MWMSearchManagerStateMapSearch: return self.tableViewController;
   }
 }
 
-- (MWMSearchTabbedViewController *)tabbedController
+- (void)searchTabController:(MWMSearchTabViewController *)viewController didSearch:(NSString *)didSearch
 {
-  if (!_tabbedController)
-  {
-    _tabbedController = [[MWMSearchTabbedViewController alloc] init];
-    _tabbedController.scrollIndicatorOffset = self.scrollIndicatorOffset;
-    _tabbedController.scrollIndicator = self.scrollIndicator;
-    _tabbedController.tabButtons = self.tabButtons;
-    _tabbedController.delegate = self;
-  }
-  return _tabbedController;
+  [self searchText:didSearch forInputLocale:[[AppInfo sharedInfo] languageId]];
 }
 
 - (MWMSearchTableViewController *)tableViewController
@@ -440,21 +400,6 @@ using Observers = NSHashTable<Observer>;
   if (!_tableViewController)
     _tableViewController = [[MWMSearchTableViewController alloc] initWithDelegate:self];
   return _tableViewController;
-}
-
-- (void)setScrollIndicatorOffset:(NSLayoutConstraint *)scrollIndicatorOffset
-{
-  _scrollIndicatorOffset = self.tabbedController.scrollIndicatorOffset = scrollIndicatorOffset;
-}
-
-- (void)setScrollIndicator:(UIView *)scrollIndicator
-{
-  _scrollIndicator = self.tabbedController.scrollIndicator = scrollIndicator;
-}
-
-- (void)setTabButtons:(NSArray *)tabButtons
-{
-  _tabButtons = self.tabbedController.tabButtons = tabButtons;
 }
 
 - (void)setState:(MWMSearchManagerState)state
@@ -494,18 +439,19 @@ using Observers = NSHashTable<Observer>;
   UIView * actionBarView = self.actionBarView;
   UIView * contentView = self.contentView;
   UIView * parentView = self.ownerController.view;
+  UIView * actionBarContaner = self.actionBarContainer;
 
   if (!hidden)
   {
     if (searchBarView.superview)
     {
       [parentView bringSubviewToFront:searchBarView];
-      [parentView bringSubviewToFront:actionBarView];
+      [actionBarContaner bringSubviewToFront:actionBarView];
       [parentView bringSubviewToFront:contentView];
       return;
     }
     [parentView addSubview:searchBarView];
-    [parentView addSubview:actionBarView];
+    [actionBarContaner addSubview:actionBarView];
     [parentView addSubview:contentView];
     [self layoutTopViews];
   }
@@ -561,4 +507,5 @@ using Observers = NSHashTable<Observer>;
 }
 
 - (UIViewController *)ownerController { return [MapViewController sharedController]; }
+- (UIView *)actionBarContainer { return [MapViewController sharedController].controlsView; }
 @end

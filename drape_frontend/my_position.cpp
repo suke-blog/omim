@@ -1,4 +1,5 @@
 #include "drape_frontend/my_position.hpp"
+#include "drape_frontend/batcher_bucket.hpp"
 #include "drape_frontend/color_constants.hpp"
 #include "drape_frontend/map_shape.hpp"
 #include "drape_frontend/shape_view_params.hpp"
@@ -20,10 +21,10 @@ namespace
 {
 df::ColorConstant const kMyPositionAccuracyColor = "MyPositionAccuracy";
 
-struct Vertex
+struct MarkerVertex
 {
-  Vertex() = default;
-  Vertex(glsl::vec2 const & normal, glsl::vec2 const & texCoord)
+  MarkerVertex() = default;
+  MarkerVertex(glsl::vec2 const & normal, glsl::vec2 const & texCoord)
     : m_normal(normal)
     , m_texCoord(texCoord)
   {}
@@ -32,7 +33,7 @@ struct Vertex
   glsl::vec2 m_texCoord;
 };
 
-dp::BindingInfo GetBindingInfo()
+dp::BindingInfo GetMarkerBindingInfo()
 {
   dp::BindingInfo info(2);
   dp::BindingDecl & normal = info.GetBindingDecl(0);
@@ -40,14 +41,14 @@ dp::BindingInfo GetBindingInfo()
   normal.m_componentCount = 2;
   normal.m_componentType = gl_const::GLFloatType;
   normal.m_offset = 0;
-  normal.m_stride = sizeof(Vertex);
+  normal.m_stride = sizeof(MarkerVertex);
 
   dp::BindingDecl & texCoord = info.GetBindingDecl(1);
   texCoord.m_attributeName = "a_colorTexCoords";
   texCoord.m_componentCount = 2;
   texCoord.m_componentType = gl_const::GLFloatType;
   texCoord.m_offset = sizeof(glsl::vec2);
-  texCoord.m_stride = sizeof(Vertex);
+  texCoord.m_stride = sizeof(MarkerVertex);
 
   return info;
 }
@@ -155,13 +156,13 @@ void MyPosition::CacheAccuracySector(ref_ptr<dp::GraphicsContext> context,
 {
   size_t constexpr kTriangleCount = 40;
   size_t constexpr kVertexCount = 3 * kTriangleCount;
-  auto const etalonSector = static_cast<float>(math::twicePi / kTriangleCount);
+  auto const etalonSector = static_cast<float>(2.0 * math::pi / kTriangleCount);
 
   dp::TextureManager::ColorRegion color;
   mng->GetColorRegion(df::GetColorConstant(df::kMyPositionAccuracyColor), color);
   glsl::vec2 colorCoord = glsl::ToVec2(color.GetTexRect().Center());
 
-  buffer_vector<Vertex, kTriangleCount> buffer;
+  buffer_vector<MarkerVertex, kTriangleCount> buffer;
   glsl::vec2 startNormal(0.0f, 1.0f);
 
   for (size_t i = 0; i < kTriangleCount + 1; ++i)
@@ -169,7 +170,7 @@ void MyPosition::CacheAccuracySector(ref_ptr<dp::GraphicsContext> context,
     glsl::vec2 normal = glsl::rotate(startNormal, i * etalonSector);
     glsl::vec2 nextNormal = glsl::rotate(startNormal, (i + 1) * etalonSector);
 
-    buffer.emplace_back(startNormal, colorCoord);
+    buffer.emplace_back(glsl::vec2(0.0f, 0.0f), colorCoord);
     buffer.emplace_back(normal, colorCoord);
     buffer.emplace_back(nextNormal, colorCoord);
   }
@@ -180,6 +181,7 @@ void MyPosition::CacheAccuracySector(ref_ptr<dp::GraphicsContext> context,
 
   {
     dp::Batcher batcher(kTriangleCount * dp::Batcher::IndexPerTriangle, kVertexCount);
+    batcher.SetBatcherHash(static_cast<uint64_t>(BatcherBucket::Default));
     dp::SessionGuard guard(context, batcher,
       [this](dp::RenderState const & state, drape_ptr<dp::RenderBucket> && b)
     {
@@ -191,7 +193,7 @@ void MyPosition::CacheAccuracySector(ref_ptr<dp::GraphicsContext> context,
     });
 
     dp::AttributeProvider provider(1 /* stream count */, kVertexCount);
-    provider.InitStream(0 /* stream index */, GetBindingInfo(), make_ref(buffer.data()));
+    provider.InitStream(0 /* stream index */, GetMarkerBindingInfo(), make_ref(buffer.data()));
 
     m_parts[MyPositionAccuracy].first = batcher.InsertTriangleList(context, state,
                                                                    make_ref(&provider), nullptr);
@@ -207,7 +209,7 @@ void MyPosition::CacheSymbol(ref_ptr<dp::GraphicsContext> context,
   m2::RectF const & texRect = symbol.GetTexRect();
   m2::PointF const halfSize = symbol.GetPixelSize() * 0.5f;
 
-  Vertex data[4] =
+  MarkerVertex data[4] =
   {
     { glsl::vec2(-halfSize.x,  halfSize.y), glsl::ToVec2(texRect.LeftTop()) },
     { glsl::vec2(-halfSize.x, -halfSize.y), glsl::ToVec2(texRect.LeftBottom()) },
@@ -216,7 +218,7 @@ void MyPosition::CacheSymbol(ref_ptr<dp::GraphicsContext> context,
   };
 
   dp::AttributeProvider provider(1 /* streamCount */, dp::Batcher::VertexPerQuad);
-  provider.InitStream(0 /* streamIndex */, GetBindingInfo(), make_ref(data));
+  provider.InitStream(0 /* streamIndex */, GetMarkerBindingInfo(), make_ref(data));
   m_parts[part].first = batcher.InsertTriangleStrip(context, state, make_ref(&provider), nullptr);
   ASSERT(m_parts[part].first.IsValid(), ());
 }
@@ -230,11 +232,13 @@ void MyPosition::CachePointPosition(ref_ptr<dp::GraphicsContext> context, ref_pt
   auto state = CreateRenderState(gpu::Program::MyPosition, DepthLayer::OverlayLayer);
   state.SetDepthTestEnabled(false);
   state.SetColorTexture(pointSymbol.GetTexture());
+  state.SetTextureIndex(pointSymbol.GetTextureIndex());
 
   dp::TextureManager::SymbolRegion * symbols[kSymbolsCount] = { &pointSymbol };
   EMyPositionPart partIndices[kSymbolsCount] = { MyPositionPoint };
   {
     dp::Batcher batcher(kSymbolsCount * dp::Batcher::IndexPerQuad, kSymbolsCount * dp::Batcher::VertexPerQuad);
+    batcher.SetBatcherHash(static_cast<uint64_t>(BatcherBucket::Default));
     dp::SessionGuard guard(context, batcher,
       [this](dp::RenderState const & state, drape_ptr<dp::RenderBucket> && b)
     {

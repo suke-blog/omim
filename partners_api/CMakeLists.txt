@@ -4,11 +4,31 @@ include_directories(${OMIM_ROOT}/3party/jansson/src)
 
 set(
   SRC
-  ads_base.cpp
-  ads_base.hpp
-  ads_engine.cpp
-  ads_engine.hpp
-  banner.hpp
+  ads/ads_base.cpp
+  ads/ads_base.hpp
+  ads/ads_engine.cpp
+  ads/ads_engine.hpp
+  ads/ads_utils.cpp
+  ads/ads_utils.hpp
+  ads/banner.hpp
+  ads/bookmark_catalog_ads.cpp
+  ads/bookmark_catalog_ads.hpp
+  ads/facebook_ads.cpp
+  ads/facebook_ads.hpp
+  ads/google_ads.cpp
+  ads/google_ads.hpp
+  ads/mopub_ads.cpp
+  ads/mopub_ads.hpp
+  ads/mts_ads.cpp
+  ads/mts_ads.hpp
+  ads/rb_ads.cpp
+  ads/rb_ads.hpp
+  ads/skyeng_ads.cpp
+  ads/skyeng_ads.hpp
+  ads/tinkoff_allairlines_ads.cpp
+  ads/tinkoff_allairlines_ads.hpp
+  ads/tinkoff_insurance_ads.cpp
+  ads/tinkoff_insurance_ads.hpp
   booking_api.cpp
   booking_api.hpp
   booking_availability_params.cpp
@@ -16,24 +36,24 @@ set(
   booking_block_params.cpp
   booking_block_params.hpp
   booking_params_base.hpp
-  facebook_ads.cpp
-  facebook_ads.hpp
-  google_ads.cpp
-  google_ads.hpp
+  freenow_api.cpp
+  freenow_api.hpp
+  guides_on_map_api.cpp
+  guides_on_map_api.hpp
   locals_api.cpp
   locals_api.hpp
   maxim_api.cpp
   maxim_api.hpp
   megafon_countries.cpp
   megafon_countries.hpp
-  mopub_ads.cpp
-  mopub_ads.hpp
   opentable_api.cpp
   opentable_api.hpp
   partners.cpp
   partners.hpp
-  rb_ads.cpp
-  rb_ads.hpp
+  promo_api.cpp
+  promo_api.hpp
+  promo_catalog_types.cpp
+  promo_catalog_types.hpp
   rutaxi_api.cpp
   rutaxi_api.hpp
   taxi_base.cpp
@@ -50,8 +70,7 @@ set(
   uber_api.hpp
   utils.cpp
   utils.hpp
-  viator_api.cpp
-  viator_api.hpp
+  utm.hpp
   yandex_api.cpp
   yandex_api.hpp
 )

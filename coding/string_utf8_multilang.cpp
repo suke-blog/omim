@@ -229,6 +229,30 @@ bool StringUtf8Multilang::GetString(int8_t lang, string & utf8s) const
   return false;
 }
 
+StringUtf8Multilang::TranslationPositions StringUtf8Multilang::GenerateTranslationPositions() const
+{
+  TranslationPositions result;
+  size_t i = 0;
+  size_t const sz = m_s.size();
+  while (i < sz)
+  {
+    size_t const next = GetNextIndex(i);
+    int8_t const code = m_s[i] & 0x3F;
+    if (GetLangByCode(code) != kReservedLang)
+      result[code] = Position{i + 1, next - i - 1};
+
+    i = next;
+  }
+
+  return result;
+}
+
+std::string StringUtf8Multilang::GetTranslation(
+    StringUtf8Multilang::Position const & position) const
+{
+  return m_s.substr(position.m_begin, position.m_length);
+}
+
 bool StringUtf8Multilang::HasString(int8_t lang) const
 {
   if (!IsSupportedLangCode(lang))
@@ -257,6 +281,15 @@ int8_t StringUtf8Multilang::FindString(string const & utf8s) const
   });
 
   return result;
+}
+
+size_t StringUtf8Multilang::CountLangs() const
+{
+  size_t count = 0;
+  for (size_t i = 0; i < m_s.size(); i = GetNextIndex(i))
+    ++count;
+
+  return count;
 }
 
 string DebugPrint(StringUtf8Multilang const & s)

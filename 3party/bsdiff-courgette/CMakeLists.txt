@@ -9,7 +9,6 @@ set(
   bsdiff/bsdiff.h
   bsdiff/bsdiff_common.h
   bsdiff/bsdiff_search.h
-  bsdiff/paged_array.h
   divsufsort/divsufsort.cc
   divsufsort/divsufsort.h
   divsufsort/divsufsort_private.h
@@ -18,3 +17,4 @@ set(
 )
 
 add_library(${PROJECT_NAME} ${SRC})
+omim_add_test_subdirectory(bsdiff/bsdiff_tests)

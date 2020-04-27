@@ -2,16 +2,26 @@
 
 #include "map/notifications/notification_queue.hpp"
 
-#include "ugc/api.hpp"
+#include "storage/storage_defines.hpp"
 
 #include "metrics/eye.hpp"
 
+#include <ctime>
+#include <memory>
+#include <optional>
 #include <string>
+#include <unordered_set>
 
 #include <boost/optional.hpp>
 
+namespace ugc
+{
+class Api;
+}
+
 namespace notifications
 {
+using Notification = std::optional<NotificationCandidate>;
 class NotificationManager : public eye::Subscriber
 {
 public:
@@ -21,15 +31,22 @@ public:
   {
   public:
     virtual ~Delegate() = default;
-    virtual ugc::Api * GetUGCApi() = 0;
+    virtual ugc::Api & GetUGCApi() = 0;
+    virtual std::unordered_set<storage::CountryId> GetDescendantCountries(
+        storage::CountryId const & country) const = 0;
+    virtual storage::CountryId GetCountryAtPoint(m2::PointD const & pt) const = 0;
+    virtual std::string GetAddress(m2::PointD const & pt) = 0;
   };
 
-  explicit NotificationManager(Delegate & delegate);
+  void SetDelegate(std::unique_ptr<Delegate> delegate);
 
   void Load();
   void TrimExpired();
 
-  boost::optional<NotificationCandidate> GetNotification();
+  Notification GetNotification();
+  size_t GetCandidatesCount() const;
+
+  void DeleteCandidatesForCountry(storage::CountryId const & countryId);
 
   // eye::Subscriber overrides:
   void OnMapObjectEvent(eye::MapObject const & poi) override;
@@ -39,35 +56,8 @@ private:
   void ProcessUgcRateCandidates(eye::MapObject const & poi);
   Candidates::iterator GetUgcRateCandidate();
 
-  Delegate & m_delegate;
+  std::unique_ptr<Delegate> m_delegate;
   // Notification candidates queue.
   Queue m_queue;
 };
 }  // namespace notifications
-namespace lightweight
-{
-class NotificationManager
-{
-public:
-  NotificationManager() : m_manager(m_delegate) { m_manager.Load(); }
-
-  boost::optional<notifications::NotificationCandidate> GetNotification()
-  {
-    return m_manager.GetNotification();
-  }
-
-private:
-  class EmptyDelegate : public notifications::NotificationManager::Delegate
-  {
-  public:
-    // NotificationManager::Delegate overrides:
-    ugc::Api * GetUGCApi() override
-    {
-      return nullptr;
-    }
-  };
-
-  EmptyDelegate m_delegate;
-  notifications::NotificationManager m_manager;
-};
-}  // namespace lightweight

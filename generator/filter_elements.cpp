@@ -1,6 +1,7 @@
 #include "generator/filter_elements.hpp"
 
 #include "base/logging.hpp"
+#include "base/stl_helpers.hpp"
 
 #include <algorithm>
 #include <fstream>
@@ -35,14 +36,12 @@ namespace generator
 {
 bool FilterData::IsMatch(Tags const & elementTags, Tags const & tags)
 {
-  auto const fn = [&](OsmElement::Tag const & t)
-  {
-    auto const pred = [&](OsmElement::Tag const & tag) { return tag.key == t.key; };
-    auto const it = std::find_if(std::begin(elementTags), std::end(elementTags), pred);
-    return it == std::end(elementTags) ? false : t.value == "*" || it->value == t.value;
-  };
-
-  return std::all_of(std::begin(tags), std::end(tags), fn);
+  return base::AllOf(tags, [&](OsmElement::Tag const & t) {
+    auto const it = base::FindIf(elementTags, [&](OsmElement::Tag const & tag) {
+      return tag.m_key == t.m_key;
+    });
+    return it == std::end(elementTags) ? false : t.m_value == "*" || it->m_value == t.m_value;
+  });
 }
 
 void FilterData::AddSkippedId(uint64_t id)
@@ -54,7 +53,7 @@ void FilterData::AddSkippedTags(Tags const & tags)
 {
   m_rulesStorage.push_back(tags);
   for (auto const & t : tags)
-    m_skippedTags.emplace(t.key, m_rulesStorage.back());
+    m_skippedTags.emplace(t.m_key, m_rulesStorage.back());
 }
 
 bool FilterData::NeedSkipWithId(uint64_t id) const
@@ -67,7 +66,7 @@ bool FilterData::NeedSkipWithTags(Tags const & tags) const
   Set<Tags const *> s;
   for (auto const & tag : tags)
   {
-    auto const t = m_skippedTags.equal_range(tag.key);
+    auto const t = m_skippedTags.equal_range(tag.m_key);
     for (auto it = t.first; it != t.second; ++it)
     {
       Tags const & t = it->second;
@@ -153,16 +152,27 @@ bool FilterElements::ParseTags(json_t * json, FilterData & fdata)
 }
 
 FilterElements::FilterElements(std::string const & filename)
+  : m_filename(filename)
 {
-  std::ifstream stream(filename);
+  std::ifstream stream(m_filename);
   std::string str((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
   if (!ParseString(str))
-    LOG(LERROR, ("Cannot parse file", filename));
+    LOG(LERROR, ("Cannot parse file", m_filename));
+}
+
+std::shared_ptr<FilterInterface> FilterElements::Clone() const
+{
+  return std::make_shared<FilterElements>(m_filename);
+}
+
+bool FilterElements::IsAccepted(OsmElement const & element) const
+{
+  return !NeedSkip(element);
 }
 
 bool FilterElements::NeedSkip(OsmElement const & element) const
 {
-  switch (element.type)
+  switch (element.m_type)
   {
   case OsmElement::EntityType::Node: return NeedSkip(element, m_nodes);
   case OsmElement::EntityType::Way: return NeedSkip(element, m_ways);
@@ -173,7 +183,7 @@ bool FilterElements::NeedSkip(OsmElement const & element) const
 
 bool FilterElements::NeedSkip(OsmElement const & element,  FilterData const & fdata) const
 {
-  return fdata.NeedSkipWithId(element.id) || fdata.NeedSkipWithTags(element.Tags());
+  return fdata.NeedSkipWithId(element.m_id) || fdata.NeedSkipWithTags(element.Tags());
 }
 
 bool FilterElements::ParseString(std::string const & str)

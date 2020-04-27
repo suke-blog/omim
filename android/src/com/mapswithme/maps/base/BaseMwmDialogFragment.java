@@ -3,10 +3,10 @@ package com.mapswithme.maps.base;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StyleRes;
+import androidx.fragment.app.DialogFragment;
 import android.view.View;
 
 import com.mapswithme.maps.R;
@@ -85,5 +85,14 @@ public class BaseMwmDialogFragment extends DialogFragment
     if (view == null)
       throw new IllegalStateException("Before call this method make sure that the view exists");
     return view;
+  }
+
+  @NonNull
+  protected Bundle getArgumentsOrThrow()
+  {
+    Bundle args = getArguments();
+    if (args == null)
+      throw new AssertionError("Arguments must be non-null!");
+    return args;
   }
 }

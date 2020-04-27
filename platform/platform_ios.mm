@@ -22,15 +22,15 @@
 #include <sys/utsname.h>
 #include <sys/xattr.h>
 
-#import "iphone/Maps/Common/MWMCommon.h"
-
 #import "3party/Alohalytics/src/alohalytics_objc.h"
 
+#import <AdSupport/AdSupport.h>
 #import <CoreFoundation/CFURL.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <UIKit/UIKit.h>
 #import <netinet/in.h>
 
+#include <memory>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -65,9 +65,11 @@ Platform::Platform()
     m_tmpDir += "/tmp/";
   }
 
-  m_guiThread = make_unique<platform::GuiThread>();
+  m_guiThread = std::make_unique<platform::GuiThread>();
 
   UIDevice * device = UIDevice.currentDevice;
+  device.batteryMonitoringEnabled = YES;
+
   NSLog(@"Device: %@, SystemName: %@, SystemVersion: %@", device.model, device.systemName,
         device.systemVersion);
 }
@@ -117,10 +119,10 @@ bool Platform::GetFileSizeByName(std::string const & fileName, uint64_t & size) 
   }
 }
 
-unique_ptr<ModelReader> Platform::GetReader(std::string const & file, std::string const & searchScope) const
+std::unique_ptr<ModelReader> Platform::GetReader(std::string const & file, std::string const & searchScope) const
 {
-  return make_unique<FileReader>(ReadPathForFile(file, searchScope), READER_CHUNK_LOG_SIZE,
-                                 READER_CHUNK_LOG_COUNT);
+  return std::make_unique<FileReader>(ReadPathForFile(file, searchScope), READER_CHUNK_LOG_SIZE,
+                                      READER_CHUNK_LOG_COUNT);
 }
 
 int Platform::VideoMemoryLimit() const { return 8 * 1024 * 1024; }
@@ -130,8 +132,8 @@ std::string Platform::UniqueClientId() const { return [Alohalytics installationI
 
 std::string Platform::AdvertisingId() const
 {
-  //TODO(@beloal): Implement me.
-  return {};
+  NSUUID *adId = [ASIdentifierManager sharedManager].advertisingIdentifier;
+  return adId.UUIDString.UTF8String;
 }
 
 std::string Platform::MacAddress(bool md5Decoded) const
@@ -225,6 +227,23 @@ Platform::ChargingStatus Platform::GetChargingStatus()
   }
 }
 
+uint8_t Platform::GetBatteryLevel()
+{
+  auto const level = UIDevice.currentDevice.batteryLevel;
+
+  ASSERT_GREATER_OR_EQUAL(level, -1.0, ());
+  ASSERT_LESS_OR_EQUAL(level, 1.0, ());
+
+  if (level == -1.0)
+    return 100;
+
+  auto const result = static_cast<uint8_t>(level * 100);
+
+  CHECK_LESS_OR_EQUAL(result, 100, ());
+
+  return result;
+}
+
 void Platform::SetupMeasurementSystem() const
 {
   auto units = measurement_utils::Units::Metric;
@@ -236,7 +255,7 @@ void Platform::SetupMeasurementSystem() const
   settings::Set(settings::kMeasurementUnits, units);
 }
 
-void Platform::SetGuiThread(unique_ptr<base::TaskLoop> guiThread)
+void Platform::SetGuiThread(std::unique_ptr<base::TaskLoop> guiThread)
 {
   m_guiThread = std::move(guiThread);
 }

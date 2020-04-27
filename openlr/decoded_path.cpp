@@ -19,30 +19,30 @@
 
 namespace
 {
+uint32_t UintFromXML(pugi::xml_node const & node)
+{
+  THROW_IF_NODE_IS_EMPTY(node, openlr::DecodedPathLoadError, ("Can't parse uint"));
+  return node.text().as_uint();
+}
+
 bool IsForwardFromXML(pugi::xml_node const & node)
 {
   THROW_IF_NODE_IS_EMPTY(node, openlr::DecodedPathLoadError, ("Can't parse IsForward"));
   return node.text().as_bool();
 }
 
-uint32_t SegmentIdFromXML(pugi::xml_node const & node)
-{
-  THROW_IF_NODE_IS_EMPTY(node, openlr::DecodedPathLoadError, ("Can't parse SegmentId"));
-  return node.text().as_uint();
-}
-
 void LatLonToXML(ms::LatLon const & latLon, pugi::xml_node & node)
 {
   auto const kDigitsAfterComma = 5;
-  node.append_child("lat").text() = strings::to_string_dac(latLon.lat, kDigitsAfterComma).data();
-  node.append_child("lon").text() = strings::to_string_dac(latLon.lon, kDigitsAfterComma).data();
+  node.append_child("lat").text() = strings::to_string_dac(latLon.m_lat, kDigitsAfterComma).data();
+  node.append_child("lon").text() = strings::to_string_dac(latLon.m_lon, kDigitsAfterComma).data();
 }
 
 void LatLonFromXML(pugi::xml_node const & node, ms::LatLon & latLon)
 {
   THROW_IF_NODE_IS_EMPTY(node, openlr::DecodedPathLoadError, ("Can't parse latLon"));
-  latLon.lat = node.child("lat").text().as_double();
-  latLon.lon = node.child("lon").text().as_double();
+  latLon.m_lat = node.child("lat").text().as_double();
+  latLon.m_lon = node.child("lon").text().as_double();
 }
 
 void FeatureIdFromXML(pugi::xml_node const & node, DataSource const & dataSource, FeatureID & fid)
@@ -63,6 +63,15 @@ void FeatureIdToXML(FeatureID const & fid, pugi::xml_node & node)
 
 namespace openlr
 {
+uint32_t UintValueFromXML(pugi::xml_node const & node)
+{
+  auto const value = node.child("olr:value");
+  if (!value)
+    return 0;
+
+  return UintFromXML(value);
+}
+
 void WriteAsMappingForSpark(std::string const & fileName, std::vector<DecodedPath> const & paths)
 {
   std::ofstream ofs(fileName);
@@ -100,7 +109,7 @@ void WriteAsMappingForSpark(std::ostream & ost, std::vector<DecodedPath> const &
           << kFieldSep << fid.m_index
           << kFieldSep << it->GetSegId()
           << kFieldSep << (it->IsForward() ? "fwd" : "bwd")
-          << kFieldSep << MercatorBounds::DistanceOnEarth(GetStart(*it), GetEnd(*it));
+          << kFieldSep << mercator::DistanceOnEarth(GetStart(*it), GetEnd(*it));
 
       if (next(it) != end(p.m_path))
         ost << kSegmentSep;
@@ -120,7 +129,7 @@ void PathFromXML(pugi::xml_node const & node, DataSource const & dataSource, Pat
     FeatureIdFromXML(e.child("FeatureID"), dataSource, fid);
 
     auto const isForward = IsForwardFromXML(e.child("IsForward"));
-    auto const segmentId = SegmentIdFromXML(e.child("SegmentId"));
+    auto const segmentId = UintFromXML(e.child("SegmentId"));
 
     ms::LatLon start, end;
     LatLonFromXML(e.child("StartJunction"), start);
@@ -128,8 +137,8 @@ void PathFromXML(pugi::xml_node const & node, DataSource const & dataSource, Pat
 
     p.push_back(Edge::MakeReal(
         fid, isForward, segmentId,
-        routing::Junction(MercatorBounds::FromLatLon(start), feature::kDefaultAltitudeMeters),
-        routing::Junction(MercatorBounds::FromLatLon(end), feature::kDefaultAltitudeMeters)));
+        geometry::PointWithAltitude(mercator::FromLatLon(start), geometry::kDefaultAltitudeMeters),
+        geometry::PointWithAltitude(mercator::FromLatLon(end), geometry::kDefaultAltitudeMeters)));
   }
 }
 
@@ -149,8 +158,8 @@ void PathToXML(Path const & path, pugi::xml_node & node)
     {
       auto start = edge.append_child("StartJunction");
       auto end = edge.append_child("EndJunction");
-      LatLonToXML(MercatorBounds::ToLatLon(GetStart(e)), start);
-      LatLonToXML(MercatorBounds::ToLatLon(GetEnd(e)), end);
+      LatLonToXML(mercator::ToLatLon(GetStart(e)), start);
+      LatLonToXML(mercator::ToLatLon(GetEnd(e)), end);
     }
   }
 }

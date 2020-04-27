@@ -15,6 +15,8 @@ omim_add_executable(${PROJECT_NAME} ${SRC})
 omim_link_libraries(
   ${PROJECT_NAME}
   map
+  ge0
+  web_api
   routing
   metrics
   platform
@@ -22,6 +24,7 @@ omim_link_libraries(
   coding
   base
   stats_client
+  oauthcpp
   gflags
   ${LIBZ}
 )

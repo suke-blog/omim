@@ -3,9 +3,15 @@
 #include "search/search_quality/assessment_tool/helpers.hpp"
 
 #include "base/assert.hpp"
+#include "base/logging.hpp"
 
+#include <string>
+
+#include <QtGui/QContextMenuEvent>
 #include <QtGui/QStandardItem>
+#include <QtWidgets/QAction>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QMenu>
 
 // SamplesView::Model ------------------------------------------------------------------------------
 SamplesView::Model::Model(QWidget * parent)
@@ -22,7 +28,14 @@ QVariant SamplesView::Model::data(QModelIndex const & index, int role) const
   if (role == Qt::BackgroundRole && m_samples.IsValid())
   {
     if (m_samples.IsChanged(row))
-      return QBrush(QColor(255, 255, 200));
+      return QBrush(QColor(0xFF, 0xFF, 0xC8));
+
+    if (m_samples.GetSearchState(row) == Context::SearchState::InQueue)
+      return QBrush(QColor(0xFF, 0xCC, 0x66));
+
+    if (m_samples.GetSearchState(row) == Context::SearchState::Completed)
+      return QBrush(QColor(0xCA, 0xFE, 0xDB));
+
     return QBrush(Qt::transparent);
   }
   return QStandardItemModel::data(index, role);
@@ -47,4 +60,20 @@ SamplesView::SamplesView(QWidget * parent) : QTableView(parent)
 bool SamplesView::IsSelected(size_t index) const
 {
   return selectionModel()->isRowSelected(base::checked_cast<int>(index), QModelIndex());
+}
+
+void SamplesView::contextMenuEvent(QContextMenuEvent * event)
+{
+  QModelIndex modelIndex = selectionModel()->currentIndex();
+  if (!modelIndex.isValid())
+    return;
+
+  int const index = modelIndex.row();
+  bool const isUseless = m_model->SampleIsUseless(index);
+
+  QMenu menu(this);
+  auto const text = std::string(isUseless ? "unmark" : "mark") + " sample as useless";
+  auto const * action = menu.addAction(text.c_str());
+  connect(action, &QAction::triggered, [this, index]() { emit FlipSampleUsefulness(index); });
+  menu.exec(event->globalPos());
 }

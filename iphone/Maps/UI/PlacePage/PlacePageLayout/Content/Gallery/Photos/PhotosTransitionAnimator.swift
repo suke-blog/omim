@@ -1,4 +1,3 @@
-import UIKit
 
 final class PhotosTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
   private enum Settings {
@@ -49,7 +48,7 @@ final class PhotosTransitionAnimator: NSObject, UIViewControllerAnimatedTransiti
 
     if dismissing {
       if let fromView = transitionContext.view(forKey: UITransitionContextViewKey.from) {
-        transitionContext.containerView.bringSubview(toFront: fromView)
+        transitionContext.containerView.bringSubviewToFront(fromView)
       }
     }
   }

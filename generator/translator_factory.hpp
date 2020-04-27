@@ -1,10 +1,11 @@
 #pragma once
 
 #include "generator/factory_utils.hpp"
-#include "generator/translator_geo_objects.hpp"
+#include "generator/translator_coastline.hpp"
+#include "generator/translator_complex.hpp"
+#include "generator/translator_country.hpp"
 #include "generator/translator_interface.hpp"
-#include "generator/translator_planet.hpp"
-#include "generator/translator_region.hpp"
+#include "generator/translator_world.hpp"
 
 #include "base/assert.hpp"
 
@@ -15,22 +16,22 @@ namespace generator
 {
 enum class TranslatorType
 {
-  Planet,
-  Region,
-  GeoObjects
+  Country,
+  Coastline,
+  World,
+  Complex
 };
 
 template <class... Args>
-std::shared_ptr<TranslatorInterface> CreateTranslator(TranslatorType type, Args&&... args)
+std::shared_ptr<TranslatorInterface> CreateTranslator(TranslatorType type, Args &&... args)
 {
   switch (type)
   {
-  case TranslatorType::Planet:
-    return create<TranslatorPlanet>(std::forward<Args>(args)...);
-  case TranslatorType::Region:
-    return create<TranslatorRegion>(std::forward<Args>(args)...);
-  case TranslatorType::GeoObjects:
-    return create<TranslatorGeoObjects>(std::forward<Args>(args)...);
+  case TranslatorType::Coastline: return create<TranslatorCoastline>(std::forward<Args>(args)...);
+  case TranslatorType::Country: return create<TranslatorCountry>(std::forward<Args>(args)...);
+  case TranslatorType::World: return create<TranslatorWorld>(std::forward<Args>(args)...);
+  case TranslatorType::Complex:
+    return create<TranslatorComplex>(std::forward<Args>(args)...);
   }
   UNREACHABLE();
 }

@@ -3,8 +3,8 @@ package com.mapswithme.maps.location;
 import android.annotation.SuppressLint;
 import android.net.SSLCertificateSocketFactory;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.mapswithme.maps.BuildConfig;
 import com.mapswithme.util.log.Logger;
@@ -248,7 +248,7 @@ class PlatformSocket
       return false;
     }
 
-    if (data.length < 0 || count < 0 || count > data.length)
+    if (count < 0 || count > data.length)
     {
       LOGGER.e(TAG, "Illegal arguments, data.length = " + data.length + ", count = " + count + "\n");
       return false;

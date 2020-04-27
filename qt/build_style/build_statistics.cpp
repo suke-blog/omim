@@ -10,6 +10,7 @@
 #include <QtCore/QStringList>
 
 #include <exception>
+#include <string>
 
 namespace
 {
@@ -45,7 +46,7 @@ QString GetStyleStatistics(QString const & mapcssMappingFile, QString const & dr
   QString text;
   if (res.first != 0)
   {
-    text = QString("System error ") + to_string(res.first).c_str();
+    text = QString("System error ") + std::to_string(res.first).c_str();
     if (!res.second.isEmpty())
       text = text + "\n" + res.second;
   }
@@ -58,8 +59,8 @@ QString GetStyleStatistics(QString const & mapcssMappingFile, QString const & dr
 QString GetCurrentStyleStatistics()
 {
   QString const resourceDir = GetPlatform().ResourcesDir().c_str();
-  QString const mappingPath = JoinFoldersToPath({resourceDir, "mapcss-mapping.csv"});
-  QString const drulesPath = JoinFoldersToPath({resourceDir, "drules_proto_design.bin"});
+  QString const mappingPath = JoinPathQt({resourceDir, "mapcss-mapping.csv"});
+  QString const drulesPath = JoinPathQt({resourceDir, "drules_proto_design.bin"});
   return GetStyleStatistics(mappingPath, drulesPath);
 }
 }  // namespace build_style

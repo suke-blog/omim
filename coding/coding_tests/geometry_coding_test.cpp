@@ -14,7 +14,12 @@
 
 #include "base/logging.hpp"
 
+#include <cstddef>
+#include <cstdint>
+#include <vector>
+
 using namespace coding;
+using namespace std;
 
 using PU = m2::PointU;
 
@@ -22,7 +27,7 @@ namespace
 {
 m2::PointU D2U(m2::PointD const & p) { return PointDToPointU(p, kPointCoordBits); }
 
-m2::PointU GetMaxPoint() { return D2U(m2::PointD(MercatorBounds::kMaxX, MercatorBounds::kMaxY)); }
+m2::PointU GetMaxPoint() { return D2U(m2::PointD(mercator::Bounds::kMaxX, mercator::Bounds::kMaxY)); }
 
 void TestPolylineEncode(string testName, vector<m2::PointU> const & points,
                         m2::PointU const & maxPoint,

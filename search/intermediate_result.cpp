@@ -1,4 +1,5 @@
 #include "search/intermediate_result.hpp"
+
 #include "search/geometry_utils.hpp"
 #include "search/reverse_geocoder.hpp"
 
@@ -9,13 +10,14 @@
 #include "indexer/cuisines.hpp"
 #include "indexer/feature.hpp"
 #include "indexer/feature_algo.hpp"
+#include "indexer/feature_utils.hpp"
 #include "indexer/ftypes_matcher.hpp"
 #include "indexer/ftypes_sponsored.hpp"
 #include "indexer/scales.hpp"
 
-#include "geometry/angles.hpp"
-
 #include "platform/measurement_utils.hpp"
+
+#include "geometry/angles.hpp"
 
 #include "base/logging.hpp"
 #include "base/string_utils.hpp"
@@ -66,28 +68,51 @@ public:
 }  // namespace
 
 // PreRankerResult ---------------------------------------------------------------------------------
-PreRankerResult::PreRankerResult(FeatureID const & id, PreRankingInfo const & info)
-  : m_id(id), m_info(info)
+PreRankerResult::PreRankerResult(FeatureID const & id, PreRankingInfo const & info,
+                                 vector<ResultTracer::Branch> const & provenance)
+  : m_id(id), m_info(info), m_provenance(provenance)
 {
   ASSERT(m_id.IsValid(), ());
+
+  m_matchedTokensNumber = 0;
+  for (auto const & r : m_info.m_tokenRanges)
+    m_matchedTokensNumber += r.Size();
 }
 
 // static
-bool PreRankerResult::LessRankAndPopularity(PreRankerResult const & r1, PreRankerResult const & r2)
+bool PreRankerResult::LessRankAndPopularity(PreRankerResult const & lhs,
+                                            PreRankerResult const & rhs)
 {
-  if (r1.m_info.m_rank != r2.m_info.m_rank)
-    return r1.m_info.m_rank > r2.m_info.m_rank;
-  if (r1.m_info.m_popularity != r2.m_info.m_popularity)
-    return r1.m_info.m_popularity > r2.m_info.m_popularity;
-  return r1.m_info.m_distanceToPivot < r2.m_info.m_distanceToPivot;
+  if (lhs.m_info.m_rank != rhs.m_info.m_rank)
+    return lhs.m_info.m_rank > rhs.m_info.m_rank;
+  if (lhs.m_info.m_popularity != rhs.m_info.m_popularity)
+    return lhs.m_info.m_popularity > rhs.m_info.m_popularity;
+  return lhs.m_info.m_distanceToPivot < rhs.m_info.m_distanceToPivot;
 }
 
 // static
-bool PreRankerResult::LessDistance(PreRankerResult const & r1, PreRankerResult const & r2)
+bool PreRankerResult::LessDistance(PreRankerResult const & lhs, PreRankerResult const & rhs)
 {
-  if (r1.m_info.m_distanceToPivot != r2.m_info.m_distanceToPivot)
-    return r1.m_info.m_distanceToPivot < r2.m_info.m_distanceToPivot;
-  return r1.m_info.m_rank > r2.m_info.m_rank;
+  if (lhs.m_info.m_distanceToPivot != rhs.m_info.m_distanceToPivot)
+    return lhs.m_info.m_distanceToPivot < rhs.m_info.m_distanceToPivot;
+  return lhs.m_info.m_rank > rhs.m_info.m_rank;
+}
+
+// static
+bool PreRankerResult::LessByExactMatch(PreRankerResult const & lhs, PreRankerResult const & rhs)
+{
+  auto const lhsScore = lhs.m_info.m_exactMatch && lhs.m_info.m_allTokensUsed;
+  auto const rhsScore = rhs.m_info.m_exactMatch && rhs.m_info.m_allTokensUsed;
+  if (lhsScore != rhsScore)
+    return lhsScore;
+
+  if (lhs.GetInnermostTokensNumber() != rhs.GetInnermostTokensNumber())
+    return lhs.GetInnermostTokensNumber() > rhs.GetInnermostTokensNumber();
+
+  if (lhs.GetMatchedTokensNumber() != rhs.GetMatchedTokensNumber())
+    return lhs.GetMatchedTokensNumber() > rhs.GetMatchedTokensNumber();
+
+  return LessDistance(lhs, rhs);
 }
 
 bool PreRankerResult::CategoriesComparator::operator()(PreRankerResult const & lhs,
@@ -114,8 +139,8 @@ RankerResult::RankerResult(FeatureType & f, m2::PointD const & center, m2::Point
   : m_id(f.GetID())
   , m_types(f)
   , m_str(displayName)
-  , m_resultType(ftypes::IsBuildingChecker::Instance()(m_types) ? TYPE_BUILDING : TYPE_FEATURE)
-  , m_geomType(f.GetFeatureType())
+  , m_resultType(ftypes::IsBuildingChecker::Instance()(m_types) ? Type::Building : Type::Feature)
+  , m_geomType(f.GetGeomType())
 {
   ASSERT(m_id.IsValid(), ());
   ASSERT(!m_types.Empty(), ());
@@ -125,17 +150,23 @@ RankerResult::RankerResult(FeatureType & f, m2::PointD const & center, m2::Point
   m_region.SetParams(fileName, center);
   m_distance = PointDistance(center, pivot);
 
-  ProcessMetadata(f, m_metadata);
+  FillDetails(f, m_details);
 }
 
 RankerResult::RankerResult(double lat, double lon)
-  : m_str("(" + measurement_utils::FormatLatLon(lat, lon) + ")"), m_resultType(TYPE_LATLON)
+  : m_str("(" + measurement_utils::FormatLatLon(lat, lon) + ")"), m_resultType(Type::LatLon)
 {
-  m_region.SetParams(string(), MercatorBounds::FromLatLon(lat, lon));
+  m_region.SetParams(string(), mercator::FromLatLon(lat, lon));
+}
+
+RankerResult::RankerResult(m2::PointD const & coord, string const & postcode)
+  : m_str(postcode), m_resultType(Type::Postcode)
+{
+  m_region.SetParams(string(), coord);
 }
 
 bool RankerResult::GetCountryId(storage::CountryInfoGetter const & infoGetter, uint32_t ftype,
-                                storage::TCountryId & countryId) const
+                                storage::CountryId & countryId) const
 {
   static SkipRegionInfo const checker;
   if (checker.IsSkip(ftype))
@@ -145,13 +176,19 @@ bool RankerResult::GetCountryId(storage::CountryInfoGetter const & infoGetter, u
 
 bool RankerResult::IsEqualCommon(RankerResult const & r) const
 {
-  return m_geomType == r.m_geomType && GetBestType() == r.GetBestType() && m_str == r.m_str;
+  if ((m_geomType != r.m_geomType) || (m_str != r.m_str))
+    return false;
+
+  auto const bestType = GetBestType();
+  auto const rBestType = r.GetBestType();
+  if (bestType == rBestType)
+    return true;
+
+  auto const & checker = ftypes::IsWayChecker::Instance();
+  return checker(bestType) && checker(rBestType);
 }
 
-bool RankerResult::IsStreet() const
-{
-  return m_geomType == feature::GEOM_LINE && ftypes::IsStreetChecker::Instance()(m_types);
-}
+bool RankerResult::IsStreet() const { return ftypes::IsStreetOrSquareChecker::Instance()(m_types); }
 
 uint32_t RankerResult::GetBestType(vector<uint32_t> const & preferredTypes) const
 {
@@ -170,7 +207,7 @@ uint32_t RankerResult::GetBestType(vector<uint32_t> const & preferredTypes) cons
 
 // RankerResult::RegionInfo ------------------------------------------------------------------------
 bool RankerResult::RegionInfo::GetCountryId(storage::CountryInfoGetter const & infoGetter,
-                                            storage::TCountryId & countryId) const
+                                            storage::CountryId & countryId) const
 {
   if (!m_countryId.empty())
   {
@@ -189,27 +226,15 @@ bool RankerResult::RegionInfo::GetCountryId(storage::CountryInfoGetter const & i
 }
 
 // Functions ---------------------------------------------------------------------------------------
-void ProcessMetadata(FeatureType & ft, Result::Metadata & meta)
+void FillDetails(FeatureType & ft, Result::Details & details)
 {
-  if (meta.m_isInitialized)
+  if (details.m_isInitialized)
     return;
 
   feature::Metadata const & src = ft.GetMetadata();
 
-  auto const cuisinesMeta = src.Get(feature::Metadata::FMD_CUISINE);
-  if (cuisinesMeta.empty())
-  {
-    meta.m_cuisine = "";
-  }
-  else
-  {
-    vector<string> cuisines;
-    osm::Cuisines::Instance().ParseAndLocalize(cuisinesMeta, cuisines);
-    meta.m_cuisine = strings::JoinStrings(cuisines, " • ");
-  }
-
-  meta.m_airportIata = src.Get(feature::Metadata::FMD_AIRPORT_IATA);
-  meta.m_brand = src.Get(feature::Metadata::FMD_BRAND);
+  details.m_airportIata = src.Get(feature::Metadata::FMD_AIRPORT_IATA);
+  details.m_brand = src.Get(feature::Metadata::FMD_BRAND);
 
   string const openHours = src.Get(feature::Metadata::FMD_OPEN_HOURS);
   if (!openHours.empty())
@@ -218,18 +243,18 @@ void ProcessMetadata(FeatureType & ft, Result::Metadata & meta)
     // TODO: We should check closed/open time for specific feature's timezone.
     time_t const now = time(nullptr);
     if (oh.IsValid() && !oh.IsUnknown(now))
-      meta.m_isOpenNow = oh.IsOpen(now) ? osm::Yes : osm::No;
+      details.m_isOpenNow = oh.IsOpen(now) ? osm::Yes : osm::No;
     // In else case value us osm::Unknown, it's set in preview's constructor.
   }
 
-  if (strings::to_int(src.Get(feature::Metadata::FMD_STARS), meta.m_stars))
-    meta.m_stars = base::clamp(meta.m_stars, 0, 5);
+  if (strings::to_int(src.Get(feature::Metadata::FMD_STARS), details.m_stars))
+    details.m_stars = base::Clamp(details.m_stars, 0, 5);
   else
-    meta.m_stars = 0;
+    details.m_stars = 0;
 
   bool const isSponsoredHotel = ftypes::IsBookingChecker::Instance()(ft);
-  meta.m_isSponsoredHotel = isSponsoredHotel;
-  meta.m_isHotel = ftypes::IsHotelChecker::Instance()(ft);
+  details.m_isSponsoredHotel = isSponsoredHotel;
+  details.m_isHotel = ftypes::IsHotelChecker::Instance()(ft);
 
   if (isSponsoredHotel)
   {
@@ -238,9 +263,8 @@ void ProcessMetadata(FeatureType & ft, Result::Metadata & meta)
     {
       float raw;
       if (strings::to_float(r.c_str(), raw))
-        meta.m_hotelRating = raw;
+        details.m_hotelRating = raw;
     }
-
 
     int pricing;
     if (!strings::to_int(src.Get(feature::Metadata::FMD_PRICE_RATE), pricing))
@@ -250,11 +274,18 @@ void ProcessMetadata(FeatureType & ft, Result::Metadata & meta)
     for (auto i = 0; i < pricing; i++)
       pricingStr.append(kPricingSymbol);
 
-    meta.m_hotelPricing = pricing;
-    meta.m_hotelApproximatePricing = pricingStr;
+    details.m_hotelPricing = pricing;
+    details.m_hotelApproximatePricing = pricingStr;
   }
 
-  meta.m_isInitialized = true;
+  string const kFieldsSeparator = " • ";
+  auto const cuisines = feature::GetLocalizedCuisines(feature::TypesHolder(ft));
+  details.m_cuisine = strings::JoinStrings(cuisines, kFieldsSeparator);
+
+  auto const roadShields = feature::GetRoadShieldsNames(ft.GetRoadNumber());
+  details.m_roadShields = strings::JoinStrings(roadShields, kFieldsSeparator);
+
+  details.m_isInitialized = true;
 }
 
 string DebugPrint(RankerResult const & r)
@@ -262,8 +293,12 @@ string DebugPrint(RankerResult const & r)
   stringstream ss;
   ss << "RankerResult ["
      << "Name: " << r.GetName()
-     << "; Type: " << r.GetBestType()
-     << "; " << DebugPrint(r.GetRankingInfo())
+     << "; Type: " << classif().GetReadableObjectName(r.GetBestType());
+
+    if (!r.GetProvenance().empty())
+      ss << "; Provenance: " << ::DebugPrint(r.GetProvenance());
+
+     ss << "; " << DebugPrint(r.GetRankingInfo())
      << "; Linear model rank: " << r.GetLinearModelRank()
      << "]";
   return ss.str();

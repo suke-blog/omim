@@ -12,6 +12,7 @@
 
 #include "map/bookmarks_search_params.hpp"
 #include "map/search_api.hpp"
+#include "map/search_product_info.hpp"
 #include "map/viewport_search_params.hpp"
 
 #include "storage/country_info_getter.hpp"
@@ -60,8 +61,8 @@ class SearchAPITest : public generator::tests_support::TestWithCustomMwms
 {
 public:
   SearchAPITest()
-    : m_infoGetter(CountryInfoReader::CreateCountryInfoReader(GetPlatform()))
-    , m_api(m_dataSource, m_storage, *m_infoGetter, m_delegate)
+    : m_infoGetter(CountryInfoReader::CreateCountryInfoGetter(GetPlatform()))
+    , m_api(m_dataSource, m_storage, *m_infoGetter, 1 /* numThreads */, m_delegate)
   {
   }
 
@@ -130,38 +131,137 @@ UNIT_CLASS_TEST(SearchAPITest, MultipleViewportsRequests)
   future1.wait();
 }
 
+UNIT_CLASS_TEST(SearchAPITest, Cancellation)
+{
+  TestCafe cafe(m2::PointD(0, 0), "cafe", "en");
+
+  auto const id = BuildCountry("Wonderland", [&](TestMwmBuilder & builder) { builder.Add(cafe); });
+
+  EverywhereSearchParams params;
+  params.m_query = "cafe ";
+  params.m_inputLocale = "en";
+
+  {
+    promise<void> promise;
+    auto future = promise.get_future();
+
+    params.m_onResults = [&](Results const & results, vector<ProductInfo> const &) {
+      TEST(!results.IsEndedCancelled(), ());
+
+      if (!results.IsEndMarker())
+        return;
+
+      Rules const rules = {ExactMatch(id, cafe)};
+      TEST(MatchResults(m_dataSource, rules, results), ());
+
+      promise.set_value();
+    };
+
+    m_api.OnViewportChanged(m2::RectD(0.0, 0.0, 1.0, 1.0));
+    m_api.SearchEverywhere(params);
+    future.wait();
+  }
+
+  {
+    promise<void> promise;
+    auto future = promise.get_future();
+
+    params.m_timeout = chrono::seconds(-1);
+
+    params.m_onResults = [&](Results const & results, vector<ProductInfo> const &) {
+      // The deadline has fired but Search API does not expose it.
+      TEST(!results.IsEndedCancelled(), ());
+
+      if (!results.IsEndMarker())
+        return;
+
+      Rules const rules = {ExactMatch(id, cafe)};
+      TEST(MatchResults(m_dataSource, rules, results), ());
+
+      promise.set_value();
+    };
+
+    // Force the search by changing the viewport.
+    m_api.OnViewportChanged(m2::RectD(0.0, 0.0, 2.0, 2.0));
+    m_api.SearchEverywhere(params);
+    future.wait();
+  }
+}
+
 UNIT_CLASS_TEST(SearchAPITest, BookmarksSearch)
 {
-  vector<pair<kml::MarkId, kml::BookmarkData>> marks;
+  vector<BookmarkInfo> marks;
 
   kml::BookmarkData data;
   kml::SetDefaultStr(data.m_name, "R&R dinner");
   kml::SetDefaultStr(data.m_description, "They've got a cherry pie there that'll kill ya!");
   marks.emplace_back(0, data);
   kml::SetDefaultStr(data.m_name, "Silver Mustang Casino");
-  kml::SetDefaultStr(data.m_description, "Joyful place, owners Bradley and Rodney are very friendly!");
+  kml::SetDefaultStr(data.m_description,
+                     "Joyful place, owners Bradley and Rodney are very friendly!");
   marks.emplace_back(1, data);
   kml::SetDefaultStr(data.m_name, "Great Northern Hotel");
   kml::SetDefaultStr(data.m_description, "Clean place with a reasonable price");
   marks.emplace_back(2, data);
+  m_api.EnableIndexingOfBookmarksDescriptions(true);
+  m_api.EnableIndexingOfBookmarkGroup(10, true /* enable */);
   m_api.OnBookmarksCreated(marks);
+  m_api.OnViewportChanged(m2::RectD(-1, -1, 1, 1));
 
-  promise<vector<kml::MarkId>> promise;
-  auto future = promise.get_future();
+  auto runTest = [&](string const & query, kml::MarkGroupId const & groupId,
+                     vector<kml::MarkId> const & expected) {
+    promise<vector<kml::MarkId>> idsPromise;
+    auto idsFuture = idsPromise.get_future();
 
-  BookmarksSearchParams params;
-  params.m_query = "gread silver hotel";
-  params.m_onResults = [&](vector<kml::MarkId> const & results,
-                           BookmarksSearchParams::Status status) {
-    if (status != BookmarksSearchParams::Status::Completed)
-      return;
-    promise.set_value(results);
+    BookmarksSearchParams params;
+    params.m_query = query;
+    params.m_onResults = [&](vector<kml::MarkId> const & results,
+                             BookmarksSearchParams::Status status) {
+      if (status != BookmarksSearchParams::Status::Completed)
+        return;
+      idsPromise.set_value(results);
+    };
+    params.m_groupId = groupId;
+
+    m_api.SearchInBookmarks(params);
+
+    auto const ids = idsFuture.get();
+    TEST_EQUAL(ids, expected, ());
   };
 
-  m_api.OnViewportChanged(m2::RectD(-1, -1, 1, 1));
-  m_api.SearchInBookmarks(params);
+  string const query = "gread silver hotel";
+  runTest(query, kml::kInvalidMarkGroupId, vector<kml::MarkId>());
 
-  auto const ids = future.get();
-  TEST_EQUAL(ids, vector<kml::MarkId>({2, 1}), ());
+  {
+    vector<BookmarkGroupInfo> groupInfos;
+    groupInfos.emplace_back(kml::MarkGroupId(10), vector<kml::MarkId>({0, 1}));
+    groupInfos.emplace_back(kml::MarkGroupId(11), vector<kml::MarkId>({2}));
+    m_api.OnBookmarksAttached(groupInfos);
+  }
+
+  runTest(query, kml::kInvalidMarkGroupId, vector<kml::MarkId>({1}));
+  runTest(query, kml::MarkGroupId(11), {});
+  m_api.EnableIndexingOfBookmarkGroup(11, true /* enable */);
+  runTest(query, kml::kInvalidMarkGroupId, vector<kml::MarkId>({2, 1}));
+  runTest(query, kml::MarkGroupId(11), vector<kml::MarkId>({2}));
+  m_api.EnableIndexingOfBookmarkGroup(11, false /* enable */);
+  runTest(query, kml::kInvalidMarkGroupId, vector<kml::MarkId>({1}));
+  runTest(query, kml::MarkGroupId(11), {});
+  m_api.EnableIndexingOfBookmarkGroup(11, true /* enable */);
+
+  {
+    vector<BookmarkGroupInfo> groupInfos;
+    groupInfos.emplace_back(kml::MarkGroupId(10), vector<kml::MarkId>({1}));
+    m_api.OnBookmarksDetached(groupInfos);
+  }
+  {
+    vector<BookmarkGroupInfo> groupInfos;
+    groupInfos.emplace_back(kml::MarkGroupId(11), vector<kml::MarkId>({1}));
+    m_api.OnBookmarksAttached(groupInfos);
+  }
+  runTest(query, kml::MarkGroupId(11), vector<kml::MarkId>({2, 1}));
+
+  m_api.ResetBookmarksEngine();
+  runTest(query, kml::MarkGroupId(11), {});
 }
 }  // namespace

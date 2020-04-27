@@ -1,6 +1,6 @@
 #import "MWMViewController.h"
 
-#include "storage/index.hpp"
+#include "storage/storage_defines.hpp"
 
 @class MapViewController;
 
@@ -8,6 +8,6 @@
 
 + (instancetype)dialogForController:(MapViewController *)controller;
 
-- (void)processViewportCountryEvent:(storage::TCountryId const &)countryId;
+- (void)processViewportCountryEvent:(storage::CountryId const &)countryId;
 
 @end

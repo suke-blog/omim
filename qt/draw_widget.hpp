@@ -1,6 +1,7 @@
 #pragma once
 
 #include "qt/qt_common/map_widget.hpp"
+#include "qt/ruler.hpp"
 
 #include "map/everywhere_search_params.hpp"
 #include "map/place_page_info.hpp"
@@ -14,14 +15,16 @@
 
 #include "drape_frontend/drape_engine.hpp"
 
-#include "std/condition_variable.hpp"
-#include "std/mutex.hpp"
-#include "std/unique_ptr.hpp"
+#include <condition_variable>
+#include <functional>
+#include <memory>
+#include <mutex>
+#include <optional>
+#include <string>
 
 #include <QtWidgets/QRubberBand>
 
 class Framework;
-class QQuickWindow;
 
 namespace qt
 {
@@ -29,6 +32,9 @@ namespace common
 {
 class ScaleSlider;
 }
+
+class Screenshoter;
+struct ScreenshotParams;
 
 class DrawWidget : public qt::common::MapWidget
 {
@@ -44,12 +50,11 @@ public Q_SLOTS:
   void OnUpdateCountryStatusByTimer();
 
 public:
-  DrawWidget(Framework & framework, bool apiOpenGLES3, QWidget * parent);
-  ~DrawWidget();
+  DrawWidget(Framework & framework, bool apiOpenGLES3, std::unique_ptr<ScreenshotParams> && screenshotParams,
+             QWidget * parent);
+  ~DrawWidget() override;
 
-  bool Search(search::EverywhereSearchParams const & params);
-  string GetDistance(search::Result const & res) const;
-  void ShowSearchResult(search::Result const & res);
+  std::string GetDistance(search::Result const & res) const;
 
   void CreateFeature();
 
@@ -65,16 +70,14 @@ public:
 
   void SetRouter(routing::RouterType routerType);
 
-  using TCurrentCountryChanged = function<void(storage::TCountryId const &, string const &,
-                                               storage::Status, uint64_t, uint8_t)>;
+  void SetRuler(bool enabled);
+
+  using TCurrentCountryChanged = std::function<void(storage::CountryId const &, std::string const &,
+                                                    storage::Status, uint64_t, uint8_t)>;
   void SetCurrentCountryChangedListener(TCurrentCountryChanged const & listener);
 
-  void DownloadCountry(storage::TCountryId const & countryId);
-  void RetryToDownloadCountry(storage::TCountryId const & countryId);
-
-  void SetSelectionMode(bool mode);
-  void SetCityBoundariesSelectionMode(bool mode);
-  void SetCityRoadsSelectionMode(bool mode);
+  void DownloadCountry(storage::CountryId const & countryId);
+  void RetryToDownloadCountry(storage::CountryId const & countryId);
 
   RouteMarkType GetRoutePointAddMode() const { return m_routePointAddMode; }
   void SetRoutePointAddMode(RouteMarkType mode) { m_routePointAddMode = mode; }
@@ -94,18 +97,24 @@ protected:
   void mousePressEvent(QMouseEvent * e) override;
   void mouseMoveEvent(QMouseEvent * e) override;
   void mouseReleaseEvent(QMouseEvent * e) override;
+  //@}
+
   void keyPressEvent(QKeyEvent * e) override;
   void keyReleaseEvent(QKeyEvent * e) override;
-  //@}
 
 private:
   void SubmitFakeLocationPoint(m2::PointD const & pt);
+  void SubmitRulerPoint(QMouseEvent * e);
   void SubmitRoutingPoint(m2::PointD const & pt);
   void SubmitBookmark(m2::PointD const & pt);
-  void ShowInfoPopup(QMouseEvent * e, m2::PointD const & pt);
-  void ShowPlacePage(place_page::Info const & info);
+  void ShowPlacePage();
 
-  void UpdateCountryStatus(storage::TCountryId const & countryId);
+  void UpdateCountryStatus(storage::CountryId const & countryId);
+
+  void VisualizeMwmsBordersInRect(m2::RectD const & rect, bool withVertices,
+                                  bool fromPackedPolygon, bool boundingBox);
+
+  m2::PointD GetCoordsFromSettingsIfExists(bool start, m2::PointD const & pt);
 
   QRubberBand * m_rubberBand;
   QPoint m_rubberBandOrigin;
@@ -113,11 +122,33 @@ private:
   bool m_emulatingLocation;
 
   TCurrentCountryChanged m_currentCountryChanged;
-  storage::TCountryId m_countryId;
+  storage::CountryId m_countryId;
 
-  bool m_selectionMode = false;
-  bool m_cityBoundariesSelectionMode = false;
-  bool m_cityRoadsSelectionMode = false;
+public:
+  enum class SelectionMode
+  {
+    Features,
+    CityBoundaries,
+    CityRoads,
+    MwmsBordersByPolyFiles,
+    MwmsBordersWithVerticesByPolyFiles,
+    MwmsBordersByPackedPolygon,
+    MwmsBordersWithVerticesByPackedPolygon,
+    BoundingBoxByPolyFiles,
+    BoundingBoxByPackedPolygon,
+  };
+
+  void SetSelectionMode(SelectionMode mode) { m_currentSelectionMode = {mode}; }
+  void DropSelectionMode() { m_currentSelectionMode = {}; }
+  bool SelectionModeIsSet() { return static_cast<bool>(m_currentSelectionMode); }
+  SelectionMode GetSelectionMode() const { return *m_currentSelectionMode; }
+
+private:
+  void ProcessSelectionMode();
+  std::optional<SelectionMode> m_currentSelectionMode;
   RouteMarkType m_routePointAddMode = RouteMarkType::Finish;
+
+  std::unique_ptr<Screenshoter> m_screenshoter;
+  Ruler m_ruler;
 };
 }  // namespace qt

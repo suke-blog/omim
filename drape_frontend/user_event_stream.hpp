@@ -40,7 +40,8 @@ public:
     Rotate,
     FollowAndRotate,
     AutoPerspective,
-    VisibleViewport
+    VisibleViewport,
+    Move
   };
 
   virtual ~UserEvent() = default;
@@ -134,12 +135,33 @@ private:
   bool m_isAnim;
 };
 
+class MoveEvent : public UserEvent
+{
+public:
+  MoveEvent(double factorX, double factorY, bool isAnim)
+    : m_factorX(factorX)
+    , m_factorY(factorY)
+    , m_isAnim(isAnim)
+  {}
+
+  EventType GetType() const override { return UserEvent::EventType::Move; }
+
+  double GetFactorX() const { return m_factorX; }
+  double GetFactorY() const { return m_factorY; }
+  bool IsAnim() const { return m_isAnim; }
+
+private:
+  double m_factorX;
+  double m_factorY;
+  bool m_isAnim;
+};
+
 class SetCenterEvent : public UserEvent
 {
 public:
   SetCenterEvent(m2::PointD const & center, int zoom,
                  bool isAnim, bool trackVisibleViewport,
-                 TAnimationCreator const & parallelAnimCreator = nullptr)
+                 TAnimationCreator const & parallelAnimCreator)
     : m_center(center)
     , m_zoom(zoom)
     , m_isAnim(isAnim)
@@ -167,11 +189,12 @@ class SetRectEvent : public UserEvent
 {
 public:
   SetRectEvent(m2::RectD const & rect, bool rotate, int zoom, bool isAnim,
-               TAnimationCreator const & parallelAnimCreator = nullptr)
+               bool useVisibleViewport, TAnimationCreator const & parallelAnimCreator)
     : m_rect(rect)
     , m_applyRotation(rotate)
     , m_zoom(zoom)
     , m_isAnim(isAnim)
+    , m_useVisibleViewport(useVisibleViewport)
     , m_parallelAnimCreator(parallelAnimCreator)
   {}
 
@@ -181,6 +204,7 @@ public:
   bool GetApplyRotation() const { return m_applyRotation; }
   int GetZoom() const { return m_zoom; }
   bool IsAnim() const { return m_isAnim; }
+  bool UseVisibleViewport() const { return m_useVisibleViewport; }
   TAnimationCreator const & GetParallelAnimCreator() const { return m_parallelAnimCreator; }
 
 private:
@@ -188,25 +212,32 @@ private:
   bool m_applyRotation; // if true, current rotation will be apply to m_rect
   int m_zoom; // if zoom == -1, then zoom level will'n change
   bool m_isAnim;
+  bool m_useVisibleViewport;
   TAnimationCreator m_parallelAnimCreator;
 };
 
 class SetAnyRectEvent : public UserEvent
 {
 public:
-  SetAnyRectEvent(m2::AnyRectD const & rect, bool isAnim)
+  SetAnyRectEvent(m2::AnyRectD const & rect, bool isAnim, bool fitInViewport, bool useVisibleViewport)
     : m_rect(rect)
     , m_isAnim(isAnim)
+    , m_fitInViewport(fitInViewport)
+    , m_useVisibleViewport(useVisibleViewport)
   {}
 
   EventType GetType() const override { return UserEvent::EventType::SetAnyRect; }
 
   m2::AnyRectD const & GetRect() const { return m_rect; }
   bool IsAnim() const { return m_isAnim; }
+  bool FitInViewport() const { return m_fitInViewport; }
+  bool UseVisibleViewport() const { return m_useVisibleViewport; }
 
 private:
   m2::AnyRectD m_rect;  // destination mercator rect
   bool m_isAnim;
+  bool m_fitInViewport;
+  bool m_useVisibleViewport;
 };
 
 class FollowAndRotateEvent : public UserEvent
@@ -283,18 +314,21 @@ private:
 class RotateEvent : public UserEvent
 {
 public:
-  explicit RotateEvent(double targetAzimut, TAnimationCreator const & parallelAnimCreator = nullptr)
-    : m_targetAzimut(targetAzimut)
+  explicit RotateEvent(double targetAzimuth, bool isAnim, TAnimationCreator const & parallelAnimCreator)
+    : m_targetAzimuth(targetAzimuth)
+    , m_isAnim(isAnim)
     , m_parallelAnimCreator(parallelAnimCreator)
   {}
 
   EventType GetType() const override { return UserEvent::EventType::Rotate; }
 
-  double GetTargetAzimuth() const { return m_targetAzimut; }
+  bool IsAnim() const { return m_isAnim; }
+  double GetTargetAzimuth() const { return m_targetAzimuth; }
   TAnimationCreator const & GetParallelAnimCreator() const { return m_parallelAnimCreator; }
 
 private:
-  double m_targetAzimut;
+  double m_targetAzimuth;
+  bool m_isAnim;
   TAnimationCreator m_parallelAnimCreator;
 };
 
@@ -352,10 +386,10 @@ public:
     virtual void OnScaleEnded() = 0;
     virtual void OnAnimatedScaleEnded() = 0;
 
-    virtual void OnTouchMapAction(TouchEvent::ETouchType touchType) = 0;
+    virtual void OnTouchMapAction(TouchEvent::ETouchType touchType, bool isMapTouch) = 0;
 
     virtual bool OnNewVisibleViewport(m2::RectD const & oldViewport, m2::RectD const & newViewport,
-                                      m2::PointD & gOffset) = 0;
+                                      bool needOffset, m2::PointD & gOffset) = 0;
   };
 
   UserEventStream();
@@ -399,17 +433,18 @@ public:
 
 private:
   bool OnSetScale(ref_ptr<ScaleEvent> scaleEvent);
+  bool OnMove(ref_ptr<MoveEvent> moveEvent);
   bool OnSetAnyRect(ref_ptr<SetAnyRectEvent> anyRectEvent);
   bool OnSetRect(ref_ptr<SetRectEvent> rectEvent);
   bool OnSetCenter(ref_ptr<SetCenterEvent> centerEvent);
   bool OnRotate(ref_ptr<RotateEvent> rotateEvent);
   bool OnNewVisibleViewport(ref_ptr<SetVisibleViewportEvent> viewportEvent);
 
-  bool SetAngle(double azimuth, TAnimationCreator const & parallelAnimCreator = nullptr);
+  bool SetAngle(double azimuth, bool isAnim, TAnimationCreator const & parallelAnimCreator = nullptr);
   bool SetRect(m2::RectD rect, int zoom, bool applyRotation, bool isAnim,
-               TAnimationCreator const & parallelAnimCreator = nullptr);
-  bool SetRect(m2::AnyRectD const & rect, bool isAnim,
-               TAnimationCreator const & parallelAnimCreator = nullptr);
+               bool useVisibleViewport, TAnimationCreator const & parallelAnimCreator = nullptr);
+  bool SetRect(m2::AnyRectD const & rect, bool isAnim, bool fitInViewport,
+               bool useVisibleViewport, TAnimationCreator const & parallelAnimCreator = nullptr);
 
   bool SetScreen(ScreenBase const & screen, bool isAnim,
                  TAnimationCreator const & parallelAnimCreator = nullptr);

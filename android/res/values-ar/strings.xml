@@ -4,8 +4,6 @@
 <!-- Language: ar -->
 <resources>
 	<!-- SECTION: Strings -->
-	<!-- About button text (should be short) -->
-	<string name="about">نبذة عنا</string>
 	<!-- Button text (should be short) -->
 	<string name="back">رجوع</string>
 	<!-- Button text (should be short) -->
@@ -52,7 +50,6 @@
 	<string name="miles">ميل</string>
 	<!-- View and button titles for accessibility -->
 	<string name="core_my_position">موقعي</string>
-	<string name="ok">موافق</string>
 	<!-- Settings/Downloader - No free space dialog message -->
 	<string name="free_disk_space_for_country_x">الرجاء إخلاء بعض المساحة في ذاكرة جهازك أولا لكي تتمكن من تنزيل %s</string>
 	<!-- Leave Review dialog - Not now button (remind me later) -->
@@ -71,8 +68,6 @@
 	<string name="touch_to_download">انقر للتنزيل</string>
 	<!-- Settings/Downloader - 3G download warning dialog confirm button -->
 	<string name="use_cellular_data">نعم</string>
-	<!-- Settings/Downloader - No internet connection dialog message -->
-	<string name="use_wifi_recommendation_text">نحن نوصي باستخدام واي فاي لتنزيل الخرائط الكبيرة</string>
 	<!-- Choose measurement on first launch alert - title -->
 	<string name="which_measurement_system">ما هو نظام القياس المفضل لديك؟</string>
 	<!-- Location services are disabled by user alert - message -->
@@ -260,8 +255,6 @@
 	<string name="my_position_share_sms">هاي، تفقد الموقع الخاص بي على MAPS.ME! %1$s أو %2$s. ليس لديك أي خرائط تعمل بدون الاتصال مع الانترنت مثبتة على جهازك؟ قم بتحميلها من هنا: http://maps.me/get</string>
 	<!-- Subject for emailed bookmark -->
 	<string name="bookmark_share_email_subject">هاي، تفقد الدبوس الخاص بي على خريطة MAPS.ME!</string>
-	<!-- Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me -->
-	<string name="bookmark_share_email">مرحبا،\n\nقمت بوضع دبوس: %1$s على MAPS.ME، خرائط العالم بدون الاتصال مع الانترنت. انقر على هذا الرابط %2$s أو الرابط التالي %3$s لمشاهدة الموقع على الخريطة.\n\nشكرا لك.</string>
 	<!-- Subject for emailed position -->
 	<string name="my_position_share_email_subject">يا هلا، تحقق من موقعي الحالي على خريطة MAPS.ME!</string>
 	<!-- Share my position using EMail, %1$@ is ge0:// and %2$@ is http://ge0.me link WITHOUT NAME -->
@@ -564,6 +557,22 @@
 	<string name="brown">بني</string>
 	<!-- pink color -->
 	<string name="pink">وردي</string>
+	<!-- deep purple color -->
+	<string name="deep_purple">أرجواني داكن</string>
+	<!-- light blue color -->
+	<string name="light_blue">أزرق فاتح</string>
+	<!-- cyan color -->
+	<string name="cyan">أزرق سماوي</string>
+	<!-- teal color -->
+	<string name="teal">أخضر فاتح</string>
+	<!-- lime color -->
+	<string name="lime">ليموني</string>
+	<!-- deep orange color -->
+	<string name="deep_orange">برتقالي داكن</string>
+	<!-- gray color -->
+	<string name="gray">رمادي</string>
+	<!-- blue gray color -->
+	<string name="blue_gray">رمادي أزرق</string>
 	<!-- Wi-Fi available -->
 	<string name="WiFi_available">نعم</string>
 
@@ -797,8 +806,6 @@
 	<string name="onboarding_location_message">لاستخدام الملاحة والميزات الأخرى، فنحن بحاجة إلى تحديد موقعك الجغرافي.</string>
 	<string name="onboarding_permissions_title">السماح لـ MAPS.ME بالوصول إلى ذاكرة التخزين والموقع</string>
 	<string name="onboarding_permissions_message">من ثم يمكنك تنزيل الخرائط وعرض الأماكن وحركة المرور القريبة منك استخدام الملاحة.</string>
-	<string name="onboarding_welcome_title">مرحبًا بك في MAPS.ME</string>
-	<string name="onboarding_welcome_first_subtitle">خرائط تفصيلية مجانية وسريعة وتفصيلية وبدون اتصال بالكامل مع الملاحة منعطف بمنعطف.</string>
 	<string name="onboarding_welcome_second_subtitle">من خلال إطلاق التطبيق، فإنك توافق على &lt;a href="%1$s">شروط الاستخدام&lt;/a> و&lt;a href="%2$s">سياسة الخصوصية&lt;/a>.</string>
 	<string name="dialog_incorrect_feature_position">تغيير الموقع</string>
 	<string name="message_invalid_feature_position">لا يمكن تحديد موقع الكائن هنا</string>
@@ -880,6 +887,7 @@
 	<string name="minute">د</string>
 	<string name="placepage_place_description">الوصف</string>
 	<string name="placepage_more_button">المزيد</string>
+	<string name="placepage_more_reviews_button">المزيد من المراجعات</string>
 	<string name="book_button">حجز</string>
 	<string name="placepage_call_button">اتصال</string>
 	<string name="placepage_edit_bookmark_button">تحرير العلامة المرجعية</string>
@@ -1033,8 +1041,6 @@
 	<string name="banner_geerbest_message">بحث سريع في أكثر من 50000 صنف بأسعار منخفضة.</string>
 	<string name="banner_rentalcars_title">إيجار السيارات على الإنترنت</string>
 	<string name="banner_rentalcars_message">800 شركة تأجير سيارات في أكثر من 49000 مكان لتأجير السيارات.</string>
-	<string name="banner_viator_title">بحث عن الرحلات على الإنترنت</string>
-	<string name="banner_viator_message">بحث في أكثر من 50000 رحلة في كافة أنحاء العالم.</string>
 	<!-- december -->
 	<string name="whatsnew_traffic">البيانات المرورية في 36 دولة</string>
 	<!-- december -->
@@ -1076,8 +1082,6 @@
 	<string name="whatsnew_smaller_mwm_message">الخرائط تتطلب مساحة تخزين أقل بمقدار 20%.</string>
 	<string name="whatsnew_waypoints_title">نقاط الطريق في المسار</string>
 	<string name="whatsnew_waypoints_message">المس الأماكن لإضافة نقاط طريق إلى المسار.</string>
-	<string name="whatsnew_viator_title">حجز جولة</string>
-	<string name="whatsnew_viator_message">اختر جولات شائعة في المدن السياحية في كافة أنحاء العالم.</string>
 	<string name="whatsnew_driving_style_title">نمط خريطة جديد للقيادة</string>
 	<string name="whatsnew_driving_style_message">وضع التنقل بالسيارة أصبح سهل الاستخدام.</string>
 	<string name="more_on_bookingcom">المزيد عن Booking.com</string>
@@ -1134,7 +1138,6 @@
 	<string name="settings_card_memory">بطاقة الذاكرة</string>
 	<string name="settings_storage_available">%s متوفر</string>
 	<string name="toast_location_permission_denied">تم رفض إذن الموقع للتطبيق</string>
-	<string name="place_page_viator_title">معالم الجذب والجولات</string>
 	<string name="button_use">استخدام</string>
 	<string name="planning_route_manage_route">إدارة المسار</string>
 	<string name="button_plan">خطة</string>
@@ -1149,8 +1152,6 @@
 	<string name="add_my_position">إضافة موضعي</string>
 	<string name="choose_start_point">اختيار نقطة البداية</string>
 	<string name="choose_destination">اختيار الوجهة</string>
-	<string name="preloader_viator_title">اكتشاف الجولات والأنشطة غير المعتادة</string>
-	<string name="preloader_viator_message">الجولات والأنشطة ومشاهدة المعالم وغيره</string>
 	<string name="preloader_viator_button">تعلم المزيد</string>
 	<string name="whats_new_title_route">تم تحسين مسارات السيارات ومسارات المشاه</string>
 	<string name="whats_new_message_route">قمنا بتصحيح الأخطاء وجعلنا عملية بناء المسارات أسرع عدة مرات، وأضفنا نقاط توقف وسيطة</string>
@@ -1161,9 +1162,6 @@
 	<string name="placepage_no_reviews">لا توجد مراجعات</string>
 	<string name="placepage_reviewed">لقد راجعت بالفعل هذا المكان</string>
 	<string name="placepage_summary_rating">ملخص التقييم</string>
-	<plurals name="placepage_summary_rating_description">
-	  <item quantity="other">استنادًا إلى %d مراجعة</item>
-	</plurals>
 	<string name="placepage_rate_comment">المس لتقييم ومراجعة هذا المكان.</string>
 	<string name="placepage_rate_horrible">كريه</string>
 	<string name="placepage_rate_bad">سيء</string>
@@ -1206,8 +1204,6 @@
 	<string name="discovery_button_subtitle_attractions">معالم الجذب</string>
 	<string name="discovery_button_subtitle_eat_and_drink">تناول المأكولات والمشروبات</string>
 	<string name="discovery_button_subtitle_local_guides">أدلة محلية</string>
-	<string name="discovery_button_viator_offline_title">اكتشف الجولات والأشياء غير العادية التي يمكن القيام بها</string>
-	<string name="discovery_button_viator_offline_message">جولات وأشياء يمكن القيام بها وجولات مشاهدة المعالم وغيره.</string>
 	<string name="discovery_button_viator_error_title">خطأ في تحميل البيانات</string>
 	<string name="discovery_button_other_error_message">خطأ في تحميل البيانات</string>
 	<string name="discovery_button_other_loading_message">يجري تحميل البيانات</string>
@@ -1247,12 +1243,10 @@
 	<string name="downloader_percent">%1$s (%2$s من %3$s)</string>
 	<string name="downloader_process">جار تنزيل %s...</string>
 	<string name="downloader_applying">جار تطبيق %s...</string>
-	<string name="transit_not_found">الملاحة المؤقتة في هذه المنطقة غير متوفرة بعد</string>
 	<string name="whats_new_title_hotel_filter">يتوفر عوامل تصفية جديدة للفنادق!</string>
 	<string name="whats_new_message_hotel_filter">احجز الفنادق المتاحة في المواعيد الخاصة بك! استخدم عوامل تصفية تسجيل الوصول والمغادرة</string>
 	<string name="whats_new_title_ugc_travel">شارك تجربتك مع المسافرين الآخرين!</string>
 	<string name="whats_new_message_ugc_travel">احرص على تقييم ومراجعة الأماكن التي زرتها!</string>
-	<string name="dialog_pedestrian_route_is_long">مسار المشاة طويل جداً</string>
 	<string name="dialog_message_transit_not_found_connection">خطط المسار داخل شبكة عبور واحدة</string>
 	<string name="bookmarks_error_message_share_general">تعذرت المشاركة بسبب خطأ في التطبيق</string>
 	<string name="bookmarks_error_title_share_empty">خطأ في المشاركة</string>
@@ -1356,8 +1350,8 @@
 	<string name="error_already_downloaded">تم بالفعل تنزيل هذه القائمة</string>
 	<string name="guides">الأدلّة</string>
 	<string name="guide_downloaded_title">تم تنزيل الدليل بنجاح</string>
-	<string name="download_guides">تنزيل الأدلة</string>
-	<string name="cached_guides_placeholder_subtitle">أدلة مفصلة بدون اتصال بالإنترنت لأي نوع من الرحلات. اختر النوع الذي يناسبك وقم بتنزيله مباشرة على الخريطة. ستحتاج إلى الاتصال بالإنترنت لتنزيل الأدلة.</string>
+	<!-- as few symbols as possible -->
+	<string name="download_guides">بحث عن أدلة</string>
 	<string name="guides_groups_cached">الأدلة التي تم تنزيلها</string>
 	<string name="subtitle_error_downloading_guide">لم يتم تنزيل الدليل</string>
 	<string name="error_already_downloaded_guide">تم بالفعل تنزيل هذا الدليل</string>
@@ -1396,7 +1390,6 @@
 	<string name="restore_success_alert">تم استعادة الاشتراك بنجاح</string>
 	<string name="restore_error_alert">حدث خطأ أثناء استعادة الاشتراك</string>
 	<string name="restore_no_subscription_alert">لا توجد اشتراكات نشطة</string>
-	<string name="subscription_terms">سيتم خصم المبلغ من حساب iTunes الخاص بك عند تأكيد عملية الشراء. سيتم تجديد الاشتراك تلقائياً ما لم يتم إيقاف التجديد التلقائي قبل 24 ساعة على الأقل من نهاية الفترة الحالية. سيتم الخصم من حسابك وفقاً لخطة التجديد الخاصة بك وذلك خلال 24 ساعة قبل انتهاء الفترة الحالية. يمكنك إدارة أو إيقاف التجديد التلقائي عبر إعدادات حساب Apple ID الخاص بك في أي وقت عند الشراء.</string>
 	<string name="subscriptions_title">الاشتراكات</string>
 	<string name="manage_subscription">إدارة الاشتراك</string>
 	<string name="sharing_options">خيارات المشاركة</string>
@@ -1406,7 +1399,6 @@
 	<string name="hide_from_map">إخفاء من الخريطة</string>
 	<string name="ugc_route_tags_screen_label">حدد العلامات</string>
 	<string name="ugc_route_tags_progress_msg">جارٍ تحميل العلامات…</string>
-	<string name="ugc_route_tags_desc">.يرجى تحديد العلامات لمساعدة المسافرين الآخرين في العثور على دليلك. وهذا إلزامي</string>
 	<string name="public_access">إطلاع الجمهور</string>
 	<string name="limited_access">محدودية فرص حصول</string>
 	<string name="upload_and_publish_desc">سيتم تحميل هذا الدليل إلى كتالوج MAPS.ME العام وسيكون متاحًا للمستخدمين الآخرين</string>
@@ -1429,7 +1421,7 @@
 	<string name="unable_upload_errorr_title">فشل تحميل الملف</string>
 	<string name="unable_upload_error_subtitle_edited">تم تحرير هذا الملف عبر تطبيق الويب</string>
 	<string name="unable_upload_error_subtitle_broken">هذا الملف تالف ولا يمكن تحميله. يرجى تحميل ملف آخر.</string>
-	<string name="buy_btn">شراء لـ%s</string>
+	<string name="buy_btn">اشتري مقابل %s</string>
 	<string name="download_guide_progress">تحميل الدليل الخاص بك…</string>
 	<string name="price_error_title">لا يمكن الحصول على السعر</string>
 	<string name="price_error_subtitle">يرجى المحاولة مرة أخرى في بضع دقائق</string>
@@ -1477,12 +1469,326 @@
 	<string name="whatsnew_paid_routes_title">المزيد من الخبرات الجديدة!</string>
 	<string name="whatsnew_paid_routes_message">بالإضافة إلى الطرقات المجانية ، قمنا بإضافة 3 فئات للمسارات المدفوعة إلى الكتالوج الخاص بنا. أكثر من 700 طريق جديد!</string>
 	<string name="whats_new_ugc_routes_title_android_only">من السهل مشاركة انطباعاتك</string>
+	<string name="ugc_thanks_message_auth">تم حفظ تعليقك</string>
+	<string name="ugc_thanks_message_not_auth">يرجي تسجيل الدخول لوضع تعليق</string>
+	<string name="notification_leave_review_v2_title">ضع تقييمًا لمكان زيارتك و ساعد المسافرين!</string>
+	<string name="error_public_not_enought_title">لا يوجد معلمات كافية</string>
+	<string name="error_public_not_enought_subtitle">يجب أن يكون هناك 3 معلمات على الأقل لرفع دليلك إلى الدليل العام</string>
+	<string name="bookmark_public_upload_alert_title">أنت على بعد خطوات قليلة لمشاركة معلماتك مع جميع مسافري MAPS.ME!</string>
+	<string name="bookmark_public_upload_alert_subtitle">يرجي التأكد من وجود اسم ووصف محدد لقائمتك، و جميع المعلمات تحتوي على بعض المعلومات عن الأماكن. بهذه الطريقة يمكن العثور على قائمتك و استخدامها بواسطة الآخرين.</string>
+	<string name="bookmark_public_upload_alert_ok_button">نعم، أنا متأكد!</string>
+	<string name="name_title">إدخل اسم دليلك</string>
+	<string name="name_placeholder">مثال: حانات لندن</string>
+	<string name="name_comment1">يرجى تسمية دليلك حتى يستطيع المسافرين العثور عليه بسهولة: مثال \"حانات لندن\"</string>
+	<string name="name_comment2">يجب أن لا يحتوي الاسم على علامات خاصة. لا يجب أن يكون الاسم \"أماكني\"</string>
+	<string name="description_guide">الوصف</string>
+	<string name="description_title">إدخل وصف دليلك</string>
+	<string name="description_placeholder">صف دليلك بالتفصيل</string>
+	<string name="description_comment1">يجب أن يحتوي وصف الدليل على 30 حرفًا على الأقل.</string>
+	<string name="ugc_route_tags_desc">يرجى اختيار الوسوم لمساعدة المسافرين الآخرين في العثور على دليلك. هذا إجباري. %s وسم بحد أقصى.</string>
+	<string name="html_format_error_title">لم يتم نشر دليلك</string>
+	<string name="html_format_error_subtitle">يرجى التأكد أن أسماء ووصف معلماتك بالصيغة الصحيحة. يمكنك التحقق منها فى المتصفح بالضغط على زر \"حرر الآن\" فى الأسفل.</string>
+	<string name="web_editor_description">ارفع دليلك واحصل على رابط التحرير من جهازك</string>
+	<string name="edit_on_web_confirm">حرر الآن</string>
+	<string name="update_guide">الرفع و التحديث</string>
+	<string name="direct_link_updating_text">تحديث ملفك…</string>
+	<string name="direct_link_updating_success">تم نشر دليلك</string>
+	<string name="unable_get_direct_link_desc">يمكنك مشاركة دليلك بواسطة رابط عام</string>
+	<string name="any_access_update_alert_title">ربما حدثت بعض التغييرات</string>
+	<string name="any_access_update_alert_message">هل تريد تحديث معلماتك؟ الإصدار الجديد سيكون متاحًا عبر نفس الرابط.</string>
+	<string name="any_access_update_alert_update">تحديث</string>
+	<string name="public_or_limited_access_after_edit_online_error_title">لقد قمت بتحديث معلماتك على الإنترنت</string>
+	<string name="public_or_limited_access_after_edit_online_error_message">فى المستقبل، يرجى تحرير، أو نشر، أو مشاركة دليلك مع أصدقائك عبر موقعنا</string>
+	<string name="power_managment_title">وضع توفير الطاقة</string>
+	<string name="power_managment_description">عندما يتم اختيار الوضع التلقائي، يبدأ التطبيق بتعطيل الخصائص التي تستهلك البطارية بناءً على مستوى شحن البطارية</string>
+	<string name="power_managment_setting_never">أبدًا</string>
+	<string name="power_managment_setting_auto">تلقائي</string>
+	<string name="power_managment_setting_manual_max">توفير الطاقة القصوى</string>
+	<string name="enable_logging_warning_message">يتحول الخيار إلى التسجيل لإغراض التشخيص. يمكن أن يكون مفيدًا لفريق الدعم الخاص بنا الذين يعملون على استكشاف أخطاء التطبيق وإصلاحها. قم بتفعيل هذا الخيار فقط في حالة طلب الدعم من MAPS.ME.</string>
+	<string name="html_error_upload_message_try_again">يرجى التحقق من إعدادات الشبكة الخاصة بك و حاول مرة أخرى</string>
+	<string name="html_error_upload_title_try_again">لا يوجد اتصال بالانترنت</string>
+	<string name="notification_leave_review_v2_android_short_title">ضع تعليق وساعد المسافرين!</string>
+	<string name="notifications_illegal_alert_disable_button">تعطيل الإشعارات</string>
+	<string name="access_rules_author_only">التحرير على الإنترنت</string>
+	<string name="privacy_settings_menu">إعدادات الخصوصية</string>
+	<string name="gdpr_request_setting">احصل على اسم مستخدم طبقًا لقواعد GDPR</string>
+	<string name="gdpr_request_window_title">اسم المستخدم: %s.</string>
+	<string name="gdpr_request_window_message">يرجى نسخه وإرسال الطلب إلى support\@maps.me</string>
+	<string name="gdpr_request_window_copy">انسخ اسم المستخدم</string>
+	<string name="unable_upadate_error_title">فشل تحديث الملف</string>
+	<string name="unable_upadate_error_message">حدثت بعض الأخطاء أثناء التحديث يرجى التحقق من التغييرات و حاول مرة أخرى</string>
+	<string name="whats_new_wiki_title">ما هذا المكان؟</string>
+	<string name="whats_new_wiki_message">لقد أضفنا مقالات Wikipedia.org إلى صفحات معظم الأماكن السياحية المشهورة. أنها متاحة بدون اتصال بالانترنت</string>
+	<string name="driving_options_title">خيارات قيادة</string>
+	<string name="driving_options_subheader">تجنب على كل الطرق</string>
+	<string name="avoid_tolls">نقطة تحصيل رسوم</string>
+	<string name="avoid_unpaved">طرق غير ممهدة</string>
+	<string name="avoid_ferry">تقاطع عبارات</string>
+	<string name="avoid_motorways">طرق سريعة</string>
+	<string name="unable_to_calc_alert_title">لا يمكن حساب الطريق</string>
+	<string name="unable_to_calc_alert_subtitle">نأسف، لم نعثر على الطريق ربما بسبب الخيارات التي قمت بتحديدها. يرجى تغيير الاعدادات والمحاولة مجددًا</string>
+	<string name="define_to_avoid_btn">حدد الطرق التي يجب تجنبها</string>
+	<string name="change_driving_options_btn">تم تفعيل خيارات الطريق</string>
+	<string name="toll_road">نقطة تحصيل رسوم</string>
+	<string name="unpaved_road">طريق غير ممهدة</string>
+	<string name="ferry_crossing">تقاطع عبارة</string>
+	<string name="operated_by">تدرا بواسطة \"%s\"</string>
+	<string name="avoid_toll_roads_placepage">تجنب نقاط تحصيل الرسوم</string>
+	<string name="avoid_unpaved_roads_placepage">تجنب الطرق الغير ممهدة</string>
+	<string name="avoid_ferry_crossing_placepage">تجنب تقاطع العبارات</string>
+	<string name="cached_guides_placeholder_subtitle">توفر MAPS.ME دلائل جاهزة لإماكن مختارة مع الصور والوصف الذي يتم عرضه على الخريطة وهو متاح بدون اتصال بالانترنت.</string>
+	<string name="guides_catalogue_title">قائمة الدلائل</string>
+	<string name="download_guides_button">إلى الفهرس</string>
+	<plurals name="placepage_summary_rating_description">
+	  <item quantity="one">بناءًا على %d مراجعة</item>
+	  <item quantity="other">بناءًا على %d مراجعات</item>
+	</plurals>
+	<string name="type.cuisine.uzbek">مطعم أوزبكي</string>
+	<string name="onboarding_welcome_title">خطط وسافر مع MAPS.ME</string>
+	<string name="onboarding_welcome_first_subtitle">ضع علامة مرجعية على الأماكن المثيرة للاهتمام، احجز الفنادق، احسب الطرق بدون اتصال بالانترنت</string>
+	<string name="onboarding_guide_direct_download_title">الدليل جاهز للتحميل</string>
+	<string name="onboarding_guide_direct_download_subtitle">سيتم عرضه على الخريطة وبدون اتصال بالانترنت</string>
+	<string name="onboarding_guide_direct_download_button">تحميل</string>
+	<string name="onboarding_bydeeplink_guide_title">دلائل جاهزة للاستخدام في MAPS.ME</string>
+	<string name="onboarding_bydeeplink_guide_subtitle">أفضل الأماكن لزيارتها معروضة على الخريطة مع الصور والوصف. يعمل بدون اتصال بالانترنت.</string>
+	<string name="whats_new_auto_update_bydeeplink_title">قبل الدخول إلى الدليل…</string>
+	<string name="whats_new_auto_update_bydeeplink_message">قم بتحديث الخرائط للحصول على أحدث المعلومات!</string>
+	<string name="whats_new_auto_update_and_proceed_button_size">تحديث (%s) والمتابعة</string>
+	<string name="whatsnew_toll_unpaved_title">نسق طرق السيارات يشمل جميع أنواع الطرق</string>
+	<string name="whatsnew_toll_unpaved_message">حدد الطرق التي تحتوي: نقط تحصيل رسوم، طرق غير ممهدة، تفاطعات العبارات</string>
+	<string name="whatsnew_new_catalogue_title">صفحات القائمة المحدثة</string>
+	<string name="whatsnew_new_catalogue_message">قمنا بإضافة معلومات مفصلة حول دلائل الشركاء لجعل اختيار الطريق سهل ومناسب</string>
+	<string name="purchase_please_wait_toast">يرجى عدم مغادرة الصفحة قبل اكتمال عملية الشراء</string>
+	<string name="trip_start">هيا بنا</string>
+	<string name="pick_destination">جهة الوصول</string>
+	<string name="follow_my_position">العودة إلى الوسط</string>
+	<string name="search_results">نتائج البحث</string>
+	<string name="then_turn">ثم</string>
+	<string name="redirect_route_alert">هل تريد إعادة تحديد الطريق?</string>
+	<string name="redirect_route_yes">نعم</string>
+	<string name="redirect_route_no">لا</string>
+	<string name="trip_finished">لقد وصلت!</string>
+	<string name="keyboard_availability_alert">لوحة الكتابة غير متاحة أثناء القيادة</string>
+	<string name="dialog_routing_change_start_carplay">لا يمكن تحديد طريق من موقعك الحالي</string>
+	<string name="dialog_routing_change_end_carplay">لا يمكن تحديد طريق لجهة الوصول. يرجي اختيار مكان آخر</string>
+	<string name="dialog_routing_check_gps_carplay">لا وجد إشارة GPS. يرجى التحرك لمكان مفتوح</string>
+	<string name="dialog_routing_unable_locate_route_carplay">لا يمكن تحديد طريق. يرجى تحديد أماكن أخرى على الطريق</string>
+	<string name="dialog_routing_download_files_carplay">كي تُنشئ مساراً، يجب أن تحمل الخرائط المفقودة على جهازك</string>
+	<string name="dialog_routing_system_error_carplay">حدث خطأ. يرجى إعادة تشغيل التطبيق</string>
+	<string name="dialog_routing_rebuild_from_current_location_carplay">سيتم اعادة تحديد الطريق من موقعك الحالي</string>
+	<string name="dialog_routing_rebuild_for_vehicle_carplay">سيتم تعديل الطريق لتكون خاصة بالسيارة</string>
+	<string name="ok">موافق</string>
+	<string name="booking_button_toolbar">اختر فندقًا على الخريطة</string>
+	<string name="popup_booking_download_guides_title">هل حجزت فندقًا؟</string>
+	<string name="popup_booking_download_guides_message">خطط لوجهتك باستخدام دلائل جاهزة من MAPS.ME</string>
+	<string name="popup_mwm_download_guides_title">أدلة المدينة غير متصلة</string>
+	<string name="popup_mwm_download_guides_cta">اختر واحدة</string>
+	<string name="popup_mwm_download_guides_cta_1">الق نظرة</string>
+	<string name="gallery_pp_download_guides_offline_title">خطط لعطلتك مع MAPS.ME!</string>
+	<string name="gallery_pp_download_guides_offline_subtitle">لا تفوت أي شىء مع دلائل تم اعدادها بواسطة خبراء السفر</string>
+	<string name="gallery_pp_download_guides_offline_cta">فعل الانترنت</string>
+	<string name="gallery_pp_download_guides_title">الدلائل</string>
+	<string name="native_screen_subscription_title">وصول غير محدود لأكثر من 2000 دليل سفر!</string>
+	<string name="native_screen_subscription_message">ذكرى مميزة لعطلتك في أي مكان وبصحبة أي شخص</string>
+	<string name="annual_subscription_title">سنوي</string>
+	<string name="montly_subscription_title">شهري</string>
+	<string name="annual_subscription_message">12 شهرًا من الوصول الغير محدود</string>
+	<string name="montly_subscription_message">شهرًا واحدًا من الوصول الغير محدود</string>
+	<string name="subscription_success_dialog_title">شكرًا لاشتراكك!</string>
+	<string name="subscription_success_dialog_message">تمتلك الآن وصولًا غير محدود لكل الدلائل</string>
+	<string name="renewal_screen_title">انتهت فترة صلاحية اشتراكك</string>
+	<string name="renewal_screen_message">سيتم حذف جميع الدلائل التي تم تحميلها بواسطة الاشتراك. هل تريد اعادة الاشتراك والاحتفاظ بهم؟</string>
+	<string name="renewal_screen_button_restore">نعم، جدد الاشتراك</string>
+	<string name="renewal_screen_button_cancel">لا، احذف الدلائل</string>
+	<string name="subscription_error_ping_title">فشل عملية الشراء</string>
+	<string name="subscription_error_message">الخدمة غير متوفرة حاليا فى منطقتك. يرجى المحاولة في وقت لاحق</string>
+	<string name="subscription_error_button">حسنًا</string>
+	<string name="timeout_error_title">آسف، انتهى الوقت!</string>
+	<string name="timeout_error_message">خوادمنا لا تستجيب. يرجى التحقق من اتصال الانترنت والمحاولة مجددًا.</string>
+	<string name="per_month">شهر/</string>
+	<string name="per_year">سنة/</string>
+	<string name="buy_btn_for_subscription">وصول غير محدود من %s</string>
+	<string name="buy_btn_for_subscription_1">اشتري جميع الدلائل مقابل %s</string>
+	<string name="buy_btn_for_subscription_ios_only_mo">وصول غير محدود %s/شهر</string>
+	<string name="buy_btn_for_subscription_ios_only_year">وصول غير محدود %s/سنة</string>
+	<string name="subscription_terms_guides">سيتم خصم المدفوعات من حساب iTunes الخاص بك مع تأكيد عملية الشراء. سيتم تجديد الاشتراك تلقائيًا ما لم يتم تعطيل خاصية التجديد التلقائي قبل 24 ساعة من انتهاء فترة الاشتراك الحالية. سيتم خصم قيمة الاشتراك طبقًا لخطة الاشتراك الخاصة بك للتجديد خلال 24 ساعة قبل انتهاء فترة الاشتراك الحالية. يمكنك ادارة أو تعطيل خاصية التجديد التلقائي في حساب Apple ID الخاص بك في أي وقت بعد شرائك. يمكنك استخدام الدلائل التي تم تحميلها فقط عن طريق اشتراكك حتى تاريخ انتهاء الاشتراك  سيتم حذف الدلائل والعلامات المميزة عليها تلقائيًا بعد 30 يومًا من انتهاء فترة الاشتراك.</string>
+	<string name="subscription_terms">سيتم خصم المبلغ من حساب iTunes الخاص بك عند تأكيد عملية الشراء. سيتم تجديد الاشتراك تلقائياً ما لم يتم إيقاف التجديد التلقائي قبل 24 ساعة على الأقل من نهاية الفترة الحالية. سيتم الخصم من حسابك وفقاً لخطة التجديد الخاصة بك وذلك خلال 24 ساعة قبل انتهاء الفترة الحالية. يمكنك إدارة أو إيقاف التجديد التلقائي عبر إعدادات حساب Apple ID الخاص بك في أي وقت عند الشراء.</string>
+	<string name="whatsnew_carplay_title">نظام ملاحة السيارات MAPS.ME في CarPlay!</string>
+	<string name="whatsnew_carplay_message">خصائص تحديد علامات الأماكن، والبحث، وكاميرات السرعة والمسارات متاحة بدون اتصال بالانترنت</string>
+	<string name="whatsnew_subscription_title">كل العالم بواسطة الاشتراك!</string>
+	<string name="whatsnew_subscription_message">الوصول الغير محدود لفهرس الدلائل مربح أكثر من الشراء لمرة واحدة</string>
+	<string name="whatsnew_carnavi_fixes_for_android_title">تحديث الملاحة</string>
+	<string name="whatsnew_carnavi_fixes_for_android_message">لقد طورنا تخطيط المسارات لأماكن موجودة بعيدة عن الطرق</string>
+	<string name="avoid_unpaved_carplay_1">غير ترابي</string>
+	<string name="avoid_unpaved_carplay_2">تجنب غير الممهد</string>
+	<string name="avoid_ferry_carplay_1">بدون عبََارة</string>
+	<string name="avoid_ferry_carplay_2">تجنب العبََارة</string>
+	<string name="avoid_tolls_carplay_1">بدون رسوم</string>
+	<string name="avoid_tolls_carplay_2">تجنب الرسوم</string>
+	<string name="speedcams_alert_title_carplay_1">كاميرا سريعة</string>
+	<string name="speedcams_alert_title_carplay_2">تحذير سريع</string>
+	<string name="download_map_carplay">يُرجى تحميل الخرائط في تطبيق MAPS.ME على جهازك</string>
+	<string name="carplay_roundabout_exit">المخرج رقم %s</string>
+	<!-- max. 10 symbols, both iOS and Android -->
+	<string name="sort">تريتب…</string>
+	<!-- Android, title, max 20-22 symbols -->
+	<string name="sort_bookmarks">رتب العلامات المرجعية</string>
+	<!-- iOS -->
+	<string name="sort_default">رتب افتراضي</string>
+	<string name="sort_type">رتب حسب النوع</string>
+	<string name="sort_distance">رتب حسب المسافة</string>
+	<string name="sort_date">رتب حسب التاريخ</string>
+	<!-- Android -->
+	<string name="by_default">افتراضي</string>
+	<!-- Android -->
+	<string name="by_type">حسب النوع</string>
+	<!-- Android -->
+	<string name="by_distance">حسب المسافة</string>
+	<!-- Android -->
+	<string name="by_date">حسب التاريخ</string>
+	<string name="week_ago_sorttype">منذ أسبوع</string>
+	<string name="month_ago_sorttype">منذ شهر</string>
+	<string name="moremonth_ago_sorttype">منذ أكثر من شهر</string>
+	<string name="moreyear_ago_sorttype">منذ أكثر من سنة</string>
+	<string name="near_me_sorttype">قريب مني</string>
+	<string name="others_sorttype">أخرى</string>
+	<string name="food_places">طعام</string>
+	<string name="tourist_places">مشاهد</string>
+	<string name="museums">متاحف</string>
+	<string name="parks">حدائق</string>
+	<string name="swim_places">سباحة</string>
+	<string name="mountains">جبال</string>
+	<string name="animals">حيوانات</string>
+	<string name="hotels">فنادق</string>
+	<string name="buildings">بنايات</string>
+	<string name="money">نقود</string>
+	<string name="shops">متاجر</string>
+	<string name="parkings">مواقف سيارات</string>
+	<string name="fuel_places">محطات وقود</string>
+	<string name="water">ماء</string>
+	<string name="medicine">دواء</string>
+	<string name="search_in_the_list">بحث في القائمة</string>
+	<string name="view_on_map_bookmarks">على الخريطة</string>
+	<string name="more_bookmarks">المزيد…</string>
+	<string name="no_items_found">لم يتم العثور على عناصر</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_edit_list">تحرير القائمة</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_delete_list">حذف القائمة</string>
+	<string name="whatsnew_bookmarks_search_sort_title">ترتيب الإشارات المرجعية لرحلة مريحة</string>
+	<string name="whatsnew_bookmarks_search_sort_message">رتب الأماكن المفضلة حسب الفئة والموقع وترتيبها الزمني، وكذلك البحث عن إشارات مرجعية محددة بسرعة حسب اسمهم</string>
+	<string name="popup_subscription_success_map_title">يا للروعة، لقد قمت بالاشتراك!</string>
+	<string name="popup_subscription_success_map_message">اكتشف الآن أفضل المعالم السياحية في كتالوج MAPS.ME</string>
+	<string name="popup_subscription_success_map_start_button">ابدأ البحث</string>
+	<string name="popup_subscription_success_map_not_now_button">ليس الآن</string>
+	<string name="religious_places">أماكن دينية</string>
+	<string name="subscription_terms_android">عندما تؤكد عملية الشراء، سيتم الدفع عبر حسابك في Google Play سيتم تجديد الاشتراك تلقائياً ما لم يتم إيقاف تشغيل ميزة التجديد التلقائي قبل 24 ساعة على الأقل من نهاية الفترة الحالية. سيتم فرض رسوم على حسابك وفقاً لخطة التجديد الخاصة بك في غضون 24 ساعة قبل نهاية الفترة الحالية. يمكنك إدارة أو إيقاف تشغيل ميزة التجديد التلقائي في إعدادات الحساب بعد الشراء. يمكنك استخدام الأدلة التي تم تنزيلها عن طريق الاشتراك حتى تاريخ انتهاء الصلاحية فقط. بعد 30 يوماً من تاريخ انتهاء الاشتراك سيتم حذف الأدلة التي تم تنزيلها تلقائياً.</string>
+	<string name="select_list">اختر القائمة</string>
+	<string name="pp_discovery_place_related_header">هذا المكان في كاتالوج أدلة السفر</string>
+	<string name="pp_discovery_place_related_header_1">يتم العثور على هذا المكان في أدلة السفر</string>
+	<string name="pp_discovery_place_related_cta_button">مشاهدة</string>
+	<string name="pp_discovery_place_related_tag_header">أدلة السفرحسب العلامة “%s”</string>
+	<string name="pp_discovery_place_related_tag_header_1">سوف تعجبك كذلك</string>
+	<string name="buy_btn_for_subscription_version_2">جميع الأدلة فقط من أجل %s /شهر</string>
+	<string name="buy_btn_for_subscription_version_3">كامل الكتالوج من أجل %s /شهر</string>
+	<string name="buy_btn_for_subscription_ios_only_mo_version_2">الوصول إلى الكاتالوج من أجل %s /شهر</string>
+	<string name="buy_btn_for_subscription_ios_only_year_version_2">الوصول إلى الكاتالوج من أجل %s /سنة</string>
+	<string name="subscription_screen_native_title_version_2">الوصول إلى الأدلة مع الإشارات المرجعية!</string>
+	<string name="subscription_screen_native_message_version_2">كن مستعداً لأي رحلة إلى أكثر من 600 مدينة و100 دولة</string>
+	<string name="catalog_no_internet_title">غير متصل</string>
+	<string name="catalog_no_internet_button">حاول مرة أخرى</string>
+	<string name="whatsnew_map_updates_title">تحديث الخارطة بشكل سريع جداً</string>
+	<string name="whatsnew_map_updates_message">منالآن فصاعداً نقوم بتحديث البيانات مرتين بسرعة</string>
+	<string name="new_onboarding_button">التالي</string>
+	<string name="new_onboarding_button_2">ابدأ الآن</string>
+	<string name="new_onboarding_step1_header_2">كل ما تريده في صديق سفر واحد</string>
+	<string name="new_onboarding_step2_header">احلم وخطط</string>
+	<string name="new_onboarding_step2_message">أكثر من 70 مليون مكان ودليل جاهز وحجز فندق من الخريطة مباشرةً – أنت جاهز للرحلة!</string>
+	<string name="new_onboarding_step3_message">لا تضيع أبدًا بسبب استخدام خرائط تفصيلية أو نظام ملاحة لأي دولة – كل شيء يعمل بدون اتصال!</string>
+	<string name="new_onboarding_step4_header">شارك الانطباعات</string>
+	<string name="new_onboarding_step4_message">ضع إشارات مرجعية على الأماكن المفضلة وأرسلها إلى أصدقائك</string>
+	<string name="new_onboarding_step5.1_header">شيء آخر قبل أن تبدأ…</string>
+	<string name="new_onboarding_step5.1_message">لا تنس زيارة قائمة الدلائل الجديد الخاصة بنا لتجد دليل رحلتك القادمة بدون اتصال!</string>
+	<string name="new_onboarding_step5.1_button">افتح القائمة</string>
+	<string name="new_onboarding_step5.2_message">الاشتراك في قائمة دلائل MAPS.ME ذو قيمة كبيرة. احصل على الوصول الكامل إلى دلائل المدينة والمناطق الخارجية في جميع أنحاء العالم!</string>
+	<string name="new_onboarding_step5.2_button">تحقق من الشروط</string>
+	<string name="new_onboarding_step5.3_message">تحقق من عينات مجانية لمسارات جاهزة للمدن والمناطق الخارجية مع مجموعة مختارة مجانية من MAPS.ME!</string>
+	<string name="new_onboarding_step5.3_button">تحميل مجاني</string>
+	<string name="new_onboarding_additional_steps_later_button">لاحقًا</string>
+	<string name="all_pass_subscription_header">اشتراك في الدلائل</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title">30000+\nأدلة ومسارات</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle"><b>تحميلات غير محدودة</b> للمدينة والأماكن الخارجية <b>إلى الوضع الغير متصل</b></string>
+	<!-- \n - for a break between lines. Max. 17 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_2">ملف تفاعلي لتحديد\nالارتفاع</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_2">يحتوي كل مسار على <b>تحديد الارتفاع ومعلومات أساسية عن الطريق</b></string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_3">إشارات مرجعية\nوصور و\nتوصيات</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_3"><b>تعلم كل شيء عن المسار</b> الذي ستسلكه</string>
+	<string name="sightseeing_subscription_header_subscription">اشتراك الدلائل</string>
+	<string name="sightseeing_subscription_message">أكثر من 700 مدينة و 100 دولة</string>
+	<string name="sightseeing_subscription_message_2">متاح دون اتصال</string>
+	<string name="sightseeing_subscription_message_3">صور ومسارات للمشي</string>
+	<string name="subscription_success_dialog_title_sightseeing_pass">شكرًا للاشتراك!</string>
+	<string name="subscription_success_dialog_message_sightseeing_pass">يمكنك الآن الوصول إلى جميع أدلة المعالم في القائمة</string>
+	<string name="downloader_main_gallery_header">خرائط ودلائل</string>
+	<string name="downloader_main_gallery_message">الآن في هذا القسم، يمكنك تحميل الخرائط وكذلك يمكنك التحقق من الدلائل لرحلتك القادمة</string>
+	<string name="downloader_main_1_element_gallery_header">كل الدلائل</string>
+	<string name="downloader_main_1_element_gallery_message">في أكثر من 100 دولة</string>
+	<string name="downloader_country_1_element_gallery_header">%s دلائل</string>
+	<string name="downloader_country_no_guides_gallery_header">لا توجد دلائل في هذه الدولة بعد</string>
+	<string name="downloader_country_no_guides_gallery_message">يمكنك الاطلاع على دلائل أخرى بدون اتصال في أكثر من 100 دولة للتعرف على أنشطة المدن والمناطق الخارجية</string>
+	<string name="dialog_pedestrian_route_is_long">طريق المشاة إلى نقطة ركوب وسيلة النقل طويل جدًا</string>
+	<string name="whatsnew_outdoor_guides_title">أضفنا أكثر من 15000 مسار خارجي!</string>
+	<string name="whatsnew_outdoor_guides_message">تتواجد الطرق من Outdooractive لرحلات الشتاء والصيف في القائمة!</string>
+	<string name="whatsnew_guides_galleries_title">خطط لرحلتك القادمة مع MAPS.ME</string>
+	<string name="whatsnew_guides_galleries_message">يمكنك الآن العثور على دلائل موصى بها في صفحات الأماكن للمدن والمعالم السياحية الشهيرة</string>
+	<string name="new_onboarding_step3_header">جرب</string>
+	<string name="all_pass_screen_best_value">أفضل قيمة</string>
+	<string name="buy_btn_for_subscription_3">كامل الكتالوج من أجل %s / سنة</string>
+	<string name="transit_not_found">التنقل باستخدام مترو الأنفاق في هذه المنطقة غير متاح حتى الآن</string>
+	<string name="dialog_pedestrian_route_is_long_header">لم يتم العثور على مترو الانفاق</string>
+	<string name="dialog_pedestrian_route_is_long_message">يرجى اختيار نقطة بداية أو نهاية أقرب لمحطة المترو</string>
+	<!-- Failed planning SUBWAY route message in navigation view -->
+	<string name="routing_planning_error_subway_special">فشل تخطيط طريق لمترو الانفاق</string>
+	<string name="whatsnew_isolines_title">الجديد في الخارج: طبقة طبوغرافية بدون انترنت!</string>
+	<!-- as less symbols as possible -->
+	<string name="whatsnew_isolines_message">كن واثق في المنطقة الجبلية. فقط أشعل الطبقة في الزاوية العلوية اليسرى</string>
+	<string name="button_layer_isolines">تضاريس</string>
+	<string name="tips_map_layers_title_countour">الجديد في MAPS.ME: طبقة طبوغرافية بدون انترنت!</string>
+	<string name="tips_map_layers_message_countour">خطط و استمتع برحلاتك في الطبيعة و أنت متأكد من أنك تعرف كل شيء عن المنطقة</string>
+	<string name="isolines_activation_error_dialog">لتفعيل الطبقة الطبوغرافية واستخدامها ، يرجى تحديث أوتنزيل خريطة المنطقة</string>
+	<string name="isolines_location_error_dialog">الطبقة الطبوغرافية ليست متاحة بعد في هذه المنطقة</string>
+	<string name="elevation_profile_diff_level">مستوى الصعوبة</string>
+	<string name="elevation_profile_diff_level_easy">سهل</string>
+	<string name="elevation_profile_diff_level_moderate">معتدل</string>
+	<string name="elevation_profile_diff_level_hard">صعب</string>
+	<string name="elevation_profile_ascent">تصاعدي</string>
+	<string name="elevation_profile_descent">تنازلي</string>
+	<string name="elevation_profile_minaltitude">الحد الأدنى للارتفاع</string>
+	<string name="elevation_profile_maxaltitude">الحد الأقصى للارتفاع</string>
+	<string name="elevation_profile_m">م</string>
+	<string name="elevation_profile_difficulty">درجة الصعوبة</string>
+	<string name="elevation_profile_distance">المسافة:</string>
+	<string name="elevation_profile_km">كم</string>
+	<string name="elevation_profile_time">مدة:</string>
+	<string name="elevation_profile_hours">ساعة</string>
+	<string name="elevation_profile_minutes">دقيقة</string>
+	<!-- hide the full screen banner and continue working with the app -->
+	<string name="hide_screen_map_update">إخفاء ومتابعة</string>
+	<string name="view_on_map_downloaded_error">تم حذف هذا الدليل من هذا الجهاز</string>
+	<string name="subscription">الاشتراك</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">محطة تلفريك</string>
 	<string name="type.aeroway.aerodrome">مطار</string>
 	<string name="type.aeroway.aerodrome.international">مطار</string>
 	<string name="type.aeroway.helipad">مهبط مروحيات</string>
+	<string name="type.amenity">أثر</string>
+	<string name="type.amenity.arts_centre">مركز فن</string>
 	<string name="type.amenity.atm">ماكينة صراف آلي</string>
 	<string name="type.amenity.bank">بنك</string>
 	<string name="type.amenity.bar">حانة</string>
@@ -1531,14 +1837,15 @@
 	<string name="type.amenity.parking">موقف سيارات</string>
 	<string name="type.amenity.parking.fee">موقف سيارات</string>
 	<string name="type.amenity.parking.multi.storey">موقف سيارات</string>
-	<string name="type.amenity.parking.multi.storey.fee">موقف سيارات</string>
 	<string name="type.amenity.parking.no.access">موقف سيارات</string>
 	<string name="type.amenity.parking.park_and_ride">موقف سيارات</string>
 	<string name="type.amenity.parking.permissive">موقف سيارات</string>
-	<string name="type.amenity.parking.permissive.fee">موقف سيارات</string>
 	<string name="type.amenity.parking.private">موقف سيارات</string>
 	<string name="type.amenity.parking.underground">موقف سيارات</string>
-	<string name="type.amenity.parking.underground.fee">موقف سيارات</string>
+	<string name="type.amenity.parking_space">مكان لوقوف السيارات</string>
+	<string name="type.amenity.parking_space.permissive">مكان لوقوف السيارات</string>
+	<string name="type.amenity.parking_space.private">مكان لوقوف السيارات</string>
+	<string name="type.amenity.parking_space.underground">مكان لوقوف السيارات</string>
 	<string name="type.amenity.payment_terminal">محطة دفع</string>
 	<string name="type.amenity.pharmacy">متجر أدوية</string>
 	<string name="type.amenity.place_of_worship">مكان عبادة</string>
@@ -1551,7 +1858,7 @@
 	<string name="type.amenity.place_of_worship.taoist">معبد طاوي</string>
 	<string name="type.amenity.police">شرطة</string>
 	<string name="type.amenity.post_box">صندوق بريد</string>
-	<string name="type.amenity.post_office">بريد</string>
+	<string name="type.amenity.post_office">مكتب بريد</string>
 	<string name="type.amenity.pub">بار</string>
 	<string name="type.amenity.public_bookcase">مكتبة، تبادل كتب</string>
 	<string name="type.amenity.recycling">مركز إعادة تدوير</string>
@@ -1568,6 +1875,7 @@
 	<string name="type.amenity.vending_machine.cigarettes">ماكينة بيع سجائر</string>
 	<string name="type.amenity.vending_machine.drinks">ماكينة بيع مشروبات</string>
 	<string name="type.amenity.vending_machine.parking_tickets">ماكينة دفع تذاكر الموقف</string>
+	<string name="type.amenity.vending_machine.public_transport_tickets">آلة بيع تذاكر النقل العام</string>
 	<string name="type.amenity.veterinary">طبيب بيطري</string>
 	<string name="type.amenity.waste_basket">صندوق قمامة</string>
 	<string name="type.amenity.waste_disposal">قمامة</string>
@@ -1687,6 +1995,7 @@
 	<string name="type.emergency.phone">هاتف الطوارئ</string>
 	<string name="type.entrance">مدخل</string>
 	<string name="type.highway.bus_stop">موقف حافلة</string>
+	<string name="type.highway.construction">طريق تحت الإنشاء</string>
 	<string name="type.highway.footway">مسار</string>
 	<string name="type.highway.footway.alpine_hiking">مسار</string>
 	<string name="type.highway.footway.area">مسار</string>
@@ -1749,9 +2058,6 @@
 	<string name="type.highway.service.area">شارع</string>
 	<string name="type.highway.service.bridge">شارع</string>
 	<string name="type.highway.service.driveway">شارع</string>
-	<string name="type.highway.service.driveway.area">شارع</string>
-	<string name="type.highway.service.driveway.bridge">شارع</string>
-	<string name="type.highway.service.driveway.tunnel">شارع</string>
 	<string name="type.highway.service.parking_aisle">شارع</string>
 	<string name="type.highway.service.tunnel">شارع</string>
 	<string name="type.highway.speed_camera">كاميرا لرصد السرعة</string>
@@ -1770,14 +2076,8 @@
 	<string name="type.highway.track.grade1">شارع</string>
 	<string name="type.highway.track.grade2">شارع</string>
 	<string name="type.highway.track.grade3">شارع</string>
-	<string name="type.highway.track.grade3.no.access">شارع</string>
-	<string name="type.highway.track.grade3.permissive">شارع</string>
 	<string name="type.highway.track.grade4">شارع</string>
-	<string name="type.highway.track.grade4.no.access">شارع</string>
-	<string name="type.highway.track.grade4.permissive">شارع</string>
 	<string name="type.highway.track.grade5">شارع</string>
-	<string name="type.highway.track.grade5.no.access">شارع</string>
-	<string name="type.highway.track.grade5.permissive">شارع</string>
 	<string name="type.highway.track.no.access">شارع</string>
 	<string name="type.highway.track.permissive">شارع</string>
 	<string name="type.highway.track.tunnel">شارع</string>
@@ -1809,24 +2109,28 @@
 	<string name="type.landuse.basin">مياه</string>
 	<string name="type.landuse.cemetery">مقبرة</string>
 	<string name="type.landuse.cemetery.christian">مقبرة</string>
+	<string name="type.landuse.churchyard">فناء الكنيسة</string>
+	<string name="type.landuse.farmland">حقل</string>
 	<string name="type.landuse.forest">غابة</string>
 	<string name="type.landuse.forest.coniferous">غابة</string>
 	<string name="type.landuse.forest.deciduous">غابة</string>
 	<string name="type.landuse.forest.mixed">غابة</string>
+	<string name="type.landuse.grass">حديقة</string>
+	<string name="type.landuse.landfill">مكب نفايات</string>
+	<string name="type.landuse.railway">محطة خط سكة حديد</string>
 	<string name="type.landuse.reservoir">مياه</string>
+	<string name="type.leisure.dog_park">منطقة كلاب</string>
 	<string name="type.leisure.fitness_centre">مركز للياقة البدنية، نادي رياضي</string>
 	<string name="type.leisure.fitness_station">مركز لياقة</string>
 	<string name="type.leisure.garden">بستان</string>
 	<string name="type.leisure.golf_course">ملعب جولف</string>
 	<string name="type.leisure.nature_reserve">محمية</string>
-	<string name="type.leisure.park">حديقة</string>
-	<string name="type.leisure.park.no.access">حديقة</string>
-	<string name="type.leisure.park.permissive">حديقة</string>
-	<string name="type.leisure.park.private">حديقة</string>
+	<string name="type.leisure.park">موقف سيارات</string>
+	<string name="type.leisure.park.no.access">موقف سيارات</string>
+	<string name="type.leisure.park.permissive">موقف سيارات</string>
+	<string name="type.leisure.park.private">موقف سيارات</string>
 	<string name="type.leisure.pitch">ملعب رياضي</string>
-	<string name="type.leisure.pitch.tennis">ملعب رياضي</string>
 	<string name="type.leisure.playground">ملعب</string>
-	<string name="type.leisure.playground.tennis">ملعب</string>
 	<string name="type.leisure.sauna">ساونا</string>
 	<string name="type.leisure.sports_centre">رياضة</string>
 	<string name="type.leisure.sports_centre.climbing">مركز تسلق</string>
@@ -1848,20 +2152,19 @@
 	<string name="type.natural.bay">خليج</string>
 	<string name="type.natural.beach">شاطئ</string>
 	<string name="type.natural.cape">رأس</string>
-	<string name="type.natural.cave_entrance">مدخل كهف</string>
+	<string name="type.natural.cave_entrance">كهف</string>
 	<string name="type.natural.geyser">نبع ماء حار</string>
 	<string name="type.natural.glacier">كتلة جليدية</string>
+	<string name="type.natural.grassland">ملعب</string>
 	<string name="type.natural.lake">بحيرة</string>
 	<string name="type.natural.peak">قمة</string>
 	<string name="type.natural.pond">بركة</string>
+	<string name="type.natural.scrub">أَيْكَة</string>
 	<string name="type.natural.spring">ينبوع</string>
 	<string name="type.natural.tree">شجرة</string>
 	<string name="type.natural.volcano">بركان</string>
 	<string name="type.natural.water">مياه</string>
-	<string name="type.natural.wood">غابة</string>
-	<string name="type.natural.wood.coniferous">غابة</string>
-	<string name="type.natural.wood.deciduous">غابة</string>
-	<string name="type.natural.wood.mixed">غابة</string>
+	<string name="type.natural.wetland">منطقة رطبة</string>
 	<string name="type.office">مكتب</string>
 	<string name="type.office.company">مكتب شركة</string>
 	<string name="type.office.estate_agent">وكيل عقاري</string>
@@ -1902,6 +2205,9 @@
 	<string name="type.power.substation">محطة كهرباء فرعية</string>
 	<string name="type.power.tower">عمود كهرباء</string>
 	<string name="type.railway.halt">محطة سكك حديدية</string>
+	<string name="type.railway.level_crossing">مزلقان</string>
+	<string name="type.railway.monorail">اتجاه واحد</string>
+	<string name="type.railway.rail">خط سكة حديد</string>
 	<string name="type.railway.station">محطة سكك حديدية</string>
 	<string name="type.railway.station.light_rail">محطة سكك حديدية</string>
 	<string name="type.railway.station.monorail">محطة سكك حديدية</string>
@@ -1930,7 +2236,7 @@
 	<string name="type.railway.station.subway.spb">محطة مترو</string>
 	<string name="type.railway.station.subway.violet">محطة مترو</string>
 	<string name="type.railway.station.subway.yellow">محطة مترو</string>
-	<string name="type.railway.subway_entrance">محطة مترو</string>
+	<string name="type.railway.subway_entrance">مدخل المترو</string>
 	<string name="type.railway.subway_entrance.barcelona">محطة مترو</string>
 	<string name="type.railway.subway_entrance.berlin">محطة مترو</string>
 	<string name="type.railway.subway_entrance.kiev">محطة مترو</string>
@@ -2009,6 +2315,10 @@
 	<string name="type.shop.variety_store">متجر متنوع\n</string>
 	<string name="type.shop.video">متجر</string>
 	<string name="type.shop.wine">متجر مشروبات روحية</string>
+	<string name="type.sport.athletics">العاب رياضية</string>
+	<string name="type.sport.basketball">كرة السلة</string>
+	<string name="type.sport.equestrian">رياضة الفروسية</string>
+	<string name="type.sport.tennis">ملعب تنس</string>
 	<string name="type.tourism.alpine_hut">مساكن جبلية</string>
 	<string name="type.tourism.apartment">شُقَق</string>
 	<string name="type.tourism.artwork">عمل فني</string>
@@ -2050,6 +2360,10 @@
 	<string name="type.waterway.stream.intermittent">نهر</string>
 	<string name="type.waterway.stream.tunnel">نهر</string>
 	<string name="type.waterway.waterfall">شلال</string>
+	<string name="type.wheelchair.limited">دعم محدود لكراسي المعاقين</string>
+	<string name="type.wheelchair.no">لا يدعم لكراسي المعاقين</string>
+	<string name="type.wheelchair.yes">دعم كامل لكراسي المعاقين</string>
+	<string name="type.building_part">مبنى</string>
 
 	<!-- SECTION: Brands -->
 	<string name="brand.aroma">أروما</string>

@@ -8,6 +8,7 @@
 #include "base/timer.hpp"
 
 #include <functional>
+#include <utility>
 
 using namespace std;
 using namespace std::placeholders;
@@ -25,12 +26,12 @@ map<string, string> PrepareStatisticsData(string const & routerName,
   int constexpr precision = 5;
 
   return {{"name", routerName},
-          {"startLon", strings::to_string_dac(MercatorBounds::XToLon(startPoint.x), precision)},
-          {"startLat", strings::to_string_dac(MercatorBounds::YToLat(startPoint.y), precision)},
+          {"startLon", strings::to_string_dac(mercator::XToLon(startPoint.x), precision)},
+          {"startLat", strings::to_string_dac(mercator::YToLat(startPoint.y), precision)},
           {"startDirectionX", strings::to_string_dac(startDirection.x, precision)},
           {"startDirectionY", strings::to_string_dac(startDirection.y, precision)},
-          {"finalLon", strings::to_string_dac(MercatorBounds::XToLon(finalPoint.x), precision)},
-          {"finalLat", strings::to_string_dac(MercatorBounds::YToLat(finalPoint.y), precision)}};
+          {"finalLon", strings::to_string_dac(mercator::XToLon(finalPoint.x), precision)},
+          {"finalLat", strings::to_string_dac(mercator::YToLat(finalPoint.y), precision)}};
 }
 
 void SendStatistics(m2::PointD const & startPoint, m2::PointD const & startDirection,
@@ -99,7 +100,7 @@ void AsyncRouter::RouterDelegateProxy::OnReady(shared_ptr<Route> route, RouterRe
 }
 
 void AsyncRouter::RouterDelegateProxy::OnNeedMoreMaps(uint64_t routeId,
-                                                      vector<string> const & absentCounties)
+                                                      set<string> const & absentCounties)
 {
   if (!m_onNeedMoreMaps)
     return;
@@ -129,6 +130,13 @@ void AsyncRouter::RouterDelegateProxy::Cancel()
   m_delegate.Cancel();
 }
 
+bool AsyncRouter::FindClosestProjectionToRoad(m2::PointD const & point,
+                                              m2::PointD const & direction, double radius,
+                                              EdgeProj & proj)
+{
+  return m_router->FindClosestProjectionToRoad(point, direction, radius, proj);
+}
+
 void AsyncRouter::RouterDelegateProxy::OnProgress(float progress)
 {
   ProgressCallback onProgress = nullptr;
@@ -148,7 +156,7 @@ void AsyncRouter::RouterDelegateProxy::OnProgress(float progress)
   }
 }
 
-void AsyncRouter::RouterDelegateProxy::OnPointCheck(m2::PointD const & pt)
+void AsyncRouter::RouterDelegateProxy::OnPointCheck(ms::LatLon const & pt)
 {
 #ifdef SHOW_ROUTE_DEBUG_MARKS
   PointCheckCallback onPointCheck = nullptr;
@@ -161,7 +169,7 @@ void AsyncRouter::RouterDelegateProxy::OnPointCheck(m2::PointD const & pt)
       return;
 
     onPointCheck = m_onPointCheck;
-    point = pt;
+    point = mercator::FromLatLon(pt);
   }
 
   GetPlatform().RunTask(Platform::Thread::Gui, [onPointCheck, point]() { onPointCheck(point); });
@@ -206,11 +214,11 @@ void AsyncRouter::SetRouter(unique_ptr<IRouter> && router, unique_ptr<IOnlineFet
 }
 
 void AsyncRouter::CalculateRoute(Checkpoints const & checkpoints, m2::PointD const & direction,
-                                 bool adjustToPrevRoute, ReadyCallbackOwnership const & readyCallback,
+                                 bool adjustToPrevRoute,
+                                 ReadyCallbackOwnership const & readyCallback,
                                  NeedMoreMapsCallback const & needMoreMapsCallback,
                                  RemoveRouteCallback const & removeRouteCallback,
-                                 ProgressCallback const & progressCallback,
-                                 uint32_t timeoutSec)
+                                 ProgressCallback const & progressCallback, uint32_t timeoutSec)
 {
   unique_lock<mutex> ul(m_guard);
 
@@ -220,11 +228,18 @@ void AsyncRouter::CalculateRoute(Checkpoints const & checkpoints, m2::PointD con
 
   ResetDelegate();
 
-  m_delegate = make_shared<RouterDelegateProxy>(readyCallback, needMoreMapsCallback, removeRouteCallback,
-                                                m_pointCheckCallback, progressCallback, timeoutSec);
-
+  m_delegateProxy = 
+      make_shared<RouterDelegateProxy>(readyCallback, needMoreMapsCallback, removeRouteCallback,
+                                       m_pointCheckCallback, progressCallback, timeoutSec);
+  
   m_hasRequest = true;
   m_threadCondVar.notify_one();
+}
+
+void AsyncRouter::SetGuidesTracks(GuidesTracks && guides)
+{
+  unique_lock<mutex> ul(m_guard);
+  m_guides = move(guides);
 }
 
 void AsyncRouter::ClearState()
@@ -291,15 +306,18 @@ void AsyncRouter::LogCode(RouterResultCode code, double const elapsedSec)
     case RouterResultCode::RouteNotFoundRedressRouteError:
       LOG(LWARNING, ("Route not found because of a redress route error"));
       break;
+  case RouterResultCode::HasWarnings:
+      LOG(LINFO, ("Route has warnings, elapsed seconds:", elapsedSec));
+      break;
   }
 }
 
 void AsyncRouter::ResetDelegate()
 {
-  if (m_delegate)
+  if (m_delegateProxy)
   {
-    m_delegate->Cancel();
-    m_delegate.reset();
+    m_delegateProxy->Cancel();
+    m_delegateProxy.reset();
   }
 }
 
@@ -331,7 +349,7 @@ void AsyncRouter::ThreadFunc()
 void AsyncRouter::CalculateRoute()
 {
   Checkpoints checkpoints;
-  shared_ptr<RouterDelegateProxy> delegate;
+  shared_ptr<RouterDelegateProxy> delegateProxy;
   m2::PointD startDirection;
   bool adjustToPrevRoute = false;
   shared_ptr<IOnlineFetcher> absentFetcher;
@@ -349,18 +367,20 @@ void AsyncRouter::CalculateRoute()
       return;
     if (!m_router)
       return;
-    if (!m_delegate)
+    if (!m_delegateProxy)
       return;
 
     checkpoints = m_checkpoints;
     startDirection = m_startDirection;
     adjustToPrevRoute = m_adjustToPrevRoute;
-    delegate = m_delegate;
+    delegateProxy = m_delegateProxy;
     router = m_router;
     absentFetcher = m_absentFetcher;
     routeId = ++m_routeCounter;
     routingStatisticsCallback = m_routingStatisticsCallback;
     routerName = router->GetName();
+    router->SetGuides(move(m_guides));
+    m_guides.clear();
   }
 
   auto route = make_shared<Route>(router->GetName(), routeId);
@@ -379,10 +399,11 @@ void AsyncRouter::CalculateRoute()
 
     // Run basic request.
     code = router->CalculateRoute(checkpoints, startDirection, adjustToPrevRoute,
-                                  delegate->GetDelegate(), *route);
-
+                                  delegateProxy->GetDelegate(), *route);
+    router->SetGuides({});
     elapsedSec = timer.ElapsedSeconds(); // routing time
     LogCode(code, elapsedSec);
+    LOG(LINFO, ("ETA:", route->GetTotalTimeSec(), "sec."));
   }
   catch (RootException const & e)
   {
@@ -397,7 +418,7 @@ void AsyncRouter::CalculateRoute()
     // Note. After call of this method |route| should be used only on ui thread.
     // And |route| should stop using on routing background thread, in this method.
     GetPlatform().RunTask(Platform::Thread::Gui,
-                          [delegate, route, code]() { delegate->OnReady(route, code); });
+                          [delegateProxy, route, code]() { delegateProxy->OnReady(route, code); });
     return;
   }
 
@@ -415,18 +436,18 @@ void AsyncRouter::CalculateRoute()
     // Note. After call of this method |route| should be used only on ui thread.
     // And |route| should stop using on routing background thread, in this method.
     GetPlatform().RunTask(Platform::Thread::Gui,
-                          [delegate, route, code]() { delegate->OnReady(route, code); });
+                          [delegateProxy, route, code]() { delegateProxy->OnReady(route, code); });
   }
 
   bool const needFetchAbsent = (code != RouterResultCode::Cancelled);
 
   // Check online response if we have.
-  vector<string> absent;
+  set<string> absent;
   if (absentFetcher && needFetchAbsent)
     absentFetcher->GetAbsentCountries(absent);
-  absent.insert(absent.end(), route->GetAbsentCountries().cbegin(), route->GetAbsentCountries().cend());
 
-  if (!absent.empty() && code == RouterResultCode::NoError)
+  absent.insert(route->GetAbsentCountries().cbegin(), route->GetAbsentCountries().cend());
+  if (!absent.empty())
     code = RouterResultCode::NeedMoreMaps;
 
   elapsedSec = timer.ElapsedSeconds(); // routing time + absents fetch time
@@ -437,14 +458,14 @@ void AsyncRouter::CalculateRoute()
   {
     if (code == RouterResultCode::NeedMoreMaps)
     {
-      GetPlatform().RunTask(Platform::Thread::Gui, [delegate, routeId, absent]() {
-        delegate->OnNeedMoreMaps(routeId, absent);
+      GetPlatform().RunTask(Platform::Thread::Gui, [delegateProxy, routeId, absent]() {
+        delegateProxy->OnNeedMoreMaps(routeId, absent);
       });
     }
     else
     {
       GetPlatform().RunTask(Platform::Thread::Gui,
-                            [delegate, code]() { delegate->OnRemoveRoute(code); });
+                            [delegateProxy, code]() { delegateProxy->OnRemoveRoute(code); });
     }
   }
 }

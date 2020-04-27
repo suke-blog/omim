@@ -59,6 +59,11 @@ public:
   {
   }
 
+  virtual void FilterAllHotelsInViewport(m2::RectD const & viewport,
+                                         booking::filter::Tasks const & filterTasks) override
+  {
+  }
+
 private:
   Stats & m_stats;
 };
@@ -72,7 +77,8 @@ public:
     , TestSearchRequest(engine, query, "en" /* locale */, Mode::Viewport, viewport)
   {
     SetCustomOnResults(
-        ViewportSearchCallback(static_cast<ViewportSearchCallback::Delegate &>(*this),
+        ViewportSearchCallback(viewport,
+                               static_cast<ViewportSearchCallback::Delegate &>(*this),
                                {} /* bookingFilterTasks */,
                                bind(&InteractiveSearchRequest::OnResults, this, placeholders::_1)));
   }
@@ -113,8 +119,8 @@ UNIT_CLASS_TEST(InteractiveSearchTest, Smoke)
         m_engine, "cafe", m2::RectD(m2::PointD(-1.5, -1.5), m2::PointD(-0.5, -0.5)), stats);
     request.Run();
 
-    TRules const rules = {ExactMatch(id, cafes[0]), ExactMatch(id, cafes[1]),
-                          ExactMatch(id, cafes[2]), ExactMatch(id, cafes[3])};
+    Rules const rules = {ExactMatch(id, cafes[0]), ExactMatch(id, cafes[1]),
+                         ExactMatch(id, cafes[2]), ExactMatch(id, cafes[3])};
 
     TEST(!stats.m_hotelDisplacementModeSet, ());
     TEST_EQUAL(stats.m_numShownResults, 4, ());
@@ -127,8 +133,8 @@ UNIT_CLASS_TEST(InteractiveSearchTest, Smoke)
                                      m2::RectD(m2::PointD(0.5, 0.5), m2::PointD(1.5, 1.5)), stats);
     request.Run();
 
-    TRules const rules = {ExactMatch(id, hotels[0]), ExactMatch(id, hotels[1]),
-                          ExactMatch(id, hotels[2]), ExactMatch(id, hotels[3])};
+    Rules const rules = {ExactMatch(id, hotels[0]), ExactMatch(id, hotels[1]),
+                         ExactMatch(id, hotels[2]), ExactMatch(id, hotels[3])};
 
     TEST(stats.m_hotelDisplacementModeSet, ());
     TEST_EQUAL(stats.m_numShownResults, 4, ());
@@ -162,7 +168,7 @@ UNIT_CLASS_TEST(InteractiveSearchTest, NearbyFeaturesInViewport)
     request.Run();
 
     TEST(MatchResults(m_dataSource,
-                      TRules{ExactMatch(id, cafe1), ExactMatch(id, cafe2), ExactMatch(id, cafe3)},
+                      Rules{ExactMatch(id, cafe1), ExactMatch(id, cafe2), ExactMatch(id, cafe3)},
                       request.Results()),
          ());
   }
@@ -175,8 +181,8 @@ UNIT_CLASS_TEST(InteractiveSearchTest, NearbyFeaturesInViewport)
 
     auto const & results = request.Results();
 
-    TEST(MatchResults(m_dataSource, TRules{ExactMatch(id, cafe1), ExactMatch(id, cafe3)}, results) ||
-             MatchResults(m_dataSource, TRules{ExactMatch(id, cafe2)}, results),
+    TEST(MatchResults(m_dataSource, Rules{ExactMatch(id, cafe1), ExactMatch(id, cafe3)}, results) ||
+             MatchResults(m_dataSource, Rules{ExactMatch(id, cafe2)}, results),
          ());
   }
 }

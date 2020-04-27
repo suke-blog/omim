@@ -6,22 +6,28 @@
 #include "map/transit/transit_display.hpp"
 #include "map/transit/transit_reader.hpp"
 
+#include "routing/following_info.hpp"
 #include "routing/route.hpp"
+#include "routing/router.hpp"
 #include "routing/routing_callbacks.hpp"
 #include "routing/routing_session.hpp"
 #include "routing/speed_camera_manager.hpp"
 
-#include "storage/index.hpp"
+#include "tracking/archival_reporter.hpp"
+#include "tracking/reporter.hpp"
+
+#include "storage/storage_defines.hpp"
 
 #include "drape_frontend/drape_engine_safe_ptr.hpp"
 
 #include "drape/pointers.hpp"
 
-#include "tracking/reporter.hpp"
-
 #include "geometry/point2d.hpp"
+#include "geometry/point_with_altitude.hpp"
 
 #include "base/thread_checker.hpp"
+
+#include "std/target_os.hpp"
 
 #include <chrono>
 #include <functional>
@@ -43,6 +49,11 @@ class NumMwmIds;
 }
 
 class DataSource;
+
+namespace power_management
+{
+  class PowerManager;
+}
 
 struct RoutePointInfo
 {
@@ -69,19 +80,22 @@ public:
   struct Callbacks
   {
     using DataSourceGetterFn = std::function<DataSource &()>;
-    using CountryInfoGetterFn = std::function<storage::CountryInfoGetter &()>;
+    using CountryInfoGetterFn = std::function<storage::CountryInfoGetter const &()>;
     using CountryParentNameGetterFn = std::function<std::string(std::string const &)>;
     using GetStringsBundleFn = std::function<StringsBundle const &()>;
+    using PowerManagerGetter = std::function<power_management::PowerManager const &()>;
 
     template <typename DataSourceGetter, typename CountryInfoGetter,
-              typename CountryParentNameGetter, typename StringsBundleGetter>
+              typename CountryParentNameGetter, typename StringsBundleGetter,
+              typename PowerManagerGetter>
     Callbacks(DataSourceGetter && dataSourceGetter, CountryInfoGetter && countryInfoGetter,
               CountryParentNameGetter && countryParentNameGetter,
-              StringsBundleGetter && stringsBundleGetter)
+              StringsBundleGetter && stringsBundleGetter, PowerManagerGetter && powerManagerGetter)
       : m_dataSourceGetter(std::forward<DataSourceGetter>(dataSourceGetter))
       , m_countryInfoGetter(std::forward<CountryInfoGetter>(countryInfoGetter))
       , m_countryParentNameGetterFn(std::forward<CountryParentNameGetter>(countryParentNameGetter))
       , m_stringsBundleGetter(std::forward<StringsBundleGetter>(stringsBundleGetter))
+      , m_powerManagerGetter(std::forward<PowerManagerGetter>(powerManagerGetter))
     {
     }
 
@@ -89,10 +103,15 @@ public:
     CountryInfoGetterFn m_countryInfoGetter;
     CountryParentNameGetterFn m_countryParentNameGetterFn;
     GetStringsBundleFn m_stringsBundleGetter;
+    PowerManagerGetter m_powerManagerGetter;
   };
 
   using RouteBuildingCallback =
-      std::function<void(routing::RouterResultCode, storage::TCountriesVec const &)>;
+      std::function<void(routing::RouterResultCode, storage::CountriesSet const &)>;
+  using RouteSpeedCamShowCallback =
+      std::function<void(m2::PointD const &, double)>;
+  using RouteSpeedCamsClearCallback =
+      std::function<void()>;
 
   using RouteStartBuildCallback = std::function<void(std::vector<RouteMarkData> const & points)>;
 
@@ -118,11 +137,12 @@ public:
   bool IsRouteBuilt() const { return m_routingSession.IsBuilt(); }
   bool IsRouteBuilding() const { return m_routingSession.IsBuilding(); }
   bool IsRouteRebuildingOnly() const { return m_routingSession.IsRebuildingOnly(); }
-  bool IsRouteNotReady() const { return m_routingSession.IsNotReady(); }
   bool IsRouteFinished() const { return m_routingSession.IsFinished(); }
   bool IsOnRoute() const { return m_routingSession.IsOnRoute(); }
   bool IsRoutingFollowing() const { return m_routingSession.IsFollowing(); }
-  void BuildRoute(uint32_t timeoutSec);
+  bool IsRouteValid() const { return m_routingSession.IsRouteValid(); }
+  routing::GuidesTracks GetGuidesTracks() const;
+  void BuildRoute(uint32_t timeoutSec = routing::RouterDelegate::kNoTimeout);
   void SetUserCurrentPosition(m2::PointD const & position);
   void ResetRoutingSession() { m_routingSession.Reset(); }
   // FollowRoute has a bug where the router follows the route even if the method hads't been called.
@@ -134,6 +154,17 @@ public:
   {
     m_routingBuildingCallback = buildingCallback;
   }
+
+  void SetRouteSpeedCamShowListener(RouteSpeedCamShowCallback const & speedCamShowCallback)
+  {
+    m_routeSpeedCamShowCallback = speedCamShowCallback;
+  }
+    
+  void SetRouteSpeedCamsClearListener(RouteSpeedCamsClearCallback const & speedCamsClearCallback)
+  {
+    m_routeSpeedCamsClearCallback = speedCamsClearCallback;
+  }
+  
   void SetRouteStartBuildListener(RouteStartBuildCallback const & startBuildCallback)
   {
     m_routingStartBuildCallback = startBuildCallback;
@@ -149,7 +180,7 @@ public:
   }
   void FollowRoute();
   void CloseRouting(bool removeRoutePoints);
-  void GetRouteFollowingInfo(location::FollowingInfo & info) const
+  void GetRouteFollowingInfo(routing::FollowingInfo & info) const
   {
     m_routingSession.GetRouteFollowingInfo(info);
   }
@@ -209,10 +240,10 @@ public:
 
   void CheckLocationForRouting(location::GpsInfo const & info);
   void CallRouteBuilded(routing::RouterResultCode code,
-                        storage::TCountriesVec const & absentCountries);
+                        storage::CountriesSet const & absentCountries);
   void OnBuildRouteReady(routing::Route const & route, routing::RouterResultCode code);
   void OnRebuildRouteReady(routing::Route const & route, routing::RouterResultCode code);
-  void OnNeedMoreMaps(uint64_t routeId, std::vector<std::string> const & absentCountries);
+  void OnNeedMoreMaps(uint64_t routeId, storage::CountriesSet const & absentCountries);
   void OnRemoveRoute(routing::RouterResultCode code);
   void OnRoutePointPassed(RouteMarkType type, size_t intermediateIndex);
   void OnLocationUpdate(location::GpsInfo const & info);
@@ -221,6 +252,7 @@ public:
   {
     m_trackingReporter.SetAllowSendingPoints(isAllowed);
   }
+  void ConfigureArchivalReporter(tracking::ArchivingSettings const & settings);
 
   routing::SpeedCameraManager & GetSpeedCamManager() { return m_routingSession.GetSpeedCamManager(); }
   bool IsSpeedLimitExceeded() const;
@@ -237,7 +269,7 @@ public:
   /// \brief Fills altitude of current route points and distance in meters form the beginning
   /// of the route point based on the route in RoutingSession.
   bool GetRouteAltitudesAndDistancesM(std::vector<double> & routePointDistanceM,
-                                      feature::TAltitudes & altitudes) const;
+                                      geometry::Altitudes & altitudes) const;
 
   /// \brief Generates 4 bytes per point image (RGBA) and put the data to |imageRGBAData|.
   /// \param width is width of chart shall be generated in pixels.
@@ -254,7 +286,7 @@ public:
   /// \note If HasRouteAltitude() method returns true, GenerateRouteAltitudeChart(...)
   /// could return false if route was deleted or rebuilt between the calls.
   bool GenerateRouteAltitudeChart(uint32_t width, uint32_t height,
-                                  feature::TAltitudes const & altitudes,
+                                  geometry::Altitudes const & altitudes,
                                   std::vector<double> const & routePointDistanceM,
                                   std::vector<uint8_t> & imageRGBAData, int32_t & minRouteAltitude,
                                   int32_t & maxRouteAltitude,
@@ -279,11 +311,38 @@ public:
   void UpdatePreviewMode();
   void CancelPreviewMode();
 
+  routing::RouterType GetCurrentRouterType() const { return m_currentRouterType; }
+
 private:
-  void InsertRoute(routing::Route const & route);
+  /// \returns true if the route has warnings.
+  bool InsertRoute(routing::Route const & route);
+
+  struct RoadInfo
+  {
+    RoadInfo() = default;
+
+    explicit RoadInfo(m2::PointD const & pt, FeatureID const & featureId)
+      : m_startPoint(pt)
+      , m_featureId(featureId)
+    {}
+
+    m2::PointD m_startPoint;
+    FeatureID m_featureId;
+    double m_distance = 0.0;
+  };
+  using RoadWarningsCollection = std::map<routing::RoutingOptions::Road, std::vector<RoadInfo>>;
+
+  using GetMwmIdFn = std::function<MwmSet::MwmId (routing::NumMwmId numMwmId)>;
+  void CollectRoadWarnings(std::vector<routing::RouteSegment> const & segments, m2::PointD const & startPt,
+                           double baseDistance, GetMwmIdFn const & getMwmIdFn, RoadWarningsCollection & roadWarnings);
+  void CreateRoadWarningMarks(RoadWarningsCollection && roadWarnings);
+
   bool IsTrackingReporterEnabled() const;
+  bool IsTrackingReporterArchiveEnabled() const;
+  /// \returns false if the location could not be matched to the route and should be matched to the
+  /// road graph. Otherwise returns true.
   void MatchLocationToRoute(location::GpsInfo & info,
-                            location::RouteMatchingInfo & routeMatchingInfo) const;
+                            location::RouteMatchingInfo & routeMatchingInfo);
   location::RouteMatchingInfo GetRouteMatchingInfo(location::GpsInfo & info);
   uint32_t GenerateRoutePointsTransactionId() const;
 
@@ -303,6 +362,8 @@ private:
   void OnExtrapolatedLocationUpdate(location::GpsInfo const & info);
 
   RouteBuildingCallback m_routingBuildingCallback;
+  RouteSpeedCamShowCallback m_routeSpeedCamShowCallback;
+  RouteSpeedCamsClearCallback m_routeSpeedCamsClearCallback;
   RouteRecommendCallback m_routeRecommendCallback;
   RouteStartBuildCallback m_routingStartBuildCallback;
   Callbacks m_callbacks;
@@ -312,6 +373,8 @@ private:
   routing::RoutingSession m_routingSession;
   Delegate & m_delegate;
   tracking::Reporter m_trackingReporter;
+  tracking::ArchivalReporter m_trackingReporterArchive;
+
   BookmarkManager * m_bmManager = nullptr;
   extrapolation::Extrapolator m_extrapolator;
 

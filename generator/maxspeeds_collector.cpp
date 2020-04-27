@@ -4,18 +4,23 @@
 
 #include "routing_common/maxspeed_conversion.hpp"
 
-#include "coding/file_writer.hpp"
+#include "platform/platform.hpp"
 
+#include "coding/internal/file_data.hpp"
+
+#include "base/assert.hpp"
 #include "base/geo_object_id.hpp"
 #include "base/logging.hpp"
 #include "base/string_utils.hpp"
 
-#include <fstream>
+#include <algorithm>
+#include <iterator>
 #include <sstream>
 
 using namespace base;
 using namespace generator;
 using namespace routing;
+using namespace feature;
 using namespace std;
 
 namespace
@@ -32,10 +37,26 @@ bool ParseMaxspeedAndWriteToStream(string const & maxspeed, SpeedInUnits & speed
 
 namespace generator
 {
-void MaxspeedsCollector::Process(OsmElement const & p)
+MaxspeedsCollector::MaxspeedsCollector(string const & filename)
+  : CollectorInterface(filename)
 {
+  m_stream.exceptions(fstream::failbit | fstream::badbit);
+  m_stream.open(GetTmpFilename());
+}
+
+shared_ptr<CollectorInterface> MaxspeedsCollector::Clone(
+    shared_ptr<cache::IntermediateDataReaderInterface> const &) const
+{
+  return make_shared<MaxspeedsCollector>(GetFilename());
+}
+
+void MaxspeedsCollector::CollectFeature(FeatureBuilder const &, OsmElement const & p)
+{
+  if (!p.IsWay())
+    return;
+
   ostringstream ss;
-  ss << p.id << ",";
+  ss << p.m_id << ",";
 
   auto const & tags = p.Tags();
   string maxspeedForwardStr;
@@ -44,21 +65,21 @@ void MaxspeedsCollector::Process(OsmElement const & p)
 
   for (auto const & t : tags)
   {
-    if (t.key == "maxspeed")
+    if (t.m_key == "maxspeed")
     {
       SpeedInUnits dummySpeed;
-      if (!ParseMaxspeedAndWriteToStream(t.value, dummySpeed, ss))
+      if (!ParseMaxspeedAndWriteToStream(t.m_value, dummySpeed, ss))
         return;
-      m_data.push_back(ss.str());
+      m_stream << ss.str() << '\n';
       return;
     }
 
-    if (t.key == "maxspeed:forward")
-      maxspeedForwardStr = t.value;
-    else if (t.key == "maxspeed:backward")
-      maxspeedBackwardStr = t.value;
-    else if (t.key == "oneway")
-      isReverse = (t.value == "-1");
+    if (t.m_key == "maxspeed:forward")
+      maxspeedForwardStr = t.m_value;
+    else if (t.m_key == "maxspeed:backward")
+      maxspeedBackwardStr = t.m_value;
+    else if (t.m_key == "oneway")
+      isReverse = (t.m_value == "-1");
   }
 
   // Note 1. isReverse == true means feature |p| has tag "oneway" with value "-1". Now (10.2018)
@@ -92,26 +113,31 @@ void MaxspeedsCollector::Process(OsmElement const & p)
     ss << "," << strings::to_string(maxspeedBackward.GetSpeed());
   }
 
-  m_data.push_back(ss.str());
+  m_stream << ss.str() << '\n';
 }
 
-void MaxspeedsCollector::Flush()
+void MaxspeedsCollector::Finish()
 {
-  LOG(LINFO, ("Saving maxspeed tag values to", m_filePath));
-  ofstream stream(m_filePath);
+  if (m_stream.is_open())
+    m_stream.close();
+}
 
-  if (!stream)
-  {
-    LOG(LERROR, ("Cannot open file", m_filePath));
-    return;
-  }
+void MaxspeedsCollector::Save()
+{
+  CHECK(!m_stream.is_open(), ("Finish() has not been called."));
+  LOG(LINFO, ("Saving maxspeed tag values to", GetFilename()));
+  if (Platform::IsFileExistsByFullPath(GetTmpFilename()))
+    CHECK(CopyFileX(GetTmpFilename(), GetFilename()), ());
+}
 
-  for (auto const & s : m_data)
-    stream << s << '\n';
+void MaxspeedsCollector::Merge(CollectorInterface const & collector)
+{
+  collector.MergeInto(*this);
+}
 
-  if (stream.fail())
-    LOG(LERROR, ("Cannot write to file", m_filePath));
-  else
-    LOG(LINFO, ("Wrote", m_data.size(), "maxspeed tags to", m_filePath));
+void MaxspeedsCollector::MergeInto(MaxspeedsCollector & collector) const
+{
+  CHECK(!m_stream.is_open() || !collector.m_stream.is_open(), ("Finish() has not been called."));
+  base::AppendFileToFile(GetTmpFilename(), collector.GetTmpFilename());
 }
 }  // namespace generator

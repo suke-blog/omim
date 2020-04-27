@@ -16,10 +16,12 @@ set(
   base64.hpp
   bit_streams.hpp
   buffer_reader.hpp
+  buffered_file_writer.cpp
+  buffered_file_writer.hpp
+  bwt.cpp
+  bwt.hpp
   bwt_coder.hpp
   byte_stream.hpp
-  coder.hpp
-  coder_util.hpp
   compressed_bit_vector.cpp
   compressed_bit_vector.hpp
   constants.hpp
@@ -27,18 +29,15 @@ set(
   csv_reader.hpp
   dd_vector.hpp
   diff.hpp
-  diff_patch_common.hpp
   elias_coder.hpp
   endianness.hpp
-  file_container.cpp
-  file_container.hpp
-  file_name_utils.cpp
-  file_name_utils.hpp
   file_reader.cpp
   file_reader.hpp
   file_sort.hpp
   file_writer.cpp
   file_writer.hpp
+  files_container.cpp
+  files_container.hpp
   fixed_bits_ddvector.hpp
   geometry_coding.cpp
   geometry_coding.hpp
@@ -50,14 +49,15 @@ set(
   internal/file_data.cpp
   internal/file_data.hpp
   internal/xmlparser.hpp
-  matrix_traversal.hpp
+  map_uint32_to_val.hpp
   memory_region.hpp
   mmap_reader.cpp
   mmap_reader.hpp
+  move_to_front.cpp
+  move_to_front.hpp
   parse_xml.hpp
   point_coding.cpp
   point_coding.hpp
-  polymorph_reader.hpp
   read_write_utils.hpp
   reader.cpp
   reader.hpp
@@ -85,16 +85,12 @@ set(
   traffic.hpp
   transliteration.cpp
   transliteration.hpp
-  uri.cpp
-  uri.hpp
-  url_encode.hpp
+  url.cpp
+  url.hpp
   value_opt_string.hpp
   var_record_reader.hpp
   var_serial_vector.hpp
   varint.hpp
-  varint_misc.hpp
-#    varint_vector.cpp
-#    varint_vector.hpp
   write_to_sink.hpp
   writer.hpp
   zip_creator.cpp

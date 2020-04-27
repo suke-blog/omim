@@ -1,19 +1,31 @@
 package com.mapswithme.maps.gallery.impl;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mapswithme.maps.R;
-import com.mapswithme.maps.gallery.GalleryAdapter;
 import com.mapswithme.maps.gallery.Holders;
+import com.mapswithme.maps.gallery.ItemSelectedListener;
 import com.mapswithme.maps.gallery.Items;
 import com.mapswithme.maps.gallery.SimpleSingleItemAdapterStrategy;
 
 public class SimpleLoadingAdapterStrategy
     extends SimpleSingleItemAdapterStrategy<Holders.SimpleViewHolder>
 {
+  SimpleLoadingAdapterStrategy(@Nullable ItemSelectedListener<Items.Item> listener)
+  {
+    this(listener, null);
+  }
+
+  public SimpleLoadingAdapterStrategy(@Nullable ItemSelectedListener<Items.Item> listener,
+                                      @Nullable String url)
+  {
+    super(listener, url);
+  }
+
   @Override
   protected int getTitle()
   {
@@ -28,9 +40,8 @@ public class SimpleLoadingAdapterStrategy
   }
 
   @Override
-  protected Holders.SimpleViewHolder createViewHolder(@NonNull View itemView,
-                                                      @NonNull GalleryAdapter<?, Items.Item> adapter)
+  protected Holders.SimpleViewHolder createViewHolder(@NonNull View itemView)
   {
-    return new Holders.SimpleViewHolder(itemView, mItems, adapter);
+    return new Holders.SimpleViewHolder(itemView, mItems, getListener());
   }
 }

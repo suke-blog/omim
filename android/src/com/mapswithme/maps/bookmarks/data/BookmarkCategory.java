@@ -4,17 +4,16 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.PluralsRes;
-import android.support.annotation.StringRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.PluralsRes;
+import androidx.annotation.StringRes;
 import android.text.TextUtils;
 
 import com.mapswithme.maps.R;
 import com.mapswithme.maps.bookmarks.BookmarksPageFactory;
 import com.mapswithme.util.TypeConverter;
-import com.mapswithme.util.UiUtils;
 
 public class BookmarkCategory implements Parcelable
 {
@@ -33,13 +32,15 @@ public class BookmarkCategory implements Parcelable
   private final int mAccessRulesIndex;
   private final boolean mIsMyCategory;
   private final boolean mIsVisible;
+  @NonNull
+  private final String mServerId;
 
 
   public BookmarkCategory(long id, @NonNull String name, @NonNull String authorId,
                           @NonNull String authorName, @NonNull String annotation,
                           @NonNull String description, int tracksCount, int bookmarksCount,
                           boolean fromCatalog, boolean isMyCategory, boolean isVisible,
-                          int accessRulesIndex)
+                          int accessRulesIndex, @NonNull String serverId)
   {
     mId = id;
     mName = name;
@@ -48,6 +49,7 @@ public class BookmarkCategory implements Parcelable
     mTracksCount = tracksCount;
     mBookmarksCount = bookmarksCount;
     mIsMyCategory = isMyCategory;
+    mServerId = serverId;
     mTypeIndex = fromCatalog && !isMyCategory ? Type.DOWNLOADED.ordinal() : Type.PRIVATE.ordinal();
     mIsVisible = isVisible;
     mAuthor = TextUtils.isEmpty(authorId) || TextUtils.isEmpty(authorName)
@@ -140,6 +142,12 @@ public class BookmarkCategory implements Parcelable
   public String getDescription()
   {
     return mDescription;
+  }
+
+  @NonNull
+  public String getServerId()
+  {
+    return mServerId;
   }
 
   @NonNull
@@ -300,6 +308,7 @@ public class BookmarkCategory implements Parcelable
     sb.append(", mIsMyCategory=").append(mIsMyCategory);
     sb.append(", mIsVisible=").append(mIsVisible);
     sb.append(", mAccessRules=").append(getAccessRules());
+    sb.append(", mServerId=").append(mServerId);
     sb.append('}');
     return sb.toString();
   }
@@ -319,9 +328,9 @@ public class BookmarkCategory implements Parcelable
     DOWNLOADED(BookmarksPageFactory.DOWNLOADED, FilterStrategy.PredicativeStrategy.makeDownloadedInstance());
 
     @NonNull
-    private BookmarksPageFactory mFactory;
+    private final BookmarksPageFactory mFactory;
     @NonNull
-    private FilterStrategy mFilterStrategy;
+    private final FilterStrategy mFilterStrategy;
 
     Type(@NonNull BookmarksPageFactory pageFactory, @NonNull FilterStrategy filterStrategy)
     {
@@ -362,6 +371,7 @@ public class BookmarkCategory implements Parcelable
     dest.writeByte(this.mIsMyCategory ? (byte) 1 : (byte) 0);
     dest.writeByte(this.mIsVisible ? (byte) 1 : (byte) 0);
     dest.writeInt(this.mAccessRulesIndex);
+    dest.writeString(this.mServerId);
   }
 
   protected BookmarkCategory(Parcel in)
@@ -377,6 +387,7 @@ public class BookmarkCategory implements Parcelable
     this.mIsMyCategory = in.readByte() != 0;
     this.mIsVisible = in.readByte() != 0;
     this.mAccessRulesIndex = in.readInt();
+    this.mServerId = in.readString();
   }
 
   public static final Creator<BookmarkCategory> CREATOR = new Creator<BookmarkCategory>()
@@ -400,7 +411,8 @@ public class BookmarkCategory implements Parcelable
     ACCESS_RULES_PUBLIC(R.string.public_access, R.drawable.ic_public_inline),
     ACCESS_RULES_DIRECT_LINK(R.string.limited_access, R.drawable.ic_link_inline),
     ACCESS_RULES_P2P(R.string.access_rules_p_to_p, R.drawable.ic_public_inline),
-    ACCESS_RULES_PAID(R.string.access_rules_paid, R.drawable.ic_public_inline);
+    ACCESS_RULES_PAID(R.string.access_rules_paid, R.drawable.ic_public_inline),
+    ACCESS_RULES_AUTHOR_ONLY(R.string.access_rules_author_only, R.drawable.ic_lock);
 
     private final int mResId;
     private final int mDrawableResId;

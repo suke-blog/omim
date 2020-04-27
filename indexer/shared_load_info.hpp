@@ -2,10 +2,12 @@
 
 #include "indexer/data_header.hpp"
 
-#include "coding/file_container.hpp"
+#include "coding/files_container.hpp"
 #include "coding/geometry_coding.hpp"
 
 #include "base/macros.hpp"
+
+#include <optional>
 
 namespace feature
 {
@@ -24,6 +26,7 @@ public:
   Reader GetAltitudeReader() const;
   Reader GetGeometryReader(int ind) const;
   Reader GetTrianglesReader(int ind) const;
+  std::optional<Reader> GetPostcodesReader() const;
 
   version::Format GetMWMFormat() const { return m_header.GetFormat(); }
 

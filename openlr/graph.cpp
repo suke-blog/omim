@@ -1,14 +1,24 @@
 #include "openlr/graph.hpp"
 
+#include "geometry/mercator.hpp"
+#include "geometry/point_with_altitude.hpp"
+
+#include <map>
+#include <memory>
+#include <utility>
+#include <vector>
+
 using namespace routing;
+using namespace std;
 
 namespace openlr
 {
 namespace
 {
-using EdgeGetter = void (IRoadGraph::*)(Junction const &, RoadGraphBase::TEdgeVector &) const;
+using EdgeGetter = void (IRoadGraph::*)(geometry::PointWithAltitude const &,
+                                        RoadGraphBase::EdgeVector &) const;
 
-void GetRegularEdges(Junction const & junction, IRoadGraph const & graph,
+void GetRegularEdges(geometry::PointWithAltitude const & junction, IRoadGraph const & graph,
                      EdgeGetter const edgeGetter,
                      map<openlr::Graph::Junction, Graph::EdgeVector> & cache,
                      Graph::EdgeVector & edges)
@@ -58,12 +68,9 @@ void Graph::GetRegularIngoingEdges(Junction const & junction, EdgeVector & edges
 void Graph::FindClosestEdges(m2::PointD const & point, uint32_t const count,
                              vector<pair<Edge, Junction>> & vicinities) const
 {
-  m_graph.FindClosestEdges(point, count, vicinities);
-}
-
-void Graph::AddFakeEdges(Junction const & junction, vector<pair<Edge, Junction>> const & vicinities)
-{
-  m_graph.AddFakeEdges(junction, vicinities);
+  m_graph.FindClosestEdges(
+      mercator::RectByCenterXYAndSizeInMeters(point, FeaturesRoadGraph::kClosestEdgesRadiusM),
+      count, vicinities);
 }
 
 void Graph::AddIngoingFakeEdge(Edge const & e)
@@ -74,5 +81,10 @@ void Graph::AddIngoingFakeEdge(Edge const & e)
 void Graph::AddOutgoingFakeEdge(Edge const & e)
 {
   m_graph.AddOutgoingFakeEdge(e);
+}
+
+void Graph::GetFeatureTypes(FeatureID const & featureId, feature::TypesHolder & types) const
+{
+  m_graph.GetFeatureTypes(featureId, types);
 }
 }  // namespace openlr

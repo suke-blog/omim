@@ -69,8 +69,7 @@ bool IsMiddleTunnel(int const layer, double const depth)
 class Aggregator
 {
 public:
-  Aggregator(FeatureType & f, feature::EGeomType const type, int const zoomLevel,
-             int const keyCount)
+  Aggregator(FeatureType & f, feature::GeomType const type, int const zoomLevel, int const keyCount)
     : m_pointStyleFound(false)
     , m_lineStyleFound(false)
     , m_auxCaptionFound(false)
@@ -131,7 +130,7 @@ private:
     if (lineRule != nullptr && (lineRule->width() < 1e-5 && !lineRule->has_pathsym()))
       return;
 
-    m_rules.emplace_back(make_pair(dRule, depth));
+    m_rules.emplace_back(std::make_pair(dRule, depth));
   }
 
   void Init()
@@ -140,17 +139,17 @@ private:
     if (m_depthLayer == feature::LAYER_TRANSPARENT_TUNNEL)
       m_depthLayer = feature::LAYER_EMPTY;
 
-    if (m_geomType == feature::GEOM_POINT)
+    if (m_geomType == feature::GeomType::Point)
       m_priorityModifier = (double)m_f.GetPopulation() / 7E9;
     else
     {
       m2::RectD const r = m_f.GetLimitRect(m_zoomLevel);
-      m_priorityModifier = min(1.0, r.SizeX() * r.SizeY() * 10000.0);
+      m_priorityModifier = std::min(1.0, r.SizeX() * r.SizeY() * 10000.0);
     }
   }
 
   FeatureType & m_f;
-  feature::EGeomType m_geomType;
+  feature::GeomType m_geomType;
   int const m_zoomLevel;
   double m_priorityModifier;
   int m_depthLayer;
@@ -167,11 +166,6 @@ IsBuildingHasPartsChecker::IsBuildingHasPartsChecker()
   m_types.push_back(classif().GetTypeByPath({"building", "has_parts"}));
 }
 
-IsBuildingPartChecker::IsBuildingPartChecker() : BaseChecker(1 /* level */)
-{
-  m_types.push_back(classif().GetTypeByPath({"building:part"}));
-}
-
 IsHatchingTerritoryChecker::IsHatchingTerritoryChecker()
 {
   Classificator const & c = classif();
@@ -183,10 +177,10 @@ IsHatchingTerritoryChecker::IsHatchingTerritoryChecker()
 }
 
 void CaptionDescription::Init(FeatureType & f, int8_t deviceLang, int const zoomLevel,
-                              feature::EGeomType const type, drule::text_type_t const mainTextType,
+                              feature::GeomType const type, drule::text_type_t const mainTextType,
                               bool const auxCaptionExists)
 {
-  if (auxCaptionExists || type == feature::GEOM_LINE)
+  if (auxCaptionExists || type == feature::GeomType::Line)
     f.GetPreferredNames(true /* allowTranslit */, deviceLang, m_mainText, m_auxText);
   else
     f.GetReadableName(true /* allowTranslit */, deviceLang, m_mainText);
@@ -203,17 +197,17 @@ void CaptionDescription::Init(FeatureType & f, int8_t deviceLang, int const zoom
   ProcessMainTextType(mainTextType);
 }
 
-string const & CaptionDescription::GetMainText() const
+std::string const & CaptionDescription::GetMainText() const
 {
   return m_mainText;
 }
 
-string const & CaptionDescription::GetAuxText() const
+std::string const & CaptionDescription::GetAuxText() const
 {
   return m_auxText;
 }
 
-string const & CaptionDescription::GetRoadNumber() const
+std::string const & CaptionDescription::GetRoadNumber() const
 {
   return m_roadNumber;
 }
@@ -231,11 +225,17 @@ void CaptionDescription::ProcessZoomLevel(int const zoomLevel)
   }
 
   if (zoomLevel < 5 && m_mainText.size() > 50)
+  {
     m_mainText.clear();
+    m_auxText.clear();
+  }
 }
 
 void CaptionDescription::ProcessMainTextType(drule::text_type_t const & mainTextType)
 {
+  if (m_houseNumber.empty())
+    return;
+
   if (mainTextType == drule::text_type_housenumber)
   {
     m_mainText.swap(m_houseNumber);
@@ -244,8 +244,7 @@ void CaptionDescription::ProcessMainTextType(drule::text_type_t const & mainText
   }
   else if (mainTextType == drule::text_type_name)
   {
-    if (!m_houseNumber.empty() &&
-        (m_mainText.empty() || m_houseNumber.find(m_mainText) != string::npos))
+    if (m_mainText.empty() || m_houseNumber.find(m_mainText) != std::string::npos)
     {
       m_houseNumber.swap(m_mainText);
       m_isHouseNumberInMainText = true;
@@ -323,7 +322,7 @@ bool InitStylist(FeatureType & f, int8_t deviceLang, int const zoomLevel, bool b
 {
   feature::TypesHolder const types(f);
 
-  if (!buildings3d && IsBuildingPartChecker::Instance()(types) &&
+  if (!buildings3d && ftypes::IsBuildingPartChecker::Instance()(types) &&
       !ftypes::IsBuildingChecker::Instance()(types))
     return false;
 
@@ -340,17 +339,17 @@ bool InitStylist(FeatureType & f, int8_t deviceLang, int const zoomLevel, bool b
   if (geomType.second)
     s.RaiseCoastlineFlag();
 
-  auto const mainGeomType = feature::EGeomType(geomType.first);
+  auto const mainGeomType = feature::GeomType(geomType.first);
 
   switch (mainGeomType)
   {
-  case feature::GEOM_POINT:
+  case feature::GeomType::Point:
     s.RaisePointStyleFlag();
     break;
-  case feature::GEOM_LINE :
+  case feature::GeomType::Line :
     s.RaiseLineStyleFlag();
     break;
-  case feature::GEOM_AREA :
+  case feature::GeomType::Area :
     s.RaiseAreaStyleFlag();
     break;
   default:
@@ -379,11 +378,12 @@ bool InitStylist(FeatureType & f, int8_t deviceLang, int const zoomLevel, bool b
 double GetFeaturePriority(FeatureType & f, int const zoomLevel)
 {
   drule::KeysT keys;
-  pair<int, bool> const geomType = feature::GetDrawRule(feature::TypesHolder(f), zoomLevel, keys);
+  std::pair<int, bool> const geomType =
+      feature::GetDrawRule(feature::TypesHolder(f), zoomLevel, keys);
 
   feature::FilterRulesByRuntimeSelector(f, zoomLevel, keys);
 
-  auto const mainGeomType = feature::EGeomType(geomType.first);
+  auto const mainGeomType = feature::GeomType(geomType.first);
 
   Aggregator aggregator(f, mainGeomType, zoomLevel, static_cast<int>(keys.size()));
   aggregator.AggregateKeys(keys);

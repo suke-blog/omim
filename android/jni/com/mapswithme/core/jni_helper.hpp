@@ -4,10 +4,10 @@
 
 #include "ScopedLocalRef.hpp"
 
+#include "geometry/point2d.hpp"
+
 #include "base/buffer_vector.hpp"
 #include "base/logging.hpp"
-
-#include "geometry/point2d.hpp"
 
 #include <iterator>
 #include <memory>
@@ -28,9 +28,12 @@ extern jclass g_ratingClazz;
 extern jclass g_loggerFactoryClazz;
 extern jclass g_keyValueClazz;
 extern jclass g_httpUploaderClazz;
+extern jclass g_httpPayloadClazz;
+extern jclass g_httpBackgroundUploaderClazz;
 extern jclass g_httpUploaderResultClazz;
 extern jclass g_networkPolicyClazz;
 extern jclass g_storageUtilsClazz;
+extern jclass g_elevationInfoClazz;
 
 namespace jni
 {
@@ -78,7 +81,7 @@ template<typename TIt, typename TToJavaFn>
 jobjectArray ToJavaArray(JNIEnv * env, jclass clazz, TIt begin, TIt end, size_t const size, TToJavaFn && toJavaFn)
 {
   jobjectArray jArray = env->NewObjectArray((jint) size, clazz, 0);
-  size_t i = 0;
+  jint i = 0;
   for (auto it = begin; it != end; ++it)
   {
     TScopedLocalRef jItem(env, toJavaFn(env, *it));
@@ -96,7 +99,15 @@ jobjectArray ToJavaArray(JNIEnv * env, jclass clazz, TContainer const & src, TTo
                      std::forward<TToJavaFn>(toJavaFn));
 }
 
-jobjectArray ToJavaStringArray(JNIEnv * env, std::vector<std::string> const & src);
+template <typename Cont>
+jobjectArray ToJavaStringArray(JNIEnv * env, Cont const & src)
+{
+  return ToJavaArray(env, GetStringClass(env), src,
+                     [](JNIEnv * env, std::string const & item)
+                     {
+                       return ToJavaString(env, item.c_str());
+                     });
+}
 
 void DumpDalvikReferenceTables();
 
@@ -114,8 +125,8 @@ std::pair<std::string, std::string> ToNativeKeyValue(JNIEnv * env, jobject pairO
 template <typename OutputIt>
 void ToNativekeyValueContainer(JNIEnv * env, jobjectArray src, OutputIt it)
 {
-  int const length = env->GetArrayLength(src);
-  for (size_t i = 0; i < length; ++i)
+  jint const length = env->GetArrayLength(src);
+  for (jint i = 0; i < length; ++i)
   {
     jni::ScopedLocalRef<jobject> const arrayItem(env, env->GetObjectArrayElement(src, i));
 

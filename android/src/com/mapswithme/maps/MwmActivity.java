@@ -6,59 +6,55 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.Rect;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.mapswithme.maps.Framework.MapObjectListener;
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StyleRes;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import com.mapswithme.maps.Framework.PlacePageActivationListener;
 import com.mapswithme.maps.activity.CustomNavigateUpListener;
 import com.mapswithme.maps.ads.LikesManager;
 import com.mapswithme.maps.api.ParsedMwmRequest;
-import com.mapswithme.maps.api.ParsedRoutingData;
-import com.mapswithme.maps.api.ParsedSearchRequest;
-import com.mapswithme.maps.api.ParsedUrlMwmRequest;
-import com.mapswithme.maps.api.RoutePoint;
 import com.mapswithme.maps.auth.PassportAuthDialogFragment;
+import com.mapswithme.maps.background.AppBackgroundTracker;
 import com.mapswithme.maps.background.NotificationCandidate;
 import com.mapswithme.maps.background.Notifier;
 import com.mapswithme.maps.base.BaseMwmFragmentActivity;
 import com.mapswithme.maps.base.OnBackPressListener;
 import com.mapswithme.maps.bookmarks.BookmarkCategoriesActivity;
 import com.mapswithme.maps.bookmarks.BookmarksCatalogActivity;
-import com.mapswithme.maps.bookmarks.BookmarksPageFactory;
 import com.mapswithme.maps.bookmarks.data.BookmarkCategory;
 import com.mapswithme.maps.bookmarks.data.BookmarkManager;
 import com.mapswithme.maps.bookmarks.data.CatalogCustomProperty;
 import com.mapswithme.maps.bookmarks.data.CatalogTagsGroup;
-import com.mapswithme.maps.bookmarks.data.FeatureId;
 import com.mapswithme.maps.bookmarks.data.MapObject;
+import com.mapswithme.maps.dialog.AlertDialogCallback;
+import com.mapswithme.maps.dialog.DefaultConfirmationAlertDialog;
 import com.mapswithme.maps.dialog.DialogUtils;
 import com.mapswithme.maps.discovery.DiscoveryActivity;
 import com.mapswithme.maps.discovery.DiscoveryFragment;
 import com.mapswithme.maps.discovery.ItemType;
 import com.mapswithme.maps.downloader.DownloaderActivity;
 import com.mapswithme.maps.downloader.DownloaderFragment;
-import com.mapswithme.maps.downloader.MapManager;
-import com.mapswithme.maps.downloader.MigrationFragment;
 import com.mapswithme.maps.downloader.OnmapDownloader;
 import com.mapswithme.maps.editor.Editor;
 import com.mapswithme.maps.editor.EditorActivity;
@@ -66,25 +62,43 @@ import com.mapswithme.maps.editor.EditorHostFragment;
 import com.mapswithme.maps.editor.FeatureCategoryActivity;
 import com.mapswithme.maps.editor.ReportFragment;
 import com.mapswithme.maps.gallery.Items;
+import com.mapswithme.maps.intent.Factory;
+import com.mapswithme.maps.intent.MapTask;
 import com.mapswithme.maps.location.CompassData;
 import com.mapswithme.maps.location.LocationHelper;
 import com.mapswithme.maps.maplayer.MapLayerCompositeController;
 import com.mapswithme.maps.maplayer.Mode;
+import com.mapswithme.maps.maplayer.OnIsolinesLayerToggleListener;
+import com.mapswithme.maps.maplayer.isolines.IsolinesManager;
+import com.mapswithme.maps.maplayer.isolines.IsolinesState;
 import com.mapswithme.maps.maplayer.subway.OnSubwayLayerToggleListener;
 import com.mapswithme.maps.maplayer.subway.SubwayManager;
 import com.mapswithme.maps.maplayer.traffic.OnTrafficLayerToggleListener;
 import com.mapswithme.maps.maplayer.traffic.TrafficManager;
 import com.mapswithme.maps.maplayer.traffic.widget.TrafficButton;
+import com.mapswithme.maps.metrics.UserActionsLogger;
+import com.mapswithme.maps.news.OnboardingStep;
+import com.mapswithme.maps.onboarding.IntroductionDialogFragment;
+import com.mapswithme.maps.onboarding.IntroductionScreenFactory;
+import com.mapswithme.maps.onboarding.OnboardingTip;
+import com.mapswithme.maps.onboarding.WelcomeDialogFragment;
+import com.mapswithme.maps.promo.Promo;
+import com.mapswithme.maps.promo.PromoAfterBooking;
+import com.mapswithme.maps.promo.PromoBookingDialogFragment;
 import com.mapswithme.maps.purchase.AdsRemovalActivationCallback;
 import com.mapswithme.maps.purchase.AdsRemovalPurchaseControllerProvider;
+import com.mapswithme.maps.purchase.BookmarksAllSubscriptionActivity;
 import com.mapswithme.maps.purchase.FailedPurchaseChecker;
 import com.mapswithme.maps.purchase.PurchaseCallback;
 import com.mapswithme.maps.purchase.PurchaseController;
 import com.mapswithme.maps.purchase.PurchaseFactory;
+import com.mapswithme.maps.purchase.PurchaseUtils;
 import com.mapswithme.maps.routing.NavigationController;
 import com.mapswithme.maps.routing.RoutePointInfo;
 import com.mapswithme.maps.routing.RoutingBottomMenuListener;
 import com.mapswithme.maps.routing.RoutingController;
+import com.mapswithme.maps.routing.RoutingErrorDialogFragment;
+import com.mapswithme.maps.routing.RoutingOptions;
 import com.mapswithme.maps.routing.RoutingPlanFragment;
 import com.mapswithme.maps.routing.RoutingPlanInplaceController;
 import com.mapswithme.maps.search.BookingFilterParams;
@@ -97,32 +111,37 @@ import com.mapswithme.maps.search.SearchEngine;
 import com.mapswithme.maps.search.SearchFilterController;
 import com.mapswithme.maps.search.SearchFragment;
 import com.mapswithme.maps.search.SearchResult;
+import com.mapswithme.maps.settings.DrivingOptionsActivity;
+import com.mapswithme.maps.settings.RoadType;
 import com.mapswithme.maps.settings.SettingsActivity;
 import com.mapswithme.maps.settings.StoragePathManager;
 import com.mapswithme.maps.settings.UnitLocale;
 import com.mapswithme.maps.sound.TtsPlayer;
 import com.mapswithme.maps.taxi.TaxiInfo;
 import com.mapswithme.maps.taxi.TaxiManager;
-import com.mapswithme.maps.tips.TipsApi;
-import com.mapswithme.maps.ugc.EditParams;
-import com.mapswithme.maps.ugc.UGC;
-import com.mapswithme.maps.ugc.UGCEditorActivity;
+import com.mapswithme.maps.tips.Tutorial;
+import com.mapswithme.maps.tips.TutorialAction;
 import com.mapswithme.maps.widget.FadeView;
 import com.mapswithme.maps.widget.menu.BaseMenu;
 import com.mapswithme.maps.widget.menu.MainMenu;
+import com.mapswithme.maps.widget.menu.MainMenuOptionListener;
+import com.mapswithme.maps.widget.menu.MenuController;
+import com.mapswithme.maps.widget.menu.MenuControllerFactory;
+import com.mapswithme.maps.widget.menu.MenuStateObserver;
 import com.mapswithme.maps.widget.menu.MyPositionButton;
-import com.mapswithme.maps.widget.placepage.BasePlacePageAnimationController;
-import com.mapswithme.maps.widget.placepage.PlacePageView;
-import com.mapswithme.maps.widget.placepage.PlacePageView.State;
-import com.mapswithme.util.Animations;
+import com.mapswithme.maps.widget.placepage.PlacePageController;
+import com.mapswithme.maps.widget.placepage.PlacePageData;
+import com.mapswithme.maps.widget.placepage.PlacePageFactory;
+import com.mapswithme.maps.widget.placepage.RoutingModeListener;
 import com.mapswithme.util.Counters;
 import com.mapswithme.util.InputUtils;
+import com.mapswithme.util.NetworkPolicy;
 import com.mapswithme.util.PermissionsUtils;
 import com.mapswithme.util.ThemeSwitcher;
 import com.mapswithme.util.ThemeUtils;
+import com.mapswithme.util.UTM;
 import com.mapswithme.util.UiUtils;
 import com.mapswithme.util.Utils;
-import com.mapswithme.util.concurrency.UiThread;
 import com.mapswithme.util.log.Logger;
 import com.mapswithme.util.log.LoggerFactory;
 import com.mapswithme.util.permissions.PermissionsResult;
@@ -130,60 +149,67 @@ import com.mapswithme.util.sharing.ShareOption;
 import com.mapswithme.util.sharing.SharingHelper;
 import com.mapswithme.util.sharing.TargetUtils;
 import com.mapswithme.util.statistics.AlohaHelper;
-import com.mapswithme.util.statistics.PlacePageTracker;
 import com.mapswithme.util.statistics.Statistics;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
-import java.io.Serializable;
 import java.util.List;
-import java.util.Locale;
 import java.util.Stack;
 
 public class MwmActivity extends BaseMwmFragmentActivity
-                      implements MapObjectListener,
-                                 View.OnTouchListener,
-                                 BasePlacePageAnimationController.OnVisibilityChangedListener,
-                                 BasePlacePageAnimationController.OnAnimationListener,
-                                 OnClickListener,
-                                 MapFragment.MapRenderingListener,
-                                 CustomNavigateUpListener,
-                                 RoutingController.Container,
-                                 LocationHelper.UiCallback,
-                                 FloatingSearchToolbarController.VisibilityListener,
-                                 NativeSearchListener,
-                                 NavigationButtonsAnimationController.OnTranslationChangedListener,
-                                 RoutingPlanInplaceController.RoutingPlanListener,
-                                 RoutingBottomMenuListener,
-                                 BookmarkManager.BookmarksLoadingListener,
-                                 DiscoveryFragment.DiscoveryListener,
-                                 FloatingSearchToolbarController.SearchToolbarListener,
-                                 OnTrafficLayerToggleListener,
-                                 OnSubwayLayerToggleListener,
-                                 BookmarkManager.BookmarksCatalogListener,
-                                 AdsRemovalPurchaseControllerProvider,
-                                 AdsRemovalActivationCallback
+    implements PlacePageActivationListener,
+               View.OnTouchListener,
+               OnClickListener,
+               MapRenderingListener,
+               CustomNavigateUpListener,
+               RoutingController.Container,
+               LocationHelper.UiCallback,
+               FloatingSearchToolbarController.VisibilityListener,
+               NativeSearchListener,
+               NavigationButtonsAnimationController.OnTranslationChangedListener,
+               RoutingPlanInplaceController.RoutingPlanListener,
+               RoutingBottomMenuListener,
+               BookmarkManager.BookmarksLoadingListener,
+               DiscoveryFragment.DiscoveryListener,
+               FloatingSearchToolbarController.SearchToolbarListener,
+               OnTrafficLayerToggleListener,
+               OnSubwayLayerToggleListener,
+               BookmarkManager.BookmarksCatalogListener,
+               AdsRemovalPurchaseControllerProvider,
+               AdsRemovalActivationCallback,
+               PlacePageController.SlideListener,
+               AlertDialogCallback, RoutingModeListener,
+               AppBackgroundTracker.OnTransitionListener,
+               MaterialTapTargetPrompt.PromptStateChangeListener,
+               WelcomeDialogFragment.OnboardingStepPassedListener,
+               OnIsolinesLayerToggleListener
 {
   private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(LoggerFactory.Type.MISC);
   private static final String TAG = MwmActivity.class.getSimpleName();
 
   public static final String EXTRA_TASK = "map_task";
   public static final String EXTRA_LAUNCH_BY_DEEP_LINK = "launch_by_deep_link";
+  public static final String EXTRA_BACK_URL = "back_url";
   private static final String EXTRA_CONSUMED = "mwm.extra.intent.processed";
+  private static final String EXTRA_ONBOARDING_TIP = "extra_onboarding_tip";
 
   private static final String[] DOCKED_FRAGMENTS = { SearchFragment.class.getName(),
                                                      DownloaderFragment.class.getName(),
-                                                     MigrationFragment.class.getName(),
                                                      RoutingPlanFragment.class.getName(),
                                                      EditorHostFragment.class.getName(),
                                                      ReportFragment.class.getName(),
                                                      DiscoveryFragment.class.getName() };
-  // Instance state
-  private static final String STATE_PP = "PpState";
-  private static final String STATE_MAP_OBJECT = "MapObject";
-  private static final String EXTRA_LOCATION_DIALOG_IS_ANNOYING = "LOCATION_DIALOG_IS_ANNOYING";
 
+  private static final String EXTRA_LOCATION_DIALOG_IS_ANNOYING = "LOCATION_DIALOG_IS_ANNOYING";
   private static final int REQ_CODE_LOCATION_PERMISSION = 1;
   private static final int REQ_CODE_DISCOVERY = 2;
   private static final int REQ_CODE_SHOW_SIMILAR_HOTELS = 3;
+  public static final int REQ_CODE_ERROR_DRIVING_OPTIONS_DIALOG = 5;
+  public static final int REQ_CODE_DRIVING_OPTIONS = 6;
+  public static final int REQ_CODE_CATALOG_UNLIMITED_ACCESS = 7;
+  private static final int REQ_CODE_ISOLINES_ERROR = 8;
+  public static final String ERROR_DRIVING_OPTIONS_DIALOG_TAG = "error_driving_options_dialog_tag";
+  public static final String CATALOG_UNLIMITED_ACCESS_DIALOG_TAG = "catalog_unlimited_access_dialog_tag";
+  private static final String ISOLINES_ERROR_DIALOG_TAG = "isolines_dialog_tag";
 
   // Map tasks that we run AFTER rendering initialized
   private final Stack<MapTask> mTasks = new Stack<>();
@@ -191,10 +217,6 @@ public class MwmActivity extends BaseMwmFragmentActivity
 
   @Nullable
   private MapFragment mMapFragment;
-
-  @SuppressWarnings("NullableProblems")
-  @NonNull
-  private PlacePageView mPlacePage;
 
   @SuppressWarnings("NullableProblems")
   @NonNull
@@ -206,7 +228,8 @@ public class MwmActivity extends BaseMwmFragmentActivity
 
   private RoutingPlanInplaceController mRoutingPlanInplaceController;
 
-  @Nullable
+  @SuppressWarnings("NullableProblems")
+  @NonNull
   private NavigationController mNavigationController;
 
   private MainMenu mMainMenu;
@@ -229,11 +252,8 @@ public class MwmActivity extends BaseMwmFragmentActivity
   private boolean mIsFullscreen;
   private boolean mIsFullscreenAnimating;
   private boolean mIsAppearMenuLater;
-  private boolean mIsLaunchByDeepLink;
 
   private FloatingSearchToolbarController mSearchController;
-
-  private boolean mPlacePageRestored;
 
   private boolean mLocationErrorDialogAnnoying = false;
   @Nullable
@@ -243,13 +263,29 @@ public class MwmActivity extends BaseMwmFragmentActivity
   @Nullable
   private Bundle mSavedForTabletState;
   @Nullable
-  private PlacePageTracker mPlacePageTracker;
-  @Nullable
   private PurchaseController<PurchaseCallback> mAdsRemovalPurchaseController;
   @Nullable
-  private PurchaseController<FailedPurchaseChecker> mBookmarkPurchaseController;
+  private PurchaseController<FailedPurchaseChecker> mBookmarkInappPurchaseController;
+  @Nullable
+  private PurchaseController<PurchaseCallback> mBookmarksAllSubscriptionController;
+  @Nullable
+  private PurchaseController<PurchaseCallback> mBookmarksSightsSubscriptionController;
   @NonNull
   private final OnClickListener mOnMyPositionClickListener = new CurrentPositionClickListener();
+  @SuppressWarnings("NullableProblems")
+  @NonNull
+  private PlacePageController mPlacePageController;
+  @SuppressWarnings("NullableProblems")
+  @NonNull
+  private MenuController mMainMenuController;
+  @Nullable
+  private Tutorial mTutorial;
+  @Nullable
+  private OnboardingTip mOnboardingTip;
+
+  @SuppressWarnings("NullableProblems")
+  @NonNull
+  private ChartController mChartController;
 
   public interface LeftAnimationTrackListener
   {
@@ -259,83 +295,6 @@ public class MwmActivity extends BaseMwmFragmentActivity
 
     void onTrackLeftAnimation(float offset);
   }
-
-  public interface VisibleRectListener
-  {
-    void onVisibleRectChanged(Rect rect);
-  }
-
-  class VisibleRectMeasurer implements View.OnLayoutChangeListener
-  {
-    private VisibleRectListener mRectListener;
-    private Rect mScreenFullRect = null;
-    private Rect mLastVisibleRect = null;
-    private boolean mPlacePageVisible = false;
-
-    public VisibleRectMeasurer(VisibleRectListener listener)
-    {
-      mRectListener = listener;
-    }
-
-    void setPlacePageVisible(boolean visible)
-    {
-      int orientation = MwmActivity.this.getResources().getConfiguration().orientation;
-      if(orientation == Configuration.ORIENTATION_LANDSCAPE)
-      {
-        mPlacePageVisible = visible;
-        recalculateVisibleRect(mScreenFullRect);
-      }
-    }
-
-    void setPreviewVisible(boolean visible)
-    {
-      int orientation = MwmActivity.this.getResources().getConfiguration().orientation;
-      if(orientation == Configuration.ORIENTATION_PORTRAIT)
-      {
-        mPlacePageVisible = visible;
-        recalculateVisibleRect(mScreenFullRect);
-      }
-    }
-
-    @Override
-    public void onLayoutChange(View v, int left, int top, int right, int bottom,
-                               int oldLeft, int oldTop, int oldRight, int oldBottom)
-    {
-      mScreenFullRect = new Rect(left, top, right, bottom);
-      if (mPlacePageVisible && UiUtils.isHidden(mPlacePage.GetPreview()))
-        mPlacePageVisible = false;
-      recalculateVisibleRect(mScreenFullRect);
-    }
-
-    private void recalculateVisibleRect(Rect r)
-    {
-      if (r == null)
-        return;
-
-      int orientation = MwmActivity.this.getResources().getConfiguration().orientation;
-
-      Rect rect = new Rect(r.left, r.top, r.right, r.bottom);
-      if (mPlacePageVisible)
-      {
-        int[] loc = new int[2];
-        mPlacePage.GetPreview().getLocationOnScreen(loc);
-
-        if(orientation == Configuration.ORIENTATION_PORTRAIT)
-          rect.bottom = loc[1];
-        else
-          rect.left = mPlacePage.GetPreview().getWidth() + loc[0];
-      }
-
-      if (mLastVisibleRect == null || !mLastVisibleRect.equals(rect))
-      {
-        mLastVisibleRect = new Rect(rect.left, rect.top, rect.right, rect.bottom);
-        if (mRectListener != null)
-          mRectListener.onVisibleRectChanged(rect);
-      }
-    }
-  }
-
-  private VisibleRectMeasurer mVisibleRectMeasurer;
 
   public static Intent createShowMapIntent(@NonNull Context context, @Nullable String countryId)
   {
@@ -350,31 +309,36 @@ public class MwmActivity extends BaseMwmFragmentActivity
         .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         .putExtra(MwmActivity.EXTRA_TASK,
-                  new MwmActivity.ShowDialogTask(PassportAuthDialogFragment.class.getName()));
+                  new Factory.ShowDialogTask(PassportAuthDialogFragment.class.getName()));
   }
 
   @NonNull
   public static Intent createLeaveReviewIntent(@NonNull Context context,
-                                               @NonNull NotificationCandidate.MapObject mapObject)
+                                               @NonNull NotificationCandidate.UgcReview nc)
   {
     return new Intent(context, MwmActivity.class)
       .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
       .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-      .putExtra(MwmActivity.EXTRA_TASK, new MwmActivity.ShowUGCEditorTask(mapObject));
+      .putExtra(MwmActivity.EXTRA_TASK, new Factory.ShowUGCEditorTask(nc));
   }
 
   @Override
-  public void onRenderingInitialized()
+  public void onRenderingCreated()
   {
     checkMeasurementSystem();
     checkKitkatMigrationMove();
 
     LocationHelper.INSTANCE.attach(this);
-    runTasks();
   }
 
   @Override
   public void onRenderingRestored()
+  {
+    runTasks();
+  }
+
+  @Override
+  public void onRenderingInitializationFinished()
   {
     runTasks();
   }
@@ -508,7 +472,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
       final String geoUrl = Framework.nativeGetGe0Url(loc.getLatitude(), loc.getLongitude(), Framework.nativeGetDrawScale(), "");
       final String httpUrl = Framework.getHttpGe0Url(loc.getLatitude(), loc.getLongitude(), Framework.nativeGetDrawScale(), "");
       final String body = getString(R.string.my_position_share_sms, geoUrl, httpUrl);
-      ShareOption.ANY.share(this, body);
+      ShareOption.AnyShareOption.ANY.share(this, body);
       return;
     }
 
@@ -522,16 +486,13 @@ public class MwmActivity extends BaseMwmFragmentActivity
   @Override
   public void showDownloader(boolean openDownloaded)
   {
-    if (RoutingController.get().checkMigration(this))
-      return;
-
     final Bundle args = new Bundle();
     args.putBoolean(DownloaderActivity.EXTRA_OPEN_DOWNLOADED, openDownloaded);
     if (mIsTabletLayout)
     {
       SearchEngine.INSTANCE.cancel();
       mSearchController.refreshToolbar();
-      replaceFragment(MapManager.nativeIsLegacyMode() ? MigrationFragment.class : DownloaderFragment.class, args, null);
+      replaceFragment(DownloaderFragment.class, args, null);
     }
     else
     {
@@ -555,59 +516,90 @@ public class MwmActivity extends BaseMwmFragmentActivity
   @SuppressLint("InlinedApi")
   @CallSuper
   @Override
-  protected void safeOnCreate(@Nullable Bundle savedInstanceState)
+  protected void onSafeCreate(@Nullable Bundle savedInstanceState)
   {
-    super.safeOnCreate(savedInstanceState);
+    super.onSafeCreate(savedInstanceState);
     if (savedInstanceState != null)
+    {
       mLocationErrorDialogAnnoying = savedInstanceState.getBoolean(EXTRA_LOCATION_DIALOG_IS_ANNOYING);
+      mOnboardingTip = savedInstanceState.getParcelable(EXTRA_ONBOARDING_TIP);
+    }
     mIsTabletLayout = getResources().getBoolean(R.bool.tabletLayout);
 
     if (!mIsTabletLayout && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP))
       getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
     setContentView(R.layout.activity_map);
-    mIsLaunchByDeepLink = getIntent().getBooleanExtra(EXTRA_LAUNCH_BY_DEEP_LINK, false);
-    initViews();
+
+    mPlacePageController = PlacePageFactory.createCompositePlacePageController(this, this, this);
+    mPlacePageController.initialize(this);
+    mPlacePageController.onActivityCreated(this, savedInstanceState);
+
+    mMainMenuController = MenuControllerFactory.createMainMenuController(new MainMenuStateObserver(),
+                                                                         new MainMenuOptionSelectedListener());
+    mMainMenuController.initialize(findViewById(R.id.coordinator));
+
+    boolean isLaunchByDeepLink = getIntent().getBooleanExtra(EXTRA_LAUNCH_BY_DEEP_LINK, false);
+    initViews(isLaunchByDeepLink);
 
     Statistics.INSTANCE.trackConnectionState();
 
     mSearchController = new FloatingSearchToolbarController(this, this);
+    mSearchController.getToolbar().getViewTreeObserver().addOnGlobalLayoutListener(new ToolbarLayoutChangeListener());
     mSearchController.setVisibilityListener(this);
+    SearchEngine.INSTANCE.addListener(this);
 
-    SharingHelper.INSTANCE.initialize();
+    SharingHelper.INSTANCE.initialize(null);
 
-    mAdsRemovalPurchaseController = PurchaseFactory.createAdsRemovalPurchaseController(this);
-    mAdsRemovalPurchaseController.initialize(this);
-    mAdsRemovalPurchaseController.validateExistingPurchases();
-
-    mBookmarkPurchaseController = PurchaseFactory.createFailedBookmarkPurchaseController(this);
-    mBookmarkPurchaseController.initialize(this);
-    mBookmarkPurchaseController.validateExistingPurchases();
+    initControllersAndValidatePurchases(savedInstanceState);
 
     boolean isConsumed = savedInstanceState == null && processIntent(getIntent());
     // If the map activity is launched by any incoming intent (deeplink, update maps event, etc)
-    // we haven't to try restoring the route, showing the tips, etc.
-    if (isConsumed)
+    // or it's the first launch (onboarding) we haven't to try restoring the route,
+    // showing the tips, etc.
+    if (isConsumed || MwmApplication.from(this).isFirstLaunch())
       return;
 
     if (savedInstanceState == null && RoutingController.get().hasSavedRoute())
     {
-      addTask(new RestoreRouteTask());
+      addTask(new Factory.RestoreRouteTask());
       return;
     }
 
-    initTips();
+    if (savedInstanceState == null)
+      tryToShowAdditionalViewOnTop();
   }
 
-  private void initViews()
+  private void initControllersAndValidatePurchases(@Nullable Bundle savedInstanceState)
   {
-    initMap();
-    initNavigationButtons();
+    mAdsRemovalPurchaseController = PurchaseFactory.createAdsRemovalPurchaseController(this);
+    mAdsRemovalPurchaseController.initialize(this);
 
-    mPlacePage = findViewById(R.id.info_box);
-    mPlacePage.setOnVisibilityChangedListener(this);
-    mPlacePage.setOnAnimationListener(this);
-    mPlacePageTracker = new PlacePageTracker(mPlacePage);
+    mBookmarkInappPurchaseController = PurchaseFactory.createFailedBookmarkPurchaseController(this);
+    mBookmarkInappPurchaseController.initialize(this);
+
+    mBookmarksAllSubscriptionController
+        = PurchaseFactory.createBookmarksAllSubscriptionController(this);
+    mBookmarksAllSubscriptionController.initialize(this);
+
+    mBookmarksSightsSubscriptionController
+        = PurchaseFactory.createBookmarksSightsSubscriptionController(this);
+    mBookmarksSightsSubscriptionController.initialize(this);
+
+    // To reduce number of parasite validation requests during orientation change.
+    if (savedInstanceState == null)
+    {
+      mAdsRemovalPurchaseController.validateExistingPurchases();
+      mBookmarkInappPurchaseController.validateExistingPurchases();
+      mBookmarksAllSubscriptionController.validateExistingPurchases();
+      mBookmarksSightsSubscriptionController.validateExistingPurchases();
+    }
+  }
+
+  private void initViews(boolean isLaunchByDeeplink)
+  {
+    initMap(isLaunchByDeeplink);
+    initNavigationButtons();
 
     if (!mIsTabletLayout)
     {
@@ -616,19 +608,12 @@ public class MwmActivity extends BaseMwmFragmentActivity
     }
 
     mNavigationController = new NavigationController(this);
+    TrafficManager.INSTANCE.attach(mNavigationController);
+
     initMainMenu();
     initOnmapDownloader();
     initPositionChooser();
     initFilterViews();
-  }
-
-  private void initTips()
-  {
-    TipsApi api = TipsApi.requestCurrent(getClass());
-    if (api == TipsApi.STUB)
-      return;
-
-    api.showTutorial(getActivity());
   }
 
   private void initFilterViews()
@@ -720,7 +705,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
     setFullscreen(false);
   }
 
-  private void initMap()
+  private void initMap(boolean isLaunchByDeepLink)
   {
     mFadeView = findViewById(R.id.fade_view);
     mFadeView.setListener(new FadeView.Listener()
@@ -736,7 +721,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
     if (mMapFragment == null)
     {
       Bundle args = new Bundle();
-      args.putBoolean(MapFragment.ARG_LAUNCH_BY_DEEP_LINK, mIsLaunchByDeepLink);
+      args.putBoolean(MapFragment.ARG_LAUNCH_BY_DEEP_LINK, isLaunchByDeepLink);
       mMapFragment = (MapFragment) MapFragment.instantiate(this, MapFragment.class.getName(), args);
       getSupportFragmentManager()
           .beginTransaction()
@@ -770,8 +755,36 @@ public class MwmActivity extends BaseMwmFragmentActivity
     mNavMyPosition = new MyPositionButton(myPosition, mOnMyPositionClickListener);
 
     initToggleMapLayerController(frame);
+    View openSubsScreenBtnContainer = frame.findViewById(R.id.subs_screen_btn_container);
+    final OnboardingTip tip = OnboardingTip.get();
+    boolean hasOnBoardingView = mOnboardingTip == null && tip != null
+                                && MwmApplication.from(this).isFirstLaunch();
+
     mNavAnimationController = new NavigationButtonsAnimationController(
-        zoomIn, zoomOut, myPosition, getWindow().getDecorView().getRootView(), this);
+        zoomIn, zoomOut, myPosition, getWindow().getDecorView().getRootView(), this,
+        hasOnBoardingView ? openSubsScreenBtnContainer : null);
+
+    UiUtils.showIf(hasOnBoardingView, openSubsScreenBtnContainer);
+    if (hasOnBoardingView)
+    {
+      openSubsScreenBtnContainer.findViewById(R.id.onboarding_btn)
+                                .setOnClickListener(v -> onBoardingBtnClicked(tip));
+      Statistics.ParameterBuilder builder = Statistics.makeGuidesSubscriptionBuilder();
+      Statistics.INSTANCE.trackEvent(Statistics.EventName.MAP_SPONSORED_BUTTON_SHOW, builder);
+    }
+  }
+
+  private void onBoardingBtnClicked(@NonNull OnboardingTip tip)
+  {
+    Statistics.ParameterBuilder builder = Statistics.makeGuidesSubscriptionBuilder();
+    Statistics.INSTANCE.trackEvent(Statistics.EventName.MAP_SPONSORED_BUTTON_CLICK, builder);
+    if (mNavAnimationController == null)
+      return;
+
+    mNavAnimationController.hideOnBoardingTipBtn();
+    mOnboardingTip = tip;
+    OnboardingStep step = com.mapswithme.maps.onboarding.Utils.getOnboardingStepByTip(mOnboardingTip);
+    WelcomeDialogFragment.showOnboardinStep(this, step);
   }
 
   private void initToggleMapLayerController(@NonNull View frame)
@@ -779,16 +792,17 @@ public class MwmActivity extends BaseMwmFragmentActivity
     ImageButton trafficBtn = frame.findViewById(R.id.traffic);
     TrafficButton traffic = new TrafficButton(trafficBtn);
     View subway = frame.findViewById(R.id.subway);
-    mToggleMapLayerController = new MapLayerCompositeController(traffic, subway, this);
+    View isoLines = frame.findViewById(R.id.isolines);
+    mToggleMapLayerController = new MapLayerCompositeController(traffic, subway, isoLines,this);
+    mToggleMapLayerController.attachCore();
   }
 
   public boolean closePlacePage()
   {
-    if (mPlacePage.isHidden())
+    if (mPlacePageController.isClosed())
       return false;
 
-    mPlacePage.hide();
-    Framework.nativeDeactivatePopup();
+    mPlacePageController.close(true);
     return true;
   }
 
@@ -823,8 +837,11 @@ public class MwmActivity extends BaseMwmFragmentActivity
   public void closeMenu(@Nullable Runnable procAfterClose)
   {
     mFadeView.fadeOut();
-    mMainMenu.close(true, procAfterClose);
+    mMainMenuController.close();
+    if (procAfterClose != null)
+      procAfterClose.run();
   }
+
   private boolean closePositionChooser()
   {
     if (UiUtils.isVisible(mPositionChooser))
@@ -842,15 +859,9 @@ public class MwmActivity extends BaseMwmFragmentActivity
     closeMenu(() -> {
       RoutingController.get().prepare(canUseMyPositionAsStart, endPoint);
 
-      if (mPlacePage.isDocked() || !mPlacePage.isFloating())
-        closePlacePage();
+      // TODO: check for tablet.
+      closePlacePage();
     });
-  }
-
-  private void toggleMenu()
-  {
-    getCurrentMenu().toggle(true);
-    refreshFade();
   }
 
   public void refreshFade()
@@ -868,12 +879,8 @@ public class MwmActivity extends BaseMwmFragmentActivity
     if (mIsTabletLayout)
     {
       mPanelAnimator = new PanelAnimator(this);
-      mPanelAnimator.registerListener(mMainMenu.getLeftAnimationTrackListener());
       return;
     }
-
-    if (mPlacePage.isDocked())
-      mPlacePage.setLeftAnimationTrackListener(mMainMenu.getLeftAnimationTrackListener());
   }
 
   private void onItemClickOrSkipAnim(@NonNull MainMenu.Item item)
@@ -907,14 +914,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
   @Override
   protected void onSaveInstanceState(Bundle outState)
   {
-    if (!mPlacePage.isHidden())
-    {
-      outState.putInt(STATE_PP, mPlacePage.getState().ordinal());
-      outState.putParcelable(STATE_MAP_OBJECT, mPlacePage.getMapObject());
-      if (isChangingConfigurations())
-        mPlacePage.setState(State.HIDDEN);
-    }
-
+    mPlacePageController.onSave(outState);
     if (!mIsTabletLayout && RoutingController.get().isPlanning())
       mRoutingPlanInplaceController.onSaveState(outState);
 
@@ -925,16 +925,10 @@ public class MwmActivity extends BaseMwmFragmentActivity
         fragment.saveRoutingPanelState(outState);
     }
 
-    if (mNavigationController != null)
-      mNavigationController.onSaveState(outState);
+    mNavigationController.onSaveState(outState);
 
     RoutingController.get().onSaveState();
     outState.putBoolean(EXTRA_LOCATION_DIALOG_IS_ANNOYING, mLocationErrorDialogAnnoying);
-
-    if (mNavMyPosition != null)
-      mNavMyPosition.onSaveState(outState);
-    if(mNavAnimationController != null)
-      mNavAnimationController.onSaveState(outState);
 
     if (mFilterController != null)
       mFilterController.onSaveState(outState);
@@ -946,6 +940,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
       // orientation changing, etc. Otherwise, the saved route might be restored at undesirable moment.
       RoutingController.get().deleteSavedRoute();
 
+    outState.putParcelable(EXTRA_ONBOARDING_TIP, mOnboardingTip);
     super.onSaveInstanceState(outState);
   }
 
@@ -953,25 +948,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
   protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState)
   {
     super.onRestoreInstanceState(savedInstanceState);
-
-    final State state = State.values()[savedInstanceState.getInt(STATE_PP, 0)];
-    if (state != State.HIDDEN)
-    {
-      mPlacePageRestored = true;
-      MapObject mapObject = savedInstanceState.getParcelable(STATE_MAP_OBJECT);
-      mPlacePage.setMapObject(mapObject, true,
-                              new PlacePageView.SetMapObjectListener()
-      {
-        @Override
-        public void onSetMapObjectComplete()
-        {
-          mPlacePage.setState(state);
-        }
-      });
-      if (mPlacePageTracker != null)
-        mPlacePageTracker.setMapObject(mapObject);
-    }
-
+    mPlacePageController.onRestore(savedInstanceState);
     if (mIsTabletLayout)
     {
       RoutingPlanFragment fragment = (RoutingPlanFragment) getFragment(RoutingPlanFragment.class);
@@ -989,13 +966,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
     if (!mIsTabletLayout && RoutingController.get().isPlanning())
       mRoutingPlanInplaceController.restoreState(savedInstanceState);
 
-    if (mNavigationController != null)
-      mNavigationController.onRestoreState(savedInstanceState);
-
-    if (mNavMyPosition != null)
-      mNavMyPosition.onRestoreState(savedInstanceState);
-    if(mNavAnimationController != null)
-      mNavAnimationController.onRestoreState(savedInstanceState);
+    mNavigationController.onRestoreState(savedInstanceState);
 
     if (mFilterController != null)
       mFilterController.onRestoreState(savedInstanceState);
@@ -1026,7 +997,54 @@ public class MwmActivity extends BaseMwmFragmentActivity
       case BookmarkCategoriesActivity.REQ_CODE_DOWNLOAD_BOOKMARK_CATEGORY:
         handleDownloadedCategoryResult(data);
         break;
+      case REQ_CODE_DRIVING_OPTIONS:
+        rebuildLastRoute();
+        break;
+      case PurchaseUtils.REQ_CODE_PAY_SUBSCRIPTION:
+        showCatalogUnlimitedAccessDialog();
+        break;
     }
+  }
+
+  private void showCatalogUnlimitedAccessDialog()
+  {
+    com.mapswithme.maps.dialog.AlertDialog dialog =
+        new com.mapswithme.maps.dialog.AlertDialog.Builder()
+            .setTitleId(R.string.popup_subscription_success_map_title)
+            .setMessageId(R.string.popup_subscription_success_map_message)
+            .setPositiveBtnId(R.string.popup_subscription_success_map_start_button)
+            .setNegativeBtnId(R.string.popup_subscription_success_map_not_now_button)
+            .setDialogViewStrategyType(com.mapswithme.maps.dialog.AlertDialog.DialogViewStrategyType.CONFIRMATION_DIALOG)
+            .setDialogFactory(DefaultConfirmationAlertDialog::new)
+            .setReqCode(REQ_CODE_CATALOG_UNLIMITED_ACCESS)
+            .setNegativeBtnTextColor(ThemeUtils.getResource(this, R.attr.buttonDialogTextColor))
+            .setFragManagerStrategyType(com.mapswithme.maps.dialog.AlertDialog
+                                            .FragManagerStrategyType.ACTIVITY_FRAGMENT_MANAGER)
+            .build();
+    dialog.show(this, CATALOG_UNLIMITED_ACCESS_DIALOG_TAG);
+  }
+
+  private void rebuildLastRoute()
+  {
+    RoutingController.get().attach(this);
+    rebuildLastRouteInternal();
+  }
+
+  private void rebuildLastRouteInternal()
+  {
+    if (mRoutingPlanInplaceController == null)
+      return;
+
+    mRoutingPlanInplaceController.hideDrivingOptionsView();
+    RoutingController.get().rebuildLastRoute();
+  }
+
+  @Override
+  public void toggleRouteSettings(@NonNull RoadType roadType)
+  {
+    mPlacePageController.close(true);
+    RoutingOptions.addOption(roadType);
+    rebuildLastRouteInternal();
   }
 
   private void handleDownloadedCategoryResult(@NonNull Intent data)
@@ -1035,8 +1053,18 @@ public class MwmActivity extends BaseMwmFragmentActivity
     if (category == null)
       throw new IllegalArgumentException("Category not found in bundle");
 
-    MapTask mapTask = target -> showBookmarkCategory(category);
-    addTask(mapTask);
+    addTask(new MapTask()
+    {
+      private static final long serialVersionUID = -7417385158050827655L;
+
+      @Override
+      public boolean run(@NonNull MwmActivity target)
+      {
+        target.showBookmarkCategory(category);
+        return true;
+      }
+    });
+    closePlacePage();
   }
 
   private boolean showBookmarkCategory(@NonNull BookmarkCategory category)
@@ -1047,6 +1075,14 @@ public class MwmActivity extends BaseMwmFragmentActivity
 
   private void handleDiscoveryResult(@NonNull Intent data)
   {
+    BookmarkCategory category =
+        data.getParcelableExtra(BookmarksCatalogActivity.EXTRA_DOWNLOADED_CATEGORY);
+    if (category != null)
+    {
+      handleDownloadedCategoryResult(data);
+      return;
+    }
+
     String action = data.getAction();
     if (TextUtils.isEmpty(action))
       return;
@@ -1095,27 +1131,53 @@ public class MwmActivity extends BaseMwmFragmentActivity
       return;
 
     String query = data.getStringExtra(DiscoveryActivity.EXTRA_FILTER_SEARCH_QUERY);
-    mSearchController.setQuery(TextUtils.isEmpty(query) ? getString(R.string.hotel) : query);
+    mSearchController.setQuery(TextUtils.isEmpty(query) ? getString(R.string.hotel) + " " : query);
+  }
+
+  private void runHotelCategorySearchOnMap()
+  {
+    if (mSearchController == null || mFilterController == null)
+      return;
+
+    mSearchController.setQuery(getActivity().getString(R.string.hotel) + " ");
+    runSearch();
+
+    mSearchController.refreshToolbar();
+    mFilterController.updateFilterButtonVisibility(true);
+    mFilterController.show(true, true);
   }
 
   @Override
   public void onRouteToDiscoveredObject(@NonNull final MapObject object)
   {
-    addTask((MapTask) target ->
+    addTask(new MapTask()
     {
-      RoutingController.get().setRouterType(Framework.ROUTER_TYPE_PEDESTRIAN);
-      RoutingController.get().prepare(true, object);
-      return false;
+      private static final long serialVersionUID = -219799471997583494L;
+
+      @Override
+      public boolean run(@NonNull MwmActivity target)
+      {
+        RoutingController.get().attach(target);
+        RoutingController.get().setRouterType(Framework.ROUTER_TYPE_PEDESTRIAN);
+        RoutingController.get().prepare(true, object);
+        return false;
+      }
     });
   }
 
   @Override
   public void onShowDiscoveredObject(@NonNull final MapObject object)
   {
-    addTask((MapTask) target ->
+    addTask(new MapTask()
     {
-      Framework.nativeShowFeatureByLatLon(object.getLat(), object.getLon());
-      return false;
+      private static final long serialVersionUID = 7499190617762270631L;
+
+      @Override
+      public boolean run(@NonNull MwmActivity target)
+      {
+        Framework.nativeShowFeature(object.getFeatureId());
+        return false;
+      }
     });
   }
 
@@ -1167,6 +1229,31 @@ public class MwmActivity extends BaseMwmFragmentActivity
   }
 
   @Override
+  public void onIsolinesLayerSelected()
+  {
+    mToggleMapLayerController.toggleMode(Mode.ISOLINES);
+  }
+
+  private void onIsolinesStateChanged(@NonNull IsolinesState type)
+  {
+    if (type != IsolinesState.EXPIREDDATA)
+    {
+      type.activate(getApplicationContext());
+      return;
+    }
+
+    com.mapswithme.maps.dialog.AlertDialog dialog = new com.mapswithme.maps.dialog.AlertDialog.Builder()
+        .setTitleId(R.string.downloader_update_maps)
+        .setMessageId(R.string.isolines_activation_error_dialog)
+        .setPositiveBtnId(R.string.ok)
+        .setNegativeBtnId(R.string.cancel)
+        .setFragManagerStrategyType(com.mapswithme.maps.dialog.AlertDialog.FragManagerStrategyType.ACTIVITY_FRAGMENT_MANAGER)
+        .setReqCode(REQ_CODE_ISOLINES_ERROR)
+        .build();
+    dialog.show(this, ISOLINES_ERROR_DIALOG_TAG);
+  }
+
+  @Override
   public void onImportStarted(@NonNull String serverId)
   {
     // Do nothing by default.
@@ -1183,7 +1270,8 @@ public class MwmActivity extends BaseMwmFragmentActivity
   }
 
   @Override
-  public void onTagsReceived(boolean successful, @NonNull List<CatalogTagsGroup> tagsGroups)
+  public void onTagsReceived(boolean successful, @NonNull List<CatalogTagsGroup> tagsGroups,
+                             int tagsLimit)
   {
     //TODO(@alexzatsepin): Implement me if necessary
   }
@@ -1232,12 +1320,12 @@ public class MwmActivity extends BaseMwmFragmentActivity
 
     HotelsFilter filter = intent.getParcelableExtra(FilterActivity.EXTRA_FILTER);
     BookingFilterParams params = intent.getParcelableExtra(FilterActivity.EXTRA_FILTER_PARAMS);
-    if (mFilterController != null)
+    if (mFilterController != null && (filter != null || params != null))
     {
-      mFilterController.show(filter != null || params != null
-                             || !TextUtils.isEmpty(SearchEngine.INSTANCE.getQuery()), true);
+      mFilterController.updateFilterButtonVisibility(true);
+      mFilterController.show(!TextUtils.isEmpty(SearchEngine.INSTANCE.getQuery()), true);
       mFilterController.setFilterAndParams(filter, params);
-      return filter != null || params != null;
+      return true;
     }
 
     return false;
@@ -1280,35 +1368,29 @@ public class MwmActivity extends BaseMwmFragmentActivity
   protected void onResume()
   {
     super.onResume();
-    mPlacePageRestored = mPlacePage.getState() != State.HIDDEN;
     mSearchController.refreshToolbar();
-    mMainMenu.onResume(new Runnable()
+    mMainMenu.onResume(null);
+    if (Framework.nativeIsInChoosePositionMode())
     {
-      @Override
-      public void run()
-      {
-        if (Framework.nativeIsInChoosePositionMode())
-        {
-          UiUtils.show(mPositionChooser);
-          setFullscreen(true);
-        }
-      }
-    });
+      UiUtils.show(mPositionChooser);
+      setFullscreen(true);
+    }
     if (mOnmapDownloader != null)
       mOnmapDownloader.onResume();
-    if (mNavigationController != null)
-      mNavigationController.onResume();
+
+    mNavigationController.onResume();
+
     if (mNavAnimationController != null)
       mNavAnimationController.onResume();
-    mPlacePage.onActivityResume();
+    mPlacePageController.onActivityResumed(this);
   }
 
   @Override
   public void recreate()
   {
-    // Explicitly destroy context before activity recreation.
+    // Explicitly destroy surface before activity recreation.
     if (mMapFragment != null)
-      mMapFragment.destroyContext();
+      mMapFragment.destroySurface();
     super.recreate();
   }
 
@@ -1317,7 +1399,6 @@ public class MwmActivity extends BaseMwmFragmentActivity
   {
     super.onResumeFragments();
     RoutingController.get().restore();
-    mPlacePage.restore();
 
     if (!LikesManager.INSTANCE.isNewUser() && Counters.isShowReviewForOldUser())
     {
@@ -1337,7 +1418,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
     LikesManager.INSTANCE.cancelDialogs();
     if (mOnmapDownloader != null)
       mOnmapDownloader.onPause();
-    mPlacePage.onActivityPause();
+    mPlacePageController.onActivityPaused(this);
     super.onPause();
   }
 
@@ -1345,44 +1426,50 @@ public class MwmActivity extends BaseMwmFragmentActivity
   protected void onStart()
   {
     super.onStart();
-    SearchEngine.INSTANCE.addListener(this);
-    Framework.nativeSetMapObjectListener(this);
+    Framework.nativePlacePageActivationListener(this);
     BookmarkManager.INSTANCE.addLoadingListener(this);
     BookmarkManager.INSTANCE.addCatalogListener(this);
     RoutingController.get().attach(this);
+    IsolinesManager.from(getApplicationContext()).attach(this::onIsolinesStateChanged);
     if (MapFragment.nativeIsEngineCreated())
       LocationHelper.INSTANCE.attach(this);
-    mToggleMapLayerController.attachCore();
-    if (mNavigationController != null)
-      TrafficManager.INSTANCE.attach(mNavigationController);
-    mPlacePage.onActivityStarted();
+    mPlacePageController.onActivityStarted(this);
+    MwmApplication.backgroundTracker(getActivity()).addListener(this);
   }
 
   @Override
   protected void onStop()
   {
     super.onStop();
-    SearchEngine.INSTANCE.removeListener(this);
-    Framework.nativeRemoveMapObjectListener();
+    Framework.nativeRemovePlacePageActivationListener();
     BookmarkManager.INSTANCE.removeLoadingListener(this);
     BookmarkManager.INSTANCE.removeCatalogListener(this);
     LocationHelper.INSTANCE.detach(!isFinishing());
     RoutingController.get().detach();
-    TrafficManager.INSTANCE.detachAll();
-    mToggleMapLayerController.detachCore();
-    mPlacePage.onActivityStopped();
+    mPlacePageController.onActivityStopped(this);
+    MwmApplication.backgroundTracker(getActivity()).removeListener(this);
+    IsolinesManager.from(getApplicationContext()).detach();
   }
 
+  @CallSuper
   @Override
-  protected void onDestroy()
+  protected void onSafeDestroy()
   {
-    super.onDestroy();
+    super.onSafeDestroy();
     if (mAdsRemovalPurchaseController != null)
       mAdsRemovalPurchaseController.destroy();
-    if (mBookmarkPurchaseController != null)
-      mBookmarkPurchaseController.destroy();
-    if (mNavigationController != null)
-      mNavigationController.destroy();
+    if (mBookmarkInappPurchaseController != null)
+      mBookmarkInappPurchaseController.destroy();
+    if (mBookmarksAllSubscriptionController != null)
+      mBookmarksAllSubscriptionController.destroy();
+    if (mBookmarksSightsSubscriptionController != null)
+      mBookmarksSightsSubscriptionController.destroy();
+    mNavigationController.destroy();
+    mToggleMapLayerController.detachCore();
+    TrafficManager.INSTANCE.detachAll();
+    mPlacePageController.destroy();
+    mMainMenuController.destroy();
+    SearchEngine.INSTANCE.removeListener(this);
   }
 
   @Override
@@ -1394,13 +1481,18 @@ public class MwmActivity extends BaseMwmFragmentActivity
       return;
     }
 
-    if (mSearchController.hide())
+    if (!mMainMenuController.isClosed())
+    {
+      mMainMenuController.close();
+      return;
+    }
+
+    if (mSearchController != null && mSearchController.hide())
     {
       SearchEngine.INSTANCE.cancelInteractiveSearch();
       if (mFilterController != null)
         mFilterController.resetFilter();
-      if (mSearchController != null)
-        mSearchController.clear();
+      mSearchController.clear();
       return;
     }
 
@@ -1484,41 +1576,35 @@ public class MwmActivity extends BaseMwmFragmentActivity
     return true;
   }
 
+  // Called from JNI.
   @Override
-  public void onMapObjectActivated(final MapObject object)
+  public void onPlacePageActivated(@NonNull PlacePageData data)
   {
-    if (MapObject.isOfType(MapObject.API_POINT, object))
+    if (data instanceof MapObject)
     {
-      final ParsedMwmRequest request = ParsedMwmRequest.getCurrentRequest();
-      if (request == null)
-        return;
+      MapObject object = (MapObject) data;
+      if (MapObject.isOfType(MapObject.API_POINT, object))
+      {
+        final ParsedMwmRequest request = ParsedMwmRequest.getCurrentRequest();
+        if (request == null)
+          return;
 
-      request.setPointData(object.getLat(), object.getLon(), object.getTitle(), object.getApiId());
-      object.setSubtitle(request.getCallerName(MwmApplication.get()).toString());
+        request.setPointData(object.getLat(), object.getLon(), object.getTitle(), object.getApiId());
+        object.setSubtitle(request.getCallerName(MwmApplication.get()).toString());
+      }
     }
 
     setFullscreen(false);
 
-    mPlacePage.setMapObject(object, true, () -> {
-      if (!mPlacePageRestored)
-      {
-        if (object != null)
-        {
-          mPlacePage.setState(object.isExtendedView() ? State.DETAILS : State.PREVIEW);
-          Framework.logLocalAdsEvent(Framework.LOCAL_ADS_EVENT_OPEN_INFO, object);
-        }
-      }
-      mPlacePageRestored = false;
-    });
-    if (mPlacePageTracker != null)
-      mPlacePageTracker.setMapObject(object);
+    mPlacePageController.openFor(data);
 
     if (UiUtils.isVisible(mFadeView))
       mFadeView.fadeOut();
   }
 
+  // Called from JNI.
   @Override
-  public void onDismiss(boolean switchFullScreenMode)
+  public void onPlacePageDeactivated(boolean switchFullScreenMode)
   {
     if (switchFullScreenMode)
     {
@@ -1530,14 +1616,15 @@ public class MwmActivity extends BaseMwmFragmentActivity
     }
     else
     {
-      mPlacePage.hide();
+      mPlacePageController.close(true);
     }
   }
 
   private BaseMenu getCurrentMenu()
   {
-    return (RoutingController.get().isNavigating() && mNavigationController != null
-            ? mNavigationController.getNavMenu() : mMainMenu);
+    return (RoutingController.get().isNavigating()
+            ? mNavigationController.getNavMenu()
+            : mMainMenu);
   }
 
   private void setFullscreen(boolean isFullscreen)
@@ -1556,22 +1643,18 @@ public class MwmActivity extends BaseMwmFragmentActivity
         return;
 
       mIsFullscreenAnimating = true;
-      Animations.disappearSliding(menu.getFrame(), Animations.BOTTOM, new Runnable()
-      {
-        @Override
-        public void run()
-        {
-          final int menuHeight = menu.getFrame().getHeight();
-          adjustBottomWidgets(menuHeight);
+      UiUtils.invisible(menu.getFrame());
 
-          mIsFullscreenAnimating = false;
-          if (mIsAppearMenuLater)
-          {
-            appearMenu(menu);
-            mIsAppearMenuLater = false;
-          }
-        }
-      });
+      final int menuHeight = menu.getFrame().getHeight();
+      adjustBottomWidgets(menuHeight);
+
+      mIsFullscreenAnimating = false;
+      if (mIsAppearMenuLater)
+      {
+        appearMenu(menu);
+        mIsAppearMenuLater = false;
+      }
+
       if (mNavAnimationController != null)
         mNavAnimationController.disappearZoomButtons();
       if (mNavMyPosition != null)
@@ -1580,7 +1663,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
     }
     else
     {
-      if (mPlacePage.isHidden() && mNavAnimationController != null)
+      if (mPlacePageController.isClosed() && mNavAnimationController != null)
         mNavAnimationController.appearZoomButtons();
       if (!mIsFullscreenAnimating)
         appearMenu(menu);
@@ -1604,67 +1687,15 @@ public class MwmActivity extends BaseMwmFragmentActivity
 
   private void appearMenuFrame(@NonNull BaseMenu menu)
   {
-    Animations.appearSliding(menu.getFrame(), Animations.BOTTOM, new Runnable()
-    {
-      @Override
-      public void run()
-      {
-        adjustBottomWidgets(0);
-      }
-    });
+    UiUtils.show(menu.getFrame());
+    adjustBottomWidgets(0);
   }
 
   @Override
-  public void onPreviewVisibilityChanged(boolean isVisible)
-  {
-    if (mVisibleRectMeasurer != null)
-      mVisibleRectMeasurer.setPreviewVisible(isVisible);
-
-    if (isVisible)
-    {
-      if (mMainMenu.isAnimating() || mMainMenu.isOpen())
-        UiThread.runLater(new Runnable()
-        {
-          @Override
-          public void run()
-          {
-            if (mMainMenu.close(true))
-              mFadeView.fadeOut();
-          }
-        }, BaseMenu.ANIMATION_DURATION * 2);
-    }
-    else
-    {
-      Framework.nativeDeactivatePopup();
-      mPlacePage.setMapObject(null, false, null);
-      if (mPlacePageTracker != null)
-        mPlacePageTracker.onHidden();
-    }
-  }
-
-  @Override
-  public void onPlacePageVisibilityChanged(boolean isVisible)
-  {
-    if (mVisibleRectMeasurer != null)
-      mVisibleRectMeasurer.setPlacePageVisible(isVisible);
-
-    Statistics.INSTANCE.trackEvent(isVisible ? Statistics.EventName.PP_OPEN
-                                             : Statistics.EventName.PP_CLOSE);
-    AlohaHelper.logClick(isVisible ? AlohaHelper.PP_OPEN
-                                   : AlohaHelper.PP_CLOSE);
-    if (mPlacePageTracker != null && isVisible)
-    {
-      mPlacePageTracker.onOpened();
-    }
-  }
-
-  @Override
-  public void onProgress(float translationX, float translationY)
+  public void onPlacePageSlide(int top)
   {
     if (mNavAnimationController != null)
-      mNavAnimationController.onPlacePageMoved(translationY);
-    if (mPlacePageTracker != null)
-      mPlacePageTracker.onMove();
+      mNavAnimationController.move(top);
   }
 
   @Override
@@ -1688,7 +1719,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
   @Override
   public boolean onTouch(View view, MotionEvent event)
   {
-    return mPlacePage.hideOnTouch() || (mMapFragment != null && mMapFragment.onTouch(view, event));
+    return mMapFragment != null && mMapFragment.onTouch(view, event);
   }
 
   @Override
@@ -1701,95 +1732,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
     }
   }
 
-  public interface MapTask extends Serializable
-  {
-    boolean run(@NonNull MwmActivity target);
-  }
 
-  public static class ImportBookmarkCatalogueTask implements MapTask
-  {
-    private static final long serialVersionUID = 5363722491377575159L;
-
-    @NonNull
-    private final String mUrl;
-
-    public ImportBookmarkCatalogueTask(@NonNull String url)
-    {
-      mUrl = url;
-    }
-
-    @Override
-    public boolean run(@NonNull MwmActivity target)
-    {
-      BookmarkCategoriesActivity.startForResult(target, BookmarksPageFactory.DOWNLOADED.ordinal(), mUrl);
-      return true;
-    }
-  }
-
-  public static class OpenUrlTask implements MapTask
-  {
-    private static final long serialVersionUID = 1L;
-    private final String mUrl;
-
-    public OpenUrlTask(String url)
-    {
-      Utils.checkNotNull(url);
-      mUrl = url;
-    }
-
-    @Override
-    public boolean run(@NonNull MwmActivity target)
-    {
-      final @ParsedUrlMwmRequest.ParsingResult int result = Framework.nativeParseAndSetApiUrl(mUrl);
-      switch (result)
-      {
-      case ParsedUrlMwmRequest.RESULT_INCORRECT:
-        // TODO: Kernel recognizes "mapsme://", "mwm://" and "mapswithme://" schemas only!!!
-        return MapFragment.nativeShowMapForUrl(mUrl);
-
-      case ParsedUrlMwmRequest.RESULT_MAP:
-        return MapFragment.nativeShowMapForUrl(mUrl);
-
-      case ParsedUrlMwmRequest.RESULT_ROUTE:
-        final ParsedRoutingData data = Framework.nativeGetParsedRoutingData();
-        RoutingController.get().setRouterType(data.mRouterType);
-        final RoutePoint from = data.mPoints[0];
-        final RoutePoint to = data.mPoints[1];
-        RoutingController.get().prepare(MapObject.createMapObject(FeatureId.EMPTY, MapObject.API_POINT,
-                                                                  from.mName, "", from.mLat, from.mLon),
-                                        MapObject.createMapObject(FeatureId.EMPTY, MapObject.API_POINT,
-                                                                  to.mName, "", to.mLat, to.mLon), true);
-        return true;
-      case ParsedUrlMwmRequest.RESULT_SEARCH:
-        final ParsedSearchRequest request = Framework.nativeGetParsedSearchRequest();
-        SearchActivity.start(target, request.mQuery, request.mLocale, request.mIsSearchOnMap,
-                             null, null);
-        return true;
-      case ParsedUrlMwmRequest.RESULT_LEAD:
-        return true;
-      }
-
-      return false;
-    }
-  }
-
-  public static class ShowCountryTask implements MapTask
-  {
-    private static final long serialVersionUID = 1L;
-    private final String mCountryId;
-
-    public ShowCountryTask(String countryId)
-    {
-      mCountryId = countryId;
-    }
-
-    @Override
-    public boolean run(@NonNull MwmActivity target)
-    {
-      Framework.nativeShowCountry(mCountryId, false);
-      return true;
-    }
-  }
 
   void adjustCompass(int offsetY)
   {
@@ -1810,7 +1753,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
 
     CompassData compass = LocationHelper.INSTANCE.getCompassData();
     if (compass != null)
-      MapFragment.nativeCompassUpdated(compass.getMagneticNorth(), compass.getTrueNorth(), true);
+      MapFragment.nativeCompassUpdated(compass.getNorth(), true);
   }
 
   private void adjustBottomWidgets(int offsetY)
@@ -1828,11 +1771,6 @@ public class MwmActivity extends BaseMwmFragmentActivity
     return this;
   }
 
-  public MainMenu getMainMenu()
-  {
-    return mMainMenu;
-  }
-
   @Override
   public void showSearch()
   {
@@ -1842,40 +1780,25 @@ public class MwmActivity extends BaseMwmFragmentActivity
   @Override
   public void updateMenu()
   {
-    adjustMenuLineFrameVisibility(new Runnable()
+    adjustMenuLineFrameVisibility();
+    mNavigationController.showSearchButtons(RoutingController.get().isPlanning()
+                                            || RoutingController.get().isBuilt());
+
+    if (RoutingController.get().isNavigating())
     {
-      @Override
-      public void run()
-      {
-        if (mNavigationController != null)
-        {
-          mNavigationController.showSearchButtons(RoutingController.get().isPlanning()
-                                                  || RoutingController.get().isBuilt());
-        }
+      mNavigationController.show(true);
+      mSearchController.hide();
+      mMainMenu.setState(MainMenu.State.NAVIGATION, false, mIsFullscreen);
+      return;
+    }
 
-        if (RoutingController.get().isNavigating())
-        {
-          if (mNavigationController != null)
-            mNavigationController.show(true);
-          mSearchController.hide();
-          mMainMenu.setState(MainMenu.State.NAVIGATION, false, mIsFullscreen);
-          return;
-        }
+    if (RoutingController.get().isPlanning())
+    {
+      mMainMenu.setState(MainMenu.State.ROUTE_PREPARE, false, mIsFullscreen);
+      return;
+    }
 
-        if (mIsTabletLayout)
-        {
-          mMainMenu.setEnabled(MainMenu.Item.POINT_TO_POINT, !RoutingController.get().isPlanning());
-          mMainMenu.setEnabled(MainMenu.Item.SEARCH, !RoutingController.get().isWaitingPoiPick());
-        }
-        else if (RoutingController.get().isPlanning())
-        {
-          mMainMenu.setState(MainMenu.State.ROUTE_PREPARE, false, mIsFullscreen);
-          return;
-        }
-
-        mMainMenu.setState(MainMenu.State.MENU, false, mIsFullscreen);
-      }
-    });
+    mMainMenu.setState(MainMenu.State.MENU, false, mIsFullscreen);
   }
 
   @Override
@@ -1891,16 +1814,13 @@ public class MwmActivity extends BaseMwmFragmentActivity
     closePlacePage();
   }
 
-  private void adjustMenuLineFrameVisibility(@Nullable final Runnable completion)
+  private void adjustMenuLineFrameVisibility()
   {
     final RoutingController controller = RoutingController.get();
 
     if (controller.isBuilt() || controller.isTaxiRequestHandled())
     {
       showLineFrame();
-
-      if (completion != null)
-        completion.run();
       return;
     }
 
@@ -1908,31 +1828,17 @@ public class MwmActivity extends BaseMwmFragmentActivity
     {
       if (showAddStartOrFinishFrame(controller, true))
       {
-        if (completion != null)
-          completion.run();
         return;
       }
 
-      showLineFrame(false, new Runnable()
-      {
-        @Override
-        public void run()
-        {
-          final int menuHeight = getCurrentMenu().getFrame().getHeight();
-          adjustBottomWidgets(menuHeight);
-          if (completion != null)
-            completion.run();
-        }
-      });
-
+      showLineFrame(false);
+      final int menuHeight = getCurrentMenu().getFrame().getHeight();
+      adjustBottomWidgets(menuHeight);
       return;
     }
 
     hideRoutingActionFrame();
     showLineFrame();
-
-    if (completion != null)
-      completion.run();
   }
 
   private boolean showAddStartOrFinishFrame(@NonNull RoutingController controller,
@@ -2016,19 +1922,13 @@ public class MwmActivity extends BaseMwmFragmentActivity
 
   private void showLineFrame()
   {
-    showLineFrame(true, new Runnable()
-    {
-      @Override
-      public void run()
-      {
-        adjustBottomWidgets(0);
-      }
-    });
+    showLineFrame(true);
+    adjustBottomWidgets(0);
   }
 
-  private void showLineFrame(boolean show, @Nullable Runnable completion)
+  private void showLineFrame(boolean show)
   {
-    mMainMenu.showLineFrame(show, completion);
+    mMainMenu.showLineFrame(show);
   }
 
   private void setNavButtonsTopLimit(int limit)
@@ -2045,10 +1945,12 @@ public class MwmActivity extends BaseMwmFragmentActivity
     if (mNavAnimationController == null)
       return;
 
-    mNavAnimationController.setTopLimit(!show ? 0 : mRoutingPlanInplaceController.getHeight());
+    int totalHeight = calcFloatingViewsOffset();
+
+    mNavAnimationController.setTopLimit(!show ? 0 : totalHeight);
     mNavAnimationController.setBottomLimit(!show ? 0 : getCurrentMenu().getFrame().getHeight());
     adjustCompassAndTraffic(!show ? UiUtils.getStatusBarHeight(getApplicationContext())
-                                  : mRoutingPlanInplaceController.getHeight());
+                                  : totalHeight);
   }
 
   @Override
@@ -2070,8 +1972,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
         showAddStartOrFinishFrame(RoutingController.get(), false);
         int width = UiUtils.dimen(R.dimen.panel_width);
         adjustTraffic(width, UiUtils.getStatusBarHeight(getApplicationContext()));
-        if (mNavigationController != null)
-          mNavigationController.adjustSearchButtons(width);
+        mNavigationController.adjustSearchButtons(width);
       }
       else
       {
@@ -2086,8 +1987,7 @@ public class MwmActivity extends BaseMwmFragmentActivity
       {
         adjustCompassAndTraffic(UiUtils.getStatusBarHeight(getApplicationContext()));
         setNavButtonsTopLimit(0);
-        if (mNavigationController != null)
-          mNavigationController.adjustSearchButtons(0);
+        mNavigationController.adjustSearchButtons(0);
       }
       else
       {
@@ -2095,23 +1995,21 @@ public class MwmActivity extends BaseMwmFragmentActivity
       }
 
       closeAllFloatingPanels();
-
-      if (mNavigationController != null)
-        mNavigationController.resetSearchWheel();
+      mNavigationController.resetSearchWheel();
 
       if (completionListener != null)
         completionListener.run();
 
       updateSearchBar();
     }
-
-    mPlacePage.refreshViews();
   }
 
   private void adjustCompassAndTraffic(final int offsetY)
   {
     addTask(new MapTask()
     {
+      private static final long serialVersionUID = 9177064181621376624L;
+
       @Override
       public boolean run(@NonNull MwmActivity target)
       {
@@ -2133,12 +2031,9 @@ public class MwmActivity extends BaseMwmFragmentActivity
     if (mNavAnimationController == null)
       return;
 
+    adjustCompassAndTraffic(visible ? calcFloatingViewsOffset()
+                                    : UiUtils.getStatusBarHeight(getApplicationContext()));
     int toolbarHeight = mSearchController.getToolbar().getHeight();
-    int offset = mRoutingPlanInplaceController != null
-                 && mRoutingPlanInplaceController.getHeight() > 0
-                 ? mRoutingPlanInplaceController.getHeight() : UiUtils.getStatusBarHeight(this);
-
-    adjustCompassAndTraffic(visible ? toolbarHeight : offset);
     setNavButtonsTopLimit(visible ? toolbarHeight : 0);
     if (mFilterController != null)
     {
@@ -2147,6 +2042,16 @@ public class MwmActivity extends BaseMwmFragmentActivity
       mFilterController.show(show, true);
       mMainMenu.show(!show);
     }
+  }
+
+  private int calcFloatingViewsOffset()
+  {
+    int offset;
+    if (mRoutingPlanInplaceController == null
+        || (offset = mRoutingPlanInplaceController.calcHeight()) == 0)
+      return UiUtils.getStatusBarHeight(this);
+
+    return offset;
   }
 
   @Override
@@ -2164,9 +2069,9 @@ public class MwmActivity extends BaseMwmFragmentActivity
   @Override
   public void showNavigation(boolean show)
   {
-    mPlacePage.refreshViews();
-    if (mNavigationController != null)
-      mNavigationController.show(show);
+    // TODO:
+//    mPlacePage.refreshViews();
+    mNavigationController.show(show);
     refreshFade();
     if (mOnmapDownloader != null)
       mOnmapDownloader.updateState(false);
@@ -2192,6 +2097,15 @@ public class MwmActivity extends BaseMwmFragmentActivity
     {
       mRoutingPlanInplaceController.updateBuildProgress(progress, router);
     }
+  }
+
+  @Override
+  public void onStartRouteBuilding()
+  {
+    if (mRoutingPlanInplaceController == null)
+      return;
+
+    mRoutingPlanInplaceController.hideDrivingOptionsView();
   }
 
   @Override
@@ -2227,10 +2141,13 @@ public class MwmActivity extends BaseMwmFragmentActivity
   @Override
   public void onNavigationCancelled()
   {
-    if (mNavigationController != null)
-      mNavigationController.stop(this);
+    mNavigationController.stop(this);
     updateSearchBar();
     ThemeSwitcher.restart(isMapRendererActive());
+    if (mRoutingPlanInplaceController == null)
+      return;
+
+    mRoutingPlanInplaceController.hideDrivingOptionsView();
   }
 
   @Override
@@ -2257,14 +2174,45 @@ public class MwmActivity extends BaseMwmFragmentActivity
     if (!RoutingController.get().isPlanning())
       return;
 
-    if (mNavigationController != null)
-      mNavigationController.resetSearchWheel();
+    mNavigationController.resetSearchWheel();
+  }
+
+  @Override
+  public void onDrivingOptionsWarning()
+  {
+    if (mRoutingPlanInplaceController == null)
+      return;
+
+    mRoutingPlanInplaceController.showDrivingOptionView();
   }
 
   @Override
   public boolean isSubwayEnabled()
   {
     return SubwayManager.from(this).isEnabled();
+  }
+
+  @Override
+  public void onCommonBuildError(int lastResultCode, @NonNull String[] lastMissingMaps)
+  {
+    RoutingErrorDialogFragment fragment = RoutingErrorDialogFragment.create(lastResultCode, lastMissingMaps);
+    fragment.show(getSupportFragmentManager(), RoutingErrorDialogFragment.class.getSimpleName());
+  }
+
+  @Override
+  public void onDrivingOptionsBuildError()
+  {
+    com.mapswithme.maps.dialog.AlertDialog dialog =
+        new com.mapswithme.maps.dialog.AlertDialog.Builder()
+            .setTitleId(R.string.unable_to_calc_alert_title)
+            .setMessageId(R.string.unable_to_calc_alert_subtitle)
+            .setPositiveBtnId(R.string.settings)
+            .setNegativeBtnId(R.string.cancel)
+            .setReqCode(REQ_CODE_ERROR_DRIVING_OPTIONS_DIALOG)
+            .setFragManagerStrategyType(com.mapswithme.maps.dialog.AlertDialog
+                                            .FragManagerStrategyType.ACTIVITY_FRAGMENT_MANAGER)
+            .build();
+    dialog.show(this, ERROR_DRIVING_OPTIONS_DIALOG_TAG);
   }
 
   private void updateSearchBar()
@@ -2287,14 +2235,10 @@ public class MwmActivity extends BaseMwmFragmentActivity
   @Override
   public void onLocationUpdated(@NonNull Location location)
   {
-    if (!mPlacePage.isHidden())
-      mPlacePage.refreshLocation(location);
-
     if (!RoutingController.get().isNavigating())
       return;
 
-    if (mNavigationController != null)
-      mNavigationController.update(Framework.nativeGetRouteFollowingInfo());
+    mNavigationController.update(Framework.nativeGetRouteFollowingInfo());
 
     TtsPlayer.INSTANCE.playTurnNotifications(getApplicationContext());
   }
@@ -2302,10 +2246,8 @@ public class MwmActivity extends BaseMwmFragmentActivity
   @Override
   public void onCompassUpdated(@NonNull CompassData compass)
   {
-    MapFragment.nativeCompassUpdated(compass.getMagneticNorth(), compass.getTrueNorth(), false);
-    mPlacePage.refreshAzimuth(compass.getNorth());
-    if (mNavigationController != null)
-      mNavigationController.updateNorth(compass.getNorth());
+    MapFragment.nativeCompassUpdated(compass.getNorth(), false);
+    mNavigationController.updateNorth(compass.getNorth());
   }
 
   @Override
@@ -2323,23 +2265,20 @@ public class MwmActivity extends BaseMwmFragmentActivity
   @Override
   public void onTranslationChanged(float translation)
   {
-    if (mNavigationController != null)
-      mNavigationController.updateSearchButtonsTranslation(translation);
+    mNavigationController.updateSearchButtonsTranslation(translation);
   }
 
   @Override
   public void onFadeInZoomButtons()
   {
-    if (mNavigationController != null
-        && (RoutingController.get().isPlanning() || RoutingController.get().isNavigating()))
+    if (RoutingController.get().isPlanning() || RoutingController.get().isNavigating())
       mNavigationController.fadeInSearchButtons();
   }
 
   @Override
   public void onFadeOutZoomButtons()
   {
-    if (mNavigationController != null
-        && (RoutingController.get().isPlanning() || RoutingController.get().isNavigating()))
+    if (RoutingController.get().isPlanning() || RoutingController.get().isNavigating())
     {
       if (UiUtils.isLandscape(this))
         mToggleMapLayerController.hide();
@@ -2409,13 +2348,88 @@ public class MwmActivity extends BaseMwmFragmentActivity
     {
       if (!LocationHelper.INSTANCE.isActive())
         LocationHelper.INSTANCE.start();
+      LocationHelper.INSTANCE.switchToNextMode();
     };
 
     new AlertDialog.Builder(this)
         .setMessage(message)
         .setNegativeButton(R.string.current_location_unknown_stop_button, stopClickListener)
         .setPositiveButton(R.string.current_location_unknown_continue_button, continueClickListener)
+        .setCancelable(false)
         .show();
+  }
+
+  @Override
+  public void onPromptStateChanged(@NonNull MaterialTapTargetPrompt prompt, int state)
+  {
+    if (mTutorial == null)
+      return;
+
+    if (state != MaterialTapTargetPrompt.STATE_DISMISSED
+        && state != MaterialTapTargetPrompt.STATE_FINISHED)
+    {
+      return;
+    }
+
+    UserActionsLogger.logTipClickedEvent(mTutorial, TutorialAction.GOT_IT_CLICKED);
+    Statistics.INSTANCE.trackTipsClose(mTutorial.ordinal());
+    mTutorial = null;
+  }
+
+  @Nullable
+  public Tutorial getTutorial()
+  {
+    return mTutorial;
+  }
+
+  public void setTutorial(@NonNull Tutorial tutorial)
+  {
+    mTutorial = tutorial;
+    mToggleMapLayerController.setTutorial(tutorial);
+  }
+
+  private void tryToShowTutorial()
+  {
+    addTask(new Factory.ShowTutorialTask());
+  }
+
+  private boolean tryToShowPromoAfterBooking()
+  {
+    NetworkPolicy policy = NetworkPolicy.newInstance(NetworkPolicy.getCurrentNetworkUsageStatus());
+    PromoAfterBooking promo = Promo.nativeGetPromoAfterBooking(policy);
+    if (promo == null)
+      return false;
+
+    String dialogName = PromoBookingDialogFragment.class.getName();
+    if (getSupportFragmentManager().findFragmentByTag(dialogName) != null)
+      return true;
+
+    final Bundle args = new Bundle();
+    args.putString(PromoBookingDialogFragment.EXTRA_CITY_GUIDES_URL, promo.getGuidesUrl());
+    args.putString(PromoBookingDialogFragment.EXTRA_CITY_IMAGE_URL, promo.getImageUrl());
+
+    final DialogFragment fragment = (DialogFragment) Fragment.instantiate(this, dialogName, args);
+    fragment.show(getSupportFragmentManager(), dialogName);
+
+    UserActionsLogger.logPromoAfterBookingShown(promo.getId());
+    Statistics.INSTANCE.trackEvent(Statistics.EventName.INAPP_SUGGESTION_SHOWN,
+                                   Statistics.makeInAppSuggestionParamBuilder());
+    return true;
+  }
+
+  private void tryToShowAdditionalViewOnTop()
+  {
+    if (tryToShowPromoAfterBooking())
+      return;
+
+    tryToShowTutorial();
+  }
+
+  @Override
+  public void onTransit(boolean foreground)
+  {
+    if (foreground)
+      tryToShowAdditionalViewOnTop();
   }
 
   @Override
@@ -2427,12 +2441,9 @@ public class MwmActivity extends BaseMwmFragmentActivity
   @Override
   public void onSearchRoutePoint(@RoutePointInfo.RouteMarkType int pointType)
   {
-    if (mNavigationController != null)
-    {
-      RoutingController.get().waitForPoiPick(pointType);
-      mNavigationController.performSearchClick();
-      Statistics.INSTANCE.trackRoutingTooltipEvent(pointType, true);
-    }
+    RoutingController.get().waitForPoiPick(pointType);
+    mNavigationController.performSearchClick();
+    Statistics.INSTANCE.trackRoutingTooltipEvent(pointType, true);
   }
 
   @Override
@@ -2452,6 +2463,31 @@ public class MwmActivity extends BaseMwmFragmentActivity
 
   @Override
   public void onBookmarksLoadingFinished()
+  {
+    // Do nothing
+  }
+
+  @Override
+  public void onAlertDialogPositiveClick(int requestCode, int which)
+  {
+    if (requestCode == REQ_CODE_ERROR_DRIVING_OPTIONS_DIALOG)
+      DrivingOptionsActivity.start(this);
+    else if (requestCode == REQ_CODE_CATALOG_UNLIMITED_ACCESS)
+      BookmarksCatalogActivity.startForResult(this,
+                                              BookmarkCategoriesActivity.REQ_CODE_DOWNLOAD_BOOKMARK_CATEGORY,
+                                              BookmarkManager.INSTANCE.getCatalogFrontendUrl(UTM.UTM_NONE));
+    else if (requestCode == REQ_CODE_ISOLINES_ERROR)
+      startActivity(new Intent(this, DownloaderActivity.class));
+  }
+
+  @Override
+  public void onAlertDialogNegativeClick(int requestCode, int which)
+  {
+    // Do nothing
+  }
+
+  @Override
+  public void onAlertDialogCancel(int requestCode)
   {
     // Do nothing
   }
@@ -2482,226 +2518,76 @@ public class MwmActivity extends BaseMwmFragmentActivity
     showSearch(query);
   }
 
-  public static class ShowDialogTask implements MapTask
+  public void showIntroductionScreenForDeeplink(@NonNull String deepLink,
+                                                @NonNull IntroductionScreenFactory factory)
   {
-    @NonNull
-    private String mDialogName;
+    IntroductionDialogFragment.show(getSupportFragmentManager(), deepLink, factory);
+  }
 
-    public ShowDialogTask(@NonNull String dialogName)
+  @Override
+  public boolean onKeyUp(int keyCode, KeyEvent event)
+  {
+    switch (keyCode)
     {
-      mDialogName = dialogName;
-    }
-
-    @Override
-    public boolean run(@NonNull MwmActivity target)
-    {
-      Fragment f = target.getSupportFragmentManager().findFragmentByTag(mDialogName);
-      if (f != null)
+      case KeyEvent.KEYCODE_DPAD_DOWN:
+        Statistics.INSTANCE.trackEvent(Statistics.EventName.ZOOM_OUT);
+        MapFragment.nativeScaleMinus();
         return true;
+      case KeyEvent.KEYCODE_DPAD_UP:
+        Statistics.INSTANCE.trackEvent(Statistics.EventName.ZOOM_IN);
+        MapFragment.nativeScalePlus();
+        return true;
+      case KeyEvent.KEYCODE_ESCAPE:
+        Intent currIntent = getIntent();
+        if (currIntent == null || !currIntent.hasExtra(EXTRA_BACK_URL))
+          return super.onKeyUp(keyCode, event);
 
-      final DialogFragment fragment = (DialogFragment) Fragment.instantiate(target, mDialogName);
-      fragment.show(target.getSupportFragmentManager(), mDialogName);
-      return true;
+        String backUrl = currIntent.getStringExtra(EXTRA_BACK_URL);
+        if (TextUtils.isEmpty(backUrl))
+          return super.onKeyUp(keyCode, event);
+
+        Uri back_uri = Uri.parse(backUrl);
+        if (back_uri == null)
+          return super.onKeyUp(keyCode, event);
+
+        return Utils.openUri(this, back_uri);
+      default:
+        return super.onKeyUp(keyCode, event);
     }
   }
 
-  public static abstract class BaseUserMarkTask implements MapTask
+  public void onOnboardingStepPassed(@NonNull OnboardingStep step)
   {
-    private static final long serialVersionUID = 1L;
+    if (mOnboardingTip == null)
+      throw new AssertionError("Onboarding tip must be non-null at this point!");
 
-    final long mCategoryId;
-    final long mId;
-
-    BaseUserMarkTask(long categoryId, long id)
+    switch (step)
     {
-      mCategoryId = categoryId;
-      mId = id;
+      case DISCOVER_GUIDES:
+      case CHECK_OUT_SIGHTS:
+        BookmarksCatalogActivity.startForResult(this,
+                                                BookmarkCategoriesActivity.REQ_CODE_DOWNLOAD_BOOKMARK_CATEGORY,
+                                                mOnboardingTip.getUrl());
+        break;
+      case SUBSCRIBE_TO_CATALOG:
+        BookmarksAllSubscriptionActivity.startForResult(this);
+        break;
+      default:
+        throw new UnsupportedOperationException("Onboarding step '" + step + "' not supported " +
+                                                "for sponsored button");
     }
   }
 
-  public static class ShowBookmarkTask extends BaseUserMarkTask
+  @Override
+  public void onLastOnboardingStepPassed()
   {
-    public ShowBookmarkTask(long categoryId, long bookmarkId)
-    {
-      super(categoryId, bookmarkId);
-    }
-
-    @Override
-    public boolean run(@NonNull MwmActivity target)
-    {
-      BookmarkManager.INSTANCE.showBookmarkOnMap(mId);
-      return true;
-    }
+    // Do nothing by default.
   }
 
-  public static class ShowTrackTask extends BaseUserMarkTask
+  @Override
+  public void onOnboardingStepCancelled()
   {
-    public ShowTrackTask(long categoryId, long trackId)
-    {
-      super(categoryId, trackId);
-    }
-
-    @Override
-    public boolean run(@NonNull MwmActivity target)
-    {
-      Framework.nativeShowTrackRect(mId);
-      return true;
-    }
-  }
-
-  public static class ShowPointTask implements MapTask
-  {
-    private final double mLat;
-    private final double mLon;
-
-    public ShowPointTask(double lat, double lon)
-    {
-      mLat = lat;
-      mLon = lon;
-    }
-
-    @Override
-    public boolean run(@NonNull MwmActivity target)
-    {
-      MapFragment.nativeShowMapForUrl(String.format(Locale.US,
-                                                    "mapsme://map?ll=%f,%f", mLat, mLon));
-      return true;
-    }
-  }
-
-  public static class BuildRouteTask implements MapTask
-  {
-    private final double mLatTo;
-    private final double mLonTo;
-    @Nullable
-    private final Double mLatFrom;
-    @Nullable
-    private final Double mLonFrom;
-    @Nullable
-    private final String mSaddr;
-    @Nullable
-    private final String mDaddr;
-    private final String mRouter;
-
-    @NonNull
-    private static MapObject fromLatLon(double lat, double lon, @Nullable String addr)
-    {
-      return MapObject.createMapObject(FeatureId.EMPTY, MapObject.API_POINT,
-                                       TextUtils.isEmpty(addr) ? "" : addr, "", lat, lon);
-    }
-
-    public BuildRouteTask(double latTo, double lonTo, @Nullable String router)
-    {
-      this(latTo, lonTo, null, null, null, null, router);
-    }
-
-    public BuildRouteTask(double latTo, double lonTo, @Nullable String saddr,
-                   @Nullable Double latFrom, @Nullable Double lonFrom, @Nullable String daddr)
-    {
-      this(latTo, lonTo, saddr, latFrom, lonFrom, daddr, null);
-    }
-
-    public BuildRouteTask(double latTo, double lonTo, @Nullable String saddr,
-                   @Nullable Double latFrom, @Nullable Double lonFrom, @Nullable String daddr,
-                   @Nullable String router)
-    {
-      mLatTo = latTo;
-      mLonTo = lonTo;
-      mLatFrom = latFrom;
-      mLonFrom = lonFrom;
-      mSaddr = saddr;
-      mDaddr = daddr;
-      mRouter = router;
-    }
-
-    @Override
-    public boolean run(@NonNull MwmActivity target)
-    {
-      @Framework.RouterType int routerType = -1;
-      if (!TextUtils.isEmpty(mRouter))
-      {
-        switch (mRouter)
-        {
-          case "vehicle":
-            routerType = Framework.ROUTER_TYPE_VEHICLE;
-            break;
-          case "pedestrian":
-            routerType = Framework.ROUTER_TYPE_PEDESTRIAN;
-            break;
-          case "bicycle":
-            routerType = Framework.ROUTER_TYPE_BICYCLE;
-            break;
-          case "taxi":
-            routerType = Framework.ROUTER_TYPE_TAXI;
-            break;
-          case "transit":
-            routerType = Framework.ROUTER_TYPE_TRANSIT;
-            break;
-        }
-      }
-
-      if (mLatFrom != null && mLonFrom != null && routerType >= 0)
-      {
-        RoutingController.get().prepare(fromLatLon(mLatFrom, mLonFrom, mSaddr),
-                                        fromLatLon(mLatTo, mLonTo, mDaddr), routerType,
-                                        true /* fromApi */);
-      }
-      else if (mLatFrom != null && mLonFrom != null)
-      {
-        RoutingController.get().prepare(fromLatLon(mLatFrom, mLonFrom, mSaddr),
-                                        fromLatLon(mLatTo, mLonTo, mDaddr), true /* fromApi */);
-      }
-      else if (routerType > 0)
-      {
-        RoutingController.get().prepare(true /* canUseMyPositionAsStart */,
-                                        fromLatLon(mLatTo, mLonTo, mDaddr), routerType,
-                                        true /* fromApi */);
-      }
-      else
-      {
-        RoutingController.get().prepare(true /* canUseMyPositionAsStart */,
-                                        fromLatLon(mLatTo, mLonTo, mDaddr), true /* fromApi */);
-      }
-      return true;
-    }
-  }
-
-  private static class RestoreRouteTask implements MapTask
-  {
-
-    @Override
-    public boolean run(@NonNull MwmActivity target)
-    {
-      RoutingController.get().restoreRoute();
-      return true;
-    }
-  }
-
-  public static class ShowUGCEditorTask implements MapTask
-  {
-    private static final long serialVersionUID = 1636712824900113568L;
-    @NonNull
-    private final NotificationCandidate.MapObject mMapObject;
-
-    ShowUGCEditorTask(@NonNull NotificationCandidate.MapObject mapObject)
-    {
-      mMapObject = mapObject;
-    }
-
-    @Override
-    public boolean run(@NonNull MwmActivity target)
-    {
-      MapObject mapObject = Framework.nativeGetMapObject(mMapObject);
-
-      if (mapObject == null)
-        return false;
-
-      EditParams.Builder builder = EditParams.Builder.fromMapObject(mapObject)
-                                                     .setDefaultRating(UGC.RATING_NONE)
-                                                     .setFromNotification(true);
-      UGCEditorActivity.start(target, builder.build());
-      return true;
-    }
+    // Do nothing by default.
   }
 
   private class CurrentPositionClickListener implements OnClickListener
@@ -2754,10 +2640,13 @@ public class MwmActivity extends BaseMwmFragmentActivity
     @Override
     public final void onMenuItemClick()
     {
-      TipsApi api = TipsApi.requestCurrent(getActivity().getClass());
-      LOGGER.d(TAG, "TipsApi = " + api);
+      Tutorial api = Tutorial.requestCurrent(getActivity(), getActivity().getClass());
+      LOGGER.d(TAG, "Tutorial = " + api);
       if (getItem() == api.getSiblingMenuItem())
+      {
         api.createClickInterceptor().onInterceptClick(getActivity());
+        Statistics.INSTANCE.trackTipsEvent(Statistics.EventName.TIPS_TRICKS_CLICK, api.ordinal());
+      }
       else
         onMenuItemClickInternal();
     }
@@ -2775,34 +2664,10 @@ public class MwmActivity extends BaseMwmFragmentActivity
     @Override
     public void onMenuItemClickInternal()
     {
-      if (!getActivity().mMainMenu.isOpen())
-      {
-        Statistics.INSTANCE.trackToolbarClick(getItem());
-        if (getActivity().mPlacePage.isDocked() && getActivity().closePlacePage())
-          return;
-
-        if (getActivity().closeSidePanel())
-          return;
-      }
-      getActivity().toggleMenu();
-    }
-  }
-
-  public static class AddPlaceDelegate extends AbstractClickMenuDelegate
-  {
-    public AddPlaceDelegate(@NonNull MwmActivity activity, @NonNull MainMenu.Item item)
-    {
-      super(activity, item);
-    }
-
-    @Override
-    public void onMenuItemClickInternal()
-    {
-      Statistics.INSTANCE.trackToolbarMenu(getItem());
+      Statistics.INSTANCE.trackToolbarClick(getItem());
       getActivity().closePlacePage();
-      if (getActivity().mIsTabletLayout)
-        getActivity().closeSidePanel();
-      getActivity().closeMenu(() -> getActivity().showPositionChooser(false, false));
+      getActivity().closeSidePanel();
+      getActivity().mMainMenuController.open();
     }
   }
 
@@ -2822,9 +2687,9 @@ public class MwmActivity extends BaseMwmFragmentActivity
     }
   }
 
-  public static class SettingsDelegate extends AbstractClickMenuDelegate
+  public abstract static class StatisticClickMenuDelegate extends AbstractClickMenuDelegate
   {
-    public SettingsDelegate(@NonNull MwmActivity activity, @NonNull MainMenu.Item item)
+    StatisticClickMenuDelegate(@NonNull MwmActivity activity, @NonNull MainMenu.Item item)
     {
       super(activity, item);
     }
@@ -2833,44 +2698,13 @@ public class MwmActivity extends BaseMwmFragmentActivity
     public void onMenuItemClickInternal()
     {
       Statistics.INSTANCE.trackToolbarMenu(getItem());
-      Intent intent = new Intent(getActivity(), SettingsActivity.class);
-      getActivity().closeMenu(() -> getActivity().startActivity(intent));
+      onPostStatisticMenuItemClick();
     }
+
+    abstract void onPostStatisticMenuItemClick();
   }
 
-  public static class DownloadGuidesDelegate extends AbstractClickMenuDelegate
-  {
-    public DownloadGuidesDelegate(@NonNull MwmActivity activity, @NonNull MainMenu.Item item)
-    {
-      super(activity, item);
-    }
-
-    @Override
-    public void onMenuItemClickInternal()
-    {
-      Statistics.INSTANCE.trackToolbarMenu(getItem());
-      int requestCode = BookmarkCategoriesActivity.REQ_CODE_DOWNLOAD_BOOKMARK_CATEGORY;
-      getActivity().closeMenu(() -> BookmarksCatalogActivity.startForResult(getActivity(), requestCode));
-    }
-  }
-
-  public static class DownloadMapsDelegate extends AbstractClickMenuDelegate
-  {
-    public DownloadMapsDelegate(@NonNull MwmActivity activity, @NonNull MainMenu.Item item)
-    {
-      super(activity, item);
-    }
-
-    @Override
-    public void onMenuItemClickInternal()
-    {
-      Statistics.INSTANCE.trackToolbarMenu(getItem());
-      RoutingController.get().cancel();
-      getActivity().closeMenu(() -> getActivity().showDownloader(false));
-    }
-  }
-
-  public static class BookmarksDelegate extends AbstractClickMenuDelegate
+  public static class BookmarksDelegate extends StatisticClickMenuDelegate
   {
     public BookmarksDelegate(@NonNull MwmActivity activity, @NonNull MainMenu.Item item)
     {
@@ -2878,29 +2712,13 @@ public class MwmActivity extends BaseMwmFragmentActivity
     }
 
     @Override
-    public void onMenuItemClickInternal()
+    void onPostStatisticMenuItemClick()
     {
-      Statistics.INSTANCE.trackToolbarClick(getItem());
       getActivity().closeMenu(getActivity()::showBookmarks);
     }
   }
 
-  public static class ShareMyLocationDelegate extends AbstractClickMenuDelegate
-  {
-    public ShareMyLocationDelegate(@NonNull MwmActivity activity, @NonNull MainMenu.Item item)
-    {
-      super(activity, item);
-    }
-
-    @Override
-    public void onMenuItemClickInternal()
-    {
-      Statistics.INSTANCE.trackToolbarMenu(getItem());
-      getActivity().closeMenu(getActivity()::shareMyLocation);
-    }
-  }
-
-  public static class DiscoveryDelegate extends AbstractClickMenuDelegate
+  public static class DiscoveryDelegate extends StatisticClickMenuDelegate
   {
     public DiscoveryDelegate(@NonNull MwmActivity activity, @NonNull MainMenu.Item item)
     {
@@ -2908,14 +2726,13 @@ public class MwmActivity extends BaseMwmFragmentActivity
     }
 
     @Override
-    public void onMenuItemClickInternal()
+    void onPostStatisticMenuItemClick()
     {
-      Statistics.INSTANCE.trackToolbarClick(getItem());
       getActivity().showDiscovery();
     }
   }
 
-  public static class PointToPointDelegate extends AbstractClickMenuDelegate
+  public static class PointToPointDelegate extends StatisticClickMenuDelegate
   {
     public PointToPointDelegate(@NonNull MwmActivity activity, @NonNull MainMenu.Item item)
     {
@@ -2923,10 +2740,108 @@ public class MwmActivity extends BaseMwmFragmentActivity
     }
 
     @Override
-    public void onMenuItemClickInternal()
+    void onPostStatisticMenuItemClick()
     {
-      Statistics.INSTANCE.trackToolbarClick(getItem());
       getActivity().startLocationToPoint(null, false);
+    }
+  }
+
+  private class ToolbarLayoutChangeListener implements ViewTreeObserver.OnGlobalLayoutListener
+  {
+    @Override
+    public void onGlobalLayout()
+    {
+      mSearchController.getToolbar().getViewTreeObserver()
+                       .removeGlobalOnLayoutListener(this);
+
+      adjustCompassAndTraffic(UiUtils.isVisible(mSearchController.getToolbar())
+                              ? calcFloatingViewsOffset()
+                              : UiUtils.getStatusBarHeight(getApplicationContext()));
+    }
+  }
+
+  private class MainMenuStateObserver implements MenuStateObserver
+  {
+
+    @Override
+    public void onMenuOpen()
+    {
+      mFadeView.fadeIn();
+    }
+
+    @Override
+    public void onMenuClosed()
+    {
+      mFadeView.fadeOut();
+    }
+  }
+
+  private class MainMenuOptionSelectedListener implements MainMenuOptionListener
+  {
+    @Override
+    public void onAddPlaceOptionSelected()
+    {
+      Statistics.INSTANCE.trackToolbarMenu(MainMenu.Item.ADD_PLACE);
+      closePlacePage();
+      closeMenu(() -> showPositionChooser(false, false));
+    }
+
+    @Override
+    public void onSearchGuidesOptionSelected()
+    {
+      Statistics.INSTANCE.trackToolbarMenu(MainMenu.Item.DOWNLOAD_GUIDES);
+      int requestCode = BookmarkCategoriesActivity.REQ_CODE_DOWNLOAD_BOOKMARK_CATEGORY;
+      String catalogUrl = BookmarkManager.INSTANCE.getCatalogFrontendUrl(UTM.UTM_TOOLBAR_BUTTON);
+      closeMenu(() -> BookmarksCatalogActivity.startForResult(getActivity(), requestCode,
+                                                              catalogUrl));
+    }
+
+    @Override
+    public void onHotelSearchOptionSelected()
+    {
+      Statistics.INSTANCE.trackToolbarMenu(MainMenu.Item.HOTEL_SEARCH);
+      closeMenu(MwmActivity.this::runHotelCategorySearchOnMap);
+    }
+
+    @Override
+    public void onDownloadMapsOptionSelected()
+    {
+      Statistics.INSTANCE.trackToolbarMenu(MainMenu.Item.DOWNLOAD_MAPS);
+      RoutingController.get().cancel();
+      closeMenu(() -> showDownloader(false));
+    }
+
+    @Override
+    public void onSettingsOptionSelected()
+    {
+      Statistics.INSTANCE.trackToolbarMenu(MainMenu.Item.SETTINGS);
+      Intent intent = new Intent(getActivity(), SettingsActivity.class);
+      closeMenu(() -> getActivity().startActivity(intent));
+    }
+
+    @Override
+    public void onShareLocationOptionSelected()
+    {
+      Statistics.INSTANCE.trackToolbarMenu(MainMenu.Item.SHARE_MY_LOCATION);
+      closeMenu(MwmActivity.this::shareMyLocation);
+    }
+
+    @Override
+    public void onSubwayLayerOptionSelected()
+    {
+      onSubwayLayerSelected();
+    }
+
+    @Override
+    public void onTrafficLayerOptionSelected()
+    {
+      onTrafficLayerSelected();
+    }
+
+    @Override
+    public void onIsolinesLayerOptionSelected()
+    {
+      onIsolinesLayerSelected();
     }
   }
 }

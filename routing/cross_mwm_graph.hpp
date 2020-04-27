@@ -35,7 +35,8 @@ public:
     NoSection,
   };
 
-  CrossMwmGraph(std::shared_ptr<NumMwmIds> numMwmIds, shared_ptr<m4::Tree<NumMwmId>> numMwmTree,
+  CrossMwmGraph(std::shared_ptr<NumMwmIds> numMwmIds,
+                std::shared_ptr<m4::Tree<NumMwmId>> numMwmTree,
                 std::shared_ptr<VehicleModelFactoryInterface> vehicleModelFactory,
                 VehicleType vehicleType, CourntryRectFn const & countryRectFn,
                 DataSource & dataSource);
@@ -88,6 +89,8 @@ public:
   /// to calculate |segment| weight.
   void GetOutgoingEdgeList(Segment const & s, std::vector<SegmentEdge> & edges);
 
+  void GetIngoingEdgeList(Segment const & s, std::vector<SegmentEdge> & edges);
+
   void Clear();
 
   // \returns transitions for mwm with id |numMwmId| for CrossMwmIndexGraph.
@@ -96,6 +99,11 @@ public:
     CHECK(CrossMwmSectionExists(numMwmId), ("Should be used in LeapsOnly mode only. LeapsOnly mode requires CrossMwmIndexGraph."));
     return m_crossMwmIndexGraph.GetTransitions(numMwmId, isEnter);
   }
+
+  bool IsFeatureTransit(NumMwmId numMwmId, uint32_t featureId);
+  /// \brief Checks whether feature where |segment| is placed is a cross mwm connector.
+  ///        If yes twin-segments are saved to |twins|.
+  void GetTwinFeature(Segment const & segment, bool isOutgoing, std::vector<Segment> & twins);
 
 private:
   MwmStatus GetMwmStatus(NumMwmId numMwmId, std::string const & sectionName) const;
@@ -123,5 +131,5 @@ private:
   CrossMwmIndexGraph<connector::TransitId> m_crossMwmTransitGraph;
 };
 
-string DebugPrint(CrossMwmGraph::MwmStatus status);
+std::string DebugPrint(CrossMwmGraph::MwmStatus status);
 }  // routing

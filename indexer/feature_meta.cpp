@@ -2,6 +2,8 @@
 
 #include "std/target_os.hpp"
 
+#include <sstream>
+
 using namespace std;
 
 namespace feature
@@ -15,6 +17,17 @@ char constexpr const * kBaseWikiUrl =
     ".wikipedia.org/wiki/";
 #endif
 } // namespace
+
+std::vector<Metadata::EType> Metadata::GetKeys() const
+{
+  std::vector<Metadata::EType> types;
+  types.reserve(m_metadata.size());
+
+  for (auto const & item : m_metadata)
+    types.push_back(static_cast<Metadata::EType>(item.first));
+
+  return types;
+}
 
 string Metadata::GetWikiURL() const
 {
@@ -44,9 +57,7 @@ string Metadata::GetWikiURL() const
 // static
 bool Metadata::TypeFromString(string const & k, Metadata::EType & outType)
 {
-  if (k == "cuisine")
-    outType = Metadata::FMD_CUISINE;
-  else if (k == "opening_hours")
+  if (k == "opening_hours")
     outType = Metadata::FMD_OPEN_HOURS;
   else if (k == "phone" || k == "contact:phone")
     outType = Metadata::FMD_PHONE_NUMBER;
@@ -72,8 +83,6 @@ bool Metadata::TypeFromString(string const & k, Metadata::EType & outType)
     outType = Metadata::FMD_TURN_LANES_BACKWARD;
   else if (k == "email" || k == "contact:email")
     outType = Metadata::FMD_EMAIL;
-  else if (k == "addr:postcode")
-    outType = Metadata::FMD_POSTCODE;
   else if (k == "wikipedia")
     outType = Metadata::FMD_WIKIPEDIA;
   else if (k == "addr:flats")
@@ -92,6 +101,8 @@ bool Metadata::TypeFromString(string const & k, Metadata::EType & outType)
     outType = Metadata::FMD_LEVEL;
   else if (k == "iata")
     outType = Metadata::FMD_AIRPORT_IATA;
+  else if (k == "duration")
+    outType = Metadata::FMD_DURATION;
   else
     return false;
 
@@ -156,12 +167,10 @@ void RegionData::AddPublicHoliday(int8_t month, int8_t offset)
   value.push_back(offset);
   Set(RegionData::Type::RD_PUBLIC_HOLIDAYS, value);
 }
-}  // namespace feature
 
 // Warning: exact osm tag keys should be returned for valid enum values.
-string ToString(feature::Metadata::EType type)
+string ToString(Metadata::EType type)
 {
-  using feature::Metadata;
   switch (type)
   {
   case Metadata::FMD_CUISINE: return "cuisine";
@@ -193,8 +202,42 @@ string ToString(feature::Metadata::EType type)
   case Metadata::FMD_LEVEL: return "level";
   case Metadata::FMD_AIRPORT_IATA: return "iata";
   case Metadata::FMD_BRAND: return "brand";
+  case Metadata::FMD_DURATION: return "duration";
   case Metadata::FMD_COUNT: CHECK(false, ("FMD_COUNT can not be used as a type."));
   };
 
   return string();
 }
+
+string DebugPrint(Metadata const & metadata)
+{
+  ostringstream oss;
+  bool first = true;
+  oss << "Metadata [";
+  for (uint8_t i = 0; i < static_cast<uint8_t>(Metadata::FMD_COUNT); ++i)
+  {
+    auto const t = static_cast<Metadata::EType>(i);
+    string s;
+    if (metadata.Get(t, s))
+    {
+      if (first)
+        first = false;
+      else
+        oss << "; ";
+
+      oss << DebugPrint(t) << "=" << s;
+    }
+  }
+  oss << "]";
+  return oss.str();
+}
+
+string DebugPrint(feature::AddressData const & addressData)
+{
+  ostringstream oss;
+  oss << "AddressData [";
+  oss << "Street = \"" << addressData.Get(AddressData::Type::Street) << "\"; ";
+  oss << "Postcode = \"" << addressData.Get(AddressData::Type::Postcode) << "\"]";
+  return oss.str();
+}
+}  // namespace feature

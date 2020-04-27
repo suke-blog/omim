@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.8)
 
 project(omim C CXX)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 get_filename_component(OMIM_ROOT . ABSOLUTE)
 
@@ -45,6 +45,11 @@ if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   add_definitions(-DDEBUG)
 elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
   add_definitions(-DRELEASE)
+elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
+  add_definitions(-DRELEASE)
+  add_compile_options(
+    "-fno-omit-frame-pointer"
+  )
 else()
   message(FATAL_ERROR "Unknown build type: " ${CMAKE_BUILD_TYPE})
 endif()
@@ -53,6 +58,8 @@ message("Build type: " ${CMAKE_BUILD_TYPE})
 # End of setting build type
 
 # Options
+
+# Call `make package` after cmake to build design tool.
 option(BUILD_DESIGNER "Build application as design tool" OFF)
 if (BUILD_DESIGNER)
   message("Designer tool building is enabled")
@@ -65,6 +72,11 @@ option(PYBINDINGS "Create makefiles for building python bindings" OFF)
 option(SKIP_DESKTOP "Skip building of desktop application" OFF)
 option(BUILD_MAPSHOT "Build mapshot tool" OFF)
 option(USE_PCH "Use precompiled headers" OFF)
+
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND
+    CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0)
+  message(FATAL_ERROR "Minimum supported g++ version is 7.0 yours is ${CMAKE_CXX_COMPILER_VERSION}")
+endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   set(PCH_EXTENSION "pch")
@@ -95,6 +107,10 @@ if (USE_PPROF)
   add_definitions(-DUSE_PPROF)
 endif()
 
+if (USE_HEAPPROF)
+  message("Heap Profiler is enabled")
+endif()
+
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Set environment variables
@@ -123,6 +139,11 @@ endif()
 
 # End of setting environment variables
 
+find_package(Threads REQUIRED)
+
+# Cannot call it at the beginning of the file because it depends on PYTHON_VERSION.
+include(BundledBoost)
+
 # Scripts
 
 execute_process(
@@ -131,46 +152,6 @@ execute_process(
 )
 if (CheckCertResult)
     message(FATAL_ERROR "Certificate check failed")
-endif()
-
-# Find installed packages
-
-find_package(Threads)
-
-set(Boost_USE_MULTITHREADED ON)
-
-if (PLATFORM_MAC)
-  set(Boost_USE_STATIC_LIBS ON)
-  set(Boost_USE_STATIC_RUNTIME ON)
-endif()
-
-find_package(Boost 1.64)
-
-if (NOT Boost_FOUND)
-  if (DEFINED ENV{BOOST_ROOT})
-    if (DARWIN)
-      set(Boost_INCLUDE_DIR "$ENV{BOOST_ROOT}/include")
-      set(Boost_LIBRARY_DIR "$ENV{BOOST_ROOT}/lib")
-    else()
-      set(Boost_INCLUDE_DIR "$ENV{BOOST_ROOT}")
-      set(Boost_LIBRARY_DIR "$ENV{BOOST_ROOT}/libs")
-    endif()
-  else()
-    set(Boost_INCLUDE_DIR "${OMIM_ROOT}/3party/boost")
-    set(Boost_LIBRARY_DIR "${OMIM_ROOT}/3party/boost/libs")
-  endif()
-  find_package(Boost 1.64)
-endif()
-
-if (PYBINDINGS)
-  if (PYTHON_VERSION VERSION_GREATER 3.0)
-    set(_Boost_PYTHON3_HEADERS "boost/python.hpp")
-    find_package(Boost 1.64 REQUIRED COMPONENTS python3)
-  else()
-    find_package(Boost 1.64 REQUIRED COMPONENTS python)
-  endif()
-  find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
-  include_directories(${PYTHON_INCLUDE_DIRS})
 endif()
 
 if (NOT PLATFORM_IPHONE AND NOT PLATFORM_ANDROID)
@@ -182,14 +163,13 @@ if (NOT PLATFORM_IPHONE AND NOT PLATFORM_ANDROID)
     message(FATAL_ERROR "Minimum supported Qt5 version is 5.5")
   endif()
   find_package(Qt5Network REQUIRED)
-  if (NOT SKIP_DESKTOP OR NOT SKIP_TESTS)
+  if (NOT SKIP_DESKTOP OR NOT SKIP_TESTS OR PYBINDINGS)
     find_package(Qt5Widgets)
   endif()
   if (NOT SKIP_DESKTOP)
     find_qt5_desktop_package(Qt5Gui)
     find_qt5_desktop_package(Qt5Xml)
     find_qt5_desktop_package(Qt5Svg)
-    find_qt5_desktop_package(Qt5WebEngineWidgets)
   endif()
 endif()
 
@@ -214,8 +194,6 @@ include_directories(
   ${Qt5Core_INCLUDE_DIRS}
   ${Qt5Network_INCLUDE_DIRS}
 )
-
-include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -259,6 +237,7 @@ add_subdirectory(3party/sdf_image)
 add_subdirectory(3party/stb_image)
 add_subdirectory(3party/succinct)
 add_subdirectory(3party/open-location-code)
+add_subdirectory(3party/vulkan_wrapper)
 
 if (PLATFORM_DESKTOP)
   add_subdirectory(3party/libtess2)
@@ -276,12 +255,20 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND
   add_gcc_cpp_compile_options("-Wno-noexcept-type")
 endif()
 
+find_package(PythonInterp ${PYTHON_VERSION})
+if (PYTHONINTERP_FOUND)
+  message("Found python to use in qt/, shaders/ and 3party/: ${PYTHON_EXECUTABLE}")
+else()
+  message(FATAL_ERROR "Could not find python to use in qt/, shaders/ and 3party/.")
+endif()
+
 add_subdirectory(base)
 add_subdirectory(coding)
 add_subdirectory(descriptions)
 add_subdirectory(drape)
 add_subdirectory(drape_frontend)
 add_subdirectory(editor)
+add_subdirectory(ge0)
 add_subdirectory(generator/mwm_diff)
 add_subdirectory(geometry)
 add_subdirectory(indexer)
@@ -301,6 +288,7 @@ add_subdirectory(tracking)
 add_subdirectory(traffic)
 add_subdirectory(transit)
 add_subdirectory(ugc)
+add_subdirectory(web_api)
 
 if (PLATFORM_DESKTOP)
   if (BUILD_MAPSHOT)
@@ -309,8 +297,9 @@ if (PLATFORM_DESKTOP)
   endif()
   add_subdirectory(feature_list)
   add_subdirectory(generator)
-  add_subdirectory(geocoder)
   add_subdirectory(openlr)
+  add_subdirectory(poly_borders)
+  add_subdirectory(topography_generator)
   add_subdirectory(track_analyzing)
   add_subdirectory(track_generator)
   if (NOT SKIP_DESKTOP)
@@ -325,3 +314,12 @@ omim_add_test_subdirectory(qt_tstfrm)
 if (PLATFORM_ANDROID)
   add_subdirectory(android/jni)
 endif()
+
+add_custom_target(BuildVersion ALL
+  COMMAND ${CMAKE_COMMAND}
+  ARGS
+  -D MAPSME_CURRENT_PROJECT_ROOT=${OMIM_ROOT}
+  -D PATH_WITH_BUILD_VERSION_HPP=${OMIM_ROOT}
+  -D PROJECT_NAME=${PROJECT_NAME}
+  -P ${OMIM_ROOT}/cmake/BuildVersion.cmake
+)

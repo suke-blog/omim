@@ -11,7 +11,10 @@
 
 #include "base/macros.hpp"
 
-#include "std/unordered_map.hpp"
+#include <algorithm>
+#include <cstdint>
+#include <memory>
+#include <vector>
 
 namespace search
 {
@@ -30,9 +33,9 @@ public:
 
     inline bool IsEmpty() const { return !m_calculator || m_rect.IsEmptyInterior(); }
 
-    vector<uint32_t> m_features;
+    std::vector<uint32_t> m_features;
     m2::RectD m_rect;
-    unique_ptr<ProjectionOnStreetCalculator> m_calculator;
+    std::unique_ptr<ProjectionOnStreetCalculator> m_calculator;
 
     /// @todo Cache GetProjection results for features here, because
     /// feature::GetCenter and ProjectionOnStreetCalculator::GetProjection are not so fast.
@@ -46,8 +49,8 @@ public:
   // Calls |fn| on each index in |sortedIds| where sortedIds[index]
   // belongs to the street's vicinity.
   template <typename TFn>
-  void ForEachInVicinity(uint32_t streetId, vector<uint32_t> const & sortedIds, double offsetMeters,
-                         TFn const & fn)
+  void ForEachInVicinity(uint32_t streetId, std::vector<uint32_t> const & sortedIds,
+                         double offsetMeters, TFn const & fn)
   {
     // Passed offset param should be less than the cached one, or the cache is invalid otherwise.
     ASSERT_LESS_OR_EQUAL(offsetMeters, m_offsetMeters, ());
@@ -61,14 +64,14 @@ public:
     for (uint32_t id : street.m_features)
     {
       // Load center and check projection only when |id| is in |sortedIds|.
-      if (!binary_search(sortedIds.begin(), sortedIds.end(), id))
+      if (!std::binary_search(sortedIds.begin(), sortedIds.end(), id))
         continue;
 
-      FeatureType ft;
-      if (!m_context->GetFeature(id, ft))
+      auto ft = m_context->GetFeature(id);
+      if (!ft)
         continue;  // Feature was deleted.
 
-      if (calculator.GetProjection(feature::GetCenter(ft, FeatureType::WORST_GEOMETRY), proj) &&
+      if (calculator.GetProjection(feature::GetCenter(*ft, FeatureType::WORST_GEOMETRY), proj) &&
           proj.m_distMeters <= offsetMeters)
       {
         fn(id);
@@ -91,5 +94,4 @@ private:
 
   DISALLOW_COPY_AND_MOVE(StreetVicinityLoader);
 };
-
 }  // namespace search

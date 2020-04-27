@@ -16,6 +16,7 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <iterator>
 #include <string>
 #include <utility>
 #include <vector>
@@ -153,7 +154,7 @@ private:
 
   std::vector<IndexUGC> m_ugcs;
   std::vector<TranslationKey> m_keys;
-  std::vector<vector<Text>> m_texts;
+  std::vector<std::vector<Text>> m_texts;
 };
 
 // Deserializer for UGC. May be used for random-access, but it is more
@@ -193,7 +194,7 @@ public:
       if (it == ids.end() || *it != index)
         return false;
 
-      auto const d = static_cast<uint32_t>(distance(ids.begin(), it));
+      auto const d = static_cast<uint32_t>(std::distance(ids.begin(), it));
 
       ReaderPtr<Reader> ofsSubReader(CreateUGCOffsetsSubReader(reader));
       DDVector<UGCOffset, ReaderPtr<Reader>> ofs(ofsSubReader);

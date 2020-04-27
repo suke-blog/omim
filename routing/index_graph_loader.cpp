@@ -2,8 +2,8 @@
 
 #include "routing/city_roads.hpp"
 #include "routing/index_graph_serialization.hpp"
-#include "routing/maxspeeds.hpp"
 #include "routing/restriction_loader.hpp"
+#include "routing/road_access.hpp"
 #include "routing/road_access_serialization.hpp"
 #include "routing/route.hpp"
 #include "routing/routing_exceptions.hpp"
@@ -11,7 +11,9 @@
 
 #include "indexer/data_source.hpp"
 
-#include "coding/file_container.hpp"
+#include "platform/country_defines.hpp"
+
+#include "coding/files_container.hpp"
 
 #include "base/assert.hpp"
 #include "base/timer.hpp"
@@ -19,6 +21,7 @@
 #include <algorithm>
 #include <map>
 #include <unordered_map>
+#include <utility>
 
 namespace
 {
@@ -30,7 +33,8 @@ class IndexGraphLoaderImpl final : public IndexGraphLoader
 public:
   IndexGraphLoaderImpl(VehicleType vehicleType, bool loadAltitudes, shared_ptr<NumMwmIds> numMwmIds,
                        shared_ptr<VehicleModelFactoryInterface> vehicleModelFactory,
-                       shared_ptr<EdgeEstimator> estimator, DataSource & dataSource);
+                       shared_ptr<EdgeEstimator> estimator, DataSource & dataSource,
+                       RoutingOptions routingOptions = RoutingOptions());
 
   // IndexGraphLoader overrides:
   Geometry & GetGeometry(NumMwmId numMwmId) override;
@@ -57,21 +61,27 @@ private:
 
   unordered_map<NumMwmId, GraphAttrs> m_graphs;
 
-  // TODO (@gmoryes) move this field to |GeometryIndexGraph| after @bykoianko PR
   unordered_map<NumMwmId, map<SegmentCoord, vector<RouteSegment::SpeedCamera>>> m_cachedCameras;
   decltype(m_cachedCameras)::iterator ReceiveSpeedCamsFromMwm(NumMwmId numMwmId);
+
+  RoutingOptions m_avoidRoutingOptions = RoutingOptions();
+  std::function<time_t()> m_currentTimeGetter = [time = GetCurrentTimestamp()]() {
+    return time;
+  };
 };
 
 IndexGraphLoaderImpl::IndexGraphLoaderImpl(
     VehicleType vehicleType, bool loadAltitudes, shared_ptr<NumMwmIds> numMwmIds,
     shared_ptr<VehicleModelFactoryInterface> vehicleModelFactory,
-    shared_ptr<EdgeEstimator> estimator, DataSource & dataSource)
+    shared_ptr<EdgeEstimator> estimator, DataSource & dataSource,
+    RoutingOptions routingOptions)
   : m_vehicleType(vehicleType)
   , m_loadAltitudes(loadAltitudes)
   , m_dataSource(dataSource)
-  , m_numMwmIds(numMwmIds)
-  , m_vehicleModelFactory(vehicleModelFactory)
-  , m_estimator(estimator)
+  , m_numMwmIds(move(numMwmIds))
+  , m_vehicleModelFactory(move(vehicleModelFactory))
+  , m_estimator(move(estimator))
+  , m_avoidRoutingOptions(routingOptions)
 {
   CHECK(m_numMwmIds, ());
   CHECK(m_vehicleModelFactory, ());
@@ -110,7 +120,7 @@ auto IndexGraphLoaderImpl::ReceiveSpeedCamsFromMwm(NumMwmId numMwmId) -> decltyp
   if (!handle.IsAlive())
     MYTHROW(RoutingException, ("Can't get mwm handle for", file));
 
-  MwmValue const & mwmValue = *handle.GetValue<MwmValue>();
+  MwmValue const & mwmValue = *handle.GetValue();
   if (!mwmValue.m_cont.IsExist(CAMERAS_INFO_FILE_TAG))
   {
     LOG(LINFO, ("No section about speed cameras"));
@@ -199,9 +209,10 @@ IndexGraphLoaderImpl::GraphAttrs & IndexGraphLoaderImpl::CreateIndexGraph(
   if (!handle.IsAlive())
     MYTHROW(RoutingException, ("Can't get mwm handle for", file));
 
-  graph.m_indexGraph = make_unique<IndexGraph>(graph.m_geometry, m_estimator);
+  graph.m_indexGraph = make_unique<IndexGraph>(graph.m_geometry, m_estimator, m_avoidRoutingOptions);
+  graph.m_indexGraph->SetCurrentTimeGetter(m_currentTimeGetter);
   base::Timer timer;
-  MwmValue const & mwmValue = *handle.GetValue<MwmValue>();
+  MwmValue const & mwmValue = *handle.GetValue();
   DeserializeIndexGraph(mwmValue, m_vehicleType, *graph.m_indexGraph);
   LOG(LINFO, (ROUTING_FILE_TAG, "section for", file.GetName(), "loaded in", timer.ElapsedSeconds(),
       "seconds"));
@@ -221,7 +232,8 @@ bool ReadRoadAccessFromMwm(MwmValue const & mwmValue, VehicleType vehicleType,
     auto const reader = mwmValue.m_cont.GetReader(ROAD_ACCESS_FILE_TAG);
     ReaderSource<FilesContainerR::TReader> src(reader);
 
-    RoadAccessSerializer::Deserialize(src, vehicleType, roadAccess);
+    RoadAccessSerializer::Deserialize(src, vehicleType, roadAccess,
+                                      mwmValue.m_file.GetPath(MapFileType::Map));
   }
   catch (Reader::OpenException const & e)
   {
@@ -238,10 +250,11 @@ namespace routing
 unique_ptr<IndexGraphLoader> IndexGraphLoader::Create(
     VehicleType vehicleType, bool loadAltitudes, shared_ptr<NumMwmIds> numMwmIds,
     shared_ptr<VehicleModelFactoryInterface> vehicleModelFactory,
-    shared_ptr<EdgeEstimator> estimator, DataSource & dataSource)
+    shared_ptr<EdgeEstimator> estimator, DataSource & dataSource,
+    RoutingOptions routingOptions)
 {
   return make_unique<IndexGraphLoaderImpl>(vehicleType, loadAltitudes, numMwmIds, vehicleModelFactory,
-                                           estimator, dataSource);
+                                           estimator, dataSource, routingOptions);
 }
 
 void DeserializeIndexGraph(MwmValue const & mwmValue, VehicleType vehicleType, IndexGraph & graph)
@@ -251,7 +264,10 @@ void DeserializeIndexGraph(MwmValue const & mwmValue, VehicleType vehicleType, I
   IndexGraphSerializer::Deserialize(graph, src, GetVehicleMask(vehicleType));
   RestrictionLoader restrictionLoader(mwmValue, graph);
   if (restrictionLoader.HasRestrictions())
+  {
     graph.SetRestrictions(restrictionLoader.StealRestrictions());
+    graph.SetUTurnRestrictions(restrictionLoader.StealNoUTurnRestrictions());
+  }
 
   RoadAccess roadAccess;
   if (ReadRoadAccessFromMwm(mwmValue, vehicleType, roadAccess))

@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <sstream>
 #include <string>
+#include <vector>
 
 namespace coding
 {
@@ -104,7 +105,7 @@ private:
     uint64_t m_subs = 0;    // number of strings inside the block
   };
 
-  void FlushPool(vector<uint64_t> const & lengths, string const & pool)
+  void FlushPool(std::vector<uint64_t> const & lengths, std::string const & pool)
   {
     for (auto const & length : lengths)
       WriteVarUint(m_writer, length);
@@ -117,10 +118,10 @@ private:
   uint64_t m_startOffset = 0;
   uint64_t m_dataOffset = 0;
 
-  vector<Block> m_blocks;
+  std::vector<Block> m_blocks;
 
   std::string m_pool;          // concatenated strings
-  vector<uint64_t> m_lengths;  // lengths of strings inside the |m_pool|
+  std::vector<uint64_t> m_lengths;  // lengths of strings inside the |m_pool|
 };
 
 class BlockedTextStorageIndex
@@ -140,7 +141,10 @@ public:
   };
 
   size_t GetNumBlockInfos() const { return m_blocks.size(); }
-  size_t GetNumStrings() const { return m_blocks.empty() ? 0 : m_blocks.back().To(); }
+  size_t GetNumStrings() const
+  {
+    return m_blocks.empty() ? 0 : static_cast<size_t>(m_blocks.back().To());
+  }
 
   BlockInfo const & GetBlockInfo(size_t blockIx) const
   {
@@ -184,7 +188,7 @@ public:
     source.Skip(indexOffset);
 
     auto const numBlocks = ReadVarUint<uint64_t, NonOwningReaderSource>(source);
-    m_blocks.assign(numBlocks, {});
+    m_blocks.assign(static_cast<size_t>(numBlocks), {});
 
     uint64_t prevOffset = 8;  // 8 bytes for the offset of the data section
     for (uint64_t i = 0; i < numBlocks; ++i)
@@ -193,9 +197,9 @@ public:
       CHECK_GREATER_OR_EQUAL(prevOffset + delta, prevOffset, ());
       prevOffset += delta;
 
-      auto & block = m_blocks[i];
+      auto & block = m_blocks[static_cast<size_t>(i)];
       block.m_offset = prevOffset;
-      block.m_from = i == 0 ? 0 : m_blocks[i - 1].To();
+      block.m_from = i == 0 ? 0 : m_blocks[static_cast<size_t>(i - 1)].To();
       block.m_subs = ReadVarUint<uint64_t, NonOwningReaderSource>(source);
       CHECK_GREATER_OR_EQUAL(block.m_from + block.m_subs, block.m_from, ());
     }
@@ -244,7 +248,7 @@ public:
       source.Skip(bi.m_offset);
 
       entry.m_value.clear();
-      entry.m_subs.resize(bi.m_subs);
+      entry.m_subs.resize(static_cast<size_t>(bi.m_subs));
 
       uint64_t offset = 0;
       for (size_t i = 0; i < entry.m_subs.size(); ++i)
@@ -269,7 +273,7 @@ public:
     auto const & si = entry.m_subs[stringIx];
     auto const & value = entry.m_value;
     ASSERT_LESS_OR_EQUAL(si.m_offset + si.m_length, value.size(), ());
-    return value.substr(si.m_offset, si.m_length);
+    return value.substr(static_cast<size_t>(si.m_offset), static_cast<size_t>(si.m_length));
   }
 
   void ClearCache() { m_cache.clear(); }

@@ -28,10 +28,12 @@
 #include <set>
 #include <string>
 
-#include "std/transform_iterator.hpp"
+#include <boost/iterator/transform_iterator.hpp>
 
 using namespace std;
 using namespace std::placeholders;
+
+using boost::make_transform_iterator;
 
 namespace search
 {
@@ -48,9 +50,9 @@ void Houses2KML(ostream & s, map<search::House, double> const & m)
       << "<name>" << it->first.GetNumber() <<  "</name>"
 
       << "<Point><coordinates>"
-            << MercatorBounds::XToLon(pt.x)
+            << mercator::XToLon(pt.x)
             << ","
-            << MercatorBounds::YToLat(pt.y)
+            << mercator::YToLat(pt.y)
 
       << "</coordinates></Point>"
       << "</Placemark>" << endl;
@@ -65,7 +67,7 @@ void Street2KML(ostream & s, vector<m2::PointD> const & pts, char const * color)
   s << "<LineString><coordinates>" << endl;
 
   for (size_t i = 0; i < pts.size(); ++i)
-    s << MercatorBounds::XToLon(pts[i].x) << "," << MercatorBounds::YToLat(pts[i].y) << "," << "0.0" << endl;
+    s << mercator::XToLon(pts[i].x) << "," << mercator::YToLat(pts[i].y) << "," << "0.0" << endl;
 
   s << "</coordinates></LineString>" << endl;
 
@@ -113,7 +115,7 @@ double const HN_MAX_CONNECTION_DIST_M = 300.0;
 class StreetCreator
 {
 public:
-  StreetCreator(Street * st) : m_street(st) {}
+  explicit StreetCreator(Street * st) : m_street(st) {}
   void operator () (m2::PointD const & pt) const
   {
     m_street->m_points.push_back(pt);
@@ -130,7 +132,7 @@ bool LessStreetDistance(HouseProjection const & p1, HouseProjection const & p2)
 
 double GetDistanceMeters(m2::PointD const & p1, m2::PointD const & p2)
 {
-  return MercatorBounds::DistanceOnEarth(p1, p2);
+  return mercator::DistanceOnEarth(p1, p2);
 }
 
 pair<double, double> GetConnectionAngleAndDistance(bool & isBeg, Street const * s1, Street const * s2)
@@ -149,7 +151,8 @@ pair<double, double> GetConnectionAngleAndDistance(bool & isBeg, Street const * 
 class HasSecond
 {
 public:
-  HasSecond(set<Street *> const & streets) : m_streets(streets) {}
+  explicit HasSecond(set<Street *> const & streets) : m_streets(streets) {}
+
   template <typename T>
   bool operator()(T const & t) const
   {
@@ -163,7 +166,8 @@ private:
 class HasStreet
 {
 public:
-  HasStreet(set<Street *> const & streets) : m_streets(streets) {}
+  explicit HasStreet(set<Street *> const & streets) : m_streets(streets) {}
+
   bool operator()(MergedStreet const & st) const
   {
     for (size_t i = 0; i < st.m_cont.size(); ++i)
@@ -189,7 +193,7 @@ struct ScoredHouse
 class ResultAccumulator
 {
 public:
-  ResultAccumulator(string const & houseNumber) : m_number(houseNumber) {}
+  explicit ResultAccumulator(string const & houseNumber) : m_number(houseNumber) {}
 
   string const & GetFullNumber() const { return m_number.GetNumber(); }
   bool UseOdd() const { return m_useOdd; }
@@ -247,8 +251,8 @@ public:
       m_results[ind] = ScoredHouse(p.m_house, p.m_distMeters);
   }
 
-  template <typename TCont>
-  void FlushResults(TCont & cont) const
+  template <typename Cont>
+  void FlushResults(Cont & cont) const
   {
     size_t const baseScore = 1 << (ARRAY_SIZE(m_results) - 2);
 
@@ -287,7 +291,9 @@ private:
   }
 
   ParsedNumber m_number;
-  bool m_isOdd, m_sign, m_useOdd;
+  bool m_isOdd = false;
+  bool m_sign = false;
+  bool m_useOdd = false;
 
   ScoredHouse m_results[4];
 };
@@ -330,17 +336,13 @@ struct HouseChain
 {
   vector<HouseProjection const *> houses;
   set<string> chainHouses;
-  double score;
-  int minHouseNumber;
-  int maxHouseNumber;
+  double score = 0.0;
+  int minHouseNumber = -1;
+  int maxHouseNumber = numeric_limits<int>::max();
 
-  HouseChain()
-  {
-    minHouseNumber = -1;
-    maxHouseNumber = numeric_limits<int>::max();
-  }
+  HouseChain() = default;
 
-  HouseChain(HouseProjection const * h)
+  explicit HouseChain(HouseProjection const * h)
   {
     minHouseNumber = maxHouseNumber = h->m_house->GetIntNumber();
     Add(h);
@@ -718,7 +720,7 @@ m2::RectD Street::GetLimitRect(double offsetMeters) const
 {
   m2::RectD rect;
   for (size_t i = 0; i < m_points.size(); ++i)
-    rect.Add(MercatorBounds::RectByCenterXYAndSizeInMeters(m_points[i], offsetMeters));
+    rect.Add(mercator::RectByCenterXYAndSizeInMeters(m_points[i], offsetMeters));
   return rect;
 }
 
@@ -742,7 +744,7 @@ double Street::GetPrefixLength(size_t numSegs) const
 void Street::SetName(string const & name)
 {
   m_name = name;
-  m_processedName = strings::ToUtf8(GetStreetNameAsKey(name));
+  m_processedName = strings::ToUtf8(GetStreetNameAsKey(name, false /* ignoreStreetSynonyms */));
 }
 
 void Street::Reverse()
@@ -757,7 +759,7 @@ HouseDetector::HouseDetector(DataSource const & dataSource)
   : m_loader(dataSource), m_streetNum(0)
 {
   // Default value for conversions.
-  SetMetersToMercator(MercatorBounds::kDegreesInMeter);
+  SetMetersToMercator(mercator::Bounds::kDegreesInMeter);
 }
 
 HouseDetector::~HouseDetector() { ClearCaches(); }
@@ -887,18 +889,18 @@ int HouseDetector::LoadStreets(vector<FeatureID> const & ids)
     if (m_id2st.find(ids[i]) != m_id2st.end())
       continue;
 
-    FeatureType f;
-    if (!m_loader.Load(ids[i], f))
+    auto f = m_loader.Load(ids[i]);
+    if (!f)
     {
       LOG(LWARNING, ("Can't read feature from:", ids[i].m_mwmId));
       continue;
     }
 
-    if (f.GetFeatureType() == feature::GEOM_LINE)
+    if (f->GetGeomType() == feature::GeomType::Line)
     {
       // Use default name as a primary compare key for merging.
       string name;
-      if (!f.GetName(StringUtf8Multilang::kDefaultCode, name))
+      if (!f->GetName(StringUtf8Multilang::kDefaultCode, name))
         continue;
       ASSERT(!name.empty(), ());
 
@@ -906,7 +908,7 @@ int HouseDetector::LoadStreets(vector<FeatureID> const & ids)
 
       Street * st = new Street();
       st->SetName(name);
-      f.ForEachPoint(StreetCreator(st), FeatureType::BEST_GEOMETRY);
+      f->ForEachPoint(StreetCreator(st), FeatureType::BEST_GEOMETRY);
 
       if (m_end2st.empty())
       {

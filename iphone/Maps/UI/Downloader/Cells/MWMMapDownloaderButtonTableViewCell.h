@@ -1,13 +1,12 @@
-#import "MWMMapDownloaderTableViewCellProtocol.h"
 #import "MWMTableViewCell.h"
 
 @protocol MWMMapDownloaderButtonTableViewCellProtocol <NSObject>
 
-- (void)openAvailableMaps;
+- (void)onAddMaps;
 
 @end
 
-@interface MWMMapDownloaderButtonTableViewCell : MWMTableViewCell <MWMMapDownloaderTableViewCellProtocol>
+@interface MWMMapDownloaderButtonTableViewCell : MWMTableViewCell
 
 @property (weak, nonatomic) id<MWMMapDownloaderButtonTableViewCellProtocol> delegate;
 

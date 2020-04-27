@@ -3,8 +3,8 @@ package com.mapswithme.maps.routing;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.mapswithme.maps.MwmActivity;
 import com.mapswithme.maps.R;
@@ -12,29 +12,37 @@ import com.mapswithme.util.UiUtils;
 
 public class RoutingPlanInplaceController extends RoutingPlanController
 {
+  @NonNull
+  private final RoutingPlanListener mRoutingPlanListener;
+
   @Nullable
-  private RoutingPlanListener mRoutingPlanListener;
+  private Animator mAnimator;
 
   public RoutingPlanInplaceController(@NonNull MwmActivity activity,
-                                      @Nullable RoutingPlanListener routingPlanListener,
-                                      @Nullable RoutingBottomMenuListener listener)
+                                      @NonNull RoutingPlanListener routingPlanListener,
+                                      @NonNull RoutingBottomMenuListener listener)
   {
-    super(activity.findViewById(R.id.routing_plan_frame), activity, listener);
+    super(activity.findViewById(R.id.routing_plan_frame), activity, routingPlanListener, listener);
     mRoutingPlanListener = routingPlanListener;
   }
 
   public void show(final boolean show)
   {
+    if (mAnimator != null)
+    {
+      mAnimator.cancel();
+      mAnimator.removeAllListeners();
+    }
     if (show)
-      UiUtils.show(mFrame);
+      UiUtils.show(getFrame());
 
-    animateFrame(show, new Runnable()
+    mAnimator = animateFrame(show, new Runnable()
     {
       @Override
       public void run()
       {
         if (!show)
-          UiUtils.hide(mFrame);
+          UiUtils.hide(getFrame());
       }
     });
   }
@@ -49,11 +57,12 @@ public class RoutingPlanInplaceController extends RoutingPlanController
     restoreRoutingPanelState(state);
   }
 
-  private void animateFrame(final boolean show, final @Nullable Runnable completion)
+  @Nullable
+  private ValueAnimator animateFrame(final boolean show, final @Nullable Runnable completion)
   {
     if (!checkFrameHeight())
     {
-      mFrame.post(new Runnable()
+      getFrame().post(new Runnable()
       {
         @Override
         public void run()
@@ -61,20 +70,19 @@ public class RoutingPlanInplaceController extends RoutingPlanController
           animateFrame(show, completion);
         }
       });
-      return;
+      return null;
     }
 
-    if (mRoutingPlanListener != null)
-      mRoutingPlanListener.onRoutingPlanStartAnimate(show);
+    mRoutingPlanListener.onRoutingPlanStartAnimate(show);
 
     ValueAnimator animator =
-        ValueAnimator.ofFloat(show ? -mFrameHeight : 0, show ? 0 : -mFrameHeight);
+        ValueAnimator.ofFloat(show ? -getFrame().getHeight() : 0, show ? 0 : -getFrame().getHeight());
     animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
     {
       @Override
       public void onAnimationUpdate(ValueAnimator animation)
       {
-        mFrame.setTranslationY((Float) animation.getAnimatedValue());
+        getFrame().setTranslationY((Float) animation.getAnimatedValue());
       }
     });
     animator.addListener(new UiUtils.SimpleAnimatorListener()
@@ -88,6 +96,7 @@ public class RoutingPlanInplaceController extends RoutingPlanController
     });
     animator.setDuration(ANIM_TOGGLE);
     animator.start();
+    return animator;
   }
 
   public interface RoutingPlanListener

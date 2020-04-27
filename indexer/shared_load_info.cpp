@@ -14,7 +14,9 @@ SharedLoadInfo::SharedLoadInfo(FilesContainerR const & cont, DataHeader const & 
 
 SharedLoadInfo::Reader SharedLoadInfo::GetDataReader() const
 {
-  return m_cont.GetReader(DATA_FILE_TAG);
+  if (GetMWMFormat() < version::Format::v10)
+    return m_cont.GetReader(FEATURES_FILE_TAG_V1_V9);
+  return m_cont.GetReader(FEATURES_FILE_TAG);
 }
 
 SharedLoadInfo::Reader SharedLoadInfo::GetMetadataReader() const
@@ -40,5 +42,13 @@ SharedLoadInfo::Reader SharedLoadInfo::GetGeometryReader(int ind) const
 SharedLoadInfo::Reader SharedLoadInfo::GetTrianglesReader(int ind) const
 {
   return m_cont.GetReader(GetTagForIndex(TRIANGLE_FILE_TAG, ind));
+}
+
+std::optional<SharedLoadInfo::Reader> SharedLoadInfo::GetPostcodesReader() const
+{
+  if (!m_cont.IsExist(POSTCODES_FILE_TAG))
+    return {};
+
+  return m_cont.GetReader(POSTCODES_FILE_TAG);
 }
 }  // namespace feature

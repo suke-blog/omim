@@ -2,19 +2,8 @@
 final class RoutePreviewTaxiCell: UICollectionViewCell {
 
   @IBOutlet private weak var icon: UIImageView!
-  @IBOutlet private weak var title: UILabel! {
-    didSet {
-      title.font = UIFont.bold14()
-      title.textColor = UIColor.blackPrimaryText()
-    }
-  }
-
-  @IBOutlet private weak var info: UILabel! {
-    didSet {
-      info.font = UIFont.regular14()
-      info.textColor = UIColor.blackSecondaryText()
-    }
-  }
+  @IBOutlet private weak var title: UILabel!
+  @IBOutlet private weak var info: UILabel!
 
   @objc func config(type: MWMRoutePreviewTaxiCellType, title: String, eta: String, price: String, currency: String) {
     let iconImage = { () -> UIImage in
@@ -23,7 +12,8 @@ final class RoutePreviewTaxiCell: UICollectionViewCell {
       case .uber: return #imageLiteral(resourceName: "icTaxiUber")
       case .yandex: return #imageLiteral(resourceName: "ic_taxi_logo_yandex")
       case .maxim: return #imageLiteral(resourceName: "ic_taxi_logo_maksim")
-      case .rutaxi: return #imageLiteral(resourceName: "ic_taxi_logo_rutaxi")
+      case .vezet: return #imageLiteral(resourceName: "ic_taxi_logo_vezet")
+      case .freenow: return #imageLiteral(resourceName: "ic_logo_freenow")
       }
     }
 
@@ -33,7 +23,8 @@ final class RoutePreviewTaxiCell: UICollectionViewCell {
       case .uber: return title
       case .yandex: return L("yandex_taxi_title")
       case .maxim: return L("maxim_taxi_title")
-      case .rutaxi: return L("rutaxi_title")
+      case .vezet: return L("vezet_taxi")
+      case .freenow: return title
       }
     }
 
@@ -43,7 +34,7 @@ final class RoutePreviewTaxiCell: UICollectionViewCell {
       case .uber: return price
       case .yandex: fallthrough
       case .maxim: fallthrough
-      case .rutaxi:
+      case .vezet:
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.currencyCode = currency
@@ -53,13 +44,14 @@ final class RoutePreviewTaxiCell: UICollectionViewCell {
         } else {
           return "\(currency) \(price)"
         }
+      case .freenow: return price
       }
     }
 
     let timeString = { () -> String in
       var timeValue = DateComponentsFormatter.etaString(from: TimeInterval(eta)!)!
       
-      if type == .rutaxi {
+      if type == .vezet {
         timeValue = String(coreFormat: L("place_page_starting_from"), arguments: [timeValue]);
       }
       

@@ -1,15 +1,15 @@
 #import "MWMDownloadTransitMapAlert.h"
 #import "MWMCircularProgress.h"
-#import "MWMCommon.h"
 #import "MWMDownloaderDialogCell.h"
 #import "MWMDownloaderDialogHeader.h"
-#import "MWMFrameworkListener.h"
-#import "MWMStorage.h"
+#import "MWMStorage+UI.h"
 #import "Statistics.h"
 #import "SwiftBridge.h"
 #import "UILabel+RuntimeAttributes.h"
 
-#include "Framework.h"
+#include <CoreApi/Framework.h>
+
+#include "platform/downloader_defines.hpp"
 
 namespace
 {
@@ -22,7 +22,7 @@ CGFloat const kMinimumOffset = 20.;
 CGFloat const kAnimationDuration = .05;
 } // namespace
 
-@interface MWMDownloadTransitMapAlert () <UITableViewDataSource, UITableViewDelegate, MWMFrameworkStorageObserver, MWMCircularProgressProtocol>
+@interface MWMDownloadTransitMapAlert () <UITableViewDataSource, UITableViewDelegate, MWMStorageObserver, MWMCircularProgressProtocol>
 
 @property(copy, nonatomic) MWMVoidBlock cancelBlock;
 @property(copy, nonatomic) MWMDownloadBlock downloadBlock;
@@ -53,10 +53,10 @@ CGFloat const kAnimationDuration = .05;
 
 @implementation MWMDownloadTransitMapAlert
 {
-  storage::TCountriesVec m_countries;
+  storage::CountriesVec m_countries;
 }
 
-+ (instancetype)downloaderAlertWithMaps:(storage::TCountriesVec const &)countries
++ (instancetype)downloaderAlertWithMaps:(storage::CountriesSet const &)countries
                                    code:(routing::RouterResultCode)code
                             cancelBlock:(MWMVoidBlock)cancelBlock
                           downloadBlock:(MWMDownloadBlock)downloadBlock
@@ -90,23 +90,23 @@ CGFloat const kAnimationDuration = .05;
   return alert;
 }
 
-+ (instancetype)alertWithCountries:(storage::TCountriesVec const &)countries
++ (instancetype)alertWithCountries:(storage::CountriesSet const &)countries
 {
   NSAssert(!countries.empty(), @"countries can not be empty.");
   MWMDownloadTransitMapAlert * alert =
       [NSBundle.mainBundle loadNibNamed:kDownloadTransitMapAlertNibName owner:nil options:nil]
           .firstObject;
 
-  alert->m_countries = countries;
+  alert->m_countries = storage::CountriesVec(countries.begin(), countries.end());
   [alert configure];
   [alert updateCountriesList];
-  [MWMFrameworkListener addObserver:alert];
+  [[MWMStorage sharedStorage] addObserver:alert];
   return alert;
 }
 
 - (void)configure
 {
-  [self.dialogsTableView registerWithCellClass:[MWMDownloaderDialogCell class]];
+  [self.dialogsTableView registerNibWithCellClass:[MWMDownloaderDialogCell class]];
   self.listExpanded = NO;
   CALayer * containerViewLayer = self.containerView.layer;
   containerViewLayer.shouldRasterize = YES;
@@ -119,10 +119,10 @@ CGFloat const kAnimationDuration = .05;
   auto const & s = GetFramework().GetStorage();
   m_countries.erase(
       remove_if(m_countries.begin(), m_countries.end(),
-                [&s](TCountryId const & countryId) { return s.HasLatestVersion(countryId); }),
+                [&s](storage::CountryId const & countryId) { return s.HasLatestVersion(countryId); }),
       m_countries.end());
   NSMutableArray<NSString *> * titles = [@[] mutableCopy];
-  TMwmSize totalSize = 0;
+  MwmSize totalSize = 0;
   for (auto const & countryId : m_countries)
   {
     storage::NodeAttrs attrs;
@@ -139,15 +139,15 @@ CGFloat const kAnimationDuration = .05;
 - (void)progressButtonPressed:(nonnull MWMCircularProgress *)progress
 {
   for (auto const & countryId : m_countries)
-    [MWMStorage cancelDownloadNode:countryId];
+    [[MWMStorage sharedStorage] cancelDownloadNode:@(countryId.c_str())];
   [self cancelButtonTap];
 }
 
-#pragma mark - MWMFrameworkStorageObserver
+#pragma mark - MWMStorageObserver
 
-- (void)processCountryEvent:(TCountryId const &)countryId
+- (void)processCountryEvent:(NSString *)countryId
 {
-  if (find(m_countries.begin(), m_countries.end(), countryId) == m_countries.end())
+  if (find(m_countries.begin(), m_countries.end(), countryId.UTF8String) == m_countries.end())
     return;
   if (self.rightButton.hidden)
   {
@@ -174,10 +174,12 @@ CGFloat const kAnimationDuration = .05;
   }
 }
 
-- (void)processCountry:(TCountryId const &)countryId progress:(MapFilesDownloader::TProgress const &)progress
+- (void)processCountry:(NSString *)countryId
+       downloadedBytes:(uint64_t)downloadedBytes
+            totalBytes:(uint64_t)totalBytes
 {
   if (!self.rightButton.hidden ||
-      find(m_countries.begin(), m_countries.end(), countryId) == m_countries.end())
+      find(m_countries.begin(), m_countries.end(), countryId.UTF8String) == m_countries.end())
     return;
   auto const overallProgress = GetFramework().GetStorage().GetOverallProgress(m_countries);
   CGFloat const progressValue = static_cast<CGFloat>(overallProgress.first) / overallProgress.second;
@@ -288,7 +290,7 @@ CGFloat const kAnimationDuration = .05;
 
 - (void)close:(MWMVoidBlock)completion
 {
-  [MWMFrameworkListener removeObserver:self];
+  [[MWMStorage sharedStorage] removeObserver:self];
   [super close:completion];
 }
 
@@ -317,7 +319,7 @@ CGFloat const kAnimationDuration = .05;
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
   UIView * view = [[UIView alloc] init];
-  view.backgroundColor = UIColor.blackOpaque;
+  view.styleName = @"BlackOpaqueBackground";
   return view;
 }
 

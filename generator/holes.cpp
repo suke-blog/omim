@@ -5,17 +5,20 @@
 
 #include <utility>
 
+using namespace feature;
+
 namespace generator
 {
-HolesAccumulator::HolesAccumulator(cache::IntermediateDataReader & holder) :
-  m_merger(holder)
+HolesAccumulator::HolesAccumulator(
+    std::shared_ptr<cache::IntermediateDataReaderInterface> const & cache)
+  : m_merger(cache)
 {
 }
 
-FeatureBuilder1::Geometry & HolesAccumulator::GetHoles()
+FeatureBuilder::Geometry & HolesAccumulator::GetHoles()
 {
   ASSERT(m_holes.empty(), ("It is allowed to call only once."));
-  m_merger.ForEachArea(false, [this](FeatureBuilder1::PointSeq const & v,
+  m_merger.ForEachArea(false, [this](FeatureBuilder::PointSeq const & v,
                        std::vector<uint64_t> const & /* way osm ids */)
   {
     m_holes.push_back(std::move(v));
@@ -23,9 +26,9 @@ FeatureBuilder1::Geometry & HolesAccumulator::GetHoles()
   return m_holes;
 }
 
-HolesProcessor::HolesProcessor(uint64_t id, cache::IntermediateDataReader & holder) :
-  m_id(id),
-  m_holes(holder)
+HolesProcessor::HolesProcessor(
+    uint64_t id, std::shared_ptr<cache::IntermediateDataReaderInterface> const & cache)
+  : m_id(id), m_holes(cache)
 {
 }
 
@@ -51,9 +54,8 @@ void HolesProcessor::operator() (uint64_t id, std::string const & role)
     m_holes(id);
 }
 
-HolesRelation::HolesRelation(cache::IntermediateDataReader & holder) :
-  m_holes(holder),
-  m_outer(holder)
+HolesRelation::HolesRelation(std::shared_ptr<cache::IntermediateDataReaderInterface> const & cache)
+  : m_holes(cache), m_outer(cache)
 {
 }
 
@@ -62,13 +64,13 @@ void HolesRelation::Build(OsmElement const * p)
   // Iterate ways to get 'outer' and 'inner' geometries.
   for (auto const & e : p->Members())
   {
-    if (e.type != OsmElement::EntityType::Way)
+    if (e.m_type != OsmElement::EntityType::Way)
       continue;
 
-    if (e.role == "outer")
-      m_outer.AddWay(e.ref);
-    else if (e.role == "inner")
-      m_holes(e.ref);
+    if (e.m_role == "outer")
+      m_outer.AddWay(e.m_ref);
+    else if (e.m_role == "inner")
+      m_holes(e.m_ref);
   }
 }
 }  // namespace generator

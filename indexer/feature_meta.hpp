@@ -3,35 +3,17 @@
 #include "coding/reader.hpp"
 #include "coding/string_utf8_multilang.hpp"
 
+#include "base/stl_helpers.hpp"
+
 #include <algorithm>
 #include <map>
 #include <string>
 #include <vector>
 
-
 namespace feature
 {
 class MetadataBase
 {
-protected:
-  // TODO: Change uint8_t to appropriate type when FMD_COUNT reaches 256.
-  void Set(uint8_t type, std::string const & value)
-  {
-    auto found = m_metadata.find(type);
-    if (found == m_metadata.end())
-    {
-      if (!value.empty())
-        m_metadata[type] = value;
-    }
-    else
-    {
-      if (value.empty())
-        m_metadata.erase(found);
-      else
-        found->second = value;
-    }
-  }
-
 public:
   bool Has(uint8_t type) const
   {
@@ -43,6 +25,12 @@ public:
   {
     auto const it = m_metadata.find(type);
     return (it == m_metadata.end()) ? std::string() : it->second;
+  }
+
+  bool Get(uint8_t type, std::string & value) const
+  {
+    value = Get(type);
+    return !value.empty();
   }
 
   std::vector<uint8_t> GetPresentTypes() const
@@ -88,6 +76,24 @@ public:
   }
 
 protected:
+  // TODO: Change uint8_t to appropriate type when FMD_COUNT reaches 256.
+  void Set(uint8_t type, std::string const & value)
+  {
+    auto found = m_metadata.find(type);
+    if (found == m_metadata.end())
+    {
+      if (!value.empty())
+        m_metadata[type] = value;
+    }
+    else
+    {
+      if (value.empty())
+        m_metadata.erase(found);
+      else
+        found->second = value;
+    }
+  }
+
   std::map<uint8_t, std::string> m_metadata;
 };
 
@@ -96,6 +102,8 @@ class Metadata : public MetadataBase
 public:
   /// @note! Do not change values here.
   /// Add new types to the end of list, before FMD_COUNT.
+  /// Add new types to the corresponding list in Java.
+  /// Add new types to the corresponding list in generator/pygen/pygen.cpp.
   /// For types parsed from OSM get corresponding OSM tag to MetadataTagProcessor::TypeFromString().
   enum EType : int8_t
   {
@@ -113,7 +121,7 @@ public:
     FMD_TURN_LANES_FORWARD = 12,
     FMD_TURN_LANES_BACKWARD = 13,
     FMD_EMAIL = 14,
-    FMD_POSTCODE = 15,
+    FMD_POSTCODE = 15,  // Used for old data compatibility only. Should be empty for new mwms.
     FMD_WIKIPEDIA = 16,
     // FMD_MAXSPEED used to be 17 but now it is stored in a section of its own.
     FMD_FLATS = 18,
@@ -129,6 +137,11 @@ public:
     FMD_LEVEL = 28,
     FMD_AIRPORT_IATA = 29,
     FMD_BRAND = 30,
+    // Duration of routes by ferries and other rare means of transportation.
+    // The number of ferries having the duration key in OSM is low so we
+    // store the parsed tag value in Metadata instead of building a separate section for it.
+    // See https://wiki.openstreetmap.org/wiki/Key:duration
+    FMD_DURATION = 31,
     FMD_COUNT
   };
 
@@ -136,7 +149,16 @@ public:
   static bool TypeFromString(std::string const & osmTagKey, EType & outType);
   static bool IsSponsoredType(EType const & type);
 
-  void Set(EType type, std::string const & value) { MetadataBase::Set(type, value); }
+  std::vector<Metadata::EType> GetKeys() const;
+
+  using MetadataBase::Has;
+  using MetadataBase::Get;
+  bool Has(EType type) const { return MetadataBase::Has(static_cast<uint8_t>(type)); }
+  std::string Get(EType type) const { return MetadataBase::Get(static_cast<uint8_t>(type)); }
+  bool Get(EType type, std::string & value) const { return MetadataBase::Get(static_cast<uint8_t>(type), value);  }
+
+  using MetadataBase::Set;
+  void Set(EType type, std::string const & value) { MetadataBase::Set(static_cast<uint8_t>(type), value); }
   void Drop(EType type) { Set(type, std::string()); }
   std::string GetWikiURL() const;
 
@@ -177,13 +199,19 @@ private:
 class AddressData : public MetadataBase
 {
 public:
-  enum Type { PLACE, STREET, POSTCODE };
+  enum class Type : uint8_t
+  {
+    Street,
+    Postcode
+  };
 
   void Add(Type type, std::string const & s)
   {
     /// @todo Probably, we need to add separator here and store multiple values.
-    MetadataBase::Set(type, s);
+    MetadataBase::Set(base::Underlying(type), s);
   }
+
+  std::string Get(Type type) const { return MetadataBase::Get(base::Underlying(type)); }
 };
 
 class RegionData : public MetadataBase
@@ -224,8 +252,11 @@ public:
   void AddPublicHoliday(int8_t month, int8_t offset);
   // No public holidays getters until we know what to do with these.
 };
-}  // namespace feature
 
 // Prints types in osm-friendly format.
 std::string ToString(feature::Metadata::EType type);
 inline std::string DebugPrint(feature::Metadata::EType type) { return ToString(type); }
+
+std::string DebugPrint(feature::Metadata const & metadata);
+std::string DebugPrint(feature::AddressData const & addressData);
+}  // namespace feature

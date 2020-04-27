@@ -9,8 +9,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,7 +109,6 @@ public class RateStoreDialogFragment extends BaseMwmDialogFragment implements Vi
     switch (v.getId())
     {
     case R.id.btn__explain_bad_rating:
-      Counters.setRatingApplied(GooglePlusDialogFragment.class);
       dismiss();
       final Intent intent = new Intent(Intent.ACTION_SENDTO);
       final PackageInfo info;

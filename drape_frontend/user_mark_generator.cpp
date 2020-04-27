@@ -43,7 +43,7 @@ void UserMarkGenerator::SetRemovedUserMarks(drape_ptr<IDCollections> && ids)
     m_lines.erase(id);
 }
 
-void UserMarkGenerator::SetCreatedUserMarks(drape_ptr<IDCollections> && ids)
+void UserMarkGenerator::SetJustCreatedUserMarks(drape_ptr<IDCollections> && ids)
 {
   if (ids == nullptr)
     return;
@@ -114,7 +114,7 @@ void UserMarkGenerator::UpdateIndex(kml::MarkGroupId groupId)
       if (zoomLevel < startZoom)
         continue;
       // Process spline by segments that are no longer than tile size.
-      double const maxLength = MercatorBounds::kRangeX / (1 << (zoomLevel - 1));
+      double const maxLength = mercator::Bounds::kRangeX / (1 << (zoomLevel - 1));
 
       df::ProcessSplineSegmentRects(params.m_spline, maxLength,
                                     [&](m2::RectD const & segmentRect)
@@ -230,6 +230,7 @@ void UserMarkGenerator::GenerateUserMarksGeometry(ref_ptr<dp::GraphicsContext> c
 
   uint32_t constexpr kMaxSize = 65000;
   dp::Batcher batcher(kMaxSize, kMaxSize);
+  batcher.SetBatcherHash(tileKey.GetHashValue(BatcherBucket::UserMark));
   TUserMarksRenderData renderData;
   {
     dp::SessionGuard guard(context, batcher, [&tileKey, &renderData](dp::RenderState const & state,

@@ -1,7 +1,7 @@
 package com.mapswithme.maps.ads;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class Factory
 {
@@ -13,8 +13,6 @@ public class Factory
     String provider = banner.getProvider();
     switch (provider)
     {
-      case Providers.FACEBOOK:
-        return new FacebookAdsLoader(cacheListener, tracker);
       case Providers.MY_TARGET:
         return new MyTargetAdsLoader(cacheListener, tracker);
       case Providers.MOPUB:

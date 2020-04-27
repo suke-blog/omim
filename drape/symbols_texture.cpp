@@ -16,6 +16,7 @@
 
 #include <functional>
 #include <utility>
+#include <vector>
 
 namespace dp
 {
@@ -121,7 +122,7 @@ void LoadSymbols(std::string const & skinPathName, std::string const & textureNa
   ASSERT(completionHandler != nullptr, ());
   ASSERT(failureHandler != nullptr, ());
 
-  vector<unsigned char> rawData;
+  std::vector<unsigned char> rawData;
   uint32_t width, height;
 
   try
@@ -244,6 +245,14 @@ void SymbolsTexture::Invalidate(ref_ptr<dp::GraphicsContext> context, std::strin
   Load(context, skinPathName, allocator);
 }
 
+void SymbolsTexture::Invalidate(ref_ptr<dp::GraphicsContext> context, std::string const & skinPathName,
+                                ref_ptr<HWTextureAllocator> allocator,
+                                std::vector<drape_ptr<HWTexture>> & internalTextures)
+{
+  internalTextures.push_back(std::move(m_hwTexture));
+  Invalidate(context, skinPathName, allocator);
+}
+
 ref_ptr<Texture::ResourceInfo> SymbolsTexture::FindResource(Texture::Key const & key, bool & newResource)
 {
   newResource = false;
@@ -276,7 +285,7 @@ bool SymbolsTexture::IsSymbolContained(std::string const & symbolName) const
 }
 
 bool SymbolsTexture::DecodeToMemory(std::string const & skinPathName, std::string const & textureName,
-                                    vector<uint8_t> & symbolsSkin,
+                                    std::vector<uint8_t> & symbolsSkin,
                                     std::map<std::string, m2::RectU> & symbolsIndex,
                                     uint32_t & skinWidth, uint32_t & skinHeight)
 {

@@ -1,8 +1,10 @@
 #pragma once
 
+#include "routing/latlon_with_altitude.hpp"
 #include "routing/road_graph.hpp"
 #include "routing/segment.hpp"
 
+#include "geometry/latlon.hpp"
 #include "geometry/point2d.hpp"
 
 #include <vector>
@@ -15,8 +17,10 @@ class WorldGraph;
 
 struct Projection final
 {
-  Projection(Segment const & segment, bool isOneWay, Junction const & segmentFront,
-             Junction const & segmentBack, Junction const & junction)
+  Projection(Segment const & segment, bool isOneWay,
+             LatLonWithAltitude const & segmentFront,
+             LatLonWithAltitude const & segmentBack,
+             LatLonWithAltitude const & junction)
     : m_segment(segment)
     , m_isOneWay(isOneWay)
     , m_segmentFront(segmentFront)
@@ -24,20 +28,22 @@ struct Projection final
     , m_junction(junction)
   {
   }
+  bool operator==(Projection const & other) const;
 
   Segment m_segment;
   bool m_isOneWay = false;
-  Junction m_segmentFront;
-  Junction m_segmentBack;
-  Junction m_junction;
+  LatLonWithAltitude m_segmentFront;
+  LatLonWithAltitude m_segmentBack;
+  LatLonWithAltitude m_junction;
 };
 
 struct FakeEnding final
 {
-  Junction m_originJunction;
+  LatLonWithAltitude m_originJunction;
   std::vector<Projection> m_projections;
 };
 
-FakeEnding MakeFakeEnding(Segment const & segment, m2::PointD const & point, WorldGraph & graph);
+FakeEnding MakeFakeEnding(std::vector<Segment> const & segments, m2::PointD const & point,
+                          WorldGraph & graph);
 FakeEnding MakeFakeEnding(Segment const & segment, m2::PointD const & point, IndexGraph & graph);
 }  // namespace routing

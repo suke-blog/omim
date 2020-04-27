@@ -1,21 +1,13 @@
 #import "MWMSettingsViewController.h"
 #import "MWMAuthorizationCommon.h"
-#import "MWMNetworkPolicy.h"
 #import "MWMTextToSpeech+CPP.h"
 #import "SwiftBridge.h"
 
-#include "LocaleTranslator.h"
-
-#include "Framework.h"
-
-#include "routing/speed_camera_manager.hpp"
+#import <CoreApi/CoreApi.h>
 
 #include "map/gps_tracker.hpp"
-#include "map/routing_manager.hpp"
 
-#include "base/assert.hpp"
-
-extern NSString * const kAlohalyticsTapEventKey;
+using namespace power_management;
 
 @interface MWMSettingsViewController ()<SettingsTableViewSwitchCellDelegate, RemoveAdsViewControllerDelegate>
 
@@ -27,6 +19,7 @@ extern NSString * const kAlohalyticsTapEventKey;
 @property(weak, nonatomic) IBOutlet SettingsTableViewSwitchCell * autoDownloadCell;
 @property(weak, nonatomic) IBOutlet SettingsTableViewSwitchCell * backupBookmarksCell;
 @property(weak, nonatomic) IBOutlet SettingsTableViewLinkCell * mobileInternetCell;
+@property(weak, nonatomic) IBOutlet SettingsTableViewLinkCell * powerManagementCell;
 @property(weak, nonatomic) IBOutlet SettingsTableViewLinkCell * recentTrackCell;
 @property(weak, nonatomic) IBOutlet SettingsTableViewSwitchCell * fontScaleCell;
 @property(weak, nonatomic) IBOutlet SettingsTableViewSwitchCell * transliterationCell;
@@ -34,13 +27,14 @@ extern NSString * const kAlohalyticsTapEventKey;
 @property(weak, nonatomic) IBOutlet SettingsTableViewSwitchCell * showOffersCell;
 @property(weak, nonatomic) IBOutlet SettingsTableViewSwitchCell * statisticsCell;
 
-@property(weak, nonatomic) IBOutlet SettingsTableViewSelectableProgressCell *restoreSubscriptionCell;
+@property(weak, nonatomic) IBOutlet SettingsTableViewSelectableProgressCell * restoreSubscriptionCell;
 @property(weak, nonatomic) IBOutlet SettingsTableViewLinkCell * manageSubscriptionsCell;
 
 @property(weak, nonatomic) IBOutlet SettingsTableViewLinkCell * nightModeCell;
 @property(weak, nonatomic) IBOutlet SettingsTableViewSwitchCell * perspectiveViewCell;
 @property(weak, nonatomic) IBOutlet SettingsTableViewSwitchCell * autoZoomCell;
 @property(weak, nonatomic) IBOutlet SettingsTableViewLinkCell * voiceInstructionsCell;
+@property(weak, nonatomic) IBOutlet SettingsTableViewLinkCell * drivingOptionsCell;
 
 @property(weak, nonatomic) IBOutlet SettingsTableViewLinkCell * helpCell;
 @property(weak, nonatomic) IBOutlet SettingsTableViewLinkCell * aboutCell;
@@ -105,15 +99,31 @@ extern NSString * const kAlohalyticsTapEventKey;
                                           isOn:[[MWMBookmarksManager sharedManager] isCloudEnabled]];
 
   NSString * mobileInternet = nil;
-  switch (network_policy::GetStage())
-  {
-  case network_policy::Ask:
-  case network_policy::Today:
-  case network_policy::NotToday: mobileInternet = L(@"mobile_data_option_ask"); break;
-  case network_policy::Always: mobileInternet = L(@"mobile_data_option_always"); break;
-  case network_policy::Never: mobileInternet = L(@"mobile_data_option_never"); break;
+  switch([MWMNetworkPolicy sharedPolicy].permission) {
+    case MWMNetworkPolicyPermissionAlways:
+      mobileInternet = L(@"mobile_data_option_always");
+      break;
+    case MWMNetworkPolicyPermissionNever:
+      mobileInternet = L(@"mobile_data_option_never");
+      break;
+    case MWMNetworkPolicyPermissionToday:
+    case MWMNetworkPolicyPermissionNotToday:
+    case MWMNetworkPolicyPermissionAsk:
+      mobileInternet = L(@"mobile_data_option_ask");
+      break;
   }
   [self.mobileInternetCell configWithTitle:L(@"mobile_data") info:mobileInternet];
+  
+  NSString * powerManagement = nil;
+  switch (GetFramework().GetPowerManager().GetScheme())
+  {
+  case Scheme::None: break;
+  case Scheme::Normal: powerManagement = L(@"power_managment_setting_never"); break;
+  case Scheme::EconomyMedium: break;
+  case Scheme::EconomyMaximum: powerManagement = L(@"power_managment_setting_manual_max"); break;
+  case Scheme::Auto: powerManagement = L(@"power_managment_setting_auto"); break;
+  }
+  [self.powerManagementCell configWithTitle:L(@"power_managment_title") info:powerManagement];
 
   NSString * recentTrack = nil;
   if (!GpsTracker::Instance().IsEnabled())
@@ -187,6 +197,7 @@ extern NSString * const kAlohalyticsTapEventKey;
 
   NSString * ttsEnabledString = [MWMTextToSpeech isTTSEnabled] ? L(@"on") : L(@"off");
   [self.voiceInstructionsCell configWithTitle:L(@"pref_tts_enable_title") info:ttsEnabledString];
+  [self.drivingOptionsCell configWithTitle:L(@"driving_options_title") info:@""];
 }
 
 - (void)configInfoSection
@@ -313,6 +324,10 @@ extern NSString * const kAlohalyticsTapEventKey;
           withParameters:@{kStatAction : kStatChangeMobileInternet}];
     [self performSegueWithIdentifier:@"SettingsToMobileInternetSegue" sender:nil];
   }
+  else if (cell == self.powerManagementCell)
+  {
+    [self performSegueWithIdentifier:@"SettingsToPowerManagementSegue" sender:nil];
+  }
   else if (cell == self.recentTrackCell)
   {
     [Statistics logEvent:kStatEventName(kStatSettings, kStatRecentTrack)
@@ -331,6 +346,10 @@ extern NSString * const kAlohalyticsTapEventKey;
           withParameters:@{kStatAction : kStatChangeLanguage}];
     [self performSegueWithIdentifier:@"SettingsToTTSSegue" sender:nil];
   }
+  else if (cell == self.drivingOptionsCell)
+  {
+    [self performSegueWithIdentifier:@"settingsToDrivingOptionsSegue" sender:nil];
+  }
   else if (cell == self.helpCell)
   {
     [Statistics logEvent:kStatSettingsOpenSection withParameters:@{kStatName : kStatHelp}];
@@ -344,34 +363,21 @@ extern NSString * const kAlohalyticsTapEventKey;
   }
   else if (cell == self.restoreSubscriptionCell)
   {
-    self.restoreSubscriptionCell.selected = false;
-    [self.restoreSubscriptionCell.progress startAnimating];
-    self.restoringSubscription = YES;
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     __weak auto s = self;
-    [[SubscriptionManager shared] restore:^(MWMValidationResult result) {
-      __strong auto self = s;
-      self.restoringSubscription = NO;
-      [self.restoreSubscriptionCell.progress stopAnimating];
-      NSString *alertText;
-      switch (result)
-      {
-        case MWMValidationResultValid:
-          alertText = L(@"restore_success_alert");
-          break;
-        case MWMValidationResultNotValid:
-          alertText = L(@"restore_no_subscription_alert");
-          break;
-        case MWMValidationResultError:
-          alertText = L(@"restore_error_alert");
-          break;
+    [self signupWithAnchor:self.restoreSubscriptionCell.progress onComplete:^(BOOL success) {
+      if (success) {
+        [s restoreSubscription];
       }
-      [MWMAlertViewController.activeAlertController presentInfoAlert:L(@"restore_subscription")
-                                                                text:alertText];
     }];
   }
   else if (cell == self.manageSubscriptionsCell)
   {
-    [UIApplication.sharedApplication openURL:[NSURL URLWithString:@"https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/manageSubscriptions"]];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [UIApplication.sharedApplication
+     openURL:[NSURL URLWithString:@"https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/manageSubscriptions"]
+     options:@{}
+     completionHandler:nil];
   }
 }
 
@@ -420,6 +426,60 @@ extern NSString * const kAlohalyticsTapEventKey;
   [self.navigationController dismissViewControllerAnimated:YES completion:^{
     self.showOffersCell.isOn = YES;
   }];
+}
+
+#pragma mark - RestoreSubscription
+
+- (void)restoreSubscription {
+  dispatch_group_t dispatchGroup = dispatch_group_create();
+
+  [self.restoreSubscriptionCell.progress startAnimating];
+  self.restoringSubscription = YES;
+  __block MWMValidationResult adsResult;
+  __block MWMValidationResult bookmarksResult;
+  __block MWMValidationResult allPassResult;
+
+  dispatch_group_enter(dispatchGroup);
+  [[InAppPurchase adsRemovalSubscriptionManager] restore:^(MWMValidationResult result) {
+    adsResult = result;
+    [[InAppPurchase adsRemovalSubscriptionManager] setSubscriptionActive: result == MWMValidationResultValid];
+    dispatch_group_leave(dispatchGroup);
+  }];
+
+  dispatch_group_enter(dispatchGroup);
+  [[InAppPurchase bookmarksSubscriptionManager] restore:^(MWMValidationResult result) {
+    bookmarksResult = result;
+    [[InAppPurchase bookmarksSubscriptionManager] setSubscriptionActive: result == MWMValidationResultValid];
+    dispatch_group_leave(dispatchGroup);
+  }];
+
+  dispatch_group_enter(dispatchGroup);
+  [[InAppPurchase allPassSubscriptionManager] restore:^(MWMValidationResult result) {
+    allPassResult = result;
+    [[InAppPurchase allPassSubscriptionManager] setSubscriptionActive: result == MWMValidationResultValid];
+    dispatch_group_leave(dispatchGroup);
+  }];
+
+  __weak auto s = self;
+  dispatch_group_notify(dispatchGroup, dispatch_get_main_queue(), ^{
+    __strong auto self = s;
+    self.restoringSubscription = NO;
+    [self.restoreSubscriptionCell.progress stopAnimating];
+    NSString *alertText;
+    if (adsResult == MWMValidationResultNotValid &&
+        bookmarksResult == MWMValidationResultNotValid &&
+        allPassResult == MWMValidationResultNotValid) {
+      alertText = L(@"restore_no_subscription_alert");
+    } else if (adsResult == MWMValidationResultValid ||
+               bookmarksResult == MWMValidationResultValid ||
+               allPassResult == MWMValidationResultValid) {
+      alertText = L(@"restore_success_alert");
+    } else {
+      alertText = L(@"restore_error_alert");
+    }
+    [MWMAlertViewController.activeAlertController presentInfoAlert:L(@"restore_subscription")
+                                                              text:alertText];
+  });
 }
 
 @end

@@ -1,9 +1,10 @@
 package com.mapswithme.maps.purchase;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.SkuDetails;
 import com.mapswithme.maps.PrivateVariables;
@@ -23,7 +24,7 @@ public class FailedBookmarkPurchaseController implements PurchaseController<Fail
   @Nullable
   private FailedPurchaseChecker mCallback;
   @NonNull
-  private final ValidationCallback mValidationCallback = new ValidationCallbackImpl();
+  private final ValidationCallback mValidationCallback = new ValidationCallbackImpl(null);
   @NonNull
   private final PlayStoreBillingCallback mBillingCallback = new PlayStoreBillingCallbackImpl();
 
@@ -35,8 +36,11 @@ public class FailedBookmarkPurchaseController implements PurchaseController<Fail
   }
 
   @Override
-  public void initialize(@NonNull Activity activity)
+  public void initialize(@Nullable Activity activity)
   {
+    if (activity == null)
+      throw new AssertionError("Activity must be non-null!");
+
     mBillingManager.initialize(activity);
     mValidator.addCallback(mValidationCallback);
     mBillingManager.addCallback(mBillingCallback);
@@ -46,6 +50,8 @@ public class FailedBookmarkPurchaseController implements PurchaseController<Fail
   public void destroy()
   {
     mBillingManager.destroy();
+    mValidator.removeCallback();
+    mBillingManager.removeCallback(mBillingCallback);
   }
 
   @Override
@@ -63,7 +69,7 @@ public class FailedBookmarkPurchaseController implements PurchaseController<Fail
   }
 
   @Override
-  public void queryPurchaseDetails()
+  public void queryProductDetails()
   {
     throw new UnsupportedOperationException("This purchase controller doesn't support " +
                                             "querying purchase details");
@@ -87,20 +93,29 @@ public class FailedBookmarkPurchaseController implements PurchaseController<Fail
     mCallback = null;
   }
 
-  private class ValidationCallbackImpl implements ValidationCallback
+  @Override
+  public void onSave(@NonNull Bundle outState)
+  {
+    mValidator.onSave(outState);
+  }
+
+  @Override
+  public void onRestore(@NonNull Bundle inState)
+  {
+    mValidator.onRestore(inState);
+  }
+
+  private class ValidationCallbackImpl extends AbstractBookmarkValidationCallback
   {
 
-    @Override
-    public void onValidate(@NonNull String purchaseData, @NonNull ValidationStatus status)
+    ValidationCallbackImpl(@Nullable String serverId)
     {
-      LOGGER.i(TAG, "Validation status of 'paid bookmark': " + status);
-      if (status == ValidationStatus.VERIFIED)
-      {
-        LOGGER.i(TAG, "Bookmark purchase consuming...");
-        mBillingManager.consumePurchase(PurchaseUtils.parseToken(purchaseData));
-        return;
-      }
+      super(serverId);
+    }
 
+    @Override
+    void onValidationError(@NonNull ValidationStatus status)
+    {
       if (status == ValidationStatus.AUTH_ERROR)
       {
         if (mCallback != null)
@@ -111,12 +126,19 @@ public class FailedBookmarkPurchaseController implements PurchaseController<Fail
       if (mCallback != null)
         mCallback.onFailedPurchaseDetected(true);
     }
+
+    @Override
+    void consumePurchase(@NonNull String purchaseData)
+    {
+      LOGGER.i(TAG, "Failed bookmark purchase consuming...");
+      mBillingManager.consumePurchase(PurchaseUtils.parseToken(purchaseData));
+    }
   }
 
   private class PlayStoreBillingCallbackImpl implements PlayStoreBillingCallback
   {
     @Override
-    public void onPurchaseDetailsLoaded(@NonNull List<SkuDetails> details)
+    public void onProductDetailsLoaded(@NonNull List<SkuDetails> details)
     {
       // Do nothing by default.
     }
@@ -134,7 +156,7 @@ public class FailedBookmarkPurchaseController implements PurchaseController<Fail
     }
 
     @Override
-    public void onPurchaseDetailsFailure()
+    public void onProductDetailsFailure()
     {
       // Do nothing by default.
     }
@@ -142,7 +164,8 @@ public class FailedBookmarkPurchaseController implements PurchaseController<Fail
     @Override
     public void onStoreConnectionFailed()
     {
-      // Do nothing by default.
+      if (mCallback != null)
+        mCallback.onStoreConnectionFailed();
     }
 
     @Override
@@ -172,7 +195,7 @@ public class FailedBookmarkPurchaseController implements PurchaseController<Fail
     @Override
     public void onConsumptionSuccess()
     {
-      LOGGER.i(TAG, "Failed bookmark purchase consumed and verified");
+      LOGGER.i(TAG, "Failed bookmark purchase consumed");
       if (mCallback != null)
         mCallback.onFailedPurchaseDetected(false);
     }

@@ -10,13 +10,12 @@
 #include <cstdint>
 #include <functional>
 #include <initializer_list>
+#include <optional>
 #include <set>
 #include <string>
 #include <type_traits>
 #include <utility>
 #include <vector>
-
-#include <boost/optional.hpp>
 
 namespace feature { class TypesHolder; }
 class FeatureType;
@@ -28,16 +27,18 @@ namespace ftypes
 {
 class BaseChecker
 {
-  size_t const m_level;
-
 protected:
+  uint8_t const m_level;
   std::vector<uint32_t> m_types;
 
-  BaseChecker(size_t level = 2) : m_level(level) {}
+  BaseChecker(uint8_t level = 2) : m_level(level) {}
   virtual ~BaseChecker() = default;
 
 public:
   virtual bool IsMatched(uint32_t type) const;
+  virtual void ForEachType(std::function<void(uint32_t)> && fn) const;
+
+  std::vector<uint32_t> const & GetTypes() const { return m_types; }
 
   bool operator()(feature::TypesHolder const & types) const;
   bool operator()(FeatureType & ft) const;
@@ -45,12 +46,6 @@ public:
   bool operator()(uint32_t type) const { return IsMatched(type); }
 
   static uint32_t PrepareToMatch(uint32_t type, uint8_t level);
-
-  template <typename TFn>
-  void ForEachType(TFn && fn) const
-  {
-    std::for_each(m_types.cbegin(), m_types.cend(), std::forward<TFn>(fn));
-  }
 };
 
 class IsPeakChecker : public BaseChecker
@@ -72,6 +67,14 @@ class IsSpeedCamChecker : public BaseChecker
   IsSpeedCamChecker();
 public:
   DECLARE_CHECKER_INSTANCE(IsSpeedCamChecker);
+};
+
+class IsPostBoxChecker : public BaseChecker
+{
+  IsPostBoxChecker();
+
+public:
+  DECLARE_CHECKER_INSTANCE(IsPostBoxChecker);
 };
 
 class IsFuelStationChecker : public BaseChecker
@@ -104,11 +107,36 @@ public:
   DECLARE_CHECKER_INSTANCE(IsAirportChecker);
 };
 
-class IsStreetChecker : public BaseChecker
+class IsSquareChecker : public BaseChecker
 {
-  IsStreetChecker();
+  IsSquareChecker();
+
 public:
-  DECLARE_CHECKER_INSTANCE(IsStreetChecker);
+  DECLARE_CHECKER_INSTANCE(IsSquareChecker);
+};
+
+class IsSuburbChecker : public BaseChecker
+{
+  IsSuburbChecker();
+
+public:
+  DECLARE_CHECKER_INSTANCE(IsSuburbChecker);
+};
+
+class IsWayChecker : public BaseChecker
+{
+  IsWayChecker();
+
+public:
+  DECLARE_CHECKER_INSTANCE(IsWayChecker);
+};
+
+class IsStreetOrSquareChecker : public BaseChecker
+{
+  IsStreetOrSquareChecker();
+
+public:
+  DECLARE_CHECKER_INSTANCE(IsStreetOrSquareChecker);
 };
 
 class IsAddressObjectChecker : public BaseChecker
@@ -154,6 +182,20 @@ public:
   DECLARE_CHECKER_INSTANCE(IsBuildingChecker);
 };
 
+class IsBuildingPartChecker : public ftypes::BaseChecker
+{
+  IsBuildingPartChecker();
+public:
+  DECLARE_CHECKER_INSTANCE(IsBuildingPartChecker);
+};
+
+class IsIsolineChecker : public BaseChecker
+{
+  IsIsolineChecker();
+public:
+  DECLARE_CHECKER_INSTANCE(IsIsolineChecker);
+};
+
 class IsPoiChecker : public BaseChecker
 {
   IsPoiChecker();
@@ -163,24 +205,28 @@ public:
   DECLARE_CHECKER_INSTANCE(IsPoiChecker);
 };
 
-class WikiChecker : public BaseChecker
+class AttractionsChecker : public BaseChecker
 {
-  WikiChecker();
+  AttractionsChecker();
+
 public:
-   static std::set<std::pair<std::string, std::string>> const kTypesForWiki;
+  std::vector<uint32_t> m_primaryTypes;
+  std::vector<uint32_t> m_additionalTypes;
 
-   DECLARE_CHECKER_INSTANCE(WikiChecker);
+  DECLARE_CHECKER_INSTANCE(AttractionsChecker);
 
-   template <typename Ft>
-   bool NeedFeature(Ft & feature) const
-   {
-     bool need = true;
-     feature.ForEachType([&](uint32_t type) {
-       if (need && !IsMatched(type))
-         need = false;
-     });
-     return need;
-   }
+  template <typename Ft>
+  bool NeedFeature(Ft & feature) const
+  {
+    bool need = false;
+    feature.ForEachType([&](uint32_t type) {
+      if (!need && IsMatched(type))
+        need = true;
+    });
+    return need;
+  }
+
+  uint32_t GetBestType(FeatureParams::Types const & types) const;
 };
 
 class IsPlaceChecker : public BaseChecker
@@ -208,11 +254,29 @@ public:
   DECLARE_CHECKER_INSTANCE(IsTunnelChecker);
 };
 
-class IsPopularityPlaceChecker : public BaseChecker
+class IsIslandChecker : public BaseChecker
 {
-  IsPopularityPlaceChecker();
+  IsIslandChecker();
 public:
-  DECLARE_CHECKER_INSTANCE(IsPopularityPlaceChecker);
+  DECLARE_CHECKER_INSTANCE(IsIslandChecker);
+};
+
+class IsLandChecker : public BaseChecker
+{
+  IsLandChecker();
+public:
+  DECLARE_CHECKER_INSTANCE(IsLandChecker);
+
+  uint32_t GetLandType() const;
+};
+
+class IsCoastlineChecker : public BaseChecker
+{
+  IsCoastlineChecker();
+public:
+  DECLARE_CHECKER_INSTANCE(IsCoastlineChecker);
+
+  uint32_t GetCoastlineType() const;
 };
 
 class IsHotelChecker : public BaseChecker
@@ -234,20 +298,28 @@ public:
 
   using UnderlyingType = std::underlying_type_t<Type>;
 
-  static_assert(base::Key(Type::Count) <= CHAR_BIT * sizeof(unsigned),
+  static_assert(base::Underlying(Type::Count) <= CHAR_BIT * sizeof(unsigned),
                 "Too many types of hotels");
 
   static char const * GetHotelTypeTag(Type type);
 
   unsigned GetHotelTypesMask(FeatureType & ft) const;
 
-  boost::optional<Type> GetHotelType(FeatureType & ft) const;
+  std::optional<Type> GetHotelType(FeatureType & ft) const;
 
   DECLARE_CHECKER_INSTANCE(IsHotelChecker);
 private:
   IsHotelChecker();
 
-  std::array<std::pair<uint32_t, Type>, base::Key(Type::Count)> m_sortedTypes;
+  std::array<std::pair<uint32_t, Type>, base::Underlying(Type::Count)> m_sortedTypes;
+};
+
+class IsBookingHotelChecker : public BaseChecker
+{
+  IsBookingHotelChecker();
+
+public:
+  DECLARE_CHECKER_INSTANCE(IsBookingHotelChecker);
 };
 
 // WiFi is a type in classificator.txt,
@@ -277,13 +349,12 @@ public:
 
   DECLARE_CHECKER_INSTANCE(IsEatChecker);
 
-  std::vector<uint32_t> const & GetTypes() const { return m_types; }
   Type GetType(uint32_t t) const;
 
 private:
   IsEatChecker();
 
-  std::array<std::pair<uint32_t, Type>, base::Key(Type::Count)> m_sortedTypes;
+  std::array<std::pair<uint32_t, Type>, base::Underlying(Type::Count)> m_sortedTypes;
 };
 
 class IsCuisineChecker : public BaseChecker
@@ -301,6 +372,13 @@ public:
   DECLARE_CHECKER_INSTANCE(IsCityChecker);
 };
 
+class IsCapitalChecker : public BaseChecker
+{
+  IsCapitalChecker();
+public:
+  DECLARE_CHECKER_INSTANCE(IsCapitalChecker);
+};
+
 class IsPublicTransportStopChecker : public BaseChecker
 {
   IsPublicTransportStopChecker();
@@ -308,17 +386,46 @@ public:
   DECLARE_CHECKER_INSTANCE(IsPublicTransportStopChecker);
 };
 
+class IsMotorwayJunctionChecker : public BaseChecker
+{
+  IsMotorwayJunctionChecker();
+public:
+  DECLARE_CHECKER_INSTANCE(IsMotorwayJunctionChecker);
+};
+
+class IsFerryChecker : public BaseChecker
+{
+  IsFerryChecker();
+public:
+  DECLARE_CHECKER_INSTANCE(IsFerryChecker);
+};
+
 /// Type of locality (do not change values and order - they have detalization order)
-/// COUNTRY < STATE < CITY < ...
-enum Type { NONE = -1, COUNTRY = 0, STATE, CITY, TOWN, VILLAGE, LOCALITY_COUNT };
+/// Country < State < City < ...
+enum class LocalityType
+{
+  None = -1,
+  Country = 0,
+  State,
+  City,
+  Town,
+  Village,
+  Count
+};
+
+static_assert(base::Underlying(LocalityType::Country) < base::Underlying(LocalityType::State), "");
+static_assert(base::Underlying(LocalityType::State) < base::Underlying(LocalityType::City), "");
+static_assert(base::Underlying(LocalityType::City) < base::Underlying(LocalityType::Town), "");
+static_assert(base::Underlying(LocalityType::Town) < base::Underlying(LocalityType::Village), "");
+static_assert(base::Underlying(LocalityType::Village) < base::Underlying(LocalityType::Count), "");
 
 class IsLocalityChecker : public BaseChecker
 {
   IsLocalityChecker();
 public:
-  Type GetType(uint32_t t) const;
-  Type GetType(feature::TypesHolder const & types) const;
-  Type GetType(FeatureType & f) const;
+  LocalityType GetType(uint32_t t) const;
+  LocalityType GetType(feature::TypesHolder const & types) const;
+  LocalityType GetType(FeatureType & f) const;
 
   DECLARE_CHECKER_INSTANCE(IsLocalityChecker);
 };
@@ -330,7 +437,7 @@ bool IsCityTownOrVillage(Types const & types)
   for (auto const t : types)
     h.Add(t);
   auto const type = IsLocalityChecker::Instance().GetType(h);
-  return type == CITY || type == TOWN || type == VILLAGE;
+  return type == LocalityType ::City || type == LocalityType ::Town || type == LocalityType ::Village;
 }
 
 /// @name Get city radius and population.
@@ -338,6 +445,7 @@ bool IsCityTownOrVillage(Types const & types)
 //@{
 uint64_t GetPopulation(FeatureType & ft);
 double GetRadiusByPopulation(uint64_t p);
+double GetRadiusByPopulationForRouting(uint64_t p, LocalityType localityType);
 uint64_t GetPopulationByRadius(double r);
 //@}
 
@@ -365,6 +473,7 @@ enum class HighwayClass
 };
 
 std::string DebugPrint(HighwayClass const cls);
+std::string DebugPrint(LocalityType const localityType);
 
 HighwayClass GetHighwayClass(feature::TypesHolder const & types);
 }  // namespace ftypes

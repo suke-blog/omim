@@ -7,11 +7,12 @@ set(
   atomic_shared_ptr.hpp
   base.cpp
   base.hpp
+  beam.hpp
+  bidirectional_map.hpp
   bits.hpp
   buffer_vector.hpp
-  bwt.cpp
-  bwt.hpp
   cache.hpp
+  cancellable.cpp
   cancellable.hpp
   checked_cast.hpp
   clustering_map.hpp
@@ -25,6 +26,8 @@ set(
   exception.cpp
   exception.hpp
   fifo_cache.hpp
+  file_name_utils.cpp
+  file_name_utils.hpp
   geo_object_id.cpp
   geo_object_id.hpp
   get_time.hpp
@@ -42,11 +45,10 @@ set(
   math.hpp
   matrix.hpp
   mem_trie.hpp
-  move_to_front.cpp
-  move_to_front.hpp
   mutex.hpp
   newtype.hpp
   normalize_unicode.cpp
+  non_intersecting_intervals.hpp
   observer_list.hpp
   pprof.cpp
   pprof.hpp
@@ -82,6 +84,11 @@ set(
   thread_checker.hpp
   thread_pool.cpp
   thread_pool.hpp
+  thread_pool_computational.hpp
+  thread_pool_delayed.cpp
+  thread_pool_delayed.hpp
+  thread_safe_queue.hpp
+  thread_utils.hpp
   threaded_container.cpp
   threaded_container.hpp
   threaded_list.hpp
@@ -91,11 +98,7 @@ set(
   timer.hpp
   uni_string_dfa.cpp
   uni_string_dfa.hpp
-  url_helpers.cpp
-  url_helpers.hpp
   visitor.hpp
-  worker_thread.cpp
-  worker_thread.hpp
 )
 
 omim_add_library(${PROJECT_NAME} ${SRC})

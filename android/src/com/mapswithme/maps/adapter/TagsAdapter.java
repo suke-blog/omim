@@ -3,9 +3,9 @@ package com.mapswithme.maps.adapter;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.StateListDrawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,12 +34,17 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagViewHolder>
   @NonNull
   private final List<CatalogTag> mTags;
 
+  @NonNull
+  private final TagsCompositeAdapter.SelectionPolicy mSelectionPolicy;
+
   TagsAdapter(@NonNull OnItemClickListener<TagViewHolder> listener, @NonNull SelectionState state,
-              @NonNull List<CatalogTag> tags)
+              @NonNull List<CatalogTag> tags,
+              @NonNull TagsCompositeAdapter.SelectionPolicy selectionPolicy)
   {
     mListener = new ClickListenerWrapper(listener);
     mState = state;
     mTags = tags;
+    mSelectionPolicy = selectionPolicy;
     setHasStableIds(true);
   }
 
@@ -61,14 +66,19 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.TagViewHolder>
   public void onBindViewHolder(TagViewHolder holder, int position)
   {
     CatalogTag tag = mTags.get(position);
-    holder.itemView.setSelected(mState.contains(tag));
+    boolean isTagSelected = mState.contains(tag);
+    holder.itemView.setSelected(isTagSelected);
     holder.mTag = tag;
     Context context = holder.itemView.getContext();
+    holder.mText.setText(tag.getLocalizedName());
+    boolean isEnabled = mSelectionPolicy.isTagsSelectionAllowed() || isTagSelected;
+    holder.itemView.setEnabled(isEnabled);
     StateListDrawable selector = TagsResFactory.makeSelector(context, tag.getColor());
     holder.itemView.setBackgroundDrawable(selector);
     ColorStateList color = TagsResFactory.makeColor(context, tag.getColor());
     holder.mText.setTextColor(color);
-    holder.mText.setText(tag.getLocalizedName());
+    holder.mText.setSelected(isTagSelected);
+    holder.mText.setEnabled(isEnabled);
   }
 
   @Override

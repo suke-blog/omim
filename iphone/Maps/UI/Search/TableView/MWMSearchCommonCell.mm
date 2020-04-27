@@ -1,20 +1,12 @@
 #import "MWMSearchCommonCell.h"
 #import "CLLocation+Mercator.h"
 #import "MWMLocationManager.h"
+#import "SwiftBridge.h"
 
 #include "map/place_page_info.hpp"
 
-#include "search/result.hpp"
-
-#include "indexer/classificator.hpp"
-
-#include "geometry/mercator.hpp"
-
 #include "platform/localization.hpp"
 #include "platform/measurement_utils.hpp"
-
-#include "defines.hpp"
-
 namespace
 {
 bool PopularityHasHigherPriority(bool hasPosition, double distanceInMeters)
@@ -82,6 +74,7 @@ bool PopularityHasHigherPriority(bool hasPosition, double distanceInMeters)
   NSUInteger const starsCount = result.GetStarsCount();
   NSString * cuisine = @(result.GetCuisine().c_str()).capitalizedString;
   NSString * airportIata = @(result.GetAirportIata().c_str());
+  NSString * roadShields = @(result.GetRoadShields().c_str());
   NSString * brand  = @"";
   if (!result.GetBrand().empty())
     brand = @(platform::GetLocalizedBrandName(result.GetBrand()).c_str());
@@ -90,6 +83,8 @@ bool PopularityHasHigherPriority(bool hasPosition, double distanceInMeters)
     [self setInfoRating:starsCount];
   else if (airportIata.length > 0)
     [self setInfoText:airportIata];
+  else if (roadShields.length > 0)
+    [self setInfoText:roadShields];
   else if (brand.length > 0 && cuisine.length > 0)
     [self setInfoText:[NSString stringWithFormat:@"%@ • %@", brand, cuisine]];
   else if (brand.length > 0)
@@ -106,8 +101,8 @@ bool PopularityHasHigherPriority(bool hasPosition, double distanceInMeters)
     if (result.HasPoint())
     {
       distanceInMeters =
-          MercatorBounds::DistanceOnEarth(lastLocation.mercator, result.GetFeatureCenter());
-      string distanceStr;
+          mercator::DistanceOnEarth(lastLocation.mercator, result.GetFeatureCenter());
+      std::string distanceStr;
       measurement_utils::FormatDistance(distanceInMeters, distanceStr);
 
       self.distanceLabel.text = @(distanceStr.c_str());
@@ -130,11 +125,11 @@ bool PopularityHasHigherPriority(bool hasPosition, double distanceInMeters)
   }
 
   if (productInfo.m_isLocalAdsCustomer)
-    self.backgroundColor = [UIColor bannerBackground];
+      [self setStyleAndApply: @"SearchCellAds"];
   else if (isAvailable)
-    self.backgroundColor = [UIColor transparentGreen];
+      [self setStyleAndApply: @"SearchCellAvaliable"];
   else
-    self.backgroundColor = [UIColor white];
+    [self setStyleAndApply: @"Background"];
 }
 
 - (void)setInfoText:(NSString *)infoText

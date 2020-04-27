@@ -1,10 +1,11 @@
 package com.mapswithme.maps.ugc;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,7 @@ import android.widget.EditText;
 
 import com.mapswithme.maps.Framework;
 import com.mapswithme.maps.R;
-import com.mapswithme.maps.auth.BaseMwmAuthorizationFragment;
+import com.mapswithme.maps.base.BaseToolbarAuthFragment;
 import com.mapswithme.maps.background.Notifier;
 import com.mapswithme.maps.bookmarks.data.FeatureId;
 import com.mapswithme.maps.metrics.UserActionsLogger;
@@ -20,11 +21,12 @@ import com.mapswithme.maps.widget.ToolbarController;
 import com.mapswithme.util.ConnectionState;
 import com.mapswithme.util.Language;
 import com.mapswithme.util.UiUtils;
+import com.mapswithme.util.Utils;
 import com.mapswithme.util.statistics.Statistics;
 
 import java.util.List;
 
-public class UGCEditorFragment extends BaseMwmAuthorizationFragment
+public class UGCEditorFragment extends BaseToolbarAuthFragment
 {
   static final String ARG_FEATURE_ID = "arg_feature_id";
   static final String ARG_TITLE = "arg_title";
@@ -78,17 +80,8 @@ public class UGCEditorFragment extends BaseMwmAuthorizationFragment
   {
     super.onViewCreated(view, savedInstanceState);
     getToolbarController().setTitle(getArguments().getString(ARG_TITLE));
-    View submitButton = getToolbarController().findViewById(R.id.submit);
-    submitButton.setOnClickListener(v ->
-                                    {
-                                      onSubmitButtonClick();
-                                      if (!ConnectionState.isConnected())
-                                      {
-                                        finishActivity();
-                                        return;
-                                      }
-                                      authorize();
-                                    });
+    View submitButton = getToolbarController().getToolbar().findViewById(R.id.submit);
+    submitButton.setOnClickListener(v -> onSubmitButtonClick());
   }
 
   @NonNull
@@ -107,12 +100,56 @@ public class UGCEditorFragment extends BaseMwmAuthorizationFragment
   }
 
   @Override
+  @CallSuper
+  public void onStart()
+  {
+    super.onStart();
+
+    UGC.setSaveListener((boolean result) ->
+    {
+      if (!result)
+      {
+        finishActivity();
+        return;
+      }
+
+      UserActionsLogger.logUgcSaved();
+      Statistics.INSTANCE.trackEvent(Statistics.EventName.UGC_REVIEW_SUCCESS);
+
+      if (!ConnectionState.isConnected())
+      {
+        if (isAuthorized())
+          Utils.toastShortcut(getContext(), R.string.ugc_thanks_message_auth);
+        else
+          Utils.toastShortcut(getContext(), R.string.ugc_thanks_message_not_auth);
+
+        finishActivity();
+        return;
+      }
+      authorize();
+    });
+  }
+
+  @Override
+  @CallSuper
+  public void onStop()
+  {
+    super.onStop();
+    UGC.setSaveListener(null);
+  }
+
+  @Override
   public void onAuthorizationFinish(boolean success)
   {
     if (success)
     {
       final Notifier notifier = Notifier.from(getActivity().getApplication());
       notifier.cancelNotification(Notifier.ID_IS_NOT_AUTHENTICATED);
+      Utils.toastShortcut(getContext(), R.string.ugc_thanks_message_auth);
+    }
+    else
+    {
+      Utils.toastShortcut(getContext(), R.string.ugc_thanks_message_not_auth);
     }
 
     finishActivity();
@@ -134,6 +171,7 @@ public class UGCEditorFragment extends BaseMwmAuthorizationFragment
   public void onSocialAuthenticationCancel(@Framework.AuthTokenType int type)
   {
     Statistics.INSTANCE.trackEvent(Statistics.EventName.UGC_AUTH_DECLINED);
+    Utils.toastShortcut(getContext(), R.string.ugc_thanks_message_not_auth);
     finishActivity();
   }
 
@@ -141,6 +179,7 @@ public class UGCEditorFragment extends BaseMwmAuthorizationFragment
   public void onSocialAuthenticationError(int type, @Nullable String error)
   {
     Statistics.INSTANCE.trackUGCAuthFailed(type, error);
+    Utils.toastShortcut(getContext(), R.string.ugc_thanks_message_not_auth);
     finishActivity();
   }
 
@@ -162,8 +201,7 @@ public class UGCEditorFragment extends BaseMwmAuthorizationFragment
                                "; lat = " + getArguments().getDouble(ARG_LAT) +
                                "; lon = " + getArguments().getDouble(ARG_LON));
     }
+
     UGC.setUGCUpdate(featureId, update);
-    UserActionsLogger.logUgcSaved();
-    Statistics.INSTANCE.trackEvent(Statistics.EventName.UGC_REVIEW_SUCCESS);
   }
 }

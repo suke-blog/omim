@@ -1,8 +1,5 @@
-import UIKit
-
 @objc(MWMStoryboard)
 enum Storyboard: Int {
-
   case authorization
   case launchScreen
   case main
@@ -11,6 +8,9 @@ enum Storyboard: Int {
   case welcome
   case sharing
   case categorySettings
+  case drivingOptions
+  case carPlay
+  case placePage
 }
 
 extension UIStoryboard {
@@ -25,7 +25,15 @@ extension UIStoryboard {
     case .welcome: name = "Welcome"
     case .sharing: name = "BookmarksSharingFlow"
     case .categorySettings: name = "CategorySettings"
+    case .drivingOptions: name = "DrivingOptions"
+    case .carPlay: name = "CarPlayStoryboard"
+    case .placePage: name = "PlacePage"
     }
     return UIStoryboard(name: name, bundle: nil)
+  }
+
+  func instantiateViewController<T: UIViewController>(ofType: T.Type) -> T {
+    let name = String(describing: ofType);
+    return self.instantiateViewController(withIdentifier: name) as! T;
   }
 }

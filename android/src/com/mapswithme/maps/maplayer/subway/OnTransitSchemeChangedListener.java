@@ -2,10 +2,8 @@ package com.mapswithme.maps.maplayer.subway;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
-
-import com.mapswithme.maps.content.AbstractContextualListener;
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
 
 interface OnTransitSchemeChangedListener
 {
@@ -13,19 +11,21 @@ interface OnTransitSchemeChangedListener
   @MainThread
   void onTransitStateChanged(int type);
 
-  class Default extends AbstractContextualListener implements OnTransitSchemeChangedListener
+  class Default implements OnTransitSchemeChangedListener
   {
-    public Default(@NonNull Application context)
+    @NonNull
+    private final Application mContext;
+
+    Default(@NonNull Application context)
     {
-      super(context);
+      mContext = context;
     }
 
     @Override
     public void onTransitStateChanged(int index)
     {
-      Context app = getContext();
       TransitSchemeState state = TransitSchemeState.values()[index];
-      state.activate(app);
+      state.activate(mContext);
     }
   }
 }

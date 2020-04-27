@@ -3,12 +3,12 @@ package com.mapswithme.maps.ugc.routes;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.mapswithme.maps.R;
 import com.mapswithme.maps.adapter.AdapterPositionConverter;
@@ -38,6 +39,7 @@ import com.mapswithme.util.UiUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class UgcRouteTagsFragment extends BaseMwmFragment implements BookmarkManager.BookmarksCatalogListener,
                                                                      OnItemClickListener<Pair<TagsAdapter, TagsAdapter.TagViewHolder>>,
@@ -65,6 +67,10 @@ public class UgcRouteTagsFragment extends BaseMwmFragment implements BookmarkMan
   @Nullable
   private TagsCompositeAdapter mTagsAdapter;
 
+  @SuppressWarnings("NullableProblems")
+  @NonNull
+  private TextView mDescriptionView;
+
   @Nullable
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -74,6 +80,7 @@ public class UgcRouteTagsFragment extends BaseMwmFragment implements BookmarkMan
     setHasOptionsMenu(true);
     mProgress = root.findViewById(R.id.progress_container);
     mTagsContainer = root.findViewById(R.id.tags_container);
+    mDescriptionView = root.findViewById(R.id.ugc_route_tags_desc);
     initRecycler(root);
     UiUtils.hide(mTagsContainer);
     UiUtils.show(mProgress);
@@ -107,7 +114,7 @@ public class UgcRouteTagsFragment extends BaseMwmFragment implements BookmarkMan
         .setPositiveBtnId(R.string.try_again)
         .setNegativeBtnId(R.string.cancel)
         .setReqCode(ERROR_LOADING_DIALOG_REQ_CODE)
-        .setFragManagerStrategy(new AlertDialog.ActivityFragmentManagerStrategy())
+        .setFragManagerStrategyType(AlertDialog.FragManagerStrategyType.ACTIVITY_FRAGMENT_MANAGER)
         .build();
     dialog.setTargetFragment(this, ERROR_LOADING_DIALOG_REQ_CODE);
     dialog.show(this, ERROR_LOADING_DIALOG_TAG);
@@ -116,7 +123,7 @@ public class UgcRouteTagsFragment extends BaseMwmFragment implements BookmarkMan
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
   {
-    inflater.inflate(R.menu.menu_tags_done, menu);
+    inflater.inflate(R.menu.menu_done, menu);
   }
 
   @Override
@@ -190,7 +197,8 @@ public class UgcRouteTagsFragment extends BaseMwmFragment implements BookmarkMan
   }
 
   @Override
-  public void onTagsReceived(boolean successful, @NonNull List<CatalogTagsGroup> tagsGroups)
+  public void onTagsReceived(boolean successful, @NonNull List<CatalogTagsGroup> tagsGroups,
+                             int tagsLimit)
   {
     UiUtils.showIf(successful && tagsGroups.size() != 0, mTagsContainer);
     UiUtils.hide(mProgress);
@@ -200,7 +208,7 @@ public class UgcRouteTagsFragment extends BaseMwmFragment implements BookmarkMan
       showErrorLoadingDialog();
       return;
     }
-    installTags(tagsGroups);
+    installTags(tagsGroups, tagsLimit);
   }
 
   @Override
@@ -210,18 +218,21 @@ public class UgcRouteTagsFragment extends BaseMwmFragment implements BookmarkMan
     /* Not ready yet */
   }
 
-  private void installTags(@NonNull List<CatalogTagsGroup> tagsGroups)
+  private void installTags(@NonNull List<CatalogTagsGroup> tagsGroups, int tagsLimit)
   {
     List<CatalogTag> savedStateTags = validateSavedState(mSavedInstanceState);
     TagGroupNameAdapter categoryAdapter = new TagGroupNameAdapter(tagsGroups);
-    mTagsAdapter = new TagsCompositeAdapter(getContext(), tagsGroups, savedStateTags, this);
+    mTagsAdapter = new TagsCompositeAdapter(getContext(), tagsGroups, savedStateTags, this,
+                                            tagsLimit);
     RecyclerCompositeAdapter compositeAdapter = makeCompositeAdapter(categoryAdapter, mTagsAdapter);
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
                                                                 LinearLayoutManager.VERTICAL,
                                                                 false);
     mRecycler.setLayoutManager(layoutManager);
     mRecycler.setAdapter(compositeAdapter);
-    ActivityCompat.invalidateOptionsMenu(getActivity());
+    String description = getString(R.string.ugc_route_tags_desc, String.valueOf(tagsLimit));
+    mDescriptionView.setText(description);
+    requireActivity().invalidateOptionsMenu();
   }
 
   @NonNull
@@ -262,9 +273,11 @@ public class UgcRouteTagsFragment extends BaseMwmFragment implements BookmarkMan
                           @NonNull Pair<TagsAdapter, TagsAdapter.TagViewHolder> item)
   {
     ActivityCompat.invalidateOptionsMenu(getActivity());
-    TagsAdapter adapter = item.first;
-    int position = item.second.getAdapterPosition();
-    adapter.notifyItemChanged(position);
+    Objects.requireNonNull(mTagsAdapter);
+    for (int i = 0; i < mTagsAdapter.getItemCount(); i++)
+    {
+      mTagsAdapter.getItem(i).notifyDataSetChanged();
+    }
   }
 
   @Override

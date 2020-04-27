@@ -14,6 +14,7 @@
 #include "platform/platform.hpp"
 
 #include "base/assert.hpp"
+#include "base/stl_helpers.hpp"
 
 #include <string>
 #include <utility>
@@ -35,7 +36,7 @@ public:
   // argument - TestMwmBuilder and adds all necessary features to the
   // country file.
   //
-  // *NOTE* when |type| is feature::DataHeader::country, the country
+  // *NOTE* when |type| is feature::DataHeader::MapType::Country, the country
   // with |name| will be automatically registered.
   template <typename BuildFn>
   MwmSet::MwmId BuildMwm(std::string const & name, feature::DataHeader::MapType type, BuildFn && fn)
@@ -62,9 +63,10 @@ public:
   void DeregisterMap(std::string const & name)
   {
     auto const file = platform::CountryFile(name);
-    auto it = find_if(
-        m_files.begin(), m_files.end(),
-        [&file](platform::LocalCountryFile const & f) { return f.GetCountryFile() == file; });
+    auto it = base::FindIf(m_files, [&file](platform::LocalCountryFile const & f) {
+      return f.GetCountryFile() == file;
+    });
+
     if (it == m_files.end())
       return;
 
@@ -76,13 +78,13 @@ public:
   template <typename BuildFn>
   MwmSet::MwmId BuildWorld(BuildFn && fn)
   {
-    return BuildMwm("testWorld", feature::DataHeader::world, std::forward<BuildFn>(fn));
+    return BuildMwm("testWorld", feature::DataHeader::MapType::World, std::forward<BuildFn>(fn));
   }
 
   template <typename BuildFn>
   MwmSet::MwmId BuildCountry(std::string const & name, BuildFn && fn)
   {
-    return BuildMwm(name, feature::DataHeader::country, std::forward<BuildFn>(fn));
+    return BuildMwm(name, feature::DataHeader::MapType::Country, std::forward<BuildFn>(fn));
   }
 
   void SetMwmVersion(uint32_t version);

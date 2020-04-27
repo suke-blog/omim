@@ -3,19 +3,21 @@
 #include "generator/generate_info.hpp"
 #include "generator/intermediate_elements.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/file_reader.hpp"
 #include "coding/file_writer.hpp"
 #include "coding/mmap_reader.hpp"
 
 #include "base/assert.hpp"
 #include "base/control_flow.hpp"
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <limits>
+#include <memory>
+#include <mutex>
 #include <string>
 #include <type_traits>
 #include <unordered_map>
@@ -31,7 +33,7 @@ namespace generator
 namespace cache
 {
 using Key = uint64_t;
-static_assert(is_integral<Key>::value, "Key must be an integral type");
+static_assert(std::is_integral<Key>::value, "Key must be an integral type");
 
 // Used to store all world nodes inside temporary index file.
 // To find node by id, just calculate offset inside index file:
@@ -73,9 +75,9 @@ class IndexFileReader
 public:
   using Value = uint64_t;
 
+  IndexFileReader() = default;
   explicit IndexFileReader(std::string const & name);
 
-  void ReadAll();
   bool GetValueByKey(Key key, Value & value) const;
 
   template <typename ToDo>
@@ -103,7 +105,6 @@ private:
   };
 
   std::vector<Element> m_elements;
-  FileReader m_fileReader;
 };
 
 
@@ -124,16 +125,31 @@ private:
   FileWriter m_fileWriter;
 };
 
-class OSMElementCacheReader
+class OSMElementCacheReaderInterface
 {
 public:
-  explicit OSMElementCacheReader(std::string const & name, bool preload = false);
+  virtual ~OSMElementCacheReaderInterface() = default;
 
+  virtual bool Read(Key id, WayElement & value) = 0;
+  virtual bool Read(Key id, RelationElement & value) = 0;
+};
+
+class OSMElementCacheReader : public OSMElementCacheReaderInterface
+{
+public:
+  explicit OSMElementCacheReader(std::string const & name, bool preload = false,
+                                 bool forceReload = false);
+
+  // OSMElementCacheReaderInterface overrides:
+  bool Read(Key id, WayElement & value) override { return Read<>(id, value); }
+  bool Read(Key id, RelationElement & value) override { return Read<>(id, value); }
+
+private:
   template <class Value>
   bool Read(Key id, Value & value)
   {
     uint64_t pos = 0;
-    if (!m_offsets.GetValueByKey(id, pos))
+    if (!m_offsetsReader.GetValueByKey(id, pos))
     {
       LOG_SHORT(LWARNING, ("Can't find offset in file", m_name + OFFSET_EXT, "by id", id));
       return false;
@@ -156,11 +172,8 @@ public:
     return true;
   }
 
-  void LoadOffsets();
-
-protected:
   FileReader m_fileReader;
-  IndexFileReader m_offsets;
+  IndexFileReader const & m_offsetsReader;
   std::string m_name;
   std::vector<uint8_t> m_data;
   bool m_preload = false;
@@ -169,7 +182,7 @@ protected:
 class OSMElementCacheWriter
 {
 public:
-  explicit OSMElementCacheWriter(std::string const & name, bool preload = false);
+  explicit OSMElementCacheWriter(std::string const & name);
 
   template <typename Value>
   void Write(Key id, Value const & value)
@@ -188,42 +201,61 @@ public:
 
   void SaveOffsets();
 
-protected:
+private:
   FileWriter m_fileWriter;
   IndexFileWriter m_offsets;
   std::string m_name;
   std::vector<uint8_t> m_data;
-  bool m_preload = false;
 };
 
-class IntermediateDataReader
+class IntermediateDataReaderInterface
 {
 public:
-  IntermediateDataReader(shared_ptr<PointStorageReaderInterface> nodes, feature::GenerateInfo & info);
+  using ForEachRelationFn = std::function<base::ControlFlow(uint64_t, OSMElementCacheReaderInterface &)>;
 
-  bool GetNode(Key id, double & lat, double & lon) const { return m_nodes->GetPoint(id, lat, lon); }
-  bool GetWay(Key id, WayElement & e) { return m_ways.Read(id, e); }
-  void LoadIndex();
+  virtual ~IntermediateDataReaderInterface() = default;
 
-  template <typename ToDo>
-  void ForEachRelationByWay(Key id, ToDo && toDo)
+  virtual bool GetNode(Key id, double & lat, double & lon) const = 0;
+  virtual bool GetWay(Key id, WayElement & e) = 0;
+  virtual bool GetRelation(Key id, RelationElement & e) = 0;
+
+  virtual void ForEachRelationByNodeCached(Key /* id */, ForEachRelationFn & /* toDo */) {}
+  virtual void ForEachRelationByWayCached(Key /* id */, ForEachRelationFn & /* toDo */) {}
+  virtual void ForEachRelationByRelationCached(Key /* id */, ForEachRelationFn & /* toDo */) {}
+};
+
+class IntermediateDataReader : public IntermediateDataReaderInterface
+{
+public:
+  IntermediateDataReader(PointStorageReaderInterface const & nodes,
+                         feature::GenerateInfo const & info, bool forceReload = false);
+
+  // IntermediateDataReaderInterface overrides:
+  // TODO |GetNode()|, |lat|, |lon| are used as y, x in real.
+  bool GetNode(Key id, double & lat, double & lon) const override
   {
-    RelationProcessor<ToDo> processor(m_relations, std::forward<ToDo>(toDo));
+    return m_nodes.GetPoint(id, lat, lon);
+  }
+  
+  bool GetWay(Key id, WayElement & e) override { return m_ways.Read(id, e); }
+  bool GetRelation(Key id, RelationElement & e) override { return m_relations.Read(id, e); }
+
+  void ForEachRelationByWayCached(Key id, ForEachRelationFn & toDo) override
+  {
+    CachedRelationProcessor<ForEachRelationFn> processor(m_relations, toDo);
     m_wayToRelations.ForEachByKey(id, processor);
   }
 
-  template <typename ToDo>
-  void ForEachRelationByWayCached(Key id, ToDo && toDo)
+  void ForEachRelationByNodeCached(Key id, ForEachRelationFn & toDo) override
   {
-    CachedRelationProcessor<ToDo> processor(m_relations, std::forward<ToDo>(toDo));
-    m_wayToRelations.ForEachByKey(id, processor);
-  }
-
-  template <typename ToDo>
-  void ForEachRelationByNodeCached(Key id, ToDo && toDo)
-  {
-    CachedRelationProcessor<ToDo> processor(m_relations, std::forward<ToDo>(toDo));
+    CachedRelationProcessor<ForEachRelationFn> processor(m_relations, toDo);
     m_nodeToRelations.ForEachByKey(id, processor);
+  }
+
+  void ForEachRelationByRelationCached(Key id, ForEachRelationFn & toDo) override
+  {
+    CachedRelationProcessor<ForEachRelationFn> processor(m_relations, toDo);
+    m_relationToRelations.ForEachByKey(id, processor);
   }
 
 private:
@@ -232,8 +264,12 @@ private:
   template <typename Element, typename ToDo>
   class ElementProcessorBase
   {
-  public:
-    ElementProcessorBase(CacheReader & reader, ToDo & toDo) : m_reader(reader), m_toDo(toDo) {}
+  public:  
+    ElementProcessorBase(CacheReader & reader, ToDo & toDo)
+      : m_reader(reader)
+      , m_toDo(toDo)
+    {
+    }
 
     base::ControlFlow operator()(uint64_t id)
     {
@@ -246,36 +282,34 @@ private:
     ToDo & m_toDo;
   };
 
+
   template <typename ToDo>
-  struct RelationProcessor : public ElementProcessorBase<RelationElement, ToDo>
+  struct CachedRelationProcessor : public ElementProcessorBase<RelationElement, ToDo>
   {
     using Base = ElementProcessorBase<RelationElement, ToDo>;
 
-    RelationProcessor(CacheReader & reader, ToDo & toDo) : Base(reader, toDo) {}
-  };
+    CachedRelationProcessor(CacheReader & reader, ToDo & toDo)
+      : Base(reader, toDo)
+    {
+    }
 
-  template <typename ToDo>
-  struct CachedRelationProcessor : public RelationProcessor<ToDo>
-  {
-    using Base = RelationProcessor<ToDo>;
-
-    CachedRelationProcessor(CacheReader & reader, ToDo & toDo) : Base(reader, toDo) {}
     base::ControlFlow operator()(uint64_t id) { return this->m_toDo(id, this->m_reader); }
   };
 
-  std::shared_ptr<PointStorageReaderInterface> m_nodes;
+  PointStorageReaderInterface const & m_nodes;
   cache::OSMElementCacheReader m_ways;
   cache::OSMElementCacheReader m_relations;
-  cache::IndexFileReader m_nodeToRelations;
-  cache::IndexFileReader m_wayToRelations;
+  cache::IndexFileReader const & m_nodeToRelations;
+  cache::IndexFileReader const & m_wayToRelations;
+  cache::IndexFileReader const & m_relationToRelations;
 };
 
 class IntermediateDataWriter
 {
 public:
-  IntermediateDataWriter(std::shared_ptr<PointStorageWriterInterface> nodes, feature::GenerateInfo & info);
+  IntermediateDataWriter(PointStorageWriterInterface & nodes, feature::GenerateInfo const & info);
 
-  void AddNode(Key id, double lat, double lon) { m_nodes->AddPoint(id, lat, lon); }
+  void AddNode(Key id, double lat, double lon) { m_nodes.AddPoint(id, lat, lon); }
   void AddWay(Key id, WayElement const & e) { m_ways.Write(id, e); }
 
   void AddRelation(Key id, RelationElement const & e);
@@ -295,17 +329,32 @@ private:
       index.Add(v.first, relationId);
   }
 
-  std::shared_ptr<PointStorageWriterInterface> m_nodes;
+  PointStorageWriterInterface & m_nodes;
   cache::OSMElementCacheWriter m_ways;
   cache::OSMElementCacheWriter m_relations;
   cache::IndexFileWriter m_nodeToRelations;
   cache::IndexFileWriter m_wayToRelations;
+  cache::IndexFileWriter m_relationToRelations;
 };
 
-std::shared_ptr<PointStorageReaderInterface>
+std::unique_ptr<PointStorageReaderInterface>
 CreatePointStorageReader(feature::GenerateInfo::NodeStorageType type, std::string const & name);
 
-std::shared_ptr<PointStorageWriterInterface>
+std::unique_ptr<PointStorageWriterInterface>
 CreatePointStorageWriter(feature::GenerateInfo::NodeStorageType type, std::string const & name);
+
+class IntermediateData
+{
+public:
+  explicit IntermediateData(feature::GenerateInfo const & info, bool forceReload = false);
+  std::shared_ptr<IntermediateDataReader> const & GetCache() const;
+  std::shared_ptr<IntermediateData> Clone() const;
+
+private:
+  feature::GenerateInfo const & m_info;
+  std::shared_ptr<IntermediateDataReader> m_reader;
+
+  DISALLOW_COPY(IntermediateData);
+};
 }  // namespace cache
 }  // namespace generator

@@ -2,7 +2,7 @@ package com.mapswithme.maps.bookmarks;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.mapswithme.maps.bookmarks.data.Error;
 import com.mapswithme.maps.bookmarks.data.Result;
@@ -69,5 +69,14 @@ public class OperationStatus implements Parcelable
   {
     dest.writeParcelable(mResult, flags);
     dest.writeParcelable(mError, flags);
+  }
+
+  @Override
+  public String toString()
+  {
+    return "OperationStatus{" +
+           "mResult=" + mResult +
+           ", mError=" + mError +
+           '}';
   }
 }

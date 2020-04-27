@@ -1,9 +1,15 @@
 #pragma once
 
-#include "storage/map_files_downloader.hpp"
+#include "storage/map_files_downloader_with_ping.hpp"
+
 #include "platform/http_request.hpp"
+
 #include "base/thread_checker.hpp"
-#include "std/unique_ptr.hpp"
+
+#include <cstdint>
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace storage
 {
@@ -11,30 +17,32 @@ namespace storage
 /// and file downloading.
 //
 // *NOTE*, this class is not thread-safe.
-class HttpMapFilesDownloader : public MapFilesDownloader
+class HttpMapFilesDownloader : public MapFilesDownloaderWithPing
 {
 public:
   virtual ~HttpMapFilesDownloader();
 
   // MapFilesDownloader overrides:
-  void GetServersList(TServersListCallback const & callback) override;
-
-  void DownloadMapFile(vector<string> const & urls, string const & path, int64_t size,
-                       TFileDownloadedCallback const & onDownloaded,
-                       TDownloadingProgressCallback const & onProgress) override;
-  TProgress GetDownloadingProgress() override;
+  downloader::Progress GetDownloadingProgress() override;
   bool IsIdle() override;
-  void Reset() override;
+  void Pause() override;
+  void Resume() override;
+  void Remove(CountryId const & id) override;
+  void Clear() override;
+  Queue const & GetQueue() const override;
 
 private:
-  void OnServersListDownloaded(TServersListCallback const & callback,
-                               downloader::HttpRequest & request);
-  void OnMapFileDownloaded(TFileDownloadedCallback const & onDownloaded,
-                           downloader::HttpRequest & request);
-  void OnMapFileDownloadingProgress(TDownloadingProgressCallback const & onProgress,
+  // MapFilesDownloaderWithServerList overrides:
+  void Download(QueuedCountry & queuedCountry) override;
+
+  void Download();
+
+  void OnMapFileDownloaded(QueuedCountry const & queuedCountry, downloader::HttpRequest & request);
+  void OnMapFileDownloadingProgress(QueuedCountry const & queuedCountry,
                                     downloader::HttpRequest & request);
 
-  unique_ptr<downloader::HttpRequest> m_request;
+  std::unique_ptr<downloader::HttpRequest> m_request;
+  Queue m_queue;
 
   DECLARE_THREAD_CHECKER(m_checker);
 };

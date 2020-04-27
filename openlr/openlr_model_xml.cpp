@@ -5,10 +5,13 @@
 
 #include "base/logging.hpp"
 
-#include "std/cstring.hpp"
-#include "std/type_traits.hpp"
+#include <cstring>
+#include <optional>
+#include <type_traits>
 
 #include "3party/pugixml/src/pugixml.hpp"
+
+using namespace std;
 
 namespace  // Primitive utilities to handle simple OpenLR-like XML data.
 {
@@ -21,6 +24,11 @@ bool IntegerFromXML(pugi::xml_node const & node, Value & value)
                              ? node.text().as_int()
                              : node.text().as_uint());
   return true;
+}
+
+std::optional<double> DoubleFromXML(pugi::xml_node const & node)
+{
+  return node ? node.text().as_double() : std::optional<double>();
 }
 
 bool GetLatLon(pugi::xml_node const & node, int32_t & lat, int32_t & lon)
@@ -53,10 +61,19 @@ pugi::xml_node GetLinearLocationReference(pugi::xml_node const & node)
   return node.select_node(".//olr:locationReference/olr:optionLinearLocationReference").node();
 }
 
-bool NoLocationReferenceButCoordinates(pugi::xml_node const & node)
+pugi::xml_node GetCoordinates(pugi::xml_node const & node)
 {
-  if (node.select_node(".//olr:locationReference").node())
-    return false;
+  return node.select_node(".//coordinates").node();
+}
+
+
+bool IsLocationReferenceTag(pugi::xml_node const & node)
+{
+  return node.select_node(".//olr:locationReference").node();
+}
+
+bool IsCoordinatesTag(pugi::xml_node const & node)
+{
   return node.select_node("coordinates").node();
 }
 
@@ -88,10 +105,18 @@ bool FirstCoordinateFromXML(pugi::xml_node const & node, ms::LatLon & latLon)
   if (!GetLatLon(node.child("olr:coordinate"), lat, lon))
     return false;
 
-  latLon.lat = ((lat - base::Sign(lat) * 0.5) * 360) / (1 << 24);
-  latLon.lon = ((lon - base::Sign(lon) * 0.5) * 360) / (1 << 24);
+  latLon.m_lat = ((lat - base::Sign(lat) * 0.5) * 360) / (1 << 24);
+  latLon.m_lon = ((lon - base::Sign(lon) * 0.5) * 360) / (1 << 24);
 
   return true;
+}
+
+std::optional<ms::LatLon> LatLonFormXML(pugi::xml_node const & node)
+{
+  auto const lat = DoubleFromXML(node.child("latitude"));
+  auto const lon = DoubleFromXML(node.child("longitude"));
+
+  return lat && lon ? ms::LatLon(*lat, *lon) : ms::LatLon::Zero();
 }
 
 bool CoordinateFromXML(pugi::xml_node const & node, ms::LatLon const & prevCoord,
@@ -105,8 +130,8 @@ bool CoordinateFromXML(pugi::xml_node const & node, ms::LatLon const & prevCoord
   // with no special meaning and is used as a factor to store doubles as ints.
   auto const kOpenlrDeltaFactor = 100000;
 
-  latLon.lat = prevCoord.lat + static_cast<double>(lat) / kOpenlrDeltaFactor;
-  latLon.lon = prevCoord.lon + static_cast<double>(lon) / kOpenlrDeltaFactor;
+  latLon.m_lat = prevCoord.m_lat + static_cast<double>(lat) / kOpenlrDeltaFactor;
+  latLon.m_lon = prevCoord.m_lon + static_cast<double>(lon) / kOpenlrDeltaFactor;
 
   return true;
 }
@@ -210,7 +235,7 @@ bool LinearLocationReferenceFromXML(pugi::xml_node const & locRefNode,
 {
   if (!locRefNode)
   {
-    LOG(LERROR, ("Can't get loaction reference"));
+    LOG(LERROR, ("Can't get location reference."));
     return false;
   }
 
@@ -251,6 +276,29 @@ bool LinearLocationReferenceFromXML(pugi::xml_node const & locRefNode,
 
   return true;
 }
+
+bool CoordinatesFromXML(pugi::xml_node const & coordsNode, openlr::LinearLocationReference & locRef)
+{
+  if (!coordsNode)
+  {
+    LOG(LERROR, ("Can't get <coordinates>."));
+    return false;
+  }
+
+  auto const latLonStart = LatLonFormXML(coordsNode.child("start"));
+  auto const latLonEnd = LatLonFormXML(coordsNode.child("end"));
+  if (!latLonStart || !latLonEnd)
+  {
+    LOG(LERROR, ("Can't get <start> or <end> of <coordinates>."));
+    return false;
+  }
+
+  LOG(LINFO, ("from:", *latLonStart, "to:", *latLonEnd));
+  locRef.m_points.resize(2);
+  locRef.m_points[0].m_latLon = *latLonStart;
+  locRef.m_points[1].m_latLon = *latLonEnd;
+  return true;
+}
 }  // namespace
 
 namespace openlr
@@ -260,14 +308,15 @@ bool ParseOpenlr(pugi::xml_document const & document, vector<LinearSegment> & se
   for (auto const segmentXpathNode : document.select_nodes("//reportSegments"))
   {
     LinearSegment segment;
-    if (NoLocationReferenceButCoordinates(segmentXpathNode.node()))
+    auto const & node = segmentXpathNode.node();
+    if (!IsLocationReferenceTag(node) && !IsCoordinatesTag(node))
     {
-      LOG(LWARNING, ("A segment with <coordinates> instead of <optionLinearLocationReference> "
-                     "encounted, skipping..."));
+      LOG(LWARNING, ("A segment with a strange tag. It is not <coordinates>"
+                     " or <optionLinearLocationReference>, skipping..."));
       continue;
     }
 
-    if (!SegmentFromXML(segmentXpathNode.node(), segment))
+    if (!SegmentFromXML(node, segment))
       return false;
 
     segments.push_back(segment);
@@ -290,7 +339,24 @@ bool SegmentFromXML(pugi::xml_node const & segmentNode, LinearSegment & segment)
     return false;
   }
 
-  auto const locRefNode = GetLinearLocationReference(segmentNode);
-  return LinearLocationReferenceFromXML(locRefNode, segment.m_locationReference);
+  if (IsLocationReferenceTag(segmentNode))
+  {
+    auto const locRefNode = GetLinearLocationReference(segmentNode);
+    auto const result = LinearLocationReferenceFromXML(locRefNode, segment.m_locationReference);
+    if (result)
+      segment.m_source = LinearSegmentSource::FromLocationReferenceTag;
+
+    return result;
+  }
+
+  CHECK(IsCoordinatesTag(segmentNode), ());
+  auto const coordsNode = GetCoordinates(segmentNode);
+  if (!CoordinatesFromXML(coordsNode, segment.m_locationReference))
+    return false;
+
+  CHECK_EQUAL(segment.m_locationReference.m_points.size(), 2, ());
+  segment.m_locationReference.m_points[0].m_distanceToNextPoint = segment.m_segmentLengthMeters;
+  segment.m_source = LinearSegmentSource::FromCoordinatesTag;
+  return true;
 }
 }  // namespace openlr

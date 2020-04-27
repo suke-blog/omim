@@ -1,9 +1,17 @@
 package com.mapswithme.util;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import com.google.gson.annotations.SerializedName;
 
 public final class KeyValue
 {
+  @NonNull
+  @SerializedName("key")
+  private final String mKey;
+  @NonNull
+  @SerializedName("value")
+  private final String mValue;
+
   public KeyValue(@NonNull String key, @NonNull String value)
   {
     mKey = key;
@@ -11,7 +19,14 @@ public final class KeyValue
   }
 
   @NonNull
-  public final String mKey;
+  public String getKey()
+  {
+    return mKey;
+  }
+
   @NonNull
-  public final String mValue;
+  public String getValue()
+  {
+    return mValue;
+  }
 }

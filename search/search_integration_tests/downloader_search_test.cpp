@@ -11,16 +11,22 @@
 
 #include "storage/downloader_search_params.hpp"
 #include "storage/map_files_downloader.hpp"
+#include "storage/queued_country.hpp"
 #include "storage/storage.hpp"
+#include "storage/storage_defines.hpp"
+
+#include "platform/downloader_defines.hpp"
 
 #include "geometry/rect2d.hpp"
 
 #include "base/logging.hpp"
 #include "base/macros.hpp"
 
-#include "std/algorithm.hpp"
-#include "std/bind.hpp"
-#include "std/string.hpp"
+#include <algorithm>
+#include <functional>
+#include <memory>
+#include <string>
+#include <vector>
 
 using namespace generator::tests_support;
 using namespace search::tests_support;
@@ -81,19 +87,23 @@ class TestMapFilesDownloader : public storage::MapFilesDownloader
 {
 public:
   // MapFilesDownloader overrides:
-  void GetServersList(TServersListCallback const & /* callback */) override {}
+  downloader::Progress GetDownloadingProgress() override { return {}; }
 
-  void DownloadMapFile(vector<string> const & /* urls */, string const & /* path */,
-                       int64_t /* size */, TFileDownloadedCallback const & /* onDownloaded */,
-                       TDownloadingProgressCallback const & /* onProgress */) override
-  {
-  }
-
-  TProgress GetDownloadingProgress() override { return TProgress{}; }
-  
   bool IsIdle() override { return false; }
-  
-  void Reset() override {}
+
+  void Pause() override {}
+  void Resume() override {}
+  void Remove(storage::CountryId const & id) override {}
+  void Clear() override {}
+
+  storage::Queue const & GetQueue() const override { return m_queue; }
+
+private:
+  void GetServersList(ServersListCallback const & /* callback */) override {}
+
+  void Download(storage::QueuedCountry & queuedCountry) override {}
+
+  storage::Queue m_queue;
 };
 
 class TestDelegate : public DownloaderSearchCallback::Delegate
@@ -214,18 +224,18 @@ void TestResults(vector<T> received, vector<T> expected)
 
 UNIT_CLASS_TEST(DownloaderSearchTest, Smoke)
 {
-  AddRegion("Flatland", "Square One", m2::PointD(0.0, 0.0), m2::PointD(1.0, 1.0));
-  AddRegion("", "Square Two", m2::PointD(1.0, 1.0), m2::PointD(3.0, 3.0));
+  AddRegion("Flatland", "Squareland One", m2::PointD(0.0, 0.0), m2::PointD(1.0, 1.0));
+  AddRegion("", "Squareland Two", m2::PointD(1.0, 1.0), m2::PointD(3.0, 3.0));
   AddRegion("Wonderland", "Shortpondland", m2::PointD(-1.0, -1.0), m2::PointD(0.0, 0.0));
   AddRegion("", "Longpondland", m2::PointD(-3.0, -3.0), m2::PointD(-1.0, -1.0));
   BuildWorld();
 
   {
-    DownloaderSearchRequest request(m_dataSource, m_engine, "square one");
+    DownloaderSearchRequest request(m_dataSource, m_engine, "squareland one");
     request.Run();
 
     TestResults(request.GetResults(),
-                {storage::DownloaderSearchResult("Square One", "Square One capital")});
+                {storage::DownloaderSearchResult("Squareland One", "Squareland One capital")});
   }
 
   {
@@ -244,12 +254,12 @@ UNIT_CLASS_TEST(DownloaderSearchTest, Smoke)
   }
 
   {
-    DownloaderSearchRequest request(m_dataSource, m_engine, "square");
+    DownloaderSearchRequest request(m_dataSource, m_engine, "squareland");
     request.Run();
 
     TestResults(request.GetResults(),
-                {storage::DownloaderSearchResult("Square One", "Square One capital"),
-                 storage::DownloaderSearchResult("Square Two", "Square Two capital")});
+                {storage::DownloaderSearchResult("Squareland One", "Squareland One capital"),
+                 storage::DownloaderSearchResult("Squareland Two", "Squareland Two capital")});
   }
 }
 }  // namespace

@@ -4,42 +4,37 @@
 
 #include <algorithm>
 #include <set>
-#include <string>
 
 namespace generator
 {
 namespace osm_element
 {
-bool IsPoi(OsmElement const & osmElement)
+uint64_t GetPopulation(std::string const & populationStr)
 {
-  auto const & tags = osmElement.Tags();
-  return std::any_of(std::cbegin(tags), std::cend(tags), [](OsmElement::Tag const & t) {
-    return ftypes::IsPoiChecker::kPoiTypes.find(t.key) != std::end(ftypes::IsPoiChecker::kPoiTypes);
-  });
+  std::string number;
+  for (auto const c : populationStr)
+  {
+    if (isdigit(c))
+      number += c;
+    else if (c == '.' || c == ',' || c == ' ')
+      continue;
+    else
+      break;
+  }
+
+  if (number.empty())
+    return 0;
+
+  uint64_t result = 0;
+  if (!strings::to_uint64(number, result))
+    LOG(LWARNING, ("Failed to get population from", number, populationStr));
+
+  return result;
 }
 
-bool IsBuilding(OsmElement const & osmElement)
+uint64_t GetPopulation(OsmElement const & osmElement)
 {
-  auto const & tags = osmElement.Tags();
-  return std::any_of(std::cbegin(tags), std::cend(tags), [](OsmElement::Tag const & t) {
-    return t.key == "building";
-  });
-}
-
-bool HasHouse(OsmElement const & osmElement)
-{
-  auto const & tags = osmElement.Tags();
-  return std::any_of(std::cbegin(tags), std::cend(tags), [](OsmElement::Tag const & t) {
-    return t.key == "addr:housenumber" || t.key == "addr:housename";
-  });
-}
-
-bool HasStreet(OsmElement const & osmElement)
-{
-  auto const & tags = osmElement.Tags();
-  return std::any_of(std::cbegin(tags), std::cend(tags), [](OsmElement::Tag const & t) {
-    return t.key == "addr:street";
-  });
+  return GetPopulation(osmElement.GetTag("population"));
 }
 }  // namespace osm_element
 }  // namespace generator

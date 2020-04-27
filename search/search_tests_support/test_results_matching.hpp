@@ -62,10 +62,10 @@ private:
   std::vector<std::shared_ptr<MatchingRule>> m_rules;
 };
 
-template <typename... TArgs>
-std::shared_ptr<MatchingRule> ExactMatch(TArgs &&... args)
+template <typename... Args>
+std::shared_ptr<MatchingRule> ExactMatch(Args &&... args)
 {
-  return std::make_shared<ExactMatchingRule>(forward<TArgs>(args)...);
+  return std::make_shared<ExactMatchingRule>(std::forward<Args>(args)...);
 }
 
 inline std::shared_ptr<MatchingRule> AlternativesMatch(
@@ -80,6 +80,9 @@ bool MatchResults(DataSource const & dataSource, std::vector<std::shared_ptr<Mat
                   search::Results const & actual);
 bool ResultMatches(DataSource const & dataSource, std::shared_ptr<MatchingRule> rule,
                    search::Result const & result);
+bool AlternativeMatch(DataSource const & dataSource,
+                      std::vector<std::vector<std::shared_ptr<MatchingRule>>> rules,
+                      std::vector<search::Result> const & results);
 
 std::string DebugPrint(MatchingRule const & rule);
 }  // namespace tests_support

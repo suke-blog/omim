@@ -4,7 +4,9 @@
 
 #include "geometry/point2d.hpp"
 #include "geometry/polyline2d.hpp"
+#include "geometry/rect2d.hpp"
 
+#include <cstddef>
 #include <limits>
 #include <vector>
 
@@ -57,21 +59,27 @@ public:
 
   struct Iter
   {
-    m2::PointD m_pt;
-    size_t m_ind;
-
     static size_t constexpr kInvalidIndex = std::numeric_limits<size_t>::max();
 
+    Iter() = default;
     Iter(m2::PointD pt, size_t ind) : m_pt(pt), m_ind(ind) {}
-    Iter() : m_ind(kInvalidIndex) {}
+
     bool IsValid() const { return m_ind != kInvalidIndex; }
+
+    m2::PointD m_pt;
+    size_t m_ind = kInvalidIndex;
   };
 
-  const Iter GetCurrentIter() const { return m_current; }
+  Iter GetCurrentIter() const { return m_current; }
 
   double GetDistanceM(Iter const & it1, Iter const & it2) const;
 
-  Iter UpdateProjectionByPrediction(m2::RectD const & posRect, double predictDistance);
+  /// \brief Sets indexes of all unmatching segments on route.
+  void SetFakeSegmentIndexes(std::vector<size_t> && fakeSegmentIndexes);
+
+  /// \brief Updates projection to the closest matched segment if it's possible.
+  bool UpdateMatchingProjection(m2::RectD const & posRect);
+
   Iter UpdateProjection(m2::RectD const & posRect);
 
   Iter Begin() const;
@@ -94,11 +102,9 @@ public:
     Iter res;
     double minDist = std::numeric_limits<double>::max();
 
-    m2::PointD const currPos = posRect.Center();
-
     for (size_t i = startIdx; i < endIdx; ++i)
     {
-      m2::PointD const & pt = m_segProj[i].ClosestPointTo(currPos);
+      m2::PointD const & pt = m_segProj[i].ClosestPointTo(posRect.Center());
 
       if (!posRect.IsPointInside(pt))
         continue;
@@ -115,6 +121,11 @@ public:
     return res;
   }
 
+  Iter GetClosestMatchingProjectionInInterval(m2::RectD const & posRect, size_t startIdx,
+                                              size_t endIdx) const;
+
+  bool IsFakeSegment(size_t index) const;
+
 private:
   /// \returns iterator to the best projection of center of |posRect| to the |m_poly|.
   /// If there's a good projection of center of |posRect| to two closest segments of |m_poly|
@@ -123,9 +134,13 @@ private:
   template <typename DistanceFn>
   Iter GetBestProjection(m2::RectD const & posRect, DistanceFn const & distFn) const;
 
+  Iter GetBestMatchingProjection(m2::RectD const & posRect) const;
+
   void Update();
 
   m2::PolylineD m_poly;
+  /// Indexes of all unmatching segments on route.
+  std::vector<size_t> m_fakeSegmentIndexes;
 
   /// Iterator with the current position. Position sets with UpdateProjection methods.
   Iter m_current;

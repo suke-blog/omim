@@ -1,3 +1,5 @@
+import MoPub_FacebookAudienceNetwork_Adapters
+
 final class MopubBanner: NSObject, Banner {
   private enum Limits {
     static let minTimeOnScreen: TimeInterval = 3
@@ -46,7 +48,7 @@ final class MopubBanner: NSObject, Banner {
 
   var type: BannerType { return .mopub(bannerID) }
   var mwmType: MWMBannerType { return type.mwmType }
-  var bannerID: String! { return placementID }
+  var bannerID: String { return placementID }
 
   var statisticsDescription: [String: String] {
     return [kStatBanner: bannerID, kStatProvider: kStatMopub]
@@ -59,11 +61,11 @@ final class MopubBanner: NSObject, Banner {
     let center = NotificationCenter.default
     center.addObserver(self,
                        selector: #selector(enterForeground),
-                       name: .UIApplicationWillEnterForeground,
+                       name: UIApplication.willEnterForegroundNotification,
                        object: nil)
     center.addObserver(self,
                        selector: #selector(enterBackground),
-                       name: .UIApplicationDidEnterBackground,
+                       name: UIApplication.didEnterBackgroundNotification,
                        object: nil)
   }
 
@@ -135,10 +137,10 @@ final class MopubBanner: NSObject, Banner {
     guard let nativeAd = nativeAd else { return nil }
 
     if nativeAd.adAdapter is FacebookNativeAdAdapter {
-      return (nativeAd.adAdapter as! FacebookNativeAdAdapter).fbNativeAd.adChoicesLinkURL
+      return (nativeAd.adAdapter as! FacebookNativeAdAdapter).fbNativeAdBase.adChoicesLinkURL
     }
 
-    return URL(string: kDAAIconTapDestinationURL)
+    return URL(string: kPrivacyIconTapDestinationURL)
   }
 
   // MARK: - Helpers
@@ -147,12 +149,13 @@ final class MopubBanner: NSObject, Banner {
   private func load() {
     let settings = MPStaticNativeAdRendererSettings()
     let config = MPStaticNativeAdRenderer.rendererConfiguration(with: settings)!
-    request = MPNativeAdRequest(adUnitIdentifier: placementID, rendererConfigurations: [config])
+    let fbConfig = FacebookNativeAdRenderer.rendererConfiguration(with: settings)
+    request = MPNativeAdRequest(adUnitIdentifier: placementID, rendererConfigurations: [config, fbConfig])
     let targeting = MPNativeAdRequestTargeting()
-    targeting.keywords = "user_lang:\(AppInfo.shared().twoLetterLanguageId ?? "")"
-    targeting.desiredAssets = [kAdTitleKey, kAdTextKey, kAdIconImageKey, kAdCTATextKey]
+    targeting?.keywords = "user_lang:\(AppInfo.shared().twoLetterLanguageId ?? "")"
+    targeting?.desiredAssets = [kAdTitleKey, kAdTextKey, kAdIconImageKey, kAdCTATextKey]
     if let location = MWMLocationManager.lastLocation() {
-      targeting.location = location
+      targeting?.location = location
     }
     request.targeting = targeting
 

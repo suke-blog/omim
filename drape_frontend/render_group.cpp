@@ -147,7 +147,7 @@ bool RenderGroup::IsUserMark() const
   auto const depthLayer = GetDepthLayer(m_state);
   return depthLayer == DepthLayer::UserLineLayer ||
          depthLayer == DepthLayer::UserMarkLayer ||
-         depthLayer == DepthLayer::TransitMarkLayer ||
+         depthLayer == DepthLayer::RoutingBottomMarkLayer ||
          depthLayer == DepthLayer::RoutingMarkLayer ||
          depthLayer == DepthLayer::LocalAdsMarkLayer ||
          depthLayer == DepthLayer::SearchMarkLayer;
@@ -204,7 +204,8 @@ UserMarkRenderGroup::UserMarkRenderGroup(dp::RenderState const & state, TileKey 
 
   if (program == gpu::Program::BookmarkAnim || program3d == gpu::Program::BookmarkAnimBillboard)
   {
-    m_animation = make_unique<OpacityAnimation>(0.25 /* duration */, 0.0 /* minValue */, 1.0 /* maxValue */);
+    m_animation = std::make_unique<OpacityAnimation>(0.25 /* duration */, 0.0 /* minValue */,
+                                                     1.0 /* maxValue */);
     m_mapping.AddRangePoint(0.6f, 1.3f);
     m_mapping.AddRangePoint(0.85f, 0.8f);
     m_mapping.AddRangePoint(1.0f, 1.0f);

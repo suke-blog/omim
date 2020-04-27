@@ -13,24 +13,26 @@
 
 #include "platform/platform.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/file_reader.hpp"
 #include "coding/file_writer.hpp"
 #include "coding/internal/file_data.hpp"
 #include "coding/point_coding.hpp"
 
+#include "base/file_name_utils.hpp"
+#include "base/logging.hpp"
 #include "base/stl_helpers.hpp"
+#include "base/string_utils.hpp"
 
 #include <algorithm>
 #include <map>
+#include <optional>
 #include <utility>
 
 #include "3party/Alohalytics/src/alohalytics.h"
 #include "3party/jansson/myjansson.hpp"
 
-#include <boost/optional/optional.hpp>
-
 using namespace std;
+using namespace ugc;
 
 namespace
 {
@@ -40,15 +42,11 @@ string const kTmpFileExtension = ".tmp";
 
 using Sink = MemWriter<string>;
 
-string GetUGCFilePath() { return base::JoinPath(GetPlatform().SettingsDir(), kUGCUpdateFileName); }
-
-string GetIndexFilePath() { return base::JoinPath(GetPlatform().SettingsDir(), kIndexFileName); }
-
 bool GetUGCFileSize(uint64_t & size)
 {
   try
   {
-    FileReader reader(GetUGCFilePath());
+    FileReader reader(Storage::GetUGCFilePath());
     size = reader.Size();
   }
   catch (FileReader::Exception const &)
@@ -64,8 +62,48 @@ void DeserializeIndexes(string const & jsonData, ugc::UpdateIndexes & res)
   if (jsonData.empty())
     return;
 
-  ugc::DeserializerJsonV0 des(jsonData);
-  des(res);
+  try
+  {
+    ugc::DeserializerJsonV0 des(jsonData);
+    des(res);
+  }
+  catch (base::Json::Exception const & e)
+  {
+    LOG(LERROR, ("Exception while indexes deserialization. Reason:", e.what()));
+    map<string, string> const stat = {
+        {"error", "Cannot deserialize indexes. Content: " + jsonData}};
+    alohalytics::Stats::Instance().LogEvent("UGC_File_error", stat);
+    res.clear();
+  }
+}
+
+void DeserializeUGCUpdate(vector<uint8_t> const & buf, ugc::UGCUpdate & dst)
+{
+  MemReaderWithExceptions r(buf.data(), buf.size());
+  NonOwningReaderSource source(r);
+
+  try
+  {
+    ugc::Deserialize(source, dst);
+    return;
+  }
+  catch (ugc::BadBlob const & e)
+  {
+    LOG(LERROR, ("BadBlob exception while UGCUpdate deserialization. Reason:", e.what()));
+    map<string, string> const stat = {
+        {"error", "Cannot deserialize UGCUpdate. Bad blob exception. Content: " +
+                      std::string(buf.cbegin(), buf.cend())}};
+    alohalytics::Stats::Instance().LogEvent("UGC_File_error", stat);
+  }
+  catch (Reader::Exception const & e)
+  {
+    LOG(LERROR, ("Exception while UGCUpdate deserialization. Reason:", e.what()));
+    map<string, string> const stat = {{"error", "Cannot deserialize UGCUpdate. Content: " +
+                                                    std::string(buf.cbegin(), buf.cend())}};
+    alohalytics::Stats::Instance().LogEvent("UGC_File_error", stat);
+  }
+
+  dst = {};
 }
 
 string SerializeIndexes(ugc::UpdateIndexes const & indexes)
@@ -89,6 +127,29 @@ string SerializeIndexes(ugc::UpdateIndexes const & indexes)
 
   unique_ptr<char, JSONFreeDeleter> buffer(json_dumps(array.get(), JSON_COMPACT | JSON_ENSURE_ASCII));
   return string(buffer.get());
+}
+
+bool SaveIndexes(ugc::UpdateIndexes const & indexes, std::string const & pathToTargetFile = "")
+{
+  if (indexes.empty())
+    return false;
+
+  auto const indexFilePath =
+      pathToTargetFile.empty() ? Storage::GetIndexFilePath() : pathToTargetFile;
+  auto const jsonData = SerializeIndexes(indexes);
+  try
+  {
+    FileWriter w(indexFilePath);
+    w.Write(jsonData.c_str(), jsonData.length());
+  }
+  catch (FileWriter::Exception const & exception)
+  {
+    LOG(LERROR, ("Exception while writing file:", indexFilePath, "reason:", exception.what()));
+    base::DeleteFileX(indexFilePath);
+    return false;
+  }
+
+  return true;
 }
 
 template <typename UGCUpdate>
@@ -133,7 +194,7 @@ ugc::Storage::SettingResult SetGenericUGCUpdate(UGCUpdate const & ugc,
   index.m_offset = offset;
   index.m_version = ugc::IndexVersion::Latest;
 
-  auto const ugcFilePath = GetUGCFilePath();
+  auto const ugcFilePath = Storage::GetUGCFilePath();
   try
   {
     FileWriter w(ugcFilePath, FileWriter::Op::OP_APPEND);
@@ -146,12 +207,73 @@ ugc::Storage::SettingResult SetGenericUGCUpdate(UGCUpdate const & ugc,
   }
 
   indexes.emplace_back(move(index));
-  return ugc::Storage::SettingResult::Success;
+
+  return SaveIndexes(indexes) ? ugc::Storage::SettingResult::Success
+                              : ugc::Storage::SettingResult::WritingError;
+}
+
+void FindZombieObjects(size_t indexesCount)
+{
+  auto const ugcFilePath = Storage::GetUGCFilePath();
+  vector<uint8_t> ugcFileContent;
+  try
+  {
+    FileReader r(ugcFilePath);
+    ugcFileContent = r.ReadAsBytes();
+  }
+  catch (FileReader::Exception const & exception)
+  {
+    ugcFileContent.clear();
+  }
+
+  uint32_t ugcCount = 0;
+
+  MemReaderWithExceptions r(ugcFileContent.data(), ugcFileContent.size());
+  NonOwningReaderSource source(r);
+  ugc::UGCUpdate unused;
+  try
+  {
+    while (source.Size() != 0)
+    {
+      ++ugcCount;
+      ugc::Deserialize(source, unused);
+    }
+  }
+  catch (RootException const & e)
+  {
+    auto const error = "Cannot deserialize ugc.update.bin file during zombie objects search";
+    LOG(LERROR, (error));
+
+    map<string, string> errorParams = {{"error", error}};
+    alohalytics::Stats::Instance().LogEvent("UGC_File_error", errorParams);
+    return;
+  }
+
+  if (indexesCount == ugcCount)
+    return;
+
+  auto const zombieCount = ugcCount - indexesCount;
+  LOG(LERROR, ("Zombie objects are detected. ", zombieCount, "zombie objects are found."));
+
+  map<string, string> errorParams = {{"error", "zombie: " + strings::to_string(zombieCount)}};
+  alohalytics::Stats::Instance().LogEvent("UGC_File_error", errorParams);
 }
 }  // namespace
 
 namespace ugc
 {
+// static
+string Storage::GetUGCFilePath()
+{
+  return base::JoinPath(GetPlatform().SettingsDir(), kUGCUpdateFileName);
+}
+
+// static
+string Storage::GetIndexFilePath()
+{
+  return base::JoinPath(GetPlatform().SettingsDir(), kIndexFileName);
+}
+
 UGCUpdate Storage::GetUGCUpdate(FeatureID const & id) const
 {
   if (m_indexes.empty())
@@ -163,7 +285,8 @@ UGCUpdate Storage::GetUGCUpdate(FeatureID const & id) const
     return {};
 
   auto const offset = index->m_offset;
-  auto const size = static_cast<size_t>(UGCSizeAtIndex(distance(m_indexes.begin(), index)));
+  auto const pos = static_cast<size_t>(distance(m_indexes.begin(), index));
+  auto const size = static_cast<size_t>(UGCSizeAtPos(pos));
   vector<uint8_t> buf;
   buf.resize(size);
   auto const ugcFilePath = GetUGCFilePath();
@@ -178,10 +301,8 @@ UGCUpdate Storage::GetUGCUpdate(FeatureID const & id) const
     return {};
   }
 
-  MemReader r(buf.data(), buf.size());
-  NonOwningReaderSource source(r);
   UGCUpdate update;
-  Deserialize(source, update);
+  DeserializeUGCUpdate(buf, update);
   return update;
 }
 
@@ -218,7 +339,7 @@ void Storage::Load()
   if (m_indexes.empty())
     return;
 
-  boost::optional<IndexVersion> version;
+  optional<IndexVersion> version;
   for (auto const & i : m_indexes)
   {
     if (i.m_deleted)
@@ -267,7 +388,7 @@ void Storage::Migrate(string const & indexFilePath)
     DefragmentationImpl(true /* force */);
     // fallthrough
   case migration::Result::Success:
-    if (!SaveIndex(indexFilePath))
+    if (!SaveIndexes(m_indexes, indexFilePath))
     {
       base::DeleteFileX(indexFilePath);
       base::DeleteFileX(ugcFilePath);
@@ -305,28 +426,6 @@ UpdateIndexes::const_iterator Storage::FindIndex(uint32_t bestType, m2::PointD c
     });
 }
 
-bool Storage::SaveIndex(std::string const & pathToTargetFile /* = "" */) const
-{
-  if (m_indexes.empty())
-    return false;
-
-  auto const indexFilePath = pathToTargetFile.empty() ? GetIndexFilePath() : pathToTargetFile;
-  auto const jsonData = SerializeIndexes(m_indexes);
-  try
-  {
-    FileWriter w(indexFilePath);
-    w.Write(jsonData.c_str(), jsonData.length());
-  }
-  catch (FileWriter::Exception const & exception)
-  {
-    LOG(LERROR, ("Exception while writing file:", indexFilePath, "reason:", exception.what()));
-    base::DeleteFileX(indexFilePath);
-    return false;
-  }
-
-  return true;
-}
-
 void Storage::Defragmentation()
 {
   DefragmentationImpl(false /* force */);
@@ -353,7 +452,7 @@ void Storage::DefragmentationImpl(bool force)
         continue;
 
       auto const offset = index.m_offset;
-      auto const size = static_cast<size_t>(UGCSizeAtIndex(i));
+      auto const size = static_cast<size_t>(UGCSizeAtPos(i));
       vector<uint8_t> buf;
       buf.resize(size);
       r.Read(offset, buf.data(), size);
@@ -398,7 +497,7 @@ string Storage::GetUGCToSend() const
       continue;
 
     auto const offset = index.m_offset;
-    auto const bufSize = static_cast<size_t>(UGCSizeAtIndex(i));
+    auto const bufSize = static_cast<size_t>(UGCSizeAtPos(i));
     buf.resize(bufSize);
     try
     {
@@ -410,10 +509,11 @@ string Storage::GetUGCToSend() const
       return string();
     }
 
-    MemReader r(buf.data(), buf.size());
-    NonOwningReaderSource source(r);
     UGCUpdate update;
-    Deserialize(source, update);
+    DeserializeUGCUpdate(buf, update);
+
+    if (update.IsEmpty())
+      continue;
 
     string data;
     {
@@ -461,6 +561,11 @@ bool Storage::HasUGCForPlace(uint32_t bestType, m2::PointD const & point) const
   return FindIndex(bestType, point) != m_indexes.cend();
 }
 
+void Storage::Validate() const
+{
+  FindZombieObjects(m_indexes.size());
+}
+
 void Storage::MarkAllAsSynchronized()
 {
   if (m_indexes.empty())
@@ -481,23 +586,23 @@ void Storage::MarkAllAsSynchronized()
 
   auto const indexPath = GetIndexFilePath();
   base::DeleteFileX(indexPath);
-  SaveIndex();
+  SaveIndexes(m_indexes);
 }
 
-uint64_t Storage::UGCSizeAtIndex(size_t const indexPosition) const
+uint64_t Storage::UGCSizeAtPos(size_t const pos) const
 {
   CHECK(!m_indexes.empty(), ());
   auto const indexesSize = m_indexes.size();
-  CHECK_LESS(indexPosition, indexesSize, ());
-  auto const indexOffset = m_indexes[indexPosition].m_offset;
+  CHECK_LESS(pos, indexesSize, ());
+  auto const offset = m_indexes[pos].m_offset;
   uint64_t nextOffset;
-  if (indexPosition == indexesSize - 1)
+  if (pos == indexesSize - 1)
     CHECK(GetUGCFileSize(nextOffset), ());
   else
-    nextOffset = m_indexes[indexPosition + 1].m_offset;
+    nextOffset = m_indexes[pos + 1].m_offset;
 
-  CHECK_GREATER(nextOffset, indexOffset, ());
-  return nextOffset - indexOffset;
+  CHECK_GREATER(nextOffset, offset, ());
+  return nextOffset - offset;
 }
 
 unique_ptr<FeatureType> Storage::GetFeature(FeatureID const & id) const
@@ -506,7 +611,7 @@ unique_ptr<FeatureType> Storage::GetFeature(FeatureID const & id) const
   FeaturesLoaderGuard guard(m_dataSource, id.m_mwmId);
   auto feature = guard.GetOriginalOrEditedFeatureByIndex(id.m_index);
   feature->ParseGeometry(FeatureType::BEST_GEOMETRY);
-  if (feature->GetFeatureType() == feature::EGeomType::GEOM_AREA)
+  if (feature->GetGeomType() == feature::GeomType::Area)
     feature->ParseTriangles(FeatureType::BEST_GEOMETRY);
   CHECK(feature, ());
   return feature;
@@ -540,6 +645,11 @@ void Storage::LoadForTesting(std::string const & testIndexFilePath)
   if (m_indexes.front().m_version != IndexVersion::Latest)
     Migrate(testIndexFilePath);
 }
+
+bool Storage::SaveIndexForTesting(std::string const & testIndexFilePath) const
+{
+  return SaveIndexes(m_indexes, testIndexFilePath);
+}
 }  // namespace ugc
 
 namespace lightweight
@@ -548,7 +658,7 @@ namespace impl
 {
 size_t GetNumberOfUnsentUGC()
 {
-  auto const indexFilePath = GetIndexFilePath();
+  auto const indexFilePath = Storage::GetIndexFilePath();
   if (!Platform::IsFileExistsByFullPath(indexFilePath))
     return 0;
 

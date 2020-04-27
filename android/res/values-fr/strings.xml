@@ -4,8 +4,6 @@
 <!-- Language: fr -->
 <resources>
 	<!-- SECTION: Strings -->
-	<!-- About button text (should be short) -->
-	<string name="about">À propos de</string>
 	<!-- Button text (should be short) -->
 	<string name="back">Retour</string>
 	<!-- Button text (should be short) -->
@@ -70,8 +68,6 @@
 	<string name="touch_to_download">Toucher pour télécharger</string>
 	<!-- Settings/Downloader - 3G download warning dialog confirm button -->
 	<string name="use_cellular_data">Oui</string>
-	<!-- Settings/Downloader - No internet connection dialog message -->
-	<string name="use_wifi_recommendation_text">Nous recommandons d\'utiliser une connexion Wi-Fi pour télécharger de grandes cartes</string>
 	<!-- Choose measurement on first launch alert - title -->
 	<string name="which_measurement_system">Quel système de mesure préférez-vous ?</string>
 	<!-- Location services are disabled by user alert - message -->
@@ -259,8 +255,6 @@
 	<string name="my_position_share_sms">Hé, regarde ma position actuelle sur MAPS.ME ! %1$s ou %2$s. Les cartes hors ligne ne sont pas installées ? Les télécharger ici : http://maps.me/get</string>
 	<!-- Subject for emailed bookmark -->
 	<string name="bookmark_share_email_subject">Hé, regarde mon épingle sur la carte MAPS.ME !</string>
-	<!-- Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me -->
-	<string name="bookmark_share_email">Bonjour,\n\nJ\'ai épinglé %1$s sur MAPS.ME, les cartes du monde hors ligne. Clique sur ce lien %2$s ou sur celui-ci %3$s pour voir l\'endroit sur la carte.\n\nMerci.</string>
 	<!-- Subject for emailed position -->
 	<string name="my_position_share_email_subject">Hé, regarde ma position actuelle sur la carte MAPS.ME !</string>
 	<!-- Share my position using EMail, %1$@ is ge0:// and %2$@ is http://ge0.me link WITHOUT NAME -->
@@ -293,6 +287,8 @@
 	<string name="show_on_backscreen">Afficher sur l\'arrière-plan</string>
 	<!-- Prints version number in About dialog -->
 	<string name="version">Version : %s</string>
+	<!-- Data version in «About» screen -->
+	<string name="data_version">Version de données: %d</string>
 	<!-- Confirmation in downloading countries dialog -->
 	<string name="are_you_sure">Êtes-vous certain de vouloir continuer ?</string>
 	<!-- Title for tracks category in bookmarks manager -->
@@ -301,6 +297,8 @@
 	<string name="length">Longueur</string>
 	<string name="share_my_location">Partager ma position</string>
 	<string name="menu_search">Rechercher</string>
+	<!-- Settings general group in settings screen -->
+	<string name="prefs_group_general">Paramètres généraux</string>
 	<!-- Settings screen: "Map" category title -->
 	<string name="prefs_group_map">Carte</string>
 	<!-- Settings screen: "Miscellaneous" category title -->
@@ -367,12 +365,6 @@
 	<string name="route">Itinéraire</string>
 	<!-- category title -->
 	<string name="routes">Itinéraires</string>
-	<!-- Show on first launch. -->
-	<string name="maps_licence_info">Cette application utilise des données géographiques (incluant des cartes, des listes d\'entreprises, des centres d\'intérêt, des frontières de pays et de régions, etc.) extraites du projet OpenStreetMap. Nous ne garantissons aucune cohérence, exactitude, complétude ou applicabilité des données d\'OpenStreetMap.</string>
-	<!-- Show on first launch. -->
-	<string name="agree">Je suis d\'accord</string>
-	<!-- Show on first launch -->
-	<string name="disagree">Je ne suis pas d\'accord</string>
 	<!-- text of notification -->
 	<string name="download_map_notification">Télécharger la carte de l\'endroit où vous êtes</string>
 	<!-- text of notification -->
@@ -569,6 +561,22 @@
 	<string name="brown">Marron</string>
 	<!-- pink color -->
 	<string name="pink">Rose</string>
+	<!-- deep purple color -->
+	<string name="deep_purple">Pourpre foncé</string>
+	<!-- light blue color -->
+	<string name="light_blue">Bleu ciel</string>
+	<!-- cyan color -->
+	<string name="cyan">Cyan</string>
+	<!-- teal color -->
+	<string name="teal">Émeraude</string>
+	<!-- lime color -->
+	<string name="lime">Vert citron</string>
+	<!-- deep orange color -->
+	<string name="deep_orange">Orange foncé</string>
+	<!-- gray color -->
+	<string name="gray">Gris</string>
+	<!-- blue gray color -->
+	<string name="blue_gray">Gris-bleu</string>
 	<!-- Wi-Fi available -->
 	<string name="WiFi_available">Oui</string>
 
@@ -804,8 +812,6 @@
 	<string name="onboarding_location_message">Pour utiliser la navigation et d\'autres fonctionnalités, nous devons pouvoir accéder à votre position géographique.</string>
 	<string name="onboarding_permissions_title">Autoriser MAPS.ME à accéder au stockage et à la localisation</string>
 	<string name="onboarding_permissions_message">Afin de pouvoir télécharger des cartes, voir les lieux et le trafic près de vous et utiliser la navigation.</string>
-	<string name="onboarding_welcome_title">Bienvenue sur MAPS.ME</string>
-	<string name="onboarding_welcome_first_subtitle">Cartes avec navigation étape par étape, gratuites, rapides, détaillées et totalement hors ligne.</string>
 	<string name="onboarding_welcome_second_subtitle">En lançant l’application, vous acceptez les &lt;a href="%1$s">Conditions d’utilisation&lt;/a> et la &lt;a href="%2$s">Politique de confidentialité&lt;/a>.</string>
 	<string name="dialog_incorrect_feature_position">Modifier l\'emplacement</string>
 	<string name="message_invalid_feature_position">Aucun objet ne peut être localisé ici</string>
@@ -887,6 +893,7 @@
 	<string name="minute">min</string>
 	<string name="placepage_place_description">Description</string>
 	<string name="placepage_more_button">Plus</string>
+	<string name="placepage_more_reviews_button">Plus d\'avis</string>
 	<string name="book_button">Réserver</string>
 	<string name="placepage_call_button">Appeler</string>
 	<string name="placepage_edit_bookmark_button">Éditer le signet</string>
@@ -966,6 +973,7 @@
 	<string name="something_is_not_working">Quelque chose ne fonctionne pas</string>
 	<!-- For the first routing -->
 	<string name="accept">Accepter</string>
+	<string name="accept_and_continue">Accepter et continuer</string>
 	<!-- For the first routing -->
 	<string name="decline">Refuser</string>
 	<string name="whats_new_route_profile_title">C\'est en se bougeant que l\'on trouve des solutions</string>
@@ -1040,8 +1048,6 @@
 	<string name="banner_geerbest_message">Recherche instantanée parmi plus de 50.000 articles à bas prix.</string>
 	<string name="banner_rentalcars_title">Location de voitures en ligne</string>
 	<string name="banner_rentalcars_message">800 sociétés de location de voiture dans plus de 49.000 points de location de voiture.</string>
-	<string name="banner_viator_title">Recherche d\'excursions en ligne</string>
-	<string name="banner_viator_message">Recherchez parmi plus 50.000 excursions partout dans le monde.</string>
 	<!-- december -->
 	<string name="whatsnew_traffic">Données de circulation dans 36 pays</string>
 	<!-- december -->
@@ -1083,8 +1089,6 @@
 	<string name="whatsnew_smaller_mwm_message">Les cartes nécessitent jusqu\'à 20 % d\'espace de stockage en moins.</string>
 	<string name="whatsnew_waypoints_title">Points de repère dans les itinéraires</string>
 	<string name="whatsnew_waypoints_message">Appuyez sur les lieux pour ajouter des points de repère à votre itinéraire.</string>
-	<string name="whatsnew_viator_title">Réserver une excursion</string>
-	<string name="whatsnew_viator_message">Choisissez des excursions populaires dans les villes touristiques du monde entier.</string>
 	<string name="whatsnew_driving_style_title">Nouveau style de carte pour la conduite</string>
 	<string name="whatsnew_driving_style_message">Mode de navigation en voiture plus facile à utiliser.</string>
 	<string name="more_on_bookingcom">Plus d\'infos sur Booking.com</string>
@@ -1141,7 +1145,6 @@
 	<string name="settings_card_memory">Mémoire carte</string>
 	<string name="settings_storage_available">%s disponible</string>
 	<string name="toast_location_permission_denied">Autorisation de localisation refusée à l\'application</string>
-	<string name="place_page_viator_title">Attractions et visites</string>
 	<string name="button_use">Utiliser</string>
 	<string name="planning_route_manage_route">Gérer l’itinéraire</string>
 	<string name="button_plan">Planifier</string>
@@ -1156,8 +1159,6 @@
 	<string name="add_my_position">Ajouter ma position</string>
 	<string name="choose_start_point">Choisissez un point de départ</string>
 	<string name="choose_destination">Choisissez une destination</string>
-	<string name="preloader_viator_title">Découvrez les excursions et les activités insolites</string>
-	<string name="preloader_viator_message">Excursions, activités, visites et plus</string>
 	<string name="preloader_viator_button">En savoir plus</string>
 	<string name="whats_new_title_route">Les pistes cyclables et voies piétonnes ont été améliorées</string>
 	<string name="whats_new_message_route">Nous avons corrigé les erreurs, amélioré considérablement la vitesse de construction d\'itinéraires et ajouté des arrêts intermédiaires</string>
@@ -1168,9 +1169,6 @@
 	<string name="placepage_no_reviews">Aucun avis</string>
 	<string name="placepage_reviewed">Vous avez déjà donné votre avis sur ce lieu</string>
 	<string name="placepage_summary_rating">Note moyenne</string>
-	<plurals name="placepage_summary_rating_description">
-	  <item quantity="other">Basé sur %d revues</item>
-	</plurals>
 	<string name="placepage_rate_comment">Appuyez pour évaluer et donner votre avis sur ce lieu.</string>
 	<string name="placepage_rate_horrible">Horrible</string>
 	<string name="placepage_rate_bad">Mauvais</string>
@@ -1213,8 +1211,6 @@
 	<string name="discovery_button_subtitle_attractions">Attractions</string>
 	<string name="discovery_button_subtitle_eat_and_drink">Boire et manger</string>
 	<string name="discovery_button_subtitle_local_guides">Guides locaux</string>
-	<string name="discovery_button_viator_offline_title">Découvrez les visites et les activités insolites</string>
-	<string name="discovery_button_viator_offline_message">Visites, activités, excursions et bien plus encore.</string>
 	<string name="discovery_button_viator_error_title">Erreur de chargement des données</string>
 	<string name="discovery_button_other_error_message">Erreur de chargement des données</string>
 	<string name="discovery_button_other_loading_message">Données en cours de chargement</string>
@@ -1254,12 +1250,10 @@
 	<string name="downloader_percent">%1$s (%2$s de %3$s)</string>
 	<string name="downloader_process">Téléchargement de %s...</string>
 	<string name="downloader_applying">Application de %s...</string>
-	<string name="transit_not_found">La navigation en transit dans cette région n’est pas encore disponible</string>
 	<string name="whats_new_title_hotel_filter">Nouveaux filtres d’hôtel disponibles !</string>
 	<string name="whats_new_message_hotel_filter">Réservez des hôtels disponibles à vos dates ! Utilisez les filtres de check-in et check-out</string>
 	<string name="whats_new_title_ugc_travel">Partagez votre expérience avec d’autres voyageurs !</string>
 	<string name="whats_new_message_ugc_travel">Notez et donnez votre avis sur les lieux que vous avez visités !</string>
-	<string name="dialog_pedestrian_route_is_long">La route piétonne est trop longue</string>
 	<string name="dialog_message_transit_not_found_connection">Planifier un itinéraire dans un réseau de transport en commun</string>
 	<string name="bookmarks_error_message_share_general">Impossible de partager en raison d\'une erreur d\'application</string>
 	<string name="bookmarks_error_title_share_empty">Erreur de partage</string>
@@ -1363,10 +1357,14 @@
 	<string name="whats_new_hot_offers_title">Des offres attractives d\'hôtels</string>
 	<string name="whats_new_hot_offers_message">Vous pouvez les rechercher en utilisant la catégorie «Hôtels» dans la recherche. Les offres seront marquées par le symbole du pourcentage sur la carte et dans les résultats de la recherche.</string>
 	<string name="error_already_downloaded">Cette liste a déjà été téléchargée</string>
+	<string name="popular_place">Populaire</string>
+	<string name="download_routes">Télécharger itinéraires</string>
+	<string name="bookmarks_downloaded_title">Signets téléchargés avec succès</string>
+	<string name="bookmarks_downloaded_subtitle">Appuyez sur \'Rechercher sur la carte\' pour explorer les endroits sur la liste</string>
 	<string name="guides">Guides</string>
 	<string name="guide_downloaded_title">Le guide a été téléchargé avec succès</string>
-	<string name="download_guides">Télécharger les guides</string>
-	<string name="cached_guides_placeholder_subtitle">Guides détaillés disponibles hors ligne pour tout type de voyage. Choisissez celui qui vous convient le mieux et téléchargez-le directement sur la carte. Vous aurez besoin d\'une connexion Internet pour télécharger les guides.</string>
+	<!-- as few symbols as possible -->
+	<string name="download_guides">Chercher les guides</string>
 	<string name="guides_groups_cached">Guides téléchargés</string>
 	<string name="subtitle_error_downloading_guide">Le guide n\'a pas été téléchargé</string>
 	<string name="error_already_downloaded_guide">Ce guide a déjà été téléchargé</string>
@@ -1405,7 +1403,6 @@
 	<string name="restore_success_alert">L\'abonnement a été restauré avec succès</string>
 	<string name="restore_error_alert">Une erreur s\'est produite lors de la restauration de l\'abonnement</string>
 	<string name="restore_no_subscription_alert">Il n\'y a aucun abonnement actif</string>
-	<string name="subscription_terms">Le paiement sera débité de votre compte iTunes lors de la confirmation d\'achat. L\'abonnement sera automatiquement renouvelé à moins que le renouvellement automatique ne soit désactivé au moins 24 heures avant la fin de la période en cours. Votre compte sera débité selon votre forfait pour un renouvellement dans les 24 heures précédant la fin de la période en cours. Vous pouvez gérer ou désactiver le renouvellement automatique depuis les paramètres de votre compte Apple ID à tout moment lors de votre achat.</string>
 	<string name="subscriptions_title">Abonnements</string>
 	<string name="manage_subscription">Gérer l\'abonnement</string>
 	<string name="sharing_options">Options de partage</string>
@@ -1415,7 +1412,6 @@
 	<string name="hide_from_map">Masquer de la carte</string>
 	<string name="ugc_route_tags_screen_label">Sélectionner les tags</string>
 	<string name="ugc_route_tags_progress_msg">Chargement des tags en cours…</string>
-	<string name="ugc_route_tags_desc">Sélectionnez des tags pour aider les autres voyageurs à trouver votre guide. C\'est obligatoire.</string>
 	<string name="public_access">Accès publique</string>
 	<string name="limited_access">Accès limité</string>
 	<string name="upload_and_publish_desc">Ce guide sera chargé dans le catalogue public MAPS.ME et sera disponible pour les autres utilisateurs</string>
@@ -1438,7 +1434,7 @@
 	<string name="unable_upload_errorr_title">Échec du téléchargement du fichier</string>
 	<string name="unable_upload_error_subtitle_edited">Ce fichier a été édité via l\'application Web</string>
 	<string name="unable_upload_error_subtitle_broken">Ce fichier est endommagé et n\'a pas pu être téléchargé. S\'il vous plaît télécharger un autre fichier.</string>
-	<string name="buy_btn">Acheter pour %s</string>
+	<string name="buy_btn">Achetez celui-ci à %s</string>
 	<string name="download_guide_progress">Télécharger votre guide…</string>
 	<string name="price_error_title">Impossible d\'obtenir un prix</string>
 	<string name="price_error_subtitle">S\'il vous plaît, réessayez dans quelques minutes</string>
@@ -1486,12 +1482,326 @@
 	<string name="whatsnew_paid_routes_title">Plus de nouvelles impressions!</string>
 	<string name="whatsnew_paid_routes_message">En plus des itinéraires gratuits, nous avons ajouté au catalogue 3 catégories de guides payants. Plus de 700 nouvelles routes!</string>
 	<string name="whats_new_ugc_routes_title_android_only">Il est facile de partager vos impressions</string>
+	<string name="ugc_thanks_message_auth">Votre avis a été enregistré</string>
+	<string name="ugc_thanks_message_not_auth">Inscrivez-vous pour nous donner votre avis</string>
+	<string name="notification_leave_review_v2_title">Laissez un commentaire et aidez les autres voyageurs !</string>
+	<string name="error_public_not_enought_title">Pas assez de tags</string>
+	<string name="error_public_not_enought_subtitle">Votre itinéraire doit avoir au moins 3 tags afin d\'effectuer le téléchargement dans le répertoire public</string>
+	<string name="bookmark_public_upload_alert_title">Il ne vous reste que deux étapes à suivre pour charger votre itinéraire dans le répertoire MAPS.ME!</string>
+	<string name="bookmark_public_upload_alert_subtitle">Assurez-vous que votre itinéraire a un nom et une description, ainsi que tous les tags contiennent des informations sur les lieux. Grâce à ça les utilisateurs peuvent trouver l\'itinéraire et l\'utiliser pour leurs voyages.</string>
+	<string name="bookmark_public_upload_alert_ok_button">Oui, tout va bien!</string>
+	<string name="name_title">Entrez un nom</string>
+	<string name="name_placeholder">par exemple, les pubs de Londres</string>
+	<string name="name_comment1">Veuillez donner un nom spécifique à l\'itinéraire pour que les utilisateurs puissent le trouver, par exemple, \"les Pubs de Londres\"</string>
+	<string name="name_comment2">Le nom ne doit pas contenir de caractères spéciaux. Ne publiez pas d\'itinéraires avec le nom \"Mes endroits\"</string>
+	<string name="description_guide">Descriptif</string>
+	<string name="description_title">Entrez une description de l\'itinéraire</string>
+	<string name="description_placeholder">Décrivez votre itinéraire en détail</string>
+	<string name="description_comment1">La description de l\'itinéraire doit comporter au moins 30 caractères.</string>
+	<string name="ugc_route_tags_desc">Sélectionnez des tags pour aider les autres voyageurs à trouver votre guide de voyage. Cela est indispensable. Pas plus que %s tags.</string>
+	<string name="html_format_error_title">Votre itinéraire n\'a pas été publié</string>
+	<string name="html_format_error_subtitle">Assurez-vous que les noms et les descriptions des tags dans l\'itinéraire ont la bonne mise en forme. Vous pouvez le vérifier en cliquant sur le bouton \"Modifier en ligne\" ci-dessous.</string>
+	<string name="web_editor_description">Téléchargez l\'itinéraire et vous obtiendrez un lien pour pouvoir le modifier sur votre ordinateur</string>
+	<string name="edit_on_web_confirm">Éditer en ligne</string>
+	<string name="update_guide">Télécharger la nouvelle version</string>
+	<string name="direct_link_updating_text">Mise à jour de l\'itinéraire…</string>
+	<string name="direct_link_updating_success">L\'itinéraire a été mis à jour</string>
+	<string name="unable_get_direct_link_desc">Vous pouvez désormais partager l\'itinéraire en utilisant un lien public</string>
+	<string name="any_access_update_alert_title">Il est possible qu\'une nouvelle version de l\'itinéraire soit disponible</string>
+	<string name="any_access_update_alert_message">Voulez-vous mettre à jour les tags? La nouvelle version sera disponible sur le même lien.</string>
+	<string name="any_access_update_alert_update">Mettre à jour</string>
+	<string name="public_or_limited_access_after_edit_online_error_title">Vous avez édité l\'itinéraire en ligne</string>
+	<string name="public_or_limited_access_after_edit_online_error_message">Ensuite vous pouvez éditer, publier ou partager l’itinéraire avec des amis via notre site Web</string>
+	<string name="power_managment_title">Mode économie d\'énergie</string>
+	<string name="power_managment_description">Si le mode d\'économie d\'énergie est activé, l\'application désactive les fonctions consommant de l\'énergie en fonction de la charge actuelle du téléphone</string>
+	<string name="power_managment_setting_never">Jamais</string>
+	<string name="power_managment_setting_auto">Automatique</string>
+	<string name="power_managment_setting_manual_max">Économie d\'énergie maximale</string>
+	<string name="enable_logging_warning_message">Cette option est activée pour l\'identification des actions à des fins de diagnostic. Cela aide l’équipe à identifier les problèmes liés à l’application. Activez cette option uniquement à la demande du support MAPS.ME.</string>
+	<string name="html_error_upload_message_try_again">Vérifiez l\'accès au réseau et réessayez</string>
+	<string name="html_error_upload_title_try_again">Il n\'y a pas de connexion internet</string>
+	<string name="notification_leave_review_v2_android_short_title">Laissez vos commentaire et aidez les voyageurs !</string>
+	<string name="notifications_illegal_alert_disable_button">Désactiver les notifications</string>
+	<string name="access_rules_author_only">Édition en ligne</string>
+	<string name="privacy_settings_menu">Paramètres de confidentialité</string>
+	<string name="gdpr_request_setting">Obtenir un ID pour la demande GDPR</string>
+	<string name="gdpr_request_window_title">Votre ID : %s.</string>
+	<string name="gdpr_request_window_message">Veuillez le copier et envoyer une demande à support\@maps.me</string>
+	<string name="gdpr_request_window_copy">Copier l\'ID</string>
+	<string name="unable_upadate_error_title">Impossible de mettre à jour l\'itinéraire</string>
+	<string name="unable_upadate_error_message">Il y a eu des erreurs pendant la mise à jour. Veuilelz revérifiez les modifications et réessayez</string>
+	<string name="whats_new_wiki_title">Quel est cet endroit?</string>
+	<string name="whats_new_wiki_message">Dans les fiches des attractions touristiques populaires, nous avons ajouté des articles de Wikipedia.org, disponibles hors connexion</string>
+	<string name="driving_options_title">Réglages de détour</string>
+	<string name="driving_options_subheader">Éviter sur tous les itinéraires</string>
+	<string name="avoid_tolls">Routes à péage</string>
+	<string name="avoid_unpaved">Routes non revêtues</string>
+	<string name="avoid_ferry">Passage d\'un cours d\'eau</string>
+	<string name="avoid_motorways">Artères</string>
+	<string name="unable_to_calc_alert_title">Impossible de calculer l\'itinéraire</string>
+	<string name="unable_to_calc_alert_subtitle">Malheureusement, nous n\'avons pas pu créer l\'itinéraire avec les options sélectionnées. Modifiez les paramètres et réessayez</string>
+	<string name="define_to_avoid_btn">Configurer la route de détour</string>
+	<string name="change_driving_options_btn">Paramètres de détour activés</string>
+	<string name="toll_road">Route à péage</string>
+	<string name="unpaved_road">Routes non revêtues</string>
+	<string name="ferry_crossing">Passage d\'un cours d\'eau</string>
+	<string name="operated_by">Géré par \"%s\"</string>
+	<string name="avoid_toll_roads_placepage">Éviter les routes à péage</string>
+	<string name="avoid_unpaved_roads_placepage">Éviter les routes non revêtues</string>
+	<string name="avoid_ferry_crossing_placepage">Éviter les passages d\'un cours d\'eau</string>
+	<string name="cached_guides_placeholder_subtitle">Les guides prêts à l\'emploi sur MAPS.ME sont des lieux sélectionnés avec des photos et des descriptions affichées sur la carte et disponibles hors connexion internet.</string>
+	<string name="guides_catalogue_title">Catalogue de guides</string>
+	<string name="download_guides_button">Passer au catalogue</string>
+	<plurals name="placepage_summary_rating_description">
+	  <item quantity="one">Basé sur %d avis</item>
+	  <item quantity="other">Basé sur %d avis</item>
+	</plurals>
+	<string name="type.cuisine.uzbek">Cuisine ouzbek</string>
+	<string name="onboarding_welcome_title">Planifiez et voyagez avec MAPS.ME</string>
+	<string name="onboarding_welcome_first_subtitle">Enregistrez des lieux intéressants, réservez des hôtels, créez des itinéraires hors ligne</string>
+	<string name="onboarding_guide_direct_download_title">Le guide est prêt pour le téléchargement</string>
+	<string name="onboarding_guide_direct_download_subtitle">Il sera affiché sur la carte et fonctionnera hors ligne</string>
+	<string name="onboarding_guide_direct_download_button">Télécharger</string>
+	<string name="onboarding_bydeeplink_guide_title">Guides prêts à l\'emploi sur MAPS.ME</string>
+	<string name="onboarding_bydeeplink_guide_subtitle">Les lieux sélectionnés avec des photos et des descriptions sont affichés sur la carte et disponibles hors connexion internet.</string>
+	<string name="whats_new_auto_update_bydeeplink_title">Avant de passer aux guides…</string>
+	<string name="whats_new_auto_update_bydeeplink_message">Mettez à jour les cartes pour les informations actuelles sur les lieux !</string>
+	<string name="whats_new_auto_update_and_proceed_button_size">Mettre à jour (%s) et continuer</string>
+	<string name="whatsnew_toll_unpaved_title">Frayez des itinéraires en tenant compte de tous les types de routes</string>
+	<string name="whatsnew_toll_unpaved_message">Choisissez des itinéraires de détour par péage, routes non revêtues et passages d\'un cours d\'eau</string>
+	<string name="whatsnew_new_catalogue_title">Pages de catalogue mises à jour</string>
+	<string name="whatsnew_new_catalogue_message">Nous avons ajouté des informations détaillées sur les guides partenaires afin que le choix d\'itinéraire soit simple et pratique</string>
+	<string name="purchase_please_wait_toast">Veuillez de ne pas quitter l\'écran jusqu\'à ce que l\'achat est terminé</string>
+	<string name="trip_start">On y va</string>
+	<string name="pick_destination">Point d\'arrivée</string>
+	<string name="follow_my_position">Préciser</string>
+	<string name="search_results">Résultats de recherche</string>
+	<string name="then_turn">Ensuite</string>
+	<string name="redirect_route_alert">Voulez-vous reconstruire l\'itinéraire ?</string>
+	<string name="redirect_route_yes">Oui</string>
+	<string name="redirect_route_no">Non</string>
+	<string name="trip_finished">Vous êtes arrivé !</string>
+	<string name="keyboard_availability_alert">Clavier non disponible en conduisant</string>
+	<string name="dialog_routing_change_start_carplay">Impossible de créer un itinéraire à partir de lieux actuel</string>
+	<string name="dialog_routing_change_end_carplay">Impossible de créer un itinéraire jusqu\'au point final. Choisissez un autre</string>
+	<string name="dialog_routing_check_gps_carplay">Pas de signal GPS. Passez sur le site ouvert</string>
+	<string name="dialog_routing_unable_locate_route_carplay">Impossible de calculer l\'itinéraire. Sélectionnez les autres points d\'itinéraire</string>
+	<string name="dialog_routing_download_files_carplay">Pour créer la route, téléchargez les cartes sur votre appareil</string>
+	<string name="dialog_routing_system_error_carplay">Une erreur est survenue. Redémarrez l\'application</string>
+	<string name="dialog_routing_rebuild_from_current_location_carplay">L\'itinéraire sera reconstruit à partir de votre position actuelle</string>
+	<string name="dialog_routing_rebuild_for_vehicle_carplay">L\'itinéraire sera changé en mode Voiture</string>
+	<string name="ok">Ok</string>
+	<string name="booking_button_toolbar">Choisissez un hôtel sur la carte</string>
+	<string name="popup_booking_download_guides_title">Avez-vous réservé un hôtel ?</string>
+	<string name="popup_booking_download_guides_message">Planifiez votre itinéraire avec des guides prêts à l\'emploi fait par MAPS.ME</string>
+	<string name="popup_mwm_download_guides_title">Guides hors ligne</string>
+	<string name="popup_mwm_download_guides_cta">Choisissez un</string>
+	<string name="popup_mwm_download_guides_cta_1">Jetez un coup d\'oeil</string>
+	<string name="gallery_pp_download_guides_offline_title">Planifiez vos vacances avec MAPS.ME !</string>
+	<string name="gallery_pp_download_guides_offline_subtitle">Ne manquez rien avec les guides faits par des voyageurs expérimentés</string>
+	<string name="gallery_pp_download_guides_offline_cta">Allumez l\'Internet</string>
+	<string name="gallery_pp_download_guides_title">Guides</string>
+	<string name="native_screen_subscription_title">Accès illimité à plus de 2000 guides de voyage !</string>
+	<string name="native_screen_subscription_message">Des vacances mémorables où que vous soyez et avec qui vous voyagez</string>
+	<string name="annual_subscription_title">Annuel</string>
+	<string name="montly_subscription_title">Mensuel</string>
+	<string name="annual_subscription_message">12 mois d\'accès illimité</string>
+	<string name="montly_subscription_message">1 mois d\'accès illimité</string>
+	<string name="subscription_success_dialog_title">Merci de vous être abonné !</string>
+	<string name="subscription_success_dialog_message">À présent, vous avez un accès illimité à l\'ensemble du catalogue des guides</string>
+	<string name="renewal_screen_title">Votre abonnement a expiré</string>
+	<string name="renewal_screen_message">Tous les guides téléchargés sur l\'abonnement vont être supprimés. Voulez-vous reprendre l\'abonnement et les conserver ?</string>
+	<string name="renewal_screen_button_restore">Oui, renouveler</string>
+	<string name="renewal_screen_button_cancel">Non, supprimer les guides</string>
+	<string name="subscription_error_ping_title">L\'achat a échoué</string>
+	<string name="subscription_error_message">Le service est présentement non disponible dans votre région. Veuillez réessayer ultérieurement</string>
+	<string name="subscription_error_button">Entendu</string>
+	<string name="timeout_error_title">Oups, le temps est écoulé !</string>
+	<string name="timeout_error_message">Nos serveurs ne répondent pas. Veuillez vérifiez la connexion Internet et réessayez.</string>
+	<string name="per_month">/mois</string>
+	<string name="per_year">/année</string>
+	<string name="buy_btn_for_subscription">Accès illimité de %s</string>
+	<string name="buy_btn_for_subscription_1">Acheter TOUS les guides à %s</string>
+	<string name="buy_btn_for_subscription_ios_only_mo">Accès illimité à %s/mois</string>
+	<string name="buy_btn_for_subscription_ios_only_year">Accès illimité à %s/an</string>
+	<string name="subscription_terms_guides">Le paiement sera débité de votre compte iTunes après confirmation de l\'achat. L\'abonnement sera renouvelé automatiquement, sauf si la fonction de renouvellement automatique est désactivée au moins 24 heures avant la fin de la période en cours. Votre compte sera débité en fonction de votre plan de renouvellement dans les 24 heures précédant la fin de la période en cours. Vous pouvez gérer ou désactiver la fonction de renouvellement automatique dans les paramètres de votre compte Apple ID à tout moment de votre achat. Vous ne pouvez utiliser que les guides téléchargés sur abonnement jusqu\'à leur date d\'expiration. Dans les 30 jours suivant la date d\'expiration de l\'abonnement, les guides contenant des signets seront automatiquement supprimés.</string>
+	<string name="subscription_terms">Le paiement sera débité de votre compte iTunes lors de la confirmation d\'achat. L\'abonnement sera automatiquement renouvelé à moins que le renouvellement automatique ne soit désactivé au moins 24 heures avant la fin de la période en cours. Votre compte sera débité selon votre forfait pour un renouvellement dans les 24 heures précédant la fin de la période en cours. Vous pouvez gérer ou désactiver le renouvellement automatique depuis les paramètres de votre compte Apple ID à tout moment lors de votre achat.</string>
+	<string name="whatsnew_carplay_title">Navigation MAPS.ME pour automobile en mode CarPlay !</string>
+	<string name="whatsnew_carplay_message">Les signets, la recherche, les radars et les options de routage sont disponibles hors ligne</string>
+	<string name="whatsnew_subscription_title">Le monde entier par abonnement !</string>
+	<string name="whatsnew_subscription_message">L\'accès illimité au catalogue des guides est plus rentable qu\'un achat ponctuel</string>
+	<string name="whatsnew_carnavi_fixes_for_android_title">Mise à jour de la navigation</string>
+	<string name="whatsnew_carnavi_fixes_for_android_message">Nous avons amélioré la planification des itinéraires vers les destinations éloignés des routes</string>
+	<string name="avoid_unpaved_carplay_1">Route de ter</string>
+	<string name="avoid_unpaved_carplay_2">Route de terre</string>
+	<string name="avoid_ferry_carplay_1">Sans navires</string>
+	<string name="avoid_ferry_carplay_2">Sans navires</string>
+	<string name="avoid_tolls_carplay_1">Sans péage</string>
+	<string name="avoid_tolls_carplay_2">Sans péage</string>
+	<string name="speedcams_alert_title_carplay_1">Caméras</string>
+	<string name="speedcams_alert_title_carplay_2">Info Caméras</string>
+	<string name="download_map_carplay">Téléchargez des cartes dans l\'application MAPS.ME sur votre appareil</string>
+	<string name="carplay_roundabout_exit">%s sortie</string>
+	<!-- max. 10 symbols, both iOS and Android -->
+	<string name="sort">Trier…</string>
+	<!-- Android, title, max 20-22 symbols -->
+	<string name="sort_bookmarks">Trier les signets</string>
+	<!-- iOS -->
+	<string name="sort_default">Trier par défaut</string>
+	<string name="sort_type">Trier par type</string>
+	<string name="sort_distance">Trier par distance</string>
+	<string name="sort_date">Classer pa date</string>
+	<!-- Android -->
+	<string name="by_default">Par défaut</string>
+	<!-- Android -->
+	<string name="by_type">Par type</string>
+	<!-- Android -->
+	<string name="by_distance">Par distance</string>
+	<!-- Android -->
+	<string name="by_date">Par date</string>
+	<string name="week_ago_sorttype">Il y a une semaine</string>
+	<string name="month_ago_sorttype">Il y a un mois</string>
+	<string name="moremonth_ago_sorttype">Il y a plus d\'un mois</string>
+	<string name="moreyear_ago_sorttype">Il y a plus d\'un an</string>
+	<string name="near_me_sorttype">Près de moi</string>
+	<string name="others_sorttype">Autres</string>
+	<string name="food_places">Aliments</string>
+	<string name="tourist_places">Choses à voir</string>
+	<string name="museums">Musées</string>
+	<string name="parks">Parcs</string>
+	<string name="swim_places">Natation</string>
+	<string name="mountains">Montagnes</string>
+	<string name="animals">Animaux</string>
+	<string name="hotels">Hotels</string>
+	<string name="buildings">Batiments</string>
+	<string name="money">Argent</string>
+	<string name="shops">Magasins</string>
+	<string name="parkings">Parkings</string>
+	<string name="fuel_places">Stations d\'essence</string>
+	<string name="water">Eau</string>
+	<string name="medicine">Médicament</string>
+	<string name="search_in_the_list">Chercher dans la liste</string>
+	<string name="view_on_map_bookmarks">Sur plan</string>
+	<string name="more_bookmarks">Plus…</string>
+	<string name="no_items_found">Aucun article trouvé</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_edit_list">Modifier la liste</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_delete_list">Supprimer la liste</string>
+	<string name="whatsnew_bookmarks_search_sort_title">Commander dans les signets rend un voyage confortable</string>
+	<string name="whatsnew_bookmarks_search_sort_message">Triez les endroits préférés par catégorie, emplacement et ordre chronologique, ainsi que trouver rapidement des signets spécifiques par leur nom</string>
+	<string name="popup_subscription_success_map_title">Hourra ! Vous êtes abonné !</string>
+	<string name="popup_subscription_success_map_message">Explorez maintenant les meilleures attractions touristiques du catalogue MAPS.ME</string>
+	<string name="popup_subscription_success_map_start_button">Regarder</string>
+	<string name="popup_subscription_success_map_not_now_button">Pas maintenant</string>
+	<string name="religious_places">Lieux saints</string>
+	<string name="subscription_terms_android">Le paiement sera effectué à partir de votre compte Google Play lors de la confirmation de l\'achat. L\'abonnement sera automatiquement renouvelé, sauf si le renouvellement automatique est désactivé au moins 24 heures avant la fin de la période en cours. Les fonds seront débités de votre compte conformément à votre plan de renouvellement dans les 24 heures avant la fin de la période en cours. Vous pouvez gérer le renouvellement automatique ou le désactiver dans les paramètres de votre compte après l\'achat. Vous pouvez utiliser les guides téléchargés par abonnement uniquement pendant la durée de votre abonnement. 30 jours après la fin de votre abonnement, les guides seront automatiquement supprimés.</string>
+	<string name="select_list">Sélectionner une liste</string>
+	<string name="pp_discovery_place_related_header">Cet endroit dans les guide</string>
+	<string name="pp_discovery_place_related_header_1">Vu dans le guide</string>
+	<string name="pp_discovery_place_related_cta_button">Voir plus</string>
+	<string name="pp_discovery_place_related_tag_header">Guide avec le tag « %s »</string>
+	<string name="pp_discovery_place_related_tag_header_1">Vous aimeriez aussi</string>
+	<string name="buy_btn_for_subscription_version_2">TOUS les guides pour seulement %s/mois</string>
+	<string name="buy_btn_for_subscription_version_3">Le catalogue entier pour %s/mois</string>
+	<string name="buy_btn_for_subscription_ios_only_mo_version_2">Accès au catalogue pour %s/mois</string>
+	<string name="buy_btn_for_subscription_ios_only_year_version_2">Accès au catalogue pour %s/an</string>
+	<string name="subscription_screen_native_title_version_2">Accès aux guides de voyage avec des tags sur la carte!</string>
+	<string name="subscription_screen_native_message_version_2">Préparez-vous pour n\'importe quel voyage dans plus de 600 villes et plus de 100 pays</string>
+	<string name="catalog_no_internet_title">Pas de connexion internet</string>
+	<string name="catalog_no_internet_button">Essayer à nouveau</string>
+	<string name="whatsnew_map_updates_title">Mises à jour très rapides des cartes</string>
+	<string name="whatsnew_map_updates_message">Maintenant, nous mettons à jour les données 2 fois plus rapidement</string>
+	<string name="new_onboarding_button">Suivant</string>
+	<string name="new_onboarding_button_2">Commencer</string>
+	<string name="new_onboarding_step1_header_2">Assistant de voyage universel</string>
+	<string name="new_onboarding_step2_header">Rêvez et planifiez</string>
+	<string name="new_onboarding_step2_message">+ de 70 millions de lieux intéressants, un catalogue de guides prêts à l\'emploi et des réservations d\'hôtels sur la carte – vous êtes prêt à voyager !</string>
+	<string name="new_onboarding_step3_message">Des cartes détaillées avec navigation disponibles hors ligne vous aideront à ne pas vous perdre dans des endroits inconnus !</string>
+	<string name="new_onboarding_step4_header">Partagez vos impressions</string>
+	<string name="new_onboarding_step4_message">Enregistrez lieux que vous aimez dans vos favoris et partagez-les avec vos amis</string>
+	<string name="new_onboarding_step5.1_header">Avant de commencer…</string>
+	<string name="new_onboarding_step5.1_message">N\'oubliez pas de consulter notre nouveau répertoire d\'itinéraires pour trouver un guide pour votre prochain voyage disponible hors ligne !</string>
+	<string name="new_onboarding_step5.1_button">Ouvrir le catalogue</string>
+	<string name="new_onboarding_step5.2_message">L\'abonnement au catalogue des guides dans MAPS.ME est avantageux. Obtenez un accès complet aux guides pour les promenades en ville et les activités de plein air !</string>
+	<string name="new_onboarding_step5.2_button">Voir les conditions</string>
+	<string name="new_onboarding_step5.3_message">Téléchargez et notez les itinéraires de promenades en ville et les activités de plein air grâce à une sélection gratuite de MAPS.ME !</string>
+	<string name="new_onboarding_step5.3_button">Télécharger gratuitement</string>
+	<string name="new_onboarding_additional_steps_later_button">Pas maintenant</string>
+	<string name="all_pass_subscription_header">S\'ABONNER AU CATALOGUE</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title">30000+\nde guides\net de sentiers</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle"><b>Téléchargement illimité hors connexion</b> d\'itinéraires pour ville et pour les activités en plein air</string>
+	<!-- \n - for a break between lines. Max. 17 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_2">Profil intéractif\naltimétrique</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_2">Chargement des sentiers <b>avec l\'indication des altitudes et les informations principales sur l\'itinéraire</b></string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_3">Lieux,\nphotos et avis\nfavoris</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_3"><b>Tout savoir sur l\'itinéraire</b>, que vous souhaitez prendre</string>
+	<string name="sightseeing_subscription_header_subscription">Abonnement aux guides</string>
+	<string name="sightseeing_subscription_message">+ de 700 villes et de 100 pays</string>
+	<string name="sightseeing_subscription_message_2">Disponibles hors connexion</string>
+	<string name="sightseeing_subscription_message_3">Photo et parcours</string>
+	<string name="subscription_success_dialog_title_sightseeing_pass">Merci pour votre inscription !</string>
+	<string name="subscription_success_dialog_message_sightseeing_pass">Désormais vous avez accès à tous les guides touristiques des villes du catalogue</string>
+	<string name="downloader_main_gallery_header">Cartes et guides</string>
+	<string name="downloader_main_gallery_message">Maintenant dans cette section, vous pouvez non seulement télécharger les cartes, mais aussi choisir des guides touristiques pour vos prochains voyages</string>
+	<string name="downloader_main_1_element_gallery_header">Tous les guides</string>
+	<string name="downloader_main_1_element_gallery_message">dans + de 100 pays</string>
+	<string name="downloader_country_1_element_gallery_header">%s d\'itinéraires</string>
+	<string name="downloader_country_no_guides_gallery_header">Les guides pour ce pays ne sont pas encore disponibles</string>
+	<string name="downloader_country_no_guides_gallery_message">Découvrez d\'autres itinéraires dans + de 100 pays pour les activités en ville et de plein air</string>
+	<string name="dialog_pedestrian_route_is_long">Accéder aux transports à pieds prend trop longtemps</string>
+	<string name="whatsnew_outdoor_guides_title">Nous avons ajouté + de 15 000 sentiers pour les activités de plein air !</string>
+	<string name="whatsnew_outdoor_guides_message">Les itinéraires de vacances d\'été et d\'hiver de Outdooractive vous attendent dans le catalogue !</string>
+	<string name="whatsnew_guides_galleries_title">Planifiez votre prochain voyage avec MAPS.ME</string>
+	<string name="whatsnew_guides_galleries_message">Désormais vous pouvez trouver les guides recommandés dans les fiches des villes et des attractions touristiques populaires</string>
+	<string name="new_onboarding_step3_header">Voyagez</string>
+	<string name="all_pass_screen_best_value">Prix avantageux</string>
+	<string name="buy_btn_for_subscription_3">Le catalogue entier pour %s/an</string>
+	<string name="transit_not_found">La navigation en métro n\'est pas encore disponible dans la région</string>
+	<string name="dialog_pedestrian_route_is_long_header">Itinéraire de métro non trouvé</string>
+	<string name="dialog_pedestrian_route_is_long_message">Choisissez le point de départ ou d\'arrivée de l\'itinéraire le plus proche de la station de métro</string>
+	<!-- Failed planning SUBWAY route message in navigation view -->
+	<string name="routing_planning_error_subway_special">Erreur dans le tracé de l\'itinéraire du métro</string>
+	<string name="whatsnew_isolines_title">Nouveauté pour les activités de plein air – lignes d\'altitude hors-ligne !</string>
+	<!-- as less symbols as possible -->
+	<string name="whatsnew_isolines_message">Concentrez-vous sur le terrain montagneux – activez la couche avec le bouton dans le coin supérieur gauche de l\'écran</string>
+	<string name="button_layer_isolines">Terrain</string>
+	<string name="tips_map_layers_title_countour">Lignes d\'altitude hors-ligne dans MAPS.ME !</string>
+	<string name="tips_map_layers_message_countour">Les lignes d\'altitude vous aideront à planifier votre voyage à la campagne sans vous perdre dans les champs</string>
+	<string name="isolines_activation_error_dialog">Pour utiliser les lignes d\'altitude, mettez à jour ou téléchargez la carte de l\'endroit désiré</string>
+	<string name="isolines_location_error_dialog">Les lignes d\'élévation ne sont pas encore disponibles dans cette région</string>
+	<string name="elevation_profile_diff_level">Niveau de difficulté</string>
+	<string name="elevation_profile_diff_level_easy">Faible</string>
+	<string name="elevation_profile_diff_level_moderate">Moyen</string>
+	<string name="elevation_profile_diff_level_hard">Haut</string>
+	<string name="elevation_profile_ascent">Montée</string>
+	<string name="elevation_profile_descent">Descente</string>
+	<string name="elevation_profile_minaltitude">Hauteur minimale</string>
+	<string name="elevation_profile_maxaltitude">Hauteur maximale</string>
+	<string name="elevation_profile_m">m</string>
+	<string name="elevation_profile_difficulty">Difficulté</string>
+	<string name="elevation_profile_distance">Russe :</string>
+	<string name="elevation_profile_km">km</string>
+	<string name="elevation_profile_time">Temps:</string>
+	<string name="elevation_profile_hours">h</string>
+	<string name="elevation_profile_minutes">mn</string>
+	<!-- hide the full screen banner and continue working with the app -->
+	<string name="hide_screen_map_update">Fermer la fenêtre et continuer la navigation</string>
+	<string name="view_on_map_downloaded_error">Ce guide a été supprimé de votre appareil</string>
+	<string name="subscription">Souscription</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Remontées mécaniques</string>
 	<string name="type.aeroway.aerodrome">Aéroport</string>
 	<string name="type.aeroway.aerodrome.international">Aéroport</string>
 	<string name="type.aeroway.helipad">Hélisurface</string>
+	<string name="type.amenity">Objets d\'infrastructure</string>
+	<string name="type.amenity.arts_centre">Centre d\'art</string>
 	<string name="type.amenity.atm">GAB</string>
 	<string name="type.amenity.bank">Banque</string>
 	<string name="type.amenity.bbq">Terrain de pique-nique</string>
@@ -1536,14 +1846,15 @@
 	<string name="type.amenity.parking">Stationnement</string>
 	<string name="type.amenity.parking.fee">Stationnement</string>
 	<string name="type.amenity.parking.multi.storey">Stationnement</string>
-	<string name="type.amenity.parking.multi.storey.fee">Stationnement</string>
 	<string name="type.amenity.parking.no.access">Stationnement</string>
 	<string name="type.amenity.parking.park_and_ride">Stationnement</string>
 	<string name="type.amenity.parking.permissive">Stationnement</string>
-	<string name="type.amenity.parking.permissive.fee">Stationnement</string>
 	<string name="type.amenity.parking.private">Stationnement</string>
 	<string name="type.amenity.parking.underground">Stationnement</string>
-	<string name="type.amenity.parking.underground.fee">Stationnement</string>
+	<string name="type.amenity.parking_space">Parking</string>
+	<string name="type.amenity.parking_space.permissive">Parking</string>
+	<string name="type.amenity.parking_space.private">Parking</string>
+	<string name="type.amenity.parking_space.underground">Parking</string>
 	<string name="type.amenity.payment_terminal">Terminal de paiement</string>
 	<string name="type.amenity.pharmacy">Pharmacie</string>
 	<string name="type.amenity.place_of_worship">Lieu de culte</string>
@@ -1551,7 +1862,7 @@
 	<string name="type.amenity.place_of_worship.muslim">Mosquée</string>
 	<string name="type.amenity.place_of_worship.shinto">Sanctuaire</string>
 	<string name="type.amenity.post_box">Boîte aux lettres</string>
-	<string name="type.amenity.post_office">Poste</string>
+	<string name="type.amenity.post_office">Bureau de poste</string>
 	<string name="type.amenity.pub">Bistrot</string>
 	<string name="type.amenity.public_bookcase">Bibliothèque</string>
 	<string name="type.amenity.recycling">Centre de recyclage</string>
@@ -1566,6 +1877,7 @@
 	<string name="type.amenity.vending_machine.cigarettes">Distributeur de cigarettes</string>
 	<string name="type.amenity.vending_machine.drinks">Distributeur de boissons</string>
 	<string name="type.amenity.vending_machine.parking_tickets">Horodateur</string>
+	<string name="type.amenity.vending_machine.public_transport_tickets">Distributeur de billets pour le transport en commun</string>
 	<string name="type.amenity.veterinary">Docteur vétérinaire</string>
 	<string name="type.amenity.waste_basket">Poubelle</string>
 	<string name="type.amenity.waste_disposal">Déchets</string>
@@ -1684,6 +1996,7 @@
 	<string name="type.emergency.phone">Téléphone d\'urgence</string>
 	<string name="type.entrance">Entrée</string>
 	<string name="type.highway.bus_stop">Arrêt de bus</string>
+	<string name="type.highway.construction">Route en construction</string>
 	<string name="type.highway.footway">Chemin</string>
 	<string name="type.highway.footway.alpine_hiking">Chemin</string>
 	<string name="type.highway.footway.area">Chemin</string>
@@ -1746,9 +2059,6 @@
 	<string name="type.highway.service.area">Rue</string>
 	<string name="type.highway.service.bridge">Rue</string>
 	<string name="type.highway.service.driveway">Rue</string>
-	<string name="type.highway.service.driveway.area">Rue</string>
-	<string name="type.highway.service.driveway.bridge">Rue</string>
-	<string name="type.highway.service.driveway.tunnel">Rue</string>
 	<string name="type.highway.service.parking_aisle">Rue</string>
 	<string name="type.highway.service.tunnel">Rue</string>
 	<string name="type.highway.speed_camera">Radar de vitesse</string>
@@ -1767,14 +2077,8 @@
 	<string name="type.highway.track.grade1">Rue</string>
 	<string name="type.highway.track.grade2">Rue</string>
 	<string name="type.highway.track.grade3">Rue</string>
-	<string name="type.highway.track.grade3.no.access">Rue</string>
-	<string name="type.highway.track.grade3.permissive">Rue</string>
 	<string name="type.highway.track.grade4">Rue</string>
-	<string name="type.highway.track.grade4.no.access">Rue</string>
-	<string name="type.highway.track.grade4.permissive">Rue</string>
 	<string name="type.highway.track.grade5">Rue</string>
-	<string name="type.highway.track.grade5.no.access">Rue</string>
-	<string name="type.highway.track.grade5.permissive">Rue</string>
 	<string name="type.highway.track.no.access">Rue</string>
 	<string name="type.highway.track.permissive">Rue</string>
 	<string name="type.highway.track.tunnel">Rue</string>
@@ -1803,11 +2107,17 @@
 	<string name="type.landuse.basin">Eau</string>
 	<string name="type.landuse.cemetery">Cimetière</string>
 	<string name="type.landuse.cemetery.christian">Cimetière</string>
+	<string name="type.landuse.churchyard">Cour d\'église</string>
+	<string name="type.landuse.farmland">Terrains agricoles</string>
 	<string name="type.landuse.forest">Forêt</string>
 	<string name="type.landuse.forest.coniferous">Forêt</string>
 	<string name="type.landuse.forest.deciduous">Forêt</string>
 	<string name="type.landuse.forest.mixed">Forêt</string>
+	<string name="type.landuse.grass">Gazon</string>
+	<string name="type.landuse.landfill">Voirie</string>
+	<string name="type.landuse.railway">Installations ferroviaires</string>
 	<string name="type.landuse.reservoir">Eau</string>
+	<string name="type.leisure.dog_park">Places autorisés pour promener les chiens</string>
 	<string name="type.leisure.fitness_centre">Centre fitness</string>
 	<string name="type.leisure.fitness_station">Station de fitness</string>
 	<string name="type.leisure.garden">Jardin</string>
@@ -1818,9 +2128,8 @@
 	<string name="type.leisure.park.permissive">Parc</string>
 	<string name="type.leisure.park.private">Parc</string>
 	<string name="type.leisure.pitch">Terrain de sport</string>
-	<string name="type.leisure.pitch.tennis">Terrain de sport</string>
 	<string name="type.leisure.playground">Terrain de jeu</string>
-	<string name="type.leisure.playground.tennis">Terrain de jeu</string>
+	<string name="type.leisure.sauna">Sauna</string>
 	<string name="type.leisure.sports_centre">Centre sportif</string>
 	<string name="type.leisure.sports_centre.climbing">Centre d\'escalade</string>
 	<string name="type.leisure.sports_centre.shooting">Centre de tir</string>
@@ -1840,20 +2149,19 @@
 	<string name="type.natural.bay">Baie</string>
 	<string name="type.natural.beach">Plage</string>
 	<string name="type.natural.cape">Cap</string>
-	<string name="type.natural.cave_entrance">Entrée de la cave</string>
+	<string name="type.natural.cave_entrance">Cave</string>
 	<string name="type.natural.geyser">Geyser</string>
 	<string name="type.natural.glacier">Glacier</string>
+	<string name="type.natural.grassland">Champ</string>
 	<string name="type.natural.lake">Lac</string>
 	<string name="type.natural.peak">Sommet</string>
 	<string name="type.natural.pond">Étang</string>
+	<string name="type.natural.scrub">Fourré</string>
 	<string name="type.natural.spring">Source</string>
 	<string name="type.natural.tree">Arbre</string>
 	<string name="type.natural.volcano">Volcan</string>
 	<string name="type.natural.water">Eau</string>
-	<string name="type.natural.wood">Forêt</string>
-	<string name="type.natural.wood.coniferous">Forêt</string>
-	<string name="type.natural.wood.deciduous">Forêt</string>
-	<string name="type.natural.wood.mixed">Forêt</string>
+	<string name="type.natural.wetland">Marais</string>
 	<string name="type.office">Bureau</string>
 	<string name="type.office.company">Bureaux d\'entreprise</string>
 	<string name="type.office.estate_agent">Agent immobilier</string>
@@ -1893,6 +2201,8 @@
 	<string name="type.power.tower">Poteau électrique</string>
 	<string name="type.railway.halt">Gare</string>
 	<string name="type.railway.level_crossing">Passage à niveau</string>
+	<string name="type.railway.monorail">Téléphérique</string>
+	<string name="type.railway.rail">Chemin de fer</string>
 	<string name="type.railway.station">Gare</string>
 	<string name="type.railway.station.light_rail">Gare</string>
 	<string name="type.railway.station.monorail">Gare</string>
@@ -1921,7 +2231,7 @@
 	<string name="type.railway.station.subway.spb">Métro</string>
 	<string name="type.railway.station.subway.violet">Métro</string>
 	<string name="type.railway.station.subway.yellow">Métro</string>
-	<string name="type.railway.subway_entrance">Métro</string>
+	<string name="type.railway.subway_entrance">Entrée du métro</string>
 	<string name="type.railway.subway_entrance.barcelona">Métro</string>
 	<string name="type.railway.subway_entrance.berlin">Métro</string>
 	<string name="type.railway.subway_entrance.kiev">Métro</string>
@@ -2001,7 +2311,8 @@
 	<string name="type.shop.wine">Hors licence</string>
 	<string name="type.sport.athletics">Athlétisme</string>
 	<string name="type.sport.basketball">Basket-ball</string>
-	<string name="type.sport.equestrian">Sport équestre</string>
+	<string name="type.sport.equestrian">Sport hippique</string>
+	<string name="type.sport.tennis">Court de tennis</string>
 	<string name="type.tourism.alpine_hut">Hôtel de montagne</string>
 	<string name="type.tourism.apartment">Appart\'hôtel</string>
 	<string name="type.tourism.artwork">Œuvre</string>
@@ -2034,6 +2345,10 @@
 	<string name="type.waterway.stream.intermittent">Rivière</string>
 	<string name="type.waterway.stream.tunnel">Rivière</string>
 	<string name="type.waterway.waterfall">Cascade</string>
+	<string name="type.wheelchair.limited">Partiellement équipé pour les handicapés</string>
+	<string name="type.wheelchair.no">Non équipé pour les handicapés</string>
+	<string name="type.wheelchair.yes">Équipé pour les handicapés</string>
+	<string name="type.building_part">Bâtiment</string>
 
 	<!-- SECTION: Brands -->
 	<string name="brand.kfc">PFC</string>

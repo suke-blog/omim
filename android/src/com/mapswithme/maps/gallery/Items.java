@@ -1,10 +1,14 @@
 package com.mapswithme.maps.gallery;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.mapswithme.maps.MwmApplication;
 import com.mapswithme.maps.R;
+import com.mapswithme.maps.bookmarks.data.FeatureId;
 import com.mapswithme.maps.search.Popularity;
 import com.mapswithme.maps.search.SearchResult;
 
@@ -14,46 +18,6 @@ import static com.mapswithme.util.Constants.Rating.RATING_INCORRECT_VALUE;
 
 public class Items
 {
-  public static class ViatorItem extends RegularAdapterStrategy.Item
-  {
-    @Nullable
-    final String mPhotoUrl;
-    @Nullable
-    final String mDuration;
-    final double mRating;
-    @Nullable
-    final String mPrice;
-
-    public ViatorItem(@Nullable String photoUrl, @NonNull String title,
-                      @Nullable String duration, double rating, @Nullable String price,
-                      @NonNull String url)
-    {
-      super(TYPE_PRODUCT, title, url, null);
-      mPhotoUrl = photoUrl;
-      mDuration = duration;
-      mRating = rating;
-      mPrice = price;
-    }
-
-    ViatorItem(@Constants.ViewType int type, @NonNull String title, @Nullable String url)
-    {
-      super(type, title, url, null);
-      mPhotoUrl = null;
-      mDuration = null;
-      mRating = -1;
-      mPrice = null;
-    }
-  }
-
-  public static class ViatorMoreItem extends ViatorItem
-  {
-
-    public ViatorMoreItem(@Nullable String url)
-    {
-      super(TYPE_MORE, MwmApplication.get().getString(R.string.placepage_more_button), url);
-    }
-  }
-
   public static class LocalExpertItem extends RegularAdapterStrategy.Item
   {
     @Nullable
@@ -67,7 +31,7 @@ public class Items
                            @Nullable String url, @Nullable String photoUrl, double price,
                            @NonNull String currency, double rating)
     {
-      super(viewType, title, url, null);
+      super(viewType, title, null, url);
       mPhotoUrl = photoUrl;
       mPrice = price;
       mCurrency = currency;
@@ -114,7 +78,7 @@ public class Items
 
     public SearchItem(@NonNull SearchResult result)
     {
-      super(TYPE_PRODUCT, result.name, null, result.description.featureType);
+      super(TYPE_PRODUCT, result.name, result.description.featureType, null);
       mResult = result;
     }
 
@@ -176,6 +140,15 @@ public class Items
     }
 
     @NonNull
+    public FeatureId getFeatureId()
+    {
+      if (mResult.description == null)
+        return FeatureId.EMPTY;
+
+      return mResult.description.featureId == null ? FeatureId.EMPTY : mResult.description.featureId;
+    }
+
+    @NonNull
     public Popularity getPopularity()
     {
       return mResult.getPopularity();
@@ -190,7 +163,7 @@ public class Items
     }
   }
 
-  public static class Item
+  public static class Item implements Parcelable
   {
     @NonNull
     private final String mTitle;
@@ -206,6 +179,28 @@ public class Items
       mUrl = url;
       mSubtitle = subtitle;
     }
+
+    protected Item(Parcel in)
+    {
+      mTitle = in.readString();
+      mUrl = in.readString();
+      mSubtitle = in.readString();
+    }
+
+    public static final Creator<Item> CREATOR = new Creator<Item>()
+    {
+      @Override
+      public Item createFromParcel(Parcel in)
+      {
+        return new Item(in);
+      }
+
+      @Override
+      public Item[] newArray(int size)
+      {
+        return new Item[size];
+      }
+    };
 
     @NonNull
     public String getTitle()
@@ -223,6 +218,20 @@ public class Items
     public String getUrl()
     {
       return mUrl;
+    }
+
+    @Override
+    public int describeContents()
+    {
+      return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+      dest.writeString(mTitle);
+      dest.writeString(mUrl);
+      dest.writeString(mSubtitle);
     }
   }
 }

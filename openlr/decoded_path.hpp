@@ -5,6 +5,7 @@
 #include "base/exception.hpp"
 #include "base/newtype.hpp"
 
+#include <cstdint>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -15,7 +16,7 @@ class DataSource;
 
 namespace openlr
 {
-using Path = routing::RoadGraphBase::TEdgeVector;
+using Path = routing::RoadGraphBase::EdgeVector;
 using routing::Edge;
 
 NEWTYPE(uint32_t, PartnerSegmentId);
@@ -30,6 +31,8 @@ struct DecodedPath
   Path m_path;
 };
 
+uint32_t UintValueFromXML(pugi::xml_node const & node);
+
 void WriteAsMappingForSpark(std::string const & fileName, std::vector<DecodedPath> const & paths);
 void WriteAsMappingForSpark(std::ostream & ost, std::vector<DecodedPath> const & paths);
 
@@ -42,5 +45,5 @@ namespace routing
 inline m2::PointD GetStart(Edge const & e) { return e.GetStartJunction().GetPoint(); }
 inline m2::PointD GetEnd(Edge const & e) { return e.GetEndJunction().GetPoint(); }
 
-std::vector<m2::PointD> GetPoints(routing::RoadGraphBase::TEdgeVector const & p);
+std::vector<m2::PointD> GetPoints(routing::RoadGraphBase::EdgeVector const & p);
 }  // namespace routing

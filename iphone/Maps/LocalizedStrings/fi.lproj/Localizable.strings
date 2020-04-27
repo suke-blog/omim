@@ -6,9 +6,6 @@
 
 /********** Strings **********/
 
-/* About button text (should be short) */
-"about" = "Tietoja";
-
 /* Button text (should be short) */
 "back" = "Takaisin";
 
@@ -81,8 +78,6 @@
 /* View and button titles for accessibility */
 "core_my_position" = "Sijaintini";
 
-"ok" = "OK";
-
 /* Settings/Downloader - No free space dialog message */
 "free_disk_space_for_country_x" = "Vapauta tilaa laitteellasi ladataksesi tiedoston %@";
 
@@ -109,9 +104,6 @@
 
 /* Settings/Downloader - 3G download warning dialog confirm button */
 "use_cellular_data" = "Kyllä";
-
-/* Settings/Downloader - No internet connection dialog message */
-"use_wifi_recommendation_text" = "WiFi-yhteyttä suositellaan suurten karttojen lataamiseen";
 
 /* Choose measurement on first launch alert - title */
 "which_measurement_system" = "Mitä mittayksikköä haluat käyttää?";
@@ -408,9 +400,6 @@
 /* Subject for emailed bookmark */
 "bookmark_share_email_subject" = "Hei, katso merkintäni MAPS.ME-kartalla";
 
-/* Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me */
-"bookmark_share_email" = "Hei,\n\nnastoitin kohteen %1$@ MAPS.ME:ssä, koko maailman kattavassa offline-karttasovelluksessa. Klikkaa linkkiä %2$@ tai %3$@ nähdäksesi paikan kartalla. \n\nKiitos. kaikki";
-
 /* Subject for emailed position */
 "my_position_share_email_subject" = "Hei, kurkkaa tämänhetkinen sijaintini MAPS.ME:n kartalla!";
 
@@ -588,15 +577,6 @@
 
 /* category title */
 "routes" = "Reitit";
-
-/* Show on first launch. */
-"maps_licence_info" = "Tämä sovellus käyttää maantieteellistä dataa (mukaan lukien karttoja, yrityslistauksia, mielenkiinnon kohteita, maiden ja alueiden rajoja jne.), joka on noudettu OpenStreetMap-järjestelmästä. Emme takaa OpenStreetMapin datan johdonmukaisuutta, täsmällisyyttä, täydellisyyttä tai sovellettavuutta.";
-
-/* Show on first launch. */
-"agree" = "Hyväksyn";
-
-/* Show on first launch */
-"disagree" = "En hyväksy";
 
 /* text of notification */
 "download_map_notification" = "Lataa sijaintisi kartta";
@@ -896,6 +876,30 @@
 
 /* pink color */
 "pink" = "Pinkki";
+
+/* deep purple color */
+"deep_purple" = "Tumman purppuranpunainen";
+
+/* light blue color */
+"light_blue" = "Vaaleansininen";
+
+/* cyan color */
+"cyan" = "Sinivihreä";
+
+/* teal color */
+"teal" = "Smaragdinvihreä";
+
+/* lime color */
+"lime" = "Limen värinen";
+
+/* deep orange color */
+"deep_orange" = "Tumman oranssi";
+
+/* gray color */
+"gray" = "Harmaa";
+
+/* blue gray color */
+"blue_gray" = "Harmaan sininen";
 
 /* Wi-Fi available */
 "WiFi_available" = "Kyllä";
@@ -1342,10 +1346,6 @@
 
 "onboarding_permissions_message" = "Jotta voisit ladata karttoja, nähdä lähistöllä olevat paikan ja liikenteen sekä käyttää navigointia.";
 
-"onboarding_welcome_title" = "Tervetuloa käyttämään MAPS.ME:tä";
-
-"onboarding_welcome_first_subtitle" = "Ilmaiset, nopeat, yksityiskohtaiset ja offline-tilassa täysin toimivat kartat käännös käännökseltä -navigoinnilla.";
-
 "onboarding_welcome_second_subtitle" = "Käynnistämällä sovelluksen hyväksyt <a href=\"%s\">käyttöehdot</a> ja <a href=\"%s\">tietosuojakäytännön</a>.";
 
 "dialog_incorrect_feature_position" = "Vaihda sijaintia";
@@ -1500,7 +1500,7 @@
 
 "placepage_more_button" = "Lisää";
 
-"placepage_more_reviews_button" = "More Reviews";
+"placepage_more_reviews_button" = "Lisää arvosteluja";
 
 "book_button" = "Varaa";
 
@@ -1782,10 +1782,6 @@
 
 "banner_rentalcars_message" = "800 autonvuokrausyritystä yli 49 000 autonvuokrauskohteessa.";
 
-"banner_viator_title" = "Kierrosten haku verkossa";
-
-"banner_viator_message" = "Hae yli 50 000 kierroksesta ympäri maailmaa.";
-
 /* december */
 "whatsnew_traffic" = "Liikennetiedot 36 maassa";
 
@@ -1860,10 +1856,6 @@
 "whatsnew_waypoints_title" = "Reittipisteet reitillä";
 
 "whatsnew_waypoints_message" = "Lisää reittiisi reittipisteitä napauttamalla paikkoja.";
-
-"whatsnew_viator_title" = "Varaa kierros";
-
-"whatsnew_viator_message" = "Valitse suosittuja kierroksia turistikaupungeissa ympäri maailman.";
 
 "whatsnew_driving_style_title" = "Uusi karttatyyli ajettaessa";
 
@@ -1977,8 +1969,6 @@
 
 "toast_location_permission_denied" = "Sovelluksen sijainnin käyttöoikeus evättiin";
 
-"place_page_viator_title" = "Nähtävyydet ja kierrokset";
-
 "button_use" = "Käytä";
 
 "planning_route_manage_route" = "Hallitse reittiä";
@@ -2018,10 +2008,6 @@
 "choose_start_point" = "Valitse aloituspiste";
 
 "choose_destination" = "Valitse kohde";
-
-"preloader_viator_title" = "Tutustu kierroksiin ja epätavallisiin aktiviteetteihin";
-
-"preloader_viator_message" = "Kierroksia, aktiviteetteja, nähtävyyksien katselua ja muuta";
 
 "preloader_viator_button" = "Lisätietoja";
 
@@ -2127,10 +2113,6 @@
 
 "discovery_button_subtitle_local_guides" = "Paikalliset oppaat";
 
-"discovery_button_viator_offline_title" = "Tutustu kierroksiin ja epätavallisiin aktiviteetteihin";
-
-"discovery_button_viator_offline_message" = "Kierroksia, tekemistä, kiertoajeluita ja muuta.";
-
 "discovery_button_viator_error_title" = "Virhe ladattaessa tietoja";
 
 "discovery_button_other_error_message" = "Virhe ladattaessa tietoja";
@@ -2203,8 +2185,6 @@
 
 "downloader_applying" = "%s otetaan käyttöön...";
 
-"transit_not_found" = "Navigointi kohteiden välillä ei ole vielä käytettävissä tällä alueella";
-
 "whats_new_title_hotel_filter" = "Uusia hotellisuodattimia on saatavana!";
 
 "whats_new_message_hotel_filter" = "Varaa hotelleja, joissa on tilaa valitseminasi päivinä! Käytä sisäänkirjautumis- ja uloskirjautumissuodattimia";
@@ -2212,8 +2192,6 @@
 "whats_new_title_ugc_travel" = "Jaa kokemuksesi muille matkailijoille!";
 
 "whats_new_message_ugc_travel" = "Arvioi ja kirjoita arvosteluja vierailemistasi paikoista!";
-
-"dialog_pedestrian_route_is_long" = "Jalankulkureitti on liian pitkä";
 
 "dialog_message_transit_not_found_connection" = "Suunnittele reitti yhdellä läpikulkuverkolla";
 
@@ -2405,9 +2383,8 @@
 
 "guide_downloaded_title" = "Opas on onnistuneesti ladattu";
 
-"download_guides" = "Lataa oppaat";
-
-"cached_guides_placeholder_subtitle" = "Yksityiskohtaiset offline-oppaat kaikenlaisille matkoille. Valitse se, joka sopii sinulle parhaiten, ja lataa se suoraan kartalle. Tarvitset internetyhteyden oppaiden lataamiseksi.";
+/* as few symbols as possible */
+"download_guides" = "Etsi matkaoppaita";
 
 "guides_groups_cached" = "Ladatut oppaat";
 
@@ -2487,8 +2464,6 @@
 
 "restore_no_subscription_alert" = "Aktiivisia tilauksia ei ole";
 
-"subscription_terms" = "Maksu veloitetaan iTunes-tililtäsi maksuvahvistuksen yhteydessä. Tilauksesi uusitaan automaattisesti ellei automaattista uusintaa ole otettu pois käytöstä vähintään 24 tuntia ennen nykyisen tilausjakson päättymistä. Tilauksen uusinta veloitetaan tililtäsi 24 tunnin kuluessa ennen nykyisen tilausjakson päättymistä. Voit hallita tai ottaa tilausten automaattisen uusinnan pois käytöstä Apple ID -tilisi asetuksissa oston jälkeen.";
-
 "subscriptions_title" = "Tilaukset";
 
 "manage_subscription" = "Hallitse tilausta";
@@ -2508,8 +2483,6 @@
 "ugc_route_tags_screen_label" = "Valitse tunnisteet";
 
 "ugc_route_tags_progress_msg" = "Lataamme tunnisteita…";
-
-"ugc_route_tags_desc" = "Ole hyvä, valitse tunnisteet, jotta muut matkustajat löytävät matkaoppaasi. Tämä on pakollista.";
 
 "public_access" = "Julkinen pääsy";
 
@@ -2564,7 +2537,7 @@
 
 "unable_upload_error_subtitle_broken" = "Tiedosto on vioittunut eikä sitä voi ladata. Ole hyvä, lataa toinen tiedosto.";
 
-"buy_btn" = "Osta %s:sta";
+"buy_btn" = "Osta opas hintaan %s";
 
 "download_guide_progress" = "Matkaopas latautuu…";
 
@@ -2659,6 +2632,636 @@
 
 "whats_new_ugc_routes_title_android_only" = "Voit helposti jakaa kokemuksiasi";
 
+"ugc_thanks_message_auth" = "Arvostelusi tallennettiin";
+
+"ugc_thanks_message_not_auth" = "Kirjaudu sisään jättääksesi arvostelun";
+
+"notification_leave_review_v2_title" = "Arvostele paikka, jossa kävit, ja auta matkailijoita!";
+
+"error_public_not_enought_title" = "Ei tarpeeksi kirjanmerkkejä";
+
+"error_public_not_enought_subtitle" = "Sinulla täytyy olla vähintään 3 kirjanmerkkiä, jotta voit lähettää oppaan julkiseen luetteloon";
+
+"bookmark_public_upload_alert_title" = "Muutama askel vielä, niin voit jakaa kirjanmerkkisi kaikkien MAPS.ME-matkailijoiden kanssa!";
+
+"bookmark_public_upload_alert_subtitle" = "Varmista, että listallasi on kunnollinen nimi ja kuvaus, ja että kaikissa kirjanmerkeissäsi on paikoista jotain tietoa. Näin muut voivat löytää listasi ja käyttää sitä.";
+
+"bookmark_public_upload_alert_ok_button" = "Kyllä, tottakai!";
+
+"name_title" = "Kirjoita oppaasi nimi";
+
+"name_placeholder" = "esim. Lontoon pubit";
+
+"name_comment1" = "Nimeä oppaasi niin, että matkailijat voivat löytää sen helposti: esimerkiksi \"Lontoon pubit\"";
+
+"name_comment2" = "Nimessä ei saa olla erikoismerkkejä. Nimi ei saa olla \"Minun paikkani\"";
+
+"description_guide" = "Kuvaus";
+
+"description_title" = "Kirjoita oppaasi kuvaus";
+
+"description_placeholder" = "Kuvaile opastasi yksityiskohtaisesti";
+
+"description_comment1" = "Oppaasi kuvauksen pitäisi olla vähintään 30 merkin pituinen.";
+
+"ugc_route_tags_desc" = "Valitsethan avainsanoja auttaaksesi muita matkailijoita löytämään oppaasi. Tämä on pakollinen. Enintään %s avainsanaa.";
+
+"html_format_error_title" = "Opastasi ei julkaistu";
+
+"html_format_error_subtitle" = "Varmista, että kaikkien kirjanmerkkien nimet ja kuvaukset ovat oikein muotoiltu. Voit tarkistaa sen tietokoneen selaimella klikkaamalla \"Muokkaa netissä\" -painiketta alla.";
+
+"web_editor_description" = "Lähetä oppaaksi, niin saat muokkaus linkin tietokoneelle";
+
+"edit_on_web_confirm" = "Muokkaa netissä";
+
+"update_guide" = "Lähetä päivitys";
+
+"direct_link_updating_text" = "Tiedostoasi päivitetään…";
+
+"direct_link_updating_success" = "Oppaasi päivitettiin";
+
+"unable_get_direct_link_desc" = "Voit jakaa oppaasi julkisella linkillä";
+
+"any_access_update_alert_title" = "On voinut tapahtua muutoksia";
+
+"any_access_update_alert_message" = "Haluatko päivittää kirjanmerkkisi? Uusi versio on saatavilla saman linkin kautta.";
+
+"any_access_update_alert_update" = "Päivitä";
+
+"public_or_limited_access_after_edit_online_error_title" = "Muokkasit kirjanmerkkejäsi netissä";
+
+"public_or_limited_access_after_edit_online_error_message" = "Muokkaa, julkaise tai jaa opas tulevaisuudessa nettisivujemme kautta";
+
+"power_managment_title" = "Virransäästötila";
+
+"power_managment_description" = "Kun olet valinnut automaattisen tilan, sovellus alkaa sammuttamaan virtaa vieviä ominaisuuksia riippuen kulloisestakin akun latauksesta";
+
+"power_managment_setting_never" = "Ei koskaan";
+
+"power_managment_setting_auto" = "Automaattinen";
+
+"power_managment_setting_manual_max" = "Täysi virransäästö";
+
+"enable_logging_warning_message" = "Valinta ottaa käyttöön lokikirjaukset diagnostiikkaa varten. Se voi auttaa tukihenkilöstöämme, kun he korjaavat sovelluksen ongelmia. Ota tämä ominaisuus käyttöön vain, jos MAPS.ME:n tuki pyytää.";
+
+"html_error_upload_message_try_again" = "Tarkista verkkoasetukset ja kokeile uudelleen";
+
+"html_error_upload_title_try_again" = "Ei nettiyhteyttä";
+
+"notification_leave_review_v2_android_short_title" = "Arvostele ja auta matkailijoita!";
+
+"megafon" = "Say goodbye to roaming!";
+
+"notifications_illegal_alert_disable_button" = "Kytke ilmoitukset pois";
+
+"access_rules_author_only" = "Nettimuokkaus";
+
+"privacy_settings_menu" = "Yksityisyysasetukset";
+
+"gdpr_request_setting" = "ID:n hankkiminen GDPR-pyyntöä varten";
+
+"gdpr_request_window_title" = "Sinun ID: %s.";
+
+"gdpr_request_window_message" = "Kopioi se ja lähetä pyyntö osoitteeseen support@maps.me";
+
+"gdpr_request_window_copy" = "Kopioi ID";
+
+"unable_upadate_error_title" = "Tiedoston päivitys epäonnistui";
+
+"unable_upadate_error_message" = "Päivityksen aikana tapahtui jokin virhe. Tarkista muutokset ja yritä uudelleen";
+
+"whats_new_wiki_title" = "Mikä tuo paikka on?";
+
+"whats_new_wiki_message" = "Olemme lisänneet suosituimpien turistikohteiden sivuille Wikipedia.org-artikkelit. Ne ovat saatilla myös ilman nettiä";
+
+"driving_options_title" = "Kiertotien asetukset";
+
+"driving_options_subheader" = "Vältettävä kaikissa reiteissä";
+
+"avoid_tolls" = "Maksulliset tiet";
+
+"avoid_unpaved" = "Päällystämättömät tiet";
+
+"avoid_ferry" = "Lauttaliikenne";
+
+"avoid_motorways" = "Valtatiet";
+
+"unable_to_calc_alert_title" = "Reittiä ei voi luoda";
+
+"unable_to_calc_alert_subtitle" = "Valitettavasti emme voineet luoda reittiä valituilla vaihtoehdoilla. Vaihda asetuksia ja yritä uudelleen";
+
+"define_to_avoid_btn" = "Muodosta kiertotietä";
+
+"change_driving_options_btn" = "Kiertotien asetukset on päällä";
+
+"toll_road" = "Maksullinen tie";
+
+"unpaved_road" = "Päällystämätön tie";
+
+"ferry_crossing" = "Lauttaliikenne";
+
+"operated_by" = "Hallinnoitu \"%s\"";
+
+"avoid_toll_roads_placepage" = "Vältä maksullisia teitä";
+
+"avoid_unpaved_roads_placepage" = "Vältä maanteitä";
+
+"avoid_ferry_crossing_placepage" = "Vältä lautan käyttöä";
+
+"cached_guides_placeholder_subtitle" = "MAPS.ME:n valmiit oppaat ovat valittuja paikkoja valokuvien ja kuvauksien kanssa, jotka näkyvät kartalla ja ovat käytettävissä offline-tilassa.";
+
+"guides_catalogue_title" = "Oppaiden luettelo";
+
+"download_guides_button" = "Mene hakemistoon";
+
+"type.cuisine.uzbek" = "Uzbekistanilainen ruokaa";
+
+"onboarding_welcome_title" = "Suunnittele ja matkusta MAPS.ME:n kanssa";
+
+"onboarding_welcome_first_subtitle" = "Tallenna mielenkiintoisia paikkoja, varaa hotelleja, luo reittejä offline-tilassa";
+
+"onboarding_guide_direct_download_title" = "Opas on valmis ladattavaksi";
+
+"onboarding_guide_direct_download_subtitle" = "Opas näkyy kartalla ja toimii offline-tilassa";
+
+"onboarding_guide_direct_download_button" = "Ladata";
+
+"onboarding_bydeeplink_guide_title" = "Valmiit oppaat MAPS.ME:ssä";
+
+"onboarding_bydeeplink_guide_subtitle" = "Valittuja paikkoja valokuvien ja kuvauksien kanssa, jotka näkyvät kartalla ja ovat käytettävissä offline-tilassa.";
+
+"whats_new_auto_update_bydeeplink_title" = "Ennen kuin siirtytään oppaille…";
+
+"whats_new_auto_update_bydeeplink_message" = "Päivitä kartat saadaksesi ajankohtaista tietoa kohteista!";
+
+"whats_new_auto_update_and_proceed_button_size" = "Päivitä (%s) ja jatka";
+
+"whatsnew_toll_unpaved_title" = "Luo reittejä ottaen huomioon kaikentyyppiset tiet";
+
+"whatsnew_toll_unpaved_message" = "Valitse kiertoreitit maksullisten teiden, päällystämättömien teiden ja lauttojen ohi";
+
+"whatsnew_new_catalogue_title" = "Päivitetyt hakemistosivut";
+
+"whatsnew_new_catalogue_message" = "Me lisäsimme yksityiskohtaisia tietoja kumppaneiden oppaista, jotta reitin valinta on helppoa ja kätevää";
+
+"purchase_please_wait_toast" = "Älä poistu näytöltä ennen kuin ostos on tehty";
+
+"trip_start" = "Mennään";
+
+"pick_destination" = "Kohde";
+
+"follow_my_position" = "Kohdista";
+
+"search_results" = "Hakutulokset";
+
+"then_turn" = "Sitten";
+
+"redirect_route_alert" = "Haluatko luoda reitin uudelleen?";
+
+"redirect_route_yes" = "Kyllä";
+
+"redirect_route_no" = "Ei";
+
+"trip_finished" = "Olet saapunut!";
+
+"keyboard_availability_alert" = "Näppäimistö ei ole käytettävissä ajon aikana";
+
+"dialog_routing_change_start_carplay" = "Reittiä ei ole mahdollista luoda nykyisestä sijainnista";
+
+"dialog_routing_change_end_carplay" = "Reittiä ei ole mahdollista luoda loppupisteeseen. Valitse toinen";
+
+"dialog_routing_check_gps_carplay" = "Ei ole GPS-signaalia. Siirry avaralle alueelle";
+
+"dialog_routing_unable_locate_route_carplay" = "Reittiä ei ole mahdollista luoda. Valitse muut reittipisteet";
+
+"dialog_routing_download_files_carplay" = "Luodaksesi reitin lataa puutt. kartat";
+
+"dialog_routing_system_error_carplay" = "On tapahtunut virhe. Käynnistä sovellus uudelleen";
+
+"dialog_routing_rebuild_from_current_location_carplay" = "Reitti luodaan nykyisestä sijainnista";
+
+"dialog_routing_rebuild_for_vehicle_carplay" = "Reitti muutetaan autoilijan reitiksi";
+
+"ok" = "Ok";
+
+"vezet_taxi" = "Vezet";
+
+"booking_button_toolbar" = "Etsi hotelli kartalla";
+
+"popup_booking_download_guides_title" = "Onko hotellin jo varattu?";
+
+"popup_booking_download_guides_message" = "Suunnittele reittisi valmiilla MAPS.ME -matkaoppailla";
+
+"popup_mwm_download_guides_title" = "Offline-matkaoppaat";
+
+"popup_mwm_download_guides_cta" = "Valitse";
+
+"popup_mwm_download_guides_cta_1" = "Katso";
+
+"gallery_pp_download_guides_offline_title" = "Suunnittele lomasi MAPS.ME:n kanssa!";
+
+"gallery_pp_download_guides_offline_subtitle" = "Älä missaa tärkeimpiä reittejä kokeneilta matkustajilta";
+
+"gallery_pp_download_guides_offline_cta" = "Ota Internet käyttöön";
+
+"gallery_pp_download_guides_title" = "Matkaoppaat";
+
+"native_screen_subscription_title" = "Täysimääräinen pääsy 2000+ matkaoppaaseen!";
+
+"native_screen_subscription_message" = "Vietä ikimuistoista vapaa-aikaa missä tahansa ja kenen tahansa kanssa";
+
+"annual_subscription_title" = "Yhden vuoden";
+
+"montly_subscription_title" = "Yhden kuukauden";
+
+"annual_subscription_message" = "12 kuukautta rajoittamatonta pääsyä";
+
+"montly_subscription_message" = "1 kuukausi rajoittamatonta pääsyä";
+
+"annual_save_component" = "- %d%";
+
+"subscription_success_dialog_title" = "Kiitos tilauksesta!";
+
+"subscription_success_dialog_message" = "Nyt sinulla on rajoittamaton pääsy matkaoppaiden luetteloon";
+
+"renewal_screen_title" = "Tilauksen voimassaoloaika on umpeutunut";
+
+"renewal_screen_message" = "Kaikki tilauksen puitteissa ladatut matkaoppaat poistetaan. Haluatko palauttaa tilauksesi ja pitää ne?";
+
+"renewal_screen_button_restore" = "Kyllä, palauta";
+
+"renewal_screen_button_cancel" = "Ei, poista matkaoppaat";
+
+"subscription_error_ping_title" = "Oston suorittaminen epäonnistui";
+
+"subscription_error_message" = "Nyt palvelu ei ole käytettävissä omalla alueellasi. Ole hyvä, yritä myöhemmin uudelleen";
+
+"subscription_error_button" = "Selvä";
+
+"timeout_error_title" = "Hups, aika on ohi!";
+
+"timeout_error_message" = "Palvelimemme eivät vastaa. Ole hyvä ja tarkista Internet-yhteys ja yritä uudelleen.";
+
+"per_month" = "/kuukausi";
+
+"per_year" = "/vuosi";
+
+"buy_btn_for_subscription" = "Rajoittamaton pääsy alkaen %s";
+
+"buy_btn_for_subscription_1" = "Osta KAIKKI matkaoppaat hintaan %s";
+
+"buy_btn_for_subscription_ios_only_mo" = "Rajoittamaton pääsy hintaan %s/kuu.";
+
+"buy_btn_for_subscription_ios_only_year" = "Rajoittamaton pääsy hintaan %s/vuosi";
+
+"subscription_terms_guides" = "Maksu suoritetaan iTunes-tililtäsi oston vahvistamisen jälkeen. Tilaus uusitaan automaattisesti, ellei automaattinen uusiminen ole laitettu pois päältä vähintään 24 tuntia ennen nykyisen kauden päättymistä. Varat veloitetaan tililtäsi uusintasuunnitelmasi mukaisesti 24 tunnin kuluessa nykyisen kauden päättymisestä. Sinä voit hallita automaattista uusimista tai poistaa sen käytöstä Apple ID -tili-asetuksissa milloin tahansa oston jälkeen. Voit käyttää tilauksen kautta ladattuja oppaita vain sen voimassaoloaikana. 30 päivän kuluttua tilauksen päättymisestä matkaoppaat kaikkine kirjanmerkkeineen poistetaan automaattisesti.";
+
+"subscription_terms" = "Maksu veloitetaan iTunes-tililtäsi maksuvahvistuksen yhteydessä. Tilauksesi uusitaan automaattisesti ellei automaattista uusintaa ole otettu pois käytöstä vähintään 24 tuntia ennen nykyisen tilausjakson päättymistä. Tilauksen uusinta veloitetaan tililtäsi 24 tunnin kuluessa ennen nykyisen tilausjakson päättymistä. Voit hallita tai ottaa tilausten automaattisen uusinnan pois käytöstä Apple ID -tilisi asetuksissa oston jälkeen.";
+
+"whatsnew_carplay_title" = "MAPS.ME -autonavigointi CarPlayssa!";
+
+"whatsnew_carplay_message" = "Kirjanmerkit, haku, nopeuskamerat ja kiertotien asetukset ovat käytettävissä offline-tilassa";
+
+"whatsnew_subscription_title" = "Tilauksella koko maailma!";
+
+"whatsnew_subscription_message" = "Rajaton käyttöoikeus ohjekirjoihin on hyödyllisempi kuin kertaluontoinen ostos";
+
+"whatsnew_carnavi_fixes_for_android_title" = "Navigointipäivitys";
+
+"whatsnew_carnavi_fixes_for_android_message" = "Olemme parantaneet reittisuunnittelua kaukana teistä oleviin kohteisiin";
+
+"avoid_unpaved_carplay_1" = "Päällyste";
+
+"avoid_unpaved_carplay_2" = "Vain päällyste";
+
+"avoid_ferry_carplay_1" = "Ei lauttoja";
+
+"avoid_ferry_carplay_2" = "Ei lauttoja";
+
+"avoid_tolls_carplay_1" = "Ei maksua";
+
+"avoid_tolls_carplay_2" = "Ei maksua";
+
+"speedcams_alert_title_carplay_1" = "Nopeuskamera";
+
+"speedcams_alert_title_carplay_2" = "Nopeuskamerat";
+
+"download_map_carplay" = "Lataa kartat laitteesi MAPS.ME-sovelluksessa";
+
+"carplay_roundabout_exit" = "Poistumisramppi %s";
+
+/* max. 10 symbols, both iOS and Android */
+"sort" = "Järjestä…";
+
+/* Android, title, max 20-22 symbols */
+"sort_bookmarks" = "Järjestä kirjanmerkit";
+
+/* iOS */
+"sort_default" = "Järjestä: oletus";
+
+"sort_type" = "Järjestä: tyyppi";
+
+"sort_distance" = "Järjestä: etäisyys";
+
+"sort_date" = "Järjestä: päivämäärä";
+
+/* Android */
+"by_default" = "Oletus";
+
+/* Android */
+"by_type" = "Tyyppi";
+
+/* Android */
+"by_distance" = "Etäisyys";
+
+/* Android */
+"by_date" = "Päivämäärä";
+
+"week_ago_sorttype" = "Viikko sitten";
+
+"month_ago_sorttype" = "Kuukausi sitten";
+
+"moremonth_ago_sorttype" = "Yli kuukausi sitten";
+
+"moreyear_ago_sorttype" = "Yli vuosi sitten";
+
+"near_me_sorttype" = "Lähelläni";
+
+"others_sorttype" = "Muut";
+
+"food_places" = "Ruoka";
+
+"tourist_places" = "Nähtävyydet";
+
+"museums" = "Museot";
+
+"parks" = "Puistot";
+
+"swim_places" = "Uiminen";
+
+"mountains" = "Vuoret";
+
+"animals" = "Eläimet";
+
+"hotels" = "Hotellit";
+
+"buildings" = "Rakennukset";
+
+"money" = "Raha";
+
+"shops" = "Kaupat";
+
+"parkings" = "Pysäköinti";
+
+"fuel_places" = "Huoltoasemat";
+
+"water" = "Vesi";
+
+"medicine" = "Apteekki";
+
+"search_in_the_list" = "Etsi listalta";
+
+"view_on_map_bookmarks" = "Kartalla";
+
+"more_bookmarks" = "Lisää…";
+
+"no_items_found" = "Kohteita ei löytynyt";
+
+/* Android, max 18 symbols */
+"bookmarks_edit_list" = "Muokkaa listaa";
+
+/* Android, max 18 symbols */
+"bookmarks_delete_list" = "Poista lista";
+
+"whatsnew_bookmarks_search_sort_title" = "Järjestellyt kirjanmerkit tekevät matkailusta mukavampaa";
+
+"whatsnew_bookmarks_search_sort_message" = "Järjestä suosikkipaikkasi kategorian, sijainnin tai kronologisen järjestyksen mukaan ja etsi kirjanmerkkejä nopeasti nimen perusteella";
+
+"popup_subscription_success_map_title" = "Hurraa! Tilauksesi on voimassa!";
+
+"popup_subscription_success_map_message" = "Tutustu nyt parhaisiin nähtävyyksiin MAPS.ME-luettelossa";
+
+"popup_subscription_success_map_start_button" = "Näytä";
+
+"popup_subscription_success_map_not_now_button" = "Ei nyt";
+
+"religious_places" = "Pyhät paikat";
+
+"subscription_terms_android" = "Maksu suoritetaan Google Play-tililtäsi oston vahvistamisen jälkeen. Tilaus uusitaan automaattisesti, ellei automaattinen uusiminen ole laitettu pois päältä vähintään 24 tuntia ennen nykyisen kauden päättymistä. Varat veloitetaan tililtäsi uusintasuunnitelmasi mukaisesti 24 tunnin kuluessa nykyisen kauden päättymisestä. Sinä voit hallita automaattista uusimista tai poistaa sen käytöstä Google Play-tili-asetuksissa oston jälkeen. Voit käyttää tilauksen kautta ladattuja oppaita vain sen voimassaoloaikana. 30 päivän kuluessa tilauksen päättymisestä matkaoppaat kaikkine kirjanmerkkeineen poistetaan automaattisesti.";
+
+"select_list" = "Valitse luettelo";
+
+"pp_discovery_place_related_header" = "Tämä paikka matkaopashakemistoissa";
+
+"pp_discovery_place_related_header_1" = "Tämä paikka löytyy matkaoppaasta";
+
+"pp_discovery_place_related_cta_button" = "Katso";
+
+"pp_discovery_place_related_tag_header" = "”%s”-tagin matkaoppaista";
+
+"pp_discovery_place_related_tag_header_1" = "Saatat myös pitää";
+
+"buy_btn_for_subscription_version_2" = "KAIKKI matkaoppaat vain %s/kk.";
+
+"buy_btn_for_subscription_version_3" = "Koko luettelo %s/kk.";
+
+"buy_btn_for_subscription_ios_only_mo_version_2" = "Pääsy hakemistoon %s/kk.";
+
+"buy_btn_for_subscription_ios_only_year_version_2" = "Pääsy hakemistoon %s/vuosi";
+
+"subscription_screen_native_title_version_2" = "Pääsy matkaoppaan nastojen kanssa kartalla!";
+
+"subscription_screen_native_message_version_2" = "Ole valmiita mihin tahansa matkaan yli 600 kaupungissa ja yli 100 maassa";
+
+"catalog_no_internet_title" = "Ei ole Internet-yhteyttä";
+
+"catalog_no_internet_button" = "Yritä uudelleen";
+
+"whatsnew_map_updates_title" = "Erittäin nopeat karttapäivitykset";
+
+"whatsnew_map_updates_message" = "Nyt me päivitämme tietoja 2 kertaa nopeammin";
+
+"new_onboarding_button" = "Edelleen";
+
+"new_onboarding_button_2" = "Aloita";
+
+"new_onboarding_step1_header" = "MAPS.ME";
+
+"new_onboarding_step1_header_2" = "Yleisavustaja matkojen aikana";
+
+"new_onboarding_step2_header" = "Unelmoi ja suunnittele";
+
+"new_onboarding_step2_message" = "70+ miljoonaa mielenkiintoista paikkaa, luettelo valmiita matkaoppaita ja hotellivaraus kartalla – olet valmis matkustamaan!";
+
+"new_onboarding_step3_message" = "Yksityiskohtaisten offline-karttojen ja offline-navigoinnin avulla et eksy tuntemattomissa paikoissa!";
+
+"new_onboarding_step4_header" = "Jaa vaikutelmasi";
+
+"new_onboarding_step4_message" = "Tallenna suosikkipaikat suosikkeihin ja lähetä ne ystävillesi";
+
+"new_onboarding_step5.1_header" = "Ennen aloittamista…";
+
+"new_onboarding_step5.1_message" = "Muista vierailla meidän uuden reittiluettelossamme löytääksesi offline-oppaan seuraavaa matkaa varten!";
+
+"new_onboarding_step5.1_button" = "Avaa luettelo";
+
+"new_onboarding_step5.2_message" = "MAPS.ME:ssä matkaopasluettelon tilaaminen on kannattavaa. Saat täyden pääsyn matkaoppaisiin kaupungin kävelyretkiä ja ulkoilua varten!";
+
+"new_onboarding_step5.2_button" = "Näytä ehdot";
+
+"new_onboarding_step5.3_message" = "Lataa ja arvioi kaupunkikierroksia ja ulkoiluaktiviteetteja ilmaisella MAPS.ME-valinnalla!";
+
+"new_onboarding_step5.3_button" = "Lataa ilmaiseksi";
+
+"new_onboarding_additional_steps_later_button" = "Ei nyt";
+
+"all_pass_subscription_header" = "MATKAOPASLUETTELON TILAUS";
+
+/* do not translate */
+"all_pass_subscription_subheader" = "City + Outdoor Pass";
+
+/* \n - for a break between lines. Max. 15 characters per 1 line. */
+"all_pass_subscription_message_title" = "30000+\nopasta\nja polkua";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle" = "<b>Rajoittamaton lataus offline-reittejä</b> kaupunkiin ja aktiivisia ulkoilua varten";
+
+/* \n - for a break between lines. Max. 17 characters per 1 line. */
+"all_pass_subscription_message_title_2" = "Interaktiivinen\nkorkeusprofiili";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle_2" = "Kaikki polut ladataan <b>korkeuksineen ja perustietoineen reiteistä</b>";
+
+/* \n - for a break between lines. Max. 15 characters per 1 line. */
+"all_pass_subscription_message_title_3" = "Valitut\npaikat, kuvat\nja suositukset";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle_3" = "<b>Ota kaikki selvää reitistä</b>, jota sinä aiot kulkea";
+
+/* do not translate */
+"sightseeing_subscription_header_sightseeing" = "City Pass";
+
+"sightseeing_subscription_header_subscription" = "Matkaopastilaus";
+
+"sightseeing_subscription_message" = "700+ kaupunkia ja 100+ maata";
+
+"sightseeing_subscription_message_2" = "Saatavilla offline-tilassa";
+
+"sightseeing_subscription_message_3" = "Valokuvat ja kävelyreitit";
+
+"subscription_success_dialog_title_sightseeing_pass" = "Kiitos tilauksesta!";
+
+"subscription_success_dialog_message_sightseeing_pass" = "Nyt teillä on pääsy kaikkiin luettelossa oleviin kaupunkioppaisiin";
+
+"downloader_main_gallery_header" = "Kartat ja matkaoppaat";
+
+"downloader_main_gallery_message" = "Nyt tässä jaksossa voit paitsi ladata karttoja myös valita matkaoppaita seuraavia matkojasi varten";
+
+"downloader_main_1_element_gallery_header" = "Kaikki matkaoppaat";
+
+"downloader_main_1_element_gallery_message" = "100+ maassa";
+
+"downloader_country_1_element_gallery_header" = "%s reittiä";
+
+"downloader_country_no_guides_gallery_header" = "Tätä maata varten ei ole vielä matkaoppaita";
+
+"downloader_country_no_guides_gallery_message" = "Tutustu muihin kaupunki- ja ulkoilureitteihin 100+ maassa";
+
+"dialog_pedestrian_route_is_long" = "Liian pitkä jalankulkumatka joukkoliikenteen pysäkille";
+
+"whatsnew_outdoor_guides_title" = "Me olemme lisänneet 15000+ polkua ulkoilua varten!";
+
+"whatsnew_outdoor_guides_message" = "Outdooractiven talvi- ja kesälomareitit odottavat luettelossa!";
+
+"whatsnew_guides_galleries_title" = "Suunnittele seuraava matka MAPS.ME:n kanssa";
+
+"whatsnew_guides_galleries_message" = "Nyt te voitte löytää suositeltuja matkaoppaita suosittujen kaupunkien ja nähtävyyksien korteista";
+
+"new_onboarding_step3_header" = "Matkusta";
+
+"all_pass_screen_best_value" = "Edullinen hinta";
+
+"buy_btn_for_subscription_3" = "Koko luettelo %s/vuosi";
+
+"transit_not_found" = "Metron reittiohjeet eivät ole vielä saatavilla tällä alueella";
+
+"dialog_pedestrian_route_is_long_header" = "Metroreittiä ei ole löytynyt";
+
+"dialog_pedestrian_route_is_long_message" = "Valitse reitin aloitus- tai loppupiste lähemmäksi metroasemaa";
+
+/* Failed planning SUBWAY route message in navigation view */
+"routing_planning_error_subway_special" = "Virhe metroreitin luomisessa";
+
+"whatsnew_isolines_title" = "Uutuus aktiivilomalle – korkeus linjat offline-tilassa!";
+
+/* as less symbols as possible */
+"whatsnew_isolines_message" = "Suunnistaudu vuorimaastossa – käynnistä kerros päälle näytön vasemmassa yläkulmassa olevalla painikkeella";
+
+"button_layer_isolines" = "Korkeudet";
+
+"tips_map_layers_title_countour" = "Korkeuslinjat offline-tilassa MAPS.ME:ssä!";
+
+"tips_map_layers_message_countour" = "Korkeuslinjat auttavat suunnittelemaan luontomatkan etkä enää eksy maastolla";
+
+"isolines_activation_error_dialog" = "Päivitä tai lataa haluamasi alueen kartta, voidaksesi käyttää korkeuslinjoja";
+
+"isolines_location_error_dialog" = "Korkeus linjat eivät ole vielä saatavilla tällä alueella";
+
+"elevation_profile_diff_level" = "Vaikeustaso";
+
+"elevation_profile_diff_level_easy" = "Helppo";
+
+"elevation_profile_diff_level_moderate" = "Kohtuullinen";
+
+"elevation_profile_diff_level_hard" = "Vaikea";
+
+"elevation_profile_ascent" = "Nosto";
+
+"elevation_profile_descent" = "Lasku";
+
+"elevation_profile_minaltitude" = "Min. korkeus";
+
+"elevation_profile_maxaltitude" = "Maks. korkeus";
+
+"elevation_profile_m" = "m";
+
+"elevation_profile_difficulty" = "Vaikeus";
+
+"elevation_profile_distance" = "Etäisyys:";
+
+"elevation_profile_km" = "km";
+
+"elevation_profile_time" = "Aika:";
+
+"elevation_profile_hours" = "t.";
+
+"elevation_profile_minutes" = "min";
+
+/* hide the full screen banner and continue working with the app */
+"hide_screen_map_update" = "Piilota ja jatka tausta-ajo";
+
+"view_on_map_downloaded_error" = "Tämä matkaopas oli poistettu laitteesta";
+
+"subscription" = "Tilaus";
+
+"freenow_taxi_title" = "FREE NOW";
+
+"tinkoff_allairlines_map_downloader_title" = "Карта Тинькофф All Airlines. 3000 миль в подарок";
+
+"tinkoff_allairlines_map_downloader_cta_button" = "Оформить карту";
+
+"tinkoff_insurance_map_downloader_title" = "Полис Тинькофф со скидкой! Подходит для любых виз.";
+
+"tinkoff_insurance_map_downloader_cta_button" = "Промокод";
+
+"mts_map_downloader_title" = "Забугорище: интернет и звонки за границей как дома";
+
+"mts_map_downloader_cta_button" = "Подключить";
+
+"skyeng_map_downloader_title" = "Дарим 4 бесплатных урока английского от Skyeng.";
+
+"skyeng_map_downloader_cta_button" = "Подробнее";
+
 
 /**********  Partners  **********/
 
@@ -2709,9 +3312,9 @@
 
 "type.aeroway.terminal" = "aeroway-terminal";
 
-"type.amenity" = "amenity";
+"type.amenity" = "Infrastruktuurikohteet";
 
-"type.amenity.arts_centre" = "amenity-arts_centre";
+"type.amenity.arts_centre" = "Taidekeskus";
 
 "type.amenity.atm" = "Pankkiautomaatti";
 
@@ -2775,7 +3378,7 @@
 
 "type.amenity.fire_station" = "Paloasema";
 
-"type.amenity.food_court" = "amenity-food_court";
+"type.amenity.food_court" = "Food court";
 
 "type.amenity.fountain" = "Suihkulähde";
 
@@ -2811,21 +3414,23 @@
 
 "type.amenity.parking.multi.storey" = "Parkkipaikka";
 
-"type.amenity.parking.multi.storey.fee" = "Parkkipaikka";
-
 "type.amenity.parking.no.access" = "Parkkipaikka";
 
 "type.amenity.parking.park_and_ride" = "Parkkipaikka";
 
 "type.amenity.parking.permissive" = "Parkkipaikka";
 
-"type.amenity.parking.permissive.fee" = "Parkkipaikka";
-
 "type.amenity.parking.private" = "Parkkipaikka";
 
 "type.amenity.parking.underground" = "Parkkipaikka";
 
-"type.amenity.parking.underground.fee" = "Parkkipaikka";
+"type.amenity.parking_space" = "Parkkipaikka";
+
+"type.amenity.parking_space.permissive" = "Parkkipaikka";
+
+"type.amenity.parking_space.private" = "Parkkipaikka";
+
+"type.amenity.parking_space.underground" = "Parkkipaikka";
 
 "type.amenity.payment_terminal" = "Maksupääte";
 
@@ -2851,9 +3456,9 @@
 
 "type.amenity.post_box" = "Postilaatikko";
 
-"type.amenity.post_office" = "Posti";
+"type.amenity.post_office" = "Postitoimisto";
 
-"type.amenity.prison" = "amenity-prison";
+"type.amenity.prison" = "Prison";
 
 "type.amenity.pub" = "Pubi";
 
@@ -2883,7 +3488,7 @@
 
 "type.amenity.university" = "Yliopisto";
 
-"type.amenity.vending_machine" = "amenity-vending_machine";
+"type.amenity.vending_machine" = "Vending machine";
 
 "type.amenity.vending_machine.cigarettes" = "Savukeautomaatti";
 
@@ -2891,7 +3496,7 @@
 
 "type.amenity.vending_machine.parking_tickets" = "Pysäköintimaksuautomaatti";
 
-"type.amenity.vending_machine.public_transport_tickets" = "amenity-vending_machine-public_transport_tickets";
+"type.amenity.vending_machine.public_transport_tickets" = "Julkisen liikenteen lippuautomaatti";
 
 "type.amenity.veterinary" = "Eläinlääkäri";
 
@@ -2901,7 +3506,7 @@
 
 "type.amenity.water_point" = "Vesipiste";
 
-"type.barrier" = "barrier";
+"type.barrier" = "Barrier";
 
 "type.barrier.block" = "Este";
 
@@ -2909,29 +3514,29 @@
 
 "type.barrier.border_control" = "Rajavalvonta";
 
-"type.barrier.city_wall" = "barrier-city_wall";
+"type.barrier.city_wall" = "City wall";
 
-"type.barrier.cycle_barrier" = "barrier-cycle_barrier";
+"type.barrier.cycle_barrier" = "Cycle barrier";
 
 "type.barrier.entrance" = "Sisäänkäynti";
 
-"type.barrier.fence" = "barrier-fence";
+"type.barrier.fence" = "Fence";
 
 "type.barrier.gate" = "Portti";
 
-"type.barrier.hedge" = "barrier-hedge";
+"type.barrier.hedge" = "Hedge";
 
 "type.barrier.lift_gate" = "Puomi";
 
-"type.barrier.retaining_wall" = "barrier-retaining_wall";
+"type.barrier.retaining_wall" = "Retaining wall";
 
 "type.barrier.stile" = "Portaat";
 
 "type.barrier.toll_booth" = "Tietulliasema";
 
-"type.barrier.wall" = "barrier-wall";
+"type.barrier.wall" = "Wall";
 
-"type.boundary" = "boundary";
+"type.boundary" = "Boundary";
 
 "type.boundary.administrative" = "boundary-administrative";
 
@@ -2984,12 +3589,6 @@
 "type.building.has_parts" = "Rakennus";
 
 "type.building.train_station" = "Rautatieasema";
-
-"type.communication" = "communication";
-
-"type.communication.line" = "communication-line";
-
-"type.communication.line.underground" = "communication-line-underground";
 
 "type.craft" = "craft";
 
@@ -3207,7 +3806,7 @@
 
 "type.highway.bus_stop" = "Bussipysäkki";
 
-"type.highway.construction" = "highway-construction";
+"type.highway.construction" = "Rakenteilla oleva tie";
 
 "type.highway.cycleway" = "highway-cycleway";
 
@@ -3239,7 +3838,7 @@
 
 "type.highway.footway.tunnel" = "Polku";
 
-"type.highway.ford" = "highway-ford";
+"type.highway.ford" = "Ford";
 
 "type.highway.living_street" = "Katu";
 
@@ -3293,8 +3892,6 @@
 
 "type.highway.pedestrian.tunnel" = "Katu";
 
-"type.highway.platform" = "highway-platform";
-
 "type.highway.primary" = "Katu";
 
 "type.highway.primary.bridge" = "Katu";
@@ -3347,12 +3944,6 @@
 
 "type.highway.service.driveway" = "Katu";
 
-"type.highway.service.driveway.area" = "Katu";
-
-"type.highway.service.driveway.bridge" = "Katu";
-
-"type.highway.service.driveway.tunnel" = "Katu";
-
 "type.highway.service.parking_aisle" = "Katu";
 
 "type.highway.service.tunnel" = "Katu";
@@ -3391,21 +3982,9 @@
 
 "type.highway.track.grade3" = "Katu";
 
-"type.highway.track.grade3.no.access" = "Katu";
-
-"type.highway.track.grade3.permissive" = "Katu";
-
 "type.highway.track.grade4" = "Katu";
 
-"type.highway.track.grade4.no.access" = "Katu";
-
-"type.highway.track.grade4.permissive" = "Katu";
-
 "type.highway.track.grade5" = "Katu";
-
-"type.highway.track.grade5.no.access" = "Katu";
-
-"type.highway.track.grade5.permissive" = "Katu";
 
 "type.highway.track.no.access" = "Katu";
 
@@ -3443,7 +4022,7 @@
 
 "type.historic.archaeological_site" = "Arkeologinen kohde";
 
-"type.historic.battlefield" = "historic-battlefield";
+"type.historic.battlefield" = "Battlefield";
 
 "type.historic.boundary_stone" = "historic-boundary_stone";
 
@@ -3513,27 +4092,29 @@
 
 "type.landuse" = "landuse";
 
-"type.landuse.allotments" = "landuse-allotments";
+"type.landuse.allotments" = "Allotments";
 
 "type.landuse.basin" = "Vesi";
 
-"type.landuse.brownfield" = "landuse-brownfield";
+"type.landuse.brownfield" = "Brownfield";
 
 "type.landuse.cemetery" = "Hautausmaa";
 
 "type.landuse.cemetery.christian" = "Hautausmaa";
 
+"type.landuse.churchyard" = "Kirkon piha";
+
 "type.landuse.commercial" = "landuse-commercial";
 
-"type.landuse.construction" = "landuse-construction";
+"type.landuse.construction" = "Construction";
 
-"type.landuse.farm" = "landuse-farm";
+"type.landuse.farm" = "Farm";
 
-"type.landuse.farmland" = "landuse-farmland";
+"type.landuse.farmland" = "Maatalousmaa";
 
-"type.landuse.farmyard" = "landuse-farmyard";
+"type.landuse.farmyard" = "Farmyard";
 
-"type.landuse.field" = "landuse-field";
+"type.landuse.field" = "Field";
 
 "type.landuse.forest" = "Metsä";
 
@@ -3543,27 +4124,27 @@
 
 "type.landuse.forest.mixed" = "Metsä";
 
-"type.landuse.garages" = "landuse-garages";
+"type.landuse.garages" = "Garages";
 
-"type.landuse.grass" = "landuse-grass";
+"type.landuse.grass" = "Ruohikko";
 
 "type.landuse.greenfield" = "landuse-greenfield";
 
 "type.landuse.greenhouse_horticulture" = "landuse-greenhouse_horticulture";
 
-"type.landuse.industrial" = "landuse-industrial";
+"type.landuse.industrial" = "Industrial land";
 
-"type.landuse.landfill" = "landuse-landfill";
+"type.landuse.landfill" = "Kaatopaikka";
 
-"type.landuse.meadow" = "landuse-meadow";
+"type.landuse.meadow" = "Meadow";
 
-"type.landuse.military" = "landuse-military";
+"type.landuse.military" = "Military area";
 
-"type.landuse.orchard" = "landuse-orchard";
+"type.landuse.orchard" = "Orchard";
 
-"type.landuse.quarry" = "landuse-quarry";
+"type.landuse.quarry" = "Quarry";
 
-"type.landuse.railway" = "landuse-railway";
+"type.landuse.railway" = "Rautatierakennukset";
 
 "type.landuse.recreation_ground" = "landuse-recreation_ground";
 
@@ -3571,25 +4152,19 @@
 
 "type.landuse.residential" = "landuse-residential";
 
-"type.landuse.residential.rural" = "landuse-residential-rural";
-
-"type.landuse.residential.urban" = "landuse-residential-urban";
-
 "type.landuse.retail" = "landuse-retail";
 
 "type.landuse.salt_pond" = "landuse-salt_pond";
 
 "type.landuse.village_green" = "landuse-village_green";
 
-"type.landuse.vineyard" = "landuse-vineyard";
+"type.landuse.vineyard" = "Vineyard";
 
 "type.leisure" = "leisure";
 
 "type.leisure.common" = "leisure-common";
 
-"type.leisure.dog_park" = "Koirapuisto";
-
-"type.leisure.dog_park.tennis" = "Koirapuisto";
+"type.leisure.dog_park" = "Koirien ulkoilupaikka";
 
 "type.leisure.fitness_centre" = "Kuntosali";
 
@@ -3599,11 +4174,11 @@
 
 "type.leisure.golf_course" = "Golf-rata";
 
-"type.leisure.ice_rink" = "leisure-ice_rink";
+"type.leisure.ice_rink" = "Ice rink";
 
-"type.leisure.landscape_reserve" = "leisure-landscape_reserve";
+"type.leisure.landscape_reserve" = "Landscape reserve";
 
-"type.leisure.marina" = "leisure-marina";
+"type.leisure.marina" = "Marina";
 
 "type.leisure.nature_reserve" = "Luonnonsuojelualue";
 
@@ -3617,17 +4192,9 @@
 
 "type.leisure.pitch" = "Urheilukenttä";
 
-"type.leisure.pitch.tennis" = "Urheilukenttä";
-
 "type.leisure.playground" = "Leikkikenttä";
 
-"type.leisure.playground.tennis" = "Leikkikenttä";
-
-"type.leisure.playing_fields" = "leisure-playing_fields";
-
-"type.leisure.playing_fields.tennis" = "leisure-playing_fields-tennis";
-
-"type.leisure.recreation_ground" = "leisure-recreation_ground";
+"type.leisure.recreation_ground" = "Recreation ground";
 
 "type.leisure.sauna" = "Sauna";
 
@@ -3689,25 +4256,13 @@
 
 "type.mapswithme.grid" = "mapswithme-grid";
 
-"type.marking" = "marking";
-
-"type.marking.sport" = "marking-sport";
-
-"type.marking.sport.black" = "marking-sport-black";
-
-"type.marking.sport.blue" = "marking-sport-blue";
-
-"type.marking.sport.red" = "marking-sport-red";
-
-"type.marking.sport.white" = "marking-sport-white";
-
 "type.military" = "military";
 
 "type.military.bunker" = "Bunkkeri";
 
 "type.natural" = "natural";
 
-"type.natural.bare_rock" = "natural-bare_rock";
+"type.natural.bare_rock" = "Bare rock";
 
 "type.natural.bay" = "Lahti";
 
@@ -3715,63 +4270,57 @@
 
 "type.natural.cape" = "Niemeke";
 
-"type.natural.cave_entrance" = "Luolan sisäänkäynti";
+"type.natural.cave_entrance" = "Luola";
 
-"type.natural.cliff" = "natural-cliff";
+"type.natural.cliff" = "Cliff";
 
-"type.natural.coastline" = "natural-coastline";
+"type.natural.coastline" = "Coastline";
 
 "type.natural.geyser" = "Geysir";
 
 "type.natural.glacier" = "Jäätikkö";
 
-"type.natural.grassland" = "natural-grassland";
+"type.natural.grassland" = "Pelto";
 
-"type.natural.heath" = "natural-heath";
+"type.natural.heath" = "Heath";
+
+"type.natural.hot_spring" = "Hot spring";
 
 "type.natural.lake" = "Järvi";
 
 "type.natural.land" = "natural-land";
 
-"type.natural.meadow" = "natural-meadow";
+"type.natural.meadow" = "Meadow";
 
-"type.natural.orchard" = "natural-orchard";
+"type.natural.orchard" = "Orchard";
 
 "type.natural.peak" = "Huippu";
 
 "type.natural.pond" = "Lampi";
 
-"type.natural.rock" = "natural-rock";
+"type.natural.rock" = "Rock";
 
-"type.natural.salt_pond" = "natural-salt_pond";
+"type.natural.salt_pond" = "Salt pond";
 
-"type.natural.scrub" = "natural-scrub";
+"type.natural.scrub" = "Tiheiköt";
 
 "type.natural.spring" = "Lähde";
 
 "type.natural.tree" = "Puu";
 
-"type.natural.tree_row" = "natural-tree_row";
+"type.natural.tree_row" = "Tree row";
 
-"type.natural.vineyard" = "natural-vineyard";
+"type.natural.vineyard" = "Vineyard";
 
 "type.natural.volcano" = "Tulivuori";
 
 "type.natural.water" = "Vesi";
 
-"type.natural.wetland" = "natural-wetland";
+"type.natural.wetland" = "Suoperäinen seutu";
 
-"type.natural.wetland.bog" = "natural-wetland-bog";
+"type.natural.wetland.bog" = "Wetland";
 
-"type.natural.wetland.marsh" = "natural-wetland-marsh";
-
-"type.natural.wood" = "Metsä";
-
-"type.natural.wood.coniferous" = "Metsä";
-
-"type.natural.wood.deciduous" = "Metsä";
-
-"type.natural.wood.mixed" = "Metsä";
+"type.natural.wetland.marsh" = "Wetland";
 
 "type.noexit" = "noexit";
 
@@ -3867,7 +4416,7 @@
 
 "type.place.locality" = "Paikkakunta";
 
-"type.place.neighbourhood" = "place-neighbourhood";
+"type.place.neighbourhood" = "Neighbourhood";
 
 "type.place.ocean" = "Valtameri";
 
@@ -3890,12 +4439,6 @@
 "type.power" = "power";
 
 "type.power.generator" = "power-generator";
-
-"type.power.generator.hydro" = "power-generator-hydro";
-
-"type.power.generator.photovoltaic" = "power-generator-photovoltaic";
-
-"type.power.generator.wind" = "power-generator-wind";
 
 "type.power.line" = "power-line";
 
@@ -3953,7 +4496,7 @@
 
 "type.railway.incline.tunnel" = "railway-incline-tunnel";
 
-"type.railway.level_crossing" = "Tasoristeys";
+"type.railway.level_crossing" = "Rautatien tasoristeys";
 
 "type.railway.light_rail" = "railway-light_rail";
 
@@ -3961,7 +4504,7 @@
 
 "type.railway.light_rail.tunnel" = "railway-light_rail-tunnel";
 
-"type.railway.monorail" = "railway-monorail";
+"type.railway.monorail" = "Monorail (kohorata)";
 
 "type.railway.monorail.bridge" = "railway-monorail-bridge";
 
@@ -3983,7 +4526,7 @@
 
 "type.railway.proposed" = "railway-proposed";
 
-"type.railway.rail" = "railway-rail";
+"type.railway.rail" = "Rautatie";
 
 "type.railway.rail.bridge" = "railway-rail-bridge";
 
@@ -4093,7 +4636,7 @@
 
 "type.railway.subway.yellow" = "railway-subway-yellow";
 
-"type.railway.subway_entrance" = "Metro";
+"type.railway.subway_entrance" = "Metron sisäänkäynti";
 
 "type.railway.subway_entrance.barcelona" = "Metro";
 
@@ -4275,28 +4818,6 @@
 
 "type.sponsored" = "sponsored";
 
-"type.sponsored.banner" = "sponsored-banner";
-
-"type.sponsored.banner.deliveryclub" = "sponsored-banner-deliveryclub";
-
-"type.sponsored.banner.geerbest_de" = "sponsored-banner-geerbest_de";
-
-"type.sponsored.banner.geerbest_fr" = "sponsored-banner-geerbest_fr";
-
-"type.sponsored.banner.geerbest_uk" = "sponsored-banner-geerbest_uk";
-
-"type.sponsored.banner.lamoda_ru" = "sponsored-banner-lamoda_ru";
-
-"type.sponsored.banner.lamoda_ua" = "sponsored-banner-lamoda_ua";
-
-"type.sponsored.banner.raileurope" = "sponsored-banner-raileurope";
-
-"type.sponsored.banner.rentalcars" = "sponsored-banner-rentalcars";
-
-"type.sponsored.banner.tutu" = "sponsored-banner-tutu";
-
-"type.sponsored.banner.viator" = "sponsored-banner-viator";
-
 "type.sponsored.booking" = "sponsored-booking";
 
 "type.sponsored.holiday" = "Christmas or New Year Celebrations";
@@ -4343,8 +4864,6 @@
 
 "type.sponsored.partner9" = "sponsored-partner9";
 
-"type.sponsored.viator" = "sponsored-viator";
-
 "type.sport" = "sport";
 
 "type.sport.american_football" = "sport-american_football";
@@ -4367,7 +4886,7 @@
 
 "type.sport.diving" = "sport-diving";
 
-"type.sport.equestrian" = "Equestrian Sports";
+"type.sport.equestrian" = "Hevosurheilu";
 
 "type.sport.football" = "sport-football";
 
@@ -4389,7 +4908,7 @@
 
 "type.sport.swimming" = "sport-swimming";
 
-"type.sport.tennis" = "sport-tennis";
+"type.sport.tennis" = "Tenniskenttä";
 
 "type.tourism" = "tourism";
 
@@ -4501,11 +5020,75 @@
 
 "type.wheelchair" = "wheelchair";
 
-"type.wheelchair.limited" = "wheelchair-limited";
+"type.wheelchair.limited" = "Osittain varustettu vammaisille";
 
-"type.wheelchair.no" = "wheelchair-no";
+"type.wheelchair.no" = "Ei varustettu vammaisille";
 
-"type.wheelchair.yes" = "wheelchair-yes";
+"type.wheelchair.yes" = "Varustettu vammaisille";
+
+"type.piste_lift" = "piste:lift";
+
+"type.piste_lift.j.bar" = "piste:lift-j-bar";
+
+"type.piste_lift.magic_carpet" = "piste:lift-magic_carpet";
+
+"type.piste_lift.platter" = "piste:lift-platter";
+
+"type.piste_lift.rope_tow" = "piste:lift-rope_tow";
+
+"type.piste_lift.t.bar" = "piste:lift-t-bar";
+
+"type.piste_type" = "piste:type";
+
+"type.piste_type.downhill" = "piste:type-downhill";
+
+"type.piste_type.downhill.advanced" = "piste:type-downhill-advanced";
+
+"type.piste_type.downhill.easy" = "piste:type-downhill-easy";
+
+"type.piste_type.downhill.expert" = "piste:type-downhill-expert";
+
+"type.piste_type.downhill.freeride" = "piste:type-downhill-freeride";
+
+"type.piste_type.downhill.intermediate" = "piste:type-downhill-intermediate";
+
+"type.piste_type.downhill.novice" = "piste:type-downhill-novice";
+
+"type.piste_type.nordic" = "piste:type-nordic";
+
+"type.piste_type.sled" = "piste:type-sled";
+
+"type.building_part" = "Rakennus";
+
+"type.area_highway.cycleway" = "area:highway-cycleway";
+
+"type.area_highway.footway" = "area:highway-footway";
+
+"type.area_highway.living_street" = "area:highway-living_street";
+
+"type.area_highway.motorway" = "area:highway-motorway";
+
+"type.area_highway.path" = "area:highway-path";
+
+"type.area_highway.pedestrian" = "area:highway-pedestrian";
+
+"type.area_highway.primary" = "area:highway-primary";
+
+"type.area_highway.residential" = "area:highway-residential";
+
+"type.area_highway.secondary" = "area:highway-secondary";
+
+"type.area_highway.service" = "area:highway-service";
+
+"type.area_highway.tertiary" = "area:highway-tertiary";
+
+"type.area_highway.steps" = "area:highway-steps";
+
+"type.area_highway.track" = "area:highway-track";
+
+"type.area_highway.trunk" = "area:highway-trunk";
+
+"type.area_highway.unclassified" = "area:highway-unclassified";
 
 
 /********** Brands **********/

@@ -1,20 +1,22 @@
-#include "search/feature_loader.hpp"
-#include "search/ranking_info.hpp"
-#include "search/result.hpp"
 #include "search/search_quality/helpers.hpp"
 #include "search/search_quality/matcher.hpp"
 #include "search/search_quality/sample.hpp"
+
 #include "search/search_tests_support/test_search_engine.hpp"
 #include "search/search_tests_support/test_search_request.hpp"
+
+#include "search/feature_loader.hpp"
+#include "search/ranking_info.hpp"
+#include "search/result.hpp"
+
+#include "storage/country_info_getter.hpp"
+#include "storage/storage.hpp"
+#include "storage/storage_defines.hpp"
 
 #include "indexer/classificator_loader.hpp"
 #include "indexer/data_source.hpp"
 
-#include "storage/country_info_getter.hpp"
-#include "storage/index.hpp"
-#include "storage/storage.hpp"
-
-#include "coding/file_name_utils.hpp"
+#include "platform/platform_tests_support/helpers.hpp"
 
 #include "platform/local_country_file.hpp"
 #include "platform/local_country_file_utils.hpp"
@@ -22,24 +24,29 @@
 
 #include "geometry/mercator.hpp"
 
+#include "base/file_name_utils.hpp"
 #include "base/macros.hpp"
 #include "base/string_utils.hpp"
 
-#include "std/fstream.hpp"
-#include "std/iostream.hpp"
-#include "std/limits.hpp"
-#include "std/string.hpp"
-#include "std/unique_ptr.hpp"
-#include "std/vector.hpp"
-
 #include "defines.hpp"
+
+#include <cstddef>
+#include <fstream>
+#include <iostream>
+#include <limits>
+#include <memory>
+#include <string>
+#include <vector>
 
 #include "3party/gflags/src/gflags/gflags.h"
 
+using namespace search::search_quality;
 using namespace search::tests_support;
 using namespace search;
+using namespace std;
 using namespace storage;
 
+DEFINE_int32(num_threads, 1, "Number of search engine threads");
 DEFINE_string(data_path, "", "Path to data directory (resources dir)");
 DEFINE_string(mwm_path, "", "Path to mwm files (writable dir)");
 DEFINE_string(stats_path, "", "Path to store stats about queries results (default: stderr)");
@@ -59,17 +66,6 @@ void GetContents(istream & is, string & contents)
     contents.append(line);
     contents.push_back('\n');
   }
-}
-
-void DidDownload(TCountryId const & /* countryId */,
-                 shared_ptr<platform::LocalCountryFile> const & /* localFile */)
-{
-}
-
-bool WillDelete(TCountryId const & /* countryId */,
-                shared_ptr<platform::LocalCountryFile> const & /* localFile */)
-{
-  return false;
 }
 
 void DisplayStats(ostream & os, vector<Sample> const & samples, vector<Stats> const & stats)
@@ -103,114 +99,109 @@ void DisplayStats(ostream & os, vector<Sample> const & samples, vector<Stats> co
 
 int main(int argc, char * argv[])
 {
-  ChangeMaxNumberOfOpenFiles(kMaxOpenFiles);
+  platform::tests_support::ChangeMaxNumberOfOpenFiles(kMaxOpenFiles);
+  CheckLocale();
 
   google::SetUsageMessage("Features collector tool.");
   google::ParseCommandLineFlags(&argc, &argv, true);
 
-  Platform & platform = GetPlatform();
-
-  string countriesFile = COUNTRIES_FILE;
-  if (!FLAGS_data_path.empty())
-  {
-    platform.SetResourceDir(FLAGS_data_path);
-    countriesFile = base::JoinFoldersToPath(FLAGS_data_path, COUNTRIES_FILE);
-  }
-
-  if (!FLAGS_mwm_path.empty())
-    platform.SetWritableDirForTests(FLAGS_mwm_path);
-
-  LOG(LINFO, ("writable dir =", platform.WritableDir()));
-  LOG(LINFO, ("resources dir =", platform.ResourcesDir()));
-
-  Storage storage(countriesFile);
-  storage.Init(&DidDownload, &WillDelete);
-  auto infoGetter = CountryInfoReader::CreateCountryInfoReader(platform);
-  infoGetter->InitAffiliationsInfo(&storage.GetAffiliations());
-
-  string lines;
-  if (FLAGS_json_in.empty())
-  {
-    GetContents(cin, lines);
-  }
-  else
-  {
-    ifstream ifs(FLAGS_json_in);
-    if (!ifs.is_open())
-    {
-      cerr << "Can't open input json file." << endl;
-      return -1;
-    }
-    GetContents(ifs, lines);
-  }
-
-  vector<Sample> samples;
-  if (!Sample::DeserializeFromJSONLines(lines, samples))
-  {
-    cerr << "Can't parse input json file." << endl;
-    return -1;
-  }
+  SetPlatformDirs(FLAGS_data_path, FLAGS_mwm_path);
 
   classificator::Load();
+
   FrozenDataSource dataSource;
+  InitDataSource(dataSource, "" /* mwmListPath */);
 
-  vector<platform::LocalCountryFile> mwms;
-  platform::FindAllLocalMapsAndCleanup(numeric_limits<int64_t>::max() /* the latest version */,
-                                       mwms);
-  for (auto & mwm : mwms)
+  storage::Affiliations affiliations;
+  storage::CountryNameSynonyms countryNameSynonyms;
+  InitStorageData(affiliations, countryNameSynonyms);
+
+  auto engine = InitSearchEngine(dataSource, affiliations, "en" /* locale */, FLAGS_num_threads);
+
+  vector<Sample> samples;
   {
-    mwm.SyncWithDisk();
-    dataSource.RegisterMap(mwm);
-  }
+    string lines;
+    if (FLAGS_json_in.empty())
+    {
+      GetContents(cin, lines);
+    }
+    else
+    {
+      ifstream ifs(FLAGS_json_in);
+      if (!ifs.is_open())
+      {
+        cerr << "Can't open input json file." << endl;
+        return -1;
+      }
+      GetContents(ifs, lines);
+    }
 
-  TestSearchEngine engine(dataSource, move(infoGetter), Engine::Params{});
+    if (!Sample::DeserializeFromJSONLines(lines, samples))
+    {
+      cerr << "Can't parse input json file." << endl;
+      return -1;
+    }
+  }
 
   vector<Stats> stats(samples.size());
   FeatureLoader loader(dataSource);
   Matcher matcher(loader);
 
+  vector<unique_ptr<TestSearchRequest>> requests;
+  requests.reserve(samples.size());
+
+  for (auto const & sample : samples)
+  {
+    search::SearchParams params;
+    sample.FillSearchParams(params);
+    params.m_batchSize = 100;
+    params.m_maxNumResults = 300;
+    params.m_timeout = search::SearchParams::kDefaultDesktopTimeout;
+    requests.push_back(make_unique<TestSearchRequest>(*engine, params));
+    requests.back()->Start();
+  }
+
   cout << "SampleId,";
   RankingInfo::PrintCSVHeader(cout);
   cout << ",Relevance" << endl;
-
   for (size_t i = 0; i < samples.size(); ++i)
   {
+    requests[i]->Wait();
     auto const & sample = samples[i];
-
-    search::SearchParams params;
-    sample.FillSearchParams(params);
-    TestSearchRequest request(engine, params);
-    request.Run();
-
-    auto const & results = request.Results();
+    auto const & results = requests[i]->Results();
 
     vector<size_t> goldenMatching;
     vector<size_t> actualMatching;
-    matcher.Match(sample.m_results, results, goldenMatching, actualMatching);
+    matcher.Match(sample, results, goldenMatching, actualMatching);
 
     for (size_t j = 0; j < results.size(); ++j)
     {
       if (results[j].GetResultType() != Result::Type::Feature)
         continue;
+      if (actualMatching[j] == Matcher::kInvalidId)
+        continue;
+
       auto const & info = results[j].GetRankingInfo();
       cout << i << ",";
       info.ToCSV(cout);
 
-      auto relevance = Sample::Result::Relevance::Irrelevant;
-      if (actualMatching[j] != Matcher::kInvalidId)
-        relevance = sample.m_results[actualMatching[j]].m_relevance;
+      auto const relevance = sample.m_results[actualMatching[j]].m_relevance;
       cout << "," << DebugPrint(relevance) << endl;
     }
 
     auto & s = stats[i];
     for (size_t j = 0; j < goldenMatching.size(); ++j)
     {
-      if (goldenMatching[j] == Matcher::kInvalidId &&
-          sample.m_results[j].m_relevance != Sample::Result::Relevance::Irrelevant)
-      {
+      auto const wasNotFound =
+          goldenMatching[j] == Matcher::kInvalidId ||
+          goldenMatching[j] >= search::SearchParams::kDefaultNumResultsEverywhere;
+      auto const isRelevant =
+          sample.m_results[j].m_relevance == Sample::Result::Relevance::Relevant ||
+          sample.m_results[j].m_relevance == Sample::Result::Relevance::Vital;
+      if (wasNotFound && isRelevant)
         s.m_notFound.push_back(j);
-      }
     }
+    requests[i].reset();
   }
 
   if (FLAGS_stats_path.empty())

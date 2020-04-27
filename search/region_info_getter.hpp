@@ -1,12 +1,13 @@
 #pragma once
 
-#include <memory>
-#include <string>
-
-#include "storage/country.hpp"
-#include "storage/index.hpp"
+#include "storage/country_tree.hpp"
+#include "storage/storage_defines.hpp"
 
 #include "platform/get_text_by_id.hpp"
+
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace search
 {
@@ -16,11 +17,13 @@ public:
   void LoadCountriesTree();
   void SetLocale(std::string const & locale);
 
-  std::string GetLocalizedFullName(storage::TCountryId const & id) const;
-  std::string GetLocalizedCountryName(storage::TCountryId const & id) const;
+  std::string GetLocalizedFullName(storage::CountryId const & id) const;
+  void GetLocalizedFullName(storage::CountryId const & id,
+                            std::vector<std::string> & nameParts) const;
+  std::string GetLocalizedCountryName(storage::CountryId const & id) const;
 
 private:
-  storage::TCountryTree m_countries;
+  storage::CountryTree m_countries;
   std::unique_ptr<platform::GetTextById> m_nameGetter;
 };
 }  // namespace search

@@ -7,7 +7,7 @@ final class BaseRoutePreviewStatus: SolidTouchView {
   @IBOutlet weak var manageRouteBoxBackground: UIView! {
     didSet {
       iPhoneSpecific {
-        manageRouteBoxBackground.backgroundColor = UIColor.blackOpaque()
+        manageRouteBoxBackground.styleName = "BlackOpaqueBackground"
       }
     }
   }
@@ -117,9 +117,7 @@ final class BaseRoutePreviewStatus: SolidTouchView {
   }
 
   private func configManageRouteButton(_ button: UIButton) {
-    button.titleLabel?.font = UIFont.medium14()
     button.setTitle(L("planning_route_manage_route"), for: .normal)
-    button.tintColor = UIColor.blackSecondaryText()
   }
 
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -169,7 +167,7 @@ final class BaseRoutePreviewStatus: SolidTouchView {
                                      completion: { image, elevation in
                                        self.heightProfileImage.image = image
                                        guard let elevation = elevation else { return }
-                                       let attributes: [NSAttributedStringKey: Any] =
+                                       let attributes: [NSAttributedString.Key: Any] =
                                          [
                                            .foregroundColor: UIColor.linkBlue(),
                                            .font: UIFont.medium14(),

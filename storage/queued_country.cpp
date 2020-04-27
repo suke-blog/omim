@@ -1,57 +1,124 @@
 #include "storage/queued_country.hpp"
 
+#include "storage/storage_helpers.hpp"
+
+#include "platform/local_country_file_utils.hpp"
+
+#include "coding/url.hpp"
+
 #include "base/assert.hpp"
+
+namespace
+{
+std::string MakeRelativeUrl(std::string const & fileName, int64_t dataVersion, uint64_t diffVersion)
+{
+  std::ostringstream url;
+  if (diffVersion != 0)
+    url << "diffs/" << dataVersion << "/" << diffVersion;
+  else
+    url << OMIM_OS_NAME "/" << dataVersion;
+
+  return url::Join(url.str(), url::UrlEncode(fileName));
+}
+}  // namespace
 
 namespace storage
 {
-QueuedCountry::QueuedCountry(TCountryId const & countryId, MapOptions opt)
-    : m_countryId(countryId), m_init(opt), m_left(opt), m_current(MapOptions::Nothing)
+QueuedCountry::QueuedCountry(platform::CountryFile const & countryFile, CountryId const & countryId,
+                             MapFileType type, int64_t currentDataVersion,
+                             std::string const & dataDir,
+                             diffs::DiffsSourcePtr const & diffs)
+  : m_countryFile(countryFile)
+  , m_countryId(countryId)
+  , m_fileType(type)
+  , m_currentDataVersion(currentDataVersion)
+  , m_dataDir(dataDir)
+  , m_diffsDataSource(diffs)
 {
-  // @TODO(bykoianko) Probably it's nessecary to check if InIndexInCountryTree here.
   ASSERT(IsCountryIdValid(GetCountryId()), ("Only valid countries may be downloaded."));
-  ASSERT(m_left != MapOptions::Nothing, ("Empty file set was requested for downloading."));
-  SwitchToNextFile();
+  ASSERT(m_diffsDataSource != nullptr, ());
 }
 
-void QueuedCountry::AddOptions(MapOptions opt)
+void QueuedCountry::SetFileType(MapFileType type)
 {
-  for (MapOptions file : {MapOptions::Map, MapOptions::CarRouting})
+  m_fileType = type;
+}
+
+MapFileType QueuedCountry::GetFileType() const
+{
+  return m_fileType;
+}
+
+CountryId const & QueuedCountry::GetCountryId() const
+{
+  return m_countryId;
+}
+
+std::string QueuedCountry::GetRelativeUrl() const
+{
+  auto const fileName = platform::GetFileName(m_countryFile.GetName(), m_fileType);
+
+  uint64_t diffVersion = 0;
+  if (m_fileType == MapFileType::Diff)
+    CHECK(m_diffsDataSource->VersionFor(m_countryId, diffVersion), ());
+
+  return MakeRelativeUrl(fileName, m_currentDataVersion, diffVersion);
+}
+
+std::string QueuedCountry::GetFileDownloadPath() const
+{
+  return platform::GetFileDownloadPath(m_currentDataVersion, m_dataDir, m_countryFile, m_fileType);
+}
+
+uint64_t QueuedCountry::GetDownloadSize() const
+{
+  uint64_t size;
+  if (m_fileType == MapFileType::Diff)
   {
-    if (HasOptions(opt, file) && !HasOptions(m_init, file))
-    {
-      m_init = SetOptions(m_init, file);
-      m_left = SetOptions(m_left, file);
-    }
+    CHECK(m_diffsDataSource->SizeToDownloadFor(m_countryId, size), ());
+    return size;
+  }
+
+  return GetRemoteSize(*m_diffsDataSource, m_countryFile);
+}
+
+void QueuedCountry::ClarifyDownloadingType()
+{
+  if (m_fileType != MapFileType::Diff)
+    return;
+
+  using diffs::Status;
+  auto const status = m_diffsDataSource->GetStatus();
+  if (status == Status::NotAvailable || !m_diffsDataSource->HasDiffFor(m_countryId))
+  {
+    m_fileType = MapFileType::Map;
   }
 }
 
-void QueuedCountry::RemoveOptions(MapOptions opt)
+void QueuedCountry::SetOnFinishCallback(DownloadingFinishCallback const & onDownloaded)
 {
-  for (MapOptions file : {MapOptions::Map, MapOptions::CarRouting, MapOptions::Diff})
-  {
-    if (HasOptions(opt, file) && HasOptions(m_init, file))
-    {
-      m_init = UnsetOptions(m_init, file);
-      m_left = UnsetOptions(m_left, file);
-    }
-  }
-  if (HasOptions(opt, m_current))
-    m_current = LeastSignificantOption(m_left);
+  m_downloadingFinishCallback = onDownloaded;
 }
 
-void QueuedCountry::ResetToDefaultOptions()
+void QueuedCountry::SetOnProgressCallback(DownloadingProgressCallback const & onProgress)
 {
-  m_init = MapOptions::MapWithCarRouting;
-  m_left = MapOptions::MapWithCarRouting;
-  m_current = LeastSignificantOption(m_left);
+  m_downloadingProgressCallback = onProgress;
 }
 
-bool QueuedCountry::SwitchToNextFile()
+void QueuedCountry::OnDownloadFinished(downloader::DownloadStatus status) const
 {
-  ASSERT(HasOptions(m_left, m_current),
-         ("Current file (", m_current, ") is not specified in left files (", m_left, ")."));
-  m_left = UnsetOptions(m_left, m_current);
-  m_current = LeastSignificantOption(m_left);
-  return m_current != MapOptions::Nothing;
+  if (m_downloadingFinishCallback)
+    m_downloadingFinishCallback(*this, status);
+}
+
+void QueuedCountry::OnDownloadProgress(downloader::Progress const & progress) const
+{
+  if (m_downloadingProgressCallback)
+    m_downloadingProgressCallback(*this, progress);
+}
+
+bool QueuedCountry::operator==(CountryId const & countryId) const
+{
+  return m_countryId == countryId;
 }
 }  // namespace storage

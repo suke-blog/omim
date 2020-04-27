@@ -2,7 +2,7 @@ package com.mapswithme.maps.bookmarks.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public class Result implements Parcelable
 {
@@ -46,6 +46,15 @@ public class Result implements Parcelable
   {
     dest.writeString(mFilePath);
     dest.writeString(mArchiveId);
+  }
+
+  @Override
+  public String toString()
+  {
+    return "Result{" +
+           "mFilePath='" + mFilePath + '\'' +
+           ", mArchiveId='" + mArchiveId + '\'' +
+           '}';
   }
 
   public static final Creator<Result> CREATOR = new Creator<Result>()

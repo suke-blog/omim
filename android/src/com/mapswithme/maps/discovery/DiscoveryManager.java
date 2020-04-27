@@ -1,18 +1,18 @@
 package com.mapswithme.maps.discovery;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.mapswithme.maps.promo.PromoCityGallery;
 import com.mapswithme.maps.search.SearchResult;
-import com.mapswithme.maps.viator.ViatorProduct;
 import com.mapswithme.util.log.Logger;
 import com.mapswithme.util.log.LoggerFactory;
 
 import java.util.EnumSet;
 
-enum DiscoveryManager
+public enum DiscoveryManager
 {
   INSTANCE;
   private static final Logger LOGGER = LoggerFactory.INSTANCE.getLogger(LoggerFactory.Type.MISC);
@@ -37,7 +37,6 @@ enum DiscoveryManager
   private void onResultReceived(final @NonNull SearchResult[] results,
                                 final @DiscoveryParams.ItemType int typeIndex)
   {
-
     if (typeIndex >= ItemType.values().length)
     {
       throw new AssertionError("Unsupported discovery item type " +
@@ -56,13 +55,7 @@ enum DiscoveryManager
   }
 
   // Called from JNI.
-  @MainThread
-  private void onViatorProductsReceived(@NonNull final ViatorProduct[] products)
-  {
-    throw new UnsupportedOperationException("Viator is not supported!");
-  }
-
-  // Called from JNI.
+  @SuppressWarnings("unused")
   @MainThread
   private void onLocalExpertsReceived(@NonNull final LocalExpert[] experts)
   {
@@ -71,6 +64,16 @@ enum DiscoveryManager
   }
 
   // Called from JNI.
+  @SuppressWarnings("unused")
+  @MainThread
+  private void onPromoCityGalleryReceived(@NonNull PromoCityGallery gallery)
+  {
+    notifyUiWithCheck(gallery.getItems(), ItemType.PROMO,
+                      callback -> callback.onCatalogPromoResultReceived(gallery));
+  }
+
+  // Called from JNI.
+  @SuppressWarnings("unused")
   @MainThread
   private void onError(@DiscoveryParams.ItemType int type)
   {
@@ -116,9 +119,6 @@ enum DiscoveryManager
   }
 
   public static native void nativeDiscover(@NonNull DiscoveryParams params);
-
-  @NonNull
-  public static native String nativeGetViatorUrl();
 
   @NonNull
   public static native String nativeGetLocalExpertsUrl();

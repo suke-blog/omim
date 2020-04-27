@@ -6,6 +6,7 @@
 #include "geometry/point2d.hpp"
 #include "geometry/tree4d.hpp"
 
+#include "base/assert.hpp"
 #include "base/visitor.hpp"
 
 #include <array>
@@ -36,13 +37,13 @@ using is_enum_with_count = decltype(impl::is_enum_with_count_checker<T>(0));
 }  // namespace traits
 
 template <typename T>
-using EnableIfIsEnumWithCount = std::enable_if_t<traits::is_enum_with_count<T>::value>;
+using EnableIfEnumWithCount = std::enable_if_t<traits::is_enum_with_count<T>::value>;
 
 template <typename T, typename R, typename Enable = void>
 class Counters;
 
 template <typename T, typename R>
-class Counters<T, R, EnableIfIsEnumWithCount<T>>
+class Counters<T, R, EnableIfEnumWithCount<T>>
 {
 public:
   void Increment(T const key)
@@ -56,7 +57,24 @@ public:
     return m_counters[static_cast<size_t>(key)];
   }
 
-  DECLARE_VISITOR_AND_DEBUG_PRINT(Counters, visitor(m_counters, "counters"))
+  template <typename Visitor>
+  void Visit(Visitor & visitor)
+  {
+    // We need it to support appending additional counters
+    // without any version increasing and migration.
+    std::vector<R> loader;
+    visitor(loader, "counters");
+    CHECK_LESS_OR_EQUAL(loader.size(), m_counters.size(), ());
+    std::copy(loader.cbegin(), loader.cend(), m_counters.begin());
+  }
+
+  template <typename Visitor>
+  void Visit(Visitor & visitor) const
+  {
+    visitor(m_counters, "counters");
+  }
+
+  DECLARE_DEBUG_PRINT(Counters)
 
 private:
   std::array<R, static_cast<size_t>(T::Count)> m_counters = {};
@@ -97,6 +115,8 @@ struct Bookmarks
 
 struct Discovery
 {
+  // The order is important.
+  // New types must be added before Type::Count item.
   enum class Event
   {
     HotelsClicked,
@@ -108,6 +128,9 @@ struct Discovery
     MoreAttractionsClicked,
     MoreCafesClicked,
     MoreLocalsClicked,
+
+    PromoClicked,
+    MorePromoClicked,
 
     Count
   };
@@ -126,7 +149,8 @@ struct Layer
   enum class Type : uint8_t
   {
     TrafficJams,
-    PublicTransport
+    PublicTransport,
+    Isolines,
   };
 
   DECLARE_VISITOR_AND_DEBUG_PRINT(Layer, visitor(m_type, "type"), visitor(m_useCount, "use_count"),
@@ -149,10 +173,13 @@ struct Tip
     BookingHotels,
     DiscoverButton,
     PublicTransport,
+    Isolines,
 
     Count
   };
 
+  // The order is important.
+  // New types must be added before Type::Count item.
   enum class Event : uint8_t
   {
     ActionClicked,
@@ -183,7 +210,7 @@ public:
       AddToBookmark,
       UgcEditorOpened,
       UgcSaved,
-      RouteToCreated
+      RouteToCreated,
     };
 
     DECLARE_VISITOR(visitor(m_type, "type"), visitor(m_userPos, "user_pos"),
@@ -195,19 +222,6 @@ public:
   };
 
   using Events = std::deque<Event>;
-
-  MapObject() = default;
-
-  MapObject(std::string const & bestType, m2::PointD const & pos, std::string const & readableName)
-    : m_bestType(bestType)
-    , m_pos(pos)
-    , m_readableName(readableName)
-    , m_limitRect(MercatorBounds::ClampX(pos.x - kMwmPointAccuracy),
-                  MercatorBounds::ClampY(pos.y - kMwmPointAccuracy),
-                  MercatorBounds::ClampX(pos.x + kMwmPointAccuracy),
-                  MercatorBounds::ClampY(pos.y + kMwmPointAccuracy))
-  {
-  }
 
   bool operator==(MapObject const & rhs) const
   {
@@ -232,7 +246,7 @@ public:
   void SetPos(m2::PointD const & pos)
   {
     m_pos = pos;
-    m_limitRect = MercatorBounds::RectByCenterXYAndOffset(pos, kMwmPointAccuracy);
+    m_limitRect = mercator::RectByCenterXYAndOffset(pos, kMwmPointAccuracy);
   }
 
   std::string const & GetDefaultName() const { return m_defaultName; }
@@ -253,7 +267,7 @@ public:
 
   DECLARE_VISITOR(visitor(m_bestType, "type"), visitor(m_pos, "pos"),
                   visitor(m_readableName, "readable_name"), visitor(m_defaultName, "default_name"),
-                  visitor(m_events, "events"));
+                  visitor(m_events, "events"))
 
 private:
   std::string m_bestType;
@@ -267,6 +281,20 @@ private:
   m2::RectD m_limitRect;
 };
 
+struct Promo
+{
+  Promo() = default;
+
+  DECLARE_VISITOR_AND_DEBUG_PRINT(Promo,
+                                  visitor(m_transitionToBookingTime, "transitionToBookingTime"),
+                                  visitor(m_lastTimeShownAfterBooking, "lastTimeShownAfterBooking"),
+                                  visitor(m_lastTimeShownAfterBookingCityId,
+                                          "lastTimeShownAfterBookingCityId"))
+  Time m_transitionToBookingTime;
+  Time m_lastTimeShownAfterBooking;
+  std::string m_lastTimeShownAfterBookingCityId;
+};
+
 using MapObjects = m4::Tree<MapObject>;
 
 struct InfoV0
@@ -275,7 +303,7 @@ struct InfoV0
   DECLARE_VISITOR_AND_DEBUG_PRINT(InfoV0, visitor(m_booking, "booking"),
                                   visitor(m_bookmarks, "bookmarks"),
                                   visitor(m_discovery, "discovery"), visitor(m_layers, "layers"),
-                                  visitor(m_tips, "tips"))
+                                  visitor(m_tips, "tips"), visitor(m_promo, Promo(), "promo"))
 
   Booking m_booking;
   Bookmarks m_bookmarks;
@@ -283,6 +311,7 @@ struct InfoV0
   Layers m_layers;
   Tips m_tips;
   MapObjects m_mapObjects;
+  Promo m_promo;
 };
 
 using Info = InfoV0;
@@ -295,8 +324,10 @@ inline std::string DebugPrint(Tip::Type const & type)
   case Tip::Type::BookingHotels: return "BookingHotels";
   case Tip::Type::DiscoverButton: return "DiscoverButton";
   case Tip::Type::PublicTransport: return "PublicTransport";
+  case Tip::Type::Isolines: return "Isolines";
   case Tip::Type::Count: return "Count";
   }
+  UNREACHABLE();
 }
 
 inline std::string DebugPrint(Tip::Event const & type)
@@ -307,6 +338,7 @@ inline std::string DebugPrint(Tip::Event const & type)
   case Tip::Event::GotitClicked: return "GotitClicked";
   case Tip::Event::Count: return "Count";
   }
+  UNREACHABLE();
 }
 
 inline std::string DebugPrint(Layer::Type const & type)
@@ -315,7 +347,9 @@ inline std::string DebugPrint(Layer::Type const & type)
   {
   case Layer::Type::TrafficJams: return "TrafficJams";
   case Layer::Type::PublicTransport: return "PublicTransport";
+  case Layer::Type::Isolines: return "Isolines";
   }
+  UNREACHABLE();
 }
 
 inline std::string DebugPrint(Discovery::Event const & event)
@@ -326,12 +360,15 @@ inline std::string DebugPrint(Discovery::Event const & event)
     case Discovery::Event::AttractionsClicked: return "AttractionsClicked";
     case Discovery::Event::CafesClicked: return "CafesClicked";
     case Discovery::Event::LocalsClicked: return "LocalsClicked";
+    case Discovery::Event::PromoClicked: return "PromoClicked";
     case Discovery::Event::MoreHotelsClicked: return "MoreHotelsClicked";
     case Discovery::Event::MoreAttractionsClicked: return "MoreAttractionsClicked";
     case Discovery::Event::MoreCafesClicked: return "MoreCafesClicked";
     case Discovery::Event::MoreLocalsClicked: return "MoreLocalsClicked";
+    case Discovery::Event::MorePromoClicked: return "MorePromoClicked";
     case Discovery::Event::Count: return "Count";
   }
+  UNREACHABLE();
 }
 
 inline std::string DebugPrint(MapObject::Event::Type const & type)
@@ -344,5 +381,6 @@ inline std::string DebugPrint(MapObject::Event::Type const & type)
   case MapObject::Event::Type::UgcSaved: return "UgcSaved";
   case MapObject::Event::Type::RouteToCreated: return "RouteToCreated";
   }
+  UNREACHABLE();
 }
 }  // namespace eye

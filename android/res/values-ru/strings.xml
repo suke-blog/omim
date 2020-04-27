@@ -4,8 +4,6 @@
 <!-- Language: ru -->
 <resources>
 	<!-- SECTION: Strings -->
-	<!-- About button text (should be short) -->
-	<string name="about">О приложении</string>
 	<!-- Button text (should be short) -->
 	<string name="back">Назад</string>
 	<!-- Button text (should be short) -->
@@ -71,8 +69,6 @@
 	<string name="touch_to_download">Нажмите для загрузки</string>
 	<!-- Settings/Downloader - 3G download warning dialog confirm button -->
 	<string name="use_cellular_data">Да</string>
-	<!-- Settings/Downloader - No internet connection dialog message -->
-	<string name="use_wifi_recommendation_text">Мы рекомендуем загружать большие страны через WiFi</string>
 	<!-- Choose measurement on first launch alert - title -->
 	<string name="which_measurement_system">Какую систему измерения вы предпочитаете?</string>
 	<!-- Location services are disabled by user alert - message -->
@@ -232,7 +228,7 @@
 	<string name="share_by_email">Послать по email</string>
 	<!-- Email Subject when sharing bookmarks category -->
 	<string name="share_bookmarks_email_subject">С вами поделились метками MAPS.ME</string>
-	<string name="share_bookmarks_email_body">Здравствуйте!\n\nВ прикрепленном файле мои метки из офлайновых карт MAPS.ME. Для того, чтобы открыть этот файл, вам потребуется приложение MAPS.ME, которое можно установить по ссылке: http://maps.me/get?kmz\n\nСпасибо!</string>
+	<string name="share_bookmarks_email_body">Здравствуйте!\n\nВ прикрепленном файле мои метки из офлайновых карт MAPS.ME. Для того чтобы открыть этот файл, вам потребуется приложение MAPS.ME, которое можно установить по ссылке: http://maps.me/get?kmz\n\nСпасибо!</string>
 	<!-- message title of loading file -->
 	<string name="load_kmz_title">Загрузка меток</string>
 	<!-- Kmz file successful loading -->
@@ -261,8 +257,6 @@
 	<string name="my_position_share_sms">Смотри где я сейчас. Жми %1$s или %2$s</string>
 	<!-- Subject for emailed bookmark -->
 	<string name="bookmark_share_email_subject">Смотри мою метку на карте MAPS.ME</string>
-	<!-- Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me -->
-	<string name="bookmark_share_email">Привет!\n\nОткрой эту ссылку %2$s либо эту %3$s, для того, чтобы увидеть мою метку %1$s на карте MAPS.ME.\n\nСпасибо.</string>
 	<!-- Subject for emailed position -->
 	<string name="my_position_share_email_subject">Посмотри на карте MAPS.ME, где я сейчас нахожусь</string>
 	<!-- Share my position using EMail, %1$@ is ge0:// and %2$@ is http://ge0.me link WITHOUT NAME -->
@@ -375,12 +369,6 @@
 	<string name="route">Маршрут</string>
 	<!-- category title -->
 	<string name="routes">Маршруты</string>
-	<!-- Show on first launch. -->
-	<string name="maps_licence_info">Это приложение использует географические данные (включая карты, справочники, достопримечательности, границы стран и регионов, др.) взятые из проекта OpenStreetMap. Мы не гарантируем последовательности, точности, полноты и пригодности данных OpenStreetMap.</string>
-	<!-- Show on first launch. -->
-	<string name="agree">Я согласен</string>
-	<!-- Show on first launch -->
-	<string name="disagree">Я не согласен</string>
 	<!-- text of notification -->
 	<string name="download_map_notification">Скачайте карту места, где вы находитесь</string>
 	<!-- text of notification -->
@@ -564,19 +552,35 @@
 	<!-- red color -->
 	<string name="red">Красный</string>
 	<!-- yellow color -->
-	<string name="yellow">Желтый</string>
+	<string name="yellow">Жёлтый</string>
 	<!-- blue color -->
 	<string name="blue">Синий</string>
 	<!-- green color -->
-	<string name="green">Зеленый</string>
+	<string name="green">Зелёный</string>
 	<!-- purple color -->
-	<string name="purple">Фиолетовый</string>
+	<string name="purple">Пурпурный</string>
 	<!-- orange color -->
 	<string name="orange">Оранжевый</string>
 	<!-- brown color -->
 	<string name="brown">Коричневый</string>
 	<!-- pink color -->
 	<string name="pink">Розовый</string>
+	<!-- deep purple color -->
+	<string name="deep_purple">Тёмно-пурпурный</string>
+	<!-- light blue color -->
+	<string name="light_blue">Голубой</string>
+	<!-- cyan color -->
+	<string name="cyan">Сине-зелёный</string>
+	<!-- teal color -->
+	<string name="teal">Изумрудный</string>
+	<!-- lime color -->
+	<string name="lime">Лайм</string>
+	<!-- deep orange color -->
+	<string name="deep_orange">Тёмно-оранжевый</string>
+	<!-- gray color -->
+	<string name="gray">Серый</string>
+	<!-- blue gray color -->
+	<string name="blue_gray">Серо-голубой</string>
 	<!-- Wi-Fi available -->
 	<string name="WiFi_available">Есть</string>
 
@@ -810,8 +814,6 @@
 	<string name="onboarding_location_message">Чтобы пользоваться навигацией и другими функциями приложения, нам необходим доступ к вашей геопозиции.</string>
 	<string name="onboarding_permissions_title">Предоставьте MAPS.ME доступ к памяти и местоположению.</string>
 	<string name="onboarding_permissions_message">Чтобы скачивать карты, смотреть места вокруг вас и пользоваться навигацией.</string>
-	<string name="onboarding_welcome_title">Добро пожаловать в MAPS.ME</string>
-	<string name="onboarding_welcome_first_subtitle">Бесплатные, быстрые, подробные и полностью автономные карты с пошаговой навигацией.</string>
 	<string name="onboarding_welcome_second_subtitle">Запуская приложение, вы соглашаетесь с &lt;a href="%1$s">Условиями использования&lt;/a> и &lt;a href="%2$s">Политикой конфиденциальности&lt;/a>.</string>
 	<string name="dialog_incorrect_feature_position">Измените местоположение</string>
 	<string name="message_invalid_feature_position">Объект не может находиться в этом месте</string>
@@ -1048,8 +1050,6 @@
 	<string name="banner_geerbest_message">Мгновенный поиск по более чем 50 тысячам товаров по низким ценам.</string>
 	<string name="banner_rentalcars_title">Прокат автомобилей онлайн</string>
 	<string name="banner_rentalcars_message">800 прокатных компаний в более чем 49 тысячах пунктах проката.</string>
-	<string name="banner_viator_title">Онлайн-поиск экскурсий</string>
-	<string name="banner_viator_message">Поиск по более чем 50 тысячам экскурсий по всему миру.</string>
 	<!-- december -->
 	<string name="whatsnew_traffic">Пробки в 36 странах мира</string>
 	<!-- december -->
@@ -1091,8 +1091,6 @@
 	<string name="whatsnew_smaller_mwm_message">Занимают на 20% меньше места на телефоне.</string>
 	<string name="whatsnew_waypoints_title">Маршруты с промежуточными точками</string>
 	<string name="whatsnew_waypoints_message">Нажмите на объекты, чтобы включить их в маршрут.</string>
-	<string name="whatsnew_viator_title">Забронируйте экскурсию</string>
-	<string name="whatsnew_viator_message">Выбирайте популярные экскурсии в туристических городах мира.</string>
 	<string name="whatsnew_driving_style_title">Новый автомобильный стиль карт</string>
 	<string name="whatsnew_driving_style_message">Режим автомобильной навигации стал удобнее.</string>
 	<string name="more_on_bookingcom">Больше на Booking.com</string>
@@ -1150,7 +1148,6 @@
 	<string name="settings_card_memory">Карта памяти</string>
 	<string name="settings_storage_available">%s доступно</string>
 	<string name="toast_location_permission_denied">Определение местоположения запрещено</string>
-	<string name="place_page_viator_title">Экскурсии и достопримечательности</string>
 	<string name="button_use">Использовать</string>
 	<string name="planning_route_manage_route">Изменить маршрут</string>
 	<string name="button_plan">Построить</string>
@@ -1173,8 +1170,6 @@
 	<string name="add_my_position">Добавить мое местоположение</string>
 	<string name="choose_start_point">Выберите начало маршрута</string>
 	<string name="choose_destination">Выберите конец маршрута</string>
-	<string name="preloader_viator_title">Откройте для себя экскурсии и необычные туры</string>
-	<string name="preloader_viator_message">Туры, достопримечательности, экскурсии и многое другое</string>
 	<string name="preloader_viator_button">Посмотреть</string>
 	<string name="whats_new_title_route">Вело- и пешеходные маршруты стали лучше</string>
 	<string name="whats_new_message_route">Исправили ошибки, ускорили построение маршрутов в несколько раз, а также добавили промежуточные остановки</string>
@@ -1185,10 +1180,6 @@
 	<string name="placepage_no_reviews">Нет отзывов</string>
 	<string name="placepage_reviewed">Вы уже оставили отзыв</string>
 	<string name="placepage_summary_rating">Общий рейтинг</string>
-	<plurals name="placepage_summary_rating_description">
-	  <item quantity="one">На основе %d отзыва</item>
-	  <item quantity="other">На основе %d отзывов</item>
-	</plurals>
 	<string name="placepage_rate_comment">Нажмите, чтобы оставить оценку и отзыв этого места.</string>
 	<string name="placepage_rate_horrible">Ужасно</string>
 	<string name="placepage_rate_bad">Плохо</string>
@@ -1231,8 +1222,6 @@
 	<string name="discovery_button_subtitle_attractions">Достопримечательности</string>
 	<string name="discovery_button_subtitle_eat_and_drink">Перекусить</string>
 	<string name="discovery_button_subtitle_local_guides">Местные гиды</string>
-	<string name="discovery_button_viator_offline_title">Откройте для себя туры и необычные активности</string>
-	<string name="discovery_button_viator_offline_message">Туры, активности, достопримечательности и многое другое</string>
 	<string name="discovery_button_viator_error_title">Ошибка загрузки данных</string>
 	<string name="discovery_button_other_error_message">Ошибка загрузки данных</string>
 	<string name="discovery_button_other_loading_message">Данные загружаются</string>
@@ -1274,12 +1263,10 @@
 	<string name="downloader_percent">%1$s (%2$s из %3$s)</string>
 	<string name="downloader_process">Загрузка %s…</string>
 	<string name="downloader_applying">Применение %s…</string>
-	<string name="transit_not_found">Навигация по общественному траспорту пока не доступна в данном регионе</string>
 	<string name="whats_new_title_hotel_filter">Новые фильтры при поиске отелей!</string>
 	<string name="whats_new_message_hotel_filter">При поиске отелей используйте фильтрацию по дате заезда и выезда</string>
 	<string name="whats_new_title_ugc_travel">Делитесь вашими впечатлениями с другими путешественниками!</string>
 	<string name="whats_new_message_ugc_travel">Оценивайте и пишите отзывы о посещенных местах!</string>
-	<string name="dialog_pedestrian_route_is_long">Пешеходный маршрут слишком длинный</string>
 	<string name="dialog_message_transit_not_found_connection">Постройте маршрут в пределах одной транспортной сети</string>
 	<string name="bookmarks_error_message_share_general">Не удалось поделиться из-за ошибки приложения</string>
 	<string name="bookmarks_error_title_share_empty">Ошибка при попытке поделиться</string>
@@ -1401,8 +1388,8 @@
 	<string name="bookmarks_downloaded_subtitle">Нажмите «Посмотреть на карте» чтобы посмотреть новые места из списка</string>
 	<string name="guides">Путеводители</string>
 	<string name="guide_downloaded_title">Путеводитель был успешно загружен</string>
-	<string name="download_guides">Загрузите путеводители</string>
-	<string name="cached_guides_placeholder_subtitle">Мы собрали каталог с подробными оффлайн маршрутами по городам мира! Теперь каждый путешественник сможет найти маршрут по своему вкусу и загрузить в MAPS.ME. Все загруженные маршруты автоматически отобразятся на карте. Для загрузки маршрута необходимо подключение к интернету.</string>
+	<!-- as few symbols as possible -->
+	<string name="download_guides">Найти путеводители</string>
 	<string name="guides_groups_cached">Загруженные путеводители</string>
 	<string name="subtitle_error_downloading_guide">Путеводитель не был загружен</string>
 	<string name="error_already_downloaded_guide">Этот путеводитель уже был загружен</string>
@@ -1441,7 +1428,6 @@
 	<string name="restore_success_alert">Подписка была успешно восстановлена</string>
 	<string name="restore_error_alert">Во время восстановления подписки произошла ошибка</string>
 	<string name="restore_no_subscription_alert">У вас нет активных подписок</string>
-	<string name="subscription_terms">Оплата будет списана с вашего счета iTunes при подтверждении покупки. Подписка автоматически возобновится, если автоматическое продление не будет отключено по крайней мере за 24 часа до окончания текущего периода. Деньги будут списываться с вашей учетной записи в соответствии с вашим планом продления в течение 24 часов до конца текущего периода. Вы можете управлять или отключать автоматическое продление в настройках учетной записи Apple ID в любое время после покупки.</string>
 	<string name="subscriptions_title">Подписки</string>
 	<string name="manage_subscription">Управление подпиской</string>
 	<string name="taxi">Такси</string>
@@ -1452,7 +1438,6 @@
 	<string name="hide_from_map">Скрыть с карты</string>
 	<string name="ugc_route_tags_screen_label">Выберите теги</string>
 	<string name="ugc_route_tags_progress_msg">Загружаем теги…</string>
-	<string name="ugc_route_tags_desc">Пожалуйста, выберите теги, чтобы помочь другим путешественникам найти ваш путеводитель. Это обязательно.</string>
 	<string name="public_access">Публичный доступ</string>
 	<string name="limited_access">Ограниченный доступ</string>
 	<string name="upload_and_publish_desc">Этот путеводитель будет загружен в публичный каталог MAPS.ME и будет доступен другим пользователям</string>
@@ -1475,7 +1460,7 @@
 	<string name="unable_upload_errorr_title">Не удалось загрузить файл</string>
 	<string name="unable_upload_error_subtitle_edited">Файл был отредактирован через веб-приложение</string>
 	<string name="unable_upload_error_subtitle_broken">Файл поврежден и не может быть загружен. Пожалуйста, загрузите другой файл.</string>
-	<string name="buy_btn">Купить за %s</string>
+	<string name="buy_btn">Купить путеводитель за %s</string>
 	<string name="download_guide_progress">Путеводитель загружается…</string>
 	<string name="price_error_title">Невозможно узнать стоимость</string>
 	<string name="price_error_subtitle">Пожалуйста, попробуйте еще раз через пару минут</string>
@@ -1523,6 +1508,320 @@
 	<string name="whatsnew_paid_routes_title">Больше новых впечатлений!</string>
 	<string name="whatsnew_paid_routes_message">В дополнение к бесплатным маршрутам мы добавили в каталог 3 категории платных путеводителей. Более 700 новых маршрутов!</string>
 	<string name="whats_new_ugc_routes_title_android_only">Делиться впечатлениями просто</string>
+	<string name="ugc_thanks_message_auth">Ваш отзыв сохранен</string>
+	<string name="ugc_thanks_message_not_auth">Зарегистрируйтесь, чтобы оставить отзыв</string>
+	<string name="notification_leave_review_v2_title">Оставьте отзыв и помогите путешественникам!</string>
+	<string name="error_public_not_enought_title">Недостаточно меток</string>
+	<string name="error_public_not_enought_subtitle">В вашем маршруте должно быть как минимум 3 метки, чтобы загрузить его в публичный каталог</string>
+	<string name="bookmark_public_upload_alert_title">Вы всего в паре шагов от загрузки вашего маршрута в каталог MAPS.ME!</string>
+	<string name="bookmark_public_upload_alert_subtitle">Убедитесь, что у маршрута есть название и описание, а все метки содержат информацию о местах. Благодаря этому, пользователи найдут маршрут и смогут воспользоваться им в поездке.</string>
+	<string name="bookmark_public_upload_alert_ok_button">Да, всё хорошо!</string>
+	<string name="name_title">Введите название</string>
+	<string name="name_placeholder">например, Пабы Лондона</string>
+	<string name="name_comment1">Назовите маршрут конкретно, чтобы пользователи смогли найти его, например, \"Пабы Лондона\"</string>
+	<string name="name_comment2">Название не должно содержать специальных символов. Не публикуйте маршруты с названием \"Мои метки\"</string>
+	<string name="description_guide">Описание</string>
+	<string name="description_title">Введите описание маршрута</string>
+	<string name="description_placeholder">Опишите свой маршрут подробно</string>
+	<string name="description_comment1">Описание маршрута должно состоять минимум из 30 символов.</string>
+	<string name="ugc_route_tags_desc">Пожалуйста, выберите теги, чтобы помочь другим путешественникам найти ваш путеводитель. Это обязательно. Не больше %s тегов.</string>
+	<string name="html_format_error_title">Ваш маршрут не был опубликован</string>
+	<string name="html_format_error_subtitle">Пожалуйста, убедитесь, что названия и описания меток в маршруте имеют верное форматирование. Вы можете проверить это в браузере на компьютере по кнопке \"Редактировать онлайн\" ниже.</string>
+	<string name="web_editor_description">Загрузите маршрут и получите ссылку для редактирования на компьютере</string>
+	<string name="edit_on_web_confirm">Редактировать онлайн</string>
+	<string name="update_guide">Загрузить новую версию</string>
+	<string name="direct_link_updating_text">Обновляем маршрут…</string>
+	<string name="direct_link_updating_success">Маршрут обновлен</string>
+	<string name="unable_get_direct_link_desc">Вы можете поделиться маршрутом с помощью публичной ссылки</string>
+	<string name="any_access_update_alert_title">Возможно, есть новая версия маршрута</string>
+	<string name="any_access_update_alert_message">Вы хотите обновить метки? Новая версия будет доступна по той же ссылке.</string>
+	<string name="any_access_update_alert_update">Обновить</string>
+	<string name="public_or_limited_access_after_edit_online_error_title">Вы редактировали маршрут онлайн</string>
+	<string name="public_or_limited_access_after_edit_online_error_message">В дальнейшем редактируйте, публикуйте или делитесь маршрутом с друзьями через наш вебсайт</string>
+	<string name="power_managment_title">Режим энергосбережения</string>
+	<string name="power_managment_description">Если режим энергосбережения включен, приложение будет отключать энергозатратные функции в зависимости от текущего заряда телефона</string>
+	<string name="power_managment_setting_never">Никогда</string>
+	<string name="power_managment_setting_auto">Авто</string>
+	<string name="power_managment_setting_manual_max">Максимальное энергосбережение</string>
+	<string name="enable_logging_warning_message">Данная настройка включается для записи действий в целях диагностики. Это помогает команде выявить проблемы с приложением. Включайте настройку только по просьбе поддержки MAPS.ME.</string>
+	<string name="html_error_upload_message_try_again">Проверьте доступ к сети и повторите попытку</string>
+	<string name="html_error_upload_title_try_again">Нет соединения с Интернетом</string>
+	<string name="notification_leave_review_v2_android_short_title">Оставляйте отзыв и помогайте путешественникам!</string>
+	<string name="megafon">Роуминг, гудбай!</string>
+	<string name="notifications_illegal_alert_disable_button">Выключить уведомления</string>
+	<string name="access_rules_author_only">Редактируется онлайн</string>
+	<string name="privacy_settings_menu">Настройки конфиденциальности</string>
+	<string name="gdpr_request_setting">Получить ID для GDPR-запроса</string>
+	<string name="gdpr_request_window_title">Ваш ID: %s.</string>
+	<string name="gdpr_request_window_message">Пожалуйста, скопируйте его и отправьте запрос на support\@maps.me</string>
+	<string name="gdpr_request_window_copy">Скопировать ID</string>
+	<string name="unable_upadate_error_title">Не удалось обновить маршрут</string>
+	<string name="unable_upadate_error_message">Возникли ошибки при обновлении. Проверьте изменения и повторите попытку</string>
+	<string name="whats_new_wiki_title">Что это за место?</string>
+	<string name="whats_new_wiki_message">В карточки популярных достопримечательностей мы добавили статьи из Wikipedia.org, доступные офлайн</string>
+	<string name="driving_options_title">Настройки объезда</string>
+	<string name="driving_options_subheader">Избегать в каждом маршруте</string>
+	<string name="avoid_tolls">Платные дороги</string>
+	<string name="avoid_unpaved">Грунтовые дороги</string>
+	<string name="avoid_ferry">Паромные переправы</string>
+	<string name="avoid_motorways">Магистрали</string>
+	<string name="unable_to_calc_alert_title">Невозможно построить маршрут</string>
+	<string name="unable_to_calc_alert_subtitle">К сожалению, мы не смогли построить маршрут с выбранными опциями. Измените настройки и повторите попытку</string>
+	<string name="define_to_avoid_btn">Настроить пути объезда</string>
+	<string name="change_driving_options_btn">Настройки объезда включены</string>
+	<string name="toll_road">Платная дорога</string>
+	<string name="unpaved_road">Грунтовая дорога</string>
+	<string name="ferry_crossing">Паромная переправа</string>
+	<string name="operated_by">Управляется оператором \"%s\"</string>
+	<string name="avoid_toll_roads_placepage">Избегать платных дорог</string>
+	<string name="avoid_unpaved_roads_placepage">Избегать грунтовых дорог</string>
+	<string name="avoid_ferry_crossing_placepage">Избегать паромных переправ</string>
+	<string name="cached_guides_placeholder_subtitle">Готовые путеводители в MAPS.ME – это избранные места с фотографиями и описаниями, которые отображаются на карте и доступны офлайн.</string>
+	<string name="guides_catalogue_title">Каталог путеводителей</string>
+	<string name="download_guides_button">Перейти в каталог</string>
+	<plurals name="placepage_summary_rating_description">
+	  <item quantity="one">На основе %d отзыва</item>
+	  <item quantity="other">На основе %d отзывов</item>
+	</plurals>
+	<string name="type.cuisine.uzbek">Узбекская кухня</string>
+	<string name="onboarding_welcome_title">Планируйте и путешествуйте с MAPS.ME</string>
+	<string name="onboarding_welcome_first_subtitle">Сохраняйте интересные места, бронируйте отели, стройте маршруты офлайн</string>
+	<string name="onboarding_guide_direct_download_title">Путеводитель готов к загрузке</string>
+	<string name="onboarding_guide_direct_download_subtitle">Он отобразится на карте и будет работать офлайн</string>
+	<string name="onboarding_guide_direct_download_button">Скачать</string>
+	<string name="onboarding_bydeeplink_guide_title">Готовые путеводители в MAPS.ME</string>
+	<string name="onboarding_bydeeplink_guide_subtitle">Избранные места с фотографиями и описаниями отображаются на карте и доступны офлайн.</string>
+	<string name="whats_new_auto_update_bydeeplink_title">Прежде, чем перейти к путеводителям…</string>
+	<string name="whats_new_auto_update_bydeeplink_message">Обновите карты для получения актуальной информации об объектах!</string>
+	<string name="whats_new_auto_update_and_proceed_button_size">Обновить (%s) и продолжить</string>
+	<string name="whatsnew_toll_unpaved_title">Прокладывайте автомобильные маршруты с учетом типа дороги</string>
+	<string name="whatsnew_toll_unpaved_message">Объезжайте платные и грунтовые дороги и паромные переправы</string>
+	<string name="whatsnew_new_catalogue_title">Обновленные страницы каталога</string>
+	<string name="whatsnew_new_catalogue_message">Мы добавили подробную информацию о партнерских путеводителях, чтобы выбор маршрута был простым и удобным</string>
+	<string name="purchase_please_wait_toast">Пожалуйста, не покидайте экран до завершения покупки</string>
+	<string name="trip_start">Поехали</string>
+	<string name="pick_destination">Цель</string>
+	<string name="follow_my_position">Отцентровать</string>
+	<string name="search_results">Результаты поиска</string>
+	<string name="then_turn">Затем</string>
+	<string name="redirect_route_alert">Хотите перестроить маршрут?</string>
+	<string name="redirect_route_yes">Да</string>
+	<string name="redirect_route_no">Нет</string>
+	<string name="trip_finished">Вы прибыли!</string>
+	<string name="keyboard_availability_alert">Клавиатура недоступна во время движения</string>
+	<string name="dialog_routing_change_start_carplay">Невозможно построить маршрут от текущего местоположения</string>
+	<string name="dialog_routing_change_end_carplay">Невозможно построить маршрут до конечной точки. Выберите другую</string>
+	<string name="dialog_routing_check_gps_carplay">Нет сигнала GPS. Проследуйте на открытую местность</string>
+	<string name="dialog_routing_unable_locate_route_carplay">Невозможно построить маршрут. Выберите другие точки маршрута</string>
+	<string name="dialog_routing_download_files_carplay">Чтобы построить маршрут, загрузите недостающие карты на своем устройстве</string>
+	<string name="dialog_routing_system_error_carplay">Произошла ошибка. Перезапустите приложение</string>
+	<string name="dialog_routing_rebuild_from_current_location_carplay">Маршрут будет перестроен от вашего текущего местоположения</string>
+	<string name="dialog_routing_rebuild_for_vehicle_carplay">Маршрут будет изменен на автомобильный</string>
+	<string name="ok">Ок</string>
+	<string name="vezet_taxi">Везет</string>
+	<string name="booking_button_toolbar">Подобрать отель на карте</string>
+	<string name="popup_booking_download_guides_title">Забронирован отель?</string>
+	<string name="popup_booking_download_guides_message">Спланируйте маршрут с готовыми путеводителями MAPS.ME</string>
+	<string name="popup_mwm_download_guides_title">Офлайн путеводители</string>
+	<string name="popup_mwm_download_guides_cta">Выбрать</string>
+	<string name="popup_mwm_download_guides_cta_1">Посмотреть</string>
+	<string name="gallery_pp_download_guides_offline_title">Планируйте свой отдых с MAPS.ME!</string>
+	<string name="gallery_pp_download_guides_offline_subtitle">Не упустите самое важное с маршрутами от опытных путешественников</string>
+	<string name="gallery_pp_download_guides_offline_cta">Включить Интернет</string>
+	<string name="gallery_pp_download_guides_title">Путеводители</string>
+	<string name="native_screen_subscription_title">Полный доступ к 2000+ путеводителям!</string>
+	<string name="native_screen_subscription_message">Запоминающийся отдых, куда бы и с кем бы вы ни путешествовали</string>
+	<string name="annual_subscription_title">Годовая</string>
+	<string name="montly_subscription_title">Месячная</string>
+	<string name="annual_subscription_message">12 месяцев безлимитного доступа</string>
+	<string name="montly_subscription_message">1 месяц безлимитного доступа</string>
+	<string name="subscription_success_dialog_title">Спасибо за подписку!</string>
+	<string name="subscription_success_dialog_message">Теперь у вас неограниченный доступ к каталогу путеводителей</string>
+	<string name="renewal_screen_title">Срок действия подписки истек</string>
+	<string name="renewal_screen_message">Все путеводители, скачанные по подписке, будут удалены. Хотите восстановить подписку и сохранить их?</string>
+	<string name="renewal_screen_button_restore">Да, восстановить</string>
+	<string name="renewal_screen_button_cancel">Нет, удалить путеводители</string>
+	<string name="subscription_error_ping_title">Не удалось совершить покупку</string>
+	<string name="subscription_error_message">Сейчас сервис недоступен в вашем регионе. Пожалуйста, попробуйте позже</string>
+	<string name="subscription_error_button">Понятно</string>
+	<string name="timeout_error_title">Упс, время вышло!</string>
+	<string name="timeout_error_message">Наши серверы не отвечают. Пожалуйста, проверьте интернет-соединение и повторите попытку.</string>
+	<string name="per_month">/мес.</string>
+	<string name="per_year">/год</string>
+	<string name="buy_btn_for_subscription">Полный доступ от %s</string>
+	<string name="buy_btn_for_subscription_1">Купить ВСЕ путеводители за %s</string>
+	<string name="buy_btn_for_subscription_ios_only_mo">Полный доступ за %s/мес.</string>
+	<string name="buy_btn_for_subscription_ios_only_year">Полный доступ за %s/год</string>
+	<string name="subscription_terms_guides">Оплата будет произведена с вашего счета iTunes при подтверждении покупки. Подписка автоматически возобновится, если автоматическое продление не будет отключено по крайней мере за 24 часа до окончания текущего периода. Денежные средства будут списываться с вашей учетной записи в соответствии с вашим тарифным планом продления в течение 24 часов до конца текущего периода. Вы можете управлять автоматическим продлением или отключать его в настройках учетной записи Apple ID в любое время после покупки. Вы сможете использовать путеводители, скачанные по подписке, только в течение ее срока действия. По истечении 30 дней после окончания подписки путеводители со всеми закладками будут автоматически удалены.</string>
+	<string name="subscription_terms">Оплата будет списана с вашего счета iTunes при подтверждении покупки. Подписка автоматически возобновится, если автоматическое продление не будет отключено по крайней мере за 24 часа до окончания текущего периода. Деньги будут списываться с вашей учетной записи в соответствии с вашим планом продления в течение 24 часов до конца текущего периода. Вы можете управлять или отключать автоматическое продление в настройках учетной записи Apple ID в любое время после покупки.</string>
+	<string name="whatsnew_carplay_title">Автонавигация MAPS.ME в CarPlay!</string>
+	<string name="whatsnew_carplay_message">Метки, поиск, камеры скорости и настройки объезда — все работает без Интернета</string>
+	<string name="whatsnew_subscription_title">Открой мир по подписке!</string>
+	<string name="whatsnew_subscription_message">Неограниченный доступ к каталогу маршрутов выгоднее одноразовой покупки</string>
+	<string name="whatsnew_carnavi_fixes_for_android_title">Обновление навигации</string>
+	<string name="whatsnew_carnavi_fixes_for_android_message">Мы улучшили построение маршрутов до точек, расположенных далеко от дорог</string>
+	<string name="avoid_unpaved_carplay_1">Без грунт.</string>
+	<string name="avoid_unpaved_carplay_2">Без грунтовых</string>
+	<string name="avoid_ferry_carplay_1">Без паромов</string>
+	<string name="avoid_ferry_carplay_2">Без паромов</string>
+	<string name="avoid_tolls_carplay_1">Без платных</string>
+	<string name="avoid_tolls_carplay_2">Без платных</string>
+	<string name="speedcams_alert_title_carplay_1">Камеры</string>
+	<string name="speedcams_alert_title_carplay_2">Инфо о камерах</string>
+	<string name="download_map_carplay">Скачайте карты в приложении MAPS.ME на своем устройстве</string>
+	<string name="carplay_roundabout_exit">%s съезд</string>
+	<!-- max. 10 symbols, both iOS and Android -->
+	<string name="sort">Сортировать…</string>
+	<!-- Android, title, max 20-22 symbols -->
+	<string name="sort_bookmarks">Сортировать метки</string>
+	<!-- iOS -->
+	<string name="sort_default">Сортировать по умолчанию</string>
+	<string name="sort_type">Сортировать по типу</string>
+	<string name="sort_distance">Сортировать по расстоянию</string>
+	<string name="sort_date">Сортировать по дате</string>
+	<!-- Android -->
+	<string name="by_default">По умолчанию</string>
+	<!-- Android -->
+	<string name="by_type">По типу</string>
+	<!-- Android -->
+	<string name="by_distance">По расстоянию</string>
+	<!-- Android -->
+	<string name="by_date">По дате</string>
+	<string name="week_ago_sorttype">Неделю назад</string>
+	<string name="month_ago_sorttype">Месяц назад</string>
+	<string name="moremonth_ago_sorttype">Больше месяца назад</string>
+	<string name="moreyear_ago_sorttype">Больше года назад</string>
+	<string name="near_me_sorttype">Рядом со мной</string>
+	<string name="others_sorttype">Другие</string>
+	<string name="food_places">Еда</string>
+	<string name="tourist_places">Достопримечательности</string>
+	<string name="museums">Музеи</string>
+	<string name="parks">Парки</string>
+	<string name="swim_places">Плавание</string>
+	<string name="mountains">Горы</string>
+	<string name="animals">Животные</string>
+	<string name="hotels">Отели</string>
+	<string name="buildings">Здания</string>
+	<string name="money">Деньги</string>
+	<string name="shops">Магазины</string>
+	<string name="parkings">Парковки</string>
+	<string name="fuel_places">Заправки</string>
+	<string name="water">Вода</string>
+	<string name="medicine">Медицина</string>
+	<string name="search_in_the_list">Искать в списке</string>
+	<string name="view_on_map_bookmarks">На карте</string>
+	<string name="more_bookmarks">Еще…</string>
+	<string name="no_items_found">Ничего не найдено</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_edit_list">Редактировать</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_delete_list">Удалить список</string>
+	<string name="whatsnew_bookmarks_search_sort_title">Порядок в метках — удобство в путешествии</string>
+	<string name="whatsnew_bookmarks_search_sort_message">Сортируйте избранные места по категориям, времени добавления и геолокации, а также быстро находите конкретные метки по названию</string>
+	<string name="popup_subscription_success_map_title">Ура! Вы подписаны!</string>
+	<string name="popup_subscription_success_map_message">Теперь исследуйте лучшие туристические достопримечательности в каталоге MAPS.ME</string>
+	<string name="popup_subscription_success_map_start_button">Просмотреть</string>
+	<string name="popup_subscription_success_map_not_now_button">Не сейчас</string>
+	<string name="religious_places">Святые места</string>
+	<string name="subscription_terms_android">Оплата будет произведена с вашего счета Google Play при подтверждении покупки. Подписка автоматически возобновится, если автоматическое продление не будет отключено по крайней мере за 24 часа до окончания текущего периода. Денежные средства будут списываться с вашей учетной записи в соответствии с вашим тарифным планом продления в течение 24 часов до конца текущего периода. Вы можете управлять автоматическим продлением или отключать его в настройках учетной записи после покупки. Вы сможете использовать путеводители, скачанные по подписке, только в течение ее срока действия. По истечении 30 дней после окончания подписки путеводители будут автоматически удалены.</string>
+	<string name="select_list">Выбрать список</string>
+	<string name="pp_discovery_place_related_header">Это место в каталоге путеводителей</string>
+	<string name="pp_discovery_place_related_header_1">Это место встречается в путеводителе</string>
+	<string name="pp_discovery_place_related_cta_button">Посмотреть</string>
+	<string name="pp_discovery_place_related_tag_header">Путеводители по тегу «%s»</string>
+	<string name="pp_discovery_place_related_tag_header_1">Вам также могут понравиться</string>
+	<string name="buy_btn_for_subscription_version_2">ВСЕ путеводители всего за %s/мес.</string>
+	<string name="buy_btn_for_subscription_version_3">Весь каталог за %s/мес.</string>
+	<string name="buy_btn_for_subscription_ios_only_mo_version_2">Доступ к каталогу за %s/мес.</string>
+	<string name="buy_btn_for_subscription_ios_only_year_version_2">Доступ к каталогу за %s/год</string>
+	<string name="subscription_screen_native_title_version_2">Доступ к путеводителям с метками на карте!</string>
+	<string name="subscription_screen_native_message_version_2">Будьте готовы к любому путешествию в 600+ городах и 100+ странах</string>
+	<string name="catalog_no_internet_title">Нет интернет-подключения</string>
+	<string name="catalog_no_internet_button">Попробовать снова</string>
+	<string name="whatsnew_map_updates_title">Реактивные обновления карт</string>
+	<string name="whatsnew_map_updates_message">Теперь обновляем данные в 2 раза быстрее</string>
+	<string name="new_onboarding_button">Далее</string>
+	<string name="new_onboarding_button_2">Начать</string>
+	<string name="new_onboarding_step1_header_2">Универсальный помощник в путешествиях</string>
+	<string name="new_onboarding_step2_header">Мечтайте и планируйте</string>
+	<string name="new_onboarding_step2_message">70+ млн интересных мест, каталог готовых путеводителей и бронирование гостиниц с карты – вы готовы к путешествию!</string>
+	<string name="new_onboarding_step3_message">Детализированные офлайн карты и офлайн навигация помогут не потеряться в незнакомых местах!</string>
+	<string name="new_onboarding_step4_header">Делитесь впечатлениями</string>
+	<string name="new_onboarding_step4_message">Сохраняйте понравившиеся места в избранном и отправляйте их друзьям</string>
+	<string name="new_onboarding_step5.1_header">Перед тем как начать…</string>
+	<string name="new_onboarding_step5.1_message">Не забудьте посетить наш новый каталог путеводителей, чтобы найти офлайн гид к ближайшей поездке!</string>
+	<string name="new_onboarding_step5.1_button">Открыть каталог</string>
+	<string name="new_onboarding_step5.2_message">Подписка на каталог путеводителей в MAPS.ME – это выгодно. Получите полный доступ к путеводителям для городских прогулок и активного отдыха!</string>
+	<string name="new_onboarding_step5.2_button">Посмотреть условия</string>
+	<string name="new_onboarding_step5.3_message">Скачайте и оцените маршруты для городских прогулок и активного отдыха с бесплатной подборкой MAPS.ME!</string>
+	<string name="new_onboarding_step5.3_button">Скачать бесплатно</string>
+	<string name="new_onboarding_additional_steps_later_button">Не сейчас</string>
+	<string name="all_pass_subscription_header">ПОДПИСКА НА КАТАЛОГ</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title">30000+\nпутеводителей\nи троп</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle"><b>Безлимитное скачивание в офлайн</b> маршрутов для города и активного отдыха</string>
+	<!-- \n - for a break between lines. Max. 17 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_2">Интерактивный\nпрофиль высот</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_2">Все тропы загружаются <b>с высотами и основной информацией о маршруте</b></string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_3">Избранные\nместа, фото\nи рекомендации</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_3"><b>Узнайте всё о маршруте</b>, по которому собираетесь пройти</string>
+	<string name="sightseeing_subscription_header_subscription">Подписка на путеводители</string>
+	<string name="sightseeing_subscription_message">700+ городов и 100+ стран</string>
+	<string name="sightseeing_subscription_message_2">Доступны офлайн</string>
+	<string name="sightseeing_subscription_message_3">Фото и пешеходные треки</string>
+	<string name="subscription_success_dialog_title_sightseeing_pass">Спасибо за подписку!</string>
+	<string name="subscription_success_dialog_message_sightseeing_pass">Теперь у вас есть доступ ко всем городским путеводителям в каталоге</string>
+	<string name="downloader_main_gallery_header">Карты и путеводители</string>
+	<string name="downloader_main_gallery_message">Теперь в этом разделе вы можете не только загрузить карты, но и выбрать путеводители для ближайших путешествий</string>
+	<string name="downloader_main_1_element_gallery_header">Все путеводители</string>
+	<string name="downloader_main_1_element_gallery_message">в 100+ странах</string>
+	<string name="downloader_country_1_element_gallery_header">%s маршрутов</string>
+	<string name="downloader_country_no_guides_gallery_header">Пока нет путеводителей по этой стране</string>
+	<string name="downloader_country_no_guides_gallery_message">Ознакомьтесь с другими маршрутами в 100+ странах для городского и активного отдыха</string>
+	<string name="dialog_pedestrian_route_is_long">Добираться до транспорта пешком слишком долго</string>
+	<string name="whatsnew_outdoor_guides_title">Мы добавили 15000+ троп для активного отдыха!</string>
+	<string name="whatsnew_outdoor_guides_message">Маршруты от Outdooractive для зимних и летних отпусков ждут в каталоге!</string>
+	<string name="whatsnew_guides_galleries_title">Планируйте ближайшую поездку с MAPS.ME</string>
+	<string name="whatsnew_guides_galleries_message">Теперь вы можете найти рекомендованные путеводители в карточках популярных городов и достопримечательностей</string>
+	<string name="new_onboarding_step3_header">Путешествуйте</string>
+	<string name="all_pass_screen_best_value">Выгодная цена</string>
+	<string name="buy_btn_for_subscription_3">Весь каталог за %s/год</string>
+	<string name="transit_not_found">Навигация на метро ещё недоступна в данном регионе</string>
+	<string name="dialog_pedestrian_route_is_long_header">Маршрут метро не найден</string>
+	<string name="dialog_pedestrian_route_is_long_message">Выберите начальную или конечную точку маршрута ближе к станции метро</string>
+	<!-- Failed planning SUBWAY route message in navigation view -->
+	<string name="routing_planning_error_subway_special">Ошибка построения маршрута метро</string>
+	<string name="whatsnew_isolines_title">Новинка для активного отдыха – линии высот офлайн!</string>
+	<!-- as less symbols as possible -->
+	<string name="whatsnew_isolines_message">Ориентируйтесь в горной местности – включите слой кнопкой в левом верхнем углу экрана</string>
+	<string name="button_layer_isolines">Высоты</string>
+	<string name="tips_map_layers_title_countour">Линии высот офлайн в MAPS.ME!</string>
+	<string name="tips_map_layers_message_countour">Линии высот помогут спланировать путешествие на природу и не потеряться на местности</string>
+	<string name="isolines_activation_error_dialog">Чтобы воспользоваться линиями высот, обновите или загрузите карту нужной местности</string>
+	<string name="isolines_location_error_dialog">Линии высот пока не доступны в этом регионе</string>
+	<string name="elevation_profile_diff_level">Уровень сложности</string>
+	<string name="elevation_profile_diff_level_easy">Лёгкий</string>
+	<string name="elevation_profile_diff_level_moderate">Умеренный</string>
+	<string name="elevation_profile_diff_level_hard">Сложный</string>
+	<string name="elevation_profile_ascent">Подъём</string>
+	<string name="elevation_profile_descent">Спуск</string>
+	<string name="elevation_profile_minaltitude">Мин. высота</string>
+	<string name="elevation_profile_maxaltitude">Макс. высота</string>
+	<string name="elevation_profile_m">м</string>
+	<string name="elevation_profile_difficulty">Сложность</string>
+	<string name="elevation_profile_distance">Расст.:</string>
+	<string name="elevation_profile_km">км</string>
+	<string name="elevation_profile_time">В пути:</string>
+	<string name="elevation_profile_hours">ч.</string>
+	<string name="elevation_profile_minutes">мин</string>
+	<!-- hide the full screen banner and continue working with the app -->
+	<string name="hide_screen_map_update">Скрыть и продолжить работу</string>
+	<string name="view_on_map_downloaded_error">Этот путеводитель был удалён с устройства</string>
+	<string name="subscription">Подписка</string>
 
 	<!-- SECTION:  Partners  -->
 	<string name="sponsored_partner1_action">Аутлеты</string>
@@ -1536,6 +1835,8 @@
 	<string name="type.aeroway.aerodrome">Аэропорт</string>
 	<string name="type.aeroway.aerodrome.international">Аэропорт</string>
 	<string name="type.aeroway.helipad">Вертолётная площадка</string>
+	<string name="type.amenity">Объекты инфраструктуры</string>
+	<string name="type.amenity.arts_centre">Центр искусств</string>
 	<string name="type.amenity.atm">Банкомат</string>
 	<string name="type.amenity.bank">Банк</string>
 	<string name="type.amenity.bar">Бар</string>
@@ -1567,6 +1868,7 @@
 	<string name="type.amenity.fast_food">Фастфуд</string>
 	<string name="type.amenity.ferry_terminal">Паром</string>
 	<string name="type.amenity.fire_station">Пожарная часть</string>
+	<string name="type.amenity.food_court">Ресторанный дворик</string>
 	<string name="type.amenity.fountain">Фонтан</string>
 	<string name="type.amenity.fuel">Заправка</string>
 	<string name="type.amenity.grave_yard">Кладбище</string>
@@ -1584,14 +1886,15 @@
 	<string name="type.amenity.parking">Парковка</string>
 	<string name="type.amenity.parking.fee">Парковка</string>
 	<string name="type.amenity.parking.multi.storey">Парковка</string>
-	<string name="type.amenity.parking.multi.storey.fee">Парковка</string>
 	<string name="type.amenity.parking.no.access">Парковка</string>
 	<string name="type.amenity.parking.park_and_ride">Парковка</string>
 	<string name="type.amenity.parking.permissive">Парковка</string>
-	<string name="type.amenity.parking.permissive.fee">Парковка</string>
 	<string name="type.amenity.parking.private">Парковка</string>
 	<string name="type.amenity.parking.underground">Парковка</string>
-	<string name="type.amenity.parking.underground.fee">Парковка</string>
+	<string name="type.amenity.parking_space">Парковочное место</string>
+	<string name="type.amenity.parking_space.permissive">Парковочное место</string>
+	<string name="type.amenity.parking_space.private">Парковочное место</string>
+	<string name="type.amenity.parking_space.underground">Парковочное место</string>
 	<string name="type.amenity.payment_terminal">Терминал оплаты</string>
 	<string name="type.amenity.pharmacy">Аптека</string>
 	<string name="type.amenity.place_of_worship">Храм</string>
@@ -1604,7 +1907,8 @@
 	<string name="type.amenity.place_of_worship.taoist">Храм</string>
 	<string name="type.amenity.police">Полиция</string>
 	<string name="type.amenity.post_box">Почтовый ящик</string>
-	<string name="type.amenity.post_office">Почта</string>
+	<string name="type.amenity.post_office">Почтовое отделение</string>
+	<string name="type.amenity.prison">Тюрьма</string>
 	<string name="type.amenity.pub">Паб</string>
 	<string name="type.amenity.public_bookcase">Книжный шкаф</string>
 	<string name="type.amenity.recycling">Приём вторсырья</string>
@@ -1618,21 +1922,31 @@
 	<string name="type.amenity.toilets">Туалет</string>
 	<string name="type.amenity.townhall">Ратуша</string>
 	<string name="type.amenity.university">Университет</string>
+	<string name="type.amenity.vending_machine">Торговый автомат</string>
 	<string name="type.amenity.vending_machine.cigarettes">Сигаретный автомат</string>
 	<string name="type.amenity.vending_machine.drinks">Автомат с напитками</string>
 	<string name="type.amenity.vending_machine.parking_tickets">Паркомат</string>
+	<string name="type.amenity.vending_machine.public_transport_tickets">Автомат по продаже билетов на общественный транспорт</string>
 	<string name="type.amenity.veterinary">Ветеринарная клиника</string>
 	<string name="type.amenity.waste_basket">Урна</string>
 	<string name="type.amenity.waste_disposal">Мусорный контейнер</string>
 	<string name="type.amenity.water_point">Выдача питьевой воды</string>
+	<string name="type.barrier">Преграда</string>
 	<string name="type.barrier.block">Блок</string>
 	<string name="type.barrier.bollard">Столбик</string>
 	<string name="type.barrier.border_control">Погранконтроль</string>
+	<string name="type.barrier.city_wall">Городская стена</string>
+	<string name="type.barrier.cycle_barrier">Ограждение, предотвращающее проезд велосипедов</string>
 	<string name="type.barrier.entrance">Проход</string>
+	<string name="type.barrier.fence">Забор</string>
 	<string name="type.barrier.gate">Ворота</string>
+	<string name="type.barrier.hedge">Живая изгородь</string>
 	<string name="type.barrier.lift_gate">Шлагбаум</string>
+	<string name="type.barrier.retaining_wall">Стена, удерживающая от осыпания</string>
 	<string name="type.barrier.stile">Перелаз</string>
 	<string name="type.barrier.toll_booth">Пункт оплаты</string>
+	<string name="type.barrier.wall">Стена</string>
+	<string name="type.boundary">Граница</string>
 	<string name="type.boundary.national_park">Национальный парк</string>
 	<string name="type.building">Здание</string>
 	<string name="type.building.address">Здание</string>
@@ -1740,6 +2054,7 @@
 	<string name="type.emergency.phone">Телефон для экстренных вызовов</string>
 	<string name="type.entrance">Вход</string>
 	<string name="type.highway.bus_stop">Остановка</string>
+	<string name="type.highway.construction">Строящаяся дорога</string>
 	<string name="type.highway.footway">Дорожка</string>
 	<string name="type.highway.footway.alpine_hiking">Дорожка</string>
 	<string name="type.highway.footway.area">Дорожка</string>
@@ -1751,6 +2066,7 @@
 	<string name="type.highway.footway.mountain_hiking">Дорожка</string>
 	<string name="type.highway.footway.permissive">Дорожка</string>
 	<string name="type.highway.footway.tunnel">Дорожка</string>
+	<string name="type.highway.ford">Брод</string>
 	<string name="type.highway.living_street">Улица</string>
 	<string name="type.highway.living_street.bridge">Улица</string>
 	<string name="type.highway.living_street.tunnel">Улица</string>
@@ -1802,9 +2118,6 @@
 	<string name="type.highway.service.area">Улица</string>
 	<string name="type.highway.service.bridge">Улица</string>
 	<string name="type.highway.service.driveway">Улица</string>
-	<string name="type.highway.service.driveway.area">Улица</string>
-	<string name="type.highway.service.driveway.bridge">Улица</string>
-	<string name="type.highway.service.driveway.tunnel">Улица</string>
 	<string name="type.highway.service.parking_aisle">Улица</string>
 	<string name="type.highway.service.tunnel">Улица</string>
 	<string name="type.highway.speed_camera">Камера скорости</string>
@@ -1823,14 +2136,8 @@
 	<string name="type.highway.track.grade1">Улица</string>
 	<string name="type.highway.track.grade2">Улица</string>
 	<string name="type.highway.track.grade3">Улица</string>
-	<string name="type.highway.track.grade3.no.access">Улица</string>
-	<string name="type.highway.track.grade3.permissive">Улица</string>
 	<string name="type.highway.track.grade4">Улица</string>
-	<string name="type.highway.track.grade4.no.access">Улица</string>
-	<string name="type.highway.track.grade4.permissive">Улица</string>
 	<string name="type.highway.track.grade5">Улица</string>
-	<string name="type.highway.track.grade5.no.access">Улица</string>
-	<string name="type.highway.track.grade5.permissive">Улица</string>
 	<string name="type.highway.track.no.access">Улица</string>
 	<string name="type.highway.track.permissive">Улица</string>
 	<string name="type.highway.track.tunnel">Улица</string>
@@ -1846,6 +2153,7 @@
 	<string name="type.highway.unclassified.bridge">Улица</string>
 	<string name="type.highway.unclassified.tunnel">Улица</string>
 	<string name="type.historic.archaeological_site">Раскопки</string>
+	<string name="type.historic.battlefield">Место исторического сражения</string>
 	<string name="type.historic.castle">Замок</string>
 	<string name="type.historic.castle.defensive">Замок</string>
 	<string name="type.historic.castle.stately">Замок</string>
@@ -1859,16 +2167,30 @@
 	<string name="type.historic.tomb">Гробница</string>
 	<string name="type.internet_access">Интернет</string>
 	<string name="type.internet_access.wlan">Интернет</string>
+	<string name="type.landuse.allotments">Земельные участки</string>
 	<string name="type.landuse.basin">Водоём</string>
+	<string name="type.landuse.brownfield">Земли для застройки</string>
 	<string name="type.landuse.cemetery">Кладбище</string>
-	<string name="type.landuse.cemetery.christian">Кладбище</string>
+	<string name="type.landuse.cemetery.christian">Христианское кладбище</string>
+	<string name="type.landuse.churchyard">Церковный двор</string>
+	<string name="type.landuse.construction">Стройка</string>
+	<string name="type.landuse.farm">Ферма</string>
+	<string name="type.landuse.farmland">Сельскохозяйственная земля</string>
+	<string name="type.landuse.farmyard">Сельскохозяйственная земля</string>
+	<string name="type.landuse.field">Поле</string>
 	<string name="type.landuse.forest">Лес</string>
-	<string name="type.landuse.forest.coniferous">Лес</string>
-	<string name="type.landuse.forest.deciduous">Лес</string>
-	<string name="type.landuse.forest.mixed">Лес</string>
+	<string name="type.landuse.forest.coniferous">Хвойный лес</string>
+	<string name="type.landuse.forest.deciduous">Лиственный лес</string>
+	<string name="type.landuse.forest.mixed">Смешанный лес</string>
+	<string name="type.landuse.garages">Гаражи</string>
+	<string name="type.landuse.grass">Газон</string>
+	<string name="type.landuse.industrial">Промзона</string>
+	<string name="type.landuse.landfill">Свалка</string>
+	<string name="type.landuse.meadow">Луг</string>
+	<string name="type.landuse.orchard">Сад</string>
+	<string name="type.landuse.railway">Железнодорожные сооружения</string>
 	<string name="type.landuse.reservoir">Водоём</string>
 	<string name="type.leisure.dog_park">Место для выгула собак</string>
-	<string name="type.leisure.dog_park.tennis">Место для выгула собак</string>
 	<string name="type.leisure.fitness_centre">Фитнес-клуб</string>
 	<string name="type.leisure.fitness_station">Спортивные снаряды</string>
 	<string name="type.leisure.garden">Сад</string>
@@ -1879,10 +2201,8 @@
 	<string name="type.leisure.park.permissive">Парк</string>
 	<string name="type.leisure.park.private">Парк</string>
 	<string name="type.leisure.pitch">Спортплощадка</string>
-	<string name="type.leisure.pitch.tennis">Спортплощадка</string>
 	<string name="type.leisure.playground">Детская площадка</string>
-	<string name="type.leisure.playground.tennis">Детская площадка</string>
-	<string name="type.leisure.sauna">Баня</string>
+	<string name="type.leisure.sauna">Сауна</string>
 	<string name="type.leisure.sports_centre">Спорткомплекс</string>
 	<string name="type.leisure.sports_centre.climbing">Скалодром</string>
 	<string name="type.leisure.sports_centre.shooting">Тир</string>
@@ -1904,19 +2224,20 @@
 	<string name="type.natural.beach">Пляж</string>
 	<string name="type.natural.cape">Мыс</string>
 	<string name="type.natural.cave_entrance">Пещера</string>
+	<string name="type.natural.coastline">Береговая линия</string>
 	<string name="type.natural.geyser">Гейзер</string>
 	<string name="type.natural.glacier">Ледник</string>
+	<string name="type.natural.grassland">Поле</string>
+	<string name="type.natural.hot_spring">Горячий источник</string>
 	<string name="type.natural.lake">Озеро</string>
 	<string name="type.natural.peak">Гора</string>
 	<string name="type.natural.pond">Пруд</string>
+	<string name="type.natural.scrub">Заросли</string>
 	<string name="type.natural.spring">Родник</string>
 	<string name="type.natural.tree">Дерево</string>
 	<string name="type.natural.volcano">Вулкан</string>
 	<string name="type.natural.water">Водоём</string>
-	<string name="type.natural.wood">Лес</string>
-	<string name="type.natural.wood.coniferous">Лес</string>
-	<string name="type.natural.wood.deciduous">Лес</string>
-	<string name="type.natural.wood.mixed">Лес</string>
+	<string name="type.natural.wetland">Болотистая местность</string>
 	<string name="type.office">Офис</string>
 	<string name="type.office.company">Организация</string>
 	<string name="type.office.estate_agent">Агентство недвижимости</string>
@@ -1958,6 +2279,8 @@
 	<string name="type.power.tower">Опора ЛЭП</string>
 	<string name="type.railway.halt">Ж/д станция</string>
 	<string name="type.railway.level_crossing">Железнодорожный переезд</string>
+	<string name="type.railway.monorail">Монорельсовая железная дорога</string>
+	<string name="type.railway.rail">Железнодорожный путь</string>
 	<string name="type.railway.station">Ж/д станция</string>
 	<string name="type.railway.station.light_rail">Ж/д станция</string>
 	<string name="type.railway.station.monorail">Ж/д станция</string>
@@ -1986,7 +2309,7 @@
 	<string name="type.railway.station.subway.spb">Метро</string>
 	<string name="type.railway.station.subway.violet">Метро</string>
 	<string name="type.railway.station.subway.yellow">Метро</string>
-	<string name="type.railway.subway_entrance">Метро</string>
+	<string name="type.railway.subway_entrance">Вход в метро</string>
 	<string name="type.railway.subway_entrance.barcelona">Метро</string>
 	<string name="type.railway.subway_entrance.berlin">Метро</string>
 	<string name="type.railway.subway_entrance.kiev">Метро</string>
@@ -2072,6 +2395,7 @@
 	<string name="type.sport.athletics">Лёгкая атлетика</string>
 	<string name="type.sport.basketball">Баскетбол</string>
 	<string name="type.sport.equestrian">Конный спорт</string>
+	<string name="type.sport.tennis">Теннисный корт</string>
 	<string name="type.tourism.alpine_hut">Горный отель</string>
 	<string name="type.tourism.apartment">Апартаменты</string>
 	<string name="type.tourism.artwork">Произведение искусства</string>
@@ -2113,6 +2437,10 @@
 	<string name="type.waterway.stream.intermittent">Река</string>
 	<string name="type.waterway.stream.tunnel">Река</string>
 	<string name="type.waterway.waterfall">Водопад</string>
+	<string name="type.wheelchair.limited">Частично оборудовано для инвалидов</string>
+	<string name="type.wheelchair.no">Не оборудовано для инвалидов</string>
+	<string name="type.wheelchair.yes">Оборудовано для инвалидов</string>
+	<string name="type.building_part">Здание</string>
 
 	<!-- SECTION: Brands -->
 	<string name="brand.baskin_robbins">Баскин Роббинс</string>

@@ -3,9 +3,15 @@
 #include "search/house_to_street_table.hpp"
 #include "search/reverse_geocoder.hpp"
 
+#include "editor/osm_editor.hpp"
+
 #include "indexer/scales.hpp"
 
 #include "base/assert.hpp"
+
+#include <string>
+
+using namespace std;
 
 namespace search
 {
@@ -49,54 +55,32 @@ void FeaturesLayerMatcher::OnQueryFinished()
 
 uint32_t FeaturesLayerMatcher::GetMatchingStreet(uint32_t houseId)
 {
-  FeatureType feature;
-  return GetMatchingStreetImpl(houseId, feature);
-}
-
-uint32_t FeaturesLayerMatcher::GetMatchingStreet(uint32_t houseId, FeatureType & houseFeature)
-{
-  return GetMatchingStreetImpl(houseId, houseFeature);
-}
-
-FeaturesLayerMatcher::TStreets const & FeaturesLayerMatcher::GetNearbyStreets(uint32_t featureId)
-{
-  FeatureType feature;
-  return GetNearbyStreetsImpl(featureId, feature);
-}
-
-FeaturesLayerMatcher::TStreets const & FeaturesLayerMatcher::GetNearbyStreets(uint32_t featureId,
-                                                                              FeatureType & feature)
-{
-  return GetNearbyStreetsImpl(featureId, feature);
-}
-
-FeaturesLayerMatcher::TStreets const & FeaturesLayerMatcher::GetNearbyStreetsImpl(
-    uint32_t featureId, FeatureType & feature)
-{
-  static FeaturesLayerMatcher::TStreets const kEmptyStreets;
-
-  auto entry = m_nearbyStreetsCache.Get(featureId);
+  auto entry = m_matchingStreetsCache.Get(houseId);
   if (!entry.second)
     return entry.first;
 
-  if (!feature.GetID().IsValid() && !GetByIndex(featureId, feature))
-    return kEmptyStreets;
+  auto feature = GetByIndex(houseId);
+  if (!feature)
+    return kInvalidId;
+
+  return GetMatchingStreet(*feature);
+}
+
+FeaturesLayerMatcher::Streets const & FeaturesLayerMatcher::GetNearbyStreets(FeatureType & feature)
+{
+  static FeaturesLayerMatcher::Streets const kEmptyStreets;
+
+  auto entry = m_nearbyStreetsCache.Get(feature.GetID().m_index);
+  if (!entry.second)
+    return entry.first;
 
   auto & streets = entry.first;
   m_reverseGeocoder.GetNearbyStreets(feature, streets);
-  for (size_t i = 0; i < streets.size(); ++i)
-  {
-    if (streets[i].m_distanceMeters > ReverseGeocoder::kLookupRadiusM)
-    {
-      streets.resize(i);
-      break;
-    }
-  }
 
   return streets;
 }
 
-uint32_t FeaturesLayerMatcher::GetMatchingStreetImpl(uint32_t houseId, FeatureType & houseFeature)
+uint32_t FeaturesLayerMatcher::GetMatchingStreet(FeatureType & houseFeature)
 {
   // Check if this feature is modified - the logic will be different.
   string streetName;
@@ -104,41 +88,40 @@ uint32_t FeaturesLayerMatcher::GetMatchingStreetImpl(uint32_t houseId, FeatureTy
       osm::Editor::Instance().GetEditedFeatureStreet(houseFeature.GetID(), streetName);
 
   // Check the cached result value.
-  auto entry = m_matchingStreetsCache.Get(houseId);
+  auto entry = m_matchingStreetsCache.Get(houseFeature.GetID().m_index);
   if (!edited && !entry.second)
     return entry.first;
 
-  // Load feature if needed.
-  if (!houseFeature.GetID().IsValid() && !GetByIndex(houseId, houseFeature))
-    return kInvalidId;
-
-  // Get nearby streets and calculate the resulting index.
-  auto const & streets = GetNearbyStreets(houseId, houseFeature);
   uint32_t & result = entry.first;
   result = kInvalidId;
 
+  FeatureID streetId;
+  CHECK(m_context, ());
+  CHECK(m_context->m_handle.IsAlive(), (m_context->m_handle.GetId()));
+  CHECK(m_context->m_handle.GetId().IsAlive(), (m_context->m_handle.GetId()));
+  if (!edited && m_reverseGeocoder.GetStreetByHouse(houseFeature, streetId))
+  {
+    result = streetId.m_index;
+    return result;
+  }
+
+  // Get nearby streets and calculate the resulting index.
+  auto const & streets = GetNearbyStreets(houseFeature);
+
   if (edited)
   {
-    auto const ret = find_if(streets.begin(), streets.end(), [&streetName](TStreet const & st)
-                             {
-                               return st.m_name == streetName;
-                             });
+    auto const ret = find_if(streets.begin(), streets.end(),
+                             [&streetName](Street const & st) { return st.m_name == streetName; });
     if (ret != streets.end())
+    {
       result = ret->m_id.m_index;
-  }
-  else
-  {
-    uint32_t index;
-    if (m_context->GetStreetIndex(houseId, index) && index < streets.size())
-      result = streets[index].m_id.m_index;
+      return result;
+    }
   }
 
   // If there is no saved street for feature, assume that it's a nearest street if it's too close.
-  if (result == kInvalidId && !streets.empty() &&
-      streets[0].m_distanceMeters < kMaxApproxStreetDistanceM)
-  {
+  if (!streets.empty() && streets[0].m_distanceMeters < kMaxApproxStreetDistanceM)
     result = streets[0].m_id.m_index;
-  }
 
   return result;
 }

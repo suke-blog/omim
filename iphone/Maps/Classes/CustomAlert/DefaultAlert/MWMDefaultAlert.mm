@@ -1,7 +1,7 @@
 #import "MWMDefaultAlert.h"
 #import "Statistics.h"
 
-#include "Framework.h"
+#include <CoreApi/Framework.h>
 
 static CGFloat const kDividerTopConstant = -8.;
 
@@ -57,8 +57,8 @@ static NSString * const kDefaultAlertNibName = @"MWMDefaultAlert";
 
 + (instancetype)routeNotFoundTooLongPedestrianAlert
 {
-  return [self defaultAlertWithTitle:L(@"dialog_pedestrian_route_is_long")
-                             message:nil
+  return [self defaultAlertWithTitle:L(@"dialog_pedestrian_route_is_long_header")
+                             message:L(@"dialog_pedestrian_route_is_long_message")
                     rightButtonTitle:L(@"ok")
                      leftButtonTitle:nil
                    rightButtonAction:nil
@@ -88,18 +88,6 @@ static NSString * const kDefaultAlertNibName = @"MWMDefaultAlert";
   return alert;
 }
 
-+ (instancetype)migrationProhibitedAlert
-{
-  MWMDefaultAlert * alert = [self defaultAlertWithTitle:L(@"no_migration_during_navigation")
-                                                message:nil
-                                       rightButtonTitle:L(@"ok")
-                                        leftButtonTitle:nil
-                                      rightButtonAction:nil
-                                        statisticsEvent:@"Migration Prohibited Alert"];
-  [alert setNeedsCloseAlertAfterEnterBackground];
-  return alert;
-}
-
 + (instancetype)deleteMapProhibitedAlert
 {
   MWMDefaultAlert * alert =
@@ -123,7 +111,7 @@ static NSString * const kDefaultAlertNibName = @"MWMDefaultAlert";
                      statisticsEvent:@"Editor unsaved changes on delete"];
 }
 
-+ (instancetype)noWiFiAlertWithOkBlock:(MWMVoidBlock)okBlock
++ (instancetype)noWiFiAlertWithOkBlock:(MWMVoidBlock)okBlock andCancelBlock:(MWMVoidBlock)cancelBlock
 {
   MWMDefaultAlert * alert = [self defaultAlertWithTitle:L(@"download_over_mobile_header")
                                                 message:L(@"download_over_mobile_message")
@@ -131,6 +119,7 @@ static NSString * const kDefaultAlertNibName = @"MWMDefaultAlert";
                                         leftButtonTitle:L(@"cancel")
                                       rightButtonAction:okBlock
                                         statisticsEvent:@"No WiFi Alert"];
+  alert.leftButtonAction = cancelBlock;
   [alert setNeedsCloseAlertAfterEnterBackground];
   return alert;
 }
@@ -346,17 +335,6 @@ static NSString * const kDefaultAlertNibName = @"MWMDefaultAlert";
                                       rightButtonAction:okBlock
                                         statisticsEvent:@"Downloader Need Update Alert"];
   [alert setNeedsCloseAlertAfterEnterBackground];
-  return alert;
-}
-
-+ (instancetype)routingMigrationAlertWithOkBlock:(MWMVoidBlock)okBlock
-{
-  MWMDefaultAlert * alert = [self defaultAlertWithTitle:L(@"downloader_update_maps")
-                                                message:L(@"downloader_mwm_migration_dialog")
-                                       rightButtonTitle:L(@"ok")
-                                        leftButtonTitle:L(@"cancel")
-                                      rightButtonAction:okBlock
-                                        statisticsEvent:@"Routing Need Migration Alert"];
   return alert;
 }
 

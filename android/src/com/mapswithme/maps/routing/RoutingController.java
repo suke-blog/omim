@@ -1,27 +1,26 @@
 package com.mapswithme.maps.routing;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.DimenRes;
-import android.support.annotation.IntRange;
-import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.util.Pair;
-import android.support.v7.app.AlertDialog;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.DimenRes;
+import androidx.annotation.IntRange;
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.util.Pair;
+import androidx.fragment.app.FragmentActivity;
 import com.mapswithme.maps.Framework;
 import com.mapswithme.maps.MwmApplication;
 import com.mapswithme.maps.R;
+import com.mapswithme.maps.base.Initializable;
 import com.mapswithme.maps.bookmarks.data.FeatureId;
 import com.mapswithme.maps.bookmarks.data.MapObject;
-import com.mapswithme.maps.downloader.MapManager;
 import com.mapswithme.maps.location.LocationHelper;
 import com.mapswithme.maps.taxi.TaxiInfo;
 import com.mapswithme.maps.taxi.TaxiInfoError;
@@ -43,8 +42,8 @@ import java.util.concurrent.TimeUnit;
 import static com.mapswithme.util.statistics.Statistics.EventName.ROUTING_POINT_ADD;
 import static com.mapswithme.util.statistics.Statistics.EventName.ROUTING_POINT_REMOVE;
 
-@android.support.annotation.UiThread
-public class RoutingController implements TaxiManager.TaxiListener
+@androidx.annotation.UiThread
+public class RoutingController implements TaxiManager.TaxiListener, Initializable<Void>
 {
   private static final String TAG = RoutingController.class.getSimpleName();
 
@@ -78,12 +77,16 @@ public class RoutingController implements TaxiManager.TaxiListener
     void onAddedStop();
     void onRemovedStop();
     void onBuiltRoute();
+    void onDrivingOptionsWarning();
     boolean isSubwayEnabled();
+    void onCommonBuildError(int lastResultCode, @NonNull String[] lastMissingMaps);
+    void onDrivingOptionsBuildError();
 
     /**
      * @param progress progress to be displayed.
      * */
     void updateBuildProgress(@IntRange(from = 0, to = 100) int progress, @Framework.RouterType int router);
+    void onStartRouteBuilding();
   }
 
   private static final int NO_WAITING_POI_PICK = -1;
@@ -128,20 +131,30 @@ public class RoutingController implements TaxiManager.TaxiListener
       mContainsCachedResult = true;
 
       if (mLastResultCode == ResultCodesHelper.NO_ERROR
-        || ResultCodesHelper.isMoreMapsNeeded(mLastResultCode))
+          || ResultCodesHelper.isMoreMapsNeeded(mLastResultCode))
       {
-        mCachedRoutingInfo = Framework.nativeGetRouteFollowingInfo();
-        if (mLastRouterType == Framework.ROUTER_TYPE_TRANSIT)
-          mCachedTransitRouteInfo = Framework.nativeGetTransitRouteInfo();
-        setBuildState(BuildState.BUILT);
-        mLastBuildProgress = 100;
+        onBuiltRoute();
+      }
+      else if (mLastResultCode == ResultCodesHelper.HAS_WARNINGS)
+      {
+        onBuiltRoute();
         if (mContainer != null)
-          mContainer.onBuiltRoute();
+          mContainer.onDrivingOptionsWarning();
       }
 
       processRoutingEvent();
     }
   };
+  private void onBuiltRoute()
+  {
+    mCachedRoutingInfo = Framework.nativeGetRouteFollowingInfo();
+    if (mLastRouterType == Framework.ROUTER_TYPE_TRANSIT)
+      mCachedTransitRouteInfo = Framework.nativeGetTransitRouteInfo();
+    setBuildState(BuildState.BUILT);
+    mLastBuildProgress = 100;
+    if (mContainer != null)
+      mContainer.onBuiltRoute();
+  }
 
   @SuppressWarnings("FieldCanBeLocal")
   private final Framework.RoutingProgressListener mRoutingProgressListener = new Framework.RoutingProgressListener()
@@ -183,7 +196,10 @@ public class RoutingController implements TaxiManager.TaxiListener
 
     mContainsCachedResult = false;
 
-    if (mLastResultCode == ResultCodesHelper.NO_ERROR)
+    if (isDrivingOptionsBuildError())
+      mContainer.onDrivingOptionsWarning();
+
+    if (mLastResultCode == ResultCodesHelper.NO_ERROR || mLastResultCode == ResultCodesHelper.HAS_WARNINGS)
     {
       updatePlan();
       return;
@@ -203,8 +219,16 @@ public class RoutingController implements TaxiManager.TaxiListener
       updateProgress();
     }
 
-    RoutingErrorDialogFragment fragment = RoutingErrorDialogFragment.create(mLastResultCode, mLastMissingMaps);
-    fragment.show(mContainer.getActivity().getSupportFragmentManager(), RoutingErrorDialogFragment.class.getSimpleName());
+    if (isDrivingOptionsBuildError())
+      mContainer.onDrivingOptionsBuildError();
+    else
+      mContainer.onCommonBuildError(mLastResultCode, mLastMissingMaps);
+  }
+
+  private boolean isDrivingOptionsBuildError()
+  {
+    return !ResultCodesHelper.isMoreMapsNeeded(mLastResultCode) && isVehicleRouterType()
+           && RoutingOptions.hasAnyOptions();
   }
 
   private void setState(State newState)
@@ -255,7 +279,8 @@ public class RoutingController implements TaxiManager.TaxiListener
     mContainer = container;
   }
 
-  public void initialize()
+  @Override
+  public void initialize(@Nullable Void aVoid)
   {
     mLastRouterType = Framework.nativeGetLastUsedRouter();
     mInvalidRoutePointsTransactionId = Framework.nativeInvalidRoutePointsTransactionId();
@@ -266,6 +291,12 @@ public class RoutingController implements TaxiManager.TaxiListener
     Framework.nativeSetRoutingRecommendationListener(mRoutingRecommendationListener);
     Framework.nativeSetRoutingLoadPointsListener(mRoutingLoadPointsListener);
     TaxiManager.INSTANCE.setTaxiListener(this);
+  }
+
+  @Override
+  public void destroy()
+  {
+    // No op.
   }
 
   public void detach()
@@ -320,6 +351,9 @@ public class RoutingController implements TaxiManager.TaxiListener
     }
 
     setBuildState(BuildState.BUILDING);
+    if (mContainer != null)
+      mContainer.onStartRouteBuilding();
+
     updatePlan();
 
     Statistics.INSTANCE.trackRouteBuild(mLastRouterType, getStartPoint(), getEndPoint());
@@ -387,6 +421,13 @@ public class RoutingController implements TaxiManager.TaxiListener
   public void deleteSavedRoute()
   {
     Framework.nativeDeleteSavedRoutePoints();
+  }
+
+  public void rebuildLastRoute()
+  {
+    setState(State.NONE);
+    setBuildState(BuildState.NONE);
+    prepare(getStartPoint(), getEndPoint(), false);
   }
 
   public void prepare(boolean canUseMyPositionAsStart, @Nullable MapObject endPoint)
@@ -821,21 +862,21 @@ public class RoutingController implements TaxiManager.TaxiListener
 
   private void setPointsInternal(@Nullable MapObject startPoint, @Nullable MapObject endPoint)
   {
-    if (startPoint != null)
-    {
-      applyRemovingIntermediatePointsTransaction();
-      addRoutePoint(RoutePointInfo.ROUTE_MARK_START, startPoint);
-      if (mContainer != null)
-        mContainer.updateMenu();
-    }
+    final boolean hasStart = startPoint != null;
+    final boolean hasEnd = endPoint != null;
+    final boolean hasOnePointAtLeast = hasStart || hasEnd;
 
-    if (endPoint != null)
-    {
+    if (hasOnePointAtLeast)
       applyRemovingIntermediatePointsTransaction();
-      addRoutePoint(RoutePointInfo.ROUTE_MARK_FINISH, endPoint);
-      if (mContainer != null)
-        mContainer.updateMenu();
-    }
+
+    if (hasStart)
+      addRoutePoint(RoutePointInfo.ROUTE_MARK_START , startPoint);
+
+    if (hasEnd)
+      addRoutePoint(RoutePointInfo.ROUTE_MARK_FINISH , endPoint);
+
+    if (hasOnePointAtLeast && mContainer != null)
+      mContainer.updateMenu();
   }
 
   void checkAndBuildRoute()
@@ -1129,23 +1170,6 @@ public class RoutingController implements TaxiManager.TaxiListener
     current.set(Calendar.SECOND, 0);
     current.add(Calendar.SECOND, seconds);
     return StringUtils.formatUsingUsLocale("%d:%02d", current.get(Calendar.HOUR_OF_DAY), current.get(Calendar.MINUTE));
-  }
-
-  public boolean checkMigration(Activity activity)
-  {
-    if (!MapManager.nativeIsLegacyMode())
-      return false;
-
-    if (!isNavigating() && !isPlanning())
-      return false;
-
-    new AlertDialog.Builder(activity)
-        .setTitle(R.string.migrate_title)
-        .setMessage(R.string.no_migration_during_navigation)
-        .setPositiveButton(android.R.string.ok, null)
-        .show();
-
-    return true;
   }
 
   private void requestTaxiInfo(@NonNull MapObject startPoint, @NonNull MapObject endPoint)

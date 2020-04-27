@@ -1,7 +1,5 @@
 #include "generator/srtm_parser.hpp"
 
-#include "map/feature_vec_model.hpp"
-
 #include "routing/routing_helpers.hpp"
 
 #include "indexer/classificator_loader.hpp"
@@ -11,6 +9,7 @@
 #include "indexer/feature_processor.hpp"
 
 #include "geometry/mercator.hpp"
+#include "geometry/point_with_altitude.hpp"
 
 #include "platform/country_file.hpp"
 #include "platform/local_country_file.hpp"
@@ -61,18 +60,18 @@ int main(int argc, char * argv[])
   for (auto & file : localFiles)
   {
     file.SyncWithDisk();
-    if (file.GetFiles() != MapOptions::MapWithCarRouting)
+    if (!file.OnDisk(MapFileType::Map))
     {
       LOG(LINFO, ("Warning! Routing file not found for:", file.GetCountryName()));
       continue;
     }
 
-    auto const path = file.GetPath(MapOptions::CarRouting);
+    auto const path = file.GetPath(MapFileType::Map);
     LOG(LINFO, ("Mwm", path, "is being processed."));
 
     size_t all = 0;
     size_t good = 0;
-    ForEachFromDat(path, [&](FeatureType & ft, uint32_t fid) {
+    ForEachFeature(path, [&](FeatureType & ft, uint32_t fid) {
       if (!IsRoad(TypesHolder(ft)))
         return;
 
@@ -81,8 +80,8 @@ int main(int argc, char * argv[])
 
       for (size_t i = 0; i < ft.GetPointsCount(); ++i)
       {
-        auto const height = manager.GetHeight(MercatorBounds::ToLatLon(ft.GetPoint(i)));
-        if (height != feature::kInvalidAltitude)
+        auto const height = manager.GetHeight(mercator::ToLatLon(ft.GetPoint(i)));
+        if (height != geometry::kInvalidAltitude)
           good++;
       }
     });

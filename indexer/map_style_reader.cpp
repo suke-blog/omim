@@ -1,9 +1,8 @@
 #include "map_style_reader.hpp"
 
-#include "coding/file_name_utils.hpp"
-
 #include "platform/platform.hpp"
 
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 
 namespace
@@ -98,11 +97,16 @@ ReaderPtr<Reader> StyleReader::GetDrawingRulesReader() const
       std::string("drules_proto") + GetStyleRulesSuffix(GetCurrentStyle()) + ".bin";
 
   auto overriddenRulesFile =
-      base::JoinFoldersToPath({GetPlatform().WritableDir(), kStylesOverrideDir}, rulesFile);
+      base::JoinPath(GetPlatform().WritableDir(), kStylesOverrideDir, rulesFile);
   if (GetPlatform().IsFileExistsByFullPath(overriddenRulesFile))
     rulesFile = overriddenRulesFile;
 
+#ifdef BUILD_DESIGNER
+  // For Designer tool we have to look first into the resource folder.
+  return GetPlatform().GetReader(rulesFile, "rwf");
+#else
   return GetPlatform().GetReader(rulesFile);
+#endif
 }
 
 ReaderPtr<Reader> StyleReader::GetResourceReader(std::string const & file,
@@ -110,19 +114,23 @@ ReaderPtr<Reader> StyleReader::GetResourceReader(std::string const & file,
 {
   std::string const resourceDir =
       std::string("resources-") + density + GetStyleResourcesSuffix(GetCurrentStyle());
-  std::string resFile = base::JoinFoldersToPath(resourceDir, file);
+  std::string resFile = base::JoinPath(resourceDir, file);
 
-  auto overriddenResFile =
-      base::JoinFoldersToPath({GetPlatform().WritableDir(), kStylesOverrideDir}, resFile);
+  auto overriddenResFile = base::JoinPath(GetPlatform().WritableDir(), kStylesOverrideDir, resFile);
   if (GetPlatform().IsFileExistsByFullPath(overriddenResFile))
     resFile = overriddenResFile;
 
+#ifdef BUILD_DESIGNER
+  // For Designer tool we have to look first into the resource folder.
+  return GetPlatform().GetReader(resFile, "rwf");
+#else
   return GetPlatform().GetReader(resFile);
+#endif
 }
 
 ReaderPtr<Reader> StyleReader::GetDefaultResourceReader(std::string const & file) const
 {
-  return GetPlatform().GetReader(base::JoinFoldersToPath("resources-default", file));
+  return GetPlatform().GetReader(base::JoinPath("resources-default", file));
 }
 
 StyleReader & GetStyleReader()

@@ -1,40 +1,58 @@
 #pragma once
 
-#include "storage/index.hpp"
+#include "storage/diff_scheme/diffs_data_source.hpp"
+#include "storage/storage_defines.hpp"
+
 #include "platform/country_defines.hpp"
+#include "platform/country_file.hpp"
+#include "platform/downloader_defines.hpp"
+
+#include <string>
 
 namespace storage
 {
-/// Country queued for downloading.
-/// @TODO(bykoianko) This class assumes that a map may consist of one or two mwm files.
-/// But single mwm files are used now. So this class should be redisigned to support
-/// only single mwm case.
+class QueuedCountry;
+
+using DownloadingFinishCallback =
+    std::function<void(QueuedCountry const & queuedCountry, downloader::DownloadStatus status)>;
+using DownloadingProgressCallback =
+    std::function<void(QueuedCountry const & queuedCountry, downloader::Progress const & progress)>;
+
 class QueuedCountry
 {
 public:
-  QueuedCountry(TCountryId const & m_countryId, MapOptions opt);
+  QueuedCountry(platform::CountryFile const & countryFile, CountryId const & m_countryId,
+                MapFileType type, int64_t currentDataVersion, std::string const & dataDir,
+                diffs::DiffsSourcePtr const & diffs);
 
-  void AddOptions(MapOptions opt);
-  void RemoveOptions(MapOptions opt);
-  /// In case we can't update file using diff scheme.
-  void ResetToDefaultOptions();
-  bool SwitchToNextFile();
+  void SetFileType(MapFileType type);
+  MapFileType GetFileType() const;
 
-  void SetFrozen() { m_isFrozen = true; }
-  bool IsFrozen() const { return m_isFrozen; }
+  CountryId const & GetCountryId() const;
 
-  inline TCountryId const & GetCountryId() const { return m_countryId; }
-  inline MapOptions GetInitOptions() const { return m_init; }
-  inline MapOptions GetCurrentFileOptions() const { return m_current; }
-  inline MapOptions GetDownloadedFilesOptions() const { return UnsetOptions(m_init, m_left); }
+  std::string GetRelativeUrl() const;
+  std::string GetFileDownloadPath() const;
+  uint64_t GetDownloadSize() const;
 
-  inline bool operator==(TCountryId const & countryId) const { return m_countryId == countryId; }
+  void ClarifyDownloadingType();
+
+  void SetOnFinishCallback(DownloadingFinishCallback const & onDownloaded);
+  void SetOnProgressCallback(DownloadingProgressCallback const & onProgress);
+
+  void OnDownloadFinished(downloader::DownloadStatus status) const;
+  void OnDownloadProgress(downloader::Progress const & progress) const;
+
+  bool operator==(CountryId const & countryId) const;
 
 private:
-  TCountryId m_countryId;
-  MapOptions m_init;
-  MapOptions m_left;
-  MapOptions m_current;
-  bool m_isFrozen = false;
+  platform::CountryFile const m_countryFile;
+  CountryId const m_countryId;
+  MapFileType m_fileType;
+  int64_t m_currentDataVersion;
+  std::string m_dataDir;
+  diffs::DiffsSourcePtr m_diffsDataSource;
+
+  DownloadingFinishCallback m_downloadingFinishCallback;
+  DownloadingProgressCallback m_downloadingProgressCallback;
 };
 }  // namespace storage

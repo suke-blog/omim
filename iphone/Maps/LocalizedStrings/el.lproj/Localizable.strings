@@ -6,9 +6,6 @@
 
 /********** Strings **********/
 
-/* About button text (should be short) */
-"about" = "About";
-
 /* Button text (should be short) */
 "back" = "Πίσω";
 
@@ -81,8 +78,6 @@
 /* View and button titles for accessibility */
 "core_my_position" = "Η θέση μου";
 
-"ok" = "OK";
-
 /* Settings/Downloader - No free space dialog message */
 "free_disk_space_for_country_x" = "Please free some space on your device first in order to download %@";
 
@@ -109,9 +104,6 @@
 
 /* Settings/Downloader - 3G download warning dialog confirm button */
 "use_cellular_data" = "Ναι";
-
-/* Settings/Downloader - No internet connection dialog message */
-"use_wifi_recommendation_text" = "We recommend using WiFi to download large maps";
 
 /* Choose measurement on first launch alert - title */
 "which_measurement_system" = "Which measurement system do you prefer?";
@@ -408,9 +400,6 @@
 /* Subject for emailed bookmark */
 "bookmark_share_email_subject" = "Έλεγξε τις τοποθεσίες που έχω καρφιτσώσει στο MAPS.ME!";
 
-/* Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me */
-"bookmark_share_email" = "Hi,\n\nI pinned: %1$@ on the MAPS.ME offline map of the world. Click this link %2$@ or this one %3$@ to see the place on the map.\n\nThanks.";
-
 /* Subject for emailed position */
 "my_position_share_email_subject" = "Έλεγξε την τρέχουσα τοποθεσία μου στο χάρτη MAPS.ME!";
 
@@ -588,15 +577,6 @@
 
 /* category title */
 "routes" = "Διαδρομές";
-
-/* Show on first launch. */
-"maps_licence_info" = "This applications uses geographical data (including maps, business listings, points of interest, borders of countries and regions, etc.) taken from the OpenStreetMap project. We do not warrant any consistency, accuracy, completeness or applicability of the OpenStreetMap data.";
-
-/* Show on first launch. */
-"agree" = "I agree";
-
-/* Show on first launch */
-"disagree" = "I disagree";
 
 /* text of notification */
 "download_map_notification" = "Κατεβάστε τον χάρτη της τοποθεσίας που βρίσκεστε";
@@ -896,6 +876,30 @@
 
 /* pink color */
 "pink" = "Ροζ";
+
+/* deep purple color */
+"deep_purple" = "Βαθύ πορφυρό";
+
+/* light blue color */
+"light_blue" = "Γαλάζιο";
+
+/* cyan color */
+"cyan" = "Κυανό";
+
+/* teal color */
+"teal" = "Σμαραγδένιο";
+
+/* lime color */
+"lime" = "Κιτρινοπράσινο";
+
+/* deep orange color */
+"deep_orange" = "Βαθύ πορτοκαλί";
+
+/* gray color */
+"gray" = "Γκρι";
+
+/* blue gray color */
+"blue_gray" = "Γκρίζο μπλε";
 
 /* Wi-Fi available */
 "WiFi_available" = "Ναι";
@@ -1342,10 +1346,6 @@
 
 "onboarding_permissions_message" = "Μπορείτε να κατεβάσετε χάρτες, να δείτε μέρη και πληροφορίες για την κίνηση κοντά σε εσάς και να χρησιμοποιήσεττ την πλοήγηση.";
 
-"onboarding_welcome_title" = "Καλωσήρθατε στο MAPS.ME";
-
-"onboarding_welcome_first_subtitle" = "Δωρεάν, γρήγοροι, λεπτομερείς χάρτες αποκλειστικά εκτός σύνδεσης με πλοήγηση αννά στροφή.";
-
 "onboarding_welcome_second_subtitle" = "Με την εκκίνηση της εφαρμογής συμφωνείτε με <a href=\"%s\">τους Όρους χρήσης</a> και <a href=\"%s\">την Πολιτική απορρήτου</a>.";
 
 "dialog_incorrect_feature_position" = "Αλλαγή τοποθεσίας";
@@ -1500,7 +1500,7 @@
 
 "placepage_more_button" = "Περισσότερα";
 
-"placepage_more_reviews_button" = "Περισσότερες κριτικές";
+"placepage_more_reviews_button" = "Περισσότερα σχόλια";
 
 "book_button" = "Book";
 
@@ -1782,10 +1782,6 @@
 
 "banner_rentalcars_message" = "800 εταιρείες ενοικίασης αυτοκινήτων σε περισσότερες από 49.000 τοποθεσίες.";
 
-"banner_viator_title" = "Αναζήτηση οργανωμένων εκδρομών online";
-
-"banner_viator_message" = "Αναζήτηση σε περισσότερες από 50.000 εκδρομές σε όλο τον κόσμο.";
-
 /* december */
 "whatsnew_traffic" = "Πληροφορίες για την κίνηση σε 36 χώρες";
 
@@ -1860,10 +1856,6 @@
 "whatsnew_waypoints_title" = "Ενδιάμεσα σημεία στη διαδρομή";
 
 "whatsnew_waypoints_message" = "Πατήστε στα μέρη για να προσθέσετε ενδιάμεσα σημεία στη διαδρομή σας.";
-
-"whatsnew_viator_title" = "Κάντε κράτηση σε μια ξενάγηση";
-
-"whatsnew_viator_message" = "Επιλέξτε δημοφιλείς ξεναγήσεις σε τουριστικές πόλεις σε όλο τον κόσμο.";
 
 "whatsnew_driving_style_title" = "Νέο στυλ χάρτη για την οδήγηση";
 
@@ -1977,8 +1969,6 @@
 
 "toast_location_permission_denied" = "Άρνηση πρόσβασης εφαρμογής στον εντοπισμό τοποθεσίας";
 
-"place_page_viator_title" = "Αξιοθέατα και περιηγήσεις";
-
 "button_use" = "Χρήση";
 
 "planning_route_manage_route" = "Διαχείριση διαδρομής";
@@ -2018,10 +2008,6 @@
 "choose_start_point" = "Επιλέξτε αφετηρία";
 
 "choose_destination" = "Επιλέξτε προορισμό";
-
-"preloader_viator_title" = "Ανακαλύψτε περιηγήσεις και ασυνήθιστες δραστηριότητες";
-
-"preloader_viator_message" = "Περιηγήσεις, δραστηριότητες, αξιοθέατα και πολλά άλλα";
 
 "preloader_viator_button" = "Μάθετε περισσότερα";
 
@@ -2127,10 +2113,6 @@
 
 "discovery_button_subtitle_local_guides" = "Τοπικοί οδηγοί";
 
-"discovery_button_viator_offline_title" = "Ανακαλύψτε περιηγήσεις και ασυνήθιστες δραστηριότητες";
-
-"discovery_button_viator_offline_message" = "Εκδρομές, πράγματα να κάνετε, περιηγήσεις στα αξιοθέατα και πολλά άλλα.";
-
 "discovery_button_viator_error_title" = "Σφάλμα κατά τη φόρτωση δεδομένων";
 
 "discovery_button_other_error_message" = "Σφάλμα κατά τη φόρτωση δεδομένων";
@@ -2203,8 +2185,6 @@
 
 "downloader_applying" = "Εφαρμογή %s...";
 
-"transit_not_found" = "Η πλοήγηση διαμετακόμισης στην περιοχή αυτή δεν είναι ακόμα διαθέσιμη";
-
 "whats_new_title_hotel_filter" = "Υπάρχουν διαθέσιμα νέα φίλτρα ξενοδοχείου!";
 
 "whats_new_message_hotel_filter" = "Κάντε κράτησ σε ξενοδοχεία που είναι διαθέσιμα τις ημερομηνίες σας! Χρησιμοποιήστε τα φίλτρα άφιξης και αναχώρισης";
@@ -2212,8 +2192,6 @@
 "whats_new_title_ugc_travel" = "Μοιραστείτε την εμπειρία σας με άλλους ταξιδιώτες!";
 
 "whats_new_message_ugc_travel" = "Βαθμολογήστε και αξιολογήστε τα μέρη που έχετε επισκεφτεί!";
-
-"dialog_pedestrian_route_is_long" = "Η διαδρομή πεζών είναι υπερβολικά μεγάλη";
 
 "dialog_message_transit_not_found_connection" = "Σχεδιάστε μια διαδρομή εντός δικτύου μεταφοράς";
 
@@ -2405,9 +2383,8 @@
 
 "guide_downloaded_title" = "Η λήψη του εγχειριδίου πραγματοποιήθηκε με επιτυχία";
 
-"download_guides" = "Κατεβάστε τα εγχειρίδια";
-
-"cached_guides_placeholder_subtitle" = "Λεπτομερή εγχειρίδια εκτός σύνδεσης για κάθε είδους ταξίδι. Επιλέξτε αυτό που σας ταιριάζει καλύτερα και μεταφορτώστε το απευθείας στον χάρτη. Θα χρειαστείτε τη σύνδεση στο διαδίκτυο για να κατεβάσετε τα εγχειρίδια.";
+/* as few symbols as possible */
+"download_guides" = "Έυρεση οδηγών";
 
 "guides_groups_cached" = "Κατεβασμένα εγχειρίδια";
 
@@ -2487,8 +2464,6 @@
 
 "restore_no_subscription_alert" = "Δεν υπάρχουν ενεργές συνδρομές";
 
-"subscription_terms" = "Η πληρωμή θα χρεωθεί στον iTunes λογαριασμό σας κατά την επιβεβαίωση της αγοράς. Η συνδρομή θα ανανεωθεί αυτόματα εκτός εάν η αυτόματη ανανέωση είναι απενεργοποιημένη τουλάχιστον 24 ώρες πριν από το τέλος της τρέχουσας περιόδου. Ο λογαριασμός σας θα χρεωθεί σύμφωνα με το σχέδιο ανανέωσής σας εντός 24 ωρών πριν από το τέλος της τρέχουσας περιόδου. Μπορείτε να διαχειριστείτε ή να απενεργοποιήσετε την αυτόματη ανανέωση στις ρυθμίσεις του Apple ID λογαριασμού σας ανά πάσα στιγμή κατά την αγορά σας.";
-
 "subscriptions_title" = "Συνδρομές";
 
 "manage_subscription" = "Διαχείριση συνδρομής";
@@ -2508,8 +2483,6 @@
 "ugc_route_tags_screen_label" = "Επιλέξτε ετικέτες";
 
 "ugc_route_tags_progress_msg" = "Φόρτωση ετικετών…";
-
-"ugc_route_tags_desc" = "Παρακαλώ επιλέξτε ετικέτες για να βοηθήσετε άλλους ταξιδιώτες να βρουν τον οδηγό σας. Αυτό είναι υποχρεωτικό.";
 
 "public_access" = "Δημόσια πρόσβαση";
 
@@ -2564,7 +2537,7 @@
 
 "unable_upload_error_subtitle_broken" = "Το αρχείο είναι κατεστραμμένο και δεν μπόρεσε να ανέβει. Παρακαλώ ανεβάστε ένα άλλο αρχείο.";
 
-"buy_btn" = "Αγοράστε για %s";
+"buy_btn" = "Αγορά οδηγού για %s";
 
 "download_guide_progress" = "Κατεβάζοντας τον οδηγό σας…";
 
@@ -2659,6 +2632,636 @@
 
 "whats_new_ugc_routes_title_android_only" = "Easy to share your impressions";
 
+"ugc_thanks_message_auth" = "Το σχόλιό σας έχει αποθηκευτεί";
+
+"ugc_thanks_message_not_auth" = "Εγγραφείτε για ν' αφήσετε σχόλια";
+
+"notification_leave_review_v2_title" = "Αφήστε τα σχόλιά σας και βοηθήστε τους ταξιδιώτες!";
+
+"error_public_not_enought_title" = "Δεν υπάρχουν αρκετά σημάδια";
+
+"error_public_not_enought_subtitle" = "Η διαδρομή σας πρέπει να έχει τουλάχιστον 3 σημάδια για να μεταφορτωθεί στον δημόσιο κατάλογο";
+
+"bookmark_public_upload_alert_title" = "Είστε μόνο μερικά βήματα μακριά από τη φόρτωση της διαδρομής σας στον κατάλογο MAPS.ME!";
+
+"bookmark_public_upload_alert_subtitle" = "Βεβαιωθείτε ότι η διαδρομή έχει τίτλο και περιγραφή και ότι όλα τα σημάδια περιέχουν πληροφορίες σχετικά με τις τοποθεσίες. Χάρη σε αυτό, οι χρήστες θα βρουν τη διαδρομή και θα μπορέσουν να τη χρησιμοποιήσουν στο ταξίδι τους.";
+
+"bookmark_public_upload_alert_ok_button" = "Ναι, όλα είναι καλά!";
+
+"name_title" = "Εισαγάγετε έναν τίτλο";
+
+"name_placeholder" = "για παράδειγμα, \"Οι παμπ του Λονδίνου\"";
+
+"name_comment1" = "Δώστε στη διαδρομή έναν συγκεκριμένο τίτλο, έτσι ώστε οι χρήστες να μπορούν να την εντοπίσουν, για παράδειγμα, \"Οι παμπ του Λονδίνου\"";
+
+"name_comment2" = "Ο τίτλος δεν πρέπει να περιέχει ειδικούς χαρακτήρες. Μην δημοσιεύετε διαδρομές με τον τίτλο \"Οι τοποθεσίες μου\"";
+
+"description_guide" = "Περιγραφή";
+
+"description_title" = "Εισαγάγετε μια περιγραφή της διαδρομής";
+
+"description_placeholder" = "Περιγράψτε λεπτομερώς τη διαδρομή σας";
+
+"description_comment1" = "Η περιγραφή της διαδρομής πρέπει να είναι τουλάχιστον 30 χαρακτήρες.";
+
+"ugc_route_tags_desc" = "Διαλέξτε ετικέτες για να βοηθήσετε άλλους ταξιδιώτες να βρουν τον ταξιδιωτικό σας οδηγό. Αυτό είναι απαραίτητο. Ο μέγιστος αριθμός των ετικετών δεν πρέπει να υπερβαίνει %s.";
+
+"html_format_error_title" = "Η διαδρομή σας δεν έχει δημοσιευθεί";
+
+"html_format_error_subtitle" = "Βεβαιωθείτε ότι τα ονόματα και οι περιγραφές των σημαδιών στη διαδρομή έχουν τη σωστή μορφοποίηση. Μπορείτε να το ελέγξετε στον επεξεργαστή μας κάνοντας κλικ στο κουμπί \"Επεξεργασία online\" παρακάτω.";
+
+"web_editor_description" = "Φορτώστε τη διαδρομή και λάβετε έναν σύνδεσμο για επεξεργασία στον υπολογιστή";
+
+"edit_on_web_confirm" = "Επεξεργασία online";
+
+"update_guide" = "Φόρτωση της νέας έκδοσης";
+
+"direct_link_updating_text" = "Ενημέρωση της διαδρομής…";
+
+"direct_link_updating_success" = "Η διαδρομή ενημερώθηκε";
+
+"unable_get_direct_link_desc" = "Μπορείτε να μοιραστείτε τη διαδρομή χρησιμοποιώντας έναν δημόσιο σύνδεσμο";
+
+"any_access_update_alert_title" = "Ίσως υπάρχει μια νέα έκδοση της διαδρομής";
+
+"any_access_update_alert_message" = "Θέλετε να ενημερώσετε τα σημάδια? Η νέα έκδοση θα είναι διαθέσιμη με τον ίδιο σύνδεσμο.";
+
+"any_access_update_alert_update" = "Ενημέρωση";
+
+"public_or_limited_access_after_edit_online_error_title" = "Κάνατε την επεξεργασία της διαδρομής online";
+
+"public_or_limited_access_after_edit_online_error_message" = "Στο μέλλον κάντε την επεξεργασία, δημοσίευση ή κοινή χρήση της διαδρομής με φίλους μέσω της ιστοσελίδας μας";
+
+"power_managment_title" = "Λειτουργία εξοικονόμησης ενέργειας";
+
+"power_managment_description" = "Εάν η λειτουργία εξοικονόμησης ενέργειας είναι ενεργοποιημένη, η εφαρμογή θα κλείνει τις λειτουργίες που καταναλώνουν ενέργεια ανάλογα με την τρέχουσα φόρτιση του τηλεφώνου";
+
+"power_managment_setting_never" = "Ποτέ";
+
+"power_managment_setting_auto" = "Αυτόματα";
+
+"power_managment_setting_manual_max" = "Μέγιστη εξοικονόμηση ενέργειας";
+
+"enable_logging_warning_message" = "Αυτή η λειτουργία είναι ενεργοποιημένη για την καταγραφή ενεργειών για διαγνωστικούς σκοπούς. Αυτό βοηθά την ομάδα να εντοπίζει προβλήματα με την εφαρμογή. Να ενεργοποιείτε τη λειτουργία μόνο κατόπιν αιτήματος της υποστήριξης του MAPS.ME.";
+
+"html_error_upload_message_try_again" = "Ελέγξτε την πρόσβαση στο δίκτυο και δοκιμάστε ξανά";
+
+"html_error_upload_title_try_again" = "Δεν υπάρχει σύνδεση με το διαδίκτυο";
+
+"notification_leave_review_v2_android_short_title" = "Αφήνετε τα σχόλιά σας και βοηθάτε τους ταξιδιώτες!";
+
+"megafon" = "Say goodbye to roaming!";
+
+"notifications_illegal_alert_disable_button" = "Απενεργοποίηση των ειδοποιήσεων";
+
+"access_rules_author_only" = "Επεξεργάζεται online";
+
+"privacy_settings_menu" = "Ρυθμίσεις απορρήτου";
+
+"gdpr_request_setting" = "Λήψη του αναγνωριστικού αριθμού για το αίτημα GDPR";
+
+"gdpr_request_window_title" = "Ο αναγνωριστικός αριθμός σας είναι: %s.";
+
+"gdpr_request_window_message" = "Αντιγράψτε το και στείλτε το αίτημα στη διεύθυνση support@maps.me";
+
+"gdpr_request_window_copy" = "Αντιγραφή του αναγνωριστικού αριθμού";
+
+"unable_upadate_error_title" = "Δεν ήταν δυνατή η ενημέρωση της διαδρομής";
+
+"unable_upadate_error_message" = "Παρουσιάστηκαν σφάλματα κατά την ενημέρωση. Ελέγξτε τις αλλαγές και δοκιμάστε ξανά";
+
+"whats_new_wiki_title" = "Τι είναι αυτό το μέρος?";
+
+"whats_new_wiki_message" = "Στις κάρτες των δημοφιλών αξιοθέατων προσθέσαμε άρθρα από το Wikipedia.org που είναι διαθέσιμα εκτός σύνδεσης";
+
+"driving_options_title" = "Ρυθμίσεις παράκαμψης";
+
+"driving_options_subheader" = "Αποφυγή σε κάθε διαδρομή";
+
+"avoid_tolls" = "Δρόμοι με διόδια";
+
+"avoid_unpaved" = "Χωματόδρομοι";
+
+"avoid_ferry" = "Πορθμεία";
+
+"avoid_motorways" = "Αυτοκινητόδρομοι";
+
+"unable_to_calc_alert_title" = "Δεν είναι δυνατή η δημιουργία διαδρομής";
+
+"unable_to_calc_alert_subtitle" = "Δυστυχώς, δεν μπορούσαμε να δημιουργήσουμε μια διαδρομή με τις καθορισμένες επιλογές. Αλλάξτε τις ρυθμίσεις και δοκιμάστε πάλι";
+
+"define_to_avoid_btn" = "Ρύθμιση της διαδρομής παράκαμψης";
+
+"change_driving_options_btn" = "Ρυθμίσεις δραστηριοποιούνται";
+
+"toll_road" = "Δρόμος με διόδια";
+
+"unpaved_road" = "Χωματόδρομος";
+
+"ferry_crossing" = "Πορθμείο";
+
+"operated_by" = "Χειρίζεται από \"%s\"";
+
+"avoid_toll_roads_placepage" = "Αποφυγή των δρόμων με διόδια";
+
+"avoid_unpaved_roads_placepage" = "Αποφυγή των χωματόδρομων";
+
+"avoid_ferry_crossing_placepage" = "Αποφυγή των πορθμείων";
+
+"cached_guides_placeholder_subtitle" = "Οι έτοιμοι οδηγοί του MAPS.ME προσφέρουν κάποια επιλεγμένα μέρη με φωτογραφίες και περιγραφές που εμφανίζονται στον χάρτη και είναι διαθέσιμα εκτός σύνδεσης.";
+
+"guides_catalogue_title" = "Κατάλογος οδηγών";
+
+"download_guides_button" = "Μετάβαση στον κατάλογο";
+
+"type.cuisine.uzbek" = "Ουζμπεκική κουζίνα";
+
+"onboarding_welcome_title" = "Σχεδιάστε και ταξιδέψτε με το MAPS.ME";
+
+"onboarding_welcome_first_subtitle" = "Αποθηκεύετε τα ενδιαφέροντα μέρη, κάντε κράτηση ξενοδοχείων, χτίστε τις διαδρομές εκτός σύνδεσης";
+
+"onboarding_guide_direct_download_title" = "Ο οδηγός είναι έτοιμος για λήψη";
+
+"onboarding_guide_direct_download_subtitle" = "Θα εμφανίζεται στον χάρτη και θα λειτουργεί εκτός σύνδεσης";
+
+"onboarding_guide_direct_download_button" = "Λήψη";
+
+"onboarding_bydeeplink_guide_title" = "Έτοιμοι οδηγοί στο MAPS.ME";
+
+"onboarding_bydeeplink_guide_subtitle" = "Επιλεγμένα μέρη με φωτογραφίες και περιγραφές εμφανίζονται στον χάρτη και είναι διαθέσιμα εκτός σύνδεσης.";
+
+"whats_new_auto_update_bydeeplink_title" = "Πριν τη μετάβαση στους οδηγούς…";
+
+"whats_new_auto_update_bydeeplink_message" = "Ενημερώστε τους χάρτες για να λάβετε τις έγκυρες πληροφορίες σχετικά με τα αντικείμενα!";
+
+"whats_new_auto_update_and_proceed_button_size" = "Ενημέρωση (%s) και συνέχεια";
+
+"whatsnew_toll_unpaved_title" = "Σχεδιάστε τις διαδρομές με αυτοκίνητο λαμβάνοντας υπόψη όλους τους τύπους δρόμων";
+
+"whatsnew_toll_unpaved_message" = "Επιλέγετε τις διαδρομές παρακάμπτοντας δρόμους με διόδια, χωματόδρομους και πορθμεία";
+
+"whatsnew_new_catalogue_title" = "Ενημερωμένες σελίδες καταλόγου";
+
+"whatsnew_new_catalogue_message" = "Προσθέσαμε λεπτομερείς πληροφορίες σχετικά με τους οδηγούς συνεργατών έτσι ώστε η επιλογή της διαδρομής να είναι εύκολη και άνετη";
+
+"purchase_please_wait_toast" = "Παρακαλείστε να μην μετακινηθείτε από την οθόνη πριν ολοκληρωθεί η αγορά";
+
+"trip_start" = "Πάμε";
+
+"pick_destination" = "Προορισμός";
+
+"follow_my_position" = "Επανατοποθέτηση";
+
+"search_results" = "Αποτελέσματα αναζήτησης";
+
+"then_turn" = "Μετά";
+
+"redirect_route_alert" = "Θα θέλατε να τροποποιήσετε τη διαδρομή;";
+
+"redirect_route_yes" = "Ναι";
+
+"redirect_route_no" = "Όχι";
+
+"trip_finished" = "Έχετε φτάσει!";
+
+"keyboard_availability_alert" = "Το πληκτρολόγιο δεν είναι διαθέσιμο κατά τη διάρκεια οδήγησης";
+
+"dialog_routing_change_start_carplay" = "Δεν είναι δυνατή η δημιουργία διαδρομής από την τρέχουσα τοποθεσία σας";
+
+"dialog_routing_change_end_carplay" = "Δεν είναι δυνατή η δημιουργία διαδρομής μέχρι τον προορισμό σας. Επιλέξτε ένα άλλο σημείο";
+
+"dialog_routing_check_gps_carplay" = "Δεν υπάρχει σήμα GPS. Μετακινήστε σε μια ανοικτή τοποθεσία";
+
+"dialog_routing_unable_locate_route_carplay" = "Δεν είναι δυνατή η δημιουργία διαδρομής. Επιλέξτε άλλα σημεία διαδρομής";
+
+"dialog_routing_download_files_carplay" = "Για να χτίσετε διαδρομή, κατεβάστε χάρτες που λείπουν στη συσκευή";
+
+"dialog_routing_system_error_carplay" = "Παρουσιάστηκε σφάλμα. Κάντε επανεκκίνηση της εφαρμογής";
+
+"dialog_routing_rebuild_from_current_location_carplay" = "Η διαδρομή θα ξαναδημιουργηθεί από την τρέχουσα τοποθεσία σας";
+
+"dialog_routing_rebuild_for_vehicle_carplay" = "Η διαδρομή θα αντικατασταθεί με τη διαδρομή με αυτοκίνητο";
+
+"ok" = "Καλώς";
+
+"vezet_taxi" = "Vezet";
+
+"booking_button_toolbar" = "Επιλέξτε ξενοδοχείο στον χάρτη";
+
+"popup_booking_download_guides_title" = "Έχετε κράτηση ξενοδοχείου;";
+
+"popup_booking_download_guides_message" = "Προγραμματίστε τη διαδρομή σας με τους έτοιμους οδηγούς MAPS.ME";
+
+"popup_mwm_download_guides_title" = "Οδηγοί εκτός σύνδεσης";
+
+"popup_mwm_download_guides_cta" = "Επιλογή";
+
+"popup_mwm_download_guides_cta_1" = "Προβολή";
+
+"gallery_pp_download_guides_offline_title" = "Προγραμματίστε τις διακοπές σας με το MAPS.ME!";
+
+"gallery_pp_download_guides_offline_subtitle" = "Μην χάσετε τα πιο σημαντικά πράγματα με τη χρήση των διαδρομών από έμπειρους ταξιδιώτες";
+
+"gallery_pp_download_guides_offline_cta" = "Ενεργοποίηση της σύνδεσης με το διαδίκτυο";
+
+"gallery_pp_download_guides_title" = "Ταξιδιωτικοί οδηγοί";
+
+"native_screen_subscription_title" = "Πλήρης πρόσβαση σε 2000+ ταξιδιωτικούς οδηγούς!";
+
+"native_screen_subscription_message" = "Οι αξέχαστες διακοπές, όπου και με όποια παρέα κι αν ταξιδέψετε";
+
+"annual_subscription_title" = "Ετήσια";
+
+"montly_subscription_title" = "Μηνιαία";
+
+"annual_subscription_message" = "12 μήνες απεριόριστης πρόσβασης";
+
+"montly_subscription_message" = "1 μήνας απεριόριστης πρόσβασης";
+
+"annual_save_component" = "- %d%";
+
+"subscription_success_dialog_title" = "Ευχαριστούμε για τη συνδρομή σας!";
+
+"subscription_success_dialog_message" = "Τώρα έχετε την απεριόριστη πρόσβαση στον κατάλογο των ταξιδιωτικών οδηγών";
+
+"renewal_screen_title" = "Η συνδρομή σας έχει λήξει";
+
+"renewal_screen_message" = "Όλοι οι ταξιδιωτικοί οδηγοί που κατεβάσατε με τη συνδρομή θα διαγραφτούν. Θέλετε να επαναφέρετε τη συνδρομή σας και να τους διατηρήσετε;";
+
+"renewal_screen_button_restore" = "Ναι, επαναφορά";
+
+"renewal_screen_button_cancel" = "Όχι, διαγραφή των οδηγών";
+
+"subscription_error_ping_title" = "Η αγορά δεν πραγματοποιήθηκε";
+
+"subscription_error_message" = "Η υπηρεσία δεν είναι διαθέσιμη στην περιοχή σας αυτή τη στιγμή. Παρακαλούμε, δοκιμάστε ξανά αργότερα";
+
+"subscription_error_button" = "Κατανοητό";
+
+"timeout_error_title" = "Ουπς, ο χρόνος έληξε!";
+
+"timeout_error_message" = "Οι διακομιστές μας δεν ανταποκρίνονται. Παρακαλούμε, ελέγξτε τη σύνδεσή σας με το διαδίκτυο και δοκιμάστε ξανά.";
+
+"per_month" = "/μήνας";
+
+"per_year" = "/έτος";
+
+"buy_btn_for_subscription" = "Πλήρης πρόσβαση από %s";
+
+"buy_btn_for_subscription_1" = "Αγορά ΟΛΩΝ οδηγών για %s";
+
+"buy_btn_for_subscription_ios_only_mo" = "Πλήρης πρόσβαση για %s/μην.";
+
+"buy_btn_for_subscription_ios_only_year" = "Πλήρης πρόσβαση για %s/το έτος";
+
+"subscription_terms_guides" = "Η πληρωμή θα πραγματοποιηθεί από το λογαριασμό σας στο iTunes μετά την επιβεβαίωση αγοράς. Η συνδρομή σας θα ανανεώνεται αυτόματα εκτός εάν η αυτόματη ανανέωση απενεργοποιηθεί τουλάχιστον 24 ώρες πριν από τη λήξη της τρέχουσας περιόδου. Τα ποσά θα χρεώνονται στο λογαριασμό σας σύμφωνα με το πρόγραμμα ανανέωσής σας εντός των 24 ωρών πριν από τη λήξη της τρέχουσας περιόδου. Μπορείτε να διαχειριστείτε την αυτόματη ανανέωση ή να την απενεργοποιήσετε στις ρυθμίσεις λογαριασμού Apple ID οποιαδήποτε στιγμή μετά την αγορά. Θα μπορείτε να χρησιμοποιήσετε τους οδηγούς που έχετε κατεβάσει με τη συνδρομή μόνο κατά τη διάρκεια της περιόδου ισχύος της. Οι οδηγοί με όλους τους σελιδοδείκτες θα διαγραφτούν αυτόματα αφού περάσουν 30 ημέρες μετά τη λήξη της συνδρομής.";
+
+"subscription_terms" = "Η πληρωμή θα χρεωθεί στον iTunes λογαριασμό σας κατά την επιβεβαίωση της αγοράς. Η συνδρομή θα ανανεωθεί αυτόματα εκτός εάν η αυτόματη ανανέωση είναι απενεργοποιημένη τουλάχιστον 24 ώρες πριν από το τέλος της τρέχουσας περιόδου. Ο λογαριασμός σας θα χρεωθεί σύμφωνα με το σχέδιο ανανέωσής σας εντός 24 ωρών πριν από το τέλος της τρέχουσας περιόδου. Μπορείτε να διαχειριστείτε ή να απενεργοποιήσετε την αυτόματη ανανέωση στις ρυθμίσεις του Apple ID λογαριασμού σας ανά πάσα στιγμή κατά την αγορά σας.";
+
+"whatsnew_carplay_title" = "Αυτοπλοήγηση MAPS.ME στο CarPlay!";
+
+"whatsnew_carplay_message" = "Ετικέτες, αναζήτηση, κάμερες ταχύτητας και ρυθμίσεις παράκαμψης — όλα λειτουργούν χωρίς την πρόσβαση στο διαδίκτυο";
+
+"whatsnew_subscription_title" = "Ανακάλυψε τον κόσμο με συνδρομή!";
+
+"whatsnew_subscription_message" = "Η απεριόριστη πρόσβαση στον κατάλογο των διαδρομών συμφέρει πιο πολύ από μια μεμονωμένη αγορά";
+
+"whatsnew_carnavi_fixes_for_android_title" = "Ενημέρωση πλοήγησης";
+
+"whatsnew_carnavi_fixes_for_android_message" = "Έχουμε βελτιώσει τη δημιουργία διαδρομών έως τα σημεία που βρίσκονται μακριά από τους δρόμους";
+
+"avoid_unpaved_carplay_1" = "Χ/χωματόδρ.";
+
+"avoid_unpaved_carplay_2" = "Χ/χωματόδρομους";
+
+"avoid_ferry_carplay_1" = "Χ/πορθμεία";
+
+"avoid_ferry_carplay_2" = "Χωρίς πορθμεία";
+
+"avoid_tolls_carplay_1" = "Χωρίς διόδια";
+
+"avoid_tolls_carplay_2" = "Χωρίς διόδια";
+
+"speedcams_alert_title_carplay_1" = "Κάμερες";
+
+"speedcams_alert_title_carplay_2" = "Πληροφ. γιαόρια";
+
+"download_map_carplay" = "Κάντε λήψη χαρτών στην εφαρμογή MAPS.ME στη συσκευή σας";
+
+"carplay_roundabout_exit" = "%s έξοδος";
+
+/* max. 10 symbols, both iOS and Android */
+"sort" = "Ταξινόμηση";
+
+/* Android, title, max 20-22 symbols */
+"sort_bookmarks" = "Ταξινόμηση σελιδοδ/τών";
+
+/* iOS */
+"sort_default" = "Ταξινόμηση κατά προεπιλογή";
+
+"sort_type" = "Ταξινόμηση ανά τύπο";
+
+"sort_distance" = "Ταξινόμηση κατά απόσταση";
+
+"sort_date" = "Ταξινόμηση κατά ημερομηνία";
+
+/* Android */
+"by_default" = "Προεπιλογή";
+
+/* Android */
+"by_type" = "Ανά τύπο";
+
+/* Android */
+"by_distance" = "Κατά απόσταση";
+
+/* Android */
+"by_date" = "Κατά ημερομηνία";
+
+"week_ago_sorttype" = "Μια βδομάδα πριν";
+
+"month_ago_sorttype" = "Ένας μήνας πριν";
+
+"moremonth_ago_sorttype" = "Περισσότερο από έναν μήνα πριν";
+
+"moreyear_ago_sorttype" = "Περισσότερο από ένα έτος πριν";
+
+"near_me_sorttype" = "Δίπλα μου";
+
+"others_sorttype" = "Άλλα";
+
+"food_places" = "Εστίαση";
+
+"tourist_places" = "Αξιοθέατα";
+
+"museums" = "Μουσεία";
+
+"parks" = "Πάρκα";
+
+"swim_places" = "Κολύμβηση";
+
+"mountains" = "Βουνά";
+
+"animals" = "Ζώα";
+
+"hotels" = "Διαμονή";
+
+"buildings" = "Κτήρια";
+
+"money" = "Χρήματα";
+
+"shops" = "Καταστήματα";
+
+"parkings" = "Χώροι στάθμευσης";
+
+"fuel_places" = "Πρατήρια βενζίνης";
+
+"water" = "Νερό";
+
+"medicine" = "Γιατρική βοήθεια";
+
+"search_in_the_list" = "Αναζήτηση στη λίστα";
+
+"view_on_map_bookmarks" = "Στον χάρτη";
+
+"more_bookmarks" = "Περισσότερα…";
+
+"no_items_found" = "Δεν βρέθηκε τίποτα";
+
+/* Android, max 18 symbols */
+"bookmarks_edit_list" = "Επεξεργασία";
+
+/* Android, max 18 symbols */
+"bookmarks_delete_list" = "Διαγραφή λίστας";
+
+"whatsnew_bookmarks_search_sort_title" = "Τάξη στους σελιδοδείκτες κάνει το ταξίδι άνετο";
+
+"whatsnew_bookmarks_search_sort_message" = "Ταξινόμηση των αγαπημένων σας τοποθεσιών ανά κατηγορία, ώρα προσθήκης και γεωγραφική κατανομή και γρήγορη εύρεση συγκεκριμένων σελιδοδεικτών με το όνομα";
+
+"popup_subscription_success_map_title" = "Ζήτω! Είστε συνδρομητής!";
+
+"popup_subscription_success_map_message" = "Τώρα μελετήστε τα καλύτερα τουριστικά αξιοθέατα στον κατάλογο MAPS.ME";
+
+"popup_subscription_success_map_start_button" = "Προβολή";
+
+"popup_subscription_success_map_not_now_button" = "Όχι τώρα";
+
+"religious_places" = "Άγιοι τόποι";
+
+"subscription_terms_android" = "Μετά την επιβεβαίωση αγοράς η πληρωμή θα χρεωθεί στο λογαριασμό σας στο Google Play. Η συνδρομή θα ανανεώνεται αυτόματα εκτός εάν η λειτουργία αυτόματης ανανέωσης απενεργοποιηθεί τουλάχιστον 24 ώρες πριν από το τέλος της τρέχουσας περιόδου. Ο λογαριασμός σας θα χρεώνεται σύμφωνα με το σχέδιο ανανέωσης συνδρομής σας εντός 24 ωρών πριν από το τέλος της τρέχουσας περιόδου. Μπορείτε να διαχειριστείτε ή να απενεργοποιήσετε τη δυνατότητα αυτόματης ανανέωσης στις Ρυθμίσεις λογαριασμού σας μετά την αγορά. Θα μπορέσετε να χρησιμοποιείτε τους οδηγούς που έχουν ληφθεί με τη συνδρομή μόνο μέχρι τη λήξη της. Μετά το πέρασμα 30 ημερών από τη λήξη της συνδρομής οι οδηγοί θα διαγραφούν αυτόματα.";
+
+"select_list" = "Επιλογή λίστας";
+
+"pp_discovery_place_related_header" = "Αυτό το μέρος υπάρχει στον κατάλογο οδηγών";
+
+"pp_discovery_place_related_header_1" = "Αυτό το μέρος υπάρχει στον οδηγό";
+
+"pp_discovery_place_related_cta_button" = "Προβολή";
+
+"pp_discovery_place_related_tag_header" = "Οδηγοί με ετικέτα «%s»";
+
+"pp_discovery_place_related_tag_header_1" = "Μπορεί επίσης να σας αρέσουν";
+
+"buy_btn_for_subscription_version_2" = "ΟΛΟΙ οι οδηγοί μόνο με %s/μήνα";
+
+"buy_btn_for_subscription_version_3" = "Ολόκληρος κατάλογος με %s/μήνα";
+
+"buy_btn_for_subscription_ios_only_mo_version_2" = "Πρόσβαση στον κατάλογο με %s/μήνα";
+
+"buy_btn_for_subscription_ios_only_year_version_2" = "Πρόσβαση στον κατάλογο με %s/χρόνο";
+
+"subscription_screen_native_title_version_2" = "Πρόσβαση σε οδηγούς με τα Αγαπημένα!";
+
+"subscription_screen_native_message_version_2" = "Για να είστε έτοιμοι για κάθε ταξίδι σε 600+ πόλεις και 100+ χώρες";
+
+"catalog_no_internet_title" = "Δεν υπάρχει σύνδεση στο διαδίκτυο";
+
+"catalog_no_internet_button" = "Δοκιμάστε ξανά";
+
+"whatsnew_map_updates_title" = "Αεριωθούμενες ενημερώσεις χαρτών";
+
+"whatsnew_map_updates_message" = "Από εδώ και πέρα ενημερώνουμε τα δεδομένα 2 φορές πιο γρήγορα";
+
+"new_onboarding_button" = "Επόμενο";
+
+"new_onboarding_button_2" = "Εκκίνηση";
+
+"new_onboarding_step1_header" = "MAPS.ME";
+
+"new_onboarding_step1_header_2" = "Ολοκληρωμένος βοηθός στα ταξίδια";
+
+"new_onboarding_step2_header" = "Κάντε όνειρα και σχέδια";
+
+"new_onboarding_step2_message" = "70+ εκατομμύρια ενδιαφέρουσες τοποθεσίες, κατάλογος έτοιμων οδηγών και κρατήσεις ξενοδοχείων από τον χάρτη – είστε έτοιμοι να ταξιδέψετε!";
+
+"new_onboarding_step3_message" = "Οι λεπτομερείς χάρτες εκτός σύνδεσης και η πλοήγηση εκτός σύνδεσης θα σας βοηθήσουν να μην χαθείτε σε άγνωστα μέρη!";
+
+"new_onboarding_step4_header" = "Μοιραστείτε τις εντυπώσεις σας";
+
+"new_onboarding_step4_message" = "Να αποθηκεύετε τις τοποθεσίες που σας άρεσαν σε Αγαπημένα και να τις στέλνετε σε φίλους";
+
+"new_onboarding_step5.1_header" = "Προτού ξεκινήσετε…";
+
+"new_onboarding_step5.1_message" = "Μην ξεχάσετε να επισκεφθείτε τον καινούριο μας κατάλογο διαδρομών για να βρείτε τον οδηγό εκτός σύνδεσης για το επόμενο ταξίδι σας!";
+
+"new_onboarding_step5.1_button" = "Άνοιγμα καταλόγου";
+
+"new_onboarding_step5.2_message" = "Η συνδρομή στον κατάλογο οδηγών στο MAPS.ME συνφέρει. Αποκτήστε πλήρη πρόσβαση σε οδηγούς για περιπάτους στην πόλη και υπαίθριες δραστηριότητες!";
+
+"new_onboarding_step5.2_button" = "Προβολή όρων";
+
+"new_onboarding_step5.3_message" = "Κάντε λήψη και αξιολογήστε διαδρομές για περιπάτους στην πόλη και υπαίθριες δραστηριότητες με δωρεάν συλλογή του MAPS.ME!";
+
+"new_onboarding_step5.3_button" = "Δωρεάν λήψη";
+
+"new_onboarding_additional_steps_later_button" = "Αργότερα";
+
+"all_pass_subscription_header" = "ΕΓΓΡΑΦΗ ΣΤΟΝ ΚΑΤΑΛΟΓΟ";
+
+/* do not translate */
+"all_pass_subscription_subheader" = "City + Outdoor Pass";
+
+/* \n - for a break between lines. Max. 15 characters per 1 line. */
+"all_pass_subscription_message_title" = "30.000+\nοδηγών\nκαι μονοπατιών";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle" = "<b>Απεριόριστη λήψη εκτός σύνδεσης</b> διαδρομές για την πόλη και υπαίθριες δραστηριότητες";
+
+/* \n - for a break between lines. Max. 17 characters per 1 line. */
+"all_pass_subscription_message_title_2" = "Διαδραστικό\nπροφίλ υψόμετρου";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle_2" = "Όλα τα μονοπάτια φορτώνονται <b>με υψόμετρα και βασικές πληροφορίες διαδρομής</b>";
+
+/* \n - for a break between lines. Max. 15 characters per 1 line. */
+"all_pass_subscription_message_title_3" = "Αγαπημένα,\nφωτογραφίες\nκαι συστάσεις";
+
+/* <b> & </b> tag to make a part of the line bold */
+"all_pass_subscription_message_subtitle_3" = "<b>Μάθετε τα πάντα για τη διαδρομή</b> που θα ακολουθήσετε";
+
+/* do not translate */
+"sightseeing_subscription_header_sightseeing" = "City Pass";
+
+"sightseeing_subscription_header_subscription" = "Συνδρομή σε οδηγούς";
+
+"sightseeing_subscription_message" = "700+ πόλεις και 100+ χώρες";
+
+"sightseeing_subscription_message_2" = "Διαθέσιμα χωρίς σύνδεση";
+
+"sightseeing_subscription_message_3" = "Φωτογραφίες και μονοπάτια";
+
+"subscription_success_dialog_title_sightseeing_pass" = "Ευχαριστούμε για την εγγραφή!";
+
+"subscription_success_dialog_message_sightseeing_pass" = "Τώρα έχετε πρόσβαση σε όλους τους οδηγούς περιηγήσεων στις πόλεις που υπάρχουν στον κατάλογο";
+
+"downloader_main_gallery_header" = "Χάρτες και οδηγοί";
+
+"downloader_main_gallery_message" = "Τώρα, σε αυτήν την ενότητα μπορείτε να κάνετε λήψη των χαρτών και επιπλέον να επιλέξετε τους οδηγούς για τα επόμενα ταξίδια σας";
+
+"downloader_main_1_element_gallery_header" = "Όλοι οδηγοί";
+
+"downloader_main_1_element_gallery_message" = "σε 100+ χώρες";
+
+"downloader_country_1_element_gallery_header" = "%s διαδρομών";
+
+"downloader_country_no_guides_gallery_header" = "Προς το παρόν δεν υπάρχουν οδηγοί γι' αυτή τη χώρα";
+
+"downloader_country_no_guides_gallery_message" = "Ρίξτε μια ματιά σε άλλες διαδρομές σε 100+ χώρες για τις αστικές και υπαίθριες δραστηριότητες";
+
+"dialog_pedestrian_route_is_long" = "Η διαδρομή με τα πόδια μέχρι το σημείο επιβίβασης είναι πολύ μεγάλη";
+
+"whatsnew_outdoor_guides_title" = "Έχουμε προσθέσει 15.000 + μονοπάτια για υπαίθριες δραστηριότητες!";
+
+"whatsnew_outdoor_guides_message" = "Οι διαδρομές από την Outdooractive για χειμερινές και καλοκαιρινές διακοπές σας περιμένουν στον κατάλογο!";
+
+"whatsnew_guides_galleries_title" = "Προγραμματίστε το επόμενο ταξίδι με το MAPS.ME";
+
+"whatsnew_guides_galleries_message" = "Τώρα μπορείτε να βρείτε τους συνιστώμενους οδηγούς στις κάρτες των δημοφιλών πόλεων και αξιοθέατων";
+
+"new_onboarding_step3_header" = "Ταξιδέψτε";
+
+"all_pass_screen_best_value" = "Καλύτερη τιμή";
+
+"buy_btn_for_subscription_3" = "Ολόκληρος κατάλογος με %s/έτος";
+
+"transit_not_found" = "Η πλοήγηση στο μετρό γι' αυτή την περιοχή δεν είναι ακόμα διαθέσιμη";
+
+"dialog_pedestrian_route_is_long_header" = "Η διαδρομή του μετρό δεν βρέθηκε";
+
+"dialog_pedestrian_route_is_long_message" = "Επιλέξτε το σημείο έναρξης ή τέλους διαδρομής πιο κοντά στο σταθμό του μετρό";
+
+/* Failed planning SUBWAY route message in navigation view */
+"routing_planning_error_subway_special" = "Σφάλμα κατά την δημιουργία διαδρομής του μετρό";
+
+"whatsnew_isolines_title" = "Νέο για υπαίθριες δραστηριότητες – τοπογραφικά στρώματα εκτός σύνδεσης!";
+
+/* as less symbols as possible */
+"whatsnew_isolines_message" = "Νιώστε σίγουροι στα ορεινά – ενεργοποιήστε το στρώμα στην πάνω αριστερή γωνία της οθόνης";
+
+"button_layer_isolines" = "Υψόμετρα";
+
+"tips_map_layers_title_countour" = "Τοπογραφικά στρώματα εκτός σύνδεσης στο MAPS.ME!";
+
+"tips_map_layers_message_countour" = "Τα τοπογραφικά στρώματα θα σας βοηθήσουν να σχεδιάσετε το ταξίδι σας στη φύση και να μην χαθείτε στην περιοχή";
+
+"isolines_activation_error_dialog" = "Για να χρησιμοποιήσετε τοπογραφικά στρώματα, ενημερώστε ή κατεβάστε τον χάρτη της επιθυμητής περιοχής";
+
+"isolines_location_error_dialog" = "Τα τοπογραφικά στρώματα δεν είναι ακόμα διαθέσιμα σε αυτή την περιοχή";
+
+"elevation_profile_diff_level" = "Επίπεδο δυσκολίας";
+
+"elevation_profile_diff_level_easy" = "Εύκολο";
+
+"elevation_profile_diff_level_moderate" = "Μέτριο";
+
+"elevation_profile_diff_level_hard" = "Δύσκολο";
+
+"elevation_profile_ascent" = "Άνοδος";
+
+"elevation_profile_descent" = "Κάθοδος";
+
+"elevation_profile_minaltitude" = "Ελ. υψόμετρο";
+
+"elevation_profile_maxaltitude" = "Μέγ. υψόμετρο";
+
+"elevation_profile_m" = "μ";
+
+"elevation_profile_difficulty" = "Δυσκολία";
+
+"elevation_profile_distance" = "Απόστ.:";
+
+"elevation_profile_km" = "χλμ";
+
+"elevation_profile_time" = "Διαρκ:";
+
+"elevation_profile_hours" = "ω.";
+
+"elevation_profile_minutes" = "λ.";
+
+/* hide the full screen banner and continue working with the app */
+"hide_screen_map_update" = "Απόκρυψη και συνέχεια εργασίας";
+
+"view_on_map_downloaded_error" = "Αυτός ο ταξιδιωτικός οδηγός έχει αφαιρεθεί από τη συσκευή";
+
+"subscription" = "Συνδρομή";
+
+"freenow_taxi_title" = "FREE NOW";
+
+"tinkoff_allairlines_map_downloader_title" = "Карта Тинькофф All Airlines. 3000 миль в подарок";
+
+"tinkoff_allairlines_map_downloader_cta_button" = "Оформить карту";
+
+"tinkoff_insurance_map_downloader_title" = "Полис Тинькофф со скидкой! Подходит для любых виз.";
+
+"tinkoff_insurance_map_downloader_cta_button" = "Промокод";
+
+"mts_map_downloader_title" = "Забугорище: интернет и звонки за границей как дома";
+
+"mts_map_downloader_cta_button" = "Подключить";
+
+"skyeng_map_downloader_title" = "Дарим 4 бесплатных урока английского от Skyeng.";
+
+"skyeng_map_downloader_cta_button" = "Подробнее";
+
 
 /**********  Partners  **********/
 
@@ -2709,9 +3312,9 @@
 
 "type.aeroway.terminal" = "aeroway-terminal";
 
-"type.amenity" = "amenity";
+"type.amenity" = "Εγκαταστάσεις υποδομής";
 
-"type.amenity.arts_centre" = "amenity-arts_centre";
+"type.amenity.arts_centre" = "Κέντρο καλών τεχνών";
 
 "type.amenity.atm" = "ATM";
 
@@ -2775,7 +3378,7 @@
 
 "type.amenity.fire_station" = "Σταθμός πυρόσβεσης";
 
-"type.amenity.food_court" = "amenity-food_court";
+"type.amenity.food_court" = "Food court";
 
 "type.amenity.fountain" = "Συντριβάνι";
 
@@ -2811,21 +3414,23 @@
 
 "type.amenity.parking.multi.storey" = "Χώρος στάθμευσης";
 
-"type.amenity.parking.multi.storey.fee" = "Χώρος στάθμευσης";
-
 "type.amenity.parking.no.access" = "Χώρος στάθμευσης";
 
 "type.amenity.parking.park_and_ride" = "Χώρος στάθμευσης";
 
 "type.amenity.parking.permissive" = "Χώρος στάθμευσης";
 
-"type.amenity.parking.permissive.fee" = "Χώρος στάθμευσης";
-
 "type.amenity.parking.private" = "Χώρος στάθμευσης";
 
 "type.amenity.parking.underground" = "Χώρος στάθμευσης";
 
-"type.amenity.parking.underground.fee" = "Χώρος στάθμευσης";
+"type.amenity.parking_space" = "Χώρος στάθμευσης";
+
+"type.amenity.parking_space.permissive" = "Χώρος στάθμευσης";
+
+"type.amenity.parking_space.private" = "Χώρος στάθμευσης";
+
+"type.amenity.parking_space.underground" = "Χώρος στάθμευσης";
 
 "type.amenity.payment_terminal" = "Τερματικό πληρωμών";
 
@@ -2853,7 +3458,7 @@
 
 "type.amenity.post_office" = "Ταχυδρομείο";
 
-"type.amenity.prison" = "amenity-prison";
+"type.amenity.prison" = "Prison";
 
 "type.amenity.pub" = "Παμπ";
 
@@ -2883,7 +3488,7 @@
 
 "type.amenity.university" = "Πανεπιστήμιο";
 
-"type.amenity.vending_machine" = "amenity-vending_machine";
+"type.amenity.vending_machine" = "Vending machine";
 
 "type.amenity.vending_machine.cigarettes" = "Αυτόματος πωλητής τσιγάρων";
 
@@ -2891,7 +3496,7 @@
 
 "type.amenity.vending_machine.parking_tickets" = "Εισιτήρια στάθμευσης";
 
-"type.amenity.vending_machine.public_transport_tickets" = "amenity-vending_machine-public_transport_tickets";
+"type.amenity.vending_machine.public_transport_tickets" = "Μηχάνημα αυτόματης πώλησης εισιτηρίων για τα μέσα μαζικής μεταφοράς";
 
 "type.amenity.veterinary" = "Κτηνίατρος";
 
@@ -2901,7 +3506,7 @@
 
 "type.amenity.water_point" = "Παροχή νερού";
 
-"type.barrier" = "barrier";
+"type.barrier" = "Barrier";
 
 "type.barrier.block" = "Εμπόδιο";
 
@@ -2909,29 +3514,29 @@
 
 "type.barrier.border_control" = "Έλεγχος συνόρων";
 
-"type.barrier.city_wall" = "barrier-city_wall";
+"type.barrier.city_wall" = "City wall";
 
-"type.barrier.cycle_barrier" = "barrier-cycle_barrier";
+"type.barrier.cycle_barrier" = "Cycle barrier";
 
 "type.barrier.entrance" = "Είσοδος";
 
-"type.barrier.fence" = "barrier-fence";
+"type.barrier.fence" = "Fence";
 
 "type.barrier.gate" = "Πύλη";
 
-"type.barrier.hedge" = "barrier-hedge";
+"type.barrier.hedge" = "Hedge";
 
 "type.barrier.lift_gate" = "Ανυψούμενη μπάρα";
 
-"type.barrier.retaining_wall" = "barrier-retaining_wall";
+"type.barrier.retaining_wall" = "Retaining wall";
 
 "type.barrier.stile" = "Τουρνικέ";
 
 "type.barrier.toll_booth" = "Σταθμός διοδίων";
 
-"type.barrier.wall" = "barrier-wall";
+"type.barrier.wall" = "Wall";
 
-"type.boundary" = "boundary";
+"type.boundary" = "Boundary";
 
 "type.boundary.administrative" = "boundary-administrative";
 
@@ -2984,12 +3589,6 @@
 "type.building.has_parts" = "Κτίριο";
 
 "type.building.train_station" = "Σιδηροδρομικός σταθμός";
-
-"type.communication" = "communication";
-
-"type.communication.line" = "communication-line";
-
-"type.communication.line.underground" = "communication-line-underground";
 
 "type.craft" = "craft";
 
@@ -3207,7 +3806,7 @@
 
 "type.highway.bus_stop" = "Στάση λεωφορείου";
 
-"type.highway.construction" = "highway-construction";
+"type.highway.construction" = "Οδός υπό κατασκευή";
 
 "type.highway.cycleway" = "highway-cycleway";
 
@@ -3239,7 +3838,7 @@
 
 "type.highway.footway.tunnel" = "Διαδρομή";
 
-"type.highway.ford" = "highway-ford";
+"type.highway.ford" = "Ford";
 
 "type.highway.living_street" = "Οδός";
 
@@ -3293,8 +3892,6 @@
 
 "type.highway.pedestrian.tunnel" = "Οδός";
 
-"type.highway.platform" = "highway-platform";
-
 "type.highway.primary" = "Οδός";
 
 "type.highway.primary.bridge" = "Οδός";
@@ -3347,12 +3944,6 @@
 
 "type.highway.service.driveway" = "Οδός";
 
-"type.highway.service.driveway.area" = "Οδός";
-
-"type.highway.service.driveway.bridge" = "Οδός";
-
-"type.highway.service.driveway.tunnel" = "Οδός";
-
 "type.highway.service.parking_aisle" = "Οδός";
 
 "type.highway.service.tunnel" = "Οδός";
@@ -3391,21 +3982,9 @@
 
 "type.highway.track.grade3" = "Οδός";
 
-"type.highway.track.grade3.no.access" = "Οδός";
-
-"type.highway.track.grade3.permissive" = "Οδός";
-
 "type.highway.track.grade4" = "Οδός";
 
-"type.highway.track.grade4.no.access" = "Οδός";
-
-"type.highway.track.grade4.permissive" = "Οδός";
-
 "type.highway.track.grade5" = "Οδός";
-
-"type.highway.track.grade5.no.access" = "Οδός";
-
-"type.highway.track.grade5.permissive" = "Οδός";
 
 "type.highway.track.no.access" = "Οδός";
 
@@ -3443,7 +4022,7 @@
 
 "type.historic.archaeological_site" = "Αρχαιολογικός χώρος";
 
-"type.historic.battlefield" = "historic-battlefield";
+"type.historic.battlefield" = "Battlefield";
 
 "type.historic.boundary_stone" = "historic-boundary_stone";
 
@@ -3513,27 +4092,29 @@
 
 "type.landuse" = "landuse";
 
-"type.landuse.allotments" = "landuse-allotments";
+"type.landuse.allotments" = "Allotments";
 
 "type.landuse.basin" = "Νερό";
 
-"type.landuse.brownfield" = "landuse-brownfield";
+"type.landuse.brownfield" = "Brownfield";
 
 "type.landuse.cemetery" = "Νεκροταφείο";
 
 "type.landuse.cemetery.christian" = "Νεκροταφείο";
 
+"type.landuse.churchyard" = "Αυλόγυρος εκκλησίας";
+
 "type.landuse.commercial" = "landuse-commercial";
 
-"type.landuse.construction" = "landuse-construction";
+"type.landuse.construction" = "Construction";
 
-"type.landuse.farm" = "landuse-farm";
+"type.landuse.farm" = "Farm";
 
-"type.landuse.farmland" = "landuse-farmland";
+"type.landuse.farmland" = "Αγροτική γη";
 
-"type.landuse.farmyard" = "landuse-farmyard";
+"type.landuse.farmyard" = "Farmyard";
 
-"type.landuse.field" = "landuse-field";
+"type.landuse.field" = "Field";
 
 "type.landuse.forest" = "Δάσος";
 
@@ -3543,27 +4124,27 @@
 
 "type.landuse.forest.mixed" = "Δάσος";
 
-"type.landuse.garages" = "landuse-garages";
+"type.landuse.garages" = "Garages";
 
-"type.landuse.grass" = "landuse-grass";
+"type.landuse.grass" = "Γκαζόν";
 
 "type.landuse.greenfield" = "landuse-greenfield";
 
 "type.landuse.greenhouse_horticulture" = "landuse-greenhouse_horticulture";
 
-"type.landuse.industrial" = "landuse-industrial";
+"type.landuse.industrial" = "Industrial land";
 
-"type.landuse.landfill" = "landuse-landfill";
+"type.landuse.landfill" = "Σκουπιδότοπος";
 
-"type.landuse.meadow" = "landuse-meadow";
+"type.landuse.meadow" = "Meadow";
 
-"type.landuse.military" = "landuse-military";
+"type.landuse.military" = "Military area";
 
-"type.landuse.orchard" = "landuse-orchard";
+"type.landuse.orchard" = "Orchard";
 
-"type.landuse.quarry" = "landuse-quarry";
+"type.landuse.quarry" = "Quarry";
 
-"type.landuse.railway" = "landuse-railway";
+"type.landuse.railway" = "Σιδηροδρομικές εγκαταστάσεις";
 
 "type.landuse.recreation_ground" = "landuse-recreation_ground";
 
@@ -3571,25 +4152,19 @@
 
 "type.landuse.residential" = "landuse-residential";
 
-"type.landuse.residential.rural" = "landuse-residential-rural";
-
-"type.landuse.residential.urban" = "landuse-residential-urban";
-
 "type.landuse.retail" = "landuse-retail";
 
 "type.landuse.salt_pond" = "landuse-salt_pond";
 
 "type.landuse.village_green" = "landuse-village_green";
 
-"type.landuse.vineyard" = "landuse-vineyard";
+"type.landuse.vineyard" = "Vineyard";
 
 "type.leisure" = "leisure";
 
 "type.leisure.common" = "leisure-common";
 
-"type.leisure.dog_park" = "Dog area";
-
-"type.leisure.dog_park.tennis" = "Dog area";
+"type.leisure.dog_park" = "Περιοχή για βόλτα σκύλων";
 
 "type.leisure.fitness_centre" = "Κέντρο γυμναστικής";
 
@@ -3599,11 +4174,11 @@
 
 "type.leisure.golf_course" = "Γήπεδο γκολφ";
 
-"type.leisure.ice_rink" = "leisure-ice_rink";
+"type.leisure.ice_rink" = "Ice rink";
 
-"type.leisure.landscape_reserve" = "leisure-landscape_reserve";
+"type.leisure.landscape_reserve" = "Landscape reserve";
 
-"type.leisure.marina" = "leisure-marina";
+"type.leisure.marina" = "Marina";
 
 "type.leisure.nature_reserve" = "Φυσικό απόθεμα";
 
@@ -3617,17 +4192,9 @@
 
 "type.leisure.pitch" = "Γήπεδο αθλοπαιδιών";
 
-"type.leisure.pitch.tennis" = "Γήπεδο αθλοπαιδιών";
-
 "type.leisure.playground" = "Παιδική χαρά";
 
-"type.leisure.playground.tennis" = "Παιδική χαρά";
-
-"type.leisure.playing_fields" = "leisure-playing_fields";
-
-"type.leisure.playing_fields.tennis" = "leisure-playing_fields-tennis";
-
-"type.leisure.recreation_ground" = "leisure-recreation_ground";
+"type.leisure.recreation_ground" = "Recreation ground";
 
 "type.leisure.sauna" = "Σάουνα";
 
@@ -3689,25 +4256,13 @@
 
 "type.mapswithme.grid" = "mapswithme-grid";
 
-"type.marking" = "marking";
-
-"type.marking.sport" = "marking-sport";
-
-"type.marking.sport.black" = "marking-sport-black";
-
-"type.marking.sport.blue" = "marking-sport-blue";
-
-"type.marking.sport.red" = "marking-sport-red";
-
-"type.marking.sport.white" = "marking-sport-white";
-
 "type.military" = "military";
 
 "type.military.bunker" = "Στρατιωτική αποθήκη";
 
 "type.natural" = "natural";
 
-"type.natural.bare_rock" = "natural-bare_rock";
+"type.natural.bare_rock" = "Bare rock";
 
 "type.natural.bay" = "Κόλπος";
 
@@ -3715,63 +4270,57 @@
 
 "type.natural.cape" = "Ακρωτήρι";
 
-"type.natural.cave_entrance" = "Είσοδος σπηλαίου";
+"type.natural.cave_entrance" = "Σπήλαιο";
 
-"type.natural.cliff" = "natural-cliff";
+"type.natural.cliff" = "Cliff";
 
-"type.natural.coastline" = "natural-coastline";
+"type.natural.coastline" = "Coastline";
 
 "type.natural.geyser" = "Θερμοπίδακας";
 
 "type.natural.glacier" = "Παγετώνας";
 
-"type.natural.grassland" = "natural-grassland";
+"type.natural.grassland" = "Λιβάδι";
 
-"type.natural.heath" = "natural-heath";
+"type.natural.heath" = "Heath";
+
+"type.natural.hot_spring" = "Hot spring";
 
 "type.natural.lake" = "Λίμνη";
 
 "type.natural.land" = "natural-land";
 
-"type.natural.meadow" = "natural-meadow";
+"type.natural.meadow" = "Meadow";
 
-"type.natural.orchard" = "natural-orchard";
+"type.natural.orchard" = "Orchard";
 
 "type.natural.peak" = "Κορυφή";
 
 "type.natural.pond" = "Δεξαμενή";
 
-"type.natural.rock" = "natural-rock";
+"type.natural.rock" = "Rock";
 
-"type.natural.salt_pond" = "natural-salt_pond";
+"type.natural.salt_pond" = "Salt pond";
 
-"type.natural.scrub" = "natural-scrub";
+"type.natural.scrub" = "Θαμνώδες περιοχή";
 
 "type.natural.spring" = "Πηγή νερού";
 
 "type.natural.tree" = "Δέντρο";
 
-"type.natural.tree_row" = "natural-tree_row";
+"type.natural.tree_row" = "Tree row";
 
-"type.natural.vineyard" = "natural-vineyard";
+"type.natural.vineyard" = "Vineyard";
 
 "type.natural.volcano" = "Ηφαίστειο";
 
 "type.natural.water" = "Νερό";
 
-"type.natural.wetland" = "natural-wetland";
+"type.natural.wetland" = "Υγρότοπος";
 
-"type.natural.wetland.bog" = "natural-wetland-bog";
+"type.natural.wetland.bog" = "Wetland";
 
-"type.natural.wetland.marsh" = "natural-wetland-marsh";
-
-"type.natural.wood" = "Δάσος";
-
-"type.natural.wood.coniferous" = "Δάσος";
-
-"type.natural.wood.deciduous" = "Δάσος";
-
-"type.natural.wood.mixed" = "Δάσος";
+"type.natural.wetland.marsh" = "Wetland";
 
 "type.noexit" = "noexit";
 
@@ -3867,7 +4416,7 @@
 
 "type.place.locality" = "Τοποθεσία";
 
-"type.place.neighbourhood" = "place-neighbourhood";
+"type.place.neighbourhood" = "Neighbourhood";
 
 "type.place.ocean" = "Ωκεανός";
 
@@ -3890,12 +4439,6 @@
 "type.power" = "power";
 
 "type.power.generator" = "power-generator";
-
-"type.power.generator.hydro" = "power-generator-hydro";
-
-"type.power.generator.photovoltaic" = "power-generator-photovoltaic";
-
-"type.power.generator.wind" = "power-generator-wind";
 
 "type.power.line" = "power-line";
 
@@ -3953,7 +4496,7 @@
 
 "type.railway.incline.tunnel" = "railway-incline-tunnel";
 
-"type.railway.level_crossing" = "Ισόπεδη σιδηροδρομική διάβαση";
+"type.railway.level_crossing" = "Σιδηροδρομική διέλευση";
 
 "type.railway.light_rail" = "railway-light_rail";
 
@@ -3961,7 +4504,7 @@
 
 "type.railway.light_rail.tunnel" = "railway-light_rail-tunnel";
 
-"type.railway.monorail" = "railway-monorail";
+"type.railway.monorail" = "Μονοαξονικός σιδηρόδρομος";
 
 "type.railway.monorail.bridge" = "railway-monorail-bridge";
 
@@ -3983,7 +4526,7 @@
 
 "type.railway.proposed" = "railway-proposed";
 
-"type.railway.rail" = "railway-rail";
+"type.railway.rail" = "Σιδηρόδρομος";
 
 "type.railway.rail.bridge" = "railway-rail-bridge";
 
@@ -4093,7 +4636,7 @@
 
 "type.railway.subway.yellow" = "railway-subway-yellow";
 
-"type.railway.subway_entrance" = "Μετρό";
+"type.railway.subway_entrance" = "Είσοδος μετρό";
 
 "type.railway.subway_entrance.barcelona" = "Μετρό";
 
@@ -4275,28 +4818,6 @@
 
 "type.sponsored" = "sponsored";
 
-"type.sponsored.banner" = "sponsored-banner";
-
-"type.sponsored.banner.deliveryclub" = "sponsored-banner-deliveryclub";
-
-"type.sponsored.banner.geerbest_de" = "sponsored-banner-geerbest_de";
-
-"type.sponsored.banner.geerbest_fr" = "sponsored-banner-geerbest_fr";
-
-"type.sponsored.banner.geerbest_uk" = "sponsored-banner-geerbest_uk";
-
-"type.sponsored.banner.lamoda_ru" = "sponsored-banner-lamoda_ru";
-
-"type.sponsored.banner.lamoda_ua" = "sponsored-banner-lamoda_ua";
-
-"type.sponsored.banner.raileurope" = "sponsored-banner-raileurope";
-
-"type.sponsored.banner.rentalcars" = "sponsored-banner-rentalcars";
-
-"type.sponsored.banner.tutu" = "sponsored-banner-tutu";
-
-"type.sponsored.banner.viator" = "sponsored-banner-viator";
-
 "type.sponsored.booking" = "sponsored-booking";
 
 "type.sponsored.holiday" = "Χριστούγεννα ή Ρεβεγιόν πρωτοχρονιάς";
@@ -4343,8 +4864,6 @@
 
 "type.sponsored.partner9" = "sponsored-partner9";
 
-"type.sponsored.viator" = "sponsored-viator";
-
 "type.sport" = "sport";
 
 "type.sport.american_football" = "sport-american_football";
@@ -4357,7 +4876,7 @@
 
 "type.sport.baseball" = "sport-baseball";
 
-"type.sport.basketball" = "Καλαθόσφαιρα";
+"type.sport.basketball" = "Μπάσκετ";
 
 "type.sport.bowls" = "sport-bowls";
 
@@ -4389,7 +4908,7 @@
 
 "type.sport.swimming" = "sport-swimming";
 
-"type.sport.tennis" = "sport-tennis";
+"type.sport.tennis" = "Γήπεδο τένις";
 
 "type.tourism" = "tourism";
 
@@ -4501,11 +5020,75 @@
 
 "type.wheelchair" = "wheelchair";
 
-"type.wheelchair.limited" = "wheelchair-limited";
+"type.wheelchair.limited" = "Μερικώς εξοπλισμένο για άτομα με ειδικές ανάγκες";
 
-"type.wheelchair.no" = "wheelchair-no";
+"type.wheelchair.no" = "Δεν υπάρχει πρόβλεψη για άτομα με ειδικές ανάγκες";
 
-"type.wheelchair.yes" = "wheelchair-yes";
+"type.wheelchair.yes" = "Εξοπλισμένο για άτομα με ειδικές ανάγκες";
+
+"type.piste_lift" = "piste:lift";
+
+"type.piste_lift.j.bar" = "piste:lift-j-bar";
+
+"type.piste_lift.magic_carpet" = "piste:lift-magic_carpet";
+
+"type.piste_lift.platter" = "piste:lift-platter";
+
+"type.piste_lift.rope_tow" = "piste:lift-rope_tow";
+
+"type.piste_lift.t.bar" = "piste:lift-t-bar";
+
+"type.piste_type" = "piste:type";
+
+"type.piste_type.downhill" = "piste:type-downhill";
+
+"type.piste_type.downhill.advanced" = "piste:type-downhill-advanced";
+
+"type.piste_type.downhill.easy" = "piste:type-downhill-easy";
+
+"type.piste_type.downhill.expert" = "piste:type-downhill-expert";
+
+"type.piste_type.downhill.freeride" = "piste:type-downhill-freeride";
+
+"type.piste_type.downhill.intermediate" = "piste:type-downhill-intermediate";
+
+"type.piste_type.downhill.novice" = "piste:type-downhill-novice";
+
+"type.piste_type.nordic" = "piste:type-nordic";
+
+"type.piste_type.sled" = "piste:type-sled";
+
+"type.building_part" = "Κτίριο";
+
+"type.area_highway.cycleway" = "area:highway-cycleway";
+
+"type.area_highway.footway" = "area:highway-footway";
+
+"type.area_highway.living_street" = "area:highway-living_street";
+
+"type.area_highway.motorway" = "area:highway-motorway";
+
+"type.area_highway.path" = "area:highway-path";
+
+"type.area_highway.pedestrian" = "area:highway-pedestrian";
+
+"type.area_highway.primary" = "area:highway-primary";
+
+"type.area_highway.residential" = "area:highway-residential";
+
+"type.area_highway.secondary" = "area:highway-secondary";
+
+"type.area_highway.service" = "area:highway-service";
+
+"type.area_highway.tertiary" = "area:highway-tertiary";
+
+"type.area_highway.steps" = "area:highway-steps";
+
+"type.area_highway.track" = "area:highway-track";
+
+"type.area_highway.trunk" = "area:highway-trunk";
+
+"type.area_highway.unclassified" = "area:highway-unclassified";
 
 
 /********** Brands **********/

@@ -13,11 +13,10 @@
 #include <array>
 #include <cstdint>
 #include <initializer_list>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <utility>
-
-#include <boost/optional.hpp>
 
 namespace ftraits
 {
@@ -25,22 +24,22 @@ template <typename Base, typename Value>
 class TraitsBase
 {
 public:
-  static boost::optional<Value> GetValue(feature::TypesHolder const & types)
+  static std::optional<Value> GetValue(feature::TypesHolder const & types)
   {
     auto const & instance = Instance();
     auto const it = Find(types);
     if (!instance.m_matcher.IsValid(it))
-      return boost::none;
+      return std::nullopt;
 
     return it->second;
   }
 
-  static boost::optional<uint32_t> GetType(feature::TypesHolder const & types)
+  static std::optional<uint32_t> GetType(feature::TypesHolder const & types)
   {
     auto const & instance = Instance();
     auto const it = Find(types);
     if (!instance.m_matcher.IsValid(it))
-      return boost::none;
+      return std::nullopt;
 
     return it->first;
   }
@@ -101,9 +100,9 @@ class UGC : public TraitsBase<UGC, UGCItem>
 
   UGC()
   {
-    coding::CSVReader reader;
     auto const fileReader = GetPlatform().GetReader("ugc_types.csv");
-    reader.Read(*fileReader, [this](coding::CSVReader::Row const & row) {
+    for (auto const & row : coding::CSVRunner(coding::CSVReader(*fileReader, true /* hasHeader */)))
+    {
       size_t constexpr kTypePos = 0;
       size_t constexpr kCategoriesPos = 4;
 
@@ -116,7 +115,7 @@ class UGC : public TraitsBase<UGC, UGCItem>
         m_matcher.AppendType(std::move(typePath), std::move(item));
       else
         m_excluded.AppendType(std::move(typePath));
-    });
+    }
   }
 
   UGCTypeMask ReadMasks(coding::CSVReader::Row const & row)

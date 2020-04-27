@@ -1,8 +1,8 @@
 package com.mapswithme.maps.discovery;
 
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -12,14 +12,15 @@ import java.util.Arrays;
  * Represents discovery::ClientParams from core.
  */
 public final class DiscoveryParams {
-    public static final int ITEM_TYPE_VIATOR = 0;
-    public static final int ITEM_TYPE_ATTRACTIONS = 1;
-    public static final int ITEM_TYPE_CAFES = 2;
-    public static final int ITEM_TYPE_HOTELS = 3;
-    public static final int ITEM_TYPE_LOCAL_EXPERTS = 4;
+    public static final int ITEM_TYPE_ATTRACTIONS = 0;
+    public static final int ITEM_TYPE_CAFES = 1;
+    public static final int ITEM_TYPE_HOTELS = 2;
+    public static final int ITEM_TYPE_LOCAL_EXPERTS = 3;
+    public static final int ITEM_TYPE_PROMO = 4;
 
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({ ITEM_TYPE_VIATOR, ITEM_TYPE_ATTRACTIONS, ITEM_TYPE_CAFES, ITEM_TYPE_HOTELS, ITEM_TYPE_LOCAL_EXPERTS })
+    @IntDef({ ITEM_TYPE_ATTRACTIONS, ITEM_TYPE_CAFES, ITEM_TYPE_HOTELS, ITEM_TYPE_LOCAL_EXPERTS,
+              ITEM_TYPE_PROMO })
 
     @interface ItemType {}
 

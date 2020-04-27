@@ -1,7 +1,10 @@
 package com.mapswithme.maps.gallery;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.ViewGroup;
 
 import java.util.List;
@@ -12,12 +15,20 @@ import static com.mapswithme.maps.gallery.Constants.TYPE_PRODUCT;
 public abstract class RegularAdapterStrategy<T extends RegularAdapterStrategy.Item>
     extends AdapterStrategy<Holders.BaseViewHolder<T>, T>
 {
-  private static final int MAX_ITEMS = 5;
+  private static final int MAX_ITEMS_BY_DEFAULT = 5;
 
-  public RegularAdapterStrategy(@NonNull List<T> items, @Nullable T moreItem)
+  public RegularAdapterStrategy(@NonNull List<T> items, @Nullable T moreItem,
+                                @Nullable ItemSelectedListener<T> listener)
   {
-    boolean showMoreItem = moreItem != null && items.size() >= MAX_ITEMS;
-    int size = showMoreItem ? MAX_ITEMS : items.size();
+    this(items, moreItem, listener, MAX_ITEMS_BY_DEFAULT);
+  }
+
+  public RegularAdapterStrategy(@NonNull List<T> items, @Nullable T moreItem,
+                                @Nullable ItemSelectedListener<T> listener, int maxItems)
+  {
+    super(listener);
+    boolean showMoreItem = moreItem != null && items.size() >= maxItems;
+    int size = showMoreItem ? maxItems : items.size();
     for (int i = 0; i < size; i++)
     {
       T product = items.get(i);
@@ -29,15 +40,14 @@ public abstract class RegularAdapterStrategy<T extends RegularAdapterStrategy.It
 
   @NonNull
   @Override
-  Holders.BaseViewHolder<T> createViewHolder(@NonNull ViewGroup parent, int viewType,
-                                             @NonNull GalleryAdapter<?, T> adapter)
+  Holders.BaseViewHolder<T> createViewHolder(@NonNull ViewGroup parent, int viewType)
   {
     switch (viewType)
     {
       case TYPE_PRODUCT:
-        return createProductViewHolder(parent, viewType, adapter);
+        return createProductViewHolder(parent, viewType);
       case TYPE_MORE:
-        return createMoreProductsViewHolder(parent, viewType, adapter);
+        return createMoreProductsViewHolder(parent, viewType);
       default:
         throw new UnsupportedOperationException("This strategy doesn't support specified view type: "
                                                 + viewType);
@@ -58,23 +68,34 @@ public abstract class RegularAdapterStrategy<T extends RegularAdapterStrategy.It
 
   @NonNull
   protected abstract Holders.BaseViewHolder<T> createProductViewHolder(@NonNull ViewGroup parent,
-                                                                       int viewType,
-                                                                       @NonNull GalleryAdapter<?, T> adapter);
+                                                                       int viewType);
   @NonNull
   protected abstract Holders.BaseViewHolder<T> createMoreProductsViewHolder(@NonNull ViewGroup parent,
-                                                                            int viewType,
-                                                                            @NonNull GalleryAdapter<?, T> adapter);
+                                                                            int viewType);
 
   public static class Item extends Items.Item
   {
     @Constants.ViewType
     private final int mType;
 
-    protected Item(@Constants.ViewType int type, @NonNull String title,
-                   @Nullable String url, @Nullable String subtitle)
+    public Item(@Constants.ViewType int type, @NonNull String title,
+                @Nullable String subtitle, @Nullable String url)
     {
       super(title, url, subtitle);
       mType = type;
+    }
+
+    protected Item(Parcel in)
+    {
+      super(in);
+      mType = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+      super.writeToParcel(dest, flags);
+      dest.writeInt(mType);
     }
 
     public int getType()

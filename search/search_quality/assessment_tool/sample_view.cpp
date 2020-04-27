@@ -58,6 +58,9 @@ void SetVerticalStretch(QWidget & widget, int stretch)
 SampleView::SampleView(QWidget * parent, Framework & framework)
   : QWidget(parent), m_framework(framework)
 {
+  m_framework.GetBookmarkManager().GetEditSession().SetIsVisible(UserMark::Type::SEARCH, true);
+  m_framework.GetBookmarkManager().GetEditSession().SetIsVisible(UserMark::Type::COLORED, true);
+
   auto * mainLayout = BuildLayout<QVBoxLayout>(this /* parent */);
 
   // When the dock for SampleView is attached to the right side of the
@@ -98,6 +101,7 @@ SampleView::SampleView(QWidget * parent, Framework & framework)
     auto * layout =
         BuildSubLayout<QVBoxLayout>(*mainLayout, *this /* parent */, &m_relatedQueriesBox);
     SetVerticalStretch(*m_relatedQueriesBox, 1 /* stretch */);
+
     layout->addWidget(new QLabel(tr("Related queries")));
 
     m_relatedQueries = new QListWidget();
@@ -116,6 +120,13 @@ SampleView::SampleView(QWidget * parent, Framework & framework)
     connect(m_markAllAsIrrelevant, &QPushButton::clicked,
             [this]() { emit OnMarkAllAsIrrelevantClicked(); });
     layout->addWidget(m_markAllAsIrrelevant);
+  }
+
+  {
+    m_uselessnessLabel = new QLabel(this /* parent */);
+    m_uselessnessLabel->setText(tr("Sample is marked as useless"));
+    m_uselessnessLabel->hide();
+    mainLayout->addWidget(m_uselessnessLabel);
   }
 
   {
@@ -167,8 +178,8 @@ SampleView::SampleView(QWidget * parent, Framework & framework)
   Clear();
 }
 
-void SampleView::SetContents(search::Sample const & sample, bool positionAvailable,
-                             m2::PointD const & position)
+void SampleView::SetContents(search::Sample const & sample,
+                             std::optional<m2::PointD> const & position)
 {
   if (!sample.m_query.empty())
   {
@@ -189,9 +200,9 @@ void SampleView::SetContents(search::Sample const & sample, bool positionAvailab
     m_relatedQueriesBox->show();
 
   ClearAllResults();
-  m_positionAvailable = positionAvailable;
-  if (m_positionAvailable)
-    ShowUserPosition(position);
+  m_position = position;
+  if (m_position)
+    ShowUserPosition(*m_position);
   else
     HideUserPosition();
 }
@@ -209,7 +220,7 @@ void SampleView::OnSearchCompleted()
 {
   m_spinner->Hide();
   auto const resultsAvailable = m_foundResults->HasResultsWithPoints();
-  if (m_positionAvailable)
+  if (m_position)
   {
     if (resultsAvailable)
       m_showPosition->setText(tr("Show position and top results"));
@@ -238,11 +249,9 @@ void SampleView::AddFoundResults(search::Results::ConstIter begin, search::Resul
 }
 
 void SampleView::ShowNonFoundResults(std::vector<search::Sample::Result> const & results,
-                                     std::vector<Edits::Entry> const & entries)
+                                     std::vector<ResultsEdits::Entry> const & entries)
 {
   CHECK_EQUAL(results.size(), entries.size(), ());
-
-  m_framework.GetBookmarkManager().GetEditSession().SetIsVisible(UserMark::Type::SEARCH, true);
 
   m_nonFoundResults->Clear();
 
@@ -264,7 +273,7 @@ void SampleView::ShowFoundResultsMarks(search::Results::ConstIter begin, search:
 }
 
 void SampleView::ShowNonFoundResultsMarks(std::vector<search::Sample::Result> const & results,
-                                          std::vector<Edits::Entry> const & entries)
+                                          std::vector<ResultsEdits::Entry> const & entries)
 
 {
   CHECK_EQUAL(results.size(), entries.size(), ());
@@ -297,11 +306,31 @@ void SampleView::ClearAllResults()
   ClearSearchResultMarks();
 }
 
-void SampleView::SetEdits(Edits & resultsEdits, Edits & nonFoundResultsEdits)
+void SampleView::SetResultsEdits(ResultsEdits & resultsResultsEdits,
+                                 ResultsEdits & nonFoundResultsEdits)
 {
-  SetEdits(*m_foundResults, resultsEdits);
-  SetEdits(*m_nonFoundResults, nonFoundResultsEdits);
+  SetResultsEdits(*m_foundResults, resultsResultsEdits);
+  SetResultsEdits(*m_nonFoundResults, nonFoundResultsEdits);
   m_nonFoundResultsEdits = &nonFoundResultsEdits;
+}
+
+void SampleView::OnUselessnessChanged(bool isUseless)
+{
+  if (isUseless)
+  {
+    m_uselessnessLabel->show();
+    m_foundResultsBox->hide();
+    m_nonFoundResultsBox->hide();
+    m_markAllAsRelevant->hide();
+    m_markAllAsIrrelevant->hide();
+  }
+  else
+  {
+    m_uselessnessLabel->hide();
+    m_foundResultsBox->show();
+    m_markAllAsRelevant->show();
+    m_markAllAsIrrelevant->show();
+  }
 }
 
 void SampleView::Clear()
@@ -319,7 +348,7 @@ void SampleView::Clear()
 
   ClearAllResults();
   HideUserPosition();
-  m_positionAvailable = false;
+  m_position = std::nullopt;
   OnSearchCompleted();
 }
 
@@ -331,22 +360,33 @@ void SampleView::OnLocationChanged(Qt::DockWidgetArea area)
     layout()->setContentsMargins(m_defaultMargins);
 }
 
-void SampleView::SetEdits(ResultsView & results, Edits & edits)
+void SampleView::SetResultsEdits(ResultsView & results, ResultsEdits & edits)
 {
   size_t const numRelevances = edits.GetRelevances().size();
   CHECK_EQUAL(results.Size(), numRelevances, ());
   for (size_t i = 0; i < numRelevances; ++i)
-    results.Get(i).SetEditor(Edits::Editor(edits, i));
+    results.Get(i).SetEditor(ResultsEdits::Editor(edits, i));
 }
 
 void SampleView::OnRemoveNonFoundResult(int row) { m_nonFoundResultsEdits->Delete(row); }
 
 void SampleView::ShowUserPosition(m2::PointD const & position)
 {
-  m_framework.OnLocationUpdate(qt::common::MakeGpsInfo(position));
+  // Clear the old position.
+  HideUserPosition();
+
+  auto es = m_framework.GetBookmarkManager().GetEditSession();
+  auto mark = es.CreateUserMark<ColoredMarkPoint>(position);
+  mark->SetColor(dp::Color(200, 100, 240, 255) /* purple */);
+  mark->SetRadius(8.0f);
+  m_positionMarkId = mark->GetId();
 }
 
 void SampleView::HideUserPosition()
 {
-  m_framework.OnLocationError(location::EGPSIsOff);
+  if (m_positionMarkId == kml::kInvalidMarkId)
+    return;
+
+  m_framework.GetBookmarkManager().GetEditSession().DeleteUserMark(m_positionMarkId);
+  m_positionMarkId = kml::kInvalidMarkId;
 }

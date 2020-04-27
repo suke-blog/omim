@@ -1,4 +1,6 @@
-#import "MWMFrameworkObservers.h"
+#import "MWMFrameworkObserver.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface MWMFrameworkListener : NSObject
 
@@ -9,9 +11,10 @@
 - (instancetype)init __attribute__((unavailable("call +listener instead")));
 - (instancetype)copy __attribute__((unavailable("call +listener instead")));
 - (instancetype)copyWithZone:(NSZone *)zone __attribute__((unavailable("call +listener instead")));
-+ (instancetype)alloc __attribute__((unavailable("call +listener instead")));
 + (instancetype)allocWithZone:(struct _NSZone *)zone
     __attribute__((unavailable("call +listener instead")));
 + (instancetype) new __attribute__((unavailable("call +listener instead")));
 
 @end
+
+NS_ASSUME_NONNULL_END

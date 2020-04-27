@@ -7,12 +7,29 @@
 #include <cstddef>
 #include <functional>
 #include <limits>
+#include <optional>
 #include <type_traits>
 #include <vector>
 
-#include <boost/optional.hpp>
+struct SampleEdits
+{
+  using OnUpdate = std::function<void()>;
 
-class Edits
+  explicit SampleEdits(OnUpdate onUpdate) : m_onUpdate(onUpdate) {}
+
+  void Reset(bool origUseless);
+  void FlipUsefulness();
+  void Apply();
+  bool HasChanges() const { return m_origUseless != m_currUseless; }
+  void Clear() {}
+
+  bool m_origUseless = false;
+  bool m_currUseless = false;
+
+  OnUpdate m_onUpdate;
+};
+
+class ResultsEdits
 {
 public:
   using Relevance = search::Sample::Result::Relevance;
@@ -26,13 +43,13 @@ public:
     };
 
     Entry() = default;
-    Entry(boost::optional<Relevance> relevance, Type type)
-      : m_curr(relevance), m_orig(relevance), m_type(type)
+    Entry(std::optional<Relevance> relevance, Type type)
+      : m_currRelevance(relevance), m_origRelevance(relevance), m_type(type)
     {
     }
 
-    boost::optional<Relevance> m_curr = {};
-    boost::optional<Relevance> m_orig = {};
+    std::optional<Relevance> m_currRelevance = {};
+    std::optional<Relevance> m_origRelevance = {};
     bool m_deleted = false;
     Type m_type = Type::Loaded;
   };
@@ -68,24 +85,24 @@ public:
   class Editor
   {
   public:
-    Editor(Edits & parent, size_t index);
+    Editor(ResultsEdits & parent, size_t index);
 
     // Sets relevance to |relevance|. Returns true iff |relevance|
     // differs from the original one.
     bool Set(Relevance relevance);
-    boost::optional<Relevance> const & Get() const;
+    std::optional<Relevance> const & Get() const;
     bool HasChanges() const;
     Entry::Type GetType() const;
 
   private:
-    Edits & m_parent;
+    ResultsEdits & m_parent;
     size_t m_index = 0;
   };
 
-  explicit Edits(OnUpdate onUpdate) : m_onUpdate(onUpdate) {}
+  explicit ResultsEdits(OnUpdate onUpdate) : m_onUpdate(onUpdate) {}
 
   void Apply();
-  void Reset(std::vector<boost::optional<Relevance>> const & relevances);
+  void Reset(std::vector<std::optional<Relevance>> const & relevances);
 
   // Sets relevance at |index| to |relevance|. Returns true iff
   // |relevance| differs from the original one.
@@ -107,7 +124,7 @@ public:
   Entry & GetEntry(size_t index);
   Entry const & GetEntry(size_t index) const;
   size_t NumEntries() const { return m_entries.size(); }
-  std::vector<boost::optional<Relevance>> GetRelevances() const;
+  std::vector<std::optional<Relevance>> GetRelevances() const;
 
   Entry const & Get(size_t index) const;
 

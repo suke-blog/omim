@@ -6,21 +6,24 @@
 
 #include "storage/country_info_getter.hpp"
 
+#include "platform/downloader_defines.hpp"
 #include "platform/http_client.hpp"
 #include "platform/platform.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/reader.hpp"
 
 #include "geometry/mercator.hpp"
 
-#include "3party/jansson/myjansson.hpp"
+#include "base/file_name_utils.hpp"
 
 #include <algorithm>
 #include <atomic>
+#include <chrono>
 #include <set>
 #include <string>
 #include <vector>
+
+#include "3party/jansson/myjansson.hpp"
 
 namespace
 {
@@ -28,11 +31,11 @@ struct BenchmarkHandle
 {
   std::vector<df::ScenarioManager::ScenarioData> m_scenariosToRun;
   size_t m_currentScenario = 0;
-  std::vector<storage::TCountryId> m_regionsToDownload;
+  std::vector<storage::CountryId> m_regionsToDownload;
   size_t m_regionsToDownloadCounter = 0;
 
 #ifdef DRAPE_MEASURER_BENCHMARK
-  std::vector<std::pair<string, df::DrapeMeasurer::DrapeStatistic>> m_drapeStatistic;
+  std::vector<std::pair<std::string, df::DrapeMeasurer::DrapeStatistic>> m_drapeStatistic;
 #endif
 };
 
@@ -129,14 +132,14 @@ void RunGraphicsBenchmark(Framework * framework)
           auto stepElem = json_array_get(stepsNode, j);
           if (stepElem == nullptr)
             return;
-          string actionType;
+          std::string actionType;
           FromJSONObject(stepElem, "actionType", actionType);
           if (actionType == "waitForTime")
           {
             json_int_t timeInSeconds = 0;
             FromJSONObject(stepElem, "time", timeInSeconds);
             scenario.push_back(std::unique_ptr<ScenarioManager::Action>(
-                                 new ScenarioManager::WaitForTimeAction(seconds(timeInSeconds))));
+                new ScenarioManager::WaitForTimeAction(std::chrono::seconds(timeInSeconds))));
           }
           else if (actionType == "centerViewport")
           {
@@ -148,7 +151,7 @@ void RunGraphicsBenchmark(Framework * framework)
             FromJSONObject(centerNode, "lon", lon);
             json_int_t zoomLevel = -1;
             FromJSONObject(stepElem, "zoomLevel", zoomLevel);
-            m2::PointD const pt = MercatorBounds::FromLatLon(lat, lon);
+            m2::PointD const pt = mercator::FromLatLon(lat, lon);
             points.push_back(pt);
             scenario.push_back(std::unique_ptr<ScenarioManager::Action>(
                                  new ScenarioManager::CenterViewportAction(pt, static_cast<int>(zoomLevel))));
@@ -165,7 +168,7 @@ void RunGraphicsBenchmark(Framework * framework)
     return;
 
   // Find out regions to download.
-  std::set<storage::TCountryId> regions;
+  std::set<storage::CountryId> regions;
   for (m2::PointD const & pt : points)
     regions.insert(framework->GetCountryInfoGetter().GetRegionCountryId(pt));
 
@@ -180,19 +183,20 @@ void RunGraphicsBenchmark(Framework * framework)
   // Download regions and run scenarios after downloading.
   if (!handle->m_regionsToDownload.empty())
   {
-    framework->GetStorage().Subscribe([framework, handle](storage::TCountryId const & countryId)
-    {
-      if (std::find(handle->m_regionsToDownload.begin(),
-                    handle->m_regionsToDownload.end(), countryId) != handle->m_regionsToDownload.end())
-      {
-        handle->m_regionsToDownloadCounter++;
-        if (handle->m_regionsToDownloadCounter == handle->m_regionsToDownload.size())
-        {
-          handle->m_regionsToDownload.clear();
-          RunScenario(framework, handle);
-        }
-      }
-    }, [](storage::TCountryId const &, storage::MapFilesDownloader::TProgress const &){});
+    framework->GetStorage().Subscribe(
+        [framework, handle](storage::CountryId const & countryId) {
+          if (std::find(handle->m_regionsToDownload.begin(), handle->m_regionsToDownload.end(),
+                        countryId) != handle->m_regionsToDownload.end())
+          {
+            handle->m_regionsToDownloadCounter++;
+            if (handle->m_regionsToDownloadCounter == handle->m_regionsToDownload.size())
+            {
+              handle->m_regionsToDownload.clear();
+              RunScenario(framework, handle);
+            }
+          }
+        },
+        [](storage::CountryId const &, downloader::Progress const &) {});
 
     for (auto const & countryId : handle->m_regionsToDownload)
       framework->GetStorage().DownloadNode(countryId);

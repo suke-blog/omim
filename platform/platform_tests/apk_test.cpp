@@ -6,10 +6,15 @@
 #include "coding/internal/file_data.hpp"
 
 #include "base/thread.hpp"
+#include "base/thread_pool.hpp"
 #include "base/logging.hpp"
 
-#include "std/numeric.hpp"
+#include <cstdint>
+#include <memory>
+#include <numeric>
+#include <string>
 
+using namespace std;
 
 namespace
 {
@@ -41,9 +46,8 @@ namespace
     string const & m_cont;
 
   public:
-    ApkTester(string const & cont) : m_cont(cont)
+    explicit ApkTester(string const & cont) : m_cont(cont), m_hashes(COUNT)
     {
-      m_hashes.resize(COUNT);
     }
 
     virtual void Do()
@@ -103,7 +107,7 @@ UNIT_TEST(ApkReader_Multithreaded)
   srand(static_cast<unsigned>(size));
 
   size_t const count = 20;
-  threads::SimpleThreadPool pool(count);
+  base::thread_pool::routine_simple::ThreadPool pool(count);
 
   for (size_t i = 0; i < count; ++i)
     pool.Add(make_unique<ApkTester>(path));

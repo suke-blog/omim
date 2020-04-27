@@ -2,11 +2,13 @@
 #include "indexer/cell_id.hpp"
 #include "indexer/feature_altitude.hpp"
 #include "indexer/feature_data.hpp"
+#include "indexer/meta_idx.hpp"
 
 #include "geometry/point2d.hpp"
 #include "geometry/rect2d.hpp"
 
 #include "base/buffer_vector.hpp"
+#include "base/macros.hpp"
 
 #include <array>
 #include <cstdint>
@@ -23,24 +25,25 @@ class SharedLoadInfo;
 
 namespace osm
 {
-class EditableMapObject;
+class MapObject;
 }
 
 // Lazy feature loader. Loads needed data and caches it.
 class FeatureType
 {
 public:
-  using Buffer = char const *;
-  using GeometryOffsets = buffer_vector<uint32_t, feature::DataHeader::MAX_SCALES_COUNT>;
+  using GeometryOffsets = buffer_vector<uint32_t, feature::DataHeader::kMaxScalesCount>;
 
-  void Deserialize(feature::SharedLoadInfo const * loadInfo, Buffer buffer);
+  FeatureType(feature::SharedLoadInfo const * loadInfo, std::vector<uint8_t> && buffer,
+              feature::MetadataIndex const * metadataIndex);
+  FeatureType(osm::MapObject const & emo);
 
-  feature::EGeomType GetFeatureType() const;
+  feature::GeomType GetGeomType() const;
   FeatureParamsBase & GetParams() { return m_params; }
 
-  uint8_t GetTypesCount() const { return (m_header & feature::HEADER_TYPE_MASK) + 1; }
+  uint8_t GetTypesCount() const { return (m_header & feature::HEADER_MASK_TYPE) + 1; }
 
-  bool HasName() const { return (m_header & feature::HEADER_HAS_NAME) != 0; }
+  bool HasName() const { return (m_header & feature::HEADER_MASK_HAS_NAME) != 0; }
   StringUtf8Multilang const & GetNames();
 
   m2::PointD GetCenter();
@@ -68,34 +71,10 @@ public:
 
   int8_t GetLayer();
 
-  /// @name Editor methods.
-  //@{
-  /// Apply changes from UI for edited or newly created features.
-  /// Replaces all FeatureType's components.
-  std::vector<m2::PointD> GetTriangesAsPoints(int scale);
-
-  void ReplaceBy(osm::EditableMapObject const & ef);
-
-  void SetNames(StringUtf8Multilang const & newNames);
-  void SetTypes(std::array<uint32_t, feature::kMaxTypesCount> const & types, uint32_t count);
-  void SetMetadata(feature::Metadata const & newMetadata);
-
-  void UpdateHeader(bool commonParsed, bool metadataParsed);
-  bool UpdateMetadataValue(std::string const & key, std::string const & value);
-  void ForEachMetadataItem(
-      bool skipSponsored,
-      std::function<void(std::string const & tag, std::string const & value)> const & fn) const;
-
-  void SetCenter(m2::PointD const &pt);
-  //@}
+  std::vector<m2::PointD> GetTrianglesAsPoints(int scale);
 
   void SetID(FeatureID const & id) { m_id = id; }
   FeatureID const & GetID() const { return m_id; }
-
-  /// @name Parse functions.
-  //@{
-  /// Super-method to call all possible Parse* methods.
-  void ParseEverything();
 
   void ResetGeometry();
   uint32_t ParseGeometry(int scale);
@@ -119,7 +98,7 @@ public:
     if (m_points.empty())
     {
       // it's a point feature
-      if (GetFeatureType() == feature::GEOM_POINT)
+      if (GetGeomType() == feature::GeomType::Point)
         f(m_center);
     }
     else
@@ -146,7 +125,7 @@ public:
   }
 
   template <typename Functor>
-  void ForEachTriangleEx(Functor && f, int scale) const
+  void ForEachTriangleEx(Functor && f, int scale)
   {
     f.StartPrimitive(m_triangles.size());
     ForEachTriangle(std::forward<Functor>(f), scale);
@@ -157,8 +136,6 @@ public:
   std::string DebugString(int scale);
 
   std::string GetHouseNumber();
-  /// Needed for Editor, to change house numbers in runtime.
-  void SetHouseNumber(std::string const & number);
 
   /// @name Get names for feature.
   /// @param[out] defaultName corresponds to osm tag "name"
@@ -178,6 +155,8 @@ public:
   uint8_t GetRank();
   uint64_t GetPopulation();
   std::string GetRoadNumber();
+
+  std::string const & GetPostcode();
 
   feature::Metadata & GetMetadata();
 
@@ -217,8 +196,12 @@ private:
     bool m_points = false;
     bool m_triangles = false;
     bool m_metadata = false;
+    bool m_postcode = false;
 
-    void Reset() { m_types = m_common = m_header2 = m_points = m_triangles = m_metadata = false; }
+    void Reset()
+    {
+      m_types = m_common = m_header2 = m_points = m_triangles = m_metadata = m_postcode = false;
+    }
   };
 
   struct Offsets
@@ -240,6 +223,7 @@ private:
   void ParseCommon();
   void ParseHeader2();
   void ParseMetadata();
+  void ParsePostcode();
   void ParseGeometryAndTriangles(int scale);
 
   uint8_t m_header = 0;
@@ -247,6 +231,7 @@ private:
 
   FeatureID m_id;
   FeatureParamsBase m_params;
+  std::string m_postcode;
 
   m2::PointD m_center;
   m2::RectD m_limitRect;
@@ -260,12 +245,15 @@ private:
 
   // Non-owning pointer to shared load info. SharedLoadInfo created once per FeaturesVector.
   feature::SharedLoadInfo const * m_loadInfo = nullptr;
-  // Raw pointer to data buffer.
-  Buffer m_data = nullptr;
+  std::vector<uint8_t> m_data;
+  // Pointer to shared metadata index. Must be set for mwm format >= Format::v10
+  feature::MetadataIndex const * m_metadataIndex = nullptr;
 
   ParsedFlags m_parsed;
   Offsets m_offsets;
   uint32_t m_ptsSimpMask = 0;
 
   InnerGeomStat m_innerStats;
+
+  DISALLOW_COPY_AND_MOVE(FeatureType);
 };

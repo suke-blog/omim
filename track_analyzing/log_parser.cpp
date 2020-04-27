@@ -2,16 +2,16 @@
 
 #include "track_analyzing/exceptions.hpp"
 
-#include "generator/borders_generator.hpp"
-#include "generator/borders_loader.hpp"
+#include "generator/borders.hpp"
 
 #include "platform/platform.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/hex.hpp"
+#include "coding/traffic.hpp"
 
 #include "geometry/mercator.hpp"
 
+#include "base/file_name_utils.hpp"
 #include "base/timer.hpp"
 
 #include <cstdint>
@@ -28,9 +28,20 @@ vector<DataPoint> ReadDataPoints(string const & data)
 {
   string const decoded = FromHex(data);
   vector<DataPoint> points;
-  MemReader memReader(decoded.data(), decoded.size());
-  ReaderSource<MemReader> src(memReader);
-  coding::TrafficGPSEncoder::DeserializeDataPoints(1 /* version */, src, points);
+  MemReaderWithExceptions memReader(decoded.data(), decoded.size());
+  ReaderSource<MemReaderWithExceptions> src(memReader);
+
+  try
+  {
+    coding::TrafficGPSEncoder::DeserializeDataPoints(coding::TrafficGPSEncoder::kLatestVersion, src,
+                                                     points);
+  }
+  catch (Reader::SizeException const & e)
+  {
+    points.clear();
+    LOG(LERROR, ("DataPoint is corrupted. data:", data));
+    LOG(LINFO, ("Continue reading..."));
+  }
   return points;
 }
 
@@ -44,7 +55,7 @@ public:
     numMwmIds.ForEachId([&](routing::NumMwmId numMwmId) {
       string const & mwmName = numMwmIds.GetFile(numMwmId).GetName();
       string const polyFile = base::JoinPath(dataDir, BORDERS_DIR, mwmName + BORDERS_EXTENSION);
-      osm::LoadBorders(polyFile, m_borders[numMwmId]);
+      borders::LoadBorders(polyFile, m_borders[numMwmId]);
     });
   }
 
@@ -54,7 +65,7 @@ public:
       return expectedId;
 
     routing::NumMwmId result = routing::kFakeNumMwmId;
-    m2::RectD const rect = MercatorBounds::RectByCenterXYAndSizeInMeters(point, 1);
+    m2::RectD const rect = mercator::RectByCenterXYAndSizeInMeters(point, 1);
     m_mwmTree->ForEachInRect(rect, [&](routing::NumMwmId numMwmId) {
       if (result == routing::kFakeNumMwmId && m2::RegionsContain(GetBorders(numMwmId), point))
         result = numMwmId;
@@ -154,7 +165,7 @@ void LogParser::SplitIntoMwms(UserToTrack const & userToTrack, MwmToTracks & mwm
     routing::NumMwmId mwmId = routing::kFakeNumMwmId;
     for (DataPoint const & point : track)
     {
-      mwmId = pointToMwmId.FindMwmId(MercatorBounds::FromLatLon(point.m_latLon), mwmId);
+      mwmId = pointToMwmId.FindMwmId(mercator::FromLatLon(point.m_latLon), mwmId);
       if (mwmId != routing::kFakeNumMwmId)
         mwmToTracks[mwmId][user].push_back(point);
       else

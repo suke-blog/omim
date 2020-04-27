@@ -36,6 +36,8 @@
 
 #include <array>
 #include <functional>
+#include <memory>
+#include <optional>
 #include <unordered_set>
 #include <vector>
 
@@ -62,9 +64,10 @@ struct TapInfo
   bool const m_isMyPositionTapped;
   FeatureID const m_featureTapped;
 
-  m2::AnyRectD GetDefaultSearchRect(ScreenBase const & screen) const;
-  m2::AnyRectD GetBookmarkSearchRect(ScreenBase const & screen) const;
-  m2::AnyRectD GetRoutingPointSearchRect(ScreenBase const & screen) const;
+  static m2::AnyRectD GetDefaultSearchRect(m2::PointD const & mercator, ScreenBase const & screen);
+  static m2::AnyRectD GetBookmarkSearchRect(m2::PointD const & mercator, ScreenBase const & screen);
+  static m2::AnyRectD GetRoutingPointSearchRect(m2::PointD const & mercator, ScreenBase const & screen);
+  static m2::AnyRectD GetPreciseSearchRect(m2::PointD const & mercator, double const eps);
 };
 
 class FrontendRenderer : public BaseRenderer,
@@ -72,26 +75,32 @@ class FrontendRenderer : public BaseRenderer,
                          public UserEventStream::Listener
 {
 public:
-  using TModelViewChanged = std::function<void(ScreenBase const & screen)>;
-  using TTapEventInfoFn = std::function<void(TapInfo const &)>;
-  using TUserPositionChangedFn = std::function<void(m2::PointD const & pt, bool hasPosition)>;
+  using ModelViewChangedHandler = std::function<void(ScreenBase const & screen)>;
+  using GraphicsReadyHandler = std::function<void()>;
+  using TapEventInfoHandler = std::function<void(TapInfo const &)>;
+  using UserPositionChangedHandler = std::function<void(m2::PointD const & pt, bool hasPosition)>;
+  using UserPositionPendingTimeoutHandler = std::function<void()>;
 
   struct Params : BaseRenderer::Params
   {
     Params(dp::ApiVersion apiVersion, ref_ptr<ThreadsCommutator> commutator,
            ref_ptr<dp::GraphicsContextFactory> factory, ref_ptr<dp::TextureManager> texMng,
            MyPositionController::Params && myPositionParams, dp::Viewport viewport,
-           TModelViewChanged const & modelViewChangedFn, TTapEventInfoFn const & tapEventFn,
-           TUserPositionChangedFn const & positionChangedFn, ref_ptr<RequestedTiles> requestedTiles,
+           ModelViewChangedHandler && modelViewChangedHandler, TapEventInfoHandler && tapEventHandler,
+           UserPositionChangedHandler && positionChangedHandler,
+           UserPositionPendingTimeoutHandler && userPositionPendingTimeoutHandler,
+           ref_ptr<RequestedTiles> requestedTiles,
            OverlaysShowStatsCallback && overlaysShowStatsCallback,
            bool allow3dBuildings, bool trafficEnabled, bool blockTapEvents,
-           std::vector<PostprocessRenderer::Effect> && enabledEffects)
-      : BaseRenderer::Params(apiVersion, commutator, factory, texMng)
+           std::vector<PostprocessRenderer::Effect> && enabledEffects,
+           OnGraphicsContextInitialized const & onGraphicsContextInitialized)
+      : BaseRenderer::Params(apiVersion, commutator, factory, texMng, onGraphicsContextInitialized)
       , m_myPositionParams(std::move(myPositionParams))
       , m_viewport(viewport)
-      , m_modelViewChangedFn(modelViewChangedFn)
-      , m_tapEventFn(tapEventFn)
-      , m_positionChangedFn(positionChangedFn)
+      , m_modelViewChangedHandler(std::move(modelViewChangedHandler))
+      , m_tapEventHandler(std::move(tapEventHandler))
+      , m_positionChangedHandler(std::move(positionChangedHandler))
+      , m_userPositionPendingTimeoutHandler(std::move(userPositionPendingTimeoutHandler))
       , m_requestedTiles(requestedTiles)
       , m_overlaysShowStatsCallback(std::move(overlaysShowStatsCallback))
       , m_allow3dBuildings(allow3dBuildings)
@@ -102,9 +111,10 @@ public:
 
     MyPositionController::Params m_myPositionParams;
     dp::Viewport m_viewport;
-    TModelViewChanged m_modelViewChangedFn;
-    TTapEventInfoFn m_tapEventFn;
-    TUserPositionChangedFn m_positionChangedFn;
+    ModelViewChangedHandler m_modelViewChangedHandler;
+    TapEventInfoHandler m_tapEventHandler;
+    UserPositionChangedHandler m_positionChangedHandler;
+    UserPositionPendingTimeoutHandler m_userPositionPendingTimeoutHandler;
     ref_ptr<RequestedTiles> m_requestedTiles;
     OverlaysShowStatsCallback m_overlaysShowStatsCallback;
     bool m_allow3dBuildings;
@@ -113,7 +123,7 @@ public:
     std::vector<PostprocessRenderer::Effect> m_enabledEffects;
   };
 
-  FrontendRenderer(Params && params);
+  explicit FrontendRenderer(Params && params);
   ~FrontendRenderer() override;
 
   void Teardown();
@@ -122,6 +132,7 @@ public:
 
   // MyPositionController::Listener
   void PositionChanged(m2::PointD const & position, bool hasPosition) override;
+  void PositionPendingTimeout() override;
   void ChangeModelView(m2::PointD const & center, int zoomLevel,
                        TAnimationCreator const & parallelAnimCreator) override;
   void ChangeModelView(double azimuth, TAnimationCreator const & parallelAnimCreator) override;
@@ -137,7 +148,10 @@ public:
 
 protected:
   void AcceptMessage(ref_ptr<Message> message) override;
-  unique_ptr<threads::IRoutine> CreateRoutine() override;
+  std::unique_ptr<threads::IRoutine> CreateRoutine() override;
+  
+  void RenderFrame() override;
+  
   void OnContextCreate() override;
   void OnContextDestroy() override;
 
@@ -175,7 +189,6 @@ private:
   void RenderSearchMarksLayer(ScreenBase const & modelView);
   void RenderTransitBackground();
   void RenderEmptyFrame();
-  void RenderFrame();
 
   bool HasTransitRouteData() const;
   bool HasRouteData() const;
@@ -186,6 +199,10 @@ private:
   void BuildOverlayTree(ScreenBase const & modelView);
 
   void EmitModelViewChanged(ScreenBase const & modelView) const;
+
+#if defined(OMIM_OS_MAC) || defined(OMIM_OS_LINUX)
+  void EmitGraphicsReady();
+#endif
 
   TTilesCollection ResolveTileKeys(ScreenBase const & screen);
   void ResolveZoomLevel(ScreenBase const & screen);
@@ -209,9 +226,9 @@ private:
   void CorrectGlobalScalePoint(m2::PointD & pt) const override;
   void OnScaleEnded() override;
   void OnAnimatedScaleEnded() override;
-  void OnTouchMapAction(TouchEvent::ETouchType touchType) override;
+  void OnTouchMapAction(TouchEvent::ETouchType touchType, bool isMapTouch) override;
   bool OnNewVisibleViewport(m2::RectD const & oldViewport, m2::RectD const & newViewport,
-                            m2::PointD & gOffset) override;
+                            bool needOffset, m2::PointD & gOffset) override;
 
   class Routine : public threads::IRoutine
   {
@@ -224,7 +241,7 @@ private:
   };
 
   void ReleaseResources();
-  void UpdateGLResources();
+  void UpdateContextDependentResources();
 
   void BeginUpdateOverlayTree(ScreenBase const & modelView);
   void UpdateOverlayTree(ScreenBase const & modelView, drape_ptr<RenderGroup> & renderGroup);
@@ -237,7 +254,9 @@ private:
   using TRenderGroupRemovePredicate = std::function<bool(drape_ptr<RenderGroup> const &)>;
   void RemoveRenderGroupsLater(TRenderGroupRemovePredicate const & predicate);
 
-  void FollowRoute(int preferredZoomLevel, int preferredZoomLevelIn3d, bool enableAutoZoom);
+  void FollowRoute(int preferredZoomLevel, int preferredZoomLevelIn3d, bool enableAutoZoom,
+                   bool isArrowGlued);
+
   bool CheckRouteRecaching(ref_ptr<BaseSubrouteData> subrouteData);
 
   void InvalidateRect(m2::RectD const & gRect);
@@ -253,7 +272,8 @@ private:
 
   void ProcessSelection(ref_ptr<SelectObjectMessage> msg);
 
-  void OnCacheRouteArrows(int routeIndex, std::vector<ArrowBorders> const & borders);
+  void OnPrepareRouteArrows(dp::DrapeID subrouteIndex, std::vector<ArrowBorders> && borders);
+  void OnCacheRouteArrows(dp::DrapeID subrouteIndex, std::vector<ArrowBorders> const & borders);
 
   void CollectShowOverlaysEvents();
 
@@ -268,7 +288,23 @@ private:
   drape_ptr<gui::LayerRenderer> m_guiRenderer;
   gui::TWidgetsLayoutInfo m_lastWidgetsLayout;
   drape_ptr<MyPositionController> m_myPositionController;
+
   drape_ptr<SelectionShape> m_selectionShape;
+  struct SelectionTrackInfo
+  {
+    SelectionTrackInfo() = default;
+
+    SelectionTrackInfo(m2::AnyRectD const & startRect, m2::PointD const & startPos)
+      : m_startRect(startRect)
+      , m_startPos(startPos)
+    {}
+
+    m2::AnyRectD m_startRect;
+    m2::PointD m_startPos;
+    m2::PointI m_snapSides = m2::PointI::Zero();
+  };
+  std::optional<SelectionTrackInfo> m_selectionTrackInfo;
+
   drape_ptr<RouteRenderer> m_routeRenderer;
   drape_ptr<TrafficRenderer> m_trafficRenderer;
   drape_ptr<TransitSchemeRenderer> m_transitSchemeRenderer;
@@ -288,12 +324,14 @@ private:
   bool m_blockTapEvents;
 
   bool m_choosePositionMode;
+  bool m_screenshotMode;
 
   dp::Viewport m_viewport;
   UserEventStream m_userEventStream;
-  TModelViewChanged m_modelViewChangedFn;
-  TTapEventInfoFn m_tapEventInfoFn;
-  TUserPositionChangedFn m_userPositionChangedFn;
+  ModelViewChangedHandler m_modelViewChangedHandler;
+  TapEventInfoHandler m_tapEventInfoHandler;
+  UserPositionChangedHandler m_userPositionChangedHandler;
+  UserPositionPendingTimeoutHandler m_userPositionPendingTimeoutHandler;
 
   ScreenBase m_lastReadedModelView;
   TTilesCollection m_notFinishedTiles;
@@ -308,18 +346,21 @@ private:
 
   struct FollowRouteData
   {
-    FollowRouteData(int preferredZoomLevel, int preferredZoomLevelIn3d, bool enableAutoZoom)
+    FollowRouteData(int preferredZoomLevel, int preferredZoomLevelIn3d, bool enableAutoZoom,
+                    bool isArrowGlued)
       : m_preferredZoomLevel(preferredZoomLevel)
       , m_preferredZoomLevelIn3d(preferredZoomLevelIn3d)
       , m_enableAutoZoom(enableAutoZoom)
+      , m_isArrowGlued(isArrowGlued)
     {}
 
     int m_preferredZoomLevel;
     int m_preferredZoomLevelIn3d;
     bool m_enableAutoZoom;
+    bool m_isArrowGlued;
   };
 
-  unique_ptr<FollowRouteData> m_pendingFollowRoute;
+  std::unique_ptr<FollowRouteData> m_pendingFollowRoute;
 
   std::vector<m2::TriangleD> m_dragBoundArea;
 
@@ -348,6 +389,19 @@ private:
   bool m_firstTilesReady = false;
   bool m_firstLaunchAnimationTriggered = false;
   bool m_firstLaunchAnimationInterrupted = false;
+
+#if defined(OMIM_OS_MAC) || defined(OMIM_OS_LINUX)
+  GraphicsReadyHandler m_graphicsReadyFn;
+
+  enum class GraphicsStage
+  {
+    Unknown,
+    WaitReady,
+    WaitRendering,
+    Rendered
+  };
+  GraphicsStage m_graphicsStage = GraphicsStage::Unknown;
+#endif
 
   bool m_finishTexturesInitialization = false;
   drape_ptr<ScreenQuadRenderer> m_transitBackground;

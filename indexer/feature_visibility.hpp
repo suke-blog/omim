@@ -6,6 +6,7 @@
 
 #include "base/base.hpp"
 
+#include <cstdint>
 #include <initializer_list>
 #include <string>
 #include <utility>
@@ -30,14 +31,18 @@ namespace feature
   bool IsDrawableForIndexGeometryOnly(TypesHolder const & types, m2::RectD limitRect, int level);
 
   /// For FEATURE_TYPE_AREA need to have at least one area-filling type.
-  bool IsDrawableLike(std::vector<uint32_t> const & types, EGeomType geomType);
+  bool IsDrawableLike(std::vector<uint32_t> const & types, GeomType geomType);
   /// For FEATURE_TYPE_AREA removes line-drawing only types.
-  bool RemoveUselessTypes(std::vector<uint32_t> & types, EGeomType geomType,
-                          bool emptyName = false);
-  //@}
+  bool RemoveUselessTypes(std::vector<uint32_t> & types, GeomType geomType, bool emptyName = false);
+
+  // Returns true, if there is at least one type that is needed for the application.
+  // This can be specified either by the drawing rule or by other rules.
+  bool HasUsefulType(std::vector<uint32_t> const & types, GeomType geomType,
+                     bool emptyName = false);
 
   int GetMinDrawableScale(FeatureType & ft);
   int GetMinDrawableScale(TypesHolder const & types, m2::RectD limitRect);
+  int GetMinDrawableScaleGeometryOnly(TypesHolder const & types, m2::RectD limitRect);
   int GetMinDrawableScaleClassifOnly(TypesHolder const & types);
 
   /// @return [-1, -1] if range is not drawable
@@ -60,9 +65,8 @@ namespace feature
   //@}
 
   /// @return (geometry type, is coastline)
-  pair<int, bool> GetDrawRule(TypesHolder const & types, int level,
-                              drule::KeysT & keys);
-  void GetDrawRule(std::vector<uint32_t> const & types, int level, int geoType,
+  std::pair<int, bool> GetDrawRule(TypesHolder const & types, int level, drule::KeysT & keys);
+  void GetDrawRule(std::vector<uint32_t> const & types, int level, GeomType geomType,
                    drule::KeysT & keys);
   void FilterRulesByRuntimeSelector(FeatureType & f, int zoomLevel, drule::KeysT & keys);
 

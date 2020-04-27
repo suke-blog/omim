@@ -6,6 +6,7 @@
 #include "search/geocoder_locality.hpp"
 #include "search/hotels_filter.hpp"
 #include "search/model.hpp"
+#include "search/retrieval.hpp"
 
 #include <cstddef>
 #include <memory>
@@ -24,6 +25,7 @@ struct BaseContext
     TOKEN_TYPE_POI,
     TOKEN_TYPE_BUILDING,
     TOKEN_TYPE_STREET,
+    TOKEN_TYPE_SUBURB,
     TOKEN_TYPE_UNCLASSIFIED,
     TOKEN_TYPE_VILLAGE,
     TOKEN_TYPE_CITY,
@@ -55,9 +57,10 @@ struct BaseContext
 
   // List of bit-vectors of features, where i-th element of the list
   // corresponds to the i-th token in the search query.
-  std::vector<CBV> m_features;
+  std::vector<Retrieval::ExtendedFeatures> m_features;
   CBV m_villages;
   CBV m_streets;
+  CBV m_suburbs;
 
   // Stack of layers filled during geocoding.
   std::vector<FeaturesLayer> m_layers;
@@ -76,11 +79,12 @@ struct BaseContext
 
   // The total number of results emitted using this
   // context in all branches of the search.
-  // size_t m_numEmitted = 0;
+  size_t m_numEmitted = 0;
 
   std::unique_ptr<hotels_filter::HotelsFilter::ScopedFilter> m_hotelsFilter;
   std::unique_ptr<cuisine_filter::CuisineFilter::ScopedFilter> m_cuisineFilter;
 };
 
 std::string DebugPrint(BaseContext::TokenType type);
+std::string ToString(BaseContext::TokenType type);
 }  // namespace search

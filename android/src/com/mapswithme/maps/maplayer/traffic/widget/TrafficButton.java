@@ -4,13 +4,12 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.mapswithme.maps.R;
-import com.mapswithme.util.Animations;
 import com.mapswithme.util.ThemeUtils;
 import com.mapswithme.util.UiUtils;
 import com.mapswithme.util.Utils;
@@ -45,8 +44,8 @@ public class TrafficButton
   void turnOff()
   {
     stopWaitingAnimation();
-    mButton.setImageResource(ThemeUtils.isNightTheme() ? R.drawable.ic_traffic_off_night
-                                                       : R.drawable.ic_traffic_off);
+    mButton.setImageResource(ThemeUtils.isNightTheme() ? R.drawable.bg_subway_night_default
+                                                       : R.drawable.bg_subway_light_default);
   }
 
   void turnOn()
@@ -90,12 +89,12 @@ public class TrafficButton
 
   public void show()
   {
-    Animations.appearSliding(mButton, Animations.LEFT, null);
+    UiUtils.show(mButton);
   }
 
   public void hide()
   {
-    Animations.disappearSliding(mButton, Animations.LEFT, null);
+    UiUtils.hide(mButton);
   }
 
   public void hideImmediately()

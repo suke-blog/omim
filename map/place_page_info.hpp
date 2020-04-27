@@ -8,7 +8,10 @@
 
 #include "map/routing_mark.hpp"
 
-#include "storage/index.hpp"
+#include "drape_frontend/frontend_renderer.hpp"
+#include "drape_frontend/selection_shape.hpp"
+
+#include "storage/storage_defines.hpp"
 
 #include "editor/osm_editor.hpp"
 
@@ -18,18 +21,16 @@
 #include "indexer/ftypes_matcher.hpp"
 #include "indexer/map_object.hpp"
 
-#include "geometry/latlon.hpp"
 #include "geometry/mercator.hpp"
 #include "geometry/point2d.hpp"
 
 #include "defines.hpp"
 
 #include <memory>
+#include <optional>
 #include <string>
 #include <utility>
 #include <vector>
-
-#include <boost/optional.hpp>
 
 namespace ads
 {
@@ -44,16 +45,19 @@ enum class SponsoredType
   None,
   Booking,
   Opentable,
-  Viator,
   Partner,
-  Holiday
+  Holiday,
+  PromoCatalogCity,
+  PromoCatalogSightseeings,
+  PromoCatalogOutdoor,
 };
 
 enum class LocalAdsStatus
 {
   NotAvailable,
   Candidate,
-  Customer
+  Customer,
+  Hidden
 };
 
 enum class LocalsStatus
@@ -62,7 +66,71 @@ enum class LocalsStatus
   Available
 };
 
+enum class OpeningMode
+{
+  Preview = 0,
+  PreviewPlus,
+  Details,
+  Full
+};
+
 auto constexpr kIncorrectRating = kInvalidRatingValue;
+
+struct BuildInfo
+{
+  enum class Source : uint8_t
+  {
+    User,
+    Search,
+    Other
+  };
+
+  enum class Match : uint8_t
+  {
+    Everything = 0,
+    FeatureOnly,
+    UserMarkOnly,
+    TrackOnly,
+    Nothing
+  };
+
+  BuildInfo() = default;
+
+  explicit BuildInfo(df::TapInfo const & info)
+    : m_source(Source::User)
+    , m_mercator(info.m_mercator)
+    , m_isLongTap(info.m_isLong)
+    , m_isMyPosition(info.m_isMyPositionTapped)
+    , m_featureId(info.m_featureTapped)
+  {}
+
+  bool IsFeatureMatchingEnabled() const
+  {
+    return m_match == Match::Everything || m_match == Match::FeatureOnly;
+  }
+
+  bool IsUserMarkMatchingEnabled() const
+  {
+    return m_match == Match::Everything || m_match == Match::UserMarkOnly;
+  }
+
+  bool IsTrackMatchingEnabled() const
+  {
+    return m_match == Match::Everything || m_match == Match::TrackOnly;
+  }
+
+  Source m_source = Source::Other;
+  m2::PointD m_mercator;
+  bool m_isLongTap = false;
+  bool m_isMyPosition = false;
+  FeatureID m_featureId;
+  Match m_match = Match::Everything;
+  kml::MarkId m_userMarkId = kml::kInvalidMarkId;
+  kml::TrackId m_trackId = kml::kInvalidTrackId;
+  bool m_isGeometrySelectionAllowed = false;
+  bool m_needAnimationOnSelection = true;
+  std::string m_postcode;
+};
 
 class Info : public osm::MapObject
 {
@@ -72,11 +140,17 @@ public:
   static char const * const kMountainSymbol;
   static char const * const kPricingSymbol;
 
+  void SetBuildInfo(place_page::BuildInfo const & info) { m_buildInfo = info; }
+  place_page::BuildInfo const & GetBuildInfo() const { return m_buildInfo; }
+
   /// Place traits
   bool IsFeature() const { return m_featureID.IsValid(); }
   bool IsBookmark() const { return m_markGroupId != kml::kInvalidMarkGroupId && m_markId != kml::kInvalidMarkId; }
-  bool IsMyPosition() const { return m_isMyPosition; }
+  bool IsTrack() const { return m_trackId != kml::kInvalidTrackId; }
+  bool IsMyPosition() const { return m_selectedObject == df::SelectionShape::ESelectedObject::OBJECT_MY_POSITION; }
   bool IsRoutePoint() const { return m_isRoutePoint; }
+  bool IsRoadType() const { return m_roadType != RoadWarningMarkType::Count; }
+  bool IsGuide() const { return m_isGuide; }
 
   /// Edit and add
   bool ShouldShowAddPlace() const;
@@ -112,13 +186,13 @@ public:
   float GetRatingRawValue() const;
   /// @returns string with |kPricingSymbol| signs or empty std::string if it isn't booking object
   std::string GetApproximatePricing() const;
-  boost::optional<int> GetRawApproximatePricing() const;
+  std::optional<int> GetRawApproximatePricing() const;
 
   /// UI setters
   void SetCustomName(std::string const & name);
+  void SetCustomNames(std::string const & title, std::string const & subtitle);
   void SetCustomNameWithCoordinates(m2::PointD const & mercator, std::string const & name);
   void SetAddress(std::string const & address) { m_address = address; }
-  void SetIsMyPosition() { m_isMyPosition = true; }
   void SetCanEditOrAdd(bool canEditOrAdd) { m_canEditOrAdd = canEditOrAdd; }
   void SetLocalizedWifiString(std::string const & str) { m_localizedWifiString = str; }
 
@@ -131,6 +205,13 @@ public:
   void SetBookmarkCategoryName(std::string const & name) { m_bookmarkCategoryName = name; }
   void SetBookmarkData(kml::BookmarkData const & data) { m_bookmarkData = data; }
   kml::BookmarkData const & GetBookmarkData() const { return m_bookmarkData; }
+
+  /// Track
+  void SetTrackId(kml::TrackId trackId) { m_trackId = trackId; };
+  kml::TrackId GetTrackId() const { return m_trackId; };
+
+  /// Guide
+  void SetIsGuide(bool isGuide) { m_isGuide = isGuide; }
 
   /// Api
   void SetApiId(std::string const & apiId) { m_apiId = apiId; }
@@ -148,11 +229,15 @@ public:
   std::string const & GetSponsoredDeepLink() const { return m_sponsoredDeepLink; }
   void SetSponsoredDescriptionUrl(std::string const & url) { m_sponsoredDescriptionUrl = url; }
   std::string const & GetSponsoredDescriptionUrl() const { return m_sponsoredDescriptionUrl; }
+  void SetSponsoredMoreUrl(std::string const & url) { m_sponsoredMoreUrl = url; }
+  std::string const & GetSponsoredMoreUrl() const { return m_sponsoredMoreUrl; }
   void SetSponsoredReviewUrl(std::string const & url) { m_sponsoredReviewUrl = url; }
   std::string const & GetSponsoredReviewUrl() const { return m_sponsoredReviewUrl; }
   void SetSponsoredType(SponsoredType type) { m_sponsoredType = type; }
   SponsoredType GetSponsoredType() const { return m_sponsoredType; }
-  bool IsPreviewExtended() const { return m_sponsoredType == SponsoredType::Viator; }
+
+  void SetOpeningMode(OpeningMode openingMode) { m_openingMode = openingMode; }
+  OpeningMode GetOpeningMode() const { return m_openingMode; }
 
   /// Partners
   int GetPartnerIndex() const { return m_partnerIndex; }
@@ -161,9 +246,9 @@ public:
 
   /// Feature status
   void SetFeatureStatus(FeatureStatus const status) { m_featureStatus = status; }
+  FeatureStatus GetFeatureStatus() const { return m_featureStatus; }
 
   /// Banner
-  bool HasBanner() const;
   std::vector<ads::Banner> GetBanners() const;
 
   /// Taxi
@@ -197,18 +282,24 @@ public:
   size_t GetIntermediateIndex() const { return m_intermediateIndex; }
   void SetIsRoutePoint() { m_isRoutePoint = true; }
 
+  /// Road type
+  void SetRoadType(FeatureType & ft, RoadWarningMarkType type, std::string const & localizedType,
+                   std::string const & distance);
+  void SetRoadType(RoadWarningMarkType type, std::string const & localizedType, std::string const & distance);
+  RoadWarningMarkType GetRoadType() const { return m_roadType; }
+
   /// CountryId
   /// Which mwm this MapObject is in.
   /// Exception: for a country-name point it will be set to the topmost node for the mwm.
   /// TODO(@a): use m_topmostCountryIds in exceptional case.
-  void SetCountryId(storage::TCountryId const & countryId) { m_countryId = countryId; }
-  storage::TCountryId const & GetCountryId() const { return m_countryId; }
+  void SetCountryId(storage::CountryId const & countryId) { m_countryId = countryId; }
+  storage::CountryId const & GetCountryId() const { return m_countryId; }
   template <typename Countries>
   void SetTopmostCountryIds(Countries && ids)
   {
     m_topmostCountryIds = std::forward<Countries>(ids);
   }
-  storage::TCountriesVec const & GetTopmostCountryIds() const { return m_topmostCountryIds; }
+  storage::CountriesVec const & GetTopmostCountryIds() const { return m_topmostCountryIds; }
 
   /// MapObject
   void SetFromFeatureType(FeatureType & ft);
@@ -218,11 +309,14 @@ public:
   void SetMercator(m2::PointD const & mercator) { m_mercator = mercator; }
   std::vector<std::string> GetRawTypes() const { return m_types.ToObjectNames(); }
 
-  boost::optional<ftypes::IsHotelChecker::Type> GetHotelType() const { return m_hotelType; }
+  std::optional<ftypes::IsHotelChecker::Type> GetHotelType() const { return m_hotelType; }
 
   void SetPopularity(uint8_t popularity) { m_popularity = popularity; }
   uint8_t GetPopularity() const { return m_popularity; }
   std::string const & GetPrimaryFeatureName() const { return m_primaryFeatureName; };
+
+  void SetSelectedObject(df::SelectionShape::ESelectedObject selectedObject) { m_selectedObject = selectedObject; }
+  df::SelectionShape::ESelectedObject GetSelectedObject() const { return m_selectedObject; }
 
 private:
   std::string FormatSubtitle(bool withType) const;
@@ -231,6 +325,8 @@ private:
   /// @returns empty string or GetStars() count of ★ symbol.
   std::string FormatStars() const;
   void SetTitlesForBookmark();
+
+  place_page::BuildInfo m_buildInfo;
 
   /// UI
   std::string m_uiTitle;
@@ -244,22 +340,27 @@ private:
   std::string m_localizedRatingString;
 
   /// CountryId
-  storage::TCountryId m_countryId = storage::kInvalidCountryId;
+  storage::CountryId m_countryId = storage::kInvalidCountryId;
   /// The topmost downloader nodes this MapObject is in, i.e.
   /// the country name for an object whose mwm represents only
   /// one part of the country (or several countries for disputed territories).
-  storage::TCountriesVec m_topmostCountryIds;
+  storage::CountriesVec m_topmostCountryIds;
 
   /// Comes from API, shared links etc.
   std::string m_customName;
 
-  /// Bookmarks
+  /// Bookmark or track
+  kml::MarkGroupId m_markGroupId = kml::kInvalidMarkGroupId;
   /// If not invalid, bookmark is bound to this place page.
   kml::MarkId m_markId = kml::kInvalidMarkId;
-  kml::MarkGroupId m_markGroupId = kml::kInvalidMarkGroupId;;
   /// Bookmark category name. Empty, if it's not bookmark;
   std::string m_bookmarkCategoryName;
   kml::BookmarkData m_bookmarkData;
+  /// If not invalid, track is bound to this place page.
+  kml::TrackId m_trackId = kml::kInvalidTrackId;
+
+  /// Guide
+  bool m_isGuide = false;
 
   /// Api ID passed for the selected object. It's automatically included in api url below.
   std::string m_apiId;
@@ -273,7 +374,8 @@ private:
   size_t m_intermediateIndex = 0;
   bool m_isRoutePoint = false;
 
-  bool m_isMyPosition = false;
+  /// Road type
+  RoadWarningMarkType m_roadType = RoadWarningMarkType::Count;
 
   /// Editor
   /// True if editing of a selected point is allowed by basic logic.
@@ -296,6 +398,7 @@ private:
   std::string m_sponsoredUrl;
   std::string m_sponsoredDeepLink;
   std::string m_sponsoredDescriptionUrl;
+  std::string m_sponsoredMoreUrl;
   std::string m_sponsoredReviewUrl;
 
   /// Booking
@@ -311,11 +414,15 @@ private:
 
   feature::TypesHolder m_sortedTypes;
 
-  boost::optional<ftypes::IsHotelChecker::Type> m_hotelType;
+  std::optional<ftypes::IsHotelChecker::Type> m_hotelType;
 
   uint8_t m_popularity = 0;
 
   std::string m_primaryFeatureName;
+
+  OpeningMode m_openingMode = OpeningMode::Preview;
+
+  df::SelectionShape::ESelectedObject m_selectedObject = df::SelectionShape::ESelectedObject::OBJECT_EMPTY;
 };
 
 namespace rating

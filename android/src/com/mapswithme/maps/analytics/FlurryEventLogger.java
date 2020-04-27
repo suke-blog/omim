@@ -2,7 +2,7 @@ package com.mapswithme.maps.analytics;
 
 import android.app.Activity;
 import android.app.Application;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.flurry.android.FlurryAgent;
@@ -23,11 +23,13 @@ class FlurryEventLogger extends DefaultEventLogger
   {
     //noinspection ConstantConditions
     FlurryAgent.setVersionName(BuildConfig.VERSION_NAME);
+    FlurryAgent.setDataSaleOptOut(true);
     new FlurryAgent
         .Builder()
         .withLogEnabled(true)
         .withLogLevel(BuildConfig.DEBUG ? Log.DEBUG : Log.ERROR)
         .withCaptureUncaughtExceptions(false)
+        .withDataSaleOptOut(true)
         .build(getApplication(), PrivateVariables.flurryKey());
   }
 

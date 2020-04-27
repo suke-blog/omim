@@ -10,10 +10,10 @@
 #include "platform/platform_tests_support/scoped_dir.hpp"
 #include "platform/platform_tests_support/writable_dir_changer.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/file_writer.hpp"
 #include "coding/sha1.hpp"
 
+#include "base/file_name_utils.hpp"
 #include "base/scope_guard.hpp"
 #include "base/string_utils.hpp"
 #include "base/thread.hpp"
@@ -42,12 +42,12 @@ string const kCountryId = "Angola";
 
 class InterruptException : public exception {};
 
-void Update(TCountryId const &, storage::TLocalFilePtr const localCountryFile)
+void Update(CountryId const &, storage::LocalFilePtr const localCountryFile)
 {
   TEST_EQUAL(localCountryFile->GetCountryName(), kCountryId, ());
 }
 
-void ChangeCountry(Storage & storage, TCountryId const & countryId)
+void ChangeCountry(Storage & storage, CountryId const & countryId)
 {
   TEST_EQUAL(countryId, kCountryId, ());
 
@@ -55,12 +55,12 @@ void ChangeCountry(Storage & storage, TCountryId const & countryId)
     testing::StopEventLoop();
 }
 
-void InitStorage(Storage & storage, Storage::TProgressFunction const & onProgressFn)
+void InitStorage(Storage & storage, Storage::ProgressFunction const & onProgressFn)
 {
-  storage.Init(Update, [](TCountryId const &, storage::TLocalFilePtr const){return false;});
+  storage.Init(Update, [](CountryId const &, storage::LocalFilePtr const) { return false; });
   storage.RegisterAllLocalMaps(false /* enableDiffs */);
   storage.Subscribe(bind(&ChangeCountry, ref(storage), _1), onProgressFn);
-  storage.SetDownloadingUrlsForTesting({kTestWebServer});
+  storage.SetDownloadingServersForTesting({kTestWebServer});
 }
 
 } // namespace
@@ -68,10 +68,9 @@ void InitStorage(Storage & storage, Storage::TProgressFunction const & onProgres
 UNIT_TEST(SmallMwms_ReDownloadExistedMWMIgnored_Test)
 {
   WritableDirChanger writableDirChanger(kMapTestDir);
-  Storage storage(COUNTRIES_FILE);
-  TEST(version::IsSingleMwm(storage.GetCurrentDataVersion()), ());
+  Storage storage;
 
-  InitStorage(storage, [](TCountryId const & countryId, TLocalAndRemoteSize const & mapSize){});
+  InitStorage(storage, [](CountryId const & countryId, LocalAndRemoteSize const & mapSize) {});
   TEST(!storage.IsDownloadInProgress(), ());
 
   storage.DownloadNode(kCountryId);
@@ -89,11 +88,9 @@ UNIT_CLASS_TEST(Runner, SmallMwms_InterruptDownloadResumeDownload_Test)
 
   // Start download but interrupt it
   {
-    Storage storage(COUNTRIES_FILE);
-    TEST(version::IsSingleMwm(storage.GetCurrentDataVersion()), ());
+    Storage storage;
 
-    auto onProgressFn = [](TCountryId const & countryId, TLocalAndRemoteSize const & mapSize)
-    {
+    auto const onProgressFn = [](CountryId const & countryId, LocalAndRemoteSize const & mapSize) {
       TEST_EQUAL(countryId, kCountryId, ());
       // Interrupt download
       testing::StopEventLoop();
@@ -107,28 +104,52 @@ UNIT_CLASS_TEST(Runner, SmallMwms_InterruptDownloadResumeDownload_Test)
     testing::RunEventLoop();
 
     TEST(storage.IsDownloadInProgress(), ());
-  }
-
-  // Continue download
-  {
-    Storage storage(COUNTRIES_FILE);
-
-    auto onProgressFn = [](TCountryId const & countryId, TLocalAndRemoteSize const & mapSize)
-    {
-      TEST_EQUAL(countryId, kCountryId, ());
-    };
-
-    InitStorage(storage, onProgressFn);
-
-    TEST(storage.IsDownloadInProgress(), ());
 
     NodeAttrs attrs;
     storage.GetNodeAttrs(kCountryId, attrs);
     TEST_EQUAL(NodeStatus::Downloading, attrs.m_status, ());
+  }
 
-    storage.DownloadNode(kCountryId);
+  // Continue download
+  {
+    Storage storage;
+
+    bool onProgressIsCalled = false;
+    NodeAttrs onProgressAttrs;
+    auto const onProgressFn =
+      [&](CountryId const & countryId, LocalAndRemoteSize const & mapSize)
+      {
+        TEST_EQUAL(countryId, kCountryId, ());
+
+        if (onProgressIsCalled)
+          return;
+
+        onProgressIsCalled = true;
+        storage.GetNodeAttrs(kCountryId, onProgressAttrs);
+        testing::StopEventLoop();
+      };
+
+    InitStorage(storage, onProgressFn);
+    storage.Init([](CountryId const &, storage::LocalFilePtr const localCountryFile)
+                 {
+                   TEST_EQUAL(localCountryFile->GetCountryName(), kCountryId, ());
+
+                   testing::StopEventLoop();
+                 },
+                 [](CountryId const &, storage::LocalFilePtr const)
+                 {
+                   return false;
+                 });
+
     testing::RunEventLoop();
 
+    TEST(storage.IsDownloadInProgress(), ());
+
+    testing::RunEventLoop();
+
+    TEST_EQUAL(NodeStatus::Downloading, onProgressAttrs.m_status, ());
+
+    NodeAttrs attrs;
     storage.GetNodeAttrs(kCountryId, attrs);
     TEST_EQUAL(NodeStatus::OnDisk, attrs.m_status, ());
   }
@@ -145,9 +166,8 @@ UNIT_CLASS_TEST(Runner, DownloadIntegrity_Test)
     SCOPE_GUARD(deleteTestFileGuard, bind(&FileWriter::DeleteFileX, ref(mapPath)));
 
     Storage storage(COUNTRIES_FILE);
-    TEST(version::IsSingleMwm(storage.GetCurrentDataVersion()), ());
 
-    InitStorage(storage, [](TCountryId const & countryId, TLocalAndRemoteSize const & mapSize){});
+    InitStorage(storage, [](CountryId const & countryId, LocalAndRemoteSize const & mapSize) {});
     TEST(!storage.IsDownloadInProgress(), ());
 
     storage.DownloadNode(kCountryId);
@@ -155,7 +175,7 @@ UNIT_CLASS_TEST(Runner, DownloadIntegrity_Test)
     testing::RunEventLoop();
 
     auto localFile = storage.GetLatestLocalFile(kCountryId);
-    mapPath = localFile->GetPath(MapOptions::Map);
+    mapPath = localFile->GetPath(MapFileType::Map);
     mapHash = coding::SHA1::Calculate(mapPath);
   }
   TEST_NOT_EQUAL(mapHash, coding::SHA1::Hash(), ());
@@ -170,11 +190,8 @@ UNIT_CLASS_TEST(Runner, DownloadIntegrity_Test)
       SCOPE_GUARD(deleteTestFileGuard, bind(&FileWriter::DeleteFileX, ref(mapPath)));
 
       Storage storage(COUNTRIES_FILE);
-      TEST(version::IsSingleMwm(storage.GetCurrentDataVersion()), ());
 
-      auto onProgressFn = [i, j](TCountryId const & countryId,
-                                 TLocalAndRemoteSize const & mapSize)
-      {
+      auto onProgressFn = [i, j](CountryId const & countryId, LocalAndRemoteSize const & mapSize) {
         TEST_EQUAL(countryId, kCountryId, ());
         auto progress = static_cast<double>(mapSize.first) / mapSize.second;
         auto interruptionProgress =
@@ -193,9 +210,8 @@ UNIT_CLASS_TEST(Runner, DownloadIntegrity_Test)
     coding::SHA1::Hash newHash;
     {
       Storage storage(COUNTRIES_FILE);
-      TEST(version::IsSingleMwm(storage.GetCurrentDataVersion()), ());
 
-      InitStorage(storage, [](TCountryId const & countryId, TLocalAndRemoteSize const & mapSize){});
+      InitStorage(storage, [](CountryId const & countryId, LocalAndRemoteSize const & mapSize) {});
       TEST(storage.IsDownloadInProgress(), ());
 
       NodeAttrs attrs;

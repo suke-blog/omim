@@ -3,7 +3,7 @@ package com.mapswithme.maps.location;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.mapswithme.util.log.Logger;
 import com.mapswithme.util.log.LoggerFactory;
@@ -33,7 +33,6 @@ class BaseLocationListener implements LocationListener, com.google.android.gms.l
 
     if (mLocationFixChecker.isLocationBetterThanLast(location))
     {
-      LocationHelper.INSTANCE.resetMagneticField(location);
       LocationHelper.INSTANCE.onLocationUpdated(location);
       LocationHelper.INSTANCE.notifyLocationUpdated();
     }

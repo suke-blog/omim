@@ -1,14 +1,19 @@
 #include "testing/testing.hpp"
 
 #include "generator/camera_info_collector.hpp"
-#include "generator/emitter_factory.hpp"
 #include "generator/feature_sorter.hpp"
 #include "generator/generate_info.hpp"
+#include "generator/generator_tests/common.hpp"
 #include "generator/generator_tests_support/routing_helpers.hpp"
 #include "generator/generator_tests_support/test_mwm_builder.hpp"
+#include "generator/intermediate_data.hpp"
 #include "generator/maxspeeds_parser.hpp"
 #include "generator/metalines_builder.hpp"
 #include "generator/osm_source.hpp"
+#include "generator/processor_factory.hpp"
+#include "generator/raw_generator.hpp"
+#include "generator/translator_collection.hpp"
+#include "generator/translator_factory.hpp"
 
 #include "routing/speed_camera_ser_des.hpp"
 
@@ -24,11 +29,11 @@
 #include "platform/platform_tests_support/scoped_dir.hpp"
 #include "platform/platform_tests_support/scoped_file.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/internal/file_data.hpp"
 
 #include "geometry/point2d.hpp"
 
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 #include "base/macros.hpp"
 #include "base/math.hpp"
@@ -163,8 +168,9 @@ void TestSpeedCameraSectionBuilding(string const & osmContent, CameraMap const &
   genInfo.m_nodeStorageType = feature::GenerateInfo::NodeStorageType::Index;
   genInfo.m_osmFileName = base::JoinPath(tmpDir, osmRelativePath);
   genInfo.m_osmFileType = feature::GenerateInfo::OsmSourceType::XML;
+  genInfo.m_emitCoasts = false;
 
-  TEST(GenerateIntermediateData(genInfo), ("Can not generate intermediate data for speed cam"));
+  TEST(GenerateIntermediateData(genInfo), ("Cannot generate intermediate data for speed cam"));
 
   // Building empty mwm.
   LocalCountryFile country(base::JoinPath(tmpDir, kTestDir), CountryFile(kTestMwm), 0 /* version */);
@@ -173,12 +179,16 @@ void TestSpeedCameraSectionBuilding(string const & osmContent, CameraMap const &
 
   // Step 2. Generate binary file about cameras.
   {
-    auto emitter = CreateEmitter(EmitterType::Planet, genInfo);
-    TEST(GenerateFeatures(genInfo, emitter), ("Can not generate features for speed camera"));
+    CHECK(generator_tests::MakeFakeBordersFile(testDirFullPath, kTestMwm), ());
+    RawGenerator rawGenerator(genInfo);
+    rawGenerator.ForceReloadCache();
+    rawGenerator.GenerateCountries();
+    TEST(rawGenerator.Execute(), ("Cannot generate features for speed camera"));
   }
 
   TEST(GenerateFinalFeatures(genInfo, country.GetCountryName(),
-                             feature::DataHeader::country), ("Cannot generate final feature"));
+                             feature::DataHeader::MapType::Country),
+       ("Cannot generate final feature"));
 
   string const & mwmFullPath = scopedMwm.GetFullPath();
 

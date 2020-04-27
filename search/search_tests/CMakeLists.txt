@@ -6,6 +6,7 @@ set(
   SRC
   algos_tests.cpp
   bookmarks_processor_tests.cpp
+  feature_offset_match_tests.cpp
   highlighting_tests.cpp
   house_detector_tests.cpp
   house_numbers_matcher_test.cpp
@@ -35,6 +36,7 @@ omim_link_libraries(
   search_tests_support
   generator_tests_support
   platform_tests_support
+  kml
   search
   editor
   indexer

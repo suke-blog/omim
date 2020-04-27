@@ -44,12 +44,20 @@ set(
   main.cpp
   mainwindow.cpp
   mainwindow.hpp
+  mwms_borders_selection.cpp
+  mwms_borders_selection.hpp
   osm_auth_dialog.cpp
   osm_auth_dialog.hpp
   place_page_dialog.cpp
   place_page_dialog.hpp
   preferences_dialog.cpp
   preferences_dialog.hpp
+  routing_settings_dialog.cpp
+  routing_settings_dialog.hpp
+  ruler.cpp
+  ruler.hpp
+  screenshoter.cpp
+  screenshoter.hpp
   search_panel.cpp
   search_panel.hpp
   update_dialog.cpp
@@ -62,8 +70,10 @@ omim_link_libraries(
   ${PROJECT_NAME}
   qt_common
   map
+  ge0
   drape_frontend
   shaders
+  generator
   routing
   search
   storage
@@ -77,6 +87,7 @@ omim_link_libraries(
   ugc
   drape
   partners_api
+  web_api
   local_ads
   kml
   editor
@@ -101,11 +112,19 @@ omim_link_libraries(
   opening_hours
   stb_image
   sdf_image
+  vulkan_wrapper
   ${Qt5Gui_LIBRARIES}
   ${Qt5Network_LIBRARIES}
   ${Qt5Widgets_LIBRARIES}
   ${LIBZ}
 )
+
+if (PLATFORM_LINUX)
+  omim_link_libraries(
+    ${PROJECT_NAME}
+    dl
+  )
+endif()
 
 link_opengl(${PROJECT_NAME})
 link_qt5_core(${PROJECT_NAME})
@@ -150,7 +169,11 @@ copy_resources(
   countries-strings
   resources-default
   resources-mdpi_clear
-  cuisine-strings
+  resources-hdpi_clear
+  resources-xhdpi_clear
+  resources-xxhdpi_clear
+  resources-xxxhdpi_clear
+  resources-6plus_clear
   taxi_places
   eula.html
 
@@ -160,7 +183,6 @@ copy_resources(
   colors.txt
   copyright.html
   countries.txt
-  countries_obsolete.txt
   drules_proto_clear.bin
   drules_proto_dark.bin
   drules_proto_vehicle_clear.bin
@@ -169,13 +191,12 @@ copy_resources(
   fonts_blacklist.txt
   fonts_whitelist.txt
   packed_polygons.bin
-  packed_polygons_obsolete.bin
   patterns.txt
+  transit_colors.txt
   types.txt
   unicode_blocks.txt
   World.mwm
   WorldCoasts.mwm
-  WorldCoasts_obsolete.mwm
   icudt57l.dat
   local_ads_symbols.txt
 
@@ -272,7 +293,7 @@ if (BUILD_DESIGNER)
     foreach(BUNDLE ${BUNDLE_FOLDER} ${BUNDLES})
       execute_process(
         COMMAND \"${QT_PATH}/bin/macdeployqt\" \"\${BUNDLE}\"
-        COMMAND python \"${OMIM_ROOT}/tools/macdeployqtfix/macdeployqtfix.py\" -q -nl \"\${BUNDLE}\" \"${QT_PATH}\"
+        COMMAND find \"\${BUNDLE}/Contents/MacOS\" -type f -exec python \"${OMIM_ROOT}/tools/macdeployqtfix/macdeployqtfix.py\" -q -nl {} \"${QT_PATH}\" \\;
       )
     endforeach()
     foreach(BUNDLE ${BUNDLES})
@@ -288,6 +309,14 @@ if (BUILD_DESIGNER)
   set(CPACK_DMG_VOLUME_NAME ${BUNDLE_NAME})
   set(CPACK_PACKAGE_ICON ${PROJECT_SOURCE_DIR}/res/designer.icns)
   include(CPack)
+elseif (BUILD_STANDALONE)
+  add_custom_command(TARGET desktop POST_BUILD
+    COMMAND "${QT_PATH}/bin/macdeployqt" ${BUNDLE_FOLDER}
+    COMMAND ${PYTHON_EXECUTABLE} "${OMIM_ROOT}/tools/macdeployqtfix/macdeployqtfix.py" -q -nl ${BUNDLE_FOLDER}/Contents/MacOS/${BUNDLE_NAME} ${QT_PATH}
+    COMMAND echo "Fixing Qt dependencies finished."
+    VERBATIM
+    COMMENT "Fixing Qt dependencies for standalone desktop app"
+  )
 endif()
 
 add_subdirectory(qt_common)

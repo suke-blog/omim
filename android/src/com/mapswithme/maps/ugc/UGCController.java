@@ -2,12 +2,11 @@ package com.mapswithme.maps.ugc;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,11 +20,11 @@ import com.mapswithme.util.DateUtils;
 import com.mapswithme.util.UiUtils;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class UGCController implements View.OnClickListener, UGC.UGCListener
+public class UGCController implements View.OnClickListener, UGC.ReceiveUGCListener
 {
   @NonNull
   private final View mUgcRootView;
@@ -143,15 +142,15 @@ public class UGCController implements View.OnClickListener, UGC.UGCListener
     mReviewListDivider = mPlacePage.findViewById(R.id.ugc_review_list_divider);
     mUserReviewDivider = mPlacePage.findViewById(R.id.user_review_divider);
 
-    UGC.setListener(this);
+    UGC.setReceiveListener(this);
   }
 
-  public void clear()
+  public void clearViewsFor(@NonNull MapObject mapObject)
   {
     UiUtils.hide(mUgcRootView, mLeaveReviewButton, mPreviewUgcInfoView);
-    mUGCReviewAdapter.setItems(new ArrayList<UGC.Review>());
-    mUGCRatingRecordsAdapter.setItems(new ArrayList<UGC.Rating>());
-    mUGCUserRatingRecordsAdapter.setItems(new ArrayList<UGC.Rating>());
+    mUGCReviewAdapter.setItems(Collections.emptyList());
+    mUGCRatingRecordsAdapter.setItems(Collections.emptyList());
+    mUGCUserRatingRecordsAdapter.setItems(Collections.emptyList());
     mReviewCount.setText("");
     mSummaryReviewCount.setText("");
   }
@@ -187,12 +186,7 @@ public class UGCController implements View.OnClickListener, UGC.UGCListener
       return;
 
     mMapObject = mapObject;
-    UGC.requestUGC(mMapObject.getFeatureId());
-  }
-
-  public boolean isLeaveReviewButtonTouched(@NonNull MotionEvent event)
-  {
-    return UiUtils.isViewTouched(event, mLeaveReviewButton);
+    UGC.nativeRequestUGC(mMapObject.getFeatureId());
   }
 
   @Override
@@ -204,7 +198,7 @@ public class UGCController implements View.OnClickListener, UGC.UGCListener
     UiUtils.showIf(canUserRate(ugcUpdate), mLeaveReviewButton, mUgcAddRatingView);
     UiUtils.showIf(ugc != null, mUgcMoreReviews);
     UiUtils.showIf(ugc != null && impress != UGC.RATING_NONE, mSummaryRootView);
-    RatingView ratingView = (RatingView) mPreviewUgcInfoView.findViewById(R.id.rating_view);
+    RatingView ratingView = mPreviewUgcInfoView.findViewById(R.id.rating_view);
     if (ugc == null)
     {
       mReviewCount.setText(ugcUpdate != null ? R.string.placepage_reviewed : R.string.placepage_no_reviews);

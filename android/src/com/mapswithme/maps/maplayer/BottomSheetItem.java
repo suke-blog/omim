@@ -1,9 +1,9 @@
 package com.mapswithme.maps.maplayer;
 
 import android.content.Context;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
 import com.mapswithme.maps.R;
 import com.mapswithme.util.ThemeUtils;
@@ -80,6 +80,21 @@ public abstract class BottomSheetItem
       int disabled = ThemeUtils.getResource(mContext, R.attr.trafficMenuDisabled);
 
       return new Traffic(R.drawable.ic_traffic_menu_on, disabled);
+    }
+  }
+
+  public static class Isolines extends BottomSheetItem
+  {
+    private Isolines(int drawableResId, int disabledStateDrawableResId)
+    {
+      super(drawableResId, disabledStateDrawableResId, R.string.button_layer_isolines, Mode.ISOLINES);
+    }
+
+    public static BottomSheetItem makeInstance(@NonNull Context mContext)
+    {
+      int disabled = ThemeUtils.getResource(mContext, R.attr.isoLinesMenuDisabled);
+
+      return new Isolines(R.drawable.ic_planning_route_isomaps_dark_on, disabled);
     }
   }
 }

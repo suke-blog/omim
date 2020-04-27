@@ -1,16 +1,11 @@
-import AlamofireImage
-
-@objc(MWMGalleryItemViewController)
 final class GalleryItemViewController: MWMViewController {
-  typealias Model = GalleryItemModel
-
-  static func instance(model: Model) -> GalleryItemViewController {
+  static func instance(photo: HotelPhotoUrl) -> GalleryItemViewController {
     let vc = GalleryItemViewController(nibName: toString(self), bundle: nil)
-    vc.model = model
+    vc.photo = photo
     return vc
   }
 
-  private var model: Model!
+  private var photo: HotelPhotoUrl!
 
   @IBOutlet private weak var scrollView: UIScrollView!
   fileprivate var imageView: UIImageView!
@@ -28,8 +23,8 @@ final class GalleryItemViewController: MWMViewController {
     imageView = UIImageView(frame: scrollView.bounds)
     imageView.contentMode = .scaleAspectFit
     scrollView.addSubview(imageView)
-    imageView.af_setImage(withURL: model.imageURL,
-                          imageTransition: .crossDissolve(kDefaultAnimationDuration))
+    guard let url = URL(string: photo.original) else { return }
+    imageView.wi_setImage(with: url, transitionDuration: kDefaultAnimationDuration)
   }
 
   override func viewDidLayoutSubviews() {

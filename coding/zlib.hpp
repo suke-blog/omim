@@ -3,8 +3,9 @@
 #include "base/assert.hpp"
 #include "base/macros.hpp"
 
-#include "std/algorithm.hpp"
-#include "std/string.hpp"
+#include <algorithm>
+#include <cstddef>
+#include <string>
 
 #include "zlib.h"
 
@@ -41,7 +42,7 @@ public:
     }
 
     template <typename OutIt>
-    bool operator()(string const & s, OutIt out) const
+    bool operator()(std::string const & s, OutIt out) const
     {
       return (*this)(s.c_str(), s.size(), out);
     }
@@ -79,7 +80,7 @@ public:
     }
 
     template <typename OutIt>
-    bool operator()(string const & s, OutIt out) const
+    bool operator()(std::string const & s, OutIt out) const
     {
       return (*this)(s.c_str(), s.size(), out);
     }
@@ -106,7 +107,7 @@ private:
     void MoveOut(OutIt out)
     {
       ASSERT(IsInit(), ());
-      copy(m_buffer, m_buffer + kBufferSize - m_stream.avail_out, out);
+      std::copy(m_buffer, m_buffer + kBufferSize - m_stream.avail_out, out);
       m_stream.next_out = m_buffer;
       m_stream.avail_out = kBufferSize;
     }
@@ -148,10 +149,10 @@ private:
     if (!processor.IsInit())
       return false;
 
+    int ret = Z_OK;
     while (true)
     {
-      int const flush = processor.ConsumedAll() ? Z_FINISH : Z_NO_FLUSH;
-      int ret = Z_OK;
+      int const flush = (processor.ConsumedAll() || ret == Z_STREAM_END) ? Z_FINISH : Z_NO_FLUSH;
 
       while (true)
       {
@@ -170,7 +171,7 @@ private:
     }
 
     processor.MoveOut(out);
-    return true;
+    return processor.ConsumedAll();
   }
 };
 }  // namespace coding

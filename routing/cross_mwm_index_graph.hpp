@@ -12,7 +12,7 @@
 
 #include "geometry/point2d.hpp"
 
-#include "coding/file_container.hpp"
+#include "coding/files_container.hpp"
 #include "coding/point_coding.hpp"
 #include "coding/reader.hpp"
 
@@ -23,6 +23,7 @@
 #include <cstdint>
 #include <map>
 #include <memory>
+#include <type_traits>
 #include <vector>
 
 namespace routing
@@ -83,6 +84,16 @@ public:
     return c.IsTransition(s, isOutgoing);
   }
 
+  bool IsFeatureTransit(NumMwmId numMwmId, uint32_t featureId)
+  {
+    return GetCrossMwmConnectorWithTransitions(numMwmId).IsFeatureCrossMwmConnector(featureId);
+  }
+
+  std::vector<uint32_t> const & GetTransitSegmentId(NumMwmId numMwmId, uint32_t featureId)
+  {
+    return GetCrossMwmConnectorWithTransitions(numMwmId).GetTransitSegmentId(featureId);
+  }
+
   /// \brief Fills |twins| based on transitions defined in cross_mwm section.
   /// \note In cross_mwm section transitions are defined by osm ids of theirs features.
   /// \note This method fills |twins| with all available twins iff all neighboring of mwm of |s|
@@ -114,13 +125,21 @@ public:
       if (twinSeg == nullptr)
         continue;
 
+      // Twins should have the same direction, because we assume that twins are the same segments
+      // with one difference - they are in the different mwms. Twins could have not same direction
+      // in case of different mwms versions. For example |s| is cross mwm Enter from elder version
+      // and somebody moved points of ways such that |twinSeg| became cross mwm Exit from newer
+      // version. Because of that |twinSeg.IsForward()| will differ from |s.IsForward()|.
+      if (twinSeg->IsForward() != s.IsForward())
+        continue;
+
       CHECK_NOT_EQUAL(twinSeg->GetMwmId(), s.GetMwmId(), ());
 
       // Checks twins for equality.
       // There are same in common, but in case of different version of mwms
       // their's geometry can differ from each other. Because of this we can not
       // build the route, because we fail in astar_algorithm.hpp CHECK(invariant) sometimes.
-      if (s.IsRealSegment() || SegmentsAreEqualByGeometry(s, *twinSeg))
+      if (SegmentsAreEqualByGeometry(s, *twinSeg))
         twins.push_back(*twinSeg);
       else
         LOG(LINFO, ("Bad cross mwm feature, differ in geometry. Current:", s, ", twin:", *twinSeg));
@@ -131,6 +150,12 @@ public:
   {
     CrossMwmConnector<CrossMwmId> const & c = GetCrossMwmConnectorWithWeights(s.GetMwmId());
     c.GetOutgoingEdgeList(s, edges);
+  }
+
+  void GetIngoingEdgeList(Segment const & s, std::vector<SegmentEdge> & edges)
+  {
+    CrossMwmConnector<CrossMwmId> const & c = GetCrossMwmConnectorWithWeights(s.GetMwmId());
+    c.GetIngoingEdgeList(s, edges);
   }
 
   void Clear() { m_connectors.clear(); }
@@ -186,8 +211,17 @@ private:
   }
 
   /// \brief Checks segment for equality point by point.
-   bool SegmentsAreEqualByGeometry(Segment const & one, Segment const & two)
+  bool SegmentsAreEqualByGeometry(Segment const & one, Segment const & two)
   {
+    // Do not check for transit graph.
+    if (!one.IsRealSegment() || !two.IsRealSegment())
+      return true;
+
+    static_assert(std::is_same<CrossMwmId, base::GeoObjectId>::value ||
+                  std::is_same<CrossMwmId, connector::TransitId>::value,
+                  "Be careful of usage other ids here. "
+                  "Make sure, there is not crash with your new CrossMwmId");
+
     std::vector<m2::PointD> geometryOne = GetFeaturePointsBySegment(one);
     std::vector<m2::PointD> geometryTwo = GetFeaturePointsBySegment(two);
 
@@ -225,7 +259,7 @@ private:
     if (!handle.IsAlive())
       MYTHROW(RoutingException, ("Mwm", m_numMwmIds->GetFile(numMwmId), "cannot be loaded."));
 
-    MwmValue * value = handle.GetValue<MwmValue>();
+    MwmValue const * value = handle.GetValue();
     CHECK(value != nullptr, ("Country file:", m_numMwmIds->GetFile(numMwmId)));
 
     FilesContainerR::TReader const reader =

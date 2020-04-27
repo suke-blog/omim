@@ -4,6 +4,8 @@ include_directories(${OMIM_ROOT}/3party/gflags/src)
 
 set(
   SRC
+  cmd_balance_csv.cpp
+  cmd_balance_csv.hpp
   cmd_cpp_track.cpp
   cmd_gpx.cpp
   cmd_match.cpp
@@ -11,6 +13,8 @@ set(
   cmd_track.cpp
   cmd_tracks.cpp
   cmd_unmatched_tracks.cpp
+  crossroad_checker.cpp
+  crossroad_checker.hpp
   track_analyzer.cpp
   utils.cpp
   utils.hpp
@@ -36,8 +40,10 @@ omim_link_libraries(
   icu
   jansson
   oauthcpp
+  opening_hours
   protobuf
   stats_client
+  succinct
   gflags
   ${LIBZ}
 )

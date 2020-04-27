@@ -14,12 +14,14 @@
 
 #include <set>
 #include <string>
+#include <utility>
 
 namespace
 {
 bool GetGroupCountryIdFromFeature(storage::Storage const & storage, FeatureType & ft,
                                   std::string & name)
 {
+  auto const & synonyms = storage.GetCountryNameSynonyms();
   int8_t const langIndices[] = {StringUtf8Multilang::kEnglishCode,
                                 StringUtf8Multilang::kDefaultCode,
                                 StringUtf8Multilang::kInternationalCode};
@@ -30,6 +32,13 @@ bool GetGroupCountryIdFromFeature(storage::Storage const & storage, FeatureType 
       continue;
     if (storage.IsInnerNode(name))
       return true;
+    auto const it = synonyms.find(name);
+    if (it == synonyms.end())
+      continue;
+    if (!storage.IsInnerNode(it->second))
+      continue;
+    name = it->second;
+    return true;
   }
   return false;
 }
@@ -46,7 +55,7 @@ DownloaderSearchCallback::DownloaderSearchCallback(Delegate & delegate,
   , m_dataSource(dataSource)
   , m_infoGetter(infoGetter)
   , m_storage(storage)
-  , m_params(move(params))
+  , m_params(std::move(params))
 {
 }
 
@@ -64,19 +73,19 @@ void DownloaderSearchCallback::operator()(search::Results const & results)
     {
       FeatureID const & fid = result.GetFeatureID();
       FeaturesLoaderGuard loader(m_dataSource, fid.m_mwmId);
-      FeatureType ft;
-      if (!loader.GetFeatureByIndex(fid.m_index, ft))
+      auto ft = loader.GetFeatureByIndex(fid.m_index);
+      if (!ft)
       {
         LOG(LERROR, ("Feature can't be loaded:", fid));
         continue;
       }
 
-      ftypes::Type const type = ftypes::IsLocalityChecker::Instance().GetType(ft);
+      ftypes::LocalityType const type = ftypes::IsLocalityChecker::Instance().GetType(*ft);
 
-      if (type == ftypes::COUNTRY || type == ftypes::STATE)
+      if (type == ftypes::LocalityType::Country || type == ftypes::LocalityType::State)
       {
         std::string groupFeatureName;
-        if (GetGroupCountryIdFromFeature(m_storage, ft, groupFeatureName))
+        if (GetGroupCountryIdFromFeature(m_storage, *ft, groupFeatureName))
         {
           storage::DownloaderSearchResult downloaderResult(groupFeatureName,
                                                            result.GetString() /* m_matchedName */);
@@ -90,7 +99,7 @@ void DownloaderSearchCallback::operator()(search::Results const & results)
       }
     }
     auto const & mercator = result.GetFeatureCenter();
-    storage::TCountryId const & countryId = m_infoGetter.GetRegionCountryId(mercator);
+    storage::CountryId const & countryId = m_infoGetter.GetRegionCountryId(mercator);
     if (countryId == storage::kInvalidCountryId)
       continue;
 

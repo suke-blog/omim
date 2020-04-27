@@ -5,10 +5,19 @@ class DimmedModalPresentationController: UIPresentationController {
 
   private lazy var dimView: UIView = {
     let view = UIView()
-    view.backgroundColor = UIColor.blackStatusBarBackground()
-    view.addGestureRecognizer(onTapGr)
+    view.styleName = "BlackStatusBarBackground"
+    if isCancellable {
+      view.addGestureRecognizer(onTapGr)
+    }
     return view
   }()
+
+  let isCancellable: Bool
+
+  required init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?, cancellable: Bool = true) {
+    isCancellable = cancellable
+    super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
+  }
 
   @objc private func onTap() {
     presentingViewController.dismiss(animated: true, completion: nil)

@@ -6,7 +6,7 @@
 #include "base/assert.hpp"
 #include "base/logging.hpp"
 #include "base/stl_helpers.hpp"
-#include "base/worker_thread.hpp"
+#include "base/thread_pool_delayed.hpp"
 
 #include "3party/Alohalytics/src/alohalytics.h"
 
@@ -54,22 +54,22 @@ void SendStatistics(size_t serversLeft)
 namespace storage
 {
 // static
-void Pinger::Ping(vector<string> const & urls, Pinger::Pong const & pong)
+Pinger::Endpoints Pinger::ExcludeUnavailableEndpoints(Endpoints const & urls)
 {
   auto const size = urls.size();
   CHECK_GREATER(size, 0, ());
 
   vector<string> readyUrls(size);
   {
-    base::WorkerThread t(size);
+    base::thread_pool::delayed::ThreadPool t(size);
     for (size_t i = 0; i < size; ++i)
       t.Push([url = urls[i], &readyUrls, i] { DoPing(url, i, readyUrls); });
 
-    t.Shutdown(base::WorkerThread::Exit::ExecPending);
+    t.Shutdown(base::thread_pool::delayed::ThreadPool::Exit::ExecPending);
   }
 
   base::EraseIf(readyUrls, [](auto const & url) { return url.empty(); });
   SendStatistics(readyUrls.size());
-  pong(move(readyUrls));
+  return readyUrls;
 }
 }  // namespace storage

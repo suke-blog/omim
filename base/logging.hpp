@@ -3,9 +3,12 @@
 #include "base/base.hpp"
 #include "base/internal/message.hpp"
 #include "base/src_point.hpp"
+#include "base/thread.hpp"
+#include "base/timer.hpp"
 
 #include <array>
 #include <atomic>
+#include <map>
 #include <string>
 
 namespace base
@@ -19,6 +22,26 @@ enum LogLevel
   LCRITICAL,
 
   NUM_LOG_LEVELS
+};
+
+class LogHelper
+{
+public:
+  static LogHelper & Instance();
+
+  LogHelper();
+
+  int GetThreadID();
+  void WriteProlog(std::ostream & s, LogLevel level);
+
+private:
+  int m_threadsCount;
+  std::map<threads::ThreadID, int> m_threadID;
+
+  base::Timer m_timer;
+
+  std::array<char const *, NUM_LOG_LEVELS> m_names;
+  std::array<size_t, NUM_LOG_LEVELS> m_lens;
 };
 
 std::string ToString(LogLevel level);
@@ -52,7 +75,7 @@ void LogMessageTests(LogLevel level, SrcPoint const & srcPoint, std::string cons
 // }
 struct ScopedLogLevelChanger
 {
-  ScopedLogLevelChanger(LogLevel temporaryLogLevel = LERROR) { g_LogLevel = temporaryLogLevel; }
+  explicit ScopedLogLevelChanger(LogLevel temporaryLogLevel = LERROR) { g_LogLevel = temporaryLogLevel; }
 
   ~ScopedLogLevelChanger() { g_LogLevel = m_old; }
 
@@ -61,7 +84,7 @@ struct ScopedLogLevelChanger
 
 struct ScopedLogAbortLevelChanger
 {
-  ScopedLogAbortLevelChanger(LogLevel temporaryLogAbortLevel = LCRITICAL)
+  explicit ScopedLogAbortLevelChanger(LogLevel temporaryLogAbortLevel = LCRITICAL)
   {
     g_LogAbortLevel = temporaryLogAbortLevel;
   }
@@ -95,6 +118,13 @@ using ::base::NUM_LOG_LEVELS;
     if ((level) >= ::base::g_LogLevel)                                  \
       ::base::LogMessage(level, base::SrcPoint(), ::base::Message msg); \
   } while (false)
+
+// Provides logging despite of |g_LogLevel|.
+#define LOG_FORCE(level, msg)                                         \
+  do                                                                  \
+  {                                                                   \
+    ::base::LogMessage(level, SRC(), ::base::Message msg);            \
+  } while (false)                                                     \
 
 // Conditional log. Logs @msg with level @level in case when @X returns false.
 #define CLOG(level, X, msg)                                     \

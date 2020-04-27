@@ -17,6 +17,7 @@ omim_link_libraries(
   generator
   search
   routing
+  traffic
   routing_common
   editor
   indexer
@@ -34,6 +35,7 @@ omim_link_libraries(
   pugixml
   stats_client
   succinct
+  ${CMAKE_DL_LIBS}
   ${LIBZ}
 )
 

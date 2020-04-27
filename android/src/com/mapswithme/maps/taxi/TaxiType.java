@@ -1,8 +1,8 @@
 package com.mapswithme.maps.taxi;
 
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
 import com.mapswithme.maps.R;
 import com.mapswithme.util.Utils;
@@ -105,12 +105,12 @@ public enum TaxiType
           return "Maxim";
         }
       },
-  RUTAXI(R.string.place_page_starting_from, new LocaleDependentFormatPriceStrategy(), true)
+  TAXI_VEZET(R.string.place_page_starting_from, new LocaleDependentFormatPriceStrategy(), true)
       {
         @NonNull
         public String getPackageName()
         {
-          return "com.its.rto";
+          return "ru.rutaxi.vezet";
         }
 
         @NonNull
@@ -122,19 +122,51 @@ public enum TaxiType
         @DrawableRes
         public int getIcon()
         {
-          return R.drawable.ic_taxi_logo_rutaxi;
+          return R.drawable.ic_taxi_logo_vezet;
         }
 
         @StringRes
         public int getTitle()
         {
-          return R.string.rutaxi_title;
+          return R.string.vezet_taxi;
         }
 
         @NonNull
         public String getProviderName()
         {
-          return "Rutaxi";
+          return "Vezet";
+        }
+      },
+  FREENOW
+      {
+        @NonNull
+        public String getPackageName()
+        {
+          return "taxi.android.client";
+        }
+
+        @NonNull
+        public Utils.PartnerAppOpenMode getOpenMode()
+        {
+          return Utils.PartnerAppOpenMode.Indirect;
+        }
+
+        @DrawableRes
+        public int getIcon()
+        {
+          return R.drawable.ic_logo_freenow;
+        }
+
+        @StringRes
+        public int getTitle()
+        {
+          return R.string.freenow_taxi_title;
+        }
+
+        @NonNull
+        public String getProviderName()
+        {
+          return "Freenow";
         }
       };
 

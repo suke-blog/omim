@@ -14,6 +14,7 @@
 
 #include <chrono>
 #include <condition_variable>
+#include <cstddef>
 #include <cstdint>
 #include <functional>
 #include <map>
@@ -21,6 +22,7 @@
 #include <mutex>
 #include <set>
 #include <string>
+#include <utility>
 #include <vector>
 
 class DataSource;
@@ -53,7 +55,7 @@ private:
     {
       if (!m_loadSubset)
       {
-        itemsById.insert(make_pair(item.GetId(), item));
+        itemsById.emplace(item.GetId(), item);
       }
       else
       {
@@ -86,7 +88,7 @@ public:
     NoData,
   };
 
-  using GetMwmsByRectFn = std::function<vector<MwmSet::MwmId>(m2::RectD const &)>;
+  using GetMwmsByRectFn = std::function<std::vector<MwmSet::MwmId>(m2::RectD const &)>;
   using TransitStateChangedFn = std::function<void(TransitSchemeState)>;
 
   TransitReadManager(DataSource & dataSource, TReadFeaturesFn const & readFeaturesFn,
@@ -97,6 +99,8 @@ public:
   void Stop();
 
   void SetDrapeEngine(ref_ptr<df::DrapeEngine> engine);
+
+  TransitSchemeState GetState() const;
   void SetStateListener(TransitStateChangedFn const & onStateChangedFn);
 
   bool GetTransitDisplayInfo(TransitDisplayInfos & transitDisplayInfos);
@@ -114,7 +118,7 @@ private:
   void ShrinkCacheToAllowableSize();
   void ClearCache(MwmSet::MwmId const & mwmId);
 
-  std::unique_ptr<threads::ThreadPool> m_threadsPool;
+  std::unique_ptr<base::thread_pool::routine::ThreadPool> m_threadsPool;
 
   std::mutex m_mutex;
   std::condition_variable m_event;
@@ -147,6 +151,6 @@ private:
   size_t m_cacheSize = 0;
   bool m_isSchemeMode = false;
   bool m_isSchemeModeBlocked = false;
-  pair<ScreenBase, bool> m_currentModelView = {ScreenBase(), false /* initialized */};
+  std::pair<ScreenBase, bool> m_currentModelView = {ScreenBase(), false /* initialized */};
   bool m_trackFirstSchemeData = false;
 };

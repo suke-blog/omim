@@ -5,16 +5,16 @@
 
 #include "storage/country_info_getter.hpp"
 
-#include "map/feature_vec_model.hpp"
+#include "map/features_fetcher.hpp"
 
 #include "platform/local_country_file.hpp"
 
-#include "std/set.hpp"
-#include "std/shared_ptr.hpp"
-#include "std/string.hpp"
-#include "std/unique_ptr.hpp"
-#include "std/utility.hpp"
-#include "std/vector.hpp"
+#include <cstdint>
+#include <memory>
+#include <set>
+#include <string>
+#include <utility>
+#include <vector>
 
 /*
  * These tests are developed to simplify routing integration tests writing.
@@ -43,24 +43,25 @@ using namespace routing;
 using namespace turns;
 using platform::LocalCountryFile;
 
-typedef pair<shared_ptr<Route>, RouterResultCode> TRouteResult;
+typedef std::pair<std::shared_ptr<Route>, RouterResultCode> TRouteResult;
 
 namespace integration
 {
-shared_ptr<model::FeaturesFetcher> CreateFeaturesFetcher(vector<LocalCountryFile> const & localFiles);
+std::shared_ptr<FeaturesFetcher> CreateFeaturesFetcher(
+    std::vector<LocalCountryFile> const & localFiles);
 
-unique_ptr<storage::CountryInfoGetter> CreateCountryInfoGetter();
+std::unique_ptr<storage::CountryInfoGetter> CreateCountryInfoGetter();
 
-unique_ptr<IndexRouter> CreateVehicleRouter(DataSource & dataSource,
-                                            storage::CountryInfoGetter const & infoGetter,
-                                            traffic::TrafficCache const & trafficCache,
-                                            vector<LocalCountryFile> const & localFiles,
-                                            VehicleType vehicleType);
+std::unique_ptr<IndexRouter> CreateVehicleRouter(DataSource & dataSource,
+                                                 storage::CountryInfoGetter const & infoGetter,
+                                                 traffic::TrafficCache const & trafficCache,
+                                                 std::vector<LocalCountryFile> const & localFiles,
+                                                 VehicleType vehicleType);
 
 class IRouterComponents
 {
 public:
-  IRouterComponents(vector<LocalCountryFile> const & localFiles)
+  IRouterComponents(std::vector<LocalCountryFile> const & localFiles)
     : m_featuresFetcher(CreateFeaturesFetcher(localFiles)), m_infoGetter(CreateCountryInfoGetter())
   {
   }
@@ -72,17 +73,17 @@ public:
   storage::CountryInfoGetter const & GetCountryInfoGetter() const noexcept { return *m_infoGetter; }
 
 protected:
-  shared_ptr<model::FeaturesFetcher> m_featuresFetcher;
-  unique_ptr<storage::CountryInfoGetter> m_infoGetter;
+  std::shared_ptr<FeaturesFetcher> m_featuresFetcher;
+  std::unique_ptr<storage::CountryInfoGetter> m_infoGetter;
 };
 
 class VehicleRouterComponents : public IRouterComponents
 {
 public:
-  VehicleRouterComponents(vector<LocalCountryFile> const & localFiles, VehicleType vehicleType)
+  VehicleRouterComponents(std::vector<LocalCountryFile> const & localFiles, VehicleType vehicleType)
     : IRouterComponents(localFiles)
-    , m_indexRouter(CreateVehicleRouter(m_featuresFetcher->GetDataSource(), *m_infoGetter, m_trafficCache,
-                                        localFiles, vehicleType))
+    , m_indexRouter(CreateVehicleRouter(m_featuresFetcher->GetDataSource(), *m_infoGetter,
+                                        m_trafficCache, localFiles, vehicleType))
   {
   }
 
@@ -90,28 +91,26 @@ public:
 
 private:
   traffic::TrafficCache m_trafficCache;
-  unique_ptr<IndexRouter> m_indexRouter;
+  std::unique_ptr<IndexRouter> m_indexRouter;
 };
 
-void GetAllLocalFiles(vector<LocalCountryFile> & localFiles);
+void GetAllLocalFiles(std::vector<LocalCountryFile> & localFiles);
 void TestOnlineCrosses(ms::LatLon const & startPoint, ms::LatLon const & finalPoint,
-                       vector<string> const & expected, IRouterComponents & routerComponents);
+                       std::vector<std::string> const & expected,
+                       IRouterComponents & routerComponents);
 void TestOnlineFetcher(ms::LatLon const & startPoint, ms::LatLon const & finalPoint,
-                       vector<string> const & expected, IRouterComponents & routerComponents);
+                       std::vector<std::string> const & expected,
+                       IRouterComponents & routerComponents);
 
-shared_ptr<VehicleRouterComponents> CreateAllMapsComponents(VehicleType vehicleType);
-
-template <VehicleType type>
-IRouterComponents & GetVehicleComponents()
-{
-  static auto const instance = CreateAllMapsComponents(type);
-  ASSERT(instance, ());
-  return *instance;
-}
+std::shared_ptr<VehicleRouterComponents> CreateAllMapsComponents(VehicleType vehicleType);
+IRouterComponents & GetVehicleComponents(VehicleType vehicleType);
 
 TRouteResult CalculateRoute(IRouterComponents const & routerComponents,
                             m2::PointD const & startPoint, m2::PointD const & startDirection,
                             m2::PointD const & finalPoint);
+
+TRouteResult CalculateRoute(IRouterComponents const & routerComponents,
+                            Checkpoints const & checkpoints, GuidesTracks && guides);
 
 void TestTurnCount(Route const & route, uint32_t expectedTurnCount);
 
@@ -130,6 +129,15 @@ void CalculateRouteAndTestRouteLength(IRouterComponents const & routerComponents
                                       m2::PointD const & startDirection,
                                       m2::PointD const & finalPoint, double expectedRouteMeters,
                                       double relativeError = 0.07);
+
+void CalculateRouteAndTestRouteTime(IRouterComponents const & routerComponents,
+                                    m2::PointD const & startPoint,
+                                    m2::PointD const & startDirection,
+                                    m2::PointD const & finalPoint, double expectedTimeSeconds,
+                                    double relativeError = 0.07);
+
+void CheckSubwayExistence(Route const & route);
+void CheckSubwayAbsent(Route const & route);
 
 class TestTurn
 {
@@ -157,7 +165,7 @@ public:
   const TestTurn & TestNotValid() const;
   const TestTurn & TestPoint(m2::PointD const & expectedPoint, double inaccuracyMeters = 3.) const;
   const TestTurn & TestDirection(CarDirection expectedDirection) const;
-  const TestTurn & TestOneOfDirections(set<CarDirection> const & expectedDirections) const;
+  const TestTurn & TestOneOfDirections(std::set<CarDirection> const & expectedDirections) const;
   const TestTurn & TestRoundAboutExitNum(uint32_t expectedRoundAboutExitNum) const;
 };
 
@@ -165,7 +173,7 @@ public:
 /// inaccuracy is set in meters.
 TestTurn GetNthTurn(Route const & route, uint32_t turnNumber);
 
-void TestCurrentStreetName(routing::Route const & route, string const & expectedStreetName);
+void TestCurrentStreetName(routing::Route const & route, std::string const & expectedStreetName);
 
-void TestNextStreetName(routing::Route const & route, string const & expectedStreetName);
+void TestNextStreetName(routing::Route const & route, std::string const & expectedStreetName);
 }  // namespace integration

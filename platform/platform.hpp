@@ -1,5 +1,6 @@
 #pragma once
 
+#include "platform/battery_tracker.hpp"
 #include "platform/country_defines.hpp"
 #include "platform/gui_thread.hpp"
 #include "platform/http_user_agent.hpp"
@@ -11,7 +12,7 @@
 #include "base/exception.hpp"
 #include "base/macros.hpp"
 #include "base/task_loop.hpp"
-#include "base/worker_thread.hpp"
+#include "base/thread_pool_delayed.hpp"
 
 #include <cstdint>
 #include <memory>
@@ -127,9 +128,11 @@ protected:
 
   std::unique_ptr<base::TaskLoop> m_guiThread;
 
-  std::unique_ptr<base::WorkerThread> m_networkThread;
-  std::unique_ptr<base::WorkerThread> m_fileThread;
-  std::unique_ptr<base::WorkerThread> m_backgroundThread;
+  std::unique_ptr<base::thread_pool::delayed::ThreadPool> m_networkThread;
+  std::unique_ptr<base::thread_pool::delayed::ThreadPool> m_fileThread;
+  std::unique_ptr<base::thread_pool::delayed::ThreadPool> m_backgroundThread;
+
+  platform::BatteryLevelTracker m_batteryTracker;
 
 public:
   Platform();
@@ -267,6 +270,8 @@ public:
 
   std::string UniqueClientId() const;
 
+  std::string UniqueIdHash() const;
+
   std::string AdvertisingId() const;
 
   std::string MacAddress(bool md5Decoded) const;
@@ -291,6 +296,10 @@ public:
   static bool IsConnected() { return ConnectionStatus() != EConnectionType::CONNECTION_NONE; }
 
   static ChargingStatus GetChargingStatus();
+
+  // Returns current battery level. Possible values are from 0 to 100.
+  // Returns 100 when actual level is unknown.
+  static uint8_t GetBatteryLevel();
 
   void SetupMeasurementSystem() const;
 
@@ -323,7 +332,7 @@ public:
   }
 
   template <typename Task>
-  void RunDelayedTask(Thread thread, base::WorkerThread::Duration const & delay, Task && task)
+  void RunDelayedTask(Thread thread, base::thread_pool::delayed::ThreadPool::Duration const & delay, Task && task)
   {
     ASSERT(m_networkThread && m_fileThread && m_backgroundThread, ());
     switch (thread)
@@ -345,6 +354,8 @@ public:
 
   // Use this method for testing purposes only.
   void SetGuiThread(std::unique_ptr<base::TaskLoop> guiThread);
+
+  platform::BatteryLevelTracker & GetBatteryTracker() { return m_batteryTracker; }
 
 private:
   void RunThreads();

@@ -1,14 +1,17 @@
 #include "editor/xml_feature.hpp"
 
 #include "indexer/classificator.hpp"
-#include "indexer/feature.hpp"
+#include "indexer/editable_map_object.hpp"
+#include "indexer/ftypes_matcher.hpp"
+
+#include "coding/string_utf8_multilang.hpp"
+
+#include "geometry/latlon.hpp"
 
 #include "base/exception.hpp"
 #include "base/macros.hpp"
 #include "base/string_utils.hpp"
 #include "base/timer.hpp"
-
-#include "geometry/latlon.hpp"
 
 #include <array>
 #include <sstream>
@@ -24,6 +27,8 @@ constexpr char const * kUploadTimestamp = "upload_timestamp";
 constexpr char const * kUploadStatus = "upload_status";
 constexpr char const * kUploadError = "upload_error";
 constexpr char const * kHouseNumber = "addr:housenumber";
+constexpr char const * kPostcode = "addr:postcode";
+constexpr char const * kCuisine = "cuisine";
 
 constexpr char const * kUnknownType = "unknown";
 constexpr char const * kNodeType = "node";
@@ -38,12 +43,12 @@ pugi::xml_node FindTag(pugi::xml_document const & document, string const & key)
 ms::LatLon GetLatLonFromNode(pugi::xml_node const & node)
 {
   ms::LatLon ll;
-  if (!strings::to_double(node.attribute("lat").value(), ll.lat))
+  if (!strings::to_double(node.attribute("lat").value(), ll.m_lat))
   {
     MYTHROW(editor::NoLatLon,
             ("Can't parse lat attribute:", string(node.attribute("lat").value())));
   }
-  if (!strings::to_double(node.attribute("lon").value(), ll.lon))
+  if (!strings::to_double(node.attribute("lon").value(), ll.m_lon))
   {
     MYTHROW(editor::NoLatLon,
             ("Can't parse lon attribute:", string(node.attribute("lon").value())));
@@ -189,7 +194,7 @@ void XMLFeature::ApplyPatch(XMLFeature const & featureWithChanges)
 
 m2::PointD XMLFeature::GetMercatorCenter() const
 {
-  return MercatorBounds::FromLatLon(GetLatLonFromNode(GetRootNode()));
+  return mercator::FromLatLon(GetLatLonFromNode(GetRootNode()));
 }
 
 ms::LatLon XMLFeature::GetCenter() const
@@ -201,13 +206,13 @@ ms::LatLon XMLFeature::GetCenter() const
 void XMLFeature::SetCenter(ms::LatLon const & ll)
 {
   ASSERT_EQUAL(GetType(), Type::Node, ());
-  SetAttribute("lat", strings::to_string_dac(ll.lat, kLatLonTolerance));
-  SetAttribute("lon", strings::to_string_dac(ll.lon, kLatLonTolerance));
+  SetAttribute("lat", strings::to_string_dac(ll.m_lat, kLatLonTolerance));
+  SetAttribute("lon", strings::to_string_dac(ll.m_lon, kLatLonTolerance));
 }
 
 void XMLFeature::SetCenter(m2::PointD const & mercatorCenter)
 {
-  SetCenter(MercatorBounds::ToLatLon(mercatorCenter));
+  SetCenter(mercator::ToLatLon(mercatorCenter));
 }
 
 vector<m2::PointD> XMLFeature::GetGeometry() const
@@ -257,6 +262,14 @@ void XMLFeature::SetName(uint8_t const langCode, string const & name)
 string XMLFeature::GetHouse() const { return GetTagValue(kHouseNumber); }
 
 void XMLFeature::SetHouse(string const & house) { SetTagValue(kHouseNumber, house); }
+
+string XMLFeature::GetPostcode() const { return GetTagValue(kPostcode); }
+
+void XMLFeature::SetPostcode(string const & postcode) { SetTagValue(kPostcode, postcode); }
+
+string XMLFeature::GetCuisine() const { return GetTagValue(kCuisine); }
+
+void XMLFeature::SetCuisine(string const & cuisine) { SetTagValue(kCuisine, cuisine); }
 
 time_t XMLFeature::GetModificationTime() const
 {
@@ -381,58 +394,78 @@ XMLFeature::Type XMLFeature::StringToType(string const & type)
   return Type::Unknown;
 }
 
-void ApplyPatch(XMLFeature const & xml, FeatureType & feature)
+void ApplyPatch(XMLFeature const & xml, osm::EditableMapObject & object)
 {
-  xml.ForEachName([&feature](string const & lang, string const & name) {
-    feature.GetParams().name.AddString(lang, name);
+  xml.ForEachName([&object](string const & lang, string const & name) {
+    object.SetName(name, StringUtf8Multilang::GetLangIndex(lang));
   });
 
   string const house = xml.GetHouse();
   if (!house.empty())
-    feature.GetParams().house.Set(house);
+    object.SetHouseNumber(house);
 
-  xml.ForEachTag([&feature](string const & k, string const & v) {
-    if (!feature.UpdateMetadataValue(k, v))
+  auto const postcode = xml.GetPostcode();
+  if (!postcode.empty())
+    object.SetPostcode(postcode);
+
+  auto const cuisineStr = xml.GetCuisine();
+  if (!cuisineStr.empty())
+  {
+    auto const cuisines = strings::Tokenize(cuisineStr, ";");
+    object.SetCuisines(cuisines);
+  }
+
+  xml.ForEachTag([&object](string const & k, string const & v) {
+    if (!object.UpdateMetadataValue(k, v))
       LOG(LWARNING, ("Patch feature has unknown tags", k, v));
   });
-
-  // If types count are changed here, in ApplyPatch, new number of types should be passed
-  // instead of GetTypesCount().
-  // So we call UpdateHeader for recalc header and update parsed parts.
-  feature.UpdateHeader(true /* commonParsed */, true /* metadataParsed */);
 }
 
-XMLFeature ToXML(FeatureType & fromFeature, bool serializeType)
+XMLFeature ToXML(osm::EditableMapObject const & object, bool serializeType)
 {
-  bool const isPoint = fromFeature.GetFeatureType() == feature::GEOM_POINT;
+  bool const isPoint = object.GetGeomType() == feature::GeomType::Point;
   XMLFeature toFeature(isPoint ? XMLFeature::Type::Node : XMLFeature::Type::Way);
 
   if (isPoint)
   {
-    toFeature.SetCenter(fromFeature.GetCenter());
+    toFeature.SetCenter(object.GetMercator());
   }
   else
   {
-    auto const & triangles = fromFeature.GetTriangesAsPoints(FeatureType::BEST_GEOMETRY);
+    auto const & triangles = object.GetTriangesAsPoints();
     toFeature.SetGeometry(begin(triangles), end(triangles));
   }
 
-  fromFeature.ForEachName(
+  object.GetNameMultilang().ForEach(
       [&toFeature](uint8_t const & lang, string const & name) { toFeature.SetName(lang, name); });
 
-  string const house = fromFeature.GetHouseNumber();
+  string const house = object.GetHouseNumber();
   if (!house.empty())
     toFeature.SetHouse(house);
 
+  auto const postcode = object.GetPostcode();
+  if (!postcode.empty())
+    toFeature.SetPostcode(postcode);
+
+  auto const cuisines = object.GetCuisines();
+  if (!cuisines.empty())
+  {
+    auto const cuisineStr = strings::JoinStrings(cuisines, ";");
+    toFeature.SetCuisine(cuisineStr);
+  }
+
   if (serializeType)
   {
-    feature::TypesHolder th(fromFeature);
+    feature::TypesHolder th = object.GetTypes();
     // TODO(mgsergio): Use correct sorting instead of SortBySpec based on the config.
     th.SortBySpec();
     // TODO(mgsergio): Either improve "OSM"-compatible serialization for more complex types,
     // or save all our types directly, to restore and reuse them in migration of modified features.
     for (uint32_t const type : th)
     {
+      if (ftypes::IsCuisineChecker::Instance()(type))
+        continue;
+
       string const strType = classif().GetReadableObjectName(type);
       strings::SimpleTokenizer iter(strType, "-");
       string const k = *iter;
@@ -455,31 +488,45 @@ XMLFeature ToXML(FeatureType & fromFeature, bool serializeType)
     }
   }
 
-  fromFeature.ForEachMetadataItem(true /* skipSponsored */,
-                                  [&toFeature](string const & tag, string const & value) {
-                                    toFeature.SetTagValue(tag, value);
-                                  });
+  object.ForEachMetadataItem(true /* skipSponsored */,
+                             [&toFeature](string const & tag, string const & value) {
+                               toFeature.SetTagValue(tag, value);
+                             });
 
   return toFeature;
 }
 
-bool FromXML(XMLFeature const & xml, FeatureType & feature)
+bool FromXML(XMLFeature const & xml, osm::EditableMapObject & object)
 {
   ASSERT_EQUAL(XMLFeature::Type::Node, xml.GetType(),
-               ("At the moment only new nodes (points) can can be created."));
-  feature.SetCenter(xml.GetMercatorCenter());
-  xml.ForEachName([&feature](string const & lang, string const & name) {
-    feature.GetParams().name.AddString(lang, name);
+               ("At the moment only new nodes (points) can be created."));
+  object.SetPointType();
+  object.SetMercator(xml.GetMercatorCenter());
+  xml.ForEachName([&object](string const & lang, string const & name) {
+    object.SetName(name, StringUtf8Multilang::GetLangIndex(lang));
   });
 
   string const house = xml.GetHouse();
   if (!house.empty())
-    feature.GetParams().house.Set(house);
+    object.SetHouseNumber(house);
 
-  uint32_t typesCount = 0;
-  array<uint32_t, feature::kMaxTypesCount> types;
-  xml.ForEachTag([&feature, &types, &typesCount](string const & k, string const & v) {
-    if (feature.UpdateMetadataValue(k, v))
+  auto const postcode = xml.GetPostcode();
+  if (!postcode.empty())
+    object.SetPostcode(postcode);
+
+  auto const cuisineStr = xml.GetCuisine();
+  if (!cuisineStr.empty())
+  {
+    auto const cuisines = strings::Tokenize(cuisineStr, ";");
+    object.SetCuisines(cuisines);
+  }
+
+  feature::TypesHolder types = object.GetTypes();
+  xml.ForEachTag([&object, &types](string const & k, string const & v) {
+    if (object.UpdateMetadataValue(k, v))
+      return;
+
+    if (k == "cuisine")
       return;
 
     // Simple heuristics. It works if all our supported types for
@@ -492,18 +539,17 @@ bool FromXML(XMLFeature const & xml, FeatureType & feature)
     if (type == 0)
       type = cl.GetTypeByPathSafe({"amenity", k});  // atm=yes, toilet=yes etc.
 
-    if (type && typesCount >= feature::kMaxTypesCount)
+    if (type && types.Size() >= feature::kMaxTypesCount)
       LOG(LERROR, ("Can't add type:", k, v, ". Types limit exceeded."));
     else if (type)
-      types[typesCount++] = type;
+      types.Add(type);
     else
       LOG(LWARNING, ("Can't load/parse type:", k, v));
   });
 
-  feature.SetTypes(types, typesCount);
-  feature.UpdateHeader(true /* commonParsed */, true /* metadataParsed */);
+  object.SetTypes(types);
 
-  return typesCount > 0;
+  return types.Size() > 0;
 }
 
 string DebugPrint(XMLFeature const & feature)

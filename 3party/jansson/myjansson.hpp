@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -16,7 +17,11 @@ namespace base
 {
 struct JSONDecRef
 {
-  void operator()(json_t * root) const { json_decref(root); }
+  void operator()(json_t * root) const
+  {
+    if (root)
+      json_decref(root);
+  }
 };
 
 using JSONPtr = std::unique_ptr<json_t, JSONDecRef>;
@@ -37,6 +42,7 @@ public:
   Json() = default;
   explicit Json(std::string const & s) { ParseFrom(s); }
   explicit Json(char const * s) { ParseFrom(s); }
+  explicit Json(JSONPtr && json) { m_handle.AttachNew(json.release()); }
 
   Json GetDeepCopy() const
   {
@@ -60,26 +66,86 @@ private:
   JsonHandle m_handle;
 };
 
+JSONPtr LoadFromString(std::string const & str);
+std::string DumpToString(JSONPtr const & json, size_t flags = 0);
+
 json_t * GetJSONObligatoryField(json_t * root, std::string const & field);
+json_t const * GetJSONObligatoryField(json_t const * root, std::string const & field);
+json_t * GetJSONObligatoryField(json_t * root, char const * field);
+json_t const * GetJSONObligatoryField(json_t const * root, char const * field);
 json_t * GetJSONOptionalField(json_t * root, std::string const & field);
-bool JSONIsNull(json_t * root);
+json_t const * GetJSONOptionalField(json_t const * root, std::string const & field);
+json_t * GetJSONOptionalField(json_t * root, char const * field);
+json_t const * GetJSONOptionalField(json_t const * root, char const * field);
+
+template <class First>
+inline json_t const * GetJSONObligatoryFieldByPath(json_t const * root, First && path)
+{
+  return GetJSONObligatoryField(root, std::forward<First>(path));
+}
+
+template <class First, class... Paths>
+inline json_t const * GetJSONObligatoryFieldByPath(json_t const * root, First && path,
+                                                   Paths &&... paths)
+{
+  json_t const * newRoot = GetJSONObligatoryFieldByPath(root, std::forward<First>(path));
+  return GetJSONObligatoryFieldByPath(newRoot, std::forward<Paths>(paths)...);
+}
+
+template <class First>
+inline json_t * GetJSONObligatoryFieldByPath(json_t * root, First && path)
+{
+  return GetJSONObligatoryField(root, std::forward<First>(path));
+}
+
+template <class First, class... Paths>
+inline json_t * GetJSONObligatoryFieldByPath(json_t * root, First && path,
+                                                   Paths &&... paths)
+{
+  json_t * newRoot = GetJSONObligatoryFieldByPath(root, std::forward<First>(path));
+  return GetJSONObligatoryFieldByPath(newRoot, std::forward<Paths>(paths)...);
+}
+
+bool JSONIsNull(json_t const * root);
 }  // namespace base
 
+template <typename T>
+T FromJSON(json_t const * root)
+{
+  T result{};
+  FromJSON(root, result);
+  return result;
+}
+
 inline void FromJSON(json_t * root, json_t *& value) { value = root; }
+inline void FromJSON(json_t const * root, json_t const *& value) { value = root; }
 
-void FromJSON(json_t * root, double & result);
-void FromJSON(json_t * root, bool & result);
+void FromJSON(json_t const * root, double & result);
+void FromJSON(json_t const * root, bool & result);
 
-template <typename T,
-          typename std::enable_if<std::is_integral<T>::value, void>::type* = nullptr>
-void FromJSON(json_t * root, T & result)
+template <typename T, typename std::enable_if<std::is_integral<T>::value, void>::type * = nullptr>
+void FromJSON(json_t const * root, T & result)
 {
   if (!json_is_number(root))
     MYTHROW(base::Json::Exception, ("Object must contain a json number."));
   result = static_cast<T>(json_integer_value(root));
 }
 
-std::string FromJSONToString(json_t * root);
+std::string FromJSONToString(json_t const * root);
+
+template <typename T>
+T FromJSONObject(json_t const * root, char const * field)
+{
+  auto const * json = base::GetJSONObligatoryField(root, field);
+  try
+  {
+    return FromJSON<T>(json);
+  }
+  catch (base::Json::Exception const & e)
+  {
+    MYTHROW(base::Json::Exception, ("An error occured while parsing field", field, e.Msg()));
+  }
+}
 
 template <typename T>
 void FromJSONObject(json_t * root, std::string const & field, T & result)
@@ -96,7 +162,19 @@ void FromJSONObject(json_t * root, std::string const & field, T & result)
 }
 
 template <typename T>
-void FromJSONObjectOptionalField(json_t * root, std::string const & field, T & result)
+std::optional<T> FromJSONObjectOptional(json_t const * root, char const * field)
+{
+  auto * json = base::GetJSONOptionalField(root, field);
+  if (!json)
+    return {};
+
+  std::optional<T> result{T{}};
+  FromJSON(json, *result);
+  return result;
+}
+
+template <typename T>
+void FromJSONObjectOptionalField(json_t const * root, std::string const & field, T & result)
 {
   auto * json = base::GetJSONOptionalField(root, field);
   if (!json)
@@ -107,9 +185,11 @@ void FromJSONObjectOptionalField(json_t * root, std::string const & field, T & r
   FromJSON(json, result);
 }
 
-template <typename T,
-          typename std::enable_if<std::is_integral<T>::value, void>::type* = nullptr>
-inline base::JSONPtr ToJSON(T value) { return base::NewJSONInt(value); }
+template <typename T, typename std::enable_if<std::is_integral<T>::value, void>::type * = nullptr>
+inline base::JSONPtr ToJSON(T value)
+{
+  return base::NewJSONInt(value);
+}
 inline base::JSONPtr ToJSON(double value) { return base::NewJSONReal(value); }
 inline base::JSONPtr ToJSON(bool value) { return base::NewJSONBool(value); }
 inline base::JSONPtr ToJSON(char const * s) { return base::NewJSONString(s); }
@@ -125,10 +205,7 @@ inline void ToJSONArray(json_t & parent, base::JSONPtr & child)
   json_array_append_new(&parent, child.release());
 }
 
-inline void ToJSONArray(json_t & parent, json_t & child)
-{
-  json_array_append_new(&parent, &child);
-}
+inline void ToJSONArray(json_t & parent, json_t & child) { json_array_append_new(&parent, &child); }
 
 template <typename T>
 void ToJSONObject(json_t & root, char const * field, T const & value)
@@ -226,7 +303,13 @@ void ToJSONObject(json_t & root, std::string const & field, std::vector<T> const
 template <typename T>
 void FromJSONObjectOptionalField(json_t * root, std::string const & field, std::vector<T> & result)
 {
-  json_t * arr = base::GetJSONOptionalField(root, field);
+  FromJSONObjectOptionalField(const_cast<json_t const *>(root), field, result);
+}
+
+template <typename T>
+void FromJSONObjectOptionalField(json_t const * root, std::string const & field, std::vector<T> & result)
+{
+  json_t const * arr = base::GetJSONOptionalField(root, field);
   if (!arr)
   {
     result.clear();
@@ -247,12 +330,12 @@ struct JSONFreeDeleter
 
 namespace std
 {
-void FromJSON(json_t * root, std::string & result);
+void FromJSON(json_t const * root, std::string & result);
 inline base::JSONPtr ToJSON(std::string const & s) { return base::NewJSONString(s); }
 }  // namespace std
 
 namespace strings
 {
-void FromJSON(json_t * root, UniString & result);
+void FromJSON(json_t const * root, UniString & result);
 base::JSONPtr ToJSON(UniString const & s);
 }  // namespace strings

@@ -2,6 +2,7 @@
 
 #include "routing/index_router.hpp"
 #include "routing/road_graph.hpp"
+#include "routing/route.hpp"
 #include "routing/router.hpp"
 #include "routing/vehicle_mask.hpp"
 
@@ -26,7 +27,8 @@
 class RoutingTest
 {
 public:
-  RoutingTest(routing::IRoadGraph::Mode mode, std::set<std::string> const & neededMaps);
+  RoutingTest(routing::IRoadGraph::Mode mode, routing::VehicleType type,
+              std::set<std::string> const & neededMaps);
 
   virtual ~RoutingTest() = default;
 
@@ -40,9 +42,10 @@ protected:
 
   std::unique_ptr<routing::IRouter> CreateRouter(std::string const & name);
   void GetNearestEdges(m2::PointD const & pt,
-                       std::vector<std::pair<routing::Edge, routing::Junction>> & edges);
+                       std::vector<std::pair<routing::Edge, geometry::PointWithAltitude>> & edges);
 
   routing::IRoadGraph::Mode const m_mode;
+  routing::VehicleType m_type;
   FrozenDataSource m_dataSource;
   traffic::TrafficCache m_trafficCache;
 
@@ -69,16 +72,15 @@ public:
     // some speed depending of road type (0 <= speed <= maxSpeed).  For
     // tests purposes for all allowed features speed must be the same as
     // max speed.
-    using SpeedKMpH = typename Model::SpeedKMpH;
-
-    SpeedKMpH GetSpeed(FeatureType & f, routing::SpeedParams const & speedParams) const override
+    routing::SpeedKMpH GetSpeed(FeatureType & f,
+                                routing::SpeedParams const & speedParams) const override
     {
       auto const speed = Model::GetSpeed(f, speedParams);
       if (speed.m_weight <= 0.0)
-        return SpeedKMpH();
+        return routing::SpeedKMpH();
 
       // Note. Max weight speed is used for eta as well here. It's ok for test purposes.
-      return SpeedKMpH(Model::GetMaxWeightSpeed());
+      return routing::SpeedKMpH(Model::GetMaxWeightSpeed());
     }
   };
 
@@ -95,3 +97,6 @@ public:
 private:
   std::shared_ptr<SimplifiedModel> const m_model;
 };
+
+void TestRouter(routing::IRouter & router, m2::PointD const & startPos,
+                m2::PointD const & finalPos, routing::Route & route);

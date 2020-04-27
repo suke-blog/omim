@@ -37,10 +37,10 @@ public:
   void CorrectScalePoint(m2::PointD & pt1, m2::PointD & pt2) const override {}
   void CorrectGlobalScalePoint(m2::PointD & pt) const override {}
   void OnScaleEnded() override {}
-  void OnTouchMapAction(df::TouchEvent::ETouchType touchType) override {}
+  void OnTouchMapAction(df::TouchEvent::ETouchType touchType, bool isMapTouch) override {}
   void OnAnimatedScaleEnded() override {}
   bool OnNewVisibleViewport(m2::RectD const & oldViewport, m2::RectD const & newViewport,
-                            m2::PointD & gOffset) override
+                            bool needOffset, m2::PointD & gOffset) override
   {
     return false;
   }
@@ -52,7 +52,9 @@ public:
 
   void SetRect(m2::RectD const & r)
   {
-    m_stream.AddEvent(make_unique_dp<df::SetRectEvent>(r, false, -1, false /* isAnim */));
+    m_stream.AddEvent(make_unique_dp<df::SetRectEvent>(r, false /* rotate */, -1, false /* isAnim */,
+                                                       false /* useVisibleViewport */,
+                                                       nullptr /* parallelAnimCreator */));
   }
 
   void AddExpectation(char const * action)

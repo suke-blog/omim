@@ -1,28 +1,29 @@
 #include "map/cloud.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/file_reader.hpp"
 #include "coding/file_writer.hpp"
 #include "coding/internal/file_data.hpp"
 #include "coding/sha1.hpp"
 
-#include "platform/network_policy.hpp"
 #include "platform/http_client.hpp"
+#include "platform/http_payload.hpp"
+#include "platform/http_uploader.hpp"
+#include "platform/network_policy.hpp"
 #include "platform/platform.hpp"
 #include "platform/preferred_languages.hpp"
 #include "platform/remote_file.hpp"
 #include "platform/settings.hpp"
-#include "platform/http_uploader.hpp"
 
 #include "base/assert.hpp"
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 #include "base/stl_helpers.hpp"
-
-#include "3party/Alohalytics/src/alohalytics.h"
 
 #include <algorithm>
 #include <chrono>
 #include <sstream>
+
+#include "3party/Alohalytics/src/alohalytics.h"
 
 #include "private.h"
 
@@ -682,13 +683,18 @@ void Cloud::ScheduleUploadingTask(EntryPtr const & entry, uint32_t timeout)
     }
 
     // Prepare file to uploading.
+    bool needSkip;
     std::string hash;
-    auto const uploadedName = PrepareFileToUploading(entryName, hash);
+    auto const uploadedName = PrepareFileToUploading(entryName, hash, needSkip);
     auto deleteAfterUploading = [uploadedName]() {
       if (!uploadedName.empty())
         base::DeleteFileX(uploadedName);
     };
     SCOPE_GUARD(deleteAfterUploadingGuard, deleteAfterUploading);
+
+    // This file must be skipped by some reason.
+    if (needSkip)
+      return;
 
     if (uploadedName.empty())
     {
@@ -810,7 +816,8 @@ void Cloud::FinishUploadingOnRequestError(Cloud::RequestResult const & result)
   }
 }
 
-std::string Cloud::PrepareFileToUploading(std::string const & fileName, std::string & hash)
+std::string Cloud::PrepareFileToUploading(std::string const & fileName, std::string & hash,
+                                          bool & needSkip)
 {
   // 1. Get path to the original uploading file.
   std::string filePath;
@@ -831,7 +838,7 @@ std::string Cloud::PrepareFileToUploading(std::string const & fileName, std::str
 
   // 3. Create a temporary file from the original uploading file.
   auto name = ExtractFileNameWithoutExtension(filePath);
-  auto const tmpPath = base::JoinFoldersToPath(GetPlatform().TmpDir(), name + ".tmp");
+  auto const tmpPath = base::JoinPath(GetPlatform().TmpDir(), name + ".tmp");
   if (!base::CopyFileX(filePath, tmpPath))
     return {};
 
@@ -844,12 +851,12 @@ std::string Cloud::PrepareFileToUploading(std::string const & fileName, std::str
   if (originalSha1 != tmpSha1)
     return {};
 
-  auto const outputPath = base::JoinFoldersToPath(GetPlatform().TmpDir(),
-                                                name + ".uploaded");
+  auto const outputPath = base::JoinPath(GetPlatform().TmpDir(), name + ".uploaded");
 
   // 5. Convert temporary file and save to output path.
   CHECK(m_params.m_backupConverter, ());
   auto const convertionResult = m_params.m_backupConverter(tmpPath, outputPath);
+  needSkip = convertionResult.m_needSkip;
   hash = convertionResult.m_hash;
   if (convertionResult.m_isSuccessful)
     return outputPath;
@@ -921,15 +928,18 @@ Cloud::RequestResult Cloud::ExecuteUploading(UploadingResponseData const & respo
   int code = 0;
   for (size_t i = 0; i < urls.size(); ++i)
   {
-    platform::HttpUploader request;
-    request.SetUrl(urls[i]);
-    request.SetMethod(responseData.m_method);
+    platform::HttpPayload payload;
+    payload.m_url = urls[i];
+    payload.m_method = responseData.m_method;
+
     for (auto const & f : responseData.m_fields)
     {
       ASSERT_EQUAL(f.size(), 2, ());
-      request.SetParam(f[0], f[1]);
+      payload.m_params[f[0]] = f[1];
     }
-    request.SetFilePath(filePath);
+    payload.m_filePath = filePath;
+
+    platform::HttpUploader request(payload);
 
     auto const result = request.Upload();
     code = result.m_httpCode;
@@ -1391,7 +1401,8 @@ void Cloud::DownloadingTask(std::string const & dirPath, bool useFallbackUrl,
 
       platform::RemoteFile remoteFile(useFallbackUrl ? result.m_response.m_fallbackUrl
                                                      : result.m_response.m_url,
-                                      {} /* accessToken */, false /* allowRedirection */);
+                                      {} /* accessToken */, {} /* defaultHeaders */,
+                                      false /* allowRedirection */);
       auto const downloadResult = remoteFile.Download(filePath);
 
       if (downloadResult.m_status == platform::RemoteFile::Status::Ok)
@@ -1479,6 +1490,11 @@ void Cloud::CompleteRestoring(std::string const & dirPath)
       auto const fn = f.m_fileName + ".converted";
       auto const convertedFile = base::JoinPath(dirPath, fn);
       auto const convertionResult = m_params.m_restoreConverter(restoringFile, convertedFile);
+
+      // This file must be skipped by some reason.
+      if (convertionResult.m_needSkip)
+        continue;
+
       if (!convertionResult.m_isSuccessful)
       {
         FinishRestoring(SynchronizationResult::DiskError, "Restored file conversion error");

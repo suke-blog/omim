@@ -10,7 +10,7 @@
 #include "base/assert.hpp"
 #include "base/stl_helpers.hpp"
 
-#include "std/algorithm.hpp"
+#include <algorithm>
 
 namespace search
 {
@@ -26,7 +26,7 @@ NestedRectsCache::NestedRectsCache(DataSource const & dataSource)
 
 void NestedRectsCache::SetPosition(m2::PointD const & position, int scale)
 {
-  double distance = MercatorBounds::DistanceOnEarth(position, m_position);
+  double distance = mercator::DistanceOnEarth(position, m_position);
   if (distance < kPositionToleranceMeters && scale == m_scale && m_valid)
     return;
   m_position = position;
@@ -57,8 +57,8 @@ double NestedRectsCache::GetDistanceToFeatureMeters(FeatureID const & id) const
   if (auto const & info = id.m_mwmId.GetInfo())
   {
     auto const & rect = info->m_bordersRect;
-    return max(MercatorBounds::DistanceOnEarth(rect.Center(), m_position),
-               GetRadiusMeters(static_cast<RectScale>(scale)));
+    return std::max(mercator::DistanceOnEarth(rect.Center(), m_position),
+                    GetRadiusMeters(static_cast<RectScale>(scale)));
   }
 
   return RankingInfo::kMaxDistMeters;
@@ -92,11 +92,11 @@ void NestedRectsCache::Update()
     auto & bucket = m_buckets[scale];
     bucket.clear();
 
-    m2::RectD const rect = MercatorBounds::RectByCenterXYAndSizeInMeters(
+    m2::RectD const rect = mercator::RectByCenterXYAndSizeInMeters(
         m_position, GetRadiusMeters(static_cast<RectScale>(scale)));
 
     MwmSet::MwmId lastId;
-    TFeatures * lastFeatures = nullptr;
+    Features * lastFeatures = nullptr;
     auto addId = [&lastId, &lastFeatures, &bucket](FeatureID const & id)
     {
       if (!id.IsValid())
@@ -110,7 +110,7 @@ void NestedRectsCache::Update()
     };
     m_dataSource.ForEachFeatureIDInRect(addId, rect, m_scale);
     for (auto & kv : bucket)
-      sort(kv.second.begin(), kv.second.end());
+      std::sort(kv.second.begin(), kv.second.end());
   }
 
   m_valid = true;

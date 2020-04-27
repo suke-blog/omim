@@ -1,12 +1,9 @@
 #import "MWMPlacePageOpeningHoursCell.h"
-#import "MWMCommon.h"
-#import "MWMOpeningHoursCommon.h"
+#import <CoreApi/MWMCommon.h>
+#import <CoreApi/MWMOpeningHoursCommon.h>
 #import "MWMPlacePageOpeningHoursDayView.h"
-#import "Statistics.h"
-#import "UIImageView+Coloring.h"
+#import "SwiftBridge.h"
 
-#include "3party/opening_hours/opening_hours.hpp"
-#include "editor/opening_hours_ui.hpp"
 #include "editor/ui2oh.hpp"
 
 using namespace editor;
@@ -74,7 +71,7 @@ WeekDayView getWeekDayView()
   self.toggleButton.hidden = !delegate.forcedButton;
   self.expandImage.hidden = !delegate.forcedButton;
   self.expandImage.image = [UIImage imageNamed:@"ic_arrow_gray_right"];
-  self.expandImage.mwm_coloring = MWMImageColoringGray;
+  self.expandImage.styleName = @"MWMGray";
   if (isInterfaceRightToLeft())
     self.expandImage.transform = CGAffineTransformMakeScale(-1, 1);
   NSAssert(info, @"Schedule can not be empty");
@@ -112,8 +109,8 @@ WeekDayView getWeekDayView()
   [self.weekDaysView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
   for (size_t idx = 0; idx < timeTablesCount; ++idx)
   {
-    ui::TTimeTableProxy tt = timeTableSet.Get(idx);
-    ui::TOpeningDays const & workingDays = tt.GetOpeningDays();
+    auto tt = timeTableSet.Get(idx);
+    ui::OpeningDays const & workingDays = tt.GetOpeningDays();
     if (workingDays.find(currentDay) != workingDays.end())
     {
       haveCurrentDay = YES;
@@ -136,7 +133,7 @@ WeekDayView getWeekDayView()
     else
       self.expandImage.image = [UIImage imageNamed:@"ic_arrow_gray_down"];
 
-    self.expandImage.mwm_coloring = MWMImageColoringGray;
+    self.expandImage.styleName = @"MWMGray";
     if (isInterfaceRightToLeft())
       self.expandImage.transform = CGAffineTransformMakeScale(-1, 1);
 
@@ -149,7 +146,7 @@ WeekDayView getWeekDayView()
   [self alignTimeOffsets];
 }
 
-- (void)addCurrentDay:(ui::TTimeTableProxy)timeTable
+- (void)addCurrentDay:(ui::TimeTableSet::Proxy)timeTable
 {
   WeekDayView cd = self.currentDay;
   NSString * label;
@@ -186,7 +183,7 @@ WeekDayView getWeekDayView()
   [cd setClosed:NO];
 }
 
-- (void)addWeekDays:(ui::TTimeTableProxy)timeTable
+- (void)addWeekDays:(ui::TimeTableSet::Proxy)timeTable
 {
   WeekDayView wd = getWeekDayView();
   wd.currentDay = NO;
@@ -210,7 +207,7 @@ WeekDayView getWeekDayView()
 
 - (void)addClosedDays
 {
-  editor::ui::TOpeningDays closedDays = timeTableSet.GetUnhandledDays();
+  editor::ui::OpeningDays closedDays = timeTableSet.GetUnhandledDays();
   if (closedDays.empty())
     return;
   WeekDayView wd = getWeekDayView();

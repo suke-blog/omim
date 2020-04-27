@@ -1,9 +1,9 @@
 #import "MWMTableViewController.h"
 
-@class MWMPlacePageData;
+@class PlacePageData;
 
 @interface MWMEditBookmarkController : MWMTableViewController
 
-@property(weak, nonatomic) MWMPlacePageData * data;
+@property(strong, nonatomic) PlacePageData *placePageData;
 
 @end

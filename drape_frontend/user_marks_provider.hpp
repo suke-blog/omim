@@ -40,6 +40,7 @@ public:
   struct ColoredSymbolZoomInfo
   {
     std::map<int, df::ColoredSymbolViewParams> m_zoomInfo;
+    bool m_isSymbolStub = false;
     bool m_needOverlay = true;
     bool m_addTextSize = false;
   };
@@ -73,7 +74,7 @@ public:
   virtual uint16_t GetPriority() const = 0;
   virtual df::SpecialDisplacement GetDisplacement() const = 0;
   virtual uint32_t GetIndex() const = 0;
-  virtual bool HasSymbolShapes() const = 0;
+  virtual bool SymbolIsPOI() const = 0;
   virtual bool HasTitlePriority() const = 0;
   virtual int GetMinZoom() const = 0;
   virtual int GetMinTitleZoom() const = 0;
@@ -96,6 +97,7 @@ public:
   virtual void ResetChanges() const = 0;
 
   virtual kml::TrackId GetId() const { return m_id; }
+  virtual kml::MarkGroupId GetGroupId() const = 0;
 
   virtual int GetMinZoom() const = 0;
   virtual DepthLayer GetDepthLayer() const = 0;
@@ -103,7 +105,7 @@ public:
   virtual dp::Color GetColor(size_t layerIndex) const = 0;
   virtual float GetWidth(size_t layerIndex) const = 0;
   virtual float GetDepth(size_t layerIndex) const = 0;
-  virtual std::vector<m2::PointD> const & GetPoints() const = 0;
+  virtual std::vector<m2::PointD> GetPoints() const = 0;
 
 private:
   kml::TrackId m_id;
@@ -113,16 +115,18 @@ class UserMarksProvider
 {
 public:
   virtual ~UserMarksProvider() = default;
-  virtual kml::GroupIdSet const & GetDirtyGroupIds() const = 0;
+  virtual kml::GroupIdSet const & GetUpdatedGroupIds() const = 0;
   virtual kml::GroupIdSet const & GetRemovedGroupIds() const = 0;
   virtual kml::GroupIdSet GetAllGroupIds() const = 0;
+  virtual kml::GroupIdSet const & GetBecameVisibleGroupIds() const = 0;
+  virtual kml::GroupIdSet const & GetBecameInvisibleGroupIds() const = 0;
   virtual bool IsGroupVisible(kml::MarkGroupId groupId) const = 0;
-  virtual bool IsGroupVisibilityChanged(kml::MarkGroupId groupId) const = 0;
   virtual kml::MarkIdSet const & GetGroupPointIds(kml::MarkGroupId groupId) const = 0;
   virtual kml::TrackIdSet const & GetGroupLineIds(kml::MarkGroupId groupId) const = 0;
   virtual kml::MarkIdSet const & GetCreatedMarkIds() const = 0;
   virtual kml::MarkIdSet const & GetRemovedMarkIds() const = 0;
   virtual kml::MarkIdSet const & GetUpdatedMarkIds() const = 0;
+  virtual kml::TrackIdSet const & GetCreatedLineIds() const = 0;
   virtual kml::TrackIdSet const & GetRemovedLineIds() const = 0;
   /// Never store UserPointMark reference.
   virtual UserPointMark const * GetUserPointMark(kml::MarkId markId) const = 0;

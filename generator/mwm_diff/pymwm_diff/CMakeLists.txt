@@ -5,6 +5,8 @@ set(
   bindings.cpp
 )
 
+include_directories(${CMAKE_BINARY_DIR})
+
 omim_add_library(${PROJECT_NAME} MODULE ${SRC})
 
 omim_link_libraries(
@@ -12,6 +14,7 @@ omim_link_libraries(
   mwm_diff
   bsdiff
   platform
+  oauthcpp
   coding
   base
   stats_client

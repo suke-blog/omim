@@ -1,6 +1,5 @@
 #include "search/features_layer_path_finder.hpp"
 
-#include "search/cancel_exception.hpp"
 #include "search/features_layer_matcher.hpp"
 #include "search/house_numbers_matcher.hpp"
 
@@ -26,8 +25,8 @@ using ParentGraph = deque<unordered_map<uint32_t, uint32_t>>;
 
 // This function tries to estimate amount of work needed to perform an
 // intersection pass on a sequence of layers.
-template <typename TIt>
-uint64_t CalcPassCost(TIt begin, TIt end)
+template <typename It>
+uint64_t CalcPassCost(It begin, It end)
 {
   uint64_t cost = 0;
 
@@ -133,7 +132,7 @@ void FeaturesLayerPathFinder::FindReachableVerticesTopDown(
 
   for (size_t i = layers.size() - 1; i != 0; --i)
   {
-    BailIfCancelled(m_cancellable);
+    BailIfCancelled();
 
     parentGraph.emplace_back();
     FeaturesLayer parent(*layers[i]);
@@ -197,7 +196,7 @@ void FeaturesLayerPathFinder::FindReachableVerticesBottomUp(
 
   for (size_t i = 0; i + 1 != layers.size(); ++i)
   {
-    BailIfCancelled(m_cancellable);
+    BailIfCancelled();
 
     parentGraph.emplace_front();
     FeaturesLayer child(*layers[i]);

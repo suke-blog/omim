@@ -11,6 +11,7 @@
 #include "base/timer.hpp"
 
 #include <atomic>
+#include <cstdint>
 #include <list>
 #include <mutex>
 #include <string>
@@ -43,7 +44,14 @@ public:
     ref_ptr<Texture> m_texture;
   };
 
-  class SymbolRegion : public BaseRegion {};
+  class SymbolRegion : public BaseRegion
+  {
+  public:
+    uint32_t GetTextureIndex() const { return m_textureIndex; }
+    void SetTextureIndex(uint32_t index) { m_textureIndex = index; }
+  private:
+    uint32_t m_textureIndex = 0;
+  };
 
   class GlyphRegion : public BaseRegion
   {
@@ -85,6 +93,7 @@ public:
 
   void Init(ref_ptr<dp::GraphicsContext> context, Params const & params);
   void OnSwitchMapStyle(ref_ptr<dp::GraphicsContext> context);
+  void GetTexturesToCleanup(std::vector<drape_ptr<HWTexture>> & textures);
 
   void GetSymbolRegion(std::string const & symbolName, SymbolRegion & region);
   bool HasSymbolRegion(std::string const & symbolName) const;
@@ -150,10 +159,6 @@ private:
   void GetGlyphsRegions(ref_ptr<FontTexture> tex, strings::UniString const & text,
                         int fixedHeight, TGlyphsBuffer & regions);
 
-  size_t FindGlyphsGroup(strings::UniChar const & c) const;
-  size_t FindGlyphsGroup(strings::UniString const & text) const;
-  size_t FindGlyphsGroup(TMultilineText const & text) const;
-
   size_t FindHybridGlyphsGroup(strings::UniString const & text, int fixedHeight);
   size_t FindHybridGlyphsGroup(TMultilineText const & text, int fixedHeight);
 
@@ -198,29 +203,11 @@ private:
   template<typename TText, typename TBuffer>
   void CalcGlyphRegions(TText const & text, int fixedHeight, TBuffer & buffers)
   {
-    size_t const groupIndex = FindGlyphsGroup(text);
-    bool useHybridGroup = false;
-    if (fixedHeight < 0 && groupIndex != GetInvalidGlyphGroup())
-    {
-      GlyphGroup & group = m_glyphGroups[groupIndex];
-      uint32_t const absentGlyphs = GetAbsentGlyphsCount(group.m_texture, text, fixedHeight);
-      if (group.m_texture == nullptr || group.m_texture->HasEnoughSpace(absentGlyphs))
-        FillResults<GlyphGroup>(text, fixedHeight, buffers, group);
-      else
-        useHybridGroup = true;
-    }
-    else
-    {
-      useHybridGroup = true;
-    }
-
-    if (useHybridGroup)
-    {
-      size_t const hybridGroupIndex = FindHybridGlyphsGroup(text, fixedHeight);
-      ASSERT(hybridGroupIndex != GetInvalidGlyphGroup(), ());
-      HybridGlyphGroup & group = m_hybridGlyphGroups[hybridGroupIndex];
-      FillResults<HybridGlyphGroup>(text, fixedHeight, buffers, group);
-    }
+    CHECK(m_isInitialized, ());
+    size_t const hybridGroupIndex = FindHybridGlyphsGroup(text, fixedHeight);
+    ASSERT(hybridGroupIndex != GetInvalidGlyphGroup(), ());
+    HybridGlyphGroup & group = m_hybridGlyphGroups[hybridGroupIndex];
+    FillResults<HybridGlyphGroup>(text, fixedHeight, buffers, group);
   }
 
   uint32_t GetAbsentGlyphsCount(ref_ptr<Texture> texture, strings::UniString const & text,
@@ -234,6 +221,7 @@ private:
   static constexpr size_t GetInvalidGlyphGroup();
 
 private:
+  bool m_isInitialized = false;
   ref_ptr<GlyphGenerator> m_glyphGenerator;
   std::string m_resPostfix;
   std::vector<drape_ptr<Texture>> m_symbolTextures;
@@ -250,8 +238,9 @@ private:
   drape_ptr<GlyphManager> m_glyphManager;
   drape_ptr<HWTextureAllocator> m_textureAllocator;
 
-  buffer_vector<GlyphGroup, 64> m_glyphGroups;
   buffer_vector<HybridGlyphGroup, 4> m_hybridGlyphGroups;
+
+  std::vector<drape_ptr<HWTexture>> m_texturesToCleanup;
 
   base::Timer m_uploadTimer;
   std::atomic_flag m_nothingToUpload;

@@ -1,18 +1,19 @@
 #include "platform/platform.hpp"
+
 #include "platform/socket.hpp"
 
 #include "coding/file_reader.hpp"
-#include "coding/file_name_utils.hpp"
 
 #include "base/exception.hpp"
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 #include "base/macros.hpp"
 #include "base/scope_guard.hpp"
 
-#include "std/algorithm.hpp"
-#include "std/bind.hpp"
-#include "std/initializer_list.hpp"
-#include "std/string.hpp"
+#include <algorithm>
+#include <functional>
+#include <initializer_list>
+#include <string>
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -23,6 +24,8 @@
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
+
+using namespace std;
 
 namespace
 {
@@ -96,8 +99,12 @@ string HomeDir()
 // An exception is thrown if the default dir is not already there and we were unable to create it.
 string DefaultWritableDir()
 {
-  initializer_list<string> dirs = {".local", "share", "MapsWithMe"};
-  auto const result = base::JoinFoldersToPath(dirs, "" /* file */);
+  initializer_list<string> const dirs = {".local", "share", "MapsWithMe"};
+  string result;
+  for (auto const & dir : dirs)
+    result = base::JoinPath(result, dir);
+  result = base::AddSlashIfNeeded(result);
+
   auto const home = HomeDir();
   if (!MkDirsChecked(home, dirs))
     MYTHROW(FileSystemException, ("Cannot create directory:", result));
@@ -258,6 +265,12 @@ Platform::EConnectionType Platform::ConnectionStatus()
 Platform::ChargingStatus Platform::GetChargingStatus()
 {
   return Platform::ChargingStatus::Plugged;
+}
+
+uint8_t Platform::GetBatteryLevel()
+{
+  // This value is always 100 for desktop.
+  return 100;
 }
 
 void Platform::SetGuiThread(unique_ptr<base::TaskLoop> guiThread)

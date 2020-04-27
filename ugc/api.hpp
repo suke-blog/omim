@@ -8,7 +8,7 @@
 
 #include "geometry/point2d.hpp"
 
-#include "base/worker_thread.hpp"
+#include "base/thread_pool_delayed.hpp"
 
 #include <functional>
 
@@ -41,9 +41,10 @@ public:
   void HasUGCForPlace(uint32_t bestType, m2::PointD const & point,
                       HasUGCForPlaceCallback const & callback);
   void SendingCompleted();
-  void SaveUGCOnDisk();
 
   Loader & GetLoader();
+
+  void ValidateStorage();
 
 private:
   void GetUGCImpl(FeatureID const & id, UGCCallbackUnsafe const & callback);
@@ -52,9 +53,8 @@ private:
   void HasUGCForPlaceImpl(uint32_t bestType, m2::PointD const & point,
                           HasUGCForPlaceCallback const & callback) const;
   void SendingCompletedImpl();
-  void SaveUGCOnDiskImpl();
 
-  base::WorkerThread m_thread;
+  base::thread_pool::delayed::ThreadPool m_thread;
   Storage m_storage;
   Loader m_loader;
 };

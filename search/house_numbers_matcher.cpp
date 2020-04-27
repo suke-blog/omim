@@ -4,13 +4,17 @@
 
 #include "base/logging.hpp"
 
-#include "std/algorithm.hpp"
-#include "std/iterator.hpp"
-#include "std/limits.hpp"
-#include "std/sstream.hpp"
-#include "std/transform_iterator.hpp"
+#include <algorithm>
+#include <iterator>
+#include <limits>
+#include <sstream>
 
+#include <boost/iterator/transform_iterator.hpp>
+
+using namespace std;
 using namespace strings;
+
+using boost::make_transform_iterator;
 
 namespace search
 {
@@ -27,7 +31,7 @@ namespace
 // sort | uniq
 //
 // *NOTE* there is a list of exceptions at the end.
-char const * const g_strings[] = {
+vector<string> const g_strings = {
     "a",      "aa",      "ab",      "abc",  "ac",   "ad",      "ae",      "af",       "ag",
     "ah",     "ai",      "aj",      "ak",   "al",   "am",      "an",      "ao",       "ap",
     "aq",     "ar",      "are",     "as",   "at",   "au",      "av",      "avenida",  "aw",
@@ -82,7 +86,7 @@ char const * const g_strings[] = {
 // ./clusterize-tag-values.lisp house-number path-to-taginfo-db.db > numbers.txt
 // tail -n +2 numbers.txt  | head -78 | sed 's/^.*) \(.*\) \[.*$/"\1"/g;s/[ -/]//g;s/$/,/' |
 // sort | uniq
-const char * const g_patterns[] = {
+vector<string> const g_patterns = {
     "BL",  "BLN",  "BLNSL", "BN",   "BNL",    "BNSL", "L",   "LL",   "LN",  "LNL",  "LNLN", "LNN",
     "N",   "NBL",  "NBLN",  "NBN",  "NBNBN",  "NBNL", "NL",  "NLBN", "NLL", "NLLN", "NLN",  "NLNL",
     "NLS", "NLSN", "NN",    "NNBN", "NNL",    "NNLN", "NNN", "NNS",  "NS",  "NSN",  "NSS",  "S",
@@ -92,8 +96,14 @@ const char * const g_patterns[] = {
     "NNBNL"
 };
 
+// List of patterns which look like house numbers more than other patterns. Constructed by hand.
+vector<string> const g_patternsStrict = {
+    "N", "NBN", "NBL", "NL"
+};
+
+
 // List of common synonyms for building parts. Constructed by hand.
-const char * const g_buildingPartSynonyms[] = {
+vector<string> const g_buildingPartSynonyms = {
     "building", "bldg", "bld",   "bl",  "unit",     "block", "blk",  "корпус",
     "корп",     "кор",  "литер", "лит", "строение", "стр",   "блок", "бл"};
 
@@ -113,11 +123,11 @@ bool IsStopWord(UniString const & s, bool isPrefix)
 class BuildingPartSynonymsMatcher
 {
 public:
-  using TSynonyms = StringSet<UniChar, 4>;
+  using Synonyms = StringSet<UniChar, 4>;
 
   BuildingPartSynonymsMatcher()
   {
-    for (auto const * s : g_buildingPartSynonyms)
+    for (auto const & s : g_buildingPartSynonyms)
     {
       UniString const us = MakeUniString(s);
       m_synonyms.Add(us.begin(), us.end());
@@ -127,27 +137,27 @@ public:
   // Returns true if |s| looks like a building synonym.
   inline bool Has(UniString const & s) const
   {
-    return m_synonyms.Has(s.begin(), s.end()) == TSynonyms::Status::Full;
+    return m_synonyms.Has(s.begin(), s.end()) == Synonyms::Status::Full;
   }
 
 private:
-  TSynonyms m_synonyms;
+  Synonyms m_synonyms;
 };
 
 class StringsMatcher
 {
 public:
-  using TStrings = StringSet<UniChar, 8>;
+  using Strings = StringSet<UniChar, 8>;
 
   StringsMatcher()
   {
-    for (auto const * s : g_strings)
+    for (auto const & s : g_strings)
     {
       UniString const us = MakeUniString(s);
       m_strings.Add(us.begin(), us.end());
     }
 
-    for (auto const * s : g_buildingPartSynonyms)
+    for (auto const & s : g_buildingPartSynonyms)
     {
       UniString const us = MakeUniString(s);
       m_strings.Add(us.begin(), us.end());
@@ -162,28 +172,28 @@ public:
     auto const status = m_strings.Has(s.begin(), s.end());
     switch (status)
     {
-    case TStrings::Status::Absent: return false;
-    case TStrings::Status::Prefix: return isPrefix;
-    case TStrings::Status::Full: return true;
+    case Strings::Status::Absent: return false;
+    case Strings::Status::Prefix: return isPrefix;
+    case Strings::Status::Full: return true;
     }
     UNREACHABLE();
   }
 
 private:
-  TStrings m_strings;
+  Strings m_strings;
 };
 
 class HouseNumberClassifier
 {
 public:
-  using TPatterns = StringSet<Token::Type, 4>;
+  using Patterns = StringSet<Token::Type, 4>;
 
-  HouseNumberClassifier()
+  HouseNumberClassifier(vector<string> const & patterns = g_patterns)
   {
-    for (auto const * p : g_patterns)
+    for (auto const & p : patterns)
     {
-      m_patterns.Add(make_transform_iterator(p, &CharToType),
-                     make_transform_iterator(p + strlen(p), &CharToType));
+      m_patterns.Add(make_transform_iterator(p.begin(), &CharToType),
+                     make_transform_iterator(p.end(), &CharToType));
     }
   }
 
@@ -233,9 +243,9 @@ public:
                                        make_transform_iterator(parse.end(), &TokenToType));
     switch (status)
     {
-    case TPatterns::Status::Absent: return false;
-    case TPatterns::Status::Prefix: return true;
-    case TPatterns::Status::Full: return true;
+    case Patterns::Status::Absent: return false;
+    case Patterns::Status::Prefix: return true;
+    case Patterns::Status::Full: return true;
     }
     UNREACHABLE();
   }
@@ -258,7 +268,7 @@ private:
   static Token::Type TokenToType(Token const & token) { return token.m_type; }
 
   StringsMatcher m_matcher;
-  TPatterns m_patterns;
+  Patterns m_patterns;
 };
 
 Token::Type GetCharType(UniChar c)
@@ -350,8 +360,8 @@ bool IsShortBuildingSynonym(UniString const & t)
   return false;
 }
 
-template <typename TFn>
-void ForEachGroup(vector<Token> const & ts, TFn && fn)
+template <typename Fn>
+void ForEachGroup(vector<Token> const & ts, Fn && fn)
 {
   size_t i = 0;
   while (i < ts.size())
@@ -370,8 +380,8 @@ void ForEachGroup(vector<Token> const & ts, TFn && fn)
   }
 }
 
-template <typename TFn>
-void TransformString(UniString && token, TFn && fn)
+template <typename Fn>
+void TransformString(UniString && token, Fn && fn)
 {
   static UniString const kLiter = MakeUniString("лит");
 
@@ -551,7 +561,8 @@ bool HouseNumbersMatch(strings::UniString const & houseNumber, vector<Token> con
     if (parse.empty())
       continue;
     if (parse[0] == queryParse[0] &&
-        IsSubsequence(parse.begin() + 1, parse.end(), queryParse.begin() + 1, queryParse.end()))
+        (IsSubsequence(parse.begin() + 1, parse.end(), queryParse.begin() + 1, queryParse.end()) ||
+         IsSubsequence(queryParse.begin() + 1, queryParse.end(), parse.begin() + 1, parse.end())))
     {
       return true;
     }
@@ -563,6 +574,22 @@ bool LooksLikeHouseNumber(strings::UniString const & s, bool isPrefix)
 {
   static HouseNumberClassifier const classifier;
   return classifier.LooksGood(s, isPrefix);
+}
+
+bool LooksLikeHouseNumber(string const & s, bool isPrefix)
+{
+  return LooksLikeHouseNumber(strings::MakeUniString(s), isPrefix);
+}
+
+bool LooksLikeHouseNumberStrict(strings::UniString const & s)
+{
+  static HouseNumberClassifier const classifier(g_patternsStrict);
+  return classifier.LooksGood(s, false /* isPrefix */);
+}
+
+bool LooksLikeHouseNumberStrict(string const & s)
+{
+  return LooksLikeHouseNumberStrict(strings::MakeUniString(s));
 }
 
 string DebugPrint(Token::Type type)

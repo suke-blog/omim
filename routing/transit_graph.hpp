@@ -4,12 +4,15 @@
 #include "routing/fake_ending.hpp"
 #include "routing/fake_graph.hpp"
 #include "routing/fake_vertex.hpp"
+#include "routing/latlon_with_altitude.hpp"
 #include "routing/road_graph.hpp"
 #include "routing/route_weight.hpp"
 #include "routing/segment.hpp"
 
 #include "transit/transit_graph_data.hpp"
 #include "transit/transit_types.hpp"
+
+#include "routing_common/num_mwm_id.hpp"
 
 #include <cstdint>
 #include <map>
@@ -31,8 +34,8 @@ public:
 
   TransitGraph(NumMwmId numMwmId, std::shared_ptr<EdgeEstimator> estimator);
 
-  Junction const & GetJunction(Segment const & segment, bool front) const;
-  RouteWeight CalcSegmentWeight(Segment const & segment) const;
+  LatLonWithAltitude const & GetJunction(Segment const & segment, bool front) const;
+  RouteWeight CalcSegmentWeight(Segment const & segment, EdgeEstimator::Purpose purpose) const;
   RouteWeight GetTransferPenalty(Segment const & from, Segment const & to) const;
   void GetTransitEdges(Segment const & segment, bool isOutgoing,
                        std::vector<SegmentEdge> & edges) const;
@@ -55,12 +58,12 @@ private:
   // Adds gate to fake graph. Also adds gate to temporary stopToBack, stopToFront maps used while
   // TransitGraph::Fill.
   void AddGate(transit::Gate const & gate, FakeEnding const & ending,
-               std::map<transit::StopId, Junction> const & stopCoords, bool isEnter,
-               StopToSegmentsMap & stopToBack, StopToSegmentsMap & stopToFront);
+               std::map<transit::StopId, LatLonWithAltitude> const & stopCoords,
+               bool isEnter, StopToSegmentsMap & stopToBack, StopToSegmentsMap & stopToFront);
   // Adds transit edge to fake graph, returns corresponding transit segment. Also adds gate to
   // temporary stopToBack, stopToFront maps used while TransitGraph::Fill.
   Segment AddEdge(transit::Edge const & edge,
-                  std::map<transit::StopId, Junction> const & stopCoords,
+                  std::map<transit::StopId, LatLonWithAltitude> const & stopCoords,
                   StopToSegmentsMap & stopToBack, StopToSegmentsMap & stopToFront);
   // Adds connections to fake graph.
   void AddConnections(StopToSegmentsMap const & connections, StopToSegmentsMap const & stopToBack,
@@ -68,7 +71,7 @@ private:
 
   NumMwmId const m_mwmId = kFakeNumMwmId;
   std::shared_ptr<EdgeEstimator> m_estimator;
-  FakeGraph<Segment, FakeVertex> m_fake;
+  FakeGraph m_fake;
   std::map<Segment, transit::Edge> m_segmentToEdge;
   std::map<Segment, transit::Gate> m_segmentToGate;
   std::map<transit::LineId, double> m_transferPenalties;

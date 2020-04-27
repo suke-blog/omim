@@ -1,7 +1,7 @@
 project(shaders)
 
 execute_process(
-  COMMAND python ${OMIM_ROOT}/shaders/gl_shaders_preprocessor.py
+  COMMAND ${PYTHON_EXECUTABLE} ${OMIM_ROOT}/shaders/gl_shaders_preprocessor.py
   ${OMIM_ROOT}/shaders/GL
   shader_index.txt
   programs.hpp
@@ -12,6 +12,9 @@ execute_process(
 
 include_directories(
   ${OMIM_ROOT}/3party/glm
+  ${OMIM_ROOT}/3party/jansson/src
+  ${OMIM_ROOT}/3party/Vulkan-Headers/include
+  ${OMIM_ROOT}/3party/vulkan_wrapper
 )
 
 set(
@@ -29,6 +32,10 @@ set(
   program_params.hpp
   program_pool.hpp
   programs.hpp
+  vulkan_program_params.cpp
+  vulkan_program_params.hpp
+  vulkan_program_pool.cpp
+  vulkan_program_pool.hpp
 )
 
 if (PLATFORM_IPHONE)
@@ -84,6 +91,8 @@ set(
   GL/route_marker.fsh.glsl
   GL/route_marker.vsh.glsl
   GL/ruler.vsh.glsl
+  GL/selection_line.fsh.glsl
+  GL/selection_line.vsh.glsl
   GL/screen_quad.vsh.glsl
   GL/shader_index.txt
   GL/shaders_lib.glsl

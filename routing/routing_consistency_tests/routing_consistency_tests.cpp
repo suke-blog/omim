@@ -1,7 +1,7 @@
 #include "testing/testing.hpp"
 #include "routing/routing_integration_tests/routing_test_tools.hpp"
 
-#include "generator/borders_loader.hpp"
+#include "generator/borders.hpp"
 
 #include "storage/country_decl.hpp"
 
@@ -72,15 +72,15 @@ bool ParseUserString(string const & incomeString, UserRoutingRecord & result)
 
   // Extract numbers from a record.
   result.distance = GetDouble(incomeString, "distance");
-  result.start = MercatorBounds::FromLatLon(GetDouble(incomeString, "startLat"), GetDouble(incomeString, "startLon"));
-  result.stop = MercatorBounds::FromLatLon(GetDouble(incomeString, "finalLat"), GetDouble(incomeString, "finalLon"));
+  result.start = mercator::FromLatLon(GetDouble(incomeString, "startLat"), GetDouble(incomeString, "startLon"));
+  result.stop = mercator::FromLatLon(GetDouble(incomeString, "finalLat"), GetDouble(incomeString, "finalLon"));
   return true;
 }
 
 class RouteTester
 {
 public:
-  RouteTester() : m_components(integration::GetVehicleComponents<VehicleType::Car>())
+  RouteTester() : m_components(integration::GetVehicleComponents(VehicleType::Car))
   {
   }
 

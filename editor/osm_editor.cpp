@@ -33,21 +33,20 @@
 #include "base/thread_checker.hpp"
 #include "base/timer.hpp"
 
-#include "std/algorithm.hpp"
-#include "std/array.hpp"
-#include "std/chrono.hpp"
-#include "std/sstream.hpp"
 #include "std/target_os.hpp"
-#include "std/tuple.hpp"
-#include "std/unordered_map.hpp"
-#include "std/unordered_set.hpp"
+
+#include <algorithm>
+#include <array>
+#include <sstream>
 
 #include "3party/Alohalytics/src/alohalytics.h"
 #include "3party/opening_hours/opening_hours.hpp"
 #include "3party/pugixml/src/pugixml.hpp"
 
+using namespace std;
+
 using namespace pugi;
-using feature::EGeomType;
+using feature::GeomType;
 using feature::Metadata;
 using editor::XMLFeature;
 
@@ -69,13 +68,13 @@ constexpr char const * kMatchedFeatureIsEmpty = "Matched feature has no tags";
 
 struct XmlSection
 {
-  XmlSection(FeatureStatus status, std::string const & sectionName)
+  XmlSection(FeatureStatus status, string const & sectionName)
     : m_status(status), m_sectionName(sectionName)
   {
   }
 
   FeatureStatus m_status = FeatureStatus::Untouched;
-  std::string m_sectionName;
+  string m_sectionName;
 };
 
 array<XmlSection, 4> const kXmlSections = {{{FeatureStatus::Deleted, kDeleteSection},
@@ -85,7 +84,7 @@ array<XmlSection, 4> const kXmlSections = {{{FeatureStatus::Deleted, kDeleteSect
 
 struct LogHelper
 {
-  LogHelper(MwmSet::MwmId const & mwmId) : m_mwmId(mwmId) {}
+  explicit LogHelper(MwmSet::MwmId const & mwmId) : m_mwmId(mwmId) {}
 
   ~LogHelper()
   {
@@ -119,37 +118,41 @@ bool NeedsUpload(string const & uploadStatus)
 }
 
 /// Compares editable fields connected with feature ignoring street.
-bool AreFeaturesEqualButStreet(FeatureType & a, FeatureType & b)
+bool AreObjectsEqualButStreet(osm::EditableMapObject const & lhs,
+                              osm::EditableMapObject const & rhs)
 {
-  feature::TypesHolder const aTypes(a);
-  feature::TypesHolder const bTypes(b);
+  feature::TypesHolder const & lhsTypes = lhs.GetTypes();
+  feature::TypesHolder const & rhsTypes = rhs.GetTypes();
 
-  if (!aTypes.Equals(bTypes))
+  if (!lhsTypes.Equals(rhsTypes))
     return false;
 
-  if (a.GetHouseNumber() != b.GetHouseNumber())
+  if (lhs.GetHouseNumber() != rhs.GetHouseNumber())
     return false;
 
-  if (!a.GetMetadata().Equals(b.GetMetadata()))
+  if (lhs.GetPostcode() != rhs.GetPostcode())
     return false;
 
-  if (a.GetNames() != b.GetNames())
+  if (lhs.GetCuisines() != rhs.GetCuisines())
+    return false;
+
+  if (!lhs.GetMetadata().Equals(rhs.GetMetadata()))
+    return false;
+
+  if (lhs.GetNameMultilang() != rhs.GetNameMultilang())
     return false;
 
   return true;
 }
 
-XMLFeature GetMatchingFeatureFromOSM(osm::ChangesetWrapper & cw, FeatureType & ft)
+XMLFeature GetMatchingFeatureFromOSM(osm::ChangesetWrapper & cw, osm::EditableMapObject & o)
 {
-  ASSERT_NOT_EQUAL(ft.GetFeatureType(), feature::GEOM_LINE,
+  ASSERT_NOT_EQUAL(o.GetGeomType(), feature::GeomType::Line,
                    ("Line features are not supported yet."));
-  if (ft.GetFeatureType() == feature::GEOM_POINT)
-    return cw.GetMatchingNodeFeatureFromOSM(ft.GetCenter());
+  if (o.GetGeomType() == feature::GeomType::Point)
+    return cw.GetMatchingNodeFeatureFromOSM(o.GetMercator());
 
-  // Warning: geometry is cached in FeatureType. So if it wasn't BEST_GEOMETRY,
-  // we can never have it. Features here came from editors loader and should
-  // have BEST_GEOMETRY geometry.
-  auto geometry = ft.GetTriangesAsPoints(FeatureType::BEST_GEOMETRY);
+  auto geometry = o.GetTriangesAsPoints();
 
   ASSERT_GREATER_OR_EQUAL(geometry.size(), 3, ("Is it an area feature?"));
 
@@ -247,6 +250,9 @@ bool Editor::Save(FeaturesContainer const & features) const
   root.append_attribute("format_version") = 1;
   for (auto const & mwm : features)
   {
+    if (!mwm.first.IsAlive())
+      continue;
+
     xml_node mwmNode = root.append_child(kXmlMwmNode);
     mwmNode.append_attribute("name") = mwm.first.GetInfo()->GetCountryName().c_str();
     mwmNode.append_attribute("version") = static_cast<long long>(mwm.first.GetInfo()->GetVersion());
@@ -257,13 +263,10 @@ bool Editor::Save(FeaturesContainer const & features) const
     for (auto & index : mwm.second)
     {
       FeatureTypeInfo const & fti = index.second;
-      // Temporary solution because of FeatureType does not have constant getters.
-      // TODO(a): Use constant reference instead of copy.
-      auto feature = fti.m_feature;
       // TODO: Do we really need to serialize deleted features in full details? Looks like mwm ID
       // and meta fields are enough.
       XMLFeature xf =
-          editor::ToXML(feature, true /*type serializing helps during migration*/);
+          editor::ToXML(fti.m_object, true /* type serializing helps during migration */);
       xf.SetMWMFeatureIndex(index.first);
       if (!fti.m_street.empty())
         xf.SetTagValue(kAddrStreetTag, fti.m_street);
@@ -308,32 +311,10 @@ void Editor::ClearAllLocalEdits()
   Invalidate();
 }
 
-void Editor::OnMapDeregistered(platform::LocalCountryFile const & localFile)
+void Editor::OnMapRegistered(platform::LocalCountryFile const & localFile)
 {
-  // Can be called on non-main-thread in case of simultaneous uploading process.
-  GetPlatform().RunTask(Platform::Thread::Gui, [this, localFile]
-  {
-    using FeaturePair = FeaturesContainer::value_type;
-
-    auto const findMwm = [](FeaturesContainer const & src, platform::LocalCountryFile const & localFile)
-    {
-      // Cannot search by MwmId because country already removed. So, search by country name.
-      return find_if(cbegin(src), cend(src), [&localFile](FeaturePair const & item) {
-        return item.first.GetInfo()->GetCountryName() == localFile.GetCountryName();
-      });
-    };
-
-    auto const features = m_features.Get();
-    auto const matchedMwm = findMwm(*features, localFile);
-
-    if (features->cend() != matchedMwm)
-    {
-      auto editableFeatures = make_shared<FeaturesContainer>(*features);
-      editableFeatures->erase(findMwm(*editableFeatures, localFile));
-
-      SaveTransaction(editableFeatures);
-    }
-  });
+  // todo(@a, @m) Reloading edits only for |localFile| should be enough.
+  LoadEdits();
 }
 
 FeatureStatus Editor::GetFeatureStatus(MwmSet::MwmId const & mwmId, uint32_t index) const
@@ -415,15 +396,12 @@ Editor::SaveResult Editor::SaveEditedFeature(EditableMapObject const & emo)
   if (wasCreatedByUser)
   {
     fti.m_status = FeatureStatus::Created;
-    fti.m_feature.ReplaceBy(emo);
+    fti.m_object = emo;
 
     if (featureStatus == FeatureStatus::Created)
     {
       auto const & editedFeatureInfo = features->at(fid.m_mwmId).at(fid.m_index);
-      // Temporary solution because of FeatureType does not have constant getters.
-      // TODO(a): Use constant reference instead of copy.
-      auto feature = editedFeatureInfo.m_feature;
-      if (AreFeaturesEqualButStreet(fti.m_feature, feature) &&
+      if (AreObjectsEqualButStreet(fti.m_object, editedFeatureInfo.m_object) &&
           emo.GetStreet().m_defaultName == editedFeatureInfo.m_street)
       {
         return SaveResult::NothingWasChanged;
@@ -432,30 +410,23 @@ Editor::SaveResult Editor::SaveEditedFeature(EditableMapObject const & emo)
   }
   else
   {
-    auto const originalFeaturePtr = GetOriginalFeature(fid);
-    if (!originalFeaturePtr)
+    auto const originalObjectPtr = GetOriginalMapObject(fid);
+    if (!originalObjectPtr)
     {
       LOG(LERROR, ("A feature with id", fid, "cannot be loaded."));
       alohalytics::LogEvent("Editor_MissingFeature_Error");
       return SaveResult::SavingError;
     }
-
-    fti.m_feature = featureStatus == FeatureStatus::Untouched
-                        ? *originalFeaturePtr
-                        : features->at(fid.m_mwmId).at(fid.m_index).m_feature;
-    fti.m_feature.ReplaceBy(emo);
+    fti.m_object = emo;
     bool const sameAsInMWM =
-        AreFeaturesEqualButStreet(fti.m_feature, *originalFeaturePtr) &&
-        emo.GetStreet().m_defaultName == GetOriginalFeatureStreet(fti.m_feature);
+        AreObjectsEqualButStreet(fti.m_object, *originalObjectPtr) &&
+        emo.GetStreet().m_defaultName == GetOriginalFeatureStreet(fti.m_object.GetID());
 
     if (featureStatus != FeatureStatus::Untouched)
     {
       // A feature was modified and equals to the one in editor.
       auto const & editedFeatureInfo = features->at(fid.m_mwmId).at(fid.m_index);
-      // Temporary solution because of FeatureType does not have constant getters.
-      // TODO(a): Use constant reference instead of copy.
-      auto feature = editedFeatureInfo.m_feature;
-      if (AreFeaturesEqualButStreet(fti.m_feature, feature) &&
+      if (AreObjectsEqualButStreet(fti.m_object, editedFeatureInfo.m_object) &&
           emo.GetStreet().m_defaultName == editedFeatureInfo.m_street)
       {
         return SaveResult::NothingWasChanged;
@@ -527,30 +498,20 @@ void Editor::ForEachCreatedFeature(MwmSet::MwmId const & id, FeatureIndexFunctor
     FeatureTypeInfo const & ftInfo = index.second;
     if (ftInfo.m_status == FeatureStatus::Created)
     {
-      // Temporary solution because of FeatureType does not have constant getters.
-      // TODO(a): Use constant reference instead of copy.
-      auto feature = ftInfo.m_feature;
-      if (rect.IsPointInside(feature.GetCenter()))
+      if (rect.IsPointInside(ftInfo.m_object.GetMercator()))
         f(index.first);
     }
   }
 }
 
-bool Editor::GetEditedFeature(MwmSet::MwmId const & mwmId, uint32_t index,
-                              FeatureType & outFeature) const
+optional<osm::EditableMapObject> Editor::GetEditedFeature(FeatureID const & fid) const
 {
   auto const features = m_features.Get();
-  auto const * featureInfo = GetFeatureTypeInfo(*features, mwmId, index);
+  auto const * featureInfo = GetFeatureTypeInfo(*features, fid.m_mwmId, fid.m_index);
   if (featureInfo == nullptr)
-    return false;
+    return {};
 
-  outFeature = featureInfo->m_feature;
-  return true;
-}
-
-bool Editor::GetEditedFeature(FeatureID const & fid, FeatureType & outFeature) const
-{
-  return GetEditedFeature(fid.m_mwmId, fid.m_index, outFeature);
+  return featureInfo->m_object;
 }
 
 bool Editor::GetEditedFeatureStreet(FeatureID const & fid, string & outFeatureStreet) const
@@ -590,8 +551,6 @@ EditableProperties Editor::GetEditableProperties(FeatureType & feature) const
   auto const & fid = feature.GetID();
   auto const featureStatus = GetFeatureStatusImpl(*features, fid.m_mwmId, fid.m_index);
 
-  ASSERT(version::IsSingleMwm(feature.GetID().m_mwmId.GetInfo()->m_version.GetVersion()),
-         ("Edit mode should be available only on new data"));
   ASSERT(featureStatus != FeatureStatus::Obsolete,
          ("Edit mode should not be available on obsolete features"));
 
@@ -601,15 +560,15 @@ EditableProperties Editor::GetEditableProperties(FeatureType & feature) const
   // Disable opening hours editing if opening hours cannot be parsed.
   if (featureStatus != FeatureStatus::Created)
   {
-    auto const originalFeaturePtr = GetOriginalFeature(fid);
-    if (!originalFeaturePtr)
+    auto const originalObjectPtr = GetOriginalMapObject(fid);
+    if (!originalObjectPtr)
     {
       LOG(LERROR, ("A feature with id", fid, "cannot be loaded."));
       alohalytics::LogEvent("Editor_MissingFeature_Error");
       return {};
     }
 
-    auto const & metadata = originalFeaturePtr->GetMetadata();
+    auto const & metadata = originalObjectPtr->GetMetadata();
     auto const & featureOpeningHours = metadata.Get(feature::Metadata::FMD_OPEN_HOURS);
     // Note: empty string is parsed as a valid opening hours rule.
     if (!osmoh::OpeningHours(featureOpeningHours).IsValid())
@@ -628,7 +587,8 @@ EditableProperties Editor::GetEditablePropertiesForTypes(feature::TypesHolder co
 {
   editor::TypeAggregatedDescription desc;
   if (m_config.Get()->GetTypeDescription(types.ToObjectNames(), desc))
-    return {desc.GetEditableFields(), desc.IsNameEditable(), desc.IsAddressEditable()};
+    return {desc.GetEditableFields(), desc.IsNameEditable(), desc.IsAddressEditable(),
+            desc.IsCuisineEditable()};
   return {};
 }
 
@@ -643,6 +603,9 @@ bool Editor::HaveMapEditsOrNotesToUpload() const
 
 bool Editor::HaveMapEditsToUpload(MwmSet::MwmId const & mwmId) const
 {
+  if (!mwmId.IsAlive())
+    return false;
+
   auto const features = m_features.Get();
 
   auto const found = features->find(mwmId);
@@ -684,6 +647,9 @@ void Editor::UploadChanges(string const & key, string const & secret, ChangesetT
 
     for (auto const & id : *features)
     {
+      if (!id.first.IsAlive())
+        continue;
+
       for (auto const & index : id.second)
       {
         FeatureTypeInfo const & fti = index.second;
@@ -693,9 +659,6 @@ void Editor::UploadChanges(string const & key, string const & secret, ChangesetT
 
         // TODO(a): Use UploadInfo as part of FeatureTypeInfo.
         UploadInfo uploadInfo = {fti.m_uploadAttemptTimestamp, fti.m_uploadStatus, fti.m_uploadError};
-        // Temporary solution because of FeatureType does not have constant getters.
-        // TODO(a): Use constant reference instead of copy.
-        auto featureData = fti.m_feature;
         string ourDebugFeatureString;
 
         try
@@ -706,7 +669,7 @@ void Editor::UploadChanges(string const & key, string const & secret, ChangesetT
           case FeatureStatus::Obsolete: continue;  // Obsolete features will be deleted by OSMers.
           case FeatureStatus::Created:
           {
-            XMLFeature feature = editor::ToXML(featureData, true);
+            XMLFeature feature = editor::ToXML(fti.m_object, true);
             if (!fti.m_street.empty())
               feature.SetTagValue(kAddrStreetTag, fti.m_street);
             ourDebugFeatureString = DebugPrint(feature);
@@ -715,7 +678,7 @@ void Editor::UploadChanges(string const & key, string const & secret, ChangesetT
                          ("Linear and area features creation is not supported yet."));
             try
             {
-              auto const center = featureData.GetCenter();
+              auto const center = fti.m_object.GetMercator();
 
               XMLFeature osmFeature = changeset.GetMatchingNodeFeatureFromOSM(center);
               // If we are here, it means that object already exists at the given point.
@@ -757,24 +720,23 @@ void Editor::UploadChanges(string const & key, string const & secret, ChangesetT
           {
             // Do not serialize feature's type to avoid breaking OSM data.
             // TODO: Implement correct types matching when we support modifying existing feature types.
-            XMLFeature feature = editor::ToXML(featureData, false);
+            XMLFeature feature = editor::ToXML(fti.m_object, false);
             if (!fti.m_street.empty())
               feature.SetTagValue(kAddrStreetTag, fti.m_street);
             ourDebugFeatureString = DebugPrint(feature);
 
-            auto const originalFeaturePtr = GetOriginalFeature(fti.m_feature.GetID());
-            if (!originalFeaturePtr)
+            auto const originalObjectPtr = GetOriginalMapObject(fti.m_object.GetID());
+            if (!originalObjectPtr)
             {
-              LOG(LERROR, ("A feature with id", fti.m_feature.GetID(), "cannot be loaded."));
+              LOG(LERROR, ("A feature with id", fti.m_object.GetID(), "cannot be loaded."));
               alohalytics::LogEvent("Editor_MissingFeature_Error");
-              GetPlatform().RunTask(Platform::Thread::Gui, [this, fid = fti.m_feature.GetID()]()
-              {
+              GetPlatform().RunTask(Platform::Thread::Gui, [this, fid = fti.m_object.GetID()]() {
                 RemoveFeatureIfExists(fid);
               });
               continue;
             }
 
-            XMLFeature osmFeature = GetMatchingFeatureFromOSM(changeset, *originalFeaturePtr);
+            XMLFeature osmFeature = GetMatchingFeatureFromOSM(changeset, *originalObjectPtr);
             XMLFeature const osmFeatureCopy = osmFeature;
             osmFeature.ApplyPatch(feature);
             // Check to avoid uploading duplicates into OSM.
@@ -793,18 +755,17 @@ void Editor::UploadChanges(string const & key, string const & secret, ChangesetT
           break;
 
           case FeatureStatus::Deleted:
-            auto const originalFeaturePtr = GetOriginalFeature(fti.m_feature.GetID());
-            if (!originalFeaturePtr)
+            auto const originalObjectPtr = GetOriginalMapObject(fti.m_object.GetID());
+            if (!originalObjectPtr)
             {
-              LOG(LERROR, ("A feature with id", fti.m_feature.GetID(), "cannot be loaded."));
+              LOG(LERROR, ("A feature with id", fti.m_object.GetID(), "cannot be loaded."));
               alohalytics::LogEvent("Editor_MissingFeature_Error");
-              GetPlatform().RunTask(Platform::Thread::Gui, [this, fid = fti.m_feature.GetID()]()
-              {
+              GetPlatform().RunTask(Platform::Thread::Gui, [this, fid = fti.m_object.GetID()]() {
                 RemoveFeatureIfExists(fid);
               });
               continue;
             }
-            changeset.Delete(GetMatchingFeatureFromOSM(changeset, *originalFeaturePtr));
+            changeset.Delete(GetMatchingFeatureFromOSM(changeset, *originalObjectPtr));
             break;
           }
           uploadInfo.m_uploadStatus = kUploaded;
@@ -837,22 +798,22 @@ void Editor::UploadChanges(string const & key, string const & secret, ChangesetT
 
         if (uploadInfo.m_uploadStatus != kUploaded)
         {
-          ms::LatLon const ll = MercatorBounds::ToLatLon(feature::GetCenter(featureData));
+          ms::LatLon const ll = fti.m_object.GetLatLon();
           alohalytics::LogEvent(
               "Editor_DataSync_error",
               {{"type", fti.m_uploadStatus},
                {"details", fti.m_uploadError},
                {"our", ourDebugFeatureString},
-               {"mwm", fti.m_feature.GetID().GetMwmName()},
-               {"mwm_version", strings::to_string(fti.m_feature.GetID().GetMwmVersion())}},
-              alohalytics::Location::FromLatLon(ll.lat, ll.lon));
+               {"mwm", fti.m_object.GetID().GetMwmName()},
+               {"mwm_version", strings::to_string(fti.m_object.GetID().GetMwmVersion())}},
+              alohalytics::Location::FromLatLon(ll.m_lat, ll.m_lon));
         }
 
-        GetPlatform().RunTask(Platform::Thread::Gui, [this, id = fti.m_feature.GetID(), uploadInfo]()
-        {
-          // Call Save every time we modify each feature's information.
-          SaveUploadedInformation(id, uploadInfo);
-        });
+        GetPlatform().RunTask(Platform::Thread::Gui,
+                              [this, id = fti.m_object.GetID(), uploadInfo]() {
+                                // Call Save every time we modify each feature's information.
+                                SaveUploadedInformation(id, uploadInfo);
+                              });
       }
     }
 
@@ -877,10 +838,10 @@ void Editor::UploadChanges(string const & key, string const & secret, ChangesetT
   if (!m_isUploadingNow)
   {
     m_isUploadingNow = true;
-    GetPlatform().RunTask(Platform::Thread::Network, [upload = std::move(upload), key, secret,
-                                                      tags = std::move(tags), callback = std::move(callback)]()
+    GetPlatform().RunTask(Platform::Thread::Network, [upload = move(upload), key, secret,
+                                                      tags = move(tags), callback = move(callback)]()
     {
-      upload(std::move(key), std::move(secret), std::move(tags), std::move(callback));
+      upload(move(key), move(secret), move(tags), move(callback));
     });
   }
 }
@@ -915,23 +876,23 @@ bool Editor::FillFeatureInfo(FeatureStatus status, XMLFeature const & xml, Featu
 {
   if (status == FeatureStatus::Created)
   {
-    editor::FromXML(xml, fti.m_feature);
+    editor::FromXML(xml, fti.m_object);
   }
   else
   {
-    auto const originalFeaturePtr = GetOriginalFeature(fid);
-    if (!originalFeaturePtr)
+    auto const originalObjectPtr = GetOriginalMapObject(fid);
+    if (!originalObjectPtr)
     {
       LOG(LERROR, ("A feature with id", fid, "cannot be loaded."));
       alohalytics::LogEvent("Editor_MissingFeature_Error");
       return false;
     }
 
-    fti.m_feature = *originalFeaturePtr;
-    editor::ApplyPatch(xml, fti.m_feature);
+    fti.m_object = *originalObjectPtr;
+    editor::ApplyPatch(xml, fti.m_object);
   }
 
-  fti.m_feature.SetID(fid);
+  fti.m_object.SetID(fid);
   fti.m_street = xml.GetTagValue(kAddrStreetTag);
 
   fti.m_modificationTimestamp = xml.GetModificationTime();
@@ -1031,16 +992,13 @@ Editor::Stats Editor::GetStats() const
     for (auto & index : id.second)
     {
       auto const & fti = index.second;
-      // Temporary solution because of FeatureType does not have constant getters.
-      // TODO(a): Use constant reference instead of copy.
-      auto feature = fti.m_feature;
       stats.m_edits.push_back(make_pair(FeatureID(id.first, index.first),
                                         fti.m_uploadStatus + " " + fti.m_uploadError));
       LOG(LDEBUG, (fti.m_uploadAttemptTimestamp == base::INVALID_TIME_STAMP
                        ? "NOT_UPLOADED_YET"
                        : base::TimestampToString(fti.m_uploadAttemptTimestamp),
-                   fti.m_uploadStatus, fti.m_uploadError, feature.GetFeatureType(),
-                   feature::GetCenter(feature)));
+                   fti.m_uploadStatus, fti.m_uploadError, fti.m_object.GetGeomType(),
+                   fti.m_object.GetMercator()));
       if (fti.m_uploadStatus == kUploaded)
       {
         ++stats.m_uploadedCount;
@@ -1161,16 +1119,16 @@ void Editor::MarkFeatureWithStatus(FeaturesContainer & editableFeatures, Feature
 
   auto & fti = editableFeatures[fid.m_mwmId][fid.m_index];
 
-  auto const originalFeaturePtr = GetOriginalFeature(fid);
+  auto const originalObjectPtr = GetOriginalMapObject(fid);
 
-  if (!originalFeaturePtr)
+  if (!originalObjectPtr)
   {
     LOG(LERROR, ("A feature with id", fid, "cannot be loaded."));
     alohalytics::LogEvent("Editor_MissingFeature_Error");
     return;
   }
 
-  fti.m_feature = *originalFeaturePtr;
+  fti.m_object = *originalObjectPtr;
   fti.m_status = status;
   fti.m_modificationTimestamp = time(nullptr);
 }
@@ -1185,24 +1143,24 @@ MwmSet::MwmId Editor::GetMwmIdByMapName(string const & name)
   return m_delegate->GetMwmIdByMapName(name);
 }
 
-unique_ptr<FeatureType> Editor::GetOriginalFeature(FeatureID const & fid) const
+unique_ptr<EditableMapObject> Editor::GetOriginalMapObject(FeatureID const & fid) const
 {
   if (!m_delegate)
   {
     LOG(LERROR, ("Can't get original feature by id:", fid, ", delegate is not set."));
     return {};
   }
-  return m_delegate->GetOriginalFeature(fid);
+  return m_delegate->GetOriginalMapObject(fid);
 }
 
-string Editor::GetOriginalFeatureStreet(FeatureType & ft) const
+string Editor::GetOriginalFeatureStreet(FeatureID const & fid) const
 {
   if (!m_delegate)
   {
     LOG(LERROR, ("Can't get feature street, delegate is not set."));
     return {};
   }
-  return m_delegate->GetOriginalFeatureStreet(ft);
+  return m_delegate->GetOriginalFeatureStreet(fid);
 }
 
 void Editor::ForEachFeatureAtPoint(FeatureTypeFn && fn, m2::PointD const & point) const
@@ -1280,6 +1238,17 @@ bool Editor::HaveMapEditsToUpload(FeaturesContainer const & features) const
 {
   for (auto const & id : features)
   {
+    // Do not upload changes for a deleted map.
+    // todo(@a, @m) This should be unnecessary but unfortunately it's not.
+    // The mwm's feature is read right before the xml feature is uploaded to fill
+    // in missing fields such as precise feature geometry. This is an artefact
+    // of an old design decision; we have all the information needed for uploading
+    // already at the time when the xml feature is created and should not
+    // need to re-read it when uploading and when the corresponding mwm may have
+    // been deleted from disk.
+    if (!id.first.IsAlive())
+      continue;
+
     for (auto const & index : id.second)
     {
       if (NeedsUpload(index.second.m_uploadStatus))
@@ -1325,5 +1294,6 @@ string DebugPrint(Editor::SaveResult const saveResult)
     case Editor::SaveResult::NoUnderlyingMapError: return "NoUnderlyingMapError";
     case Editor::SaveResult::SavingError: return "SavingError";
   }
+  UNREACHABLE();
 }
 }  // namespace osm

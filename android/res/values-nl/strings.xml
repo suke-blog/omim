@@ -4,8 +4,6 @@
 <!-- Language: nl -->
 <resources>
 	<!-- SECTION: Strings -->
-	<!-- About button text (should be short) -->
-	<string name="about">Over</string>
 	<!-- Button text (should be short) -->
 	<string name="back">Terug</string>
 	<!-- Button text (should be short) -->
@@ -66,8 +64,6 @@
 	<string name="touch_to_download">Klik om te downloaden</string>
 	<!-- Settings/Downloader - 3G download warning dialog confirm button -->
 	<string name="use_cellular_data">Ja</string>
-	<!-- Settings/Downloader - No internet connection dialog message -->
-	<string name="use_wifi_recommendation_text">We raden WiFi aan om grote kaarten te downloaden</string>
 	<!-- Choose measurement on first launch alert - title -->
 	<string name="which_measurement_system">Welk meetstelsel heeft u liever?</string>
 	<!-- Location services are disabled by user alert - message -->
@@ -254,8 +250,6 @@
 	<string name="my_position_share_sms">Kijk waar ik nu ben. Open %1$s of %2$s</string>
 	<!-- Subject for emailed bookmark -->
 	<string name="bookmark_share_email_subject">Kijk naar mijn pin op MAPS.ME kaart</string>
-	<!-- Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me -->
-	<string name="bookmark_share_email">Hoi,\n\nIk heb: %1$s geprikt bij MAPS.ME, offline wereldkaarten. Klik op deze %2$s of deze %3$s om de plaats op de kaart te zien.\n\nBedankt.</string>
 	<!-- Subject for emailed position -->
 	<string name="my_position_share_email_subject">Kijk naar mijn huidige locatie op MAPS.ME kaart</string>
 	<!-- Share my position using EMail, %1$@ is ge0:// and %2$@ is http://ge0.me link WITHOUT NAME -->
@@ -558,6 +552,22 @@
 	<string name="brown">Bruin</string>
 	<!-- pink color -->
 	<string name="pink">Roze</string>
+	<!-- deep purple color -->
+	<string name="deep_purple">Donker paars</string>
+	<!-- light blue color -->
+	<string name="light_blue">Lichtblauw</string>
+	<!-- cyan color -->
+	<string name="cyan">Blauwgroen</string>
+	<!-- teal color -->
+	<string name="teal">Smaragdgroen</string>
+	<!-- lime color -->
+	<string name="lime">Lime</string>
+	<!-- deep orange color -->
+	<string name="deep_orange">Donkeroranje</string>
+	<!-- gray color -->
+	<string name="gray">Grijs</string>
+	<!-- blue gray color -->
+	<string name="blue_gray">Grijsblauw</string>
 	<!-- Wi-Fi available -->
 	<string name="WiFi_available">Ja</string>
 
@@ -791,8 +801,6 @@
 	<string name="onboarding_location_message">Om de navigatie en andere functies te kunnen gebruiken, hebben we toegang tot je geolocatie nodig.</string>
 	<string name="onboarding_permissions_title">MAPS.ME toegang geven tot opslag en locatie</string>
 	<string name="onboarding_permissions_message">Zodat u kaarten kunt downloaden, plaatsen en verkeer rondom u kunt zien, en navigatie kunt gebruiken.</string>
-	<string name="onboarding_welcome_title">Welkom bij MAPS.ME</string>
-	<string name="onboarding_welcome_first_subtitle">Gratis, snelle, gedetailleerde en volledig offline kaarten met turn-by-turn navigatie.</string>
 	<string name="onboarding_welcome_second_subtitle">Door de toepassing te starten, gaat u akkoord met de &lt;a href="%1$s">Gebruiksvoorwaarden&lt;/a> en het &lt;a href="%2$s">Privacybeleid&lt;/a>.</string>
 	<string name="dialog_incorrect_feature_position">Locatie wijzigen</string>
 	<string name="message_invalid_feature_position">Hier kan geen object worden geplaatst</string>
@@ -874,6 +882,7 @@
 	<string name="minute">min</string>
 	<string name="placepage_place_description">Beschrijving</string>
 	<string name="placepage_more_button">Meer</string>
+	<string name="placepage_more_reviews_button">Meer reacties</string>
 	<string name="book_button">Boeken</string>
 	<string name="placepage_call_button">Bellen</string>
 	<string name="placepage_edit_bookmark_button">Bladwijzer bewerken</string>
@@ -1027,8 +1036,6 @@
 	<string name="banner_geerbest_message">Onmiddellijk zoeken tussen meer dan 50.000 artikelen aan lage prijzen.</string>
 	<string name="banner_rentalcars_title">Online auto\'s huren</string>
 	<string name="banner_rentalcars_message">800 autoverhuurbedrijven in meer dan 49.000 locaties voor autoverhuur.</string>
-	<string name="banner_viator_title">Online tours zoeken</string>
-	<string name="banner_viator_message">Zoek in meer dan 50.000 tours over de hele wereld.</string>
 	<!-- december -->
 	<string name="whatsnew_traffic">Verkeersgegevens in 36 Landen</string>
 	<!-- december -->
@@ -1070,8 +1077,6 @@
 	<string name="whatsnew_smaller_mwm_message">Kaarten vereisen tot 20% minder opslagruimte.</string>
 	<string name="whatsnew_waypoints_title">Tussenstops in Route</string>
 	<string name="whatsnew_waypoints_message">Tap op plaatsen om tussenstops toe te voegen aan uw route.</string>
-	<string name="whatsnew_viator_title">Boek een tour</string>
-	<string name="whatsnew_viator_message">Kies populaire tours in toeristische steden over de hele wereld.</string>
 	<string name="whatsnew_driving_style_title">Nieuwe Kaartstijl voor het Rijden</string>
 	<string name="whatsnew_driving_style_message">Modus autonavigatie is eenvoudiger te gebruiken.</string>
 	<string name="more_on_bookingcom">Meer op Booking.com</string>
@@ -1128,7 +1133,6 @@
 	<string name="settings_card_memory">Kaartgeheugen</string>
 	<string name="settings_storage_available">%s beschikbaar</string>
 	<string name="toast_location_permission_denied">App toelating locatie geweigerd</string>
-	<string name="place_page_viator_title">Attracties en tours</string>
 	<string name="button_use">Gebruiken</string>
 	<string name="planning_route_manage_route">Route beheren</string>
 	<string name="button_plan">Plannen</string>
@@ -1143,8 +1147,6 @@
 	<string name="add_my_position">Voeg mijn positie toe</string>
 	<string name="choose_start_point">Kies een vertrekpunt</string>
 	<string name="choose_destination">Kies een bestemming</string>
-	<string name="preloader_viator_title">Ontdek tours en ongewone activiteiten</string>
-	<string name="preloader_viator_message">Tours, activiteiten, bezienswaardigheden en meer</string>
 	<string name="preloader_viator_button">Meer leren</string>
 	<string name="whats_new_title_route">Fietsroutes en wandelroutes zijn verbeterd</string>
 	<string name="whats_new_message_route">We hebben fouten hersteld, het bouwen van routes meermaals versneld, en tussenstops toegevoegd</string>
@@ -1155,9 +1157,6 @@
 	<string name="placepage_no_reviews">Geen beoordelingen</string>
 	<string name="placepage_reviewed">U hebt deze plaats al beoordeeld</string>
 	<string name="placepage_summary_rating">Samengevatte rating</string>
-	<plurals name="placepage_summary_rating_description">
-	  <item quantity="other">Gebaseerd op %d beoordelingen</item>
-	</plurals>
 	<string name="placepage_rate_comment">Tap om deze plaats te raten en te beoordelen.</string>
 	<string name="placepage_rate_horrible">Verschrikkelijk</string>
 	<string name="placepage_rate_bad">Slecht</string>
@@ -1200,8 +1199,6 @@
 	<string name="discovery_button_subtitle_attractions">Attracties</string>
 	<string name="discovery_button_subtitle_eat_and_drink">Eten en drinken</string>
 	<string name="discovery_button_subtitle_local_guides">Lokale Gidsen</string>
-	<string name="discovery_button_viator_offline_title">Ontdek tours en ongewone activiteiten</string>
-	<string name="discovery_button_viator_offline_message">Rondleidingen, activiteiten, excursies en meer.</string>
 	<string name="discovery_button_viator_error_title">Fout bij laden gegevens</string>
 	<string name="discovery_button_other_error_message">Fout bij laden gegevens</string>
 	<string name="discovery_button_other_loading_message">Gegevens worden geladen</string>
@@ -1241,12 +1238,10 @@
 	<string name="downloader_percent">%1$s (%2$s van %3$s)</string>
 	<string name="downloader_process">%s downloaden...</string>
 	<string name="downloader_applying">%s toepassen...</string>
-	<string name="transit_not_found">Transit navigatie is in deze regio nog niet beschikbaar</string>
 	<string name="whats_new_title_hotel_filter">Nieuwe hotelfilters beschikbaar!</string>
 	<string name="whats_new_message_hotel_filter">Boek beschikbare hotels voor uw data! Gebruik de filters inchecken en uitchecken</string>
 	<string name="whats_new_title_ugc_travel">Deel uw ervaring met andere reizigers!</string>
 	<string name="whats_new_message_ugc_travel">Rate en beoordeel bezochte plaatsen!</string>
-	<string name="dialog_pedestrian_route_is_long">De voetgangersroute is te lang</string>
 	<string name="dialog_message_transit_not_found_connection">Plan een route binnen één vervoersnetwerk</string>
 	<string name="bookmarks_error_message_share_general">Delen is onmogelijk wegens een toepassingsfout</string>
 	<string name="bookmarks_error_title_share_empty">Deelfout</string>
@@ -1351,8 +1346,8 @@
 	<string name="error_already_downloaded">Deze lijst is al gedownload</string>
 	<string name="guides">Handleidingen</string>
 	<string name="guide_downloaded_title">De handleiding is met succes gedownload</string>
-	<string name="download_guides">Handleidingen downloaden</string>
-	<string name="cached_guides_placeholder_subtitle">Gedetailleerde offline handleidingen voor elk type reis. Kies de handleiding die het beste bij je past en download hem direct naar de kaart. Je hebt een internetverbinding nodig om handleidingen te downloaden.</string>
+	<!-- as few symbols as possible -->
+	<string name="download_guides">Gidsen zoeken</string>
 	<string name="guides_groups_cached">Gedownloade handleidingen</string>
 	<string name="subtitle_error_downloading_guide">De handleiding is niet gedownload</string>
 	<string name="error_already_downloaded_guide">De handleiding is reeds gedownload</string>
@@ -1391,7 +1386,6 @@
 	<string name="restore_success_alert">Het abonnement is met succes hersteld</string>
 	<string name="restore_error_alert">Er deed zich een fout voor bij het herstellen van het abonnement</string>
 	<string name="restore_no_subscription_alert">Er zijn geen actieve abonnementen</string>
-	<string name="subscription_terms">Payment will be charged to your iTunes account at confirmation of purchase. The subscription will automatically renew unless auto-renew is turned off at least 24 hours before the end of the current period. Your account will be charged according to your plan for renewal within 24 hours prior to the end of the current period. You can manage or turn off auto-renew in your Apple ID account settings at any time of your purchase.</string>
 	<string name="subscriptions_title">Subscriptions</string>
 	<string name="manage_subscription">Manage subscription</string>
 	<string name="sharing_options">Opties voor delen</string>
@@ -1401,7 +1395,6 @@
 	<string name="hide_from_map">Van de kaart verbergen</string>
 	<string name="ugc_route_tags_screen_label">Selecteer tags</string>
 	<string name="ugc_route_tags_progress_msg">Tags aan het laden…</string>
-	<string name="ugc_route_tags_desc">Gelieve tags te kiezen om andere reizigers te helpen uw gids te vinden. Dit is verplicht.</string>
 	<string name="public_access">Publiek toegang</string>
 	<string name="limited_access">Beperkte toegang</string>
 	<string name="upload_and_publish_desc">Deze gids zal worden geüpload naar de openbare MAPS.ME catalogus en zal voor andere gebruikers beschikbaar zijn</string>
@@ -1424,7 +1417,7 @@
 	<string name="unable_upload_errorr_title">Bestand uploaden mislukt</string>
 	<string name="unable_upload_error_subtitle_edited">Dit bestand is bewerkt via de web app</string>
 	<string name="unable_upload_error_subtitle_broken">Dit bestand is beschadigd en kon niet worden geüpload. Gelieve een ander bestand te uploaden.</string>
-	<string name="buy_btn">Kopen voor %s</string>
+	<string name="buy_btn">Een gids kopen voor %s</string>
 	<string name="download_guide_progress">Uw gids aan het downloaden…</string>
 	<string name="price_error_title">Kon geen prijs krijgen</string>
 	<string name="price_error_subtitle">Gelieve in een paar minuten opnieuw te proberen</string>
@@ -1472,12 +1465,326 @@
 	<string name="whatsnew_paid_routes_title">Nog nieuwe ervaringen!</string>
 	<string name="whatsnew_paid_routes_message">Bovenop de gratis routes, hebben we 3 betalende routes toegevoegd aan onze catalogus. Meer dan 700 routes!</string>
 	<string name="whats_new_ugc_routes_title_android_only">Het is eenvoudig om je indrukken te delen</string>
+	<string name="ugc_thanks_message_auth">Uw feedback is opgeslagen</string>
+	<string name="ugc_thanks_message_not_auth">Meld je aan om een feedback achter te laten</string>
+	<string name="notification_leave_review_v2_title">Laat een feedback achter en help de reizigers!</string>
+	<string name="error_public_not_enought_title">Niet genoeg tags</string>
+	<string name="error_public_not_enought_subtitle">Uw route moet minimaal 3 tags bevatten, zodat deze kan worden geüpload naar de openbare map</string>
+	<string name="bookmark_public_upload_alert_title">U bent slechts een paar stappen verwijderd van het laden van uw route in de MAPS.ME catalogus!</string>
+	<string name="bookmark_public_upload_alert_subtitle">Zorg ervoor dat de route een naam en beschrijving heeft en dat alle tags informatie over de plaatsen bevatten. Dankzij dit zullen gebruikers de route vinden en deze tijdens een reis kunnen gebruiken.</string>
+	<string name="bookmark_public_upload_alert_ok_button">Ja, alles is goed!</string>
+	<string name="name_title">Voer de naam in</string>
+	<string name="name_placeholder">bijvoorbeeld \"London pubs\"</string>
+	<string name="name_comment1">Geef de route een specifieke naam zodat gebruikers deze kunnen vinden, bijvoorbeeld \"London Pubs\"</string>
+	<string name="name_comment2">De naam mag geen speciale tekens. Publiceer geen routes met de naam \"Mijn Plaatsen\"</string>
+	<string name="description_guide">Beschrijving</string>
+	<string name="description_title">Voer de route beschrijving in</string>
+	<string name="description_placeholder">Beschrijf uw route in detail</string>
+	<string name="description_comment1">De routebeschrijving moet uit minimaal 30 tekens bestaan.</string>
+	<string name="ugc_route_tags_desc">Alstublieft, selecteer tags om andere reizigers te helpen uw reisgids te vinden. Dit is verplicht. Niet meer dan %s tags.</string>
+	<string name="html_format_error_title">Uw route is niet gepubliceerd</string>
+	<string name="html_format_error_subtitle">Zorg ervoor dat de namen en beschrijvingen van tags in de route de juiste opmaak hebben. U kunt dit controleren in onze editor door op de knop \"Online bewerken\" hieronder te klikken.</string>
+	<string name="web_editor_description">Download de route en krijg een link om deze te bewerken op de computer</string>
+	<string name="edit_on_web_confirm">Bewerk online</string>
+	<string name="update_guide">Download de nieuwe versie</string>
+	<string name="direct_link_updating_text">Op het bijwerken van de route…</string>
+	<string name="direct_link_updating_success">De route is bijgewerkt</string>
+	<string name="unable_get_direct_link_desc">U kunt de route delen via een openbare link</string>
+	<string name="any_access_update_alert_title">Misschien is er een nieuwe versie van de route</string>
+	<string name="any_access_update_alert_message">Wilt u de tags bijwerken? De nieuwe versie zal beschikbaar zijn op dezelfde link.</string>
+	<string name="any_access_update_alert_update">Bijwerken</string>
+	<string name="public_or_limited_access_after_edit_online_error_title">U heeft de route online bewerkt</string>
+	<string name="public_or_limited_access_after_edit_online_error_message">Later bewerk, publiceer of deel de route met de vrienden via onze website</string>
+	<string name="power_managment_title">Energiebesparende modus</string>
+	<string name="power_managment_description">Als de energiebesparende modus is ingeschakeld, schakelt de app de energieverbruikende functies uit afhankelijk van de huidige lading van de mobiele telefoon</string>
+	<string name="power_managment_setting_never">Nooit</string>
+	<string name="power_managment_setting_auto">Auto</string>
+	<string name="power_managment_setting_manual_max">Maximale energiebesparing</string>
+	<string name="enable_logging_warning_message">Deze optie is ingeschakeld voor logboekregistraties voor diagnostische doeleinden. Het helpt bij het identificeren van problemen met de applicatie. Schakel de optie alleen in op verzoek van MAPS.ME-ondersteuning.</string>
+	<string name="html_error_upload_message_try_again">Controleer de netwerktoegang en probeer het opnieuw</string>
+	<string name="html_error_upload_title_try_again">Geen internetverbinding</string>
+	<string name="notification_leave_review_v2_android_short_title">Laat een feedback achter en help reizigers!</string>
+	<string name="notifications_illegal_alert_disable_button">Meldingen uitschakelen</string>
+	<string name="access_rules_author_only">Wordt online bewerkt</string>
+	<string name="privacy_settings_menu">Privacy instellingen</string>
+	<string name="gdpr_request_setting">Ontvang ID voor GDPR-verzoek</string>
+	<string name="gdpr_request_window_title">Uw ID: %s.</string>
+	<string name="gdpr_request_window_message">Alstublieft, kopieer het en stuur een verzoek naar support\@maps.me</string>
+	<string name="gdpr_request_window_copy">ID kopiëren</string>
+	<string name="unable_upadate_error_title">Kan de route niet bijwerken</string>
+	<string name="unable_upadate_error_message">Er zijn fouten opgetreden tijdens het updaten. Controleer de wijzigingen en probeer het opnieuw</string>
+	<string name="whats_new_wiki_title">Wat is deze plaats?</string>
+	<string name="whats_new_wiki_message">We hebben artikelen van Wikipedia.org toegevoegd aan de kaartjes van de populairste attracties. Ze zijn offline beschikbaar</string>
+	<string name="driving_options_title">Omweginstellingen</string>
+	<string name="driving_options_subheader">Vermijden op elke route</string>
+	<string name="avoid_tolls">Tolwegen</string>
+	<string name="avoid_unpaved">Aardewegen</string>
+	<string name="avoid_ferry">Ferries</string>
+	<string name="avoid_motorways">Hoofdverkeerswegen</string>
+	<string name="unable_to_calc_alert_title">Kan route niet opbouwen</string>
+	<string name="unable_to_calc_alert_subtitle">Helaas konden we geen route opbouwen met de gekozen opties. Wijzig de instellingen en probeer het opnieuw</string>
+	<string name="define_to_avoid_btn">Omwegen configureren</string>
+	<string name="change_driving_options_btn">Omweginstellingen ingeschakeld</string>
+	<string name="toll_road">Tolweg</string>
+	<string name="unpaved_road">Aardeweg</string>
+	<string name="ferry_crossing">Ferry</string>
+	<string name="operated_by">Gecontroleerd door \"%s\"</string>
+	<string name="avoid_toll_roads_placepage">Tolwegen vermijden</string>
+	<string name="avoid_unpaved_roads_placepage">Aardewegen vermijden</string>
+	<string name="avoid_ferry_crossing_placepage">Ferries vermijden</string>
+	<string name="cached_guides_placeholder_subtitle">Klare reisgids op MAPS.ME bevatten geselecteerde plaatsen met foto\'s en beschrijvingen die op de kaart worden weergegeven en offline beschikbaar zijn.</string>
+	<string name="guides_catalogue_title">Reisgidscatalogus</string>
+	<string name="download_guides_button">Ga naar de catalogus</string>
+	<plurals name="placepage_summary_rating_description">
+	  <item quantity="one">Gebaseerd op %d feedback</item>
+	  <item quantity="other">Gebaseerd op %d feedbacks</item>
+	</plurals>
+	<string name="type.cuisine.uzbek">Oezbeekse keuken</string>
+	<string name="onboarding_welcome_title">Plan en reis met MAPS.ME</string>
+	<string name="onboarding_welcome_first_subtitle">Slaat op interessante plaatsen, boek hotels, bouw routen offline</string>
+	<string name="onboarding_guide_direct_download_title">De reisgids is klaar om te downloaden</string>
+	<string name="onboarding_guide_direct_download_subtitle">Hij wordt weergegeven op de kaart en zal offline werken</string>
+	<string name="onboarding_guide_direct_download_button">Downloaden</string>
+	<string name="onboarding_bydeeplink_guide_title">Klare reisgids op MAPS.ME</string>
+	<string name="onboarding_bydeeplink_guide_subtitle">Geselecteerde plaatsen met foto\'s en beschrijvingen worden op de kaart weergegeven en zijn offline beschikbaar.</string>
+	<string name="whats_new_auto_update_bydeeplink_title">Voordat u naar reisgids gaat…</string>
+	<string name="whats_new_auto_update_bydeeplink_message">Heerladt de kaarten op actuele informatie over objecten te krijgen!</string>
+	<string name="whats_new_auto_update_and_proceed_button_size">Bijwerken (%s) en verder gaan</string>
+	<string name="whatsnew_toll_unpaved_title">Bouw routen met inachtneming van alle soorten wegen</string>
+	<string name="whatsnew_toll_unpaved_message">Kies omwegen via tolwegen, aardewegen en ferries</string>
+	<string name="whatsnew_new_catalogue_title">Bijgewerkte cataloguspagina\'s</string>
+	<string name="whatsnew_new_catalogue_message">We hebben gedetailleerde informatie over partnerhandleidingen toegevoegd, zodat de routekeuze gemakkelijk en handig is</string>
+	<string name="purchase_please_wait_toast">Verlaat het scherm niet, alstublieft, voordat het aankoopproces is voltooid</string>
+	<string name="trip_start">Kom op</string>
+	<string name="pick_destination">Doel</string>
+	<string name="follow_my_position">Centreren</string>
+	<string name="search_results">Zoekresultaten</string>
+	<string name="then_turn">Dan</string>
+	<string name="redirect_route_alert">Wilt u de route wijzigen?</string>
+	<string name="redirect_route_yes">Ja</string>
+	<string name="redirect_route_no">Nee</string>
+	<string name="trip_finished">U bent aangekomen!</string>
+	<string name="keyboard_availability_alert">Toetsenbord is niet beschikbaar tijdens het rijden</string>
+	<string name="dialog_routing_change_start_carplay">Kan route vanaf huidige positie niet opbouwen</string>
+	<string name="dialog_routing_change_end_carplay">Kan route naar het eindpunt niet opbouwen. Kies een andere punt</string>
+	<string name="dialog_routing_check_gps_carplay">Geen GPS-signaal. Ga naar het open veld</string>
+	<string name="dialog_routing_unable_locate_route_carplay">Kan route niet bouwen. Selecteer andere tussenpunten</string>
+	<string name="dialog_routing_download_files_carplay">Om een route te bouwen, download u ontbrekende kaarten</string>
+	<string name="dialog_routing_system_error_carplay">Lets fout gegaan. Start de app opnieuw</string>
+	<string name="dialog_routing_rebuild_from_current_location_carplay">De route wordt opnieuw opgebouwd vanaf uw huidige positie</string>
+	<string name="dialog_routing_rebuild_for_vehicle_carplay">De route wordt gewijzigd in de autoroute</string>
+	<string name="ok">Goed</string>
+	<string name="booking_button_toolbar">Een hotel op de kaart zoeken</string>
+	<string name="popup_booking_download_guides_title">Hebt u een hotel geboekt?</string>
+	<string name="popup_booking_download_guides_message">Plan uw route met kant-en-klare reisgidsen van MAPS.ME</string>
+	<string name="popup_mwm_download_guides_title">Offline handleidingen</string>
+	<string name="popup_mwm_download_guides_cta">Kiezen</string>
+	<string name="popup_mwm_download_guides_cta_1">Kijken</string>
+	<string name="gallery_pp_download_guides_offline_title">Plan uw vakantie met MAPS.ME!</string>
+	<string name="gallery_pp_download_guides_offline_subtitle">Pas op voor de belangrijkste routes van ervaren reizigers</string>
+	<string name="gallery_pp_download_guides_offline_cta">Schakel internet in</string>
+	<string name="gallery_pp_download_guides_title">Gidsen</string>
+	<string name="native_screen_subscription_title">Volledige toegang tot 2000+ gidsen!</string>
+	<string name="native_screen_subscription_message">Een onvergetelijke vakantie, ongeacht waar en met wie u reist</string>
+	<string name="annual_subscription_title">Jaarlijks</string>
+	<string name="montly_subscription_title">Maandelijks</string>
+	<string name="annual_subscription_message">12 maanden onbeperkte toegang</string>
+	<string name="montly_subscription_message">1 maand onbeperkte toegang</string>
+	<string name="subscription_success_dialog_title">Bedankt voor uw aanmelden!</string>
+	<string name="subscription_success_dialog_message">U hebt nu onbeperkte toegang tot de catalogus met gidsen</string>
+	<string name="renewal_screen_title">Abonnement verlopen</string>
+	<string name="renewal_screen_message">Alle door abonnementen gedownloade gidsen worden verwijderd. Wilt u uw abonnement herstellen en ze opslaan?</string>
+	<string name="renewal_screen_button_restore">Ja, herstel</string>
+	<string name="renewal_screen_button_cancel">Nee, verwijder de gidsen</string>
+	<string name="subscription_error_ping_title">Mislukt te kopen</string>
+	<string name="subscription_error_message">Nu is de service niet beschikbaar in uw regio. Probeer het later opnieuw</string>
+	<string name="subscription_error_button">Klaar</string>
+	<string name="timeout_error_title">Oeps, de tijd is om!</string>
+	<string name="timeout_error_message">Onze servers reageren niet. Controleer uw internetverbinding, alstublieft, en probeer het opnieuw.</string>
+	<string name="per_month">/maand.</string>
+	<string name="per_year">/jaar</string>
+	<string name="buy_btn_for_subscription">Volledige toegang vanaf %s</string>
+	<string name="buy_btn_for_subscription_1">ALLE gidsen kopen voor %s</string>
+	<string name="buy_btn_for_subscription_ios_only_mo">Volledige toegang voor %s/maand</string>
+	<string name="buy_btn_for_subscription_ios_only_year">Volledige toegang voor %s/jaar</string>
+	<string name="subscription_terms_guides">De betaling wordt gedaan vanaf uw iTunes-account na bevestiging van de aankoop. Abonnement wordt automatisch verlengd tenzij automatisch vernieuwen is uitgeschakeld ten minste 24 uur vóór het einde van de huidige periode. Het geld wordt binnen 24 uur na afloop van de lopende periode van uw rekening afgeschreven volgens uw verlengingsplan. Je kunt automatische verlenging beheren of uitschakelen in de instellingen van je Apple ID-account op elk moment na aankoop. U kunt de gidsen die u via abonnement hebt gedownload alleen gebruiken tijdens de abonnementsperiode. Na 30 dagen na het einde van het abonnement worden gidsen met alle bladwijzers automatisch verwijderd.</string>
+	<string name="subscription_terms">Payment will be charged to your iTunes account at confirmation of purchase. The subscription will automatically renew unless auto-renew is turned off at least 24 hours before the end of the current period. Your account will be charged according to your plan for renewal within 24 hours prior to the end of the current period. You can manage or turn off auto-renew in your Apple ID account settings at any time of your purchase.</string>
+	<string name="whatsnew_carplay_title">Automatische navigatie MAPS.ME met CarPlay!</string>
+	<string name="whatsnew_carplay_message">Bladwijzers, zoeken, snelheidscamera\'s en omweginstellingen – alles werkt zonder internet</string>
+	<string name="whatsnew_subscription_title">Ontdek de wereld met een abonnement!</string>
+	<string name="whatsnew_subscription_message">Onbeperkte toegang tot de catalogus met routes is winstgevender dan een enige aankoop</string>
+	<string name="whatsnew_carnavi_fixes_for_android_title">Navigatie update</string>
+	<string name="whatsnew_carnavi_fixes_for_android_message">We hebben de aanleg van routes naar punten ver van de weggen verbeterd</string>
+	<string name="avoid_unpaved_carplay_1">Geen aardew.</string>
+	<string name="avoid_unpaved_carplay_2">Geen aardewegen</string>
+	<string name="avoid_ferry_carplay_1">Geen ferry\'s</string>
+	<string name="avoid_ferry_carplay_2">Geen ferry\'s</string>
+	<string name="avoid_tolls_carplay_1">Zonder tol</string>
+	<string name="avoid_tolls_carplay_2">Zonder tol</string>
+	<string name="speedcams_alert_title_carplay_1">Cameras</string>
+	<string name="speedcams_alert_title_carplay_2">Over cameras</string>
+	<string name="download_map_carplay">Download kaarten in de MAPS.ME app op uw apparaat</string>
+	<string name="carplay_roundabout_exit">Afrit nr. %s</string>
+	<!-- max. 10 symbols, both iOS and Android -->
+	<string name="sort">Sorteer…</string>
+	<!-- Android, title, max 20-22 symbols -->
+	<string name="sort_bookmarks">Bladwijzers sorteren</string>
+	<!-- iOS -->
+	<string name="sort_default">Standaard sorteren</string>
+	<string name="sort_type">Sorteren op type</string>
+	<string name="sort_distance">Sorteer op afstand</string>
+	<string name="sort_date">Sorteer op datum</string>
+	<!-- Android -->
+	<string name="by_default">Standaard</string>
+	<!-- Android -->
+	<string name="by_type">Op type</string>
+	<!-- Android -->
+	<string name="by_distance">Op afstand</string>
+	<!-- Android -->
+	<string name="by_date">Op datum</string>
+	<string name="week_ago_sorttype">Een week geleden</string>
+	<string name="month_ago_sorttype">Een maand geleden</string>
+	<string name="moremonth_ago_sorttype">Meer dan een maand geleden</string>
+	<string name="moreyear_ago_sorttype">Meer dan een jaar geleden</string>
+	<string name="near_me_sorttype">Naast mij</string>
+	<string name="others_sorttype">Andere</string>
+	<string name="food_places">Eten</string>
+	<string name="tourist_places">Bezienswaardigheden</string>
+	<string name="museums">Musea</string>
+	<string name="parks">Parken</string>
+	<string name="swim_places">Zwemmen</string>
+	<string name="mountains">Bergen</string>
+	<string name="animals">Dieren</string>
+	<string name="hotels">Hotels</string>
+	<string name="buildings">Gebouwen</string>
+	<string name="money">Geld</string>
+	<string name="shops">Winkels</string>
+	<string name="parkings">Parkeerplaatsen</string>
+	<string name="fuel_places">Benzinestations</string>
+	<string name="water">Water</string>
+	<string name="medicine">Geneeskunde</string>
+	<string name="search_in_the_list">In de lijst zoeken</string>
+	<string name="view_on_map_bookmarks">Op de kaart</string>
+	<string name="more_bookmarks">Meer…</string>
+	<string name="no_items_found">Niets gevonden</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_edit_list">Bewerken</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_delete_list">Lijst verwijderen</string>
+	<string name="whatsnew_bookmarks_search_sort_title">Bladwijzerts in orde om gemakkelijk te reizen</string>
+	<string name="whatsnew_bookmarks_search_sort_message">Sorteer uw favoriete plaatsen op categorie, tijdstip van toevoegen en geolocatie, en vind ook snel specifieke bladwijzers op hun namen</string>
+	<string name="popup_subscription_success_map_title">Hoera! U bent opgeschreven!</string>
+	<string name="popup_subscription_success_map_message">Ontdekt u nu de beste toeristische attracties in de MAPS.ME catalogus</string>
+	<string name="popup_subscription_success_map_start_button">Kijken</string>
+	<string name="popup_subscription_success_map_not_now_button">Niet nu</string>
+	<string name="religious_places">Religieuze plaatsen</string>
+	<string name="subscription_terms_android">De betaling zal worden gedaan vanaf uw Google Play-account wanneer u uw aankoop bevestigt. Het abonnement wordt automatisch hervat als de automatische verlenging niet minstens 24 uur voor het einde van de lopende periode wordt gedeactiveerd. Het geld wordt volgens uw verlengingsplan binnen 24 uur na afloop van de lopende periode van uw rekening afgetrokken. U kunt de automatische verlenging beheren of uitschakelen in de accountinstellingen na de aankoop. U kunt de handleidingen die u via het abonnement hebt gedownload alleen gebruiken voor de duur van het abonnement. Na 30 dagen na het einde van het abonnement worden de handleidingen automatisch verwijderd.</string>
+	<string name="select_list">Lijst kiezen</string>
+	<string name="pp_discovery_place_related_header">Deze plaats in de catalogus van reisgidsen</string>
+	<string name="pp_discovery_place_related_header_1">Deze plaats verschijnt in de reisgids</string>
+	<string name="pp_discovery_place_related_cta_button">Kijken</string>
+	<string name="pp_discovery_place_related_tag_header">De reisgidsen voor het tag „%s”</string>
+	<string name="pp_discovery_place_related_tag_header_1">Misschien wilt u ook graag</string>
+	<string name="buy_btn_for_subscription_version_2">ALLE handleidingen voor slechts %s per maand</string>
+	<string name="buy_btn_for_subscription_version_3">De hele catalogus voor %s per maand</string>
+	<string name="buy_btn_for_subscription_ios_only_mo_version_2">Toegang tot de catalogus voor %s per maand</string>
+	<string name="buy_btn_for_subscription_ios_only_year_version_2">Toegang tot de catalogus voor %s per jaar</string>
+	<string name="subscription_screen_native_title_version_2">Toegang tot handleidingen met markeringen op de kaart!</string>
+	<string name="subscription_screen_native_message_version_2">Bereidt u voor op elke reis in meer dan 600 steden en meer dan 100 landen</string>
+	<string name="catalog_no_internet_title">Geen internetverbinding</string>
+	<string name="catalog_no_internet_button">Opnieuw verzoeken</string>
+	<string name="whatsnew_map_updates_title">Supersnelle updates van kaarten</string>
+	<string name="whatsnew_map_updates_message">Nu updaten we de gegevens twee keer zo snel als vroeger</string>
+	<string name="new_onboarding_button">Verder</string>
+	<string name="new_onboarding_button_2">Start</string>
+	<string name="new_onboarding_step1_header_2">Een universele reisadviseur</string>
+	<string name="new_onboarding_step2_header">Droom verder en plan</string>
+	<string name="new_onboarding_step2_message">70+ miljoen bezienswaardigheden, een catalogus van kant-en-klare handleidingen en hotelreserveringen met een kaart – u bent klaar om te reizen!</string>
+	<string name="new_onboarding_step3_message">Gedetailleerde offline kaarten en offline navigatie zullen helpen om niet te verdwalen in vreemde plaatsen!</string>
+	<string name="new_onboarding_step4_header">Deelt u uw indrukken</string>
+	<string name="new_onboarding_step4_message">Sla uw favoriete plaatsen op in uw blaadwijzers en stuur ze naar uw vrienden en kennissen</string>
+	<string name="new_onboarding_step5.1_header">Voordat we beginnen…</string>
+	<string name="new_onboarding_step5.1_message">Vergeet u niet onze nieuwe handleidingen te bekijken om een offline gids te vinden voor uw volgende reis!</string>
+	<string name="new_onboarding_step5.1_button">Catalogus openen</string>
+	<string name="new_onboarding_step5.2_message">Een abonnement op MAPS.ME\'s catalogus van handleidingen is gunstig. Krijg volledige toegang tot de handleidingen voor stadswandelingen en buitenactiviteiten!</string>
+	<string name="new_onboarding_step5.2_button">Bekijk de voorwaarden</string>
+	<string name="new_onboarding_step5.3_message">Bekijk gratis voorbeelden van kant-en-klare stads- en buitenroutes met een gratis selectie van MAPS.ME!</string>
+	<string name="new_onboarding_step5.3_button">Gratis downloaden</string>
+	<string name="new_onboarding_additional_steps_later_button">Niet nu</string>
+	<string name="all_pass_subscription_header">INSCHRIJVING OP DE CATALOGUS</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title">30000+\ngidsen\nen paden</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle"><b>Onbeperkt offline downloaden</b> van stads- en natuurroutes</string>
+	<!-- \n - for a break between lines. Max. 17 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_2">Interactief\nhoogteprofiel</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_2">Elk pad bevat <b>informatie over de hoogte en basisinformatie over de route</b></string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_3">Favorieten\nplekjes, foto\'s\nen tips</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_3"><b>Meer informatie over de route</b> die u gaat nemen</string>
+	<string name="sightseeing_subscription_header_subscription">Gidsen abonnement</string>
+	<string name="sightseeing_subscription_message">700+ steden en 100+ landen</string>
+	<string name="sightseeing_subscription_message_2">Online beschikbaar</string>
+	<string name="sightseeing_subscription_message_3">Foto\'s en wandelroutes</string>
+	<string name="subscription_success_dialog_title_sightseeing_pass">Bedankt voor uw inschrijving!</string>
+	<string name="subscription_success_dialog_message_sightseeing_pass">Nu heeft u toegang tot alle gidsen voor sightseeing in de catalogus</string>
+	<string name="downloader_main_gallery_header">Kaarten en handleidingen</string>
+	<string name="downloader_main_gallery_message">In deze sectie kunt u niet alleen kaarten downloaden, maar ook gidsen voor uw volgende reis bekijken</string>
+	<string name="downloader_main_1_element_gallery_header">Alle handleidingen</string>
+	<string name="downloader_main_1_element_gallery_message">in 100+ landen</string>
+	<string name="downloader_country_1_element_gallery_header">%s routes</string>
+	<string name="downloader_country_no_guides_gallery_header">Nog geen handleidingen in dit land</string>
+	<string name="downloader_country_no_guides_gallery_message">U kunt andere offline gidsen in 100+ landen bekijken voor stads- en buitenactiviteiten</string>
+	<string name="dialog_pedestrian_route_is_long">De voetgangersroute naar het instappunt is te lang</string>
+	<string name="whatsnew_outdoor_guides_title">We hebben 15000+ buitenpaden toegevoegd!</string>
+	<string name="whatsnew_outdoor_guides_message">Routes van Outdooractive voor winter- en zomerreizen wachten op u in de catalogus!</string>
+	<string name="whatsnew_guides_galleries_title">Plan uw volgende reis met MAPS.ME</string>
+	<string name="whatsnew_guides_galleries_message">Nu kunt u de aanbevolen handleidingen in de populaire steden en sightseeing kaarten vinden</string>
+	<string name="new_onboarding_step3_header">Reist</string>
+	<string name="all_pass_screen_best_value">Gunstige prijs</string>
+	<string name="buy_btn_for_subscription_3">De hele catalogus voor %s per jaar</string>
+	<string name="transit_not_found">Metro-navigatie is nog niet beschikbaar in deze regio</string>
+	<string name="dialog_pedestrian_route_is_long_header">Metroroute niet gevonden</string>
+	<string name="dialog_pedestrian_route_is_long_message">Kies een begin- of eindpunt dichter bij het metrostation</string>
+	<!-- Failed planning SUBWAY route message in navigation view -->
+	<string name="routing_planning_error_subway_special">Routeplanner per metro is mislukt</string>
+	<string name="whatsnew_isolines_title">Nieuwigheid voor buitenactiviteiten: hoogtelijnen offline!</string>
+	<!-- as less symbols as possible -->
+	<string name="whatsnew_isolines_message">Navigeer probleemloos in bergachtig gebied. Schakel gewoon de hoogtelijn in via de toets in de linkerbovenhoek van het scherm</string>
+	<string name="button_layer_isolines">Hoogtes</string>
+	<string name="tips_map_layers_title_countour">Hoogtelijnen offline in MAPS.ME!</string>
+	<string name="tips_map_layers_message_countour">Dankzij de hoogtelijnen kunt u probleemloos natuurreizen plannen en er zeker van zijn dat u niet verdwalen zult</string>
+	<string name="isolines_activation_error_dialog">Als u gebruik wilt maken van hoogtelijnen, moet u een kaart van het gewenste gebied bijwerken of downloaden</string>
+	<string name="isolines_location_error_dialog">De hoogtelijnen zijn nog niet beschikbaar in deze regio</string>
+	<string name="elevation_profile_diff_level">Moeilijkheidsgraad</string>
+	<string name="elevation_profile_diff_level_easy">Gemakkelijk</string>
+	<string name="elevation_profile_diff_level_moderate">Middelmatig</string>
+	<string name="elevation_profile_diff_level_hard">Moeilijk</string>
+	<string name="elevation_profile_ascent">Opstijging</string>
+	<string name="elevation_profile_descent">Afdaling</string>
+	<string name="elevation_profile_minaltitude">Min. hoogte</string>
+	<string name="elevation_profile_maxaltitude">Max. hoogte</string>
+	<string name="elevation_profile_m">m</string>
+	<string name="elevation_profile_difficulty">Moeilijkheid</string>
+	<string name="elevation_profile_distance">Afst.:</string>
+	<string name="elevation_profile_km">km</string>
+	<string name="elevation_profile_time">Op weg</string>
+	<string name="elevation_profile_hours">uur</string>
+	<string name="elevation_profile_minutes">min</string>
+	<!-- hide the full screen banner and continue working with the app -->
+	<string name="hide_screen_map_update">Verbergen en doorgaan</string>
+	<string name="view_on_map_downloaded_error">Deze gids is van dit apparaat verwijderd</string>
+	<string name="subscription">Abonnement</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Kabelwagenstation</string>
 	<string name="type.aeroway.aerodrome">Vliegveld</string>
 	<string name="type.aeroway.aerodrome.international">Vliegveld</string>
 	<string name="type.aeroway.helipad">Heliplatform</string>
+	<string name="type.amenity">Infrastructuur objecten</string>
+	<string name="type.amenity.arts_centre">Kunstcentrum</string>
 	<string name="type.amenity.atm">Geldautomaat</string>
 	<string name="type.amenity.bbq">Picnicplaats</string>
 	<string name="type.amenity.bench">Zitbank</string>
@@ -1522,14 +1829,15 @@
 	<string name="type.amenity.parking">Parkeerplaats</string>
 	<string name="type.amenity.parking.fee">Parkeerplaats</string>
 	<string name="type.amenity.parking.multi.storey">Parkeerplaats</string>
-	<string name="type.amenity.parking.multi.storey.fee">Parkeerplaats</string>
 	<string name="type.amenity.parking.no.access">Parkeerplaats</string>
 	<string name="type.amenity.parking.park_and_ride">Parkeerplaats</string>
 	<string name="type.amenity.parking.permissive">Parkeerplaats</string>
-	<string name="type.amenity.parking.permissive.fee">Parkeerplaats</string>
 	<string name="type.amenity.parking.private">Parkeerplaats</string>
 	<string name="type.amenity.parking.underground">Parkeerplaats</string>
-	<string name="type.amenity.parking.underground.fee">Parkeerplaats</string>
+	<string name="type.amenity.parking_space">Parkeerplaats</string>
+	<string name="type.amenity.parking_space.permissive">Parkeerplaats</string>
+	<string name="type.amenity.parking_space.private">Parkeerplaats</string>
+	<string name="type.amenity.parking_space.underground">Parkeerplaats</string>
 	<string name="type.amenity.payment_terminal">Betaalautomaat</string>
 	<string name="type.amenity.pharmacy">Apotheek</string>
 	<string name="type.amenity.place_of_worship">Gebedsplaats</string>
@@ -1542,6 +1850,7 @@
 	<string name="type.amenity.place_of_worship.taoist">Tempel</string>
 	<string name="type.amenity.police">Politie</string>
 	<string name="type.amenity.post_box">Brievenbus</string>
+	<string name="type.amenity.post_office">Postkantoor</string>
 	<string name="type.amenity.pub">Kroeg</string>
 	<string name="type.amenity.public_bookcase">Boekenkast</string>
 	<string name="type.amenity.recycling">Milieustraat</string>
@@ -1554,6 +1863,7 @@
 	<string name="type.amenity.vending_machine.cigarettes">Sigarettenautomaat</string>
 	<string name="type.amenity.vending_machine.drinks">Drankautomaat</string>
 	<string name="type.amenity.vending_machine.parking_tickets">Betaalautomaat parkeergarage</string>
+	<string name="type.amenity.vending_machine.public_transport_tickets">Kaartjesautomaat voor openbaar vervoer</string>
 	<string name="type.amenity.veterinary">Dierenarts</string>
 	<string name="type.amenity.waste_basket">Vuilnisbak</string>
 	<string name="type.amenity.waste_disposal">Uitschot</string>
@@ -1671,6 +1981,7 @@
 	<string name="type.emergency.phone">Praatpaal</string>
 	<string name="type.entrance">Ingang</string>
 	<string name="type.highway.bus_stop">Bushalte</string>
+	<string name="type.highway.construction">Baan in aanbouw</string>
 	<string name="type.highway.footway">Pad</string>
 	<string name="type.highway.footway.alpine_hiking">Pad</string>
 	<string name="type.highway.footway.area">Pad</string>
@@ -1703,7 +2014,7 @@
 	<string name="type.highway.path.horse">Pad</string>
 	<string name="type.highway.path.mountain_hiking">Pad</string>
 	<string name="type.highway.path.permissive">Pad</string>
-	<string name="type.highway.path.tunnel">Pad</string>
+	<string name="type.highway.path.tunnel">Tunnel</string>
 	<string name="type.highway.pedestrian">Straat</string>
 	<string name="type.highway.pedestrian.area">Straat</string>
 	<string name="type.highway.pedestrian.bridge">Straat</string>
@@ -1733,9 +2044,6 @@
 	<string name="type.highway.service.area">Straat</string>
 	<string name="type.highway.service.bridge">Straat</string>
 	<string name="type.highway.service.driveway">Straat</string>
-	<string name="type.highway.service.driveway.area">Straat</string>
-	<string name="type.highway.service.driveway.bridge">Straat</string>
-	<string name="type.highway.service.driveway.tunnel">Straat</string>
 	<string name="type.highway.service.parking_aisle">Straat</string>
 	<string name="type.highway.service.tunnel">Straat</string>
 	<string name="type.highway.speed_camera">Flitspaal</string>
@@ -1754,14 +2062,8 @@
 	<string name="type.highway.track.grade1">Straat</string>
 	<string name="type.highway.track.grade2">Straat</string>
 	<string name="type.highway.track.grade3">Straat</string>
-	<string name="type.highway.track.grade3.no.access">Straat</string>
-	<string name="type.highway.track.grade3.permissive">Straat</string>
 	<string name="type.highway.track.grade4">Straat</string>
-	<string name="type.highway.track.grade4.no.access">Straat</string>
-	<string name="type.highway.track.grade4.permissive">Straat</string>
 	<string name="type.highway.track.grade5">Straat</string>
-	<string name="type.highway.track.grade5.no.access">Straat</string>
-	<string name="type.highway.track.grade5.permissive">Straat</string>
 	<string name="type.highway.track.no.access">Straat</string>
 	<string name="type.highway.track.permissive">Straat</string>
 	<string name="type.highway.track.tunnel">Straat</string>
@@ -1789,19 +2091,28 @@
 	<string name="type.historic.tomb">Toerisme</string>
 	<string name="type.landuse.cemetery">Begraafplaats</string>
 	<string name="type.landuse.cemetery.christian">Begraafplaats</string>
+	<string name="type.landuse.churchyard">Kerkhof</string>
+	<string name="type.landuse.farmland">Landbouwgrond</string>
 	<string name="type.landuse.forest">Bos</string>
 	<string name="type.landuse.forest.coniferous">Bos</string>
 	<string name="type.landuse.forest.deciduous">Bos</string>
 	<string name="type.landuse.forest.mixed">Bos</string>
+	<string name="type.landuse.grass">Gazon</string>
+	<string name="type.landuse.landfill">Stortplaats</string>
+	<string name="type.landuse.railway">Spoorwegfaciliteiten</string>
+	<string name="type.leisure.dog_park">Plaats voor hondenuitlaten</string>
 	<string name="type.leisure.fitness_centre">Fitnesscentrum</string>
 	<string name="type.leisure.fitness_station">Fitness-Station</string>
 	<string name="type.leisure.garden">Tuin</string>
 	<string name="type.leisure.golf_course">Golfbaan</string>
 	<string name="type.leisure.nature_reserve">Reserve</string>
+	<string name="type.leisure.park">Park</string>
+	<string name="type.leisure.park.no.access">Park</string>
+	<string name="type.leisure.park.permissive">Park</string>
+	<string name="type.leisure.park.private">Park</string>
 	<string name="type.leisure.pitch">Sportveld</string>
-	<string name="type.leisure.pitch.tennis">Sportveld</string>
 	<string name="type.leisure.playground">Speeltuin</string>
-	<string name="type.leisure.playground.tennis">Speeltuin</string>
+	<string name="type.leisure.sauna">Sauna</string>
 	<string name="type.leisure.sports_centre">Sportcentrum</string>
 	<string name="type.leisure.sports_centre.climbing">Klimhal</string>
 	<string name="type.leisure.sports_centre.shooting">Schietbaan</string>
@@ -1820,19 +2131,18 @@
 	<string name="type.natural.bay">Baai</string>
 	<string name="type.natural.beach">Strand</string>
 	<string name="type.natural.cape">Kaap</string>
-	<string name="type.natural.cave_entrance">Grotingang</string>
+	<string name="type.natural.cave_entrance">Grot</string>
 	<string name="type.natural.geyser">Geiser</string>
 	<string name="type.natural.glacier">Gletsjer</string>
+	<string name="type.natural.grassland">Veld</string>
 	<string name="type.natural.lake">Meer</string>
 	<string name="type.natural.peak">Top</string>
 	<string name="type.natural.pond">Plas</string>
+	<string name="type.natural.scrub">Kreupel bos</string>
 	<string name="type.natural.spring">Bron</string>
 	<string name="type.natural.tree">Boom</string>
 	<string name="type.natural.volcano">Vulkaan</string>
-	<string name="type.natural.wood">Bos</string>
-	<string name="type.natural.wood.coniferous">Bos</string>
-	<string name="type.natural.wood.deciduous">Bos</string>
-	<string name="type.natural.wood.mixed">Bos</string>
+	<string name="type.natural.wetland">Moerasland</string>
 	<string name="type.office">Kantoor</string>
 	<string name="type.office.company">Bedrijfskantoor</string>
 	<string name="type.office.estate_agent">Makelaar</string>
@@ -1871,7 +2181,9 @@
 	<string name="type.power.pole">Elektriciteitspaal</string>
 	<string name="type.power.tower">Elektriciteitspaal</string>
 	<string name="type.railway.halt">Station</string>
-	<string name="type.railway.level_crossing">Overweg</string>
+	<string name="type.railway.level_crossing">Spoorwegovergang</string>
+	<string name="type.railway.monorail">Monorail</string>
+	<string name="type.railway.rail">Spoorlijn</string>
 	<string name="type.railway.station">Station</string>
 	<string name="type.railway.station.light_rail">Station</string>
 	<string name="type.railway.station.monorail">Station</string>
@@ -1900,7 +2212,7 @@
 	<string name="type.railway.station.subway.spb">Metro</string>
 	<string name="type.railway.station.subway.violet">Metro</string>
 	<string name="type.railway.station.subway.yellow">Metro</string>
-	<string name="type.railway.subway_entrance">Metro</string>
+	<string name="type.railway.subway_entrance">Metro ingang</string>
 	<string name="type.railway.subway_entrance.barcelona">Metro</string>
 	<string name="type.railway.subway_entrance.berlin">Metro</string>
 	<string name="type.railway.subway_entrance.kiev">Metro</string>
@@ -1978,7 +2290,8 @@
 	<string name="type.shop.wine">Wijn</string>
 	<string name="type.sport.athletics">Atletiek</string>
 	<string name="type.sport.basketball">Basketbal</string>
-	<string name="type.sport.equestrian">Paardensport</string>
+	<string name="type.sport.equestrian">Paardesport</string>
+	<string name="type.sport.tennis">Tennisveld</string>
 	<string name="type.tourism.alpine_hut">Berghut</string>
 	<string name="type.tourism.apartment">Appartementen</string>
 	<string name="type.tourism.artwork">Kunstwerk</string>
@@ -2014,4 +2327,8 @@
 	<string name="type.waterway.stream.intermittent">Rivier</string>
 	<string name="type.waterway.stream.tunnel">Rivier</string>
 	<string name="type.waterway.waterfall">Watervallen</string>
+	<string name="type.wheelchair.limited">Gedeeltelijk uitgerust voor gehandicapten</string>
+	<string name="type.wheelchair.no">Niet uitgerust voor gehandicapten</string>
+	<string name="type.wheelchair.yes">Uitgerust voor gehandicapten</string>
+	<string name="type.building_part">Gebouw</string>
 </resources>

@@ -9,18 +9,22 @@
 #include "platform/local_country_file.hpp"
 #include "platform/platform.hpp"
 
-#include "coding/file_container.hpp"
-#include "coding/file_name_utils.hpp"
+#include "coding/files_container.hpp"
 #include "coding/file_writer.hpp"
 #include "coding/internal/file_data.hpp"
 #include "coding/writer.hpp"
 
+#include "base/file_name_utils.hpp"
 #include "base/scope_guard.hpp"
 
 #include "defines.hpp"
 
+#include <cstdint>
+#include <memory>
 #include <string>
 #include <vector>
+
+using namespace std;
 
 namespace
 {
@@ -76,15 +80,14 @@ UNIT_TEST(RankTableBuilder_EndToEnd)
 {
   classificator::Load();
 
-  string const originalMapPath =
-      base::JoinFoldersToPath(GetPlatform().WritableDir(), "minsk-pass.mwm");
-  string const mapPath = base::JoinFoldersToPath(GetPlatform().WritableDir(), "minsk-pass-copy.mwm");
+  string const originalMapPath = base::JoinPath(GetPlatform().WritableDir(), "minsk-pass.mwm");
+  string const mapPath = base::JoinPath(GetPlatform().WritableDir(), "minsk-pass-copy.mwm");
   base::CopyFileX(originalMapPath, mapPath);
   SCOPE_GUARD(cleanup, bind(&FileWriter::DeleteFileX, mapPath));
 
   platform::LocalCountryFile localFile =
       platform::LocalCountryFile::MakeForTesting("minsk-pass-copy");
-  TEST(localFile.OnDisk(MapOptions::Map), ());
+  TEST(localFile.OnDisk(MapFileType::Map), ());
 
   vector<uint8_t> ranks;
   {

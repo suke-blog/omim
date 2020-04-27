@@ -68,11 +68,13 @@ void PrepareClassRefs(JNIEnv * env, jclass sponsoredClass)
       "placepage/Sponsored$FacilityType;[Lcom/mapswithme/maps/review/Review;[Lcom/mapswithme/"
       "maps/widget/placepage/Sponsored$NearbyObject;J)V");
 
-  // Sponsored(String rating, String price, String urlBook, String urlDescription)
+  //  Sponsored(String rating, int impress, String price, String url, String deepLink,
+  //            String descriptionUrl, String moreUrl, String reviewUrl, int type,
+  //            int partnerIndex, String partnerName)
   g_sponsoredClassConstructor = jni::GetConstructorID(
       env, g_sponsoredClass,
       "(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;"
-      "Ljava/lang/String;IILjava/lang/String;)V");
+      "Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;)V");
   // static void onPriceReceived(final String id, final String price, final String currency)
   g_priceCallback =
       jni::GetStaticMethodID(env, g_sponsoredClass, "onPriceReceived",
@@ -83,7 +85,7 @@ void PrepareClassRefs(JNIEnv * env, jclass sponsoredClass)
       "(Ljava/lang/String;Lcom/mapswithme/maps/widget/placepage/Sponsored$HotelInfo;)V");
 }
 
-jobjectArray ToPhotosArray(JNIEnv * env, vector<HotelPhotoUrls> const & photos)
+jobjectArray ToPhotosArray(JNIEnv * env, std::vector<HotelPhotoUrls> const & photos)
 {
   return jni::ToJavaArray(env, g_imageClass, photos,
                           [](JNIEnv * env, HotelPhotoUrls const & item) {
@@ -93,7 +95,7 @@ jobjectArray ToPhotosArray(JNIEnv * env, vector<HotelPhotoUrls> const & photos)
                           });
 }
 
-jobjectArray ToFacilitiesArray(JNIEnv * env, vector<HotelFacility> const & facilities)
+jobjectArray ToFacilitiesArray(JNIEnv * env, std::vector<HotelFacility> const & facilities)
 {
   return jni::ToJavaArray(env, g_facilityTypeClass, facilities,
                           [](JNIEnv * env, HotelFacility const & item) {
@@ -103,7 +105,7 @@ jobjectArray ToFacilitiesArray(JNIEnv * env, vector<HotelFacility> const & facil
                           });
 }
 
-jobjectArray ToReviewsArray(JNIEnv * env, vector<HotelReview> const & reviews)
+jobjectArray ToReviewsArray(JNIEnv * env, std::vector<HotelReview> const & reviews)
 {
   return jni::ToJavaArray(env, g_reviewClass, reviews,
                           [](JNIEnv * env, HotelReview const & item) {
@@ -124,6 +126,9 @@ JNIEXPORT jobject JNICALL Java_com_mapswithme_maps_widget_placepage_Sponsored_na
 {
   PrepareClassRefs(env, clazz);
 
+  if (!g_framework->NativeFramework()->HasPlacePageInfo())
+    return nullptr;
+
   place_page::Info const & ppInfo = g_framework->GetPlacePageInfo();
   if (!ppInfo.IsSponsored())
     return nullptr;
@@ -136,6 +141,7 @@ JNIEXPORT jobject JNICALL Java_com_mapswithme_maps_widget_placepage_Sponsored_na
                         jni::ToJavaString(env, ppInfo.GetSponsoredUrl()),
                         jni::ToJavaString(env, ppInfo.GetSponsoredDeepLink()),
                         jni::ToJavaString(env, ppInfo.GetSponsoredDescriptionUrl()),
+                        jni::ToJavaString(env, ppInfo.GetSponsoredMoreUrl()),
                         jni::ToJavaString(env, ppInfo.GetSponsoredReviewUrl()),
                         static_cast<jint>(ppInfo.GetSponsoredType()),
                         static_cast<jint>(ppInfo.GetPartnerIndex()),
@@ -170,8 +176,8 @@ JNIEXPORT void JNICALL Java_com_mapswithme_maps_widget_placepage_Sponsored_nativ
                                                    jni::ToJavaString(env, hotelId),
                                                    jni::ToJavaString(env, price),
                                                    jni::ToJavaString(env, blocks.m_currency),
-                                                   static_cast<jint>(env, blocks.m_maxDiscount),
-                                                   static_cast<jboolean>(env, blocks.m_hasSmartDeal));
+                                                   static_cast<jint>(blocks.m_maxDiscount),
+                                                   static_cast<jboolean>(blocks.m_hasSmartDeal));
 
         env->CallStaticVoidMethod(g_sponsoredClass, g_priceCallback, hotelPriceInfo);
       });

@@ -20,7 +20,7 @@ FeatureSource::FeatureSource(MwmSet::MwmHandle const & handle) : m_handle(handle
   if (!m_handle.IsAlive())
     return;
 
-  auto const & value = *m_handle.GetValue<MwmValue>();
+  auto const & value = *m_handle.GetValue();
   m_vector = make_unique<FeaturesVector>(value.m_cont, value.GetHeader(), value.m_table.get());
 }
 
@@ -33,13 +33,13 @@ size_t FeatureSource::GetNumFeatures() const
   return m_vector->GetNumFeatures();
 }
 
-bool FeatureSource::GetOriginalFeature(uint32_t index, FeatureType & feature) const
+unique_ptr<FeatureType> FeatureSource::GetOriginalFeature(uint32_t index) const
 {
   ASSERT(m_handle.IsAlive(), ());
   ASSERT(m_vector != nullptr, ());
-  m_vector->GetByIndex(index, feature);
-  feature.SetID(FeatureID(m_handle.GetId(), index));
-  return true;
+  auto ft = m_vector->GetByIndex(index);
+  ft->SetID(FeatureID(m_handle.GetId(), index));
+  return ft;
 }
 
 FeatureStatus FeatureSource::GetFeatureStatus(uint32_t index) const
@@ -47,10 +47,7 @@ FeatureStatus FeatureSource::GetFeatureStatus(uint32_t index) const
   return FeatureStatus::Untouched;
 }
 
-bool FeatureSource::GetModifiedFeature(uint32_t index, FeatureType & feature) const
-{
-  return false;
-}
+unique_ptr<FeatureType> FeatureSource::GetModifiedFeature(uint32_t index) const { return {}; }
 
 void FeatureSource::ForEachAdditionalFeature(m2::RectD const & rect, int scale,
                                              function<void(uint32_t)> const & fn) const

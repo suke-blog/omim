@@ -1,5 +1,7 @@
 #include "testing/testing.hpp"
 
+#include "generator/generator_tests_support/routing_helpers.hpp"
+
 #include "routing/fake_ending.hpp"
 #include "routing/geometry.hpp"
 #include "routing/index_graph.hpp"
@@ -18,14 +20,14 @@
 
 #include "routing/base/astar_algorithm.hpp"
 
-#include "std/shared_ptr.hpp"
-#include "std/unique_ptr.hpp"
-#include "std/vector.hpp"
+#include <memory>
+#include <vector>
 
 namespace
 {
 using namespace routing;
 using namespace routing_test;
+using namespace std;
 using namespace traffic;
 
 // @TODO(bykoianko) When PR with applying restricions is merged BuildXXGraph()
@@ -119,6 +121,8 @@ private:
   shared_ptr<TrafficStash> m_trafficStash;
 };
 
+using Algorithm = AStarAlgorithm<Segment, SegmentEdge, RouteWeight>;
+
 // Route through XX graph without any traffic info.
 UNIT_CLASS_TEST(ApplyingTrafficTest, XXGraph_EmptyTrafficColoring)
 {
@@ -130,7 +134,7 @@ UNIT_CLASS_TEST(ApplyingTrafficTest, XXGraph_EmptyTrafficColoring)
   auto const finish = MakeFakeEnding(6, 0, m2::PointD(3.0, 3.0), *graph);
   auto starter = MakeStarter(start, finish, *graph);
   vector<m2::PointD> const expectedGeom = {{2 /* x */, -1 /* y */}, {2, 0}, {1, 1}, {2, 2}, {3, 3}};
-  TestRouteGeometry(*starter, AStarAlgorithm<IndexGraphStarter>::Result::OK, expectedGeom);
+  TestRouteGeometry(*starter, Algorithm::Result::OK, expectedGeom);
 }
 
 // Route through XX graph with SpeedGroup::G0 on F3.
@@ -147,7 +151,7 @@ UNIT_CLASS_TEST(ApplyingTrafficTest, XXGraph_G0onF3)
   auto const finish = MakeFakeEnding(6, 0, m2::PointD(3.0, 3.0), *graph);
   auto starter = MakeStarter(start, finish, *graph);
   vector<m2::PointD> const expectedGeom = {{2 /* x */, -1 /* y */}, {2, 0}, {3, 0}, {3, 1}, {2, 2}, {3, 3}};
-  TestRouteGeometry(*starter, AStarAlgorithm<IndexGraphStarter>::Result::OK, expectedGeom);
+  TestRouteGeometry(*starter, Algorithm::Result::OK, expectedGeom);
 }
 
 // Route through XX graph with SpeedGroup::TempBlock on F3.
@@ -164,7 +168,7 @@ UNIT_CLASS_TEST(ApplyingTrafficTest, XXGraph_TempBlockonF3)
   auto const finish = MakeFakeEnding(6, 0, m2::PointD(3.0, 3.0), *graph);
   auto starter = MakeStarter(start, finish, *graph);
   vector<m2::PointD> const expectedGeom = {{2 /* x */, -1 /* y */}, {2, 0}, {3, 0}, {3, 1}, {2, 2}, {3, 3}};
-  TestRouteGeometry(*starter, AStarAlgorithm<IndexGraphStarter>::Result::OK, expectedGeom);
+  TestRouteGeometry(*starter, Algorithm::Result::OK, expectedGeom);
 }
 
 // Route through XX graph with SpeedGroup::G0 in reverse direction on F3.
@@ -181,7 +185,7 @@ UNIT_CLASS_TEST(ApplyingTrafficTest, XXGraph_G0onF3ReverseDir)
   auto const finish = MakeFakeEnding(6, 0, m2::PointD(3.0, 3.0), *graph);
   auto starter = MakeStarter(start, finish, *graph);
   vector<m2::PointD> const expectedGeom = {{2 /* x */, -1 /* y */}, {2, 0}, {1, 1}, {2, 2}, {3, 3}};
-  TestRouteGeometry(*starter, AStarAlgorithm<IndexGraphStarter>::Result::OK, expectedGeom);
+  TestRouteGeometry(*starter, Algorithm::Result::OK, expectedGeom);
 }
 
 // Route through XX graph SpeedGroup::G1 on F3 and F6, SpeedGroup::G4 on F8 and F4.
@@ -204,7 +208,7 @@ UNIT_CLASS_TEST(ApplyingTrafficTest, XXGraph_G0onF3andF6andG4onF8andF4)
   auto const finish = MakeFakeEnding(6, 0, m2::PointD(3.0, 3.0), *graph);
   auto starter = MakeStarter(start, finish, *graph);
   vector<m2::PointD> const expectedGeom = {{2 /* x */, -1 /* y */}, {2, 0}, {3, 0}, {3, 1}, {2, 2}, {3, 3}};
-  TestRouteGeometry(*starter, AStarAlgorithm<IndexGraphStarter>::Result::OK, expectedGeom);
+  TestRouteGeometry(*starter, Algorithm::Result::OK, expectedGeom);
 }
 
 // Route through XX graph with changing traffic.
@@ -220,7 +224,7 @@ UNIT_CLASS_TEST(ApplyingTrafficTest, XXGraph_ChangingTraffic)
   auto starter = MakeStarter(start, finish, *graph);
   vector<m2::PointD> const noTrafficGeom = {{2 /* x */, -1 /* y */}, {2, 0}, {1, 1}, {2, 2}, {3, 3}};
   {
-    TestRouteGeometry(*starter, AStarAlgorithm<IndexGraphStarter>::Result::OK, noTrafficGeom);
+    TestRouteGeometry(*starter, Algorithm::Result::OK, noTrafficGeom);
   }
 
   // Heavy traffic (SpeedGroup::G0) on F3.
@@ -230,7 +234,7 @@ UNIT_CLASS_TEST(ApplyingTrafficTest, XXGraph_ChangingTraffic)
   SetTrafficColoring(make_shared<TrafficInfo::Coloring const>(coloringHeavyF3));
   {
     vector<m2::PointD> const heavyF3Geom = {{2 /* x */, -1 /* y */}, {2, 0}, {3, 0}, {3, 1}, {2, 2}, {3, 3}};
-    TestRouteGeometry(*starter, AStarAlgorithm<IndexGraphStarter>::Result::OK, heavyF3Geom);
+    TestRouteGeometry(*starter, Algorithm::Result::OK, heavyF3Geom);
   }
 
   // Overloading traffic jam on F3. Middle traffic (SpeedGroup::G3) on F1, F3, F4, F7 and F8.
@@ -247,7 +251,7 @@ UNIT_CLASS_TEST(ApplyingTrafficTest, XXGraph_ChangingTraffic)
        SpeedGroup::G3}};
   SetTrafficColoring(make_shared<TrafficInfo::Coloring const>(coloringMiddleF1F3F4F7F8));
   {
-    TestRouteGeometry(*starter, AStarAlgorithm<IndexGraphStarter>::Result::OK, noTrafficGeom);
+    TestRouteGeometry(*starter, Algorithm::Result::OK, noTrafficGeom);
   }
 }
 }  // namespace

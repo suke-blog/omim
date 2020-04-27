@@ -1,4 +1,4 @@
-protocol BMCPermissionsHeaderDelegate {
+protocol BMCPermissionsHeaderDelegate: AnyObject {
   func collapseAction(isCollapsed: Bool)
 }
 
@@ -7,16 +7,13 @@ final class BMCPermissionsHeader: UIView {
 
   @IBOutlet private weak var label: UILabel! {
     didSet {
-      label.font = .medium14()
-      label.textColor = .blackSecondaryText()
       label.text = L("settings_backup_bookmarks").uppercased()
     }
   }
 
   @IBOutlet private weak var button: UIButton! {
     didSet {
-      button.setImage(#imageLiteral(resourceName: "ic24PxChevronUp"), for: .normal)
-      button.tintColor = .blackSecondaryText()
+      button.setImage(UIImage(named: "ic24PxChevronUp")?.withRenderingMode(.alwaysTemplate), for: .normal)
       updateButton()
     }
   }
@@ -28,7 +25,7 @@ final class BMCPermissionsHeader: UIView {
     }
   }
 
-  var delegate: BMCPermissionsHeaderDelegate!
+  weak var delegate: BMCPermissionsHeaderDelegate?
 
   private func updateButton() {
     UIView.animate(withDuration: kDefaultAnimationDuration) {
@@ -37,6 +34,6 @@ final class BMCPermissionsHeader: UIView {
   }
 
   @IBAction private func buttonAction() {
-    delegate.collapseAction(isCollapsed: isCollapsed)
+    delegate?.collapseAction(isCollapsed: isCollapsed)
   }
 }

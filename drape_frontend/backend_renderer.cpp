@@ -10,9 +10,11 @@
 #include "drape_frontend/metaline_manager.hpp"
 #include "drape_frontend/read_manager.hpp"
 #include "drape_frontend/route_builder.hpp"
+#include "drape_frontend/selection_shape_generator.hpp"
 #include "drape_frontend/user_mark_shapes.hpp"
 #include "drape_frontend/visual_params.hpp"
 
+#include "drape/support_manager.hpp"
 #include "drape/texture_manager.hpp"
 
 #include "indexer/scales.hpp"
@@ -33,6 +35,7 @@ BackendRenderer::BackendRenderer(Params && params)
   , m_model(params.m_model)
   , m_readManager(make_unique_dp<ReadManager>(params.m_commutator, m_model,
                                               params.m_allow3dBuildings, params.m_trafficEnabled,
+                                              params.m_isolinesEnabled,
                                               std::move(params.m_isUGCFn)))
   , m_transitBuilder(make_unique_dp<TransitSchemeBuilder>(
         std::bind(&BackendRenderer::FlushTransitRenderData, this, _1)))
@@ -85,9 +88,9 @@ void BackendRenderer::Teardown()
 #endif
 }
 
-unique_ptr<threads::IRoutine> BackendRenderer::CreateRoutine()
+std::unique_ptr<threads::IRoutine> BackendRenderer::CreateRoutine()
 {
-  return make_unique<Routine>(*this);
+  return std::make_unique<Routine>(*this);
 }
 
 void BackendRenderer::RecacheGui(gui::TWidgetsInitInfo const & initInfo, bool needResetOldGui)
@@ -228,6 +231,7 @@ void BackendRenderer::AcceptMessage(ref_ptr<Message> message)
       {
         CHECK(m_context != nullptr, ());
         ref_ptr<dp::Batcher> batcher = m_batchersPool->GetBatcher(tileKey);
+        batcher->SetBatcherHash(tileKey.GetHashValue(BatcherBucket::Default));
 #if defined(DRAPE_MEASURER_BENCHMARK) && defined(GENERATING_STATISTIC)
         DrapeMeasurer::Instance().StartShapesGeneration();
 #endif
@@ -288,7 +292,7 @@ void BackendRenderer::AcceptMessage(ref_ptr<Message> message)
       m_userMarkGenerator->SetRemovedUserMarks(msg->AcceptRemovedIds());
       m_userMarkGenerator->SetUserMarks(msg->AcceptMarkRenderParams());
       m_userMarkGenerator->SetUserLines(msg->AcceptLineRenderParams());
-      m_userMarkGenerator->SetCreatedUserMarks(msg->AcceptCreatedIds());
+      m_userMarkGenerator->SetJustCreatedUserMarks(msg->AcceptJustCreatedIds());
       break;
     }
 
@@ -347,6 +351,9 @@ void BackendRenderer::AcceptMessage(ref_ptr<Message> message)
 
   case Message::Type::SwitchMapStyle:
     {
+      ref_ptr<SwitchMapStyleMessage> msg = message;
+      msg->FilterDependentMessages();
+
       CHECK(m_context != nullptr, ());
       m_texMng->OnSwitchMapStyle(m_context);
       RecacheMapShapes();
@@ -356,6 +363,20 @@ void BackendRenderer::AcceptMessage(ref_ptr<Message> message)
 #endif
       m_trafficGenerator->InvalidateTexturesCache();
       m_transitBuilder->RebuildSchemes(m_context, m_texMng);
+
+      // For Vulkan we initialize deferred cleaning up.
+      if (m_context->GetApiVersion() == dp::ApiVersion::Vulkan)
+      {
+        std::vector<drape_ptr<dp::HWTexture>> textures;
+        m_texMng->GetTexturesToCleanup(textures);
+        if (!textures.empty())
+        {
+          m_commutator->PostMessage(ThreadsCommutator::RenderThread,
+                                    make_unique_dp<CleanupTexturesMessage>(std::move(textures)),
+                                    MessagePriority::Normal);
+        }
+      }
+
       break;
     }
 
@@ -500,6 +521,16 @@ void BackendRenderer::AcceptMessage(ref_ptr<Message> message)
                                 MessagePriority::Normal);
       break;
     }
+  case Message::Type::EnableIsolines:
+    {
+      ref_ptr<EnableIsolinesMessage> msg = message;
+      m_readManager->SetIsolinesEnabled(msg->IsEnabled());
+      m_commutator->PostMessage(ThreadsCommutator::RenderThread,
+                                make_unique_dp<EnableIsolinesMessage>(msg->IsEnabled()),
+                                MessagePriority::Normal);
+      break;
+    }
+
   case Message::Type::DrapeApiAddLines:
     {
       ref_ptr<DrapeApiAddLinesMessage> msg = message;
@@ -581,6 +612,34 @@ void BackendRenderer::AcceptMessage(ref_ptr<Message> message)
       break;
     }
 
+  case Message::Type::CheckSelectionGeometry:
+    {
+      ref_ptr<CheckSelectionGeometryMessage> msg = message;
+      auto renderNode = SelectionShapeGenerator::GenerateSelectionGeometry(m_context, msg->GetFeature(), m_texMng,
+                                                                           make_ref(m_metalineManager),
+                                                                           m_readManager->GetMapDataProvider());
+      if (renderNode && renderNode->GetBoundingBox().IsValid())
+      {
+        m_commutator->PostMessage(ThreadsCommutator::RenderThread,
+                                  make_unique_dp<FlushSelectionGeometryMessage>(
+                                    std::move(renderNode), msg->GetRecacheId()),
+                                  MessagePriority::Normal);
+      }
+      break;
+    }
+
+#if defined(OMIM_OS_MAC) || defined(OMIM_OS_LINUX)
+  case Message::Type::NotifyGraphicsReady:
+    {
+      ref_ptr<NotifyGraphicsReadyMessage> msg = message;
+      m_commutator->PostMessage(ThreadsCommutator::RenderThread,
+                                make_unique_dp<NotifyGraphicsReadyMessage>(msg->GetCallback(),
+                                                                           msg->NeedInvalidate()),
+                                MessagePriority::Normal);
+      break;
+    }
+#endif
+
   default:
     ASSERT(false, ());
     break;
@@ -613,6 +672,7 @@ void BackendRenderer::OnContextCreate()
   m_contextFactory->WaitForInitialization(m_context.get());
   m_context->MakeCurrent();
   m_context->Init(m_apiVersion);
+  dp::SupportManager::Instance().Init(m_context);
 
   m_readManager->Start();
   InitContextDependentResources();
@@ -640,16 +700,20 @@ BackendRenderer::Routine::Routine(BackendRenderer & renderer) : m_renderer(rende
 void BackendRenderer::Routine::Do()
 {
   LOG(LINFO, ("Start routine."));
-  m_renderer.OnContextCreate();
+  m_renderer.CreateContext();
   while (!IsCancelled())
-  {
-    CHECK(m_renderer.m_context != nullptr, ());
-    if (m_renderer.m_context->Validate())
-      m_renderer.ProcessSingleMessage();
-    m_renderer.CheckRenderingEnabled();
-  }
-
+    m_renderer.IterateRenderLoop();
   m_renderer.ReleaseResources();
+}
+  
+void BackendRenderer::RenderFrame()
+{
+  CHECK(m_context != nullptr, ());
+  if (!m_context->Validate())
+    return;
+
+  ProcessSingleMessage();
+  m_context->CollectMemory();
 }
 
 void BackendRenderer::InitContextDependentResources()

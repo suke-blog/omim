@@ -27,9 +27,12 @@ jclass g_ratingClazz;
 jclass g_loggerFactoryClazz;
 jclass g_keyValueClazz;
 jclass g_httpUploaderClazz;
+jclass g_httpPayloadClazz;
+jclass g_httpBackgroundUploaderClazz;
 jclass g_httpUploaderResultClazz;
 jclass g_networkPolicyClazz;
 jclass g_storageUtilsClazz;
+jclass g_elevationInfoClazz;
 
 extern "C"
 {
@@ -54,9 +57,13 @@ JNI_OnLoad(JavaVM * jvm, void *)
   g_loggerFactoryClazz = jni::GetGlobalClassRef(env, "com/mapswithme/util/log/LoggerFactory");
   g_keyValueClazz = jni::GetGlobalClassRef(env, "com/mapswithme/util/KeyValue");
   g_httpUploaderClazz = jni::GetGlobalClassRef(env, "com/mapswithme/util/HttpUploader");
+  g_httpPayloadClazz = jni::GetGlobalClassRef(env, "com/mapswithme/util/HttpPayload");
+  g_httpBackgroundUploaderClazz =
+      jni::GetGlobalClassRef(env, "com/mapswithme/util/HttpBackgroundUploader");
   g_httpUploaderResultClazz = jni::GetGlobalClassRef(env, "com/mapswithme/util/HttpUploader$Result");
   g_networkPolicyClazz = jni::GetGlobalClassRef(env, "com/mapswithme/util/NetworkPolicy");
   g_storageUtilsClazz = jni::GetGlobalClassRef(env, "com/mapswithme/util/StorageUtils");
+  g_elevationInfoClazz = jni::GetGlobalClassRef(env, "com/mapswithme/maps/bookmarks/data/ElevationInfo");
 
   return JNI_VERSION_1_6;
 }
@@ -79,9 +86,12 @@ JNI_OnUnload(JavaVM *, void *)
   env->DeleteGlobalRef(g_loggerFactoryClazz);
   env->DeleteGlobalRef(g_keyValueClazz);
   env->DeleteGlobalRef(g_httpUploaderClazz);
+  env->DeleteGlobalRef(g_httpPayloadClazz);
+  env->DeleteGlobalRef(g_httpBackgroundUploaderClazz);
   env->DeleteGlobalRef(g_httpUploaderResultClazz);
   env->DeleteGlobalRef(g_networkPolicyClazz);
   env->DeleteGlobalRef(g_storageUtilsClazz);
+  env->DeleteGlobalRef(g_elevationInfoClazz);
 }
 } // extern "C"
 
@@ -165,15 +175,6 @@ std::string ToNativeString(JNIEnv * env, jbyteArray const & bytes)
 jstring ToJavaString(JNIEnv * env, char const * s)
 {
   return env->NewStringUTF(s);
-}
-
-jobjectArray ToJavaStringArray(JNIEnv * env, std::vector<std::string> const & src)
-{
-  return ToJavaArray(env, GetStringClass(env), src,
-                     [](JNIEnv * env, std::string const & item)
-                     {
-                       return ToJavaString(env, item.c_str());
-                     });
 }
 
 jclass GetStringClass(JNIEnv * env)

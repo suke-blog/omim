@@ -148,13 +148,10 @@ bool GetName(FeatureType & ft, string & name)
 // Feature tag value evaluator for tag 'bbox_area' (bounding box area in sq.meters)
 bool GetBoundingBoxArea(FeatureType & ft, double & sqM)
 {
-  if (feature::GEOM_AREA != ft.GetFeatureType())
+  if (feature::GeomType::Area != ft.GetGeomType())
     return false;
 
-  m2::RectD const rect = ft.GetLimitRect(scales::GetUpperScale());
-
-  sqM = MercatorBounds::AreaOnEarth(rect.LeftTop(), rect.LeftBottom(), rect.RightBottom()) +
-        MercatorBounds::AreaOnEarth(rect.LeftTop(), rect.RightTop(), rect.RightBottom());
+  sqM = mercator::AreaOnEarth(ft.GetLimitRect(scales::GetUpperScale()));
   return true;
 }
 

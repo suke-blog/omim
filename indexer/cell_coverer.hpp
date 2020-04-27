@@ -34,8 +34,9 @@ inline size_t SplitRectCell(CellId const & id, m2::RectD const & rect,
   return index;
 }
 
+// Covers |rect| with at most |cellsCount| cells that have levels equal to or less than |maxLevel|.
 template <typename Bounds, typename CellId>
-inline void CoverRect(m2::RectD rect, size_t cellsCount, int maxDepth, std::vector<CellId> & result)
+inline void CoverRect(m2::RectD rect, size_t cellsCount, int maxLevel, std::vector<CellId> & result)
 {
   ASSERT(result.empty(), ());
   {
@@ -53,17 +54,16 @@ inline void CoverRect(m2::RectD rect, size_t cellsCount, int maxDepth, std::vect
       cellQueue;
   cellQueue.push(commonCell);
 
-  maxDepth -= 1;
-
+  CHECK_GREATER_OR_EQUAL(maxLevel, 0, ());
   while (!cellQueue.empty() && cellQueue.size() + result.size() < cellsCount)
   {
     auto id = cellQueue.top();
     cellQueue.pop();
 
-    while (id.Level() > maxDepth)
+    while (id.Level() > maxLevel)
       id = id.Parent();
 
-    if (id.Level() == maxDepth)
+    if (id.Level() == maxLevel)
     {
       result.push_back(id);
       break;
@@ -91,7 +91,7 @@ inline void CoverRect(m2::RectD rect, size_t cellsCount, int maxDepth, std::vect
   for (; !cellQueue.empty(); cellQueue.pop())
   {
     auto id = cellQueue.top();
-    while (id.Level() < maxDepth)
+    while (id.Level() < maxLevel)
     {
       std::array<std::pair<CellId, m2::RectD>, 4> arr;
       size_t const count = SplitRectCell<Bounds>(id, rect, arr);
@@ -104,9 +104,9 @@ inline void CoverRect(m2::RectD rect, size_t cellsCount, int maxDepth, std::vect
   }
 }
 
-// Covers rect with cells using spiral order starting from the rect center.
+// Covers |rect| with cells using spiral order starting from the rect center cell of |maxLevel|.
 template <typename Bounds, typename CellId>
-void CoverSpiral(m2::RectD rect, int maxDepth, std::vector<CellId> & result)
+void CoverSpiral(m2::RectD rect, int maxLevel, std::vector<CellId> & result)
 {
   using Converter = CellIdConverter<Bounds, CellId>;
 
@@ -124,12 +124,10 @@ void CoverSpiral(m2::RectD rect, int maxDepth, std::vector<CellId> & result)
     return;
   CHECK(rect.IsValid(), ());
 
+  CHECK_GREATER_OR_EQUAL(maxLevel, 0, ());
   auto centralCell = Converter::ToCellId(rect.Center().x, rect.Center().y);
-  while (centralCell.Level() > maxDepth && centralCell.Level() > 0)
+  while (maxLevel < centralCell.Level())
     centralCell = centralCell.Parent();
-
-  if (centralCell.Level() > maxDepth)
-    return;
 
   result.push_back(centralCell);
 

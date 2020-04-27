@@ -1,3 +1,5 @@
+#include "track_analyzing/track_analyzer/utils.hpp"
+
 #include "track_analyzing/serialization.hpp"
 #include "track_analyzing/track.hpp"
 #include "track_analyzing/track_analyzer/utils.hpp"
@@ -9,7 +11,6 @@
 #include "storage/routing_helpers.hpp"
 #include "storage/storage.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/file_reader.hpp"
 #include "coding/file_writer.hpp"
 #include "coding/zlib.hpp"
@@ -17,10 +18,12 @@
 #include "platform/platform.hpp"
 
 #include "base/assert.hpp"
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 #include "base/timer.hpp"
 
 #include <algorithm>
+#include <exception>
 #include <memory>
 #include <string>
 #include <thread>
@@ -90,10 +93,12 @@ void MatchTracks(MwmToTracks const & mwmToTracks, storage::Storage const & stora
 
 namespace track_analyzing
 {
-void CmdMatch(string const & logFile, string const & trackFile, shared_ptr<NumMwmIds> const & numMwmIds, Storage const & storage)
+void CmdMatch(string const & logFile, string const & trackFile,
+              shared_ptr<NumMwmIds> const & numMwmIds, Storage const & storage, Stats & stats)
 {
   MwmToTracks mwmToTracks;
   ParseTracks(logFile, numMwmIds, mwmToTracks);
+  stats.AddTracksStats(mwmToTracks, *numMwmIds, storage);
 
   MwmToMatchedTracks mwmToMatchedTracks;
   MatchTracks(mwmToTracks, storage, *numMwmIds, mwmToMatchedTracks);
@@ -104,16 +109,20 @@ void CmdMatch(string const & logFile, string const & trackFile, shared_ptr<NumMw
   LOG(LINFO, ("Matched tracks were saved to", trackFile));
 }
 
-void CmdMatch(string const & logFile, string const & trackFile)
+void CmdMatch(string const & logFile, string const & trackFile, string const & inputDistribution)
 {
   LOG(LINFO, ("Matching", logFile));
   Storage storage;
   storage.RegisterAllLocalMaps(false /* enableDiffs */);
   shared_ptr<NumMwmIds> numMwmIds = CreateNumMwmIds(storage);
-  CmdMatch(logFile, trackFile, numMwmIds, storage);
+
+  Stats stats;
+  CmdMatch(logFile, trackFile, numMwmIds, storage, stats);
+  stats.SaveMwmDistributionToCsv(inputDistribution);
+  stats.Log();
 }
 
-void UnzipAndMatch(Iter begin, Iter end, string const & trackExt)
+void UnzipAndMatch(Iter begin, Iter end, string const & trackExt, Stats & stats)
 {
   Storage storage;
   storage.RegisterAllLocalMaps(false /* enableDiffs */);
@@ -143,19 +152,21 @@ void UnzipAndMatch(Iter begin, Iter end, string const & trackExt)
       FileWriter w(file);
       w.Write(track.data(), track.size());
     }
-    catch (FileWriter::WriteException const & e)
+    catch (std::exception const & e)
     {
       LOG(LWARNING, (e.what()));
       continue;
     }
 
-    CmdMatch(file, file + trackExt, numMwmIds, storage);
+    CmdMatch(file, file + trackExt, numMwmIds, storage, stats);
     FileWriter::DeleteFileX(file);
   }
 }
 
-void CmdMatchDir(string const & logDir, string const & trackExt)
+void CmdMatchDir(string const & logDir, string const & trackExt, string const & inputDistribution)
 {
+  LOG(LINFO,
+      ("Matching dir:", logDir, ". Input distribution will be saved to:", inputDistribution));
   Platform::EFileType fileType = Platform::FILE_TYPE_UNKNOWN;
   Platform::EError const result = Platform::GetFileType(logDir, fileType);
 
@@ -192,16 +203,24 @@ void CmdMatchDir(string const & logDir, string const & trackExt)
   auto const threadsCount = min(size, hardwareConcurrency);
   auto const blockSize = size / threadsCount;
   vector<thread> threads(threadsCount - 1);
+  vector<Stats> stats(threadsCount);
   auto begin = filesList.begin();
   for (size_t i = 0; i < threadsCount - 1; ++i)
   {
     auto end = begin + blockSize;
-    threads[i] = thread(UnzipAndMatch, begin, end, trackExt);
+    threads[i] = thread(UnzipAndMatch, begin, end, trackExt, ref(stats[i]));
     begin = end;
   }
 
-  UnzipAndMatch(begin, filesList.end(), trackExt);
+  UnzipAndMatch(begin, filesList.end(), trackExt, ref(stats[threadsCount - 1]));
   for (auto & t : threads)
     t.join();
+
+  Stats statSum;
+  for (auto const & s : stats)
+    statSum.Add(s);
+
+  statSum.SaveMwmDistributionToCsv(inputDistribution);
+  statSum.Log();
 }
 }  // namespace track_analyzing

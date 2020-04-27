@@ -5,16 +5,20 @@ set(
   bindings.cpp
 )
 
+include_directories(${CMAKE_BINARY_DIR})
+
 omim_add_library(${PROJECT_NAME} MODULE ${SRC})
 
 omim_link_libraries(
   ${PROJECT_NAME}
+  search_quality
   search_tests_support
   search
   storage
-  indexer
   editor
+  indexer
   geometry
+  ge0
   platform
   mwm_diff
   coding

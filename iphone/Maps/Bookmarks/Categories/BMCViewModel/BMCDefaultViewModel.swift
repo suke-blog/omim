@@ -1,38 +1,45 @@
+protocol BMCView: AnyObject {
+  func update(sections: [BMCSection])
+  func delete(at indexPaths: [IndexPath])
+  func insert(at indexPaths: [IndexPath])
+  func conversionFinished(success: Bool)
+}
+
+enum BMCShareCategoryStatus {
+  case success(URL)
+  case error(title: String, text: String)
+}
+
 final class BMCDefaultViewModel: NSObject {
   var manager: MWMBookmarksManager {
     return MWMBookmarksManager.shared()
   }
 
-  var view: BMCView!
-
-  private enum Const
-  {
-    static let minCategoryNameLength: UInt = 0
-    static let maxCategoryNameLength: UInt = 60
-  }
+  weak var view: BMCView?
 
   private var sections: [BMCSection] = []
   private var permissions: [BMCPermission] = []
-  private var categories: [BMCCategory] = []
+  private var categories: [MWMCategory] = []
   private var actions: [BMCAction] = []
   private var notifications: [BMCNotification] = []
 
   private(set) var isPendingPermission = false
   private var isAuthenticated = false
   private var filesPrepared = false;
-  
-  private var onPreparedToShareCategory: BMCViewModel.onPreparedToShareHandler?
 
-  var minCategoryNameLength: UInt = Const.minCategoryNameLength
-  var maxCategoryNameLength: UInt = Const.maxCategoryNameLength
+  typealias OnPreparedToShareHandler = (BMCShareCategoryStatus) -> Void
+  private var onPreparedToShareCategory: OnPreparedToShareHandler?
+
+  let minCategoryNameLength: UInt = 0
+  let maxCategoryNameLength: UInt = 60
 
   override init() {
     super.init()
-    loadData()
+    reloadData()
   }
 
   private func setPermissions() {
-    isAuthenticated = MWMAuthorizationViewModel.isAuthenticated()
+    isAuthenticated = User.isAuthenticated()
     if !isAuthenticated {
       Statistics.logEvent(kStatBookmarksSyncProposalShown, withParameters: [kStatHasAuthorization: 0])
       permissions = [.signup]
@@ -47,18 +54,7 @@ final class BMCDefaultViewModel: NSObject {
   }
 
   private func setCategories() {
-    categories = manager.groupsIdList().map { 
-      let categoryId = $0.uint64Value
-      let title = manager.getCategoryName(categoryId)
-      let count = manager.getCategoryMarksCount(categoryId) + manager.getCategoryTracksCount(categoryId)
-      let isVisible = manager.isCategoryVisible(categoryId)
-      let accessStatus = manager.getCategoryAccessStatus(categoryId)
-      return BMCCategory(identifier: categoryId,
-                         title: title,
-                         count: count,
-                         isVisible: isVisible,
-                         accessStatus: accessStatus)
-    }
+    categories = manager.userCategories()
   }
 
   private func setActions() {
@@ -66,14 +62,10 @@ final class BMCDefaultViewModel: NSObject {
   }
 
   private func setNotifications() {
-    notifications.append(.load)
+    notifications = [.load]
   }
   
   func reloadData() {
-    loadData()
-  }
-
-  private func loadData() {
     sections = []
 
     sections.append(.permissions)
@@ -93,7 +85,7 @@ final class BMCDefaultViewModel: NSObject {
   }
 }
 
-extension BMCDefaultViewModel: BMCViewModel {
+extension BMCDefaultViewModel {
   func numberOfSections() -> Int {
     return sections.count
   }
@@ -103,7 +95,7 @@ extension BMCDefaultViewModel: BMCViewModel {
   }
 
   func sectionIndex(section: BMCSection) -> Int {
-    return sections.index(of: section)!
+    return sections.firstIndex(of: section)!
   }
 
   func numberOfRows(section: Int) -> Int {
@@ -119,14 +111,20 @@ extension BMCDefaultViewModel: BMCViewModel {
     }
   }
 
-  func item(indexPath: IndexPath) -> BMCModel {
-    let (section, row) = (indexPath.section, indexPath.row)
-    switch sectionType(section: section) {
-    case .permissions: return permissions[row]
-    case .categories: return categories[row]
-    case .actions: return actions[row]
-    case .notifications: return notifications[row]
-    }
+  func permission(at index: Int) -> BMCPermission {
+    return permissions[index]
+  }
+
+  func category(at index: Int) -> MWMCategory {
+    return categories[index]
+  }
+
+  func action(at index: Int) -> BMCAction {
+    return actions[index]
+  }
+
+  func notification(at index: Int) -> BMCNotification {
+    return notifications[index]
   }
 
   func areAllCategoriesHidden() -> Bool {
@@ -136,51 +134,39 @@ extension BMCDefaultViewModel: BMCViewModel {
   }
 
   func updateAllCategoriesVisibility(isShowAll: Bool) {
-    categories.forEach {
-      $0.isVisible = isShowAll
-    }
     manager.setUserCategoriesVisible(isShowAll)
   }
 
-  func updateCategoryVisibility(category: BMCCategory) {
-    category.isVisible = !category.isVisible
-    manager.setCategory(category.identifier, isVisible: category.isVisible)
-  }
-
   func addCategory(name: String) {
-    guard let section = sections.index(of: .categories) else {
+    guard let section = sections.firstIndex(of: .categories) else {
       assertionFailure()
       return
     }
     
-    categories.append(BMCCategory(identifier: manager.createCategory(withName: name), title: name))
-    view.insert(at: [IndexPath(row: categories.count - 1, section: section)])
+    categories.append(manager.category(withId: manager.createCategory(withName: name)))
+    view?.insert(at: [IndexPath(row: categories.count - 1, section: section)])
   }
 
-  func renameCategory(category: BMCCategory, name: String) {
-    category.title = name
-    manager.setCategory(category.identifier, name: name)
-  }
-
-  func deleteCategory(category: BMCCategory) {
-    guard let row = categories.index(of: category), let section = sections.index(of: .categories)
-    else {
+  func deleteCategory(at index: Int) {
+    guard let section = sections.firstIndex(of: .categories) else {
       assertionFailure()
       return
     }
 
-    categories.remove(at: row)
-    manager.deleteCategory(category.identifier)
-    view.delete(at: [IndexPath(row: row, section: section)])
+    let category = categories[index]
+    categories.remove(at: index)
+    manager.deleteCategory(category.categoryId)
+    view?.delete(at: [IndexPath(row: index, section: section)])
   }
 
   func checkCategory(name: String) -> Bool {
     return manager.checkCategoryName(name)
   }
 
-  func shareCategoryFile(category: BMCCategory, handler: @escaping onPreparedToShareHandler) {
+  func shareCategoryFile(at index: Int, handler: @escaping OnPreparedToShareHandler) {
+    let category = categories[index]
     onPreparedToShareCategory = handler
-    manager.shareCategory(category.identifier)
+    manager.shareCategory(category.categoryId)
   }
 
   func finishShareCategory() {
@@ -191,7 +177,7 @@ extension BMCDefaultViewModel: BMCViewModel {
   func pendingPermission(isPending: Bool) {
     isPendingPermission = isPending
     setPermissions()
-    view.update(sections: [.permissions])
+    view?.update(sections: [.permissions])
   }
 
   func grant(permission: BMCPermission?) {
@@ -241,6 +227,16 @@ extension BMCDefaultViewModel: BMCViewModel {
   }
 
   func requestRestoring() {
+    let statusStr: String;
+    switch NetworkPolicy.shared().connectionType {
+    case .none:
+      statusStr = kStatOffline
+    case .wifi:
+      statusStr = kStatWifi
+    case .cellular:
+      statusStr = kStatMobile
+    }
+    Statistics.logEvent(kStatBookmarksRestoreProposalClick, withParameters: [kStatNetwork : statusStr])
     manager.requestRestoring()
   }
 
@@ -254,10 +250,15 @@ extension BMCDefaultViewModel: BMCViewModel {
     }
 
     manager.cancelRestoring()
+    Statistics.logEvent(kStatBookmarksRestoreProposalCancel)
   }
 }
 
 extension BMCDefaultViewModel: MWMBookmarksObserver {
+  func onBackupStarted() {
+    Statistics.logEvent(kStatBookmarksSyncStarted)
+  }
+
   func onRestoringStarted() {
     filesPrepared = false
     MWMAlertViewController.activeAlert().presentSpinnerAlert(withTitle: L("bookmarks_restore_process"))
@@ -288,8 +289,7 @@ extension BMCDefaultViewModel: MWMBookmarksObserver {
         case .userInterrupted: break
         case .success:
           guard let s = self else { return }
-          s.setCategories()
-          s.view.update(sections: [.categories])
+          s.reloadData()
       }
     }
   }
@@ -321,26 +321,31 @@ extension BMCDefaultViewModel: MWMBookmarksObserver {
           }, leftButtonAction: cancelAction)
 
         case .noBackup:
+          Statistics.logEvent(kStatBookmarksRestoreProposalError,
+                              withParameters: [kStatType: kStatNoBackup, kStatError: ""])
           MWMAlertViewController.activeAlert().presentDefaultAlert(withTitle: L("bookmarks_restore_empty_title"),
                                                                    message: L("bookmarks_restore_empty_message"),
                                                                    rightButtonTitle: L("ok"),
                                                                    leftButtonTitle: nil,
                                                                    rightButtonAction: nil)
 
-        case .notEnoughDiskSpace: MWMAlertViewController.activeAlert().presentNotEnoughSpaceAlert()
-
-        case .requestError: assertionFailure()
+        case .notEnoughDiskSpace:
+          Statistics.logEvent(kStatBookmarksRestoreProposalError,
+                              withParameters: [kStatType: kStatDisk, kStatError: "Not enough disk space"])
+          MWMAlertViewController.activeAlert().presentNotEnoughSpaceAlert()
+        case .requestError:
+          assertionFailure()
       }
     }
   }
 
   func onBookmarksLoadFinished() {
-    loadData()
+    reloadData()
     convertAllKMLIfNeeded()
   }
 
   func onBookmarkDeleted(_: MWMMarkID) {
-    loadData()
+    reloadData()
   }
   
   func onBookmarksCategoryFilePrepared(_ status: MWMBookmarksShareStatus) {
@@ -357,7 +362,7 @@ extension BMCDefaultViewModel: MWMBookmarksObserver {
 
   func onConversionFinish(_ success: Bool) {
     setCategories()
-    view.update(sections: [.categories])
-    view.conversionFinished(success: success)
+    view?.update(sections: [.categories])
+    view?.conversionFinished(success: success)
   }
 }

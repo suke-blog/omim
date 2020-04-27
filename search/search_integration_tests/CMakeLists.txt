@@ -4,6 +4,7 @@ set(
   SRC
   downloader_search_test.cpp
   generate_tests.cpp
+  postcode_points_tests.cpp
   pre_ranker_test.cpp
   processor_test.cpp
   ranker_test.cpp
@@ -20,6 +21,7 @@ omim_link_libraries(
   search_tests_support
   editor_tests_support
   generator_tests_support
+  platform_tests_support
   generator
   routing
   routing_common
@@ -28,6 +30,7 @@ omim_link_libraries(
   stats_client
   editor
   indexer
+  ge0
   platform
   mwm_diff
   bsdiff
@@ -42,6 +45,8 @@ omim_link_libraries(
   pugixml
   opening_hours
   icu
+  traffic
+  ${CMAKE_DL_LIBS}
   ${Qt5Network_LIBRARIES}
   ${LIBZ}
 )

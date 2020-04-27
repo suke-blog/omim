@@ -1,84 +1,200 @@
 #include "routing/index_graph.hpp"
 
 #include "routing/restrictions_serialization.hpp"
+#include "routing/routing_options.hpp"
+#include "routing/world_graph.hpp"
+
+#include "platform/settings.hpp"
 
 #include "base/assert.hpp"
 #include "base/checked_cast.hpp"
 #include "base/exception.hpp"
+#include "base/timer.hpp"
 
 #include <algorithm>
+#include <cstdlib>
+#include <iterator>
 #include <limits>
+#include <utility>
 
-namespace
-{
 using namespace base;
-using namespace routing;
 using namespace std;
 
+namespace routing
+{
 bool IsUTurn(Segment const & u, Segment const & v)
 {
   return u.GetFeatureId() == v.GetFeatureId() && u.GetSegmentIdx() == v.GetSegmentIdx() &&
          u.IsForward() != v.IsForward();
 }
 
-bool IsRestricted(RestrictionVec const & restrictions, Segment const & u, Segment const & v,
-                  bool isOutgoing)
+bool IsBoarding(bool prevIsFerry, bool nextIsFerry)
 {
-  uint32_t const featureIdFrom = isOutgoing ? u.GetFeatureId() : v.GetFeatureId();
-  uint32_t const featureIdTo = isOutgoing ? v.GetFeatureId() : u.GetFeatureId();
-
-  if (!binary_search(restrictions.cbegin(), restrictions.cend(),
-                     Restriction(Restriction::Type::No, {featureIdFrom, featureIdTo})))
-  {
-    return false;
-  }
-
-  if (featureIdFrom != featureIdTo)
-    return true;
-
-  // @TODO(bykoianko) According to current code if a feature id is marked as a feature with
-  // restrictricted U-turn it's restricted to make a U-turn on the both ends of the feature.
-  // Generally speaking it's wrong. In osm there's information about the end of the feature
-  // where the U-turn is restricted. It's necessary to pass the data to mwm and to use it here.
-  // Please see test LineGraph_RestrictionF1F1No for details.
-  //
-  // Another example when it's necessary to be aware about feature end participated in restriction
-  // is
-  //        *---F1---*
-  //        |        |
-  // *--F3--A        B--F4--*
-  //        |        |
-  //        *---F2---*
-  // In case of restriction F1-A-F2 or F1-B-F2 of any type (No, Only) the important information
-  // is lost.
-  return IsUTurn(u, v);
+  return !prevIsFerry && nextIsFerry;
 }
-}  // namespace
 
-namespace routing
-{
-IndexGraph::IndexGraph(shared_ptr<Geometry> geometry, shared_ptr<EdgeEstimator> estimator)
-  : m_geometry(geometry), m_estimator(move(estimator))
+IndexGraph::IndexGraph(shared_ptr<Geometry> geometry, shared_ptr<EdgeEstimator> estimator,
+                       RoutingOptions routingOptions)
+  : m_geometry(move(geometry)),
+    m_estimator(move(estimator)),
+    m_avoidRoutingOptions(routingOptions)
 {
   CHECK(m_geometry, ());
   CHECK(m_estimator, ());
 }
 
-void IndexGraph::GetEdgeList(Segment const & segment, bool isOutgoing, vector<SegmentEdge> & edges)
+bool IndexGraph::IsJoint(RoadPoint const & roadPoint) const
 {
+  return m_roadIndex.GetJointId(roadPoint) != Joint::kInvalidId;
+}
+
+bool IndexGraph::IsJointOrEnd(Segment const & segment, bool fromStart)
+{
+  if (IsJoint(segment.GetRoadPoint(fromStart)))
+    return true;
+
+  // For features, that ends out of mwm. In this case |m_graph.IsJoint| returns false, but we should
+  // think, that it's Joint anyway.
+  uint32_t const pointId = segment.GetPointId(fromStart);
+  if (pointId == 0)
+    return true;
+
+  uint32_t const pointsNumber = GetGeometry().GetRoad(segment.GetFeatureId()).GetPointsCount();
+  return pointId + 1 == pointsNumber;
+}
+
+void IndexGraph::GetEdgeList(astar::VertexData<Segment, RouteWeight> const & vertexData,
+                             bool isOutgoing, bool useRoutingOptions, vector<SegmentEdge> & edges,
+                             Parents<Segment> const & parents)
+{
+  GetEdgeListImpl(vertexData, isOutgoing, useRoutingOptions, true /* useAccessConditional */, edges,
+                  parents);
+}
+
+void IndexGraph::GetEdgeList(Segment const & segment,
+                             bool isOutgoing, bool useRoutingOptions, vector<SegmentEdge> & edges,
+                             Parents<Segment> const & parents)
+{
+  GetEdgeListImpl({segment, Weight(0.0)} /* vertexData */, isOutgoing, useRoutingOptions,
+                  false /* useAccessConditional */, edges, parents);
+}
+
+void IndexGraph::GetEdgeListImpl(astar::VertexData<Segment, RouteWeight> const & vertexData,
+                                 bool isOutgoing, bool useRoutingOptions, bool useAccessConditional,
+                                 std::vector<SegmentEdge> & edges, Parents<Segment> const & parents)
+{
+  auto const & segment = vertexData.m_vertex;
+
   RoadPoint const roadPoint = segment.GetRoadPoint(isOutgoing);
   Joint::Id const jointId = m_roadIndex.GetJointId(roadPoint);
 
   if (jointId != Joint::kInvalidId)
   {
     m_jointIndex.ForEachPoint(jointId, [&](RoadPoint const & rp) {
-      GetNeighboringEdges(segment, rp, isOutgoing, edges);
+      GetNeighboringEdges(vertexData, rp, isOutgoing, useRoutingOptions, edges, parents,
+                          useAccessConditional);
     });
   }
   else
   {
-    GetNeighboringEdges(segment, roadPoint, isOutgoing, edges);
+    GetNeighboringEdges(vertexData, roadPoint, isOutgoing, useRoutingOptions, edges, parents,
+                        useAccessConditional);
   }
+}
+
+void IndexGraph::GetLastPointsForJoint(vector<Segment> const & children,
+                                       bool isOutgoing,
+                                       vector<uint32_t> & lastPoints)
+{
+  CHECK(lastPoints.empty(), ());
+
+  lastPoints.reserve(children.size());
+  for (auto const & child : children)
+  {
+    uint32_t const startPointId = child.GetPointId(!isOutgoing /* front */);
+    uint32_t const pointsNumber = m_geometry->GetRoad(child.GetFeatureId()).GetPointsCount();
+    CHECK_LESS(startPointId, pointsNumber, ());
+
+    uint32_t endPointId;
+    // child.IsForward() == isOutgoing
+    //   This is the direction, indicating the end of the road,
+    //   where we should go for building JointSegment.
+    // You can retrieve such result if bust possible options of |child.IsForward()| and |isOutgoing|.
+    bool forward = child.IsForward() == isOutgoing;
+    if (IsRoad(child.GetFeatureId()))
+    {
+      std::tie(std::ignore, endPointId) =
+        GetRoad(child.GetFeatureId()).FindNeighbor(startPointId, forward,
+                                                   pointsNumber);
+    }
+    else
+    {
+      // child.GetFeatureId() can be not road in this case:
+      // -->--> { -->-->--> } -->
+      // Where { ... } - borders of mwm
+      // Here one feature, which enter from mwm A to mwm B and then exit from B to A.
+      // And in mwm B no other feature cross this one, those feature is in geometry
+      // and absent in roadIndex.
+      // In this case we just return endPointNumber.
+      endPointId = forward ? pointsNumber - 1 : 0;
+    }
+
+    lastPoints.push_back(endPointId);
+  }
+}
+
+void IndexGraph::GetEdgeList(astar::VertexData<JointSegment, RouteWeight> const & parentVertexData,
+                             Segment const & parent, bool isOutgoing,
+                             std::vector<JointEdge> & edges,
+                             std::vector<RouteWeight> & parentWeights,
+                             Parents<JointSegment> & parents)
+{
+  GetEdgeListImpl(parentVertexData, parent, isOutgoing, true /* useAccessConditional */, edges,
+                  parentWeights, parents);
+}
+
+void IndexGraph::GetEdgeList(JointSegment const & parentJoint, Segment const & parent,
+                             bool isOutgoing, std::vector<JointEdge> & edges,
+                             std::vector<RouteWeight> & parentWeights,
+                             Parents<JointSegment> & parents)
+{
+  GetEdgeListImpl({parentJoint, Weight(0.0)}, parent, isOutgoing, false /* useAccessConditional */, edges,
+                  parentWeights, parents);
+}
+
+void IndexGraph::GetEdgeListImpl(
+    astar::VertexData<JointSegment, RouteWeight> const & parentVertexData, Segment const & parent,
+    bool isOutgoing, bool useAccessConditional, vector<JointEdge> & edges,
+    vector<RouteWeight> & parentWeights, Parents<JointSegment> & parents)
+{
+  vector<Segment> possibleChildren;
+  GetSegmentCandidateForJoint(parent, isOutgoing, possibleChildren);
+
+  vector<uint32_t> lastPoints;
+  GetLastPointsForJoint(possibleChildren, isOutgoing, lastPoints);
+
+  ReconstructJointSegment(parentVertexData, parent, possibleChildren, lastPoints,
+                          isOutgoing, edges, parentWeights, parents);
+}
+
+optional<JointEdge> IndexGraph::GetJointEdgeByLastPoint(Segment const & parent,
+                                                        Segment const & firstChild, bool isOutgoing,
+                                                        uint32_t lastPoint)
+{
+  vector<Segment> const possibleChildren = {firstChild};
+  vector<uint32_t> const lastPoints = {lastPoint};
+
+  vector<JointEdge> edges;
+  vector<RouteWeight> parentWeights;
+  Parents<JointSegment> emptyParents;
+  ReconstructJointSegment(astar::VertexData<JointSegment, RouteWeight>::Zero(), parent, possibleChildren, lastPoints,
+                          isOutgoing, edges, parentWeights, emptyParents);
+
+  CHECK_LESS_OR_EQUAL(edges.size(), 1, ());
+  if (edges.size() == 1)
+    return {edges.back()};
+
+  return {};
 }
 
 void IndexGraph::Build(uint32_t numJoints)
@@ -95,109 +211,361 @@ void IndexGraph::Import(vector<Joint> const & joints)
 
 void IndexGraph::SetRestrictions(RestrictionVec && restrictions)
 {
-  ASSERT(is_sorted(restrictions.cbegin(), restrictions.cend()), ());
-  m_restrictions = move(restrictions);
+  m_restrictionsForward.clear();
+  m_restrictionsBackward.clear();
+
+  base::HighResTimer timer;
+  for (auto const & restriction : restrictions)
+  {
+    ASSERT(!restriction.empty(), ());
+
+    auto & forward = m_restrictionsForward[restriction.back()];
+    forward.emplace_back(restriction.begin(), prev(restriction.end()));
+    reverse(forward.back().begin(), forward.back().end());
+
+    m_restrictionsBackward[restriction.front()].emplace_back(next(restriction.begin()), restriction.end());
+  }
+
+  LOG(LDEBUG, ("Restrictions are loaded in:", timer.ElapsedNano() / 1e6, "ms"));
 }
 
-void IndexGraph::SetRoadAccess(RoadAccess && roadAccess) { m_roadAccess = move(roadAccess); }
-
-void IndexGraph::GetOutgoingEdgesList(Segment const & segment, vector<SegmentEdge> & edges)
+void IndexGraph::SetUTurnRestrictions(vector<RestrictionUTurn> && noUTurnRestrictions)
 {
-  edges.clear();
-  GetEdgeList(segment, true /* isOutgoing */, edges);
+  for (auto const & noUTurn : noUTurnRestrictions)
+  {
+    if (noUTurn.m_viaIsFirstPoint)
+      m_noUTurnRestrictions[noUTurn.m_featureId].m_atTheBegin = true;
+    else
+      m_noUTurnRestrictions[noUTurn.m_featureId].m_atTheEnd = true;
+  }
 }
 
-void IndexGraph::GetIngoingEdgesList(Segment const & segment, vector<SegmentEdge> & edges)
+void IndexGraph::SetRoadAccess(RoadAccess && roadAccess)
 {
-  edges.clear();
-  GetEdgeList(segment, false /* isOutgoing */, edges);
+  m_roadAccess = move(roadAccess);
+  m_roadAccess.SetCurrentTimeGetter(m_currentTimeGetter);
 }
 
-RouteWeight IndexGraph::HeuristicCostEstimate(Segment const & from, Segment const & to)
-{
-  return RouteWeight(
-      m_estimator->CalcHeuristic(GetPoint(from, true /* front */), GetPoint(to, true /* front */)));
-}
-
-RouteWeight IndexGraph::CalcSegmentWeight(Segment const & segment)
-{
-  return RouteWeight(
-      m_estimator->CalcSegmentWeight(segment, m_geometry->GetRoad(segment.GetFeatureId())));
-}
-
-void IndexGraph::GetNeighboringEdges(Segment const & from, RoadPoint const & rp, bool isOutgoing,
-                                     vector<SegmentEdge> & edges)
+void IndexGraph::GetNeighboringEdges(astar::VertexData<Segment, RouteWeight> const & fromVertexData,
+                                     RoadPoint const & rp, bool isOutgoing, bool useRoutingOptions,
+                                     vector<SegmentEdge> & edges, Parents<Segment> const & parents,
+                                     bool useAccessConditional)
 {
   RoadGeometry const & road = m_geometry->GetRoad(rp.GetFeatureId());
 
   if (!road.IsValid())
     return;
 
-  bool const bidirectional = !road.IsOneWay();
+  if (useRoutingOptions && !road.SuitableForOptions(m_avoidRoutingOptions))
+    return;
 
+  bool const bidirectional = !road.IsOneWay();
+  auto const & from = fromVertexData.m_vertex;
   if ((isOutgoing || bidirectional) && rp.GetPointId() + 1 < road.GetPointsCount())
   {
-    GetNeighboringEdge(from,
+    GetNeighboringEdge(fromVertexData,
                        Segment(from.GetMwmId(), rp.GetFeatureId(), rp.GetPointId(), isOutgoing),
-                       isOutgoing, edges);
+                       isOutgoing, edges, parents, useAccessConditional);
   }
 
   if ((!isOutgoing || bidirectional) && rp.GetPointId() > 0)
   {
     GetNeighboringEdge(
-        from, Segment(from.GetMwmId(), rp.GetFeatureId(), rp.GetPointId() - 1, !isOutgoing),
-        isOutgoing, edges);
+        fromVertexData,
+        Segment(from.GetMwmId(), rp.GetFeatureId(), rp.GetPointId() - 1, !isOutgoing), isOutgoing,
+        edges, parents, useAccessConditional);
   }
 }
 
-void IndexGraph::GetNeighboringEdge(Segment const & from, Segment const & to, bool isOutgoing,
-                                    vector<SegmentEdge> & edges)
+void IndexGraph::GetSegmentCandidateForRoadPoint(RoadPoint const & rp, NumMwmId numMwmId,
+                                                 bool isOutgoing, std::vector<Segment> & children)
 {
-  // Blocking U-turns on internal feature points.
-  RoadPoint const rp = from.GetRoadPoint(isOutgoing);
-  if (IsUTurn(from, to) && m_roadIndex.GetJointId(rp) == Joint::kInvalidId
-      && !m_geometry->GetRoad(from.GetFeatureId()).IsEndPointId(rp.GetPointId()))
+  RoadGeometry const & road = m_geometry->GetRoad(rp.GetFeatureId());
+  if (!road.IsValid())
+    return;
+
+  if (!road.SuitableForOptions(m_avoidRoutingOptions))
+    return;
+
+  bool const bidirectional = !road.IsOneWay();
+  auto const pointId = rp.GetPointId();
+
+  if ((isOutgoing || bidirectional) && pointId + 1 < road.GetPointsCount())
+    children.emplace_back(numMwmId, rp.GetFeatureId(), pointId, isOutgoing);
+
+  if ((!isOutgoing || bidirectional) && pointId > 0)
+    children.emplace_back(numMwmId, rp.GetFeatureId(), pointId - 1, !isOutgoing);
+}
+
+void IndexGraph::GetSegmentCandidateForJoint(Segment const & parent, bool isOutgoing,
+                                             vector<Segment> & children)
+{
+  RoadPoint const roadPoint = parent.GetRoadPoint(isOutgoing);
+  Joint::Id const jointId = m_roadIndex.GetJointId(roadPoint);
+
+  if (jointId == Joint::kInvalidId)
+    return;
+
+  m_jointIndex.ForEachPoint(jointId, [&](RoadPoint const & rp) {
+    GetSegmentCandidateForRoadPoint(rp, parent.GetMwmId(), isOutgoing, children);
+  });
+}
+
+/// \brief Prolongs segments from |parent| to |firstChildren| directions in order to
+///        create JointSegments.
+/// \param |firstChildren| - vector of neighbouring segments from parent.
+/// \param |lastPointIds| - vector of the end numbers of road points for |firstChildren|.
+/// \param |jointEdges| - the result vector with JointEdges.
+/// \param |parentWeights| - see |IndexGraphStarterJoints::GetEdgeList| method about this argument.
+///                          Shortly - in case of |isOutgoing| == false, method saves here the weights
+///                                   from parent to firstChildren.
+void IndexGraph::ReconstructJointSegment(astar::VertexData<JointSegment, RouteWeight> const & parentVertexData,
+                                         Segment const & parent,
+                                         vector<Segment> const & firstChildren,
+                                         vector<uint32_t> const & lastPointIds,
+                                         bool isOutgoing,
+                                         vector<JointEdge> & jointEdges,
+                                         vector<RouteWeight> & parentWeights,
+                                         Parents<JointSegment> const & parents)
+{
+  CHECK_EQUAL(firstChildren.size(), lastPointIds.size(), ());
+
+  auto const & weightTimeToParent = parentVertexData.m_realDistance;
+  auto const & parentJoint = parentVertexData.m_vertex;
+  for (size_t i = 0; i < firstChildren.size(); ++i)
   {
-    return;
+    auto const & firstChild = firstChildren[i];
+    auto const lastPointId = lastPointIds[i];
+
+    uint32_t currentPointId = firstChild.GetPointId(!isOutgoing /* front */);
+    CHECK_NOT_EQUAL(currentPointId, lastPointId,
+                    ("Invariant violated, can not build JointSegment,"
+                     "started and ended in the same point."));
+
+    auto const increment = [currentPointId, lastPointId](uint32_t pointId) {
+      return currentPointId < lastPointId ? pointId + 1 : pointId - 1;
+    };
+
+    if (IsAccessNoForSure(firstChild.GetFeatureId(), weightTimeToParent,
+                          true /* useAccessConditional */))
+    {
+      continue;
+    }
+
+    if (IsAccessNoForSure(parent.GetRoadPoint(isOutgoing), weightTimeToParent,
+                          true /* useAccessConditional */))
+    {
+      continue;
+    }
+
+    if (IsUTurn(parent, firstChild) && IsUTurnAndRestricted(parent, firstChild, isOutgoing))
+      continue;
+
+    if (IsRestricted(parentJoint, parent.GetFeatureId(), firstChild.GetFeatureId(),
+                     isOutgoing, parents))
+    {
+      continue;
+    }
+
+    RouteWeight summaryWeight;
+    // Check current JointSegment for bad road access between segments.
+    RoadPoint rp = firstChild.GetRoadPoint(isOutgoing);
+    uint32_t start = currentPointId;
+    bool noRoadAccess = false;
+    do
+    {
+      // This is optimization: we calculate accesses of road points before calculating weight of
+      // segments between these road points. Because of that we make less calculations when some
+      // points have RoadAccess::Type::No.
+      // And using |weightTimeToParent| is not fair in fact, because we should calculate weight
+      // until this |rp|. But we assume that segments have small length and inaccuracy will not
+      // affect user.
+      if (IsAccessNoForSure(rp, weightTimeToParent, true /* useAccessConditional */))
+      {
+        noRoadAccess = true;
+        break;
+      }
+
+      start = increment(start);
+      rp.SetPointId(start);
+    } while (start != lastPointId);
+
+    if (noRoadAccess)
+      continue;
+
+    bool forward = currentPointId < lastPointId;
+    Segment current = firstChild;
+    Segment prev = parent;
+
+    do
+    {
+      RouteWeight const weight = CalculateEdgeWeight(EdgeEstimator::Purpose::Weight, isOutgoing,
+                                                     prev, current, weightTimeToParent);
+
+      if (isOutgoing || prev != parent)
+        summaryWeight += weight;
+
+      if (prev == parent)
+        parentWeights.emplace_back(weight);
+
+      prev = current;
+      current.Next(forward);
+      currentPointId = increment(currentPointId);
+    } while (currentPointId != lastPointId);
+
+    jointEdges.emplace_back(isOutgoing ? JointSegment(firstChild, prev) :
+                                         JointSegment(prev, firstChild),
+                            summaryWeight);
   }
+}
 
-  if (IsRestricted(m_restrictions, from, to, isOutgoing))
+void IndexGraph::GetNeighboringEdge(astar::VertexData<Segment, RouteWeight> const & fromVertexData,
+                                    Segment const & to, bool isOutgoing,
+                                    vector<SegmentEdge> & edges, Parents<Segment> const & parents,
+                                    bool useAccessConditional)
+{
+  auto const & from = fromVertexData.m_vertex;
+  auto const & weightToFrom = fromVertexData.m_realDistance;
+
+  if (IsUTurn(from, to) && IsUTurnAndRestricted(from, to, isOutgoing))
     return;
 
-  if (m_roadAccess.GetFeatureType(to.GetFeatureId()) == RoadAccess::Type::No)
+  if (IsRestricted(from, from.GetFeatureId(), to.GetFeatureId(), isOutgoing, parents))
     return;
 
-  if (m_roadAccess.GetPointType(rp) == RoadAccess::Type::No)
+  if (IsAccessNoForSure(to.GetFeatureId(), weightToFrom, useAccessConditional))
     return;
 
-  RouteWeight const weight = CalcSegmentWeight(isOutgoing ? to : from) +
-                             GetPenalties(isOutgoing ? from : to, isOutgoing ? to : from);
+  RoadPoint const rp = from.GetRoadPoint(isOutgoing);
+  if (IsAccessNoForSure(rp, weightToFrom, useAccessConditional))
+    return;
+
+  auto const weight =
+      CalculateEdgeWeight(EdgeEstimator::Purpose::Weight, isOutgoing, from, to, weightToFrom);
+
   edges.emplace_back(to, weight);
 }
 
-RouteWeight IndexGraph::GetPenalties(Segment const & u, Segment const & v)
+IndexGraph::PenaltyData IndexGraph::GetRoadPenaltyData(Segment const & segment)
 {
-  bool const fromPassThroughAllowed = m_geometry->GetRoad(u.GetFeatureId()).IsPassThroughAllowed();
-  bool const toPassThroughAllowed = m_geometry->GetRoad(v.GetFeatureId()).IsPassThroughAllowed();
+  auto const & road = m_geometry->GetRoad(segment.GetFeatureId());
+
+  PenaltyData result(road.IsPassThroughAllowed(),
+                     road.GetRoutingOptions().Has(RoutingOptions::Road::Ferry));
+
+  return result;
+}
+
+RouteWeight IndexGraph::GetPenalties(EdgeEstimator::Purpose purpose, Segment const & u,
+                                     Segment const & v, optional<RouteWeight> const & prevWeight)
+{
+  auto const & fromPenaltyData = GetRoadPenaltyData(u);
+  auto const & toPenaltyData = GetRoadPenaltyData(v);
   // Route crosses border of pass-through/non-pass-through area if |u| and |v| have different
   // pass through restrictions.
-  int32_t const passThroughPenalty = fromPassThroughAllowed == toPassThroughAllowed ? 0 : 1;
+  int8_t const passThroughPenalty =
+      fromPenaltyData.m_passThroughAllowed == toPenaltyData.m_passThroughAllowed ? 0 : 1;
 
-  // We do not distinguish between RoadAccess::Type::Private and RoadAccess::Type::Destination for now.
-  bool const fromAccessAllowed = m_roadAccess.GetFeatureType(u.GetFeatureId()) == RoadAccess::Type::Yes;
-  bool const toAccessAllowed = m_roadAccess.GetFeatureType(v.GetFeatureId()) == RoadAccess::Type::Yes;
-  // Route crosses border of access=yes/access={private, destination} area if |u| and |v| have different
-  // access restrictions.
-  int32_t accessPenalty = fromAccessAllowed == toAccessAllowed ? 0 : 1;
+  int8_t accessPenalty = 0;
+  int8_t accessConditionalPenalties = 0;
+
+  if (u.GetFeatureId() != v.GetFeatureId())
+  {
+    // We do not distinguish between RoadAccess::Type::Private and RoadAccess::Type::Destination for
+    // now.
+    auto const [fromAccess, fromConfidence] =
+        prevWeight ? m_roadAccess.GetAccess(u.GetFeatureId(), *prevWeight)
+                   : m_roadAccess.GetAccessWithoutConditional(u.GetFeatureId());
+
+    auto const [toAccess, toConfidence] =
+        prevWeight ? m_roadAccess.GetAccess(v.GetFeatureId(), *prevWeight)
+                   : m_roadAccess.GetAccessWithoutConditional(v.GetFeatureId());
+
+    if (fromConfidence == RoadAccess::Confidence::Sure &&
+        toConfidence == RoadAccess::Confidence::Sure)
+    {
+      bool const fromAccessAllowed = fromAccess == RoadAccess::Type::Yes;
+      bool const toAccessAllowed = toAccess == RoadAccess::Type::Yes;
+      // Route crosses border of access=yes/access={private, destination} area if |u| and |v| have
+      // different access restrictions.
+      accessPenalty = fromAccessAllowed == toAccessAllowed ? 0 : 1;
+    }
+    else if (toConfidence == RoadAccess::Confidence::Maybe)
+    {
+      accessConditionalPenalties = 1;
+    }
+  }
 
   // RoadPoint between u and v is front of u.
   auto const rp = u.GetRoadPoint(true /* front */);
-  // No double penalty for barriers on the border of access=yes/access={private, destination} area.
-  if (m_roadAccess.GetPointType(rp) != RoadAccess::Type::Yes)
-    accessPenalty = 1;
+  auto const [rpAccessType, rpConfidence] = prevWeight
+                                                ? m_roadAccess.GetAccess(rp, *prevWeight)
+                                                : m_roadAccess.GetAccessWithoutConditional(rp);
+  switch (rpConfidence)
+  {
+  case RoadAccess::Confidence::Sure:
+  {
+    if (rpAccessType != RoadAccess::Type::Yes)
+      accessPenalty = 1;
+    break;
+  }
+  case RoadAccess::Confidence::Maybe:
+  {
+    accessConditionalPenalties = 1;
+    break;
+  }
+  }
 
-  auto const uTurnPenalty = IsUTurn(u, v) ? m_estimator->GetUTurnPenalty() : 0.0;
+  double weightPenalty = 0.0;
+  if (IsUTurn(u, v))
+    weightPenalty += m_estimator->GetUTurnPenalty(purpose);
 
-  return RouteWeight(uTurnPenalty /* weight */, passThroughPenalty, accessPenalty, 0.0 /* transitTime */);
+  if (IsBoarding(fromPenaltyData.m_isFerry, toPenaltyData.m_isFerry))
+    weightPenalty += m_estimator->GetFerryLandingPenalty(purpose);
+
+  return {weightPenalty /* weight */, passThroughPenalty, accessPenalty, accessConditionalPenalties,
+          0.0 /* transitTime */};
+}
+
+WorldGraphMode IndexGraph::GetMode() const { return WorldGraphMode::Undefined; }
+
+bool IndexGraph::IsUTurnAndRestricted(Segment const & parent, Segment const & child,
+                                      bool isOutgoing) const
+{
+  ASSERT(IsUTurn(parent, child), ());
+
+  uint32_t const featureId = parent.GetFeatureId();
+  uint32_t const turnPoint = parent.GetPointId(isOutgoing);
+  auto const & roadGeometry = m_geometry->GetRoad(featureId);
+
+  RoadPoint const rp = parent.GetRoadPoint(isOutgoing);
+  if (m_roadIndex.GetJointId(rp) == Joint::kInvalidId && !roadGeometry.IsEndPointId(turnPoint))
+    return true;
+
+  auto const it = m_noUTurnRestrictions.find(featureId);
+  if (it == m_noUTurnRestrictions.cend())
+    return false;
+
+  auto const & uTurn = it->second;
+  if (uTurn.m_atTheBegin && turnPoint == 0)
+    return true;
+
+  uint32_t const n = roadGeometry.GetPointsCount();
+  ASSERT_GREATER_OR_EQUAL(n, 1, ());
+  return uTurn.m_atTheEnd && turnPoint == n - 1;
+}
+
+RouteWeight IndexGraph::CalculateEdgeWeight(EdgeEstimator::Purpose purpose, bool isOutgoing,
+                                            Segment const & from, Segment const & to,
+                                            std::optional<RouteWeight const> const & prevWeight)
+{
+  auto const & segment = isOutgoing ? to : from;
+  auto const & road = m_geometry->GetRoad(segment.GetFeatureId());
+
+  auto const weight = RouteWeight(m_estimator->CalcSegmentWeight(segment, road, purpose));
+  auto const & penalties =
+      GetPenalties(purpose, isOutgoing ? from : to, isOutgoing ? to : from, prevWeight);
+
+  return weight + penalties;
 }
 }  // namespace routing

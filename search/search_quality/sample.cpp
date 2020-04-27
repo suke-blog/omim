@@ -1,7 +1,7 @@
 #include "search/search_quality/sample.hpp"
 
 #include "search/search_params.hpp"
-#include "search/search_quality/helpers.hpp"
+#include "search/search_quality/helpers_json.hpp"
 
 #include "indexer/feature.hpp"
 #include "indexer/feature_algo.hpp"
@@ -11,10 +11,8 @@
 #include "base/string_utils.hpp"
 
 #include <algorithm>
-#include <ios>
 #include <memory>
 #include <sstream>
-#include <string>
 
 using namespace base;
 using namespace std;
@@ -35,7 +33,7 @@ bool LessRect(m2::RectD const & lhs, m2::RectD const & rhs)
 }
 
 template <typename T>
-bool Less(std::vector<T> lhs, std::vector<T> rhs)
+bool Less(vector<T> lhs, vector<T> rhs)
 {
   sort(lhs.begin(), lhs.end());
   sort(rhs.begin(), rhs.end());
@@ -43,7 +41,7 @@ bool Less(std::vector<T> lhs, std::vector<T> rhs)
 }
 
 template <typename T>
-bool Equal(std::vector<T> lhs, std::vector<T> rhs)
+bool Equal(vector<T> lhs, vector<T> rhs)
 {
   sort(lhs.begin(), lhs.end());
   sort(rhs.begin(), rhs.end());
@@ -119,8 +117,6 @@ bool Sample::operator<(Sample const & rhs) const
     return m_locale < rhs.m_locale;
   if (m_pos != rhs.m_pos)
     return m_pos < rhs.m_pos;
-  if (m_posAvailable != rhs.m_posAvailable)
-    return m_posAvailable < rhs.m_posAvailable;
   if (m_viewport != rhs.m_viewport)
     return LessRect(m_viewport, rhs.m_viewport);
   if (!Equal(m_results, rhs.m_results))
@@ -131,7 +127,7 @@ bool Sample::operator<(Sample const & rhs) const
 bool Sample::operator==(Sample const & rhs) const { return !(*this < rhs) && !(rhs < *this); }
 
 // static
-bool Sample::DeserializeFromJSONLines(string const & lines, std::vector<Sample> & samples)
+bool Sample::DeserializeFromJSONLines(string const & lines, vector<Sample> & samples)
 {
   istringstream is(lines);
   string line;
@@ -153,7 +149,7 @@ bool Sample::DeserializeFromJSONLines(string const & lines, std::vector<Sample> 
 }
 
 // static
-void Sample::SerializeToJSONLines(std::vector<Sample> const & samples, std::string & lines)
+void Sample::SerializeToJSONLines(vector<Sample> const & samples, string & lines)
 {
   for (auto const & sample : samples)
   {
@@ -168,12 +164,11 @@ void Sample::DeserializeFromJSONImpl(json_t * root)
 {
   FromJSONObject(root, "query", m_query);
   FromJSONObject(root, "locale", m_locale);
-
-  m_posAvailable = FromJSONObjectOptional(root, "position", m_pos);
-
+  FromJSONObjectOptional(root, "position", m_pos);
   FromJSONObject(root, "viewport", m_viewport);
   FromJSONObjectOptional(root, "results", m_results);
   FromJSONObjectOptional(root, "related_queries", m_relatedQueries);
+  FromJSONObjectOptionalField(root, "useless", m_useless);
 }
 
 void Sample::SerializeToJSONImpl(json_t & root) const
@@ -184,6 +179,8 @@ void Sample::SerializeToJSONImpl(json_t & root) const
   ToJSONObject(root, "viewport", m_viewport);
   ToJSONObject(root, "results", m_results);
   ToJSONObject(root, "related_queries", m_relatedQueries);
+  if (m_useless)
+    ToJSONObject(root, "useless", m_useless);
 }
 
 void Sample::FillSearchParams(search::SearchParams & params) const
@@ -192,9 +189,7 @@ void Sample::FillSearchParams(search::SearchParams & params) const
   params.m_inputLocale = m_locale;
   params.m_viewport = m_viewport;
   params.m_mode = Mode::Everywhere;
-  if (m_posAvailable)
-    params.m_position = m_pos;
-
+  params.m_position = m_pos.value_or(m2::PointD());
   params.m_needAddress = true;
   params.m_suggestsEnabled = false;
   params.m_needHighlighting = false;
@@ -204,12 +199,14 @@ void FromJSONObject(json_t * root, char const * field, Sample::Result::Relevance
 {
   string r;
   FromJSONObject(root, field, r);
-  if (r == "vital")
-    relevance = search::Sample::Result::Relevance::Vital;
-  else if (r == "relevant")
-    relevance = search::Sample::Result::Relevance::Relevant;
+  if (r == "harmful")
+    relevance = search::Sample::Result::Relevance::Harmful;
   else if (r == "irrelevant")
     relevance = search::Sample::Result::Relevance::Irrelevant;
+  else if (r == "relevant")
+    relevance = search::Sample::Result::Relevance::Relevant;
+  else if (r == "vital")
+    relevance = search::Sample::Result::Relevance::Vital;
   else
     CHECK(false, ("Unknown relevance:", r));
 }
@@ -221,9 +218,10 @@ void ToJSONObject(json_t & root, char const * field, Sample::Result::Relevance r
   string r;
   switch (relevance)
   {
-  case Relevance::Vital: r = "vital"; break;
-  case Relevance::Relevant: r = "relevant"; break;
+  case Relevance::Harmful: r = "harmful"; break;
   case Relevance::Irrelevant: r = "irrelevant"; break;
+  case Relevance::Relevant: r = "relevant"; break;
+  case Relevance::Vital: r = "vital"; break;
   }
 
   json_object_set_new(&root, field, json_string(r.c_str()));
@@ -263,6 +261,7 @@ string DebugPrint(Sample::Result::Relevance r)
 {
   switch (r)
   {
+  case Sample::Result::Relevance::Harmful: return "Harmful";
   case Sample::Result::Relevance::Irrelevant: return "Irrelevant";
   case Sample::Result::Relevance::Relevant: return "Relevant";
   case Sample::Result::Relevance::Vital: return "Vital";
@@ -294,8 +293,7 @@ string DebugPrint(Sample const & s)
   oss << "[";
   oss << "query: " << DebugPrint(s.m_query) << ", ";
   oss << "locale: " << s.m_locale << ", ";
-  oss << "pos: " << DebugPrint(s.m_pos) << ", ";
-  oss << "posAvailable: " << boolalpha << s.m_posAvailable << ", ";
+  oss << "pos: " << (s.m_pos ? DebugPrint(*s.m_pos) : "null") << ", ";
   oss << "viewport: " << DebugPrint(s.m_viewport) << ", ";
   oss << "results: [";
   for (size_t i = 0; i < s.m_results.size(); ++i)

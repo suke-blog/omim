@@ -6,8 +6,7 @@
 #include "storage/routing_helpers.hpp"
 #include "storage/storage.hpp"
 
-#include "coding/file_name_utils.hpp"
-
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 
 #include <cstdlib>
@@ -51,9 +50,9 @@ void CmdGPX(string const & logFile, string const & outputDirName, string const &
       for (auto const & point : track.second)
       {
         ofs << "<wpt lat=\""
-            << point.m_latLon.lat
+            << point.m_latLon.m_lat
             << "\" lon=\""
-            << point.m_latLon.lon << "\">"
+            << point.m_latLon.m_lon << "\">"
             << "</wpt>\n";
       }
 

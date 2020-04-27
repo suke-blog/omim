@@ -3,15 +3,12 @@
 
 @property(weak, nonatomic) MWMAlertViewController * alertController;
 
-+ (MWMAlert *)routingMigrationAlertWithOkBlock:(MWMVoidBlock)okBlock;
 + (MWMAlert *)rateAlert;
-+ (MWMAlert *)facebookAlert;
-+ (MWMAlert *)locationAlert;
++ (MWMAlert *)locationAlertWithCancelBlock:(MWMVoidBlock)cancelBlock;
 + (MWMAlert *)routingDisclaimerAlertWithOkBlock:(MWMVoidBlock)block;
 + (MWMAlert *)disabledLocationAlert;
-+ (MWMAlert *)noWiFiAlertWithOkBlock:(MWMVoidBlock)okBlock;
++ (MWMAlert *)noWiFiAlertWithOkBlock:(MWMVoidBlock)okBlock andCancelBlock:(MWMVoidBlock)cancelBlock;
 + (MWMAlert *)noConnectionAlert;
-+ (MWMAlert *)migrationProhibitedAlert;
 + (MWMAlert *)deleteMapProhibitedAlert;
 + (MWMAlert *)unsavedEditsAlertWithOkBlock:(MWMVoidBlock)okBlock;
 + (MWMAlert *)locationServiceNotSupportedAlert;

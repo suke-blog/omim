@@ -14,50 +14,45 @@ void CoverRect(m2::RectD const & rect, int scale, covering::Intervals & result)
 }
 
 MwmContext::MwmContext(MwmSet::MwmHandle handle)
-  : m_handle(move(handle))
-  , m_value(*m_handle.GetValue<MwmValue>())
+  : m_handle(std::move(handle))
+  , m_value(*m_handle.GetValue())
   , m_vector(m_value.m_cont, m_value.GetHeader(), m_value.m_table.get())
   , m_index(m_value.m_cont.GetReader(INDEX_FILE_TAG), m_value.m_factory)
   , m_centers(m_value)
+  , m_editableSource(m_handle)
 {
 }
 
-bool MwmContext::GetFeature(uint32_t index, FeatureType & ft) const
+MwmContext::MwmContext(MwmSet::MwmHandle handle, MwmType type)
+  : m_handle(std::move(handle))
+  , m_value(*m_handle.GetValue())
+  , m_vector(m_value.m_cont, m_value.GetHeader(), m_value.m_table.get())
+  , m_index(m_value.m_cont.GetReader(INDEX_FILE_TAG), m_value.m_factory)
+  , m_centers(m_value)
+  , m_editableSource(m_handle)
+  , m_type(type)
 {
+}
+
+std::unique_ptr<FeatureType> MwmContext::GetFeature(uint32_t index) const
+{
+  std::unique_ptr<FeatureType> ft;
   switch (GetEditedStatus(index))
   {
   case FeatureStatus::Deleted:
   case FeatureStatus::Obsolete:
-    return false;
+    return ft;
   case FeatureStatus::Modified:
   case FeatureStatus::Created:
-    VERIFY(osm::Editor::Instance().GetEditedFeature(GetId(), index, ft), ());
-    return true;
+    ft = m_editableSource.GetModifiedFeature(index);
+    CHECK(ft, ());
+    return ft;
   case FeatureStatus::Untouched:
-    m_vector.GetByIndex(index, ft);
-    ft.SetID(FeatureID(GetId(), index));
-    return true;
+    auto ft = m_vector.GetByIndex(index);
+    CHECK(ft, ());
+    ft->SetID(FeatureID(GetId(), index));
+    return ft;
   }
   UNREACHABLE();
-}
-
-bool MwmContext::GetOriginalFeature(uint32_t index, FeatureType & ft) const
-{
-  if (feature::FakeFeatureIds::IsEditorCreatedFeature(index))
-    return false;
-
-  m_vector.GetByIndex(index, ft);
-  ft.SetID(FeatureID(GetId(), index));
-  return true;
-}
-
-bool MwmContext::GetStreetIndex(uint32_t houseId, uint32_t & streetId)
-{
-  if (!m_houseToStreetTable)
-  {
-    m_houseToStreetTable = HouseToStreetTable::Load(m_value);
-    ASSERT(m_houseToStreetTable, ());
-  }
-  return m_houseToStreetTable->Get(houseId, streetId);
 }
 }  // namespace search

@@ -1,13 +1,16 @@
 #include "map/gps_tracker.hpp"
 #include "map/framework.hpp"
 
-#include "coding/file_name_utils.hpp"
-
 #include "platform/platform.hpp"
 
-#include "std/atomic.hpp"
+#include "base/file_name_utils.hpp"
+
+#include <string>
 
 #include "defines.hpp"
+
+using namespace std;
+using namespace std::chrono;
 
 namespace
 {
@@ -20,7 +23,7 @@ size_t constexpr kMaxItemCount = 100000; // > 24h with 1point/s
 
 inline string GetFilePath()
 {
-  return base::JoinFoldersToPath(GetPlatform().WritableDir(), GPS_TRACK_FILENAME);
+  return base::JoinPath(GetPlatform().WritableDir(), GPS_TRACK_FILENAME);
 }
 
 inline bool GetSettingsIsEnabled()

@@ -4,12 +4,14 @@ enum TutorialType: Int {
   case discovery
   case bookmarks
   case subway
+  case isolines
 }
 
 @objc(MWMTutorialViewControllerDelegate)
 protocol TutorialViewControllerDelegate: AnyObject {
   func didPressTarget(_ viewController: TutorialViewController)
   func didPressCancel(_ viewController: TutorialViewController)
+  func didPressOnScreen(_ viewController: TutorialViewController)
 }
 
 fileprivate struct TargetAction {
@@ -54,7 +56,9 @@ class TutorialViewController: UIViewController {
 
   override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) { }
 
-  override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) { }
+  override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    delegate?.didPressOnScreen(self)
+  }
 
   func fadeOut(withCompletion completion: (() -> Void)?) {
     tutorialView.animateFadeOut(kDefaultAnimationDuration) {
@@ -102,18 +106,15 @@ extension TutorialViewController {
     switch type {
     case .search:
       result = searchTutorialBlur()
-      break
     case .discovery:
       result = discoveryTutorialBlur()
-      break
     case .subway:
       result = subwayTutorialBlur()
-      break
+    case .isolines:
+      result = isolinesTutorialBlur()
     case .bookmarks:
       result = bookmarksTutorialBlur()
-      break
     }
-
     result.targetView = target
     result.delegate = delegate
     return result
@@ -126,7 +127,7 @@ extension TutorialViewController {
   private static func bookmarksTutorialBlur() -> TutorialViewController {
     let result = TutorialViewController(nibName: "BookmarksTutorialBlur", bundle: nil)
     result.customAction = {
-      MapViewController.shared().openCatalog(animated: true)
+      MapViewController.shared().openCatalog(animated: true, utm: .tipsAndTricks)
     }
     return result
   }
@@ -147,7 +148,15 @@ extension TutorialViewController {
   private static func subwayTutorialBlur() -> TutorialViewController {
     let result = TutorialViewController(nibName: "SubwayTutorialBlur", bundle: nil)
     result.customAction = {
-      MWMTrafficManager.setTransitEnabled(true)
+      MapOverlayManager.setTransitEnabled(true)
+    }
+    return result
+  }
+  
+  private static func isolinesTutorialBlur() -> TutorialViewController {
+    let result = TutorialViewController(nibName: "IsolinesTutorialBlur", bundle: nil)
+    result.customAction = {
+      MapOverlayManager.setIsoLinesEnabled(true)
     }
     return result
   }

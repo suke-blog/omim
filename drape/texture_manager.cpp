@@ -5,14 +5,15 @@
 #include "drape/stipple_pen_resource.hpp"
 #include "drape/texture_of_colors.hpp"
 #include "drape/gl_functions.hpp"
+#include "drape/support_manager.hpp"
 #include "drape/utils/glyph_usage_tracker.hpp"
 
 #include "platform/platform.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/reader.hpp"
 
 #include "base/buffer_vector.hpp"
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 #include "base/stl_helpers.hpp"
 #include "base/string_utils.hpp"
@@ -21,6 +22,8 @@
 #include <cstdint>
 #include <limits>
 #include <sstream>
+#include <string>
+#include <utility>
 #include <vector>
 
 namespace dp
@@ -29,10 +32,8 @@ uint32_t const kMaxTextureSize = 1024;
 uint32_t const kStippleTextureWidth = 512;
 uint32_t const kMinStippleTextureHeight = 64;
 uint32_t const kMinColorTextureSize = 32;
+uint32_t const kGlyphsTextureSize = 1024;
 size_t const kInvalidGlyphGroup = std::numeric_limits<size_t>::max();
-
-// number of glyphs (since 0) which will be in each texture
-size_t const kDuplicatedGlyphsCount = 128;
 
 uint32_t const kReservedPatterns = 10;
 size_t const kReservedColors = 20;
@@ -58,9 +59,9 @@ void MultilineTextToUniString(TextureManager::TMultilineText const & text, strin
     outString.append(str.begin(), str.end());
 }
 
-string ReadFileToString(string const & filename)
+std::string ReadFileToString(std::string const & filename)
 {
-  string result;
+  std::string result;
   try
   {
     ReaderPtr<Reader>(GetPlatform().GetReader(filename)).ReadAsString(result);
@@ -74,7 +75,7 @@ string ReadFileToString(string const & filename)
 }
 
 template <typename ToDo>
-void ParseColorsList(string const & colorsFile, ToDo toDo)
+void ParseColorsList(std::string const & colorsFile, ToDo toDo)
 {
   std::istringstream fin(ReadFileToString(colorsFile));
   while (true)
@@ -89,15 +90,15 @@ void ParseColorsList(string const & colorsFile, ToDo toDo)
 }
 
 template <typename ToDo>
-void ParsePatternsList(string const & patternsFile, ToDo toDo)
+void ParsePatternsList(std::string const & patternsFile, ToDo toDo)
 {
-  strings::Tokenize(ReadFileToString(patternsFile), "\n", [&](string const & patternStr)
+  strings::Tokenize(ReadFileToString(patternsFile), "\n", [&](std::string const & patternStr)
   {
     if (patternStr.empty())
       return;
 
     buffer_vector<double, 8> pattern;
-    strings::Tokenize(patternStr, " ", [&](string const & token)
+    strings::Tokenize(patternStr, " ", [&](std::string const & token)
     {
       double d = 0.0;
       VERIFY(strings::to_double(token, d), ());
@@ -236,7 +237,6 @@ uint32_t TextureManager::StippleRegion::GetPatternPixelLength() const
 
 void TextureManager::Release()
 {
-  m_glyphGroups.clear();
   m_hybridGlyphGroups.clear();
 
   m_symbolTextures.clear();
@@ -253,6 +253,8 @@ void TextureManager::Release()
   m_glyphManager.reset();
 
   m_glyphGenerator->FinishGeneration();
+  
+  m_isInitialized = false;
   m_nothingToUpload.test_and_set();
 }
 
@@ -269,19 +271,25 @@ bool TextureManager::UpdateDynamicTextures(ref_ptr<dp::GraphicsContext> context)
       return m_uploadTimer.ElapsedSeconds() < kUploadTimeoutInSeconds;
     }
 
-    if (apiVersion == dp::ApiVersion::Metal)
+    if (apiVersion == dp::ApiVersion::Metal || apiVersion == dp::ApiVersion::Vulkan)
       return false;
 
     CHECK(false, ("Unsupported API version."));
   }
+  
+  CHECK(m_isInitialized, ());
 
   m_uploadTimer.Reset();
 
+  CHECK(m_colorTexture != nullptr, ());
   m_colorTexture->UpdateState(context);
+
+  CHECK(m_stipplePenTexture != nullptr, ());
   m_stipplePenTexture->UpdateState(context);
 
   UpdateGlyphTextures(context);
 
+  CHECK(m_textureAllocator != nullptr, ());
   m_textureAllocator->Flush();
 
   return true;
@@ -296,13 +304,14 @@ void TextureManager::UpdateGlyphTextures(ref_ptr<dp::GraphicsContext> context)
 
 bool TextureManager::HasAsyncRoutines() const
 {
+  CHECK(m_glyphGenerator != nullptr, ());
   return !m_glyphGenerator->IsSuspended();
 }
 
 ref_ptr<Texture> TextureManager::AllocateGlyphTexture()
 {
   std::lock_guard<std::mutex> lock(m_glyphTexturesMutex);
-  m2::PointU size(m_maxTextureSize, m_maxTextureSize);
+  m2::PointU size(kGlyphsTextureSize, kGlyphsTextureSize);
   m_glyphTextures.push_back(make_unique_dp<FontTexture>(size, make_ref(m_glyphManager),
                                                         m_glyphGenerator,
                                                         make_ref(m_textureAllocator)));
@@ -349,74 +358,15 @@ void TextureManager::GetGlyphsRegions(ref_ptr<FontTexture> tex, strings::UniStri
     m_nothingToUpload.clear();
 }
 
-size_t TextureManager::FindGlyphsGroup(strings::UniChar const & c) const
-{
-  auto const iter = std::lower_bound(m_glyphGroups.begin(), m_glyphGroups.end(), c,
-                                     [](GlyphGroup const & g, strings::UniChar const & c)
-  {
-    return g.m_endChar < c;
-  });
-
-  if (iter == m_glyphGroups.end())
-    return kInvalidGlyphGroup;
-
-  return static_cast<size_t>(std::distance(m_glyphGroups.begin(), iter));
-}
-
-size_t TextureManager::FindGlyphsGroup(strings::UniString const & text) const
-{
-  size_t groupIndex = kInvalidGlyphGroup;
-  for (auto const & c : text)
-  {
-    // Skip glyphs which can be duplicated.
-    if (c < kDuplicatedGlyphsCount)
-      continue;
-
-    size_t currentIndex = FindGlyphsGroup(c);
-
-    // an invalid glyph found
-    if (currentIndex == kInvalidGlyphGroup)
-    {
-#if defined(TRACK_GLYPH_USAGE)
-      GlyphUsageTracker::Instance().AddInvalidGlyph(text, c);
-#endif
-      return kInvalidGlyphGroup;
-    }
-
-    // Check if each glyph in text id in one group.
-    if (groupIndex == kInvalidGlyphGroup)
-      groupIndex = currentIndex;
-    else if (groupIndex != currentIndex)
-    {
-#if defined(TRACK_GLYPH_USAGE)
-      GlyphUsageTracker::Instance().AddUnexpectedGlyph(text, c, currentIndex, groupIndex);
-#endif
-      return kInvalidGlyphGroup;
-    }
-  }
-
-  // All glyphs in duplicated range.
-  if (groupIndex == kInvalidGlyphGroup)
-    groupIndex = FindGlyphsGroup(text[0]);
-
-  return groupIndex;
-}
-
-size_t TextureManager::FindGlyphsGroup(TMultilineText const & text) const
-{
-  strings::UniString combinedString;
-  MultilineTextToUniString(text, combinedString);
-
-  return FindGlyphsGroup(combinedString);
-}
-
 uint32_t TextureManager::GetNumberOfUnfoundCharacters(strings::UniString const & text, int fixedHeight,
                                                       HybridGlyphGroup const & group) const
 {
   uint32_t cnt = 0;
   for (auto const & c : text)
-    if (group.m_glyphs.find(make_pair(c, fixedHeight)) == group.m_glyphs.end())
+  {
+    if (group.m_glyphs.find(std::make_pair(c, fixedHeight)) == group.m_glyphs.end())
       cnt++;
+  }
 
   return cnt;
 }
@@ -425,7 +375,7 @@ void TextureManager::MarkCharactersUsage(strings::UniString const & text, int fi
                                          HybridGlyphGroup & group)
 {
   for (auto const & c : text)
-    group.m_glyphs.emplace(make_pair(c, fixedHeight));
+    group.m_glyphs.emplace(std::make_pair(c, fixedHeight));
 }
 
 size_t TextureManager::FindHybridGlyphsGroup(strings::UniString const & text, int fixedHeight)
@@ -452,8 +402,10 @@ size_t TextureManager::FindHybridGlyphsGroup(strings::UniString const & text, in
 
   // Looking for a hybrid texture which contains text entirely.
   for (size_t i = 0; i < m_hybridGlyphGroups.size() - 1; i++)
+  {
     if (GetNumberOfUnfoundCharacters(text, fixedHeight, m_hybridGlyphGroups[i]) == 0)
       return i;
+  }
 
   // Check if we can contain text in the last hybrid texture.
   uint32_t const unfoundChars = GetNumberOfUnfoundCharacters(text, fixedHeight, group);
@@ -474,20 +426,15 @@ size_t TextureManager::FindHybridGlyphsGroup(TMultilineText const & text, int fi
 
 void TextureManager::Init(ref_ptr<dp::GraphicsContext> context, Params const & params)
 {
+  CHECK(!m_isInitialized, ());
+  
   m_resPostfix = params.m_resPostfix;
   m_textureAllocator = CreateAllocator(context);
 
+  m_maxTextureSize = std::min(kMaxTextureSize, dp::SupportManager::Instance().GetMaxTextureSize());
   auto const apiVersion = context->GetApiVersion();
   if (apiVersion == dp::ApiVersion::OpenGLES2 || apiVersion == dp::ApiVersion::OpenGLES3)
-  {
-    m_maxTextureSize = std::min(kMaxTextureSize,
-                                static_cast<uint32_t>(GLFunctions::glGetInteger(gl_const::GLMaxTextureSize)));
     GLFunctions::glPixelStore(gl_const::GLUnpackAlignment, 1);
-  }
-  else
-  {
-    m_maxTextureSize = kMaxTextureSize;
-  }
 
   // Initialize symbols.
   for (size_t i = 0; i < ARRAY_SIZE(kSymbolTextures); ++i)
@@ -519,7 +466,7 @@ void TextureManager::Init(ref_ptr<dp::GraphicsContext> context, Params const & p
     buffer_vector<uint8_t, 8> p;
     for (size_t i = 0; i < pattern.size(); i++)
       p.push_back(static_cast<uint8_t>(pattern[i] * visualScale));
-    patterns.push_back(move(p));
+    patterns.push_back(std::move(p));
   });
   m_stipplePenTexture = make_unique_dp<StipplePenTexture>(StipplePenTextureSize(patterns.size(), m_maxTextureSize),
                                                           make_ref(m_textureAllocator));
@@ -545,59 +492,45 @@ void TextureManager::Init(ref_ptr<dp::GraphicsContext> context, Params const & p
 
   // Initialize glyphs.
   m_glyphManager = make_unique_dp<GlyphManager>(params.m_glyphMngParams);
-
-  uint32_t const textureSquare = m_maxTextureSize * m_maxTextureSize;
+  uint32_t const textureSquare = kGlyphsTextureSize * kGlyphsTextureSize;
   uint32_t const baseGlyphHeight =
       static_cast<uint32_t>(params.m_glyphMngParams.m_baseGlyphHeight * kGlyphAreaMultiplier);
   uint32_t const averageGlyphSquare = baseGlyphHeight * baseGlyphHeight;
-
-  m_glyphGroups.push_back(GlyphGroup());
   m_maxGlypsCount = static_cast<uint32_t>(ceil(kGlyphAreaCoverage * textureSquare / averageGlyphSquare));
-  m_glyphManager->ForEachUnicodeBlock([this](strings::UniChar const & start, strings::UniChar const & end)
-  {
-    if (m_glyphGroups.empty())
-    {
-      m_glyphGroups.push_back(GlyphGroup(start, end));
-      return;
-    }
 
-    GlyphGroup & group = m_glyphGroups.back();
-    ASSERT_LESS_OR_EQUAL(group.m_endChar, start, ());
-
-    if (end - group.m_startChar < m_maxGlypsCount)
-      group.m_endChar = end;
-    else
-      m_glyphGroups.push_back(GlyphGroup(start, end));
-  });
-
+  m_isInitialized = true;
   m_nothingToUpload.clear();
 }
 
 void TextureManager::OnSwitchMapStyle(ref_ptr<dp::GraphicsContext> context)
 {
+  CHECK(m_isInitialized, ());
+  
   // Here we need invalidate only textures which can be changed in map style switch.
+  // Now we update only symbol textures, if we need update other textures they must be added here.
+  // For Vulkan we use m_texturesToCleanup to defer textures destroying.
   for (size_t i = 0; i < m_symbolTextures.size(); ++i)
   {
     ASSERT(m_symbolTextures[i] != nullptr, ());
     ASSERT(dynamic_cast<SymbolsTexture *>(m_symbolTextures[i].get()) != nullptr, ());
     ref_ptr<SymbolsTexture> symbolsTexture = make_ref(m_symbolTextures[i]);
-    symbolsTexture->Invalidate(context, m_resPostfix, make_ref(m_textureAllocator));
-  }
 
-  // Uncomment if static textures can be changed.
-  //ref_ptr<Texture> staticTextures[] = {make_ref(m_trafficArrowTexture),
-  //                                     make_ref(m_hatchingTexture)};
-  //for (uint32_t i = 0; i < ARRAY_SIZE(staticTextures); i++)
-  //{
-  //  ASSERT(staticTextures[i] != nullptr, ());
-  //  ASSERT(dynamic_cast<StaticTexture *>(staticTextures[i].get()) != nullptr, ());
-  //  ref_ptr<StaticTexture> t = staticTextures[i];
-  //  t->Invalidate(context, make_ref(m_textureAllocator));
-  //}
+    if (context->GetApiVersion() != dp::ApiVersion::Vulkan)
+      symbolsTexture->Invalidate(context, m_resPostfix, make_ref(m_textureAllocator));
+    else
+      symbolsTexture->Invalidate(context, m_resPostfix, make_ref(m_textureAllocator), m_texturesToCleanup);
+  }
 }
 
-void TextureManager::GetSymbolRegion(string const & symbolName, SymbolRegion & region)
+void TextureManager::GetTexturesToCleanup(std::vector<drape_ptr<HWTexture>> & textures)
 {
+  CHECK(m_isInitialized, ());
+  std::swap(textures, m_texturesToCleanup);
+}
+
+void TextureManager::GetSymbolRegion(std::string const & symbolName, SymbolRegion & region)
+{
+  CHECK(m_isInitialized, ());
   for (size_t i = 0; i < m_symbolTextures.size(); ++i)
   {
     ASSERT(m_symbolTextures[i] != nullptr, ());
@@ -605,6 +538,7 @@ void TextureManager::GetSymbolRegion(string const & symbolName, SymbolRegion & r
     if (symbolsTexture->IsSymbolContained(symbolName))
     {
       GetRegionBase(symbolsTexture, region, SymbolsTexture::SymbolKey(symbolName));
+      region.SetTextureIndex(static_cast<uint32_t>(i));
       return;
     }
   }
@@ -613,6 +547,7 @@ void TextureManager::GetSymbolRegion(string const & symbolName, SymbolRegion & r
 
 bool TextureManager::HasSymbolRegion(std::string const & symbolName) const
 {
+  CHECK(m_isInitialized, ());
   for (size_t i = 0; i < m_symbolTextures.size(); ++i)
   {
     ASSERT(m_symbolTextures[i] != nullptr, ());
@@ -625,11 +560,13 @@ bool TextureManager::HasSymbolRegion(std::string const & symbolName) const
 
 void TextureManager::GetStippleRegion(TStipplePattern const & pen, StippleRegion & region)
 {
+  CHECK(m_isInitialized, ());
   GetRegionBase(make_ref(m_stipplePenTexture), region, StipplePenKey(pen));
 }
 
 void TextureManager::GetColorRegion(Color const & color, ColorRegion & region)
 {
+  CHECK(m_isInitialized, ());
   GetRegionBase(make_ref(m_colorTexture), region, ColorKey(color));
 }
 
@@ -672,32 +609,38 @@ uint32_t TextureManager::GetAbsentGlyphsCount(ref_ptr<Texture> texture, TMultili
 
 bool TextureManager::AreGlyphsReady(strings::UniString const & str, int fixedHeight) const
 {
+  CHECK(m_isInitialized, ());
   return m_glyphManager->AreGlyphsReady(str, fixedHeight);
 }
 
 ref_ptr<Texture> TextureManager::GetSymbolsTexture() const
 {
+  CHECK(m_isInitialized, ());
   ASSERT(!m_symbolTextures.empty(), ());
   return make_ref(m_symbolTextures[kDefaultSymbolsIndex]);
 }
 
 ref_ptr<Texture> TextureManager::GetTrafficArrowTexture() const
 {
+  CHECK(m_isInitialized, ());
   return make_ref(m_trafficArrowTexture);
 }
 
 ref_ptr<Texture> TextureManager::GetHatchingTexture() const
 {
+  CHECK(m_isInitialized, ());
   return make_ref(m_hatchingTexture);
 }
 
 ref_ptr<Texture> TextureManager::GetSMAAAreaTexture() const
 {
+  CHECK(m_isInitialized, ());
   return make_ref(m_smaaAreaTexture);
 }
 
 ref_ptr<Texture> TextureManager::GetSMAASearchTexture() const
 {
+  CHECK(m_isInitialized, ());
   return make_ref(m_smaaSearchTexture);
 }
 

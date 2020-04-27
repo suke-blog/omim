@@ -13,14 +13,25 @@ namespace search
 TwoLevelPOIChecker::TwoLevelPOIChecker() : ftypes::BaseChecker(2 /* level */)
 {
   Classificator const & c = classif();
-  base::StringIL arr[] = {{"highway", "bus_stop"},
-                          {"highway", "speed_camera"},
-                          {"waterway", "waterfall"},
-                          {"natural", "volcano"},
-                          {"natural", "cave_entrance"},
-                          {"natural", "beach"},
+  base::StringIL arr[] = {{"building", "train_station"},
                           {"emergency", "defibrillator"},
-                          {"emergency", "fire_hydrant"}};
+                          {"emergency", "fire_hydrant"},
+                          {"highway", "bus_stop"},
+                          {"highway", "ford"},
+                          {"highway", "raceway"},
+                          {"highway", "rest_area"},
+                          {"highway", "speed_camera"},
+                          {"natural", "beach"},
+                          {"natural", "geyser"},
+                          {"natural", "cave_entrance"},
+                          {"natural", "spring"},
+                          {"natural", "volcano"},
+                          {"office", "estate_agent"},
+                          {"office", "government"},
+                          {"office", "insurance"},
+                          {"office", "lawyer"},
+                          {"office", "telecommunication"},
+                          {"waterway", "waterfall"}};
 
   for (size_t i = 0; i < ARRAY_SIZE(arr); ++i)
     m_types.push_back(c.GetTypeByPath(arr[i]));
@@ -82,7 +93,8 @@ private:
 Model::Type Model::GetType(FeatureType & feature) const
 {
   static auto const & buildingChecker = CustomIsBuildingChecker::Instance();
-  static auto const & streetChecker = IsStreetChecker::Instance();
+  static auto const & streetChecker = IsStreetOrSquareChecker::Instance();
+  static auto const & suburbChecker = IsSuburbChecker::Instance();
   static auto const & localityChecker = IsLocalityChecker::Instance();
   static auto const & poiChecker = IsPoiChecker::Instance();
 
@@ -96,31 +108,35 @@ Model::Type Model::GetType(FeatureType & feature) const
   if (streetChecker(feature))
     return TYPE_STREET;
 
+  if (suburbChecker(feature))
+    return TYPE_SUBURB;
+
   if (localityChecker(feature))
   {
     auto const type = localityChecker.GetType(feature);
     switch (type)
     {
-    case NONE: ASSERT(false, ("Unknown locality.")); return TYPE_UNCLASSIFIED;
-    case STATE: return TYPE_STATE;
-    case COUNTRY: return TYPE_COUNTRY;
-    case CITY:
-    case TOWN: return TYPE_CITY;
-    case VILLAGE: return TYPE_VILLAGE;
-    case LOCALITY_COUNT: return TYPE_UNCLASSIFIED;
+    case LocalityType::None: ASSERT(false, ("Unknown locality.")); return TYPE_UNCLASSIFIED;
+    case LocalityType::State: return TYPE_STATE;
+    case LocalityType::Country: return TYPE_COUNTRY;
+    case LocalityType::City:
+    case LocalityType::Town: return TYPE_CITY;
+    case LocalityType::Village: return TYPE_VILLAGE;
+    case LocalityType::Count: return TYPE_UNCLASSIFIED;
     }
   }
 
   return TYPE_UNCLASSIFIED;
 }
 
-string DebugPrint(Model::Type type)
+std::string DebugPrint(Model::Type type)
 {
   switch (type)
   {
   case Model::TYPE_POI: return "POI";
   case Model::TYPE_BUILDING: return "Building";
   case Model::TYPE_STREET: return "Street";
+  case Model::TYPE_SUBURB: return "Suburb";
   case Model::TYPE_CITY: return "City";
   case Model::TYPE_VILLAGE: return "Village";
   case Model::TYPE_STATE: return "State";
@@ -129,6 +145,6 @@ string DebugPrint(Model::Type type)
   case Model::TYPE_COUNT: return "Count";
   }
   ASSERT(false, ("Unknown search type:", static_cast<int>(type)));
-  return string();
+  return {};
 }
 }  // namespace search

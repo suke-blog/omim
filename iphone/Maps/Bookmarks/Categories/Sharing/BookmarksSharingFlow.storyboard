@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yad-RH-i8M">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Yad-RH-i8M">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,215 +11,54 @@
             <objects>
                 <tableViewController id="Yad-RH-i8M" customClass="BookmarksSharingViewController" customModule="maps_me" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="1pz-95-Ts3">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
-                            <tableViewSection headerTitle="Public access" id="wSk-N4-gbo">
-                                <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="56" id="YW0-jq-Isw" customClass="UploadActionCell" customModule="maps_me" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="55.5" width="375" height="56"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YW0-jq-Isw" id="ayR-ii-DjA">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="55.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic24PxGlobe" translatesAutoresizingMaskIntoConstraints="NO" id="fmA-82-rPS">
-                                                    <rect key="frame" x="16" y="16" width="24" height="24"/>
-                                                    <color key="tintColor" red="0.11764705882352941" green="0.58823529411764708" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="24" id="5bK-ck-alK"/>
-                                                        <constraint firstAttribute="width" constant="24" id="RId-hH-I1b"/>
-                                                    </constraints>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="coloring" value="MWMBlue"/>
-                                                    </userDefinedRuntimeAttributes>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upload and publish" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uMP-YO-wbu">
-                                                    <rect key="frame" x="56" y="18" width="140" height="20"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" red="0.11764705882352941" green="0.58823529411764708" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lF2-pc-Qo7">
-                                                    <rect key="frame" x="335" y="16" width="24" height="24"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="24" id="9r2-mf-DsT"/>
-                                                        <constraint firstAttribute="width" constant="24" id="Gon-Yr-8Fq"/>
-                                                    </constraints>
-                                                </view>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PYo-PL-9Fc">
-                                                    <rect key="frame" x="335" y="16" width="24" height="24"/>
-                                                    <color key="tintColor" red="0.1176470588" green="0.58823529409999997" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <state key="normal" title="Button" image="ic24PxShare"/>
-                                                    <connections>
-                                                        <action selector="shareButtonPressed:" destination="YW0-jq-Isw" eventType="touchUpInside" id="j1d-qF-UIt"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="PYo-PL-9Fc" firstAttribute="bottom" secondItem="lF2-pc-Qo7" secondAttribute="bottom" id="BJL-HW-qeL"/>
-                                                <constraint firstItem="fmA-82-rPS" firstAttribute="centerY" secondItem="ayR-ii-DjA" secondAttribute="centerY" id="Bfj-dF-WcJ"/>
-                                                <constraint firstItem="uMP-YO-wbu" firstAttribute="centerY" secondItem="fmA-82-rPS" secondAttribute="centerY" id="D4L-J4-gPv"/>
-                                                <constraint firstItem="PYo-PL-9Fc" firstAttribute="leading" secondItem="lF2-pc-Qo7" secondAttribute="leading" id="KDo-o9-elh"/>
-                                                <constraint firstItem="lF2-pc-Qo7" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="uMP-YO-wbu" secondAttribute="trailing" constant="16" id="RxV-Xg-PoI"/>
-                                                <constraint firstItem="fmA-82-rPS" firstAttribute="leading" secondItem="ayR-ii-DjA" secondAttribute="leadingMargin" id="Zzq-yt-7DW"/>
-                                                <constraint firstItem="lF2-pc-Qo7" firstAttribute="centerY" secondItem="ayR-ii-DjA" secondAttribute="centerY" id="cBC-St-gRO"/>
-                                                <constraint firstItem="PYo-PL-9Fc" firstAttribute="trailing" secondItem="lF2-pc-Qo7" secondAttribute="trailing" id="h2e-6c-4ID"/>
-                                                <constraint firstAttribute="trailing" secondItem="lF2-pc-Qo7" secondAttribute="trailing" constant="16" id="iJm-Q9-d2P"/>
-                                                <constraint firstItem="uMP-YO-wbu" firstAttribute="leading" secondItem="fmA-82-rPS" secondAttribute="trailing" constant="16" id="qOc-7f-rpS"/>
-                                                <constraint firstItem="PYo-PL-9Fc" firstAttribute="top" secondItem="lF2-pc-Qo7" secondAttribute="top" id="qZ8-cY-uRw"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="actionImage" destination="fmA-82-rPS" id="Z0K-e9-nZj"/>
-                                            <outlet property="actionTitle" destination="uMP-YO-wbu" id="pQd-ox-QLF"/>
-                                            <outlet property="progressView" destination="lF2-pc-Qo7" id="R12-gK-Si1"/>
-                                            <outlet property="shareButton" destination="PYo-PL-9Fc" id="2yn-Sk-Yq8"/>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="95" id="VdZ-fO-p63" customClass="MWMTableViewCell">
-                                        <rect key="frame" x="0.0" y="111.5" width="375" height="95"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VdZ-fO-p63" id="Y9s-zu-iol">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="94.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This list will be uploaded in the public  catalog at MAPS.ME as guide and will be  easily shared with others" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N3w-HY-3ac">
-                                                    <rect key="frame" x="56" y="18" width="303" height="58.5"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.54000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="localizedText" value="upload_and_publish_desc"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="colorName" value="blackSecondaryText"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="regular14"/>
-                                                    </userDefinedRuntimeAttributes>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="bottom" secondItem="N3w-HY-3ac" secondAttribute="bottom" constant="18" id="1EW-1C-WIX"/>
-                                                <constraint firstItem="N3w-HY-3ac" firstAttribute="top" secondItem="Y9s-zu-iol" secondAttribute="top" constant="18" id="qEv-Gk-ane"/>
-                                                <constraint firstItem="N3w-HY-3ac" firstAttribute="leading" secondItem="Y9s-zu-iol" secondAttribute="leading" constant="56" id="upe-MD-o7N"/>
-                                                <constraint firstAttribute="trailing" secondItem="N3w-HY-3ac" secondAttribute="trailing" constant="16" id="zDt-Qf-8JF"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="86" id="3UL-dT-hKc" customClass="MWMTableViewCell">
-                                        <rect key="frame" x="0.0" y="206.5" width="375" height="86"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3UL-dT-hKc" id="402-ot-2TF">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="85.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="Please note: by proceeding, you accept the license agreement" translatesAutoresizingMaskIntoConstraints="NO" id="dsV-Vs-oCo" customClass="LinkTextView" customModule="maps_me" customModuleProvider="target">
-                                                    <rect key="frame" x="56" y="18" width="303" height="49.5"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <color key="tintColor" red="0.1176470588" green="0.58823529409999997" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.54000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="textContainer.lineFragmentPadding">
-                                                            <integer key="value" value="0"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                        <userDefinedRuntimeAttribute type="rect" keyPath="textContainerInset">
-                                                            <rect key="value" x="0.0" y="0.0" width="0.0" height="0.0"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                </textView>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="dsV-Vs-oCo" firstAttribute="leading" secondItem="402-ot-2TF" secondAttribute="leading" constant="56" id="BgN-PM-ejM"/>
-                                                <constraint firstAttribute="bottom" secondItem="dsV-Vs-oCo" secondAttribute="bottom" constant="18" id="MYS-Cs-qSO"/>
-                                                <constraint firstItem="dsV-Vs-oCo" firstAttribute="top" secondItem="402-ot-2TF" secondAttribute="top" constant="18" id="pbY-qn-0dd"/>
-                                                <constraint firstAttribute="trailing" secondItem="dsV-Vs-oCo" secondAttribute="trailing" constant="16" id="vcP-CZ-R8d"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="50" id="y5U-AG-X4u" customClass="MWMTableViewCell">
-                                        <rect key="frame" x="0.0" y="292.5" width="375" height="50"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="y5U-AG-X4u" id="2pY-Yp-mFr">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic24PxEdit" translatesAutoresizingMaskIntoConstraints="NO" id="c7L-Ts-xbm">
-                                                    <rect key="frame" x="16" y="13" width="24" height="24"/>
-                                                    <color key="tintColor" red="0.1176470588" green="0.58823529409999997" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="24" id="7mz-ea-yZR"/>
-                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="24" id="TR3-jI-vFJ"/>
-                                                        <constraint firstAttribute="height" constant="24" id="aN1-2W-dVM"/>
-                                                        <constraint firstAttribute="width" constant="24" id="ikv-1p-fdU"/>
-                                                    </constraints>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="coloring" value="MWMBlue"/>
-                                                    </userDefinedRuntimeAttributes>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Edit on web" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wLX-hM-JLH">
-                                                    <rect key="frame" x="56" y="15" width="85" height="20"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" red="0.1176470588" green="0.58823529409999997" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="localizedText" value="edit_on_web"/>
-                                                    </userDefinedRuntimeAttributes>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="wLX-hM-JLH" secondAttribute="trailing" constant="16" id="SL2-VO-qey"/>
-                                                <constraint firstItem="wLX-hM-JLH" firstAttribute="centerY" secondItem="2pY-Yp-mFr" secondAttribute="centerY" id="dej-se-4TT"/>
-                                                <constraint firstItem="c7L-Ts-xbm" firstAttribute="leading" secondItem="2pY-Yp-mFr" secondAttribute="leadingMargin" id="glD-Zf-gsX"/>
-                                                <constraint firstItem="c7L-Ts-xbm" firstAttribute="centerY" secondItem="2pY-Yp-mFr" secondAttribute="centerY" id="ldu-hm-6jT"/>
-                                                <constraint firstItem="wLX-hM-JLH" firstAttribute="leading" secondItem="c7L-Ts-xbm" secondAttribute="trailing" constant="16" id="xN9-GL-sN7"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="FPL-Dh-v8t" kind="presentation" identifier="editOnWeb" id="k7O-p8-5zO"/>
-                                        </connections>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
                             <tableViewSection headerTitle="Limited access" id="GtE-jP-p4q">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="56" id="90b-ef-VUJ" customClass="UploadActionCell" customModule="maps_me" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="398.5" width="375" height="56"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="600" height="56"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="90b-ef-VUJ" id="AlV-ie-H63">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="55.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="56"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic24PxLink" translatesAutoresizingMaskIntoConstraints="NO" id="saz-sU-6Ej">
-                                                    <rect key="frame" x="16" y="16" width="24" height="24"/>
+                                                    <rect key="frame" x="20" y="16" width="24" height="24"/>
                                                     <color key="tintColor" red="0.1176470588" green="0.58823529409999997" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="24" id="1xP-Cc-gIc"/>
                                                         <constraint firstAttribute="height" constant="24" id="gmf-FK-0kF"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="coloring" value="MWMBlue"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="MWMBlue"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upload and get a direct link" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eP0-FF-mrr">
-                                                    <rect key="frame" x="56" y="18" width="199" height="20"/>
+                                                    <rect key="frame" x="60" y="18" width="199" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.1176470588" green="0.58823529409999997" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Ai-cK-Fh3">
-                                                    <rect key="frame" x="335" y="16" width="24" height="24"/>
+                                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Ai-cK-Fh3" customClass="ActivityIndicator" customModule="maps_me" customModuleProvider="target">
+                                                    <rect key="frame" x="560" y="16" width="24" height="24"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="4Ee-n2-9vE"/>
                                                         <constraint firstAttribute="width" constant="24" id="cE0-J8-T89"/>
                                                     </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="MWMBlue"/>
+                                                    </userDefinedRuntimeAttributes>
                                                 </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ept-QQ-o9W">
-                                                    <rect key="frame" x="335" y="16" width="24" height="24"/>
+                                                    <rect key="frame" x="560" y="16" width="24" height="24"/>
                                                     <color key="tintColor" red="0.1176470588" green="0.58823529409999997" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <state key="normal" title="Button" image="ic24PxShare"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="MWMBlue"/>
+                                                    </userDefinedRuntimeAttributes>
                                                     <connections>
                                                         <action selector="shareButtonPressed:" destination="90b-ef-VUJ" eventType="touchUpInside" id="D5v-pl-bJ3"/>
                                                     </connections>
@@ -251,21 +86,20 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="50" id="4dc-7Z-s7O" customClass="MWMTableViewCell">
-                                        <rect key="frame" x="0.0" y="454.5" width="375" height="50"/>
+                                        <rect key="frame" x="0.0" y="111.5" width="600" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4dc-7Z-s7O" id="5YA-YS-3K5">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Anyone this the link will see your list" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XQh-26-CNo">
-                                                    <rect key="frame" x="56" y="18" width="303" height="13.5"/>
+                                                    <rect key="frame" x="56" y="18" width="528" height="14"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.54000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="string" keyPath="localizedText" value="get_direct_link_desc"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="colorName" value="blackSecondaryText"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="regular14"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="regular14:blackSecondaryText"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
                                             </subviews>
@@ -274,6 +108,232 @@
                                                 <constraint firstAttribute="trailing" secondItem="XQh-26-CNo" secondAttribute="trailing" constant="16" id="a42-ex-JkL"/>
                                                 <constraint firstAttribute="bottom" secondItem="XQh-26-CNo" secondAttribute="bottom" constant="18" id="jUr-iV-omT"/>
                                                 <constraint firstItem="XQh-26-CNo" firstAttribute="top" secondItem="5YA-YS-3K5" secondAttribute="top" constant="18" id="yhk-td-FO2"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="50" id="aAa-cf-kTL" customClass="MWMTableViewCell">
+                                        <rect key="frame" x="0.0" y="161.5" width="600" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aAa-cf-kTL" id="IXm-Uq-qPs">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Update guide" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AbE-1A-kJm">
+                                                    <rect key="frame" x="60" y="15" width="524" height="20"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" red="0.1176470588" green="0.58823529409999997" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="localizedText" value="update_guide"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="regular16:linkBlueText"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic24PxUpdate" translatesAutoresizingMaskIntoConstraints="NO" id="mcr-7c-yuH">
+                                                    <rect key="frame" x="20" y="13" width="24" height="24"/>
+                                                    <color key="tintColor" red="0.1176470588" green="0.58823529409999997" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="24" id="6pT-bN-NlA"/>
+                                                        <constraint firstAttribute="width" constant="24" id="qbJ-aO-ytm"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="MWMBlue"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="leadingMargin" secondItem="mcr-7c-yuH" secondAttribute="leading" id="7fK-6b-bQQ"/>
+                                                <constraint firstItem="AbE-1A-kJm" firstAttribute="leading" secondItem="mcr-7c-yuH" secondAttribute="trailing" constant="16" id="fk2-um-QgI"/>
+                                                <constraint firstItem="AbE-1A-kJm" firstAttribute="centerY" secondItem="IXm-Uq-qPs" secondAttribute="centerY" id="lqW-CO-bfx"/>
+                                                <constraint firstItem="mcr-7c-yuH" firstAttribute="centerY" secondItem="IXm-Uq-qPs" secondAttribute="centerY" id="pQX-5z-3Nz"/>
+                                                <constraint firstAttribute="trailing" secondItem="AbE-1A-kJm" secondAttribute="trailing" constant="16" id="t8y-Ef-M9e"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Public access" id="wSk-N4-gbo">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="56" id="YW0-jq-Isw" customClass="UploadActionCell" customModule="maps_me" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="267.5" width="600" height="56"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YW0-jq-Isw" id="ayR-ii-DjA">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="56"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic24PxGlobe" translatesAutoresizingMaskIntoConstraints="NO" id="fmA-82-rPS">
+                                                    <rect key="frame" x="20" y="16" width="24" height="24"/>
+                                                    <color key="tintColor" red="0.11764705882352941" green="0.58823529411764708" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="24" id="5bK-ck-alK"/>
+                                                        <constraint firstAttribute="width" constant="24" id="RId-hH-I1b"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="MWMBlue"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upload and publish" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uMP-YO-wbu">
+                                                    <rect key="frame" x="60" y="18" width="140" height="20"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" red="0.11764705882352941" green="0.58823529411764708" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lF2-pc-Qo7" customClass="ActivityIndicator" customModule="maps_me" customModuleProvider="target">
+                                                    <rect key="frame" x="560" y="16" width="24" height="24"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="24" id="9r2-mf-DsT"/>
+                                                        <constraint firstAttribute="width" constant="24" id="Gon-Yr-8Fq"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="MWMBlue"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PYo-PL-9Fc">
+                                                    <rect key="frame" x="560" y="16" width="24" height="24"/>
+                                                    <color key="tintColor" red="0.1176470588" green="0.58823529409999997" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <state key="normal" title="Button" image="ic24PxShare"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="MWMBlue"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="shareButtonPressed:" destination="YW0-jq-Isw" eventType="touchUpInside" id="j1d-qF-UIt"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="PYo-PL-9Fc" firstAttribute="bottom" secondItem="lF2-pc-Qo7" secondAttribute="bottom" id="BJL-HW-qeL"/>
+                                                <constraint firstItem="fmA-82-rPS" firstAttribute="centerY" secondItem="ayR-ii-DjA" secondAttribute="centerY" id="Bfj-dF-WcJ"/>
+                                                <constraint firstItem="uMP-YO-wbu" firstAttribute="centerY" secondItem="fmA-82-rPS" secondAttribute="centerY" id="D4L-J4-gPv"/>
+                                                <constraint firstItem="PYo-PL-9Fc" firstAttribute="leading" secondItem="lF2-pc-Qo7" secondAttribute="leading" id="KDo-o9-elh"/>
+                                                <constraint firstItem="lF2-pc-Qo7" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="uMP-YO-wbu" secondAttribute="trailing" constant="16" id="RxV-Xg-PoI"/>
+                                                <constraint firstItem="fmA-82-rPS" firstAttribute="leading" secondItem="ayR-ii-DjA" secondAttribute="leadingMargin" id="Zzq-yt-7DW"/>
+                                                <constraint firstItem="lF2-pc-Qo7" firstAttribute="centerY" secondItem="ayR-ii-DjA" secondAttribute="centerY" id="cBC-St-gRO"/>
+                                                <constraint firstItem="PYo-PL-9Fc" firstAttribute="trailing" secondItem="lF2-pc-Qo7" secondAttribute="trailing" id="h2e-6c-4ID"/>
+                                                <constraint firstAttribute="trailing" secondItem="lF2-pc-Qo7" secondAttribute="trailing" constant="16" id="iJm-Q9-d2P"/>
+                                                <constraint firstItem="uMP-YO-wbu" firstAttribute="leading" secondItem="fmA-82-rPS" secondAttribute="trailing" constant="16" id="qOc-7f-rpS"/>
+                                                <constraint firstItem="PYo-PL-9Fc" firstAttribute="top" secondItem="lF2-pc-Qo7" secondAttribute="top" id="qZ8-cY-uRw"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="actionImage" destination="fmA-82-rPS" id="Z0K-e9-nZj"/>
+                                            <outlet property="actionTitle" destination="uMP-YO-wbu" id="pQd-ox-QLF"/>
+                                            <outlet property="progressView" destination="lF2-pc-Qo7" id="R12-gK-Si1"/>
+                                            <outlet property="shareButton" destination="PYo-PL-9Fc" id="2yn-Sk-Yq8"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" rowHeight="86" id="3UL-dT-hKc" customClass="MWMTableViewCell">
+                                        <rect key="frame" x="0.0" y="323.5" width="600" height="86"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3UL-dT-hKc" id="402-ot-2TF">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="86"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="Please note: by proceeding, you accept the license agreement" translatesAutoresizingMaskIntoConstraints="NO" id="dsV-Vs-oCo" customClass="LinkTextView" customModule="maps_me" customModuleProvider="target">
+                                                    <rect key="frame" x="56" y="18" width="528" height="50"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="tintColor" red="0.1176470588" green="0.58823529409999997" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.54000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="textContainer.lineFragmentPadding">
+                                                            <integer key="value" value="0"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="BookmarkSharingLicense"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </textView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="dsV-Vs-oCo" firstAttribute="leading" secondItem="402-ot-2TF" secondAttribute="leading" constant="56" id="BgN-PM-ejM"/>
+                                                <constraint firstAttribute="bottom" secondItem="dsV-Vs-oCo" secondAttribute="bottom" constant="18" id="MYS-Cs-qSO"/>
+                                                <constraint firstItem="dsV-Vs-oCo" firstAttribute="top" secondItem="402-ot-2TF" secondAttribute="top" constant="18" id="pbY-qn-0dd"/>
+                                                <constraint firstAttribute="trailing" secondItem="dsV-Vs-oCo" secondAttribute="trailing" constant="16" id="vcP-CZ-R8d"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="50" id="7OC-5n-kuV" customClass="MWMTableViewCell">
+                                        <rect key="frame" x="0.0" y="409.5" width="600" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7OC-5n-kuV" id="ycu-0k-aXG">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Update guide" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L3P-U3-xdo">
+                                                    <rect key="frame" x="60" y="15" width="524" height="20"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" red="0.1176470588" green="0.58823529409999997" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="localizedText" value="update_guide"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="regular16:linkBlueText"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic24PxUpdate" translatesAutoresizingMaskIntoConstraints="NO" id="2cF-g6-zQ1">
+                                                    <rect key="frame" x="20" y="13" width="24" height="24"/>
+                                                    <color key="tintColor" red="0.1176470588" green="0.58823529409999997" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="24" id="OCh-zc-INp"/>
+                                                        <constraint firstAttribute="height" constant="24" id="aO1-pe-dmU"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="MWMBlue"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="2cF-g6-zQ1" firstAttribute="centerY" secondItem="ycu-0k-aXG" secondAttribute="centerY" id="6ZT-XI-LAq"/>
+                                                <constraint firstAttribute="trailing" secondItem="L3P-U3-xdo" secondAttribute="trailing" constant="16" id="Xgr-iF-bBs"/>
+                                                <constraint firstAttribute="leadingMargin" secondItem="2cF-g6-zQ1" secondAttribute="leading" id="kKk-Bo-CiN"/>
+                                                <constraint firstItem="L3P-U3-xdo" firstAttribute="centerY" secondItem="ycu-0k-aXG" secondAttribute="centerY" id="uMu-7Q-Tcl"/>
+                                                <constraint firstItem="L3P-U3-xdo" firstAttribute="leading" secondItem="2cF-g6-zQ1" secondAttribute="trailing" constant="16" id="xwh-p9-HQK"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Web editor" id="Ycc-hd-WDM">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="129" id="wRG-8I-r2U" customClass="MWMTableViewCell">
+                                        <rect key="frame" x="0.0" y="515.5" width="600" height="129"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wRG-8I-r2U" id="BPo-ON-rJH">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="129"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upload your guide and get the link for edit from desktop" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h4Z-cZ-Nmn">
+                                                    <rect key="frame" x="16" y="16" width="568" height="37"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.54000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="localizedText" value="web_editor_description"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="regular14:blackSecondaryText"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                </label>
+                                                <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ULn-RX-CjB">
+                                                    <rect key="frame" x="16" y="69" width="568" height="44"/>
+                                                    <color key="backgroundColor" red="0.1176470588" green="0.58823529409999997" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="44" id="GBG-1m-bkN"/>
+                                                    </constraints>
+                                                    <state key="normal" title="Edit on web"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="localizedText" value="edit_on_web"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="FlatNormalButton"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <segue destination="FPL-Dh-v8t" kind="show" identifier="editOnWeb" id="XOx-hn-7qC"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="h4Z-cZ-Nmn" secondAttribute="trailing" constant="16" id="6Kr-ar-HD3"/>
+                                                <constraint firstItem="ULn-RX-CjB" firstAttribute="leading" secondItem="BPo-ON-rJH" secondAttribute="leading" constant="16" id="6uj-1B-9qx"/>
+                                                <constraint firstAttribute="trailing" secondItem="ULn-RX-CjB" secondAttribute="trailing" constant="16" id="Rr7-ov-x4x"/>
+                                                <constraint firstAttribute="bottom" secondItem="ULn-RX-CjB" secondAttribute="bottom" constant="16" id="XML-Cc-bsG"/>
+                                                <constraint firstItem="h4Z-cZ-Nmn" firstAttribute="leading" secondItem="BPo-ON-rJH" secondAttribute="leading" constant="16" id="gKc-Xw-2uC"/>
+                                                <constraint firstItem="ULn-RX-CjB" firstAttribute="top" secondItem="h4Z-cZ-Nmn" secondAttribute="bottom" constant="16" id="h5W-yX-CcH"/>
+                                                <constraint firstItem="h4Z-cZ-Nmn" firstAttribute="top" secondItem="BPo-ON-rJH" secondAttribute="top" constant="16" id="z5Q-1M-a9x"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -286,44 +346,44 @@
                         </connections>
                     </tableView>
                     <connections>
-                        <outlet property="editOnWebCell" destination="y5U-AG-X4u" id="uSl-Py-gEm"/>
+                        <outlet property="directLinkInstructionsLabel" destination="XQh-26-CNo" id="0mF-Ta-Odg"/>
+                        <outlet property="editOnWebButton" destination="ULn-RX-CjB" id="EBo-eG-874"/>
                         <outlet property="getDirectLinkCell" destination="90b-ef-VUJ" id="L7h-0r-eSe"/>
                         <outlet property="licenseAgreementTextView" destination="dsV-Vs-oCo" id="TtB-Uw-WGR"/>
+                        <outlet property="updateDirectLinkCell" destination="aAa-cf-kTL" id="Gaz-h4-0E6"/>
+                        <outlet property="updatePublishCell" destination="7OC-5n-kuV" id="JuX-3X-bo4"/>
                         <outlet property="uploadAndPublishCell" destination="YW0-jq-Isw" id="84h-vp-JdM"/>
-                        <segue destination="fDN-IN-IEc" kind="show" identifier="chooseProperties" id="I88-nm-PsT"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ylv-YU-ujs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-198" y="-26"/>
+            <point key="canvasLocation" x="-199.19999999999999" y="-26.53673163418291"/>
         </scene>
         <!--Sharing Tags View Controller-->
         <scene sceneID="fwI-5y-8lb">
             <objects>
                 <viewController storyboardIdentifier="tags" id="xf5-2c-0zi" customClass="SharingTagsViewController" customModule="maps_me" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2YU-O5-UMg">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="7vG-MC-M3b">
-                                <rect key="frame" x="0.0" y="20" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KY2-7H-0bb">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="72"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="72"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please, select tags to help other travelers find your guide. This is mandatory." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tjK-HW-d6t">
-                                                <rect key="frame" x="16" y="19.5" width="343" height="33.5"/>
+                                                <rect key="frame" x="16" y="27.5" width="568" height="17"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.54000000000000004" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                                 <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="localizedText" value="ugc_route_tags_desc"/>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="colorName" value="blackSecondaryText"/>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="regular14"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="regular14:blackSecondaryText"/>
                                                 </userDefinedRuntimeAttributes>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1u2-6K-X3l">
-                                                <rect key="frame" x="0.0" y="71" width="375" height="1"/>
+                                                <rect key="frame" x="0.0" y="71" width="600" height="1"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.1213077910958904" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="1" id="dzg-PZ-65P"/>
@@ -342,10 +402,10 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tUs-JB-h8i">
-                                        <rect key="frame" x="0.0" y="72" width="375" height="105"/>
+                                        <rect key="frame" x="0.0" y="72" width="600" height="105"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RMh-DN-eFb">
-                                                <rect key="frame" x="169.5" y="28" width="36" height="36"/>
+                                                <rect key="frame" x="282" y="28" width="36" height="36"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="36" id="bQK-LD-adI"/>
@@ -353,14 +413,13 @@
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading tags..." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="27q-vH-fsJ">
-                                                <rect key="frame" x="140" y="88" width="95.5" height="17"/>
+                                                <rect key="frame" x="252.5" y="88" width="95.5" height="17"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.54000000000000004" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="localizedText" value="ugc_route_tags_progress_msg"/>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="colorName" value="blackSecondaryText"/>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="regular14"/>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="regular14:blackSecondaryText"/>
                                                 </userDefinedRuntimeAttributes>
                                             </label>
                                         </subviews>
@@ -374,10 +433,10 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="crb-Hn-y9s">
-                                        <rect key="frame" x="0.0" y="177" width="375" height="426"/>
+                                        <rect key="frame" x="0.0" y="177" width="600" height="374"/>
                                         <subviews>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="UZU-x1-VBd">
-                                                <rect key="frame" x="0.0" y="0.0" width="375" height="426"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="600" height="374"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <viewLayoutGuide key="safeArea" id="AgH-PG-DAM"/>
                                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="fbB-dB-9OF" customClass="TagsCollectionViewLayout" customModule="maps_me" customModuleProvider="target">
@@ -418,7 +477,7 @@
                                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
                                                                             <integer key="value" value="1"/>
                                                                         </userDefinedRuntimeAttribute>
-                                                                        <userDefinedRuntimeAttribute type="string" keyPath="backgroundColorName" value="white"/>
+                                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="Background"/>
                                                                     </userDefinedRuntimeAttributes>
                                                                 </view>
                                                             </subviews>
@@ -436,25 +495,23 @@
                                                     </collectionViewCell>
                                                 </cells>
                                                 <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="TagHeaderIdentifier" id="hXP-fc-7dB" customClass="TagSectionHeaderView" customModule="maps_me" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="24"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="600" height="24"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SIGHTSEEING" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W6H-nE-Qck">
-                                                            <rect key="frame" x="0.0" y="4.5" width="81" height="15"/>
+                                                            <rect key="frame" x="0.0" y="5" width="81" height="14"/>
                                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.38" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                             <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="string" keyPath="colorName" value="blackSecondaryText"/>
-                                                                <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="regular14"/>
+                                                                <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="regular14:blackSecondaryText"/>
                                                             </userDefinedRuntimeAttributes>
                                                         </label>
                                                     </subviews>
                                                     <constraints>
-                                                        <constraint firstAttribute="bottom" secondItem="W6H-nE-Qck" secondAttribute="bottom" constant="4.5" id="LKQ-m7-WEA"/>
+                                                        <constraint firstAttribute="bottom" secondItem="W6H-nE-Qck" secondAttribute="bottom" constant="5" id="LKQ-m7-WEA"/>
                                                         <constraint firstItem="W6H-nE-Qck" firstAttribute="leading" secondItem="hXP-fc-7dB" secondAttribute="leading" id="d7f-3h-5kl"/>
-                                                        <constraint firstItem="W6H-nE-Qck" firstAttribute="top" secondItem="hXP-fc-7dB" secondAttribute="top" constant="4.5" id="iWV-zZ-MWl"/>
-                                                        <constraint firstItem="W6H-nE-Qck" firstAttribute="centerY" secondItem="hXP-fc-7dB" secondAttribute="centerY" id="nGi-NO-wpI"/>
+                                                        <constraint firstItem="W6H-nE-Qck" firstAttribute="top" secondItem="hXP-fc-7dB" secondAttribute="top" constant="5" id="iWV-zZ-MWl"/>
                                                     </constraints>
                                                     <connections>
                                                         <outlet property="title" destination="W6H-nE-Qck" id="B5d-tx-YaA"/>
@@ -487,13 +544,14 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="0d6-uC-MKC"/>
                         <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="string" keyPath="backgroundColorName" value="white"/>
+                            <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="Background"/>
                         </userDefinedRuntimeAttributes>
                     </view>
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="collectionView" destination="UZU-x1-VBd" id="o5u-kl-mKw"/>
+                        <outlet property="descriptionLabel" destination="tjK-HW-d6t" id="dpY-62-3jn"/>
                         <outlet property="doneButton" destination="qY7-OC-33A" id="EoL-xY-8JM"/>
                         <outlet property="loadingTagsView" destination="tUs-JB-h8i" id="Hhx-T9-H1Q"/>
                         <outlet property="progressView" destination="RMh-DN-eFb" id="TwY-gF-3Rb"/>
@@ -511,34 +569,33 @@
         <!--Sharing Properties View Controller-->
         <scene sceneID="zug-ko-B9e">
             <objects>
-                <tableViewController storyboardIdentifier="chooseTags" id="fDN-IN-IEc" customClass="SharingPropertiesViewController" customModule="maps_me" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="chooseProperties" id="fDN-IN-IEc" customClass="SharingPropertiesViewController" customModule="maps_me" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="ibV-nf-9aS">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
                             <tableViewSection headerTitle="LOCAL OR TRAVELLER" id="M1K-Vf-5wl">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="115" id="BxX-r9-FhR" customClass="MWMTableViewCell">
-                                        <rect key="frame" x="0.0" y="55.5" width="375" height="115"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="600" height="115"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="BxX-r9-FhR" id="2z2-uI-iUF">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="114.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="115"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" text="You have visited places in this guide as" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RD2-dA-33d">
-                                                    <rect key="frame" x="0.0" y="16" width="375" height="19.5"/>
+                                                    <rect key="frame" x="0.0" y="16" width="600" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                     <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="regular16"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="colorName" value="blackPrimaryText"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="regular16:blackPrimaryText"/>
                                                         <userDefinedRuntimeAttribute type="string" keyPath="localizedText" value="custom_props_desc"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
                                                 <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Aq-yf-HLJ" customClass="MWMButton">
-                                                    <rect key="frame" x="16" y="66.5" width="161.5" height="32"/>
+                                                    <rect key="frame" x="16" y="67" width="274" height="32"/>
                                                     <color key="backgroundColor" red="0.11764705882352941" green="0.58823529411764708" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="32" id="qqI-Vk-fJA"/>
@@ -548,20 +605,14 @@
                                                         <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
                                                     <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="bold14"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="backgroundColorName" value="linkBlue"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="backgroundHighlightedColorName" value="linkBlueHighlighted"/>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                            <integer key="value" value="6"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="tintColorName" value="white"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="FlatNormalButton"/>
                                                     </userDefinedRuntimeAttributes>
                                                     <connections>
                                                         <action selector="localButtonWasPressed:" destination="fDN-IN-IEc" eventType="touchUpInside" id="eY9-Ds-2Yj"/>
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D7h-er-9Kx" customClass="MWMButton">
-                                                    <rect key="frame" x="197.5" y="66.5" width="161.5" height="32"/>
+                                                    <rect key="frame" x="310" y="67" width="274" height="32"/>
                                                     <color key="backgroundColor" red="0.11764705882352941" green="0.58823529411764708" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="32" id="nKF-9s-YhE"/>
@@ -572,13 +623,7 @@
                                                         <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
                                                     <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="bold14"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="backgroundColorName" value="linkBlue"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="backgroundHighlightedColorName" value="linkBlueHighlighted"/>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                            <integer key="value" value="6"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="tintColorName" value="white"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="FlatNormalButton"/>
                                                     </userDefinedRuntimeAttributes>
                                                     <connections>
                                                         <action selector="travelerButtonPressed:" destination="fDN-IN-IEc" eventType="touchUpInside" id="GcO-Mh-UZT"/>
@@ -620,46 +665,44 @@
             <objects>
                 <viewController id="FPL-Dh-v8t" customClass="EditOnWebViewController" customModule="maps_me" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XST-Aa-nm6">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="img_guide_editonweb" translatesAutoresizingMaskIntoConstraints="NO" id="Q8X-cu-CGX">
-                                <rect key="frame" x="67.5" y="64" width="240" height="240"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" image="img_guide_editonweb" translatesAutoresizingMaskIntoConstraints="NO" id="Q8X-cu-CGX">
+                                <rect key="frame" x="67.5" y="38" width="240" height="240"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Q8X-cu-CGX" secondAttribute="height" multiplier="1:1" id="18O-yd-NGO"/>
                                     <constraint firstAttribute="width" priority="750" constant="240" id="lBW-13-AL5"/>
                                 </constraints>
                             </imageView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YNH-ha-MaJ">
-                                <rect key="frame" x="20" y="328" width="335" height="237"/>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YNH-ha-MaJ">
+                                <rect key="frame" x="47.5" y="302" width="532.5" height="237"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="Edit your guide on the web" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pqq-0d-RGh">
-                                        <rect key="frame" x="38" y="0.0" width="259" height="26.5"/>
+                                        <rect key="frame" x="137" y="0.0" width="258.5" height="26.5"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="22"/>
                                         <color key="textColor" white="0.0" alpha="0.87" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="bold22"/>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="colorName" value="blackPrimaryText"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="bold22:blackPrimaryText"/>
                                             <userDefinedRuntimeAttribute type="string" keyPath="localizedText" value="edit_guide_title"/>
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oZZ-eC-b5K">
-                                        <rect key="frame" x="0.0" y="42.5" width="335" height="64.5"/>
+                                        <rect key="frame" x="0.0" y="42.5" width="532.5" height="43"/>
                                         <string key="text">Get a link to edit your guide via web app: add descriptions for POI,
 upload photos and more</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <color key="textColor" white="0.0" alpha="0.54000000000000004" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="regular18"/>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="colorName" value="blackSecondaryText"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="regular18:blackSecondaryText"/>
                                             <userDefinedRuntimeAttribute type="string" keyPath="localizedText" value="edit_guide_subtitle"/>
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="751" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PKE-El-ftz" customClass="MWMButton">
-                                        <rect key="frame" x="16" y="131" width="303" height="48"/>
+                                        <rect key="frame" x="16" y="109.5" width="500.5" height="48"/>
                                         <color key="backgroundColor" red="0.1176470588" green="0.58823529409999997" blue="0.94117647059999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="b2Z-cP-PLt"/>
@@ -669,20 +712,14 @@ upload photos and more</string>
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="bold14"/>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="backgroundColorName" value="linkBlue"/>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="backgroundHighlightedColorName" value="linkBlueHighlighted"/>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="6"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="tintColorName" value="white"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="FlatNormalButton"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="sendMeLinkButtonPressed:" destination="FPL-Dh-v8t" eventType="touchUpInside" id="azx-ep-f7p"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2gt-S9-kRm" userLabel="Cancel">
-                                        <rect key="frame" x="16" y="189" width="303" height="48"/>
+                                        <rect key="frame" x="16" y="167.5" width="500.5" height="48"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="48" id="gOT-uV-6tC"/>
@@ -693,22 +730,30 @@ upload photos and more</string>
                                             <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="textColorHighlightedName" value="linkBlueHighlighted"/>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="medium14"/>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="textColorName" value="linkBlue"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="FlatNormalTransButton"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="cancelButtonPressed:" destination="FPL-Dh-v8t" eventType="touchUpInside" id="Dcz-Ke-Dqs"/>
                                         </connections>
                                     </button>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="osb-Nl-1fT" customClass="ActivityIndicator" customModule="maps_me" customModuleProvider="target">
+                                        <rect key="frame" x="254.5" y="121.5" width="24" height="24"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="24" id="2dy-Vg-dQd"/>
+                                            <constraint firstAttribute="width" constant="24" id="cc7-th-Ta7"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="oZZ-eC-b5K" firstAttribute="top" secondItem="pqq-0d-RGh" secondAttribute="bottom" constant="16" id="1by-bh-ar5"/>
                                     <constraint firstAttribute="trailing" secondItem="PKE-El-ftz" secondAttribute="trailing" constant="16" id="2VL-dr-I0z"/>
+                                    <constraint firstItem="osb-Nl-1fT" firstAttribute="centerY" secondItem="PKE-El-ftz" secondAttribute="centerY" id="AZc-rv-Oni"/>
                                     <constraint firstItem="oZZ-eC-b5K" firstAttribute="leading" secondItem="YNH-ha-MaJ" secondAttribute="leading" id="B8g-jn-MbD"/>
                                     <constraint firstAttribute="trailing" secondItem="oZZ-eC-b5K" secondAttribute="trailing" id="HPf-HB-MJa"/>
                                     <constraint firstItem="2gt-S9-kRm" firstAttribute="width" secondItem="PKE-El-ftz" secondAttribute="width" id="Q1q-1h-tCz"/>
+                                    <constraint firstItem="osb-Nl-1fT" firstAttribute="centerX" secondItem="PKE-El-ftz" secondAttribute="centerX" id="ZKa-j5-iD6"/>
                                     <constraint firstItem="pqq-0d-RGh" firstAttribute="centerX" secondItem="YNH-ha-MaJ" secondAttribute="centerX" id="fcN-r1-eLk"/>
                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="pqq-0d-RGh" secondAttribute="trailing" id="jDf-Qj-cIP"/>
                                     <constraint firstItem="2gt-S9-kRm" firstAttribute="centerX" secondItem="YNH-ha-MaJ" secondAttribute="centerX" id="kg1-tq-q1x"/>
@@ -741,7 +786,7 @@ upload photos and more</string>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="S4c-kp-N1N"/>
                         <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="string" keyPath="backgroundColorName" value="white"/>
+                            <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="Background"/>
                         </userDefinedRuntimeAttributes>
                         <variation key="default">
                             <mask key="constraints">
@@ -807,20 +852,154 @@ upload photos and more</string>
                         </variation>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="osb-Nl-1fT" id="Rvk-kT-XVK"/>
                         <outlet property="cancelButton" destination="2gt-S9-kRm" id="0ga-Zq-IUh"/>
                         <outlet property="sendMeLinkButton" destination="PKE-El-ftz" id="5Od-ey-qJ2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QOd-Rm-O5z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="640.02998500749629" y="703.20000000000005"/>
+            <point key="canvasLocation" x="-199" y="712"/>
+        </scene>
+        <!--Guide name-->
+        <scene sceneID="gWg-zK-J9t">
+            <objects>
+                <tableViewController storyboardIdentifier="guideName" id="cvj-kq-BmC" customClass="GuideNameViewController" customModule="maps_me" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="Uwp-K9-cnW">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="Enter the name" id="E0V-qx-dBx">
+                                <string key="footerTitle">Please name your guide so that travelers can easily find it: for example, "Sightseeing in London".
+
+The name shouldn't contain special symbols or digits. The name shouldn't be 'My places'</string>
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="L0q-Dk-RQu" customClass="MWMTableViewCell">
+                                        <rect key="frame" x="0.0" y="55.5" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="L0q-Dk-RQu" id="ny0-9t-pzR">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="e.g. Sightseeing in London" minimumFontSize="16" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="JAZ-st-xqM">
+                                                    <rect key="frame" x="16" y="12" width="568" height="20"/>
+                                                    <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="16"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="styleName" value="MWMBlue:blackPrimaryText"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="onEditName:" destination="cvj-kq-BmC" eventType="editingChanged" id="pfy-5S-MSz"/>
+                                                        <outlet property="delegate" destination="cvj-kq-BmC" id="1L3-Mb-fvM"/>
+                                                    </connections>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="JAZ-st-xqM" firstAttribute="leading" secondItem="ny0-9t-pzR" secondAttribute="leading" constant="16" id="QKc-7g-vle"/>
+                                                <constraint firstItem="JAZ-st-xqM" firstAttribute="centerY" secondItem="ny0-9t-pzR" secondAttribute="centerY" id="RJB-Fh-0le"/>
+                                                <constraint firstAttribute="trailing" secondItem="JAZ-st-xqM" secondAttribute="trailing" constant="16" id="vp9-Kv-ImW"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="cvj-kq-BmC" id="8XX-1A-zJM"/>
+                            <outlet property="delegate" destination="cvj-kq-BmC" id="qis-et-cHS"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Guide name" id="Gga-VP-bBS">
+                        <barButtonItem key="rightBarButtonItem" title="Next" style="done" id="xYp-nr-e29">
+                            <connections>
+                                <action selector="onNext:" destination="cvj-kq-BmC" id="jsm-tf-e4c"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="nameTextField" destination="JAZ-st-xqM" id="WoE-Je-Mat"/>
+                        <outlet property="nextBarButton" destination="xYp-nr-e29" id="chV-vS-2Bt"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wJr-37-0dP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="640.79999999999995" y="711.99400299850083"/>
+        </scene>
+        <!--Description-->
+        <scene sceneID="j38-lP-seP">
+            <objects>
+                <tableViewController storyboardIdentifier="guideDescription" id="Stq-Tq-XqB" customClass="GuideDescriptionViewController" customModule="maps_me" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="Y7n-SR-xIH">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="Enter description" footerTitle="Guide description should contain at least 30 symbols (13 for oriental languages)." id="C3r-nD-p7y">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="160" id="NR5-qU-x6v" customClass="MWMTableViewCell">
+                                        <rect key="frame" x="0.0" y="55.5" width="600" height="160"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="NR5-qU-x6v" id="gPI-nK-hOK">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="160"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Vso-9t-xe5" customClass="MWMTextView">
+                                                    <rect key="frame" x="16" y="12" width="568" height="136"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="textContainer.lineFragmentPadding">
+                                                            <integer key="value" value="0"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="colorName" value="Background:MWMBlue:blackPrimaryText"/>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="Stq-Tq-XqB" id="vUs-Qc-Ooa"/>
+                                                    </connections>
+                                                </textView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Vso-9t-xe5" firstAttribute="top" secondItem="gPI-nK-hOK" secondAttribute="top" constant="12" id="TTz-Iz-x8C"/>
+                                                <constraint firstAttribute="bottom" secondItem="Vso-9t-xe5" secondAttribute="bottom" constant="12" id="ZZ1-By-uo7"/>
+                                                <constraint firstAttribute="trailing" secondItem="Vso-9t-xe5" secondAttribute="trailing" constant="16" id="wRQ-S2-jBx"/>
+                                                <constraint firstItem="Vso-9t-xe5" firstAttribute="leading" secondItem="gPI-nK-hOK" secondAttribute="leading" constant="16" id="yzc-mZ-oj6"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="Stq-Tq-XqB" id="bbX-wm-Kag"/>
+                            <outlet property="delegate" destination="Stq-Tq-XqB" id="X6r-zo-5w0"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Description" id="eXR-fT-zTY">
+                        <barButtonItem key="rightBarButtonItem" title="Next" style="done" id="rdU-IO-XZ6">
+                            <connections>
+                                <action selector="onNext:" destination="Stq-Tq-XqB" id="LcF-9Q-ZZW"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="descriptionTextView" destination="Vso-9t-xe5" id="aX6-JT-uq1"/>
+                        <outlet property="nextBarButton" destination="rdU-IO-XZ6" id="ZeO-K6-5TO"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ir8-PR-GNN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1533.5999999999999" y="711.99400299850083"/>
         </scene>
     </scenes>
     <resources>
-        <image name="ic24PxEdit" width="24" height="24"/>
         <image name="ic24PxGlobe" width="24" height="24"/>
         <image name="ic24PxLink" width="24" height="24"/>
         <image name="ic24PxShare" width="24" height="24"/>
+        <image name="ic24PxUpdate" width="24" height="24"/>
         <image name="img_guide_editonweb" width="240" height="240"/>
     </resources>
 </document>

@@ -1,12 +1,14 @@
-#include "base/logging.hpp"
-#include "base/string_utils.hpp"
-
-#include "coding/file_name_utils.hpp"
-
 #include "generator/utils.hpp"
 
-#include "geometry/mercator.hpp"
-#include "geometry/point2d.hpp"
+#include "search/search_quality/helpers.hpp"
+
+#include "search/engine.hpp"
+#include "search/locality_finder.hpp"
+#include "search/reverse_geocoder.hpp"
+
+#include "storage/country_info_getter.hpp"
+#include "storage/storage.hpp"
+#include "storage/storage_defines.hpp"
 
 #include "indexer/classificator.hpp"
 #include "indexer/classificator_loader.hpp"
@@ -18,20 +20,28 @@
 #include "indexer/map_object.hpp"
 #include "indexer/map_style_reader.hpp"
 
+#include "platform/platform_tests_support/helpers.hpp"
+
 #include "platform/local_country_file_utils.hpp"
 #include "platform/platform.hpp"
 
-#include "search/engine.hpp"
-#include "search/locality_finder.hpp"
-#include "search/reverse_geocoder.hpp"
-#include "search/search_quality/helpers.hpp"
+#include "geometry/mercator.hpp"
+#include "geometry/point2d.hpp"
 
-#include "storage/country_info_getter.hpp"
-#include "storage/index.hpp"
-#include "storage/storage.hpp"
+#include "base/file_name_utils.hpp"
+#include "base/logging.hpp"
+#include "base/string_utils.hpp"
 
-#include "std/algorithm.hpp"
-#include "std/iostream.hpp"
+#include <algorithm>
+#include <cstddef>
+#include <cstdint>
+#include <iostream>
+#include <limits>
+#include <map>
+#include <sstream>
+#include <vector>
+
+using namespace std;
 
 class ClosestPoint
 {
@@ -40,7 +50,8 @@ class ClosestPoint
   double m_distance = numeric_limits<double>::max();
 
 public:
-  ClosestPoint(m2::PointD const & center) : m_center(center), m_best(0, 0) {}
+  explicit ClosestPoint(m2::PointD const & center) : m_center(center), m_best(0, 0) {}
+
   m2::PointD GetBest() const { return m_best; }
 
   void operator()(m2::PointD const & point)
@@ -57,7 +68,7 @@ public:
 m2::PointD FindCenter(FeatureType & f)
 {
   ClosestPoint closest(f.GetLimitRect(FeatureType::BEST_GEOMETRY).Center());
-  if (f.GetFeatureType() == feature::GEOM_AREA)
+  if (f.GetGeomType() == feature::GeomType::Area)
   {
     f.ForEachTriangle([&closest](m2::PointD const & p1, m2::PointD const & p2,
                                  m2::PointD const & p3) { closest((p1 + p2 + p3) / 3); },
@@ -116,8 +127,8 @@ bool HasAtm(FeatureType & f)
 string BuildUniqueId(ms::LatLon const & coords, string const & name)
 {
   ostringstream ss;
-  ss << strings::to_string_with_digits_after_comma(coords.lat, 6) << ','
-     << strings::to_string_with_digits_after_comma(coords.lon, 6) << ',' << name;
+  ss << strings::to_string_with_digits_after_comma(coords.m_lat, 6) << ','
+     << strings::to_string_with_digits_after_comma(coords.m_lon, 6) << ',' << name;
   uint32_t hash = 0;
   for (char const c : ss.str())
     hash = hash * 101 + c;
@@ -174,7 +185,7 @@ class Processor
   search::LocalityFinder m_finder;
 
 public:
-  Processor(DataSource const & dataSource)
+  explicit Processor(DataSource const & dataSource)
     : m_geocoder(dataSource)
     , m_boundariesTable(dataSource)
     , m_villagesCache(m_cancellable)
@@ -199,13 +210,13 @@ public:
     string const & operatr = f.GetMetadata().Get(feature::Metadata::FMD_OPERATOR);
     auto const & osmIt = ft2osm.find(f.GetID().m_index);
     if ((!f.HasName() && operatr.empty()) ||
-        (f.GetFeatureType() == feature::GEOM_LINE && category != "highway-pedestrian") ||
+        (f.GetGeomType() == feature::GeomType::Line && category != "highway-pedestrian") ||
         category.empty())
     {
       return;
     }
     m2::PointD const & center = FindCenter(f);
-    ms::LatLon const & ll = MercatorBounds::ToLatLon(center);
+    ms::LatLon const & ll = mercator::ToLatLon(center);
     osm::MapObject obj;
     obj.SetFromFeatureType(f);
 
@@ -222,7 +233,7 @@ public:
       name = primary;
     if (name.empty())
       name = operatr;
-    string osmId = osmIt != ft2osm.cend() ? std::to_string(osmIt->second.GetEncodedId()) : "";
+    string osmId = osmIt != ft2osm.cend() ? to_string(osmIt->second.GetEncodedId()) : "";
     if (osmId.empty())
     {
       // For sponsored types, adding invented sponsored ids (booking = 00) to the id tail.
@@ -230,8 +241,8 @@ public:
         osmId = f.GetMetadata().Get(feature::Metadata::FMD_SPONSORED_ID) + "00";
     }
     string const & uid = BuildUniqueId(ll, name);
-    string const & lat = strings::to_string_with_digits_after_comma(ll.lat, 6);
-    string const & lon = strings::to_string_with_digits_after_comma(ll.lon, 6);
+    string const & lat = strings::to_string_with_digits_after_comma(ll.m_lat, 6);
+    string const & lon = strings::to_string_with_digits_after_comma(ll.m_lon, 6);
     search::ReverseGeocoder::Address addr;
     string addrStreet = "";
     string addrHouse = "";
@@ -289,17 +300,17 @@ void PrintHeader()
 bool ParseFeatureIdToOsmIdMapping(string const & path, map<uint32_t, base::GeoObjectId> & mapping)
 {
   return generator::ForEachOsmId2FeatureId(
-      path, [&](base::GeoObjectId const & osmId, uint32_t const featureId) {
-        mapping[featureId] = osmId;
+      path, [&](auto const & compositeId, uint32_t const featureId) {
+        mapping[featureId] = compositeId.m_mainId;
       });
 }
 
-void DidDownload(storage::TCountryId const & /* countryId */,
+void DidDownload(storage::CountryId const & /* countryId */,
                  shared_ptr<platform::LocalCountryFile> const & /* localFile */)
 {
 }
 
-bool WillDelete(storage::TCountryId const & /* countryId */,
+bool WillDelete(storage::CountryId const & /* countryId */,
                 shared_ptr<platform::LocalCountryFile> const & /* localFile */)
 {
   return false;
@@ -307,7 +318,7 @@ bool WillDelete(storage::TCountryId const & /* countryId */,
 
 int main(int argc, char ** argv)
 {
-  search::ChangeMaxNumberOfOpenFiles(search::kMaxOpenFiles);
+  platform::tests_support::ChangeMaxNumberOfOpenFiles(search::search_quality::kMaxOpenFiles);
   if (argc <= 1)
   {
     LOG(LERROR, ("Usage:", argc == 1 ? argv[0] : "feature_list",
@@ -327,8 +338,8 @@ int main(int argc, char ** argv)
 
   storage::Storage storage(countriesFile, argv[1]);
   storage.Init(&DidDownload, &WillDelete);
-  auto infoGetter = storage::CountryInfoReader::CreateCountryInfoReader(pl);
-  infoGetter->InitAffiliationsInfo(&storage.GetAffiliations());
+  auto infoGetter = storage::CountryInfoReader::CreateCountryInfoGetter(pl);
+  infoGetter->SetAffiliations(&storage.GetAffiliations());
 
   GetStyleReader().SetCurrentStyle(MapStyleMerged);
   classificator::Load();
@@ -365,9 +376,8 @@ int main(int argc, char ** argv)
     FeaturesLoaderGuard loader(dataSource, mwmId);
     for (uint32_t ftIndex = 0; ftIndex < loader.GetNumFeatures(); ftIndex++)
     {
-      FeatureType ft;
-      if (loader.GetFeatureByIndex(static_cast<uint32_t>(ftIndex), ft))
-        doProcess.Process(ft, featureIdToOsmId);
+      if (auto ft = loader.GetFeatureByIndex(static_cast<uint32_t>(ftIndex)))
+        doProcess.Process(*ft, featureIdToOsmId);
     }
     doProcess.ClearCache();
   }

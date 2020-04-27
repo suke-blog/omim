@@ -37,24 +37,24 @@ location::GpsInfo MoveTo(ms::LatLon const & coords, double speed = -1)
   location::GpsInfo info;
   info.m_horizontalAccuracy = kGpsAccuracy;
   info.m_verticalAccuracy = kGpsAccuracy;
-  info.m_latitude = coords.lat;
-  info.m_longitude = coords.lon;
+  info.m_latitude = coords.m_lat;
+  info.m_longitude = coords.m_lon;
   info.m_speedMpS = speed;
   return info;
 }
 
 void ChangePosition(ms::LatLon const & coords, double speedKmPH, RoutingSession & routingSession)
 {
-  routingSession.OnLocationPositionChanged(MoveTo({coords.lat, coords.lon}, KMPH2MPS(speedKmPH)));
+  routingSession.OnLocationPositionChanged(MoveTo({coords.m_lat, coords.m_lon}, KMPH2MPS(speedKmPH)));
 }
 
 void InitRoutingSession(ms::LatLon const & from, ms::LatLon const & to, RoutingSession & routingSession,
                         SpeedCameraManagerMode mode = SpeedCameraManagerMode::Auto)
 {
   TRouteResult const routeResult =
-    integration::CalculateRoute(integration::GetVehicleComponents<VehicleType::Car>(),
-                                MercatorBounds::FromLatLon(from), m2::PointD::Zero(),
-                                MercatorBounds::FromLatLon(to));
+    integration::CalculateRoute(integration::GetVehicleComponents(VehicleType::Car),
+                                mercator::FromLatLon(from), m2::PointD::Zero(),
+                                mercator::FromLatLon(to));
 
   Route & route = *routeResult.first;
   RouterResultCode const result = routeResult.second;
@@ -172,7 +172,6 @@ UNIT_TEST(SpeedCameraNotification_AutoAlwaysMode_3)
     {
       double const speedKmPH = 100.0;
       ChangePosition({55.76766, 37.59260}, speedKmPH, routingSession);
-      TEST(NoCameraFound(routingSession), ());
       TEST(!CheckVoiceNotification(routingSession), ());
       TEST(!CheckBeepSignal(routingSession), ());
     }
@@ -208,7 +207,6 @@ UNIT_TEST(SpeedCameraNotification_AutoAlwaysMode_4)
     {
       double const speedKmPH = 100.0;
       ChangePosition({55.65647, 37.53643}, speedKmPH, routingSession);
-      TEST(NoCameraFound(routingSession), ());
       TEST(!CheckVoiceNotification(routingSession), ());
       TEST(!CheckBeepSignal(routingSession), ());
     }
@@ -240,7 +238,6 @@ UNIT_TEST(SpeedCameraNotification_AutoAlwaysMode_5)
     {
       double const speedKmPH = 100.0;
       ChangePosition({55.76766, 37.59260}, speedKmPH, routingSession);
-      TEST(NoCameraFound(routingSession), ());
       TEST(!CheckVoiceNotification(routingSession), ());
       TEST(!CheckBeepSignal(routingSession), ());
     }
@@ -325,7 +322,7 @@ UNIT_TEST(SpeedCameraNotification_AutoAlwaysMode_7)
 
     // Intermediate Move for correct calculating of passedDistance.
     {
-      double const speedKmPH = 40.0;
+      double const speedKmPH = 20.0;
       ChangePosition({55.76559, 37.59016}, speedKmPH, routingSession);
       TEST_EQUAL(CheckZone(routingSession, speedKmPH), SpeedCameraManager::Interval::VoiceNotificationZone, ());
       TEST(!CheckVoiceNotification(routingSession), ());
@@ -336,12 +333,60 @@ UNIT_TEST(SpeedCameraNotification_AutoAlwaysMode_7)
     // so now we make BeedSignal.
     {
       double const speedKmPH = 40.0;
-      ChangePosition({55.76527, 37.58970}, speedKmPH, routingSession);
+      ChangePosition({55.76573, 37.59030}, speedKmPH, routingSession);
       TEST_EQUAL(CheckZone(routingSession, speedKmPH), SpeedCameraManager::Interval::BeepSignalZone, ());
       TEST(!CheckVoiceNotification(routingSession), ());
       TEST(CheckBeepSignal(routingSession), ());
     }
+  }
+}
 
+// Mode: Always/Auto
+// ____Notification___|___beep____|_____Impact camera zone_____|
+// ----------------^  |  - We are here. Exceed speed limit.
+//                    |    In case Always/Auto mode we should hear voice notification.
+// -----------------^ |  - Then we are here. Exceed speed limit.
+//                    |    But it's soon to make beep signal.
+// ---------------------^ - Than we are here. Exceed speed limit.
+//                          We should here beep signal.
+UNIT_TEST(SpeedCameraNotification_AutoAlwaysMode_8)
+{
+  vector<SpeedCameraManagerMode> modes = {SpeedCameraManagerMode::Auto, SpeedCameraManagerMode::Always};
+  for (auto const mode : modes)
+  {
+    RoutingSession routingSession;
+    InitRoutingSession({55.678536, 37.531112} /* from */,
+                       {55.671112, 37.520202} /* to   */,
+                       routingSession,
+                       mode);
+
+    {
+      double const speedKmPH = 180.0;
+      ChangePosition({55.67840, 37.53090}, speedKmPH, routingSession);
+      TEST(!CheckVoiceNotification(routingSession), ());
+      TEST(!CheckBeepSignal(routingSession), ());
+    }
+    {
+      double const speedKmPH = 180.0;
+      ChangePosition({55.67810, 37.53050}, speedKmPH, routingSession);
+      TEST_EQUAL(CheckZone(routingSession, speedKmPH), SpeedCameraManager::Interval::VoiceNotificationZone, ());
+      TEST(CheckVoiceNotification(routingSession), ());
+      TEST(!CheckBeepSignal(routingSession), ());
+    }
+    {
+      double const speedKmPH = 180.0;
+      ChangePosition({55.67810, 37.53050}, speedKmPH, routingSession);
+      TEST_EQUAL(CheckZone(routingSession, speedKmPH), SpeedCameraManager::Interval::VoiceNotificationZone, ());
+      TEST(!CheckVoiceNotification(routingSession), ());
+      TEST(!CheckBeepSignal(routingSession), ());
+    }
+    {
+      double const speedKmPH = 180.0;
+      ChangePosition({55.67790, 37.53020}, speedKmPH, routingSession);
+      TEST_EQUAL(CheckZone(routingSession, speedKmPH), SpeedCameraManager::Interval::BeepSignalZone, ());
+      TEST(!CheckVoiceNotification(routingSession), ());
+      TEST(CheckBeepSignal(routingSession), ());
+    }
   }
 }
 
@@ -386,7 +431,6 @@ UNIT_TEST(SpeedCameraNotification_AutoMode_1)
     {
       double const speedKmPH = 40.0;
       ChangePosition({55.76476, 37.58905}, speedKmPH, routingSession);
-      TEST(NoCameraFound(routingSession), ());
       TEST(!CheckVoiceNotification(routingSession), ());
       TEST(!CheckBeepSignal(routingSession), ());
     }
@@ -426,5 +470,18 @@ UNIT_TEST(SpeedCameraNotification_NeverMode_1)
       TEST(!CheckBeepSignal(routingSession), ());
     }
   }
+}
+
+// Test on case when a feature is split by a mini_roundabout or by a turning_loop and
+// contains a speed camera. The thing is to pass this test it's necessary to process
+// fake road feature ids correctly while speed cameras generation process.
+UNIT_TEST(SpeedCameraNotification_CameraOnMiniRoundabout)
+{
+  RoutingSession routingSession;
+  InitRoutingSession({41.201998, 69.109587} /* from */, {41.200358, 69.107051} /* to   */,
+                     routingSession, SpeedCameraManagerMode::Never);
+  double const speedKmPH = 100.0;
+  ChangePosition({41.201998, 69.109587}, speedKmPH, routingSession);
+  TEST(!NoCameraFound(routingSession), ());
 }
 }  // namespace

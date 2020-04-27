@@ -9,21 +9,6 @@
 
 <!-- ********** Strings for downloading map from search **********/ -->
 
-  <key>placepage_summary_rating_description</key>
-  <dict>
-    <key>NSStringLocalizedFormatKey</key>
-    <string>%#@value@</string>
-    <key>value</key>
-    <dict>
-      <key>NSStringFormatSpecTypeKey</key>
-      <string>NSStringPluralRuleType</string>
-      <key>NSStringFormatValueTypeKey</key>
-      <string>d</string>
-      <key>other</key>
-      <string>Baseado em %d avaliações</string>
-    </dict>
-  </dict>
-
   <key>bookmarks_places</key>
   <dict>
     <key>NSStringLocalizedFormatKey</key>
@@ -113,6 +98,23 @@
       <string>d</string>
       <key>other</key>
       <string>%d rastreamentos</string>
+    </dict>
+  </dict>
+
+  <key>placepage_summary_rating_description</key>
+  <dict>
+    <key>NSStringLocalizedFormatKey</key>
+    <string>%#@value@</string>
+    <key>value</key>
+    <dict>
+      <key>NSStringFormatSpecTypeKey</key>
+      <string>NSStringPluralRuleType</string>
+      <key>NSStringFormatValueTypeKey</key>
+      <string>d</string>
+      <key>one</key>
+      <string>Baseado em %d comentário</string>
+      <key>other</key>
+      <string>Baseado em %d comentários</string>
     </dict>
   </dict>
 </dict>

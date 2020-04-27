@@ -32,27 +32,30 @@ public:
   void SetSamples(ContextList::SamplesSlice const & samples) override;
   void OnSearchStarted() override;
   void OnSearchCompleted() override;
-  void ShowSample(size_t sampleIndex, search::Sample const & sample, bool positionAvailable,
-                  m2::PointD const & position, bool hasEdits) override;
+  void ShowSample(size_t sampleIndex, search::Sample const & sample,
+                  std::optional<m2::PointD> const & position, bool isUseless,
+                  bool hasEdits) override;
 
   void AddFoundResults(search::Results::ConstIter begin, search::Results::ConstIter end) override;
   void ShowNonFoundResults(std::vector<search::Sample::Result> const & results,
-                           std::vector<Edits::Entry> const & entries) override;
+                           std::vector<ResultsEdits::Entry> const & entries) override;
 
+  void ShowMarks(Context const & context) override;
   void ShowFoundResultsMarks(search::Results::ConstIter begin,
                              search::Results::ConstIter end) override;
   void ShowNonFoundResultsMarks(std::vector<search::Sample::Result> const & results,
-                                std::vector<Edits::Entry> const & entries) override;
+                                std::vector<ResultsEdits::Entry> const & entries) override;
   void ClearSearchResultMarks() override;
 
   void MoveViewportToResult(search::Result const & result) override;
   void MoveViewportToResult(search::Sample::Result const & result) override;
   void MoveViewportToRect(m2::RectD const & rect) override;
 
-  void OnResultChanged(size_t sampleIndex, ResultType type, Edits::Update const & update) override;
-  void SetEdits(size_t sampleIndex, Edits & foundResultsEdits,
-                Edits & nonFoundResultsEdits) override;
-  void OnSampleChanged(size_t sampleIndex, bool hasEdits) override;
+  void OnResultChanged(size_t sampleIndex, ResultType type,
+                       ResultsEdits::Update const & update) override;
+  void SetResultsEdits(size_t sampleIndex, ResultsEdits & foundResultsResultsEdits,
+                       ResultsEdits & nonFoundResultsResultsEdits) override;
+  void OnSampleChanged(size_t sampleIndex, bool isUseless, bool hasEdits) override;
   void OnSamplesChanged(bool hasEdits) override;
 
   void ShowError(std::string const & msg) override;
@@ -76,7 +79,7 @@ private:
     AfterSearch
   };
 
-  friend string DebugPrint(State state)
+  friend std::string DebugPrint(State state)
   {
     switch (state)
     {
@@ -101,9 +104,10 @@ private:
   void Open();
   void Save();
   void SaveAs();
+  void InitiateBackgroundSearch();
 
   void SetSamplesDockTitle(bool hasEdits);
-  void SetSampleDockTitle(bool hasEdits);
+  void SetSampleDockTitle(bool isUseless, bool hasEdits);
   SaveResult TryToSaveEdits(QString const & msg);
 
   void AddSelectedFeature(QPoint const & p);
@@ -120,6 +124,7 @@ private:
 
   QAction * m_save = nullptr;
   QAction * m_saveAs = nullptr;
+  QAction * m_initiateBackgroundSearch = nullptr;
 
   State m_state = State::BeforeSearch;
   FeatureID m_selectedFeature;

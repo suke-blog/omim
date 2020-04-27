@@ -69,6 +69,7 @@
   <string name="pref_navigation" translatable="false">Navigation</string>
   <string name="pref_information" translatable="false">Information</string>
   <string name="pref_transliteration" translatable="false">Transliteration</string>
+  <string name="pref_power_management" translatable="false">PowerManagment</string>
 
   <string name="notification_ticker_ltr" translatable="false">%1$s: %2$s</string>
   <string name="notification_ticker_rtl" translatable="false">%2$s :%1$s</string>
@@ -95,4 +96,7 @@
   <string name="never_enum_value" translatable="false">NEVER</string>
   <string name="always_enum_value" translatable="false">ALWAYS</string>
   <string name="auto_enum_value" translatable="false">AUTO</string>
+  <string name="placepage_toolbar_behavior" translatable="false">com.mapswithme.maps.widget.placepage.ToolbarBehavior</string>
+  <string name="placepage_behavior" translatable="false">com.trafi.anchorbottomsheetbehavior.AnchorBottomSheetBehavior</string>
+
 </resources>

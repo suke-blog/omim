@@ -4,8 +4,9 @@ struct CatalogCategoryInfo {
   var author: String?
   var productId: String?
   var imageUrl: String?
+  var subscriptionType: SubscriptionGroupType
 
-  init?(_ components: [String : String]) {
+  init?(_ components: [String : String], type: SubscriptionGroupType) {
     guard let id = components["id"],
       let name = components["name"] else { return nil }
     self.id = id
@@ -13,93 +14,128 @@ struct CatalogCategoryInfo {
     author = components["author_name"]
     productId = components["tier"]
     imageUrl = components["img"]
+    subscriptionType = type
   }
 }
 
 @objc(MWMCatalogWebViewController)
 final class CatalogWebViewController: WebViewController {
-  let progressView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-  let progressImageView = UIImageView(image: #imageLiteral(resourceName: "ic_24px_spinner"))
+  let progressBgView = UIVisualEffectView(effect:
+    UIBlurEffect(style: UIColor.isNightMode() ? .light : .dark))
+  let progressView = ActivityIndicator()
   let numberOfTasksLabel = UILabel()
-  let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+  let loadingIndicator = UIActivityIndicatorView(style: .gray)
   let pendingTransactionsHandler = InAppPurchase.pendingTransactionsHandler()
   var deeplink: URL?
   var categoryInfo: CatalogCategoryInfo?
   var statSent = false
-  var backButton: UIBarButtonItem!
-  var fwdButton: UIBarButtonItem!
-  var toolbar = UIToolbar()
+  var billing = InAppPurchase.inAppBilling()
+  var noInternetView: CatalogConnectionErrorView!
 
-  @objc init() {
-    super.init(url: MWMBookmarksManager.shared().catalogFrontendUrl()!, title: L("guides"))!
-    backButton = UIBarButtonItem(image: #imageLiteral(resourceName: "ic_catalog_back"), style: .plain, target: self, action: #selector(onBack))
-    fwdButton = UIBarButtonItem(image: #imageLiteral(resourceName: "ic_catalog_fwd"), style: .plain, target: self, action: #selector(onFwd))
-    backButton.tintColor = .blackSecondaryText()
-    fwdButton.tintColor = .blackSecondaryText()
-    backButton.isEnabled = false
-    fwdButton.isEnabled = false
+  @objc static func catalogFromAbsoluteUrl(_ url: URL? = nil, utm: MWMUTM = .none) -> CatalogWebViewController {
+    return CatalogWebViewController(url, utm:utm, isAbsoluteUrl:true)
+  }
+  
+  @objc static func catalogFromDeeplink(_ url: URL, utm: MWMUTM = .none) -> CatalogWebViewController {
+    return CatalogWebViewController(url, utm:utm)
+  }
+
+  private init(_ url: URL? = nil, utm: MWMUTM = .none, isAbsoluteUrl: Bool = false) {
+    var catalogUrl = MWMBookmarksManager.shared().catalogFrontendUrl(utm)!
+    if let u = url {
+      if isAbsoluteUrl {
+        catalogUrl = u
+      } else {
+        if u.host == "guides_page" {
+          if let urlComponents = URLComponents(url: u, resolvingAgainstBaseURL: false),
+            let path = urlComponents.queryItems?.reduce(into: "", { if $1.name == "url" { $0 = $1.value } }),
+            let calculatedUrl = MWMBookmarksManager.shared().catalogFrontendUrlPlusPath(path, utm: utm) {
+            catalogUrl = calculatedUrl
+          }
+        } else {
+          deeplink = url
+        }
+        Statistics.logEvent(kStatCatalogOpen, withParameters: [kStatFrom : kStatDeeplink])
+      }
+    }
+    super.init(url: catalogUrl, title: L("guides_catalogue_title"))!
+    noInternetView = CatalogConnectionErrorView(frame: .zero, actionCallback: { [weak self] in
+      guard let self = self else { return }
+      if !FrameworkHelper.isNetworkConnected() {
+        self.noInternetView.isHidden = false
+        return
+      }
+
+      self.noInternetView.isHidden = true
+      self.loadingIndicator.startAnimating()
+      if self.webView.url != nil {
+        self.webView.reload()
+      } else {
+        self.performURLRequest()
+      }
+    })
   }
 
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  @objc convenience init(_ deeplinkURL: URL) {
-    self.init()
-    deeplink = deeplinkURL
-  }
-
   override func viewDidLoad() {
     super.viewDidLoad()
 
     numberOfTasksLabel.translatesAutoresizingMaskIntoConstraints = false
-    progressImageView.translatesAutoresizingMaskIntoConstraints = false
     progressView.translatesAutoresizingMaskIntoConstraints = false
+    progressBgView.translatesAutoresizingMaskIntoConstraints = false
     loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
-    numberOfTasksLabel.font = UIFont.medium14()
-    numberOfTasksLabel.textColor = UIColor.white
+    numberOfTasksLabel.styleName = "medium14:whiteText"
     numberOfTasksLabel.text = "0"
-    progressView.layer.cornerRadius = 8
-    progressView.clipsToBounds = true
-    progressView.contentView.addSubview(progressImageView)
-    progressView.contentView.addSubview(numberOfTasksLabel)
-    view.addSubview(progressView)
+    progressBgView.layer.cornerRadius = 8
+    progressBgView.clipsToBounds = true
+    progressBgView.contentView.addSubview(progressView)
+    progressBgView.contentView.addSubview(numberOfTasksLabel)
+    view.addSubview(progressBgView)
     loadingIndicator.startAnimating()
     view.addSubview(loadingIndicator)
 
     loadingIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-    numberOfTasksLabel.centerXAnchor.constraint(equalTo: progressView.centerXAnchor).isActive = true
-    numberOfTasksLabel.centerYAnchor.constraint(equalTo: progressView.centerYAnchor).isActive = true
-    progressImageView.centerXAnchor.constraint(equalTo: progressView.centerXAnchor).isActive = true
-    progressImageView.centerYAnchor.constraint(equalTo: progressView.centerYAnchor).isActive = true
-    progressView.widthAnchor.constraint(equalToConstant: 48).isActive = true
-    progressView.heightAnchor.constraint(equalToConstant: 48).isActive = true
+    numberOfTasksLabel.centerXAnchor.constraint(equalTo: progressBgView.centerXAnchor).isActive = true
+    numberOfTasksLabel.centerYAnchor.constraint(equalTo: progressBgView.centerYAnchor).isActive = true
+    progressView.centerXAnchor.constraint(equalTo: progressBgView.centerXAnchor).isActive = true
+    progressView.centerYAnchor.constraint(equalTo: progressBgView.centerYAnchor).isActive = true
+    progressBgView.widthAnchor.constraint(equalToConstant: 48).isActive = true
+    progressBgView.heightAnchor.constraint(equalToConstant: 48).isActive = true
 
-    view.addSubview(toolbar)
-    toolbar.translatesAutoresizingMaskIntoConstraints = false
-    toolbar.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-    toolbar.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-    toolbar.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: 8).isActive = true
-
-    if #available(iOS 11, *) {
-      toolbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-      progressView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 8).isActive = true
-    } else {
-      toolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-      progressView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8).isActive = true
+    let connected = FrameworkHelper.isNetworkConnected()
+    if !connected {
+      Statistics.logEvent("Bookmarks_Downloaded_Catalogue_error",
+                          withParameters: [kStatError : "no_internet"])
     }
 
-    rotateProgress()
-    updateProgress()
-    navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "ic_catalog_close"), style: .plain, target: self, action: #selector(goBack))
-  }
+    noInternetView.isHidden = connected
+    noInternetView.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(noInternetView)
+    noInternetView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+    noInternetView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20.0).isActive = true
 
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    let fixedSpace = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-    fixedSpace.width = 20
-    toolbar.setItems([backButton, fixedSpace, fwdButton], animated: true)
+    if #available(iOS 11, *) {
+      progressBgView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 8).isActive = true
+    } else {
+      progressBgView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 8).isActive = true
+    }
+
+    progressView.styleName = "MWMWhite"
+    self.view.styleName = "Background"
+    
+    updateProgress()
+    navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "ic_nav_bar_back"),
+                                                       style: .plain,
+                                                       target: self,
+                                                       action: #selector(onBackPressed))
+    navigationItem.rightBarButtonItem = UIBarButtonItem(title: L("core_exit"),
+                                                        style: .plain,
+                                                        target: self,
+                                                        action:  #selector(onExitPressed))
   }
 
   override func viewDidAppear(_ animated: Bool) {
@@ -109,8 +145,13 @@ final class CatalogWebViewController: WebViewController {
     }
   }
 
-  override func willLoadUrl(_ decisionHandler: @escaping (Bool) -> Void) {
-    handlePendingTransactions { decisionHandler($0) }
+  override func willLoadUrl(_ decisionHandler: @escaping (Bool, Dictionary<String, String>?) -> Void) {
+    buildHeaders { [weak self] (headers) in
+      self?.handlePendingTransactions {
+        decisionHandler($0, headers)
+        self?.checkInvalidSubscription()
+      }
+    }
   }
 
   override func shouldAddAccessToken() -> Bool {
@@ -120,10 +161,17 @@ final class CatalogWebViewController: WebViewController {
   override func webView(_ webView: WKWebView,
                         decidePolicyFor navigationAction: WKNavigationAction,
                         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+    let subscribePath = "subscribe"
     guard let url = navigationAction.request.url,
-      url.scheme == "mapsme" || url.path == "/mobilefront/buy_kml" else {
+      url.scheme == "mapsme" || url.path.contains("buy_kml") || url.path.contains(subscribePath) else {
         super.webView(webView, decidePolicyFor: navigationAction, decisionHandler: decisionHandler)
         return
+    }
+
+    if url.path.contains(subscribePath) {
+      showSubscribe(type: SubscriptionGroupType(catalogURL: url))
+      decisionHandler(.cancel);
+      return
     }
 
     processDeeplink(url)
@@ -136,22 +184,58 @@ final class CatalogWebViewController: WebViewController {
       MWMEye.boomarksCatalogShown()
     }
     loadingIndicator.stopAnimating()
-    backButton.isEnabled = webView.canGoBack
-    fwdButton.isEnabled = webView.canGoForward
   }
 
   override func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+    loadingIndicator.stopAnimating()
     Statistics.logEvent("Bookmarks_Downloaded_Catalogue_error",
                         withParameters: [kStatError : kStatUnknown])
-    loadingIndicator.stopAnimating()
   }
 
   override func webView(_ webView: WKWebView,
                         didFailProvisionalNavigation navigation: WKNavigation!,
                         withError error: Error) {
+    loadingIndicator.stopAnimating()
     Statistics.logEvent("Bookmarks_Downloaded_Catalogue_error",
                         withParameters: [kStatError : kStatUnknown])
-    loadingIndicator.stopAnimating()
+  }
+
+  private func showSubscribe(type: SubscriptionGroupType) {
+    let subscribeViewController = SubscriptionViewBuilder.build(type: type,
+                                                                parentViewController: self,
+                                                                source: kStatWebView,
+                                                                successDialog: .success) { [weak self] (success) in
+                                                                  if (success) {
+                                                                    self?.webView.reloadFromOrigin()
+                                                                  }
+    }
+    present(subscribeViewController, animated: true)
+  }
+
+  private func buildHeaders(completion: @escaping ([String : String]?) -> Void) {
+    billing.requestProducts(Set(MWMPurchaseManager.bookmarkInappIds()), completion: { (products, error) in
+      var productsInfo: [String : [String: String]] = [:]
+      if let products = products {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        for product in products {
+          formatter.locale = product.priceLocale
+          let formattedPrice = formatter.string(from: product.price) ?? ""
+          let pd: [String: String] = ["price_string": formattedPrice]
+          productsInfo[product.productId] = pd
+        }
+      }
+      guard let jsonData = try? JSONSerialization.data(withJSONObject: productsInfo, options: []),
+        let jsonString = String(data: jsonData, encoding: .utf8),
+        let encodedString = jsonString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {
+          completion(nil)
+          return
+      }
+      
+      var result = MWMBookmarksManager.shared().getCatalogHeaders()
+      result["X-Mapsme-Bundle-Tiers"] = encodedString
+      completion(result)
+    })
   }
 
   private func handlePendingTransactions(completion: @escaping (Bool) -> Void) {
@@ -167,8 +251,8 @@ final class CatalogWebViewController: WebViewController {
         completion(false)
         self?.loadingIndicator.stopAnimating()
       case .needAuth:
-        if let s = self {
-          s.signup(anchor: s.toolbar, onComplete: {
+        if let s = self, let navBar = s.navigationController?.navigationBar {
+          s.signup(anchor: navBar, onComplete: {
             if $0 {
               s.handlePendingTransactions(completion: completion)
             } else {
@@ -189,10 +273,11 @@ final class CatalogWebViewController: WebViewController {
     guard let components = urlComponents.queryItems?.reduce(into: [:], { $0[$1.name] = $1.value })
       else { return nil }
 
-    return CatalogCategoryInfo(components)
+    return CatalogCategoryInfo(components, type: SubscriptionGroupType(catalogURL: url))
   }
 
   func processDeeplink(_ url: URL) {
+    self.deeplink = nil
     guard let categoryInfo = parseUrl(url) else {
       MWMAlertViewController.activeAlert().presentInfoAlert(L("title_error_downloading_bookmarks"),
                                                             text: L("subtitle_error_downloading_guide"))
@@ -233,8 +318,8 @@ final class CatalogWebViewController: WebViewController {
           }
           switch (status) {
           case .needAuth:
-            if let s = self {
-              s.signup(anchor: s.toolbar) {
+            if let s = self, let navBar = s.navigationController?.navigationBar{
+              s.signup(anchor: navBar) {
                 if $0 { s.download() }
               }
             }
@@ -258,7 +343,9 @@ final class CatalogWebViewController: WebViewController {
       } else {
         if MWMBookmarksManager.shared().getCatalogDownloadsCount() == 0 {
           Statistics.logEvent(kStatInappProductDelivered, withParameters: [kStatVendor: BOOKMARKS_VENDOR,
-                                                                           kStatPurchase: categoryInfo.id])
+                                                                           kStatPurchase: categoryInfo.id],
+                              with: .realtime)
+          logToPushWoosh(categoryInfo)
           MapViewController.shared().showBookmarksLoadedAlert(categoryId)
         }
       }
@@ -275,14 +362,19 @@ final class CatalogWebViewController: WebViewController {
 
     let purchase = InAppPurchase.paidRoutePurchase(serverId: productInfo.id,
                                                    productId: productId)
-    let stats = InAppPurchase.paidRouteStatistics(serverId: productInfo.id, productId: productId)
+    let testGroup = PromoCampaignManager.manager().paidRoutesSubscriptionCampaign.testGroupStatName
+    let stats = InAppPurchase.paidRouteStatistics(serverId: productInfo.id,
+                                                  productId: productId,
+                                                  testGroup: testGroup)
     let paymentVC = PaidRouteViewController(name: productInfo.name,
                                             author: productInfo.author,
                                             imageUrl: URL(string: productInfo.imageUrl ?? ""),
+                                            subscriptionType: productInfo.subscriptionType,
                                             purchase: purchase,
                                             statistics: stats)
     paymentVC.delegate = self
     paymentVC.modalTransitionStyle = .coverVertical
+    paymentVC.modalPresentationStyle = .fullScreen
     self.navigationController?.present(paymentVC, animated: true)
   }
 
@@ -311,21 +403,22 @@ final class CatalogWebViewController: WebViewController {
   private func updateProgress() {
     let numberOfTasks = MWMBookmarksManager.shared().getCatalogDownloadsCount()
     numberOfTasksLabel.text = "\(numberOfTasks)"
-    progressView.isHidden = numberOfTasks == 0
+    progressBgView.isHidden = numberOfTasks == 0
   }
 
-  private func rotateProgress() {
-    let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
-    rotationAnimation.toValue = Double.pi * 2;
-    rotationAnimation.duration = 1
-    rotationAnimation.isCumulative = true
-    rotationAnimation.repeatCount = Float(Int.max)
-
-    progressImageView.layer.add(rotationAnimation, forKey:"rotationAnimation");
+  @objc private func onBackPressed() {
+    if (webView.canGoBack) {
+      back()
+      Statistics.logEvent(kStatGuidesBack, withParameters: [kStatMethod: kStatBack])
+    } else {
+      navigationController?.popViewController(animated: true)
+      Statistics.logEvent(kStatGuidesClose, withParameters: [kStatMethod: kStatBack])
+    }
   }
 
-  @objc private func onBack() {
-    back()
+  @objc private func onExitPressed() {
+    goBack()
+    Statistics.logEvent(kStatGuidesClose, withParameters: [kStatMethod: kStatDone])
   }
 
   @objc private func onFwd() {
@@ -333,7 +426,26 @@ final class CatalogWebViewController: WebViewController {
   }
 }
 
+private func logToPushWoosh(_ categoryInfo: CatalogCategoryInfo) {
+  let pushManager = PushNotificationManager.push()
+  
+  if categoryInfo.productId == nil {
+    pushManager!.setTags(["Bookmarks_Guides_free_title": categoryInfo.name]);
+    pushManager!.setTags(["Bookmarks_Guides_free_date": MWMPushNotifications.formattedTimestamp()]);
+  } else {
+    pushManager!.setTags(["Bookmarks_Guides_paid_tier": categoryInfo.productId!]);
+    pushManager!.setTags(["Bookmarks_Guides_paid_title": categoryInfo.name]);
+    pushManager!.setTags(["Bookmarks_Guides_paid_date": MWMPushNotifications.formattedTimestamp()]);
+  }
+}
+
 extension CatalogWebViewController: PaidRouteViewControllerDelegate {
+  func didCompleteSubscription(_ viewController: PaidRouteViewController) {
+    dismiss(animated: true)
+    download()
+    self.webView.reloadFromOrigin()
+  }
+
   func didCompletePurchase(_ viewController: PaidRouteViewController) {
     dismiss(animated: true)
     download()

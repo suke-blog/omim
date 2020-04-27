@@ -5,6 +5,8 @@
 #include "platform/platform.hpp"
 #include "platform/socket.hpp"
 
+#include "3party/Alohalytics/src/alohalytics.h"
+
 namespace
 {
 uint32_t constexpr kSocketTimeoutMs = 10000;
@@ -12,8 +14,8 @@ uint32_t constexpr kSocketTimeoutMs = 10000;
 
 namespace tracking
 {
-Connection::Connection(unique_ptr<platform::Socket> socket, string const & host, uint16_t port,
-                       bool isHistorical)
+Connection::Connection(std::unique_ptr<platform::Socket> socket, std::string const & host,
+                       uint16_t port, bool isHistorical)
   : m_socket(move(socket)), m_host(host), m_port(port)
 {
   if (!m_socket)
@@ -28,6 +30,7 @@ bool Connection::Reconnect()
   if (!m_socket)
     return false;
 
+  alohalytics::Stats::Instance().LogEvent("TrafficTrack_reconnect");
   m_socket->Close();
 
   if (!m_socket->Open(m_host, m_port))
@@ -54,7 +57,6 @@ void Connection::Shutdown()
   m_socket->Close();
 }
 
-// TODO: implement historical
 bool Connection::Send(boost::circular_buffer<DataPoint> const & points)
 {
   if (!m_socket)

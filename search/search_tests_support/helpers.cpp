@@ -15,7 +15,7 @@ SearchTest::SearchTest()
   : m_scopedLog(LDEBUG)
   , m_engine(m_dataSource, make_unique<storage::CountryInfoGetterForTesting>(), Engine::Params{})
 {
-  SetViewport(MercatorBounds::FullRect());
+  SetViewport(mercator::Bounds::FullRect());
 }
 
 void SearchTest::RegisterCountry(string const & name, m2::RectD const & rect)
@@ -47,21 +47,35 @@ bool SearchTest::ResultsMatch(string const & query, Mode mode,
   return MatchResults(m_dataSource, rules, request.Results());
 }
 
-bool SearchTest::ResultsMatch(vector<search::Result> const & results, TRules const & rules)
+bool SearchTest::ResultsMatch(vector<search::Result> const & results, Rules const & rules)
 {
   return MatchResults(m_dataSource, rules, results);
 }
 
-bool SearchTest::ResultsMatch(SearchParams const & params, TRules const & rules)
+bool SearchTest::ResultsMatch(SearchParams const & params, Rules const & rules)
 {
   tests_support::TestSearchRequest request(m_engine, params);
   request.Run();
   return ResultsMatch(request.Results(), rules);
 }
 
-bool SearchTest::ResultMatches(search::Result const & result, TRule const & rule)
+bool SearchTest::ResultMatches(search::Result const & result, Rule const & rule)
 {
   return tests_support::ResultMatches(m_dataSource, rule, result);
+}
+
+bool SearchTest::AlternativeMatch(string const & query, vector<Rules> const & rulesList)
+{
+  tests_support::TestSearchRequest request(m_engine, query, "en", Mode::Everywhere, m_viewport);
+  request.Run();
+  return tests_support::AlternativeMatch(m_dataSource, rulesList, request.Results());
+}
+
+size_t SearchTest::GetResultsNumber(string const & query, string const & locale)
+{
+  tests_support::TestSearchRequest request(m_engine, query, locale, Mode::Everywhere, m_viewport);
+  request.Run();
+  return request.Results().size();
 }
 
 unique_ptr<tests_support::TestSearchRequest> SearchTest::MakeRequest(
@@ -74,6 +88,9 @@ unique_ptr<tests_support::TestSearchRequest> SearchTest::MakeRequest(
   params.m_mode = Mode::Everywhere;
   params.m_needAddress = true;
   params.m_suggestsEnabled = false;
+  params.m_streetSearchRadiusM = tests_support::TestSearchRequest::kDefaultTestStreetSearchRadiusM;
+  params.m_villageSearchRadiusM =
+      tests_support::TestSearchRequest::kDefaultTestVillageSearchRadiusM;
 
   auto request = make_unique<tests_support::TestSearchRequest>(m_engine, params);
   request->Run();

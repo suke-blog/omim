@@ -2,14 +2,19 @@
 #include "qt/bookmark_dialog.hpp"
 #include "qt/draw_widget.hpp"
 #include "qt/mainwindow.hpp"
+#include "qt/mwms_borders_selection.hpp"
 #include "qt/osm_auth_dialog.hpp"
 #include "qt/preferences_dialog.hpp"
 #include "qt/qt_common/helpers.hpp"
 #include "qt/qt_common/scale_slider.hpp"
+#include "qt/routing_settings_dialog.hpp"
+#include "qt/screenshoter.hpp"
 #include "qt/search_panel.hpp"
 
 #include "platform/settings.hpp"
 #include "platform/platform.hpp"
+
+#include "base/assert.hpp"
 
 #include "defines.hpp"
 
@@ -38,6 +43,7 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QToolButton>
 
@@ -54,15 +60,103 @@
 
 #endif // NO_DOWNLOADER
 
+namespace
+{
+using namespace qt;
+
+struct button_t
+{
+  QString name;
+  char const * icon;
+  char const * slot;
+};
+
+void add_buttons(QToolBar * pBar, button_t buttons[], size_t count, QObject * pReceiver)
+{
+  for (size_t i = 0; i < count; ++i)
+  {
+    if (buttons[i].icon)
+      pBar->addAction(QIcon(buttons[i].icon), buttons[i].name, pReceiver, buttons[i].slot);
+    else
+      pBar->addSeparator();
+  }
+}
+
+void FormatMapSize(uint64_t sizeInBytes, std::string & units, size_t & sizeToDownload)
+{
+  int const mbInBytes = 1024 * 1024;
+  int const kbInBytes = 1024;
+  if (sizeInBytes > mbInBytes)
+  {
+    sizeToDownload = (sizeInBytes + mbInBytes - 1) / mbInBytes;
+    units = "MB";
+  }
+  else if (sizeInBytes > kbInBytes)
+  {
+    sizeToDownload = (sizeInBytes + kbInBytes -1) / kbInBytes;
+    units = "KB";
+  }
+  else
+  {
+    sizeToDownload = sizeInBytes;
+    units = "B";
+  }
+}
+
+DrawWidget::SelectionMode ConvertFromMwmsBordersSelection(qt::MwmsBordersSelection::Response mode)
+{
+  switch (mode)
+  {
+  case MwmsBordersSelection::Response::MwmsBordersByPolyFiles:
+  {
+    return DrawWidget::SelectionMode::MwmsBordersByPolyFiles;
+  }
+  case MwmsBordersSelection::Response::MwmsBordersWithVerticesByPolyFiles:
+  {
+    return DrawWidget::SelectionMode::MwmsBordersWithVerticesByPolyFiles;
+  }
+  case MwmsBordersSelection::Response::MwmsBordersByPackedPolygon:
+  {
+    return DrawWidget::SelectionMode::MwmsBordersByPackedPolygon;
+  }
+  case MwmsBordersSelection::Response::MwmsBordersWithVerticesByPackedPolygon:
+  {
+    return DrawWidget::SelectionMode::MwmsBordersWithVerticesByPackedPolygon;
+  }
+  case MwmsBordersSelection::Response::BoundingBoxByPolyFiles:
+  {
+    return DrawWidget::SelectionMode::BoundingBoxByPolyFiles;
+  }
+  case MwmsBordersSelection::Response::BoundingBoxByPackedPolygon:
+  {
+    return DrawWidget::SelectionMode::BoundingBoxByPackedPolygon;
+  }
+  default:
+    UNREACHABLE();
+  }
+}
+
+bool IsMwmsBordersSelectionMode(DrawWidget::SelectionMode mode)
+{
+  return mode == DrawWidget::SelectionMode::MwmsBordersByPolyFiles ||
+         mode == DrawWidget::SelectionMode::MwmsBordersWithVerticesByPolyFiles ||
+         mode == DrawWidget::SelectionMode::MwmsBordersByPackedPolygon ||
+         mode == DrawWidget::SelectionMode::MwmsBordersWithVerticesByPackedPolygon;
+}
+}  // namespace
+
 namespace qt
 {
 // Defined in osm_auth_dialog.cpp.
 extern char const * kTokenKeySetting;
 extern char const * kTokenSecretSetting;
 
-MainWindow::MainWindow(Framework & framework, bool apiOpenGLES3, QString const & mapcssFilePath /*= QString()*/)
+MainWindow::MainWindow(Framework & framework, bool apiOpenGLES3,
+                       std::unique_ptr<ScreenshotParams> && screenshotParams,
+                       QString const & mapcssFilePath /*= QString()*/)
   : m_Docks{}
   , m_locationService(CreateDesktopLocationService(*this))
+  , m_screenshotMode(screenshotParams != nullptr)
 #ifdef BUILD_DESIGNER
   , m_mapcssFilePath(mapcssFilePath)
 #endif
@@ -71,8 +165,27 @@ MainWindow::MainWindow(Framework & framework, bool apiOpenGLES3, QString const &
   QDesktopWidget const * desktop(QApplication::desktop());
   setGeometry(desktop->screenGeometry(desktop->primaryScreen()));
 
-  m_pDrawWidget = new DrawWidget(framework, apiOpenGLES3, this);
+  if (m_screenshotMode)
+  {
+    screenshotParams->m_statusChangedFn = [this](std::string const & state, bool finished)
+    {
+      statusBar()->showMessage(QString::fromStdString(state));
+      if (finished)
+        QCoreApplication::quit();
+    };
+  }
+
+  m_pDrawWidget = new DrawWidget(framework, apiOpenGLES3, std::move(screenshotParams), this);
+
   setCentralWidget(m_pDrawWidget);
+
+  if (m_screenshotMode)
+  {
+    QSize size(static_cast<int>(screenshotParams->m_width), static_cast<int>(screenshotParams->m_height));
+    size.setHeight(size.height() + statusBar()->height());
+    m_pDrawWidget->setFixedSize(size);
+    setFixedSize(size);
+  }
 
   QObject::connect(m_pDrawWidget, SIGNAL(BeforeEngineCreation()), this, SLOT(OnBeforeEngineCreation()));
 
@@ -125,14 +238,14 @@ MainWindow::MainWindow(Framework & framework, bool apiOpenGLES3, QString const &
 #ifndef NO_DOWNLOADER
   // Show intro dialog if necessary
   bool bShow = true;
-  string const showWelcome = "ShowWelcome";
+  std::string const showWelcome = "ShowWelcome";
   settings::TryGet(showWelcome, bShow);
 
   if (bShow)
   {
     bool bShowUpdateDialog = true;
 
-    string text;
+    std::string text;
     try
     {
       ReaderPtr<Reader> reader = GetPlatform().GetReader("welcome.html");
@@ -158,6 +271,11 @@ MainWindow::MainWindow(Framework & framework, bool apiOpenGLES3, QString const &
   m_pDrawWidget->UpdateAfterSettingsChanged();
 
   m_pDrawWidget->GetFramework().UploadUGC(nullptr /* onCompleteUploading */);
+  
+  if (RoutingSettings::IsCacheEnabled())
+    RoutingSettings::LoadSettings(m_pDrawWidget->GetFramework());
+  else
+    RoutingSettings::ResetSettings();
 }
 
 #if defined(Q_WS_WIN)
@@ -195,54 +313,11 @@ void MainWindow::LocationStateModeChanged(location::EMyPositionMode mode)
   m_pMyPositionAction->setToolTip(tr("My Position"));
 }
 
-namespace
-{
-struct button_t
-{
-  QString name;
-  char const * icon;
-  char const * slot;
-};
-
-void add_buttons(QToolBar * pBar, button_t buttons[], size_t count, QObject * pReceiver)
-{
-  for (size_t i = 0; i < count; ++i)
-  {
-    if (buttons[i].icon)
-      pBar->addAction(QIcon(buttons[i].icon), buttons[i].name, pReceiver, buttons[i].slot);
-    else
-      pBar->addSeparator();
-  }
-}
-
-void FormatMapSize(uint64_t sizeInBytes, string & units, size_t & sizeToDownload)
-{
-  int const mbInBytes = 1024 * 1024;
-  int const kbInBytes = 1024;
-  if (sizeInBytes > mbInBytes)
-  {
-    sizeToDownload = (sizeInBytes + mbInBytes - 1) / mbInBytes;
-    units = "MB";
-  }
-  else if (sizeInBytes > kbInBytes)
-  {
-    sizeToDownload = (sizeInBytes + kbInBytes -1) / kbInBytes;
-    units = "KB";
-  }
-  else
-  {
-    sizeToDownload = sizeInBytes;
-    units = "B";
-  }
-}
-}  // namespace
-
 void MainWindow::CreateNavigationBar()
 {
   QToolBar * pToolBar = new QToolBar(tr("Navigation Bar"), this);
   pToolBar->setOrientation(Qt::Vertical);
   pToolBar->setIconSize(QSize(32, 32));
-
   {
     m_pDrawWidget->BindHotkeys(*this);
 
@@ -263,10 +338,34 @@ void MainWindow::CreateNavigationBar()
   }
 
   {
-    m_trafficEnableAction = pToolBar->addAction(QIcon(":/navig64/traffic.png"), tr("Show traffic"),
-                                                this, SLOT(OnTrafficEnabled()));
-    m_trafficEnableAction->setCheckable(true);
-    m_trafficEnableAction->setChecked(m_pDrawWidget->GetFramework().LoadTrafficEnabled());
+    m_selectLayerTrafficAction = new QAction(QIcon(":/navig64/traffic.png"), tr("Traffic"), this);
+    m_selectLayerTrafficAction->setCheckable(true);
+    m_selectLayerTrafficAction->setChecked(m_pDrawWidget->GetFramework().LoadTrafficEnabled());
+    connect(m_selectLayerTrafficAction, SIGNAL(triggered()), this, SLOT(OnTrafficEnabled()));
+
+    m_selectLayerTransitAction =
+        new QAction(QIcon(":/navig64/subway.png"), tr("Public transport"), this);
+    m_selectLayerTransitAction->setCheckable(true);
+    m_selectLayerTransitAction->setChecked(
+        m_pDrawWidget->GetFramework().LoadTransitSchemeEnabled());
+    connect(m_selectLayerTransitAction, SIGNAL(triggered()), this, SLOT(OnTransitEnabled()));
+
+    m_selectLayerIsolinesAction =
+        new QAction(QIcon(":/navig64/isolines.png"), tr("Isolines"), this);
+    m_selectLayerIsolinesAction->setCheckable(true);
+    m_selectLayerIsolinesAction->setChecked(m_pDrawWidget->GetFramework().LoadIsolinesEnabled());
+    connect(m_selectLayerIsolinesAction, SIGNAL(triggered()), this, SLOT(OnIsolinesEnabled()));
+
+    auto layersMenu = new QMenu();
+    layersMenu->addAction(m_selectLayerTrafficAction);
+    layersMenu->addAction(m_selectLayerTransitAction);
+    layersMenu->addAction(m_selectLayerIsolinesAction);
+
+    m_selectLayerButton = new QToolButton();
+    m_selectLayerButton->setPopupMode(QToolButton::MenuButtonPopup);
+    m_selectLayerButton->setMenu(layersMenu);
+    m_selectLayerButton->setIcon(QIcon(":/navig64/layers.png"));
+    pToolBar->addWidget(m_selectLayerButton);
     pToolBar->addSeparator();
 
     m_bookmarksAction = pToolBar->addAction(QIcon(":/navig64/bookmark.png"), tr("Show bookmarks and tracks"),
@@ -312,6 +411,12 @@ void MainWindow::CreateNavigationBar()
     auto clearAction = pToolBar->addAction(QIcon(":/navig64/clear-route.png"), tr("Clear route"),
                                            this, SLOT(OnClearRoute()));
     clearAction->setToolTip(tr("Clear route"));
+
+    auto settingsRoutingAction = pToolBar->addAction(QIcon(":/navig64/settings-routing.png"),
+                                                     tr("Routing settings"), this,
+                                                     SLOT(OnRoutingSettings()));
+    settingsRoutingAction->setToolTip(tr("Routing settings"));
+
     pToolBar->addSeparator();
 
     m_pCreateFeatureAction = pToolBar->addAction(QIcon(":/navig64/select.png"), tr("Create Feature"),
@@ -337,11 +442,13 @@ void MainWindow::CreateNavigationBar()
                             this, SLOT(OnSwitchCityRoadsSelectionMode()));
     m_selectionCityRoadsMode->setCheckable(true);
 
-    m_clearSelection = pToolBar->addAction(QIcon(":/navig64/clear.png"), tr("Clear selection"),
-                                           this, SLOT(OnClearSelection()));
-    m_clearSelection->setToolTip(tr("Clear selection"));
+    m_selectionMwmsBordersMode =
+      pToolBar->addAction(QIcon(":/navig64/borders_selection.png"), tr("MWMs borders selection mode"),
+                          this, SLOT(OnSwitchMwmsBordersSelectionMode()));
+    m_selectionMwmsBordersMode->setCheckable(true);
 
     pToolBar->addSeparator();
+
 #endif // NOT BUILD_DESIGNER
 
     // Add search button with "checked" behavior.
@@ -350,6 +457,17 @@ void MainWindow::CreateNavigationBar()
     m_pSearchAction->setCheckable(true);
     m_pSearchAction->setToolTip(tr("Offline Search"));
     m_pSearchAction->setShortcut(QKeySequence::Find);
+
+    m_rulerAction = pToolBar->addAction(QIcon(":/navig64/ruler.png"), tr("Ruler"),
+                                        this, SLOT(OnRulerEnabled()));
+    m_rulerAction->setCheckable(true);
+    m_rulerAction->setChecked(false);
+
+    pToolBar->addSeparator();
+
+    m_clearSelection = pToolBar->addAction(QIcon(":/navig64/clear.png"), tr("Clear selection"),
+                                           this, SLOT(OnClearSelection()));
+    m_clearSelection->setToolTip(tr("Clear selection"));
 
     pToolBar->addSeparator();
 
@@ -420,7 +538,6 @@ void MainWindow::CreateNavigationBar()
   }
 
   qt::common::ScaleSlider::Embed(Qt::Vertical, *pToolBar, *m_pDrawWidget);
-
 #ifndef NO_DOWNLOADER
   {
     // add mainframe actions
@@ -432,13 +549,15 @@ void MainWindow::CreateNavigationBar()
   }
 #endif // NO_DOWNLOADER
 
+  if (m_screenshotMode)
+    pToolBar->setVisible(false);
+
   addToolBar(Qt::RightToolBarArea, pToolBar);
 }
 
 void MainWindow::CreateCountryStatusControls()
 {
   QHBoxLayout * mainLayout = new QHBoxLayout();
-
   m_downloadButton = new QPushButton("Download");
   mainLayout->addWidget(m_downloadButton, 0, Qt::AlignHCenter);
   m_downloadButton->setVisible(false);
@@ -455,10 +574,10 @@ void MainWindow::CreateCountryStatusControls()
 
   m_pDrawWidget->setLayout(mainLayout);
 
-  m_pDrawWidget->SetCurrentCountryChangedListener([this](storage::TCountryId const & countryId,
-                                                         string const & countryName, storage::Status status,
-                                                         uint64_t sizeInBytes, uint8_t progress)
-  {
+  m_pDrawWidget->SetCurrentCountryChangedListener([this](storage::CountryId const & countryId,
+                                                         std::string const & countryName,
+                                                         storage::Status status,
+                                                         uint64_t sizeInBytes, uint8_t progress) {
     m_lastCountry = countryId;
     if (m_lastCountry.empty() || status == storage::Status::EOnDisk || status == storage::Status::EOnDiskOutOfDate)
     {
@@ -474,7 +593,7 @@ void MainWindow::CreateCountryStatusControls()
         m_retryButton->setVisible(false);
         m_downloadingStatusLabel->setVisible(false);
 
-        string units;
+        std::string units;
         size_t sizeToDownload = 0;
         FormatMapSize(sizeInBytes, units, sizeToDownload);
         std::stringstream str;
@@ -564,34 +683,53 @@ void MainWindow::OnCreateFeatureClicked()
 void MainWindow::OnSwitchSelectionMode()
 {
   m_selectionCityBoundariesMode->setChecked(false);
-  m_pDrawWidget->SetCityBoundariesSelectionMode(false);
-
   m_selectionCityRoadsMode->setChecked(false);
-  m_pDrawWidget->SetCityRoadsSelectionMode(false);
+  m_selectionMwmsBordersMode->setChecked(false);
 
-  m_pDrawWidget->SetSelectionMode(m_selectionMode->isChecked());
+  m_pDrawWidget->SetSelectionMode(DrawWidget::SelectionMode::Features);
 }
 
 void MainWindow::OnSwitchCityBoundariesSelectionMode()
 {
   m_selectionMode->setChecked(false);
-  m_pDrawWidget->SetSelectionMode(false);
-
   m_selectionCityRoadsMode->setChecked(false);
-  m_pDrawWidget->SetCityRoadsSelectionMode(false);
+  m_selectionMwmsBordersMode->setChecked(false);
 
-  m_pDrawWidget->SetCityBoundariesSelectionMode(m_selectionCityBoundariesMode->isChecked());
+  m_pDrawWidget->SetSelectionMode(DrawWidget::SelectionMode::CityBoundaries);
 }
 
 void MainWindow::OnSwitchCityRoadsSelectionMode()
 {
   m_selectionMode->setChecked(false);
-  m_pDrawWidget->SetSelectionMode(false);
-
   m_selectionCityBoundariesMode->setChecked(false);
-  m_pDrawWidget->SetCityBoundariesSelectionMode(false);
+  m_selectionMwmsBordersMode->setChecked(false);
 
-  m_pDrawWidget->SetCityRoadsSelectionMode(m_selectionCityRoadsMode->isChecked());
+  m_pDrawWidget->SetSelectionMode(DrawWidget::SelectionMode::CityRoads);
+}
+
+void MainWindow::OnSwitchMwmsBordersSelectionMode()
+{
+  MwmsBordersSelection dlg(this);
+  auto const response = dlg.ShowModal();
+  if (response == MwmsBordersSelection::Response::Cancelled)
+  {
+    if (m_pDrawWidget->SelectionModeIsSet() &&
+        IsMwmsBordersSelectionMode(m_pDrawWidget->GetSelectionMode()))
+    {
+      m_pDrawWidget->DropSelectionMode();
+    }
+
+    m_selectionMwmsBordersMode->setChecked(false);
+    return;
+  }
+
+  m_selectionMode->setChecked(false);
+  m_selectionCityBoundariesMode->setChecked(false);
+  m_selectionCityRoadsMode->setChecked(false);
+
+  m_selectionMwmsBordersMode->setChecked(true);
+
+  m_pDrawWidget->SetSelectionMode(ConvertFromMwmsBordersSelection(response));
 }
 
 void MainWindow::OnClearSelection()
@@ -615,7 +753,7 @@ void MainWindow::OnLoginMenuItem()
 
 void MainWindow::OnUploadEditsMenuItem()
 {
-  string key, secret;
+  std::string key, secret;
   if (!settings::Get(kTokenKeySetting, key) || key.empty() ||
       !settings::Get(kTokenSecretSetting, secret) || secret.empty())
   {
@@ -652,7 +790,7 @@ void MainWindow::OnBuildStyle()
   try
   {
     build_style::BuildAndApply(m_mapcssFilePath);
-    // m_pDrawWidget->RefreshDrawingRules();
+    m_pDrawWidget->RefreshDrawingRules();
 
     bool enabled;
     if (!settings::Get(kEnabledAutoRegenGeomIndex, enabled))
@@ -756,7 +894,7 @@ void MainWindow::OnBuildPhonePackage()
     QString const targetDir = QFileDialog::getExistingDirectory(nullptr, "Choose output directory");
     if (targetDir.isEmpty())
       return;
-    auto outDir = QDir(JoinFoldersToPath({targetDir, kStylesFolder}));
+    auto outDir = QDir(JoinPathQt({targetDir, kStylesFolder}));
     if (outDir.exists())
     {
       QMessageBox msgBox;
@@ -769,13 +907,13 @@ void MainWindow::OnBuildPhonePackage()
         throw std::runtime_error(std::string("Target directory exists: ") + outDir.absolutePath().toStdString());
     }
 
-    QString const stylesDir = JoinFoldersToPath({m_mapcssFilePath, "..", "..", ".."});
-    if (!QDir(JoinFoldersToPath({stylesDir, kClearStyleFolder})).exists())
+    QString const stylesDir = JoinPathQt({m_mapcssFilePath, "..", "..", ".."});
+    if (!QDir(JoinPathQt({stylesDir, kClearStyleFolder})).exists())
       throw std::runtime_error(std::string("Styles folder is not found in ") + stylesDir.toStdString());
 
     QString text = build_style::RunBuildingPhonePack(stylesDir, targetDir);
     text.append("\nMobile device style package is in the directory: ");
-    text.append(JoinFoldersToPath({targetDir, kStylesFolder}));
+    text.append(JoinPathQt({targetDir, kStylesFolder}));
     text.append(". Copy it to your mobile device.\n");
     InfoDialog dlg(QString("Building phone pack"), text, nullptr);
     dlg.exec();
@@ -847,11 +985,66 @@ void MainWindow::OnRetryDownloadClicked()
   m_pDrawWidget->RetryToDownloadCountry(m_lastCountry);
 }
 
+void MainWindow::SetEnabledTraffic(bool enable)
+{
+  m_selectLayerTrafficAction->setChecked(enable);
+  m_pDrawWidget->GetFramework().GetTrafficManager().SetEnabled(enable);
+  m_pDrawWidget->GetFramework().SaveTrafficEnabled(enable);
+}
+
+void MainWindow::SetEnabledTransit(bool enable)
+{
+  m_selectLayerTransitAction->setChecked(enable);
+  m_pDrawWidget->GetFramework().GetTransitManager().EnableTransitSchemeMode(enable);
+  m_pDrawWidget->GetFramework().SaveTransitSchemeEnabled(enable);
+}
+
+void MainWindow::SetEnabledIsolines(bool enable)
+{
+  m_selectLayerIsolinesAction->setChecked(enable);
+  m_pDrawWidget->GetFramework().GetIsolinesManager().SetEnabled(enable);
+  m_pDrawWidget->GetFramework().SaveIsolonesEnabled(enable);
+}
+
 void MainWindow::OnTrafficEnabled()
 {
-  bool const enabled = m_trafficEnableAction->isChecked();
-  m_pDrawWidget->GetFramework().GetTrafficManager().SetEnabled(enabled);
-  m_pDrawWidget->GetFramework().SaveTrafficEnabled(enabled);
+  bool const enabled = m_selectLayerTrafficAction->isChecked();
+  SetEnabledTraffic(enabled);
+
+  if (enabled)
+  {
+    SetEnabledTransit(false);
+    SetEnabledIsolines(false);
+  }
+}
+
+void MainWindow::OnTransitEnabled()
+{
+  bool const enabled = m_selectLayerTransitAction->isChecked();
+  SetEnabledTransit(enabled);
+
+  if (enabled)
+  {
+    SetEnabledIsolines(false);
+    SetEnabledTraffic(false);
+  }
+}
+
+void MainWindow::OnIsolinesEnabled()
+{
+  bool const enabled = m_selectLayerIsolinesAction->isChecked();
+  SetEnabledIsolines(enabled);
+
+  if (enabled)
+  {
+    SetEnabledTraffic(false);
+    SetEnabledTransit(false);
+  }
+}
+
+void MainWindow::OnRulerEnabled()
+{
+  m_pDrawWidget->SetRuler(m_rulerAction->isChecked());
 }
 
 void MainWindow::OnStartPointSelected()
@@ -880,6 +1073,12 @@ void MainWindow::OnFollowRoute()
 void MainWindow::OnClearRoute()
 {
   m_pDrawWidget->ClearRoute();
+}
+
+void MainWindow::OnRoutingSettings()
+{
+  RoutingSettings dlg(this, m_pDrawWidget->GetFramework());
+  dlg.ShowModal();
 }
 
 void MainWindow::OnBookmarksAction()

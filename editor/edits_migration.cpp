@@ -10,48 +10,48 @@
 
 #include "base/logging.hpp"
 
-#include "std/algorithm.hpp"
-#include "std/unique_ptr.hpp"
+#include <optional>
 
 namespace editor
 {
 FeatureID MigrateNodeFeatureIndex(osm::Editor::ForEachFeaturesNearByFn & forEach,
                                   XMLFeature const & xml,
                                   FeatureStatus const featureStatus,
-                                  TGenerateIDFn const & generateID)
+                                  GenerateIDFn const & generateID)
 {
-  unique_ptr<FeatureType> feature;
-  auto count = 0;
-  forEach(
-      [&feature, &count](FeatureType const & ft)
-      {
-        if (ft.GetFeatureType() != feature::GEOM_POINT)
-          return;
-        // TODO(mgsergio): Check that ft and xml correspond to the same feature.
-        feature = make_unique<FeatureType>(ft);
-        ++count;
-      },
-      MercatorBounds::FromLatLon(xml.GetCenter()));
-
-  if (!feature && featureStatus != FeatureStatus::Created)
-    MYTHROW(MigrationError, ("No pointed features returned."));
   if (featureStatus == FeatureStatus::Created)
     return generateID();
+
+  FeatureID fid;
+  auto count = 0;
+  forEach(
+      [&fid, &count](FeatureType const & ft) {
+        if (ft.GetGeomType() != feature::GeomType::Point)
+          return;
+        // TODO(mgsergio): Check that ft and xml correspond to the same feature.
+        fid = ft.GetID();
+        ++count;
+      },
+      mercator::FromLatLon(xml.GetCenter()));
+
+  if (count == 0)
+    MYTHROW(MigrationError, ("No pointed features returned."));
 
   if (count > 1)
   {
     LOG(LWARNING,
-        (count, "features returned for point", MercatorBounds::FromLatLon(xml.GetCenter())));
+        (count, "features returned for point", mercator::FromLatLon(xml.GetCenter())));
   }
-  return feature->GetID();
+
+  return fid;
 }
 
 FeatureID MigrateWayOrRelatonFeatureIndex(
     osm::Editor::ForEachFeaturesNearByFn & forEach, XMLFeature const & xml,
     FeatureStatus const /* Unused for now (we don't create/delete area features)*/,
-    TGenerateIDFn const & /*Unused for the same reason*/)
+    GenerateIDFn const & /*Unused for the same reason*/)
 {
-  unique_ptr<FeatureType> feature;
+  std::optional<FeatureID> fid;
   auto bestScore = 0.6;  // initial score is used as a threshold.
   auto geometry = xml.GetGeometry();
   auto count = 0;
@@ -63,11 +63,11 @@ FeatureID MigrateWayOrRelatonFeatureIndex(
   auto const someFeaturePoint = geometry[0];
 
   forEach(
-      [&feature, &geometry, &count, &bestScore](FeatureType & ft) {
-        if (ft.GetFeatureType() != feature::GEOM_AREA)
+      [&fid, &geometry, &count, &bestScore](FeatureType & ft) {
+        if (ft.GetGeomType() != feature::GeomType::Area)
           return;
         ++count;
-        auto ftGeometry = ft.GetTriangesAsPoints(FeatureType::BEST_GEOMETRY);
+        auto ftGeometry = ft.GetTrianglesAsPoints(FeatureType::BEST_GEOMETRY);
 
         double score = 0.0;
         try
@@ -86,7 +86,7 @@ FeatureID MigrateWayOrRelatonFeatureIndex(
         if (score > bestScore)
         {
           bestScore = score;
-          feature = make_unique<FeatureType>(ft);
+          fid = ft.GetID();
         }
       },
       someFeaturePoint);
@@ -94,18 +94,18 @@ FeatureID MigrateWayOrRelatonFeatureIndex(
   if (count == 0)
     MYTHROW(MigrationError, ("No ways returned for point", someFeaturePoint));
 
-  if (!feature)
+  if (!fid)
   {
     MYTHROW(MigrationError,
-            ("None of returned ways suffice. Possibly, the feature have been deleted."));
+            ("None of returned ways suffice. Possibly, the feature has been deleted."));
   }
-  return feature->GetID();
+  return *fid;
 }
 
 FeatureID MigrateFeatureIndex(osm::Editor::ForEachFeaturesNearByFn & forEach,
                               XMLFeature const & xml,
                               FeatureStatus const featureStatus,
-                              TGenerateIDFn const & generateID)
+                              GenerateIDFn const & generateID)
 {
   switch (xml.GetType())
   {

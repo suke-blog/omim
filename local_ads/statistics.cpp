@@ -1,4 +1,5 @@
 #include "local_ads/statistics.hpp"
+
 #include "local_ads/config.hpp"
 #include "local_ads/file_helpers.hpp"
 
@@ -6,11 +7,9 @@
 #include "platform/network_policy.hpp"
 #include "platform/platform.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/file_writer.hpp"
 #include "coding/point_coding.hpp"
-#include "coding/sha1.hpp"
-#include "coding/url_encode.hpp"
+#include "coding/url.hpp"
 #include "coding/write_to_sink.hpp"
 #include "coding/zlib.hpp"
 
@@ -18,17 +17,19 @@
 
 #include "base/assert.hpp"
 #include "base/exception.hpp"
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 #include "base/string_utils.hpp"
 
-#include "3party/jansson/myjansson.hpp"
+#include "private.h"
 
 #include <functional>
 #include <memory>
 #include <sstream>
 #include <utility>
 
-#include "private.h"
+#include "3party/Alohalytics/src/alohalytics.h"
+#include "3party/jansson/myjansson.hpp"
 
 namespace
 {
@@ -128,14 +129,9 @@ local_ads::Timestamp GetMaxTimestamp(std::list<local_ads::Event> const & events,
   return maxTimestamp;
 }
 
-std::string GetClientIdHash()
-{
-  return coding::SHA1::CalculateBase64ForString(GetPlatform().UniqueClientId());
-}
-
 std::string GetPath(std::string const & fileName)
 {
-  return base::JoinFoldersToPath({GetPlatform().SettingsDir(), kStatisticsFolderName}, fileName);
+  return base::JoinPath(GetPlatform().SettingsDir(), kStatisticsFolderName, fileName);
 }
 
 std::string GetPath(local_ads::Event const & event)
@@ -172,8 +168,7 @@ std::list<local_ads::Event> ReadEvents(std::string const & fileName)
       result.emplace_back(static_cast<local_ads::EventType>(data.m_eventType), mwmVersion, countryId,
                           data.m_featureIndex, data.m_zoomLevel,
                           baseTimestamp + std::chrono::seconds(data.m_seconds),
-                          MercatorBounds::YToLat(mercatorPt.y),
-                          MercatorBounds::XToLon(mercatorPt.x), data.m_accuracy);
+                          mercator::YToLat(mercatorPt.y), mercator::XToLon(mercatorPt.x), data.m_accuracy);
     });
   }
   catch (Reader::Exception const & ex)
@@ -190,9 +185,9 @@ std::string MakeRemoteURL(std::string const & userId, std::string const & name, 
 
   std::ostringstream ss;
   ss << kStatisticsServer << "/";
-  ss << UrlEncode(userId) << "/";
+  ss << url::UrlEncode(userId) << "/";
   ss << version << "/";
-  ss << UrlEncode(name);
+  ss << url::UrlEncode(name);
   return ss.str();
 }
   
@@ -244,7 +239,7 @@ bool CanUpload()
 namespace local_ads
 {
 Statistics::Statistics()
-  : m_userId(GetClientIdHash())
+  : m_userId(GetPlatform().UniqueIdHash())
 {}
   
 void Statistics::Startup()
@@ -319,7 +314,11 @@ std::list<Event> Statistics::WriteEvents(std::list<Event> & events, std::string 
       }
 
       if (writer == nullptr || writer->GetName() != metadata.m_fileName)
-        writer = std::make_unique<FileWriter>(metadata.m_fileName, FileWriter::OP_APPEND);
+      {
+        writer = std::make_unique<FileWriter>(
+            metadata.m_fileName,
+            needWriteMetadata ? FileWriter::OP_WRITE_TRUNCATE : FileWriter::OP_APPEND);
+      }
 
       if (needWriteMetadata)
         WriteMetadata(*writer, event.m_countryId, event.m_mwmVersion, metadata.m_timestamp);
@@ -342,7 +341,7 @@ std::list<Event> Statistics::WriteEvents(std::list<Event> & events, std::string 
       data.m_seconds = static_cast<uint32_t>(s);
       data.m_zoomLevel = event.m_zoomLevel;
       data.m_eventType = static_cast<uint8_t>(event.m_type);
-      auto const mercatorPt = MercatorBounds::FromLatLon(event.m_latitude, event.m_longitude);
+      auto const mercatorPt = mercator::FromLatLon(event.m_latitude, event.m_longitude);
       data.m_mercator = PointToInt64Obsolete(mercatorPt, kPointCoordBits);
       data.m_accuracy = event.m_accuracyInMeters;
       WritePackedData(*writer, std::move(data));
@@ -493,6 +492,19 @@ void Statistics::ExtractMetadata(std::string const & fileName)
       ReaderSource<FileReader> src(reader);
       ReadMetadata(src, countryId, mwmVersion, baseTimestamp);
     }
+
+    auto const expectedFileName =
+        GetPath(countryId + "_" + strings::to_string(mwmVersion) + kStatisticsExt);
+
+    if (fileName != expectedFileName)
+    {
+      alohalytics::TStringMap const info = {
+          {"expectedFilename", expectedFileName},
+          {"actualFilename", fileName},
+      };
+      alohalytics::LogEvent("localAdsBadFile", info);
+    }
+
     MetadataKey const key = std::make_pair(countryId, mwmVersion);
     auto it = m_metadataCache.find(key);
     if (it != m_metadataCache.end())

@@ -25,6 +25,15 @@
     android:visibility="invisible"/>
 
   <ImageButton
+    android:id="@+id/isolines"
+    style="@style/MwmWidget.MapButton.Traffic"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentTop="true"
+    android:background="?nav_bg_isolines"
+    android:visibility="invisible"/>
+
+  <ImageButton
     android:id="@+id/nav_zoom_in"
     style="@style/MwmWidget.MapButton"
     android:layout_above="@+id/nav_zoom_out"
@@ -52,4 +61,28 @@
     android:background="?nav_background"
     android:contentDescription="@string/core_my_position"
     android:tint="@null"/>
+
+  <FrameLayout
+    android:id="@+id/subs_screen_btn_container"
+    android:layout_alignBottom="@id/nav_zoom_out"
+    android:layout_centerVertical="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+      android:id="@+id/dog_btn_bg"
+      android:layout_height="wrap_content"
+      android:layout_width="wrap_content"
+      android:layout_gravity="center"
+      android:src="?attr/bgDogBtn"/>
+
+    <ImageView
+      android:id="@+id/onboarding_btn"
+      android:layout_height="wrap_content"
+      android:layout_width="wrap_content"
+      android:layout_gravity="center"
+      android:src="@drawable/ic_dog"/>
+  </FrameLayout>
 </RelativeLayout>

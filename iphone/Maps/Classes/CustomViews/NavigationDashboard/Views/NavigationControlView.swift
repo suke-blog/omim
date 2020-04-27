@@ -1,5 +1,5 @@
 @objc(MWMNavigationControlView)
-final class NavigationControlView: SolidTouchView, MWMTextToSpeechObserver, MWMTrafficManagerObserver {
+final class NavigationControlView: SolidTouchView, MWMTextToSpeechObserver, MapOverlayManagerObserver {
   @IBOutlet private weak var distanceLabel: UILabel!
   @IBOutlet private weak var distanceLegendLabel: UILabel!
   @IBOutlet private weak var distanceWithLegendLabel: UILabel!
@@ -120,22 +120,22 @@ final class NavigationControlView: SolidTouchView, MWMTextToSpeechObserver, MWMT
     })
   }
 
-  override func mwm_refreshUI() {
-    if isVisible {
-      super.mwm_refreshUI()
-    }
-  }
-
   override func awakeFromNib() {
     super.awakeFromNib()
     translatesAutoresizingMaskIntoConstraints = false
 
+    updateLegendSize()
+
     MWMTextToSpeech.add(self)
-    MWMTrafficManager.add(self)
+    MapOverlayManager.add(self)
   }
 
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
     super.traitCollectionDidChange(previousTraitCollection)
+    updateLegendSize()
+  }
+
+  func updateLegendSize() {
     let isCompact = traitCollection.verticalSizeClass == .compact
     distanceLabel.isHidden = isCompact
     distanceLegendLabel.isHidden = isCompact
@@ -152,15 +152,15 @@ final class NavigationControlView: SolidTouchView, MWMTextToSpeechObserver, MWMT
     navigationInfo = info
     guard !MWMRouter.isTaxi() else { return }
 
-    let routingNumberAttributes: [NSAttributedStringKey: Any] =
+    let routingNumberAttributes: [NSAttributedString.Key: Any] =
       [
-        NSAttributedStringKey.foregroundColor: UIColor.blackPrimaryText(),
-        NSAttributedStringKey.font: UIFont.bold24(),
+        NSAttributedString.Key.foregroundColor: UIColor.blackPrimaryText(),
+        NSAttributedString.Key.font: UIFont.bold24(),
       ]
-    let routingLegendAttributes: [NSAttributedStringKey: Any] =
+    let routingLegendAttributes: [NSAttributedString.Key: Any] =
       [
-        NSAttributedStringKey.foregroundColor: UIColor.blackSecondaryText(),
-        NSAttributedStringKey.font: UIFont.bold14(),
+        NSAttributedString.Key.foregroundColor: UIColor.blackSecondaryText(),
+        NSAttributedString.Key.font: UIFont.bold14(),
       ]
 
     if timePageControl.currentPage == 0 {
@@ -270,7 +270,7 @@ final class NavigationControlView: SolidTouchView, MWMTextToSpeechObserver, MWMT
     guard MWMRouter.isRoutingActive() else { return }
     let isPedestrianRouting = MWMRouter.type() == .pedestrian
     trafficButton.isHidden = isPedestrianRouting
-    trafficButton.isSelected = MWMTrafficManager.trafficState() != .disabled
+    trafficButton.isSelected = MapOverlayManager.trafficState() != .disabled
     refreshDiminishTimer()
   }
 

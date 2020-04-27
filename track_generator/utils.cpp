@@ -1,21 +1,24 @@
 #include "track_generator/utils.hpp"
 
-#include "kml/serdes.hpp"
-#include "kml/type_utils.hpp"
-#include "kml/types.hpp"
+#include "routing/routes_builder/routes_builder.hpp"
 
 #include "routing/base/followed_polyline.hpp"
 #include "routing/route.hpp"
 #include "routing/routing_callbacks.hpp"
-#include "routing/routing_quality/utils.hpp"
 
-#include "coding/file_name_utils.hpp"
-#include "coding/file_reader.hpp"
-#include "coding/file_writer.hpp"
+#include "kml/serdes.hpp"
+#include "kml/type_utils.hpp"
+#include "kml/types.hpp"
 
 #include "platform/platform.hpp"
 
+#include "coding/file_reader.hpp"
+#include "coding/file_writer.hpp"
+
+#include "geometry/point_with_altitude.hpp"
+
 #include "base/assert.hpp"
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 
 #include <cstdint>
@@ -26,12 +29,10 @@ using namespace std;
 
 namespace
 {
-vector<m2::PointD> GetTrackPoints(routing::Route && route)
+vector<geometry::PointWithAltitude> GetTrackPoints(std::vector<m2::PointD> const & routePoints)
 {
-  CHECK(route.IsValid(), ());
-  auto const & segments = route.GetRouteSegments();
-  auto const size = segments.size();
-  vector<m2::PointD> result;
+  auto const size = routePoints.size();
+  vector<geometry::PointWithAltitude> result;
   result.reserve(size);
 
   for (size_t i = 0; i < size;)
@@ -39,7 +40,7 @@ vector<m2::PointD> GetTrackPoints(routing::Route && route)
     size_t j = i + 1;
     size_t consecutiveNumber = 1;
     /// Check number of consecutive junctions with the same point.
-    while (j < size && segments[j].GetJunction().GetPoint() == segments[i].GetJunction().GetPoint())
+    while (j < size && routePoints[j] == routePoints[i])
     {
       ++j;
       ++consecutiveNumber;
@@ -66,7 +67,7 @@ vector<m2::PointD> GetTrackPoints(routing::Route && route)
       ///           *
 
       /// Check if there are two perpendicular fake segments and get rid from both of them.
-      if (!result.empty() && result.back() == segments[j].GetJunction().GetPoint())
+      if (!result.empty() && result.back().GetPoint() == routePoints[j])
       {
         result.pop_back();
         ++j;
@@ -74,7 +75,7 @@ vector<m2::PointD> GetTrackPoints(routing::Route && route)
     }
     else
     {
-      result.emplace_back(segments[i].GetJunction().GetPoint());
+      result.emplace_back(routePoints[i], geometry::kDefaultAltitudeMeters);
     }
 
     i = j;
@@ -95,6 +96,8 @@ void GenerateTracks(string const & inputDir, string const & outputDir, routing::
   Platform::FilesList files;
   Platform::GetFilesByExt(inputDir, ".kml", files);
   CHECK(!files.empty(), ("Input directory doesn't contain kmls."));
+
+  auto & routesBuilder = routing::routes_builder::RoutesBuilder::GetSimpleRoutesBuilder();
 
   size_t numberOfTracks = 0;
   size_t numberOfNotConverted = 0;
@@ -126,8 +129,14 @@ void GenerateTracks(string const & inputDir, string const & outputDir, routing::
     numberOfTracks += data.m_tracksData.size();
     for (auto & track : data.m_tracksData)
     {
-      auto waypoints = track.m_points;
-      auto result = routing_quality::GetRoute(move(waypoints), type);
+      std::vector<m2::PointD> waypoints;
+      waypoints.reserve(track.m_pointsWithAltitudes.size());
+      for (auto const & pt : track.m_pointsWithAltitudes)
+        waypoints.push_back(pt.GetPoint());
+
+      routing::routes_builder::RoutesBuilder::Params params(type, move(waypoints));
+
+      auto result = routesBuilder.ProcessTask(params);
       if (result.m_code != routing::RouterResultCode::NoError)
       {
         LOG(LINFO, ("Can't convert track", track.m_id, "from file:", file, "Error:", result.m_code));
@@ -135,7 +144,8 @@ void GenerateTracks(string const & inputDir, string const & outputDir, routing::
         continue;
       }
 
-      track.m_points = GetTrackPoints(move(result.m_route));
+      track.m_pointsWithAltitudes =
+          GetTrackPoints(result.GetRoutes().back().m_followedPolyline.GetPolyline().GetPoints());
     }
 
     try

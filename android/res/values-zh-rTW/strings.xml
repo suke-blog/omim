@@ -4,8 +4,6 @@
 <!-- Language: zh-Hant -->
 <resources>
 	<!-- SECTION: Strings -->
-	<!-- About button text (should be short) -->
-	<string name="about">關於</string>
 	<!-- Button text (should be short) -->
 	<string name="back">返回</string>
 	<!-- Button text (should be short) -->
@@ -48,7 +46,6 @@
 	<string name="miles">英哩</string>
 	<!-- View and button titles for accessibility -->
 	<string name="core_my_position">我的位置</string>
-	<string name="ok">確定</string>
 	<!-- Settings/Downloader - No free space dialog message -->
 	<string name="free_disk_space_for_country_x">如要下載%s ，請先釋放一些空間！</string>
 	<!-- Leave Review dialog - Not now button (remind me later) -->
@@ -67,8 +64,6 @@
 	<string name="touch_to_download">輕觸以下載</string>
 	<!-- Settings/Downloader - 3G download warning dialog confirm button -->
 	<string name="use_cellular_data">是</string>
-	<!-- Settings/Downloader - No internet connection dialog message -->
-	<string name="use_wifi_recommendation_text">我們建議透過 WiFi 連線來下載較大的地圖</string>
 	<!-- Choose measurement on first launch alert - title -->
 	<string name="which_measurement_system">您偏好哪種度量單位系統？</string>
 	<!-- Location services are disabled by user alert - message -->
@@ -256,8 +251,6 @@
 	<string name="my_position_share_sms">嘿，在 MAPS.ME 查看我的目前位置吧！ %1$s 或%2$s 沒安裝離線地圖？在此下載: http://maps.me/get</string>
 	<!-- Subject for emailed bookmark -->
 	<string name="bookmark_share_email_subject">嘿，看看我在 MAPS.ME 地圖上的圖釘！</string>
-	<!-- Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me -->
-	<string name="bookmark_share_email">嗨，\n\n我在 MAPS.ME 世界離線地圖上標記了%1$s。點擊此連結 %2$s 或此連結 %3$s 來察看地圖上的位置。\n\n謝謝。</string>
 	<!-- Subject for emailed position -->
 	<string name="my_position_share_email_subject">嗨，到 MAPS.ME 地圖查看我的目前位置！</string>
 	<!-- Share my position using EMail, %1$@ is ge0:// and %2$@ is http://ge0.me link WITHOUT NAME -->
@@ -366,12 +359,6 @@
 	<string name="route">路線</string>
 	<!-- category title -->
 	<string name="routes">路線</string>
-	<!-- Show on first launch. -->
-	<string name="maps_licence_info">此應用程式使用從 OpenStreetMap 專案擷取之地理數據（包括地圖、商家資訊、興趣點、國家和地區邊界等）。我們不保證 OpenStreetMap 數據的一致性、準確性、完整性、或適用性。</string>
-	<!-- Show on first launch. -->
-	<string name="agree">我同意</string>
-	<!-- Show on first launch -->
-	<string name="disagree">我不同意</string>
 	<!-- text of notification -->
 	<string name="download_map_notification">下載您所在地方的地圖</string>
 	<!-- text of notification -->
@@ -566,6 +553,22 @@
 	<string name="brown">棕色</string>
 	<!-- pink color -->
 	<string name="pink">粉色</string>
+	<!-- deep purple color -->
+	<string name="deep_purple">暗紫色</string>
+	<!-- light blue color -->
+	<string name="light_blue">天藍色</string>
+	<!-- cyan color -->
+	<string name="cyan">藍綠色</string>
+	<!-- teal color -->
+	<string name="teal">碧綠色</string>
+	<!-- lime color -->
+	<string name="lime">青檸</string>
+	<!-- deep orange color -->
+	<string name="deep_orange">深橘色</string>
+	<!-- gray color -->
+	<string name="gray">灰色</string>
+	<!-- blue gray color -->
+	<string name="blue_gray">藍灰色</string>
 	<!-- Wi-Fi available -->
 	<string name="WiFi_available">是</string>
 
@@ -801,8 +804,6 @@
 	<string name="onboarding_location_message">如要使用導航和其他功能，我們需要能獲取您的地理位置.</string>
 	<string name="onboarding_permissions_title">允許 MAPS.ME 存儲和定位的權限</string>
 	<string name="onboarding_permissions_message">所以，您可以下載地圖，查看您附近的地點和交通，以及使用導航服務。</string>
-	<string name="onboarding_welcome_title">歡迎來到 MAPS.ME</string>
-	<string name="onboarding_welcome_first_subtitle">免費、快速、詳盡又全面的地圖，提供逐向導航服務。</string>
 	<string name="onboarding_welcome_second_subtitle">啟用本應用程式，即表示您同意 &lt;a href="%1$s">服務條款&lt;/a>和 &lt;a href="%2$s">隱私權原則&lt;/a>。</string>
 	<string name="dialog_incorrect_feature_position">改變位置</string>
 	<string name="message_invalid_feature_position">物件無法設置在這裡</string>
@@ -884,6 +885,7 @@
 	<string name="minute">分鐘</string>
 	<string name="placepage_place_description">說明</string>
 	<string name="placepage_more_button">更多</string>
+	<string name="placepage_more_reviews_button">更多評論</string>
 	<string name="book_button">預約</string>
 	<string name="placepage_call_button">呼叫</string>
 	<string name="placepage_edit_bookmark_button">編輯書籤</string>
@@ -1037,8 +1039,6 @@
 	<string name="banner_geerbest_message">立即搜尋超過 50,000 樣低價品項。</string>
 	<string name="banner_rentalcars_title">線上租車</string>
 	<string name="banner_rentalcars_message">營運 49,000 多個租車地點的 800 家租車公司。</string>
-	<string name="banner_viator_title">線上行程搜尋</string>
-	<string name="banner_viator_message">搜尋全世界 50,000 多個行程。</string>
 	<!-- december -->
 	<string name="whatsnew_traffic">36 個國家的交通資料</string>
 	<!-- december -->
@@ -1080,8 +1080,6 @@
 	<string name="whatsnew_smaller_mwm_message">Maps 所需存儲空間減少 20%。</string>
 	<string name="whatsnew_waypoints_title">在路線中新增路徑點</string>
 	<string name="whatsnew_waypoints_message">點按地點，即可向您的路線新增路徑點。</string>
-	<string name="whatsnew_viator_title">預訂行程</string>
-	<string name="whatsnew_viator_message">選擇全世界旅遊城市的熱門行程。</string>
 	<string name="whatsnew_driving_style_title">新的駕駛地圖模式</string>
 	<string name="whatsnew_driving_style_message">汽車導航模式更好用。</string>
 	<string name="more_on_bookingcom">Booking.com 上的更多資訊</string>
@@ -1138,7 +1136,6 @@
 	<string name="settings_card_memory">卡記憶體</string>
 	<string name="settings_storage_available">%s 可用</string>
 	<string name="toast_location_permission_denied">應用程式地點存取權限被拒絕</string>
-	<string name="place_page_viator_title">景點和行程</string>
 	<string name="button_use">使用</string>
 	<string name="planning_route_manage_route">管理路線</string>
 	<string name="button_plan">計畫</string>
@@ -1153,8 +1150,6 @@
 	<string name="add_my_position">新增我的位置</string>
 	<string name="choose_start_point">選擇起點</string>
 	<string name="choose_destination">選擇目的地</string>
-	<string name="preloader_viator_title">探索行程與特殊活動</string>
-	<string name="preloader_viator_message">行程、活動、觀光等等</string>
 	<string name="preloader_viator_button">進一步了解</string>
 	<string name="whats_new_title_route">改善自行車路線與行人路線</string>
 	<string name="whats_new_message_route">我們修正了錯誤，讓路線產生的速度加快好幾倍，並新增了中途點</string>
@@ -1165,9 +1160,6 @@
 	<string name="placepage_no_reviews">無評論</string>
 	<string name="placepage_reviewed">您已評論過這個地方</string>
 	<string name="placepage_summary_rating">評分摘要</string>
-	<plurals name="placepage_summary_rating_description">
-	  <item quantity="other">根據 %d 則評論</item>
-	</plurals>
 	<string name="placepage_rate_comment">點選以為這個地點評分或評論。</string>
 	<string name="placepage_rate_horrible">很糟</string>
 	<string name="placepage_rate_bad">不好</string>
@@ -1210,8 +1202,6 @@
 	<string name="discovery_button_subtitle_attractions">景點</string>
 	<string name="discovery_button_subtitle_eat_and_drink">餐飲</string>
 	<string name="discovery_button_subtitle_local_guides">本地指南</string>
-	<string name="discovery_button_viator_offline_title">探索行程與特殊活動</string>
-	<string name="discovery_button_viator_offline_message">旅行、活動、觀光及其他。</string>
 	<string name="discovery_button_viator_error_title">載入數據時，發生錯誤</string>
 	<string name="discovery_button_other_error_message">載入數據時，發生錯誤</string>
 	<string name="discovery_button_other_loading_message">正在載入數據</string>
@@ -1251,12 +1241,10 @@
 	<string name="downloader_percent">%1$s (%2$s，共%3$s)</string>
 	<string name="downloader_process">下載 %s 中……</string>
 	<string name="downloader_applying">應用 %s 中……</string>
-	<string name="transit_not_found">本區域還沒有交通導航</string>
 	<string name="whats_new_title_hotel_filter">有新的賓館篩選！</string>
 	<string name="whats_new_message_hotel_filter">預訂在您所選日期有空的賓館！用入住和離店篩選</string>
 	<string name="whats_new_title_ugc_travel">和其他旅客分享您的體驗！</string>
 	<string name="whats_new_message_ugc_travel">給您訪問過的地方打分和評價！</string>
-	<string name="dialog_pedestrian_route_is_long">步行路線太長</string>
 	<string name="dialog_message_transit_not_found_connection">規劃一個交通網絡內的路線</string>
 	<string name="bookmarks_error_message_share_general">由於應用程序出錯而無法分享</string>
 	<string name="bookmarks_error_title_share_empty">分享錯誤</string>
@@ -1359,8 +1347,8 @@
 	<string name="error_already_downloaded">這個列表已被下載</string>
 	<string name="guides">指南</string>
 	<string name="guide_downloaded_title">指南已被成功下載</string>
-	<string name="download_guides">下載指南</string>
-	<string name="cached_guides_placeholder_subtitle">適合任何旅行種類的詳細的離線指南。選擇最適合您的那個，直接下載到地圖上。您需要網絡連接來下載指南。</string>
+	<!-- as few symbols as possible -->
+	<string name="download_guides">查找指南</string>
 	<string name="guides_groups_cached">已下載的指南</string>
 	<string name="subtitle_error_downloading_guide">該指南沒有被下載</string>
 	<string name="error_already_downloaded_guide">這個指南已被下載過了</string>
@@ -1399,7 +1387,6 @@
 	<string name="restore_success_alert">訂閱已成功恢復</string>
 	<string name="restore_error_alert">恢復訂閱時發生錯誤</string>
 	<string name="restore_no_subscription_alert">沒有有效訂閱</string>
-	<string name="subscription_terms">確認購買後將向您的iTunes賬戶收費。除非在當前周期結束前至少24小時關閉自動續訂，訂購會自動延續。在當前周期結束前24小時內，我們會根據您的方案向您的賬戶收費。您能在購買後在Apple ID賬戶設置中隨時管理或關閉自動續訂。</string>
 	<string name="subscriptions_title">訂購</string>
 	<string name="manage_subscription">管理訂購</string>
 	<string name="sharing_options">登錄設置</string>
@@ -1409,7 +1396,6 @@
 	<string name="hide_from_map">從卡中隱藏</string>
 	<string name="ugc_route_tags_screen_label">請選擇標籤</string>
 	<string name="ugc_route_tags_progress_msg">正在加載標籤......</string>
-	<string name="ugc_route_tags_desc">請選擇標籤以幫助其他旅行者找到您的旅行指南。此為必填項。</string>
 	<string name="public_access">公共訪問</string>
 	<string name="limited_access">私人訪問</string>
 	<string name="upload_and_publish_desc">本指南將上傳到MAPS.ME公共目錄，並可供其他用戶使用</string>
@@ -1432,7 +1418,7 @@
 	<string name="unable_upload_errorr_title">無法上傳文件</string>
 	<string name="unable_upload_error_subtitle_edited">文件是通過Web應用程序編輯的</string>
 	<string name="unable_upload_error_subtitle_broken">該文件已損壞，無法上傳。請上傳其他文件。</string>
-	<string name="buy_btn">購買%s</string>
+	<string name="buy_btn">購買%s的旅行指南</string>
 	<string name="download_guide_progress">指南正在加載......</string>
 	<string name="price_error_title">無法得知價格</string>
 	<string name="price_error_subtitle">請在幾分鐘之後再試一次</string>
@@ -1480,12 +1466,326 @@
 	<string name="whatsnew_paid_routes_title">更多新體驗！</string>
 	<string name="whatsnew_paid_routes_message">除了免費路線，我們還為目錄添加了3類付費指南。超過700條新路線！</string>
 	<string name="whats_new_ugc_routes_title_android_only">分享您的印象很容易</string>
+	<string name="ugc_thanks_message_auth">您的評論已保存</string>
+	<string name="ugc_thanks_message_not_auth">請註冊以留下評論</string>
+	<string name="notification_leave_review_v2_title">請發表評論來幫助旅行者們！</string>
+	<string name="error_public_not_enought_title">標籤不足</string>
+	<string name="error_public_not_enought_subtitle">您的路線至少應有3個標籤才能上傳到公共目錄中</string>
+	<string name="bookmark_public_upload_alert_title">您只需幾步即可將您的路徑加載到MAPS.ME目錄中！</string>
+	<string name="bookmark_public_upload_alert_subtitle">請確保路線具有名稱和描述，並且所有標籤都包含場地信息。這樣用戶就能找到路線並在旅途中使用它們。</string>
+	<string name="bookmark_public_upload_alert_ok_button">是的，全部正確！</string>
+	<string name="name_title">請輸入名稱</string>
+	<string name="name_placeholder">例如，倫敦酒吧</string>
+	<string name="name_comment1">請具體化命名線路以便用戶能夠找到它們，例如\"倫敦酒吧\"</string>
+	<string name="name_comment2">名稱不應包含特殊字符. 請不要發布名稱為\"我的標籤\"的路線</string>
+	<string name="description_guide">描述</string>
+	<string name="description_title">請輸入線路描述</string>
+	<string name="description_placeholder">請詳細描述您的路線</string>
+	<string name="description_comment1">路線描述至少應為30個字符。</string>
+	<string name="ugc_route_tags_desc">請選擇標籤以幫助其他旅行者找到您的指南。這是必須的。不要超過 %s 標籤。</string>
+	<string name="html_format_error_title">您的路線尚未發布</string>
+	<string name="html_format_error_subtitle">請確保線路中標籤的名稱和描述格式正確。您可以單擊下面的\"在線編輯\"鍵在我們的編輯器中進行檢查。</string>
+	<string name="web_editor_description">請下載路線並獲取在電腦上編輯的鏈接</string>
+	<string name="edit_on_web_confirm">在線編輯</string>
+	<string name="update_guide">下載新版本</string>
+	<string name="direct_link_updating_text">更新路線中……</string>
+	<string name="direct_link_updating_success">路線已更新</string>
+	<string name="unable_get_direct_link_desc">您可以使用公共鏈接共享路線</string>
+	<string name="any_access_update_alert_title">可能有路線新版本</string>
+	<string name="any_access_update_alert_message">您是否更新標籤？新版本將在同一連鏈接上訪問。</string>
+	<string name="any_access_update_alert_update">更新</string>
+	<string name="public_or_limited_access_after_edit_online_error_title">您在線編輯了路線</string>
+	<string name="public_or_limited_access_after_edit_online_error_message">以後請通過我們的網站編輯、發布或與朋友分享路線</string>
+	<string name="power_managment_title">省電模式</string>
+	<string name="power_managment_description">如果開啟省電模式，應用程序將根據手機的當前電量關耗電功能</string>
+	<string name="power_managment_setting_never">從不</string>
+	<string name="power_managment_setting_auto">自動</string>
+	<string name="power_managment_setting_manual_max">最大程度省電</string>
+	<string name="enable_logging_warning_message">此選項啟用以記錄操作來進行診斷。這有助於團隊識別應用程序的問題。請僅在MAPS.ME支持請求時開啟該選項。</string>
+	<string name="html_error_upload_message_try_again">請檢查網絡訪問，然後再重試</string>
+	<string name="html_error_upload_title_try_again">未連接到網絡</string>
+	<string name="notification_leave_review_v2_android_short_title">請發表評論來幫助旅行者們！</string>
+	<string name="notifications_illegal_alert_disable_button">關閉通知</string>
+	<string name="access_rules_author_only">在線編輯</string>
+	<string name="privacy_settings_menu">隱私設置</string>
+	<string name="gdpr_request_setting">GDPR請求獲取ID</string>
+	<string name="gdpr_request_window_title">您的ID：%s。</string>
+	<string name="gdpr_request_window_message">請複制並發送請求至support\@maps.me</string>
+	<string name="gdpr_request_window_copy">複製ID</string>
+	<string name="unable_upadate_error_title">無法更新路線</string>
+	<string name="unable_upadate_error_message">更新時出錯。請檢查更改，然後再重試</string>
+	<string name="whats_new_wiki_title">這是什麼地方？</string>
+	<string name="whats_new_wiki_message">在熱門景點的卡片中，我們添加了來自Wikipedia.org的文章，可以離線使用</string>
+	<string name="driving_options_title">繞行設置</string>
+	<string name="driving_options_subheader">在每條線路上規避</string>
+	<string name="avoid_tolls">收費公路</string>
+	<string name="avoid_unpaved">土路</string>
+	<string name="avoid_ferry">渡輪渡口</string>
+	<string name="avoid_motorways">幹線</string>
+	<string name="unable_to_calc_alert_title">無法規劃路線</string>
+	<string name="unable_to_calc_alert_subtitle">很遺憾，我們無法使用所選選項規劃路線。請更改設置，然後重試</string>
+	<string name="define_to_avoid_btn">設置繞行路徑</string>
+	<string name="change_driving_options_btn">绕行设置已开启</string>
+	<string name="toll_road">收費公路</string>
+	<string name="unpaved_road">土路</string>
+	<string name="ferry_crossing">輪渡</string>
+	<string name="operated_by">由\"%s\"管理</string>
+	<string name="avoid_toll_roads_placepage">規避收費公路</string>
+	<string name="avoid_unpaved_roads_placepage">規避土路</string>
+	<string name="avoid_ferry_crossing_placepage">規避輪渡</string>
+	<string name="cached_guides_placeholder_subtitle">MAPS.ME中的現有指南是精選出來的地點，其中包含在地圖上顯示並可離線使用的照片和說明。</string>
+	<string name="guides_catalogue_title">指南目錄</string>
+	<string name="download_guides_button">轉至目錄</string>
+	<plurals name="placepage_summary_rating_description">
+	  <item quantity="one">基於%d的評論</item>
+	  <item quantity="other">基於%d的評論</item>
+	</plurals>
+	<string name="type.cuisine.uzbek">烏茲別克美食</string>
+	<string name="onboarding_welcome_title">請使用MAPS.ME開始規劃和旅行</string>
+	<string name="onboarding_welcome_first_subtitle">請保存有趣的地方，預訂酒店，離線規劃路線</string>
+	<string name="onboarding_guide_direct_download_title">該指南已準備好下載</string>
+	<string name="onboarding_guide_direct_download_subtitle">它將在地圖上顯示並將脫機工作</string>
+	<string name="onboarding_guide_direct_download_button">下載</string>
+	<string name="onboarding_bydeeplink_guide_title">MAPS.ME上現成的指南</string>
+	<string name="onboarding_bydeeplink_guide_subtitle">帶有照片和說明的競選地點會顯示在地圖中，並且可以離線使用。</string>
+	<string name="whats_new_auto_update_bydeeplink_title">在轉到指南之前……</string>
+	<string name="whats_new_auto_update_bydeeplink_message">請更新有關對像以獲取實時信息的地圖!</string>
+	<string name="whats_new_auto_update_and_proceed_button_size">更新（%s）並繼續</string>
+	<string name="whatsnew_toll_unpaved_title">考慮到所有道路類型並設立路線</string>
+	<string name="whatsnew_toll_unpaved_message">請選擇通過收費公路、土路和渡輪過境的迂迴路線</string>
+	<string name="whatsnew_new_catalogue_title">更新目錄頁面</string>
+	<string name="whatsnew_new_catalogue_message">我們添加了合作夥伴的指南詳情，以便簡單、便捷的選擇路線</string>
+	<string name="purchase_please_wait_toast">購買完成後請不要離開屏幕</string>
+	<string name="trip_start">前往</string>
+	<string name="pick_destination">目標</string>
+	<string name="follow_my_position">定好中心</string>
+	<string name="search_results">搜索結果</string>
+	<string name="then_turn">接下來</string>
+	<string name="redirect_route_alert">想重建路線?</string>
+	<string name="redirect_route_yes">是</string>
+	<string name="redirect_route_no">否</string>
+	<string name="trip_finished">您已到達!</string>
+	<string name="keyboard_availability_alert">移動時鍵盤不可用</string>
+	<string name="dialog_routing_change_start_carplay">無法從當前位置構建路線</string>
+	<string name="dialog_routing_change_end_carplay">無法建立到終點的路線。請選擇其他（路線）</string>
+	<string name="dialog_routing_check_gps_carplay">無GPS信號。請沿著空曠區域行駛</string>
+	<string name="dialog_routing_unable_locate_route_carplay">無法建立路線。請選擇其他路線點</string>
+	<string name="dialog_routing_download_files_carplay">爲了創建線路，請在您的設備中下載所缺少的地圖</string>
+	<string name="dialog_routing_system_error_carplay">發生了錯誤。請重新啟動程序</string>
+	<string name="dialog_routing_rebuild_from_current_location_carplay">該路線將從您的當前位置重建</string>
+	<string name="dialog_routing_rebuild_for_vehicle_carplay">該路線將改為汽車（路線）</string>
+	<string name="ok">好的</string>
+	<string name="booking_button_toolbar">在地圖上選擇酒店</string>
+	<string name="popup_booking_download_guides_title">已預訂酒店？</string>
+	<string name="popup_booking_download_guides_message">和MAPS.ME壹起規劃行程吧</string>
+	<string name="popup_mwm_download_guides_title">在線指南</string>
+	<string name="popup_mwm_download_guides_cta">選擇</string>
+	<string name="popup_mwm_download_guides_cta_1">查看</string>
+	<string name="gallery_pp_download_guides_offline_title">和 MAPS.ME壹起規劃妳的假期吧！</string>
+	<string name="gallery_pp_download_guides_offline_subtitle">不要錯過資深驢友提供線路中最重要的內容</string>
+	<string name="gallery_pp_download_guides_offline_cta">開啟網絡</string>
+	<string name="gallery_pp_download_guides_title">旅行指南</string>
+	<string name="native_screen_subscription_title">2000+ 旅行指南向您完全開放！</string>
+	<string name="native_screen_subscription_message">令人回味無窮的旅行，和新旅伴探索新世界</string>
+	<string name="annual_subscription_title">按年訂閱</string>
+	<string name="montly_subscription_title">按月訂閱</string>
+	<string name="annual_subscription_message">12個月內無限使用</string>
+	<string name="montly_subscription_message">1個月內無限使用</string>
+	<string name="subscription_success_dialog_title">謝謝訂閱！</string>
+	<string name="subscription_success_dialog_message">您現在已經可以無限使用旅行指南目錄了</string>
+	<string name="renewal_screen_title">訂閱有效期已結束</string>
+	<string name="renewal_screen_message">所有通過訂閱下載的旅行指南將被刪除。希望恢復訂閱並保存它們？</string>
+	<string name="renewal_screen_button_restore">是的，恢復</string>
+	<string name="renewal_screen_button_cancel">不，刪除旅行指南</string>
+	<string name="subscription_error_ping_title">未能成功購買</string>
+	<string name="subscription_error_message">服務器無法在您所在的地區使用。請稍後再試</string>
+	<string name="subscription_error_button">明白</string>
+	<string name="timeout_error_title">糟糕，時間到了！</string>
+	<string name="timeout_error_message">我們的服務器無法響應。請檢查網絡連接狀況並重試。</string>
+	<string name="per_month">/月</string>
+	<string name="per_year">/年</string>
+	<string name="buy_btn_for_subscription">%s起可自由訪問</string>
+	<string name="buy_btn_for_subscription_1">在%s內購買全部旅行指南</string>
+	<string name="buy_btn_for_subscription_ios_only_mo">%s/月起可自由訪問</string>
+	<string name="buy_btn_for_subscription_ios_only_year">%s/年起可自由訪問</string>
+	<string name="subscription_terms_guides">在確認購買後，將通過您的 iTunes賬戶完成付款。如果在當前使用期限結束前的24小時內未關閉自動延長功能，則訂閱將自動更新。在當前使用期限結束前的24小時內，將根據您所選擇的套餐計劃，從您的賬戶中扣除相應金額。您可在購買後的任意時間內，在Apple ID的賬戶設置中調節或關閉自動延長功能。 您只能在訂閱有效期內使用通過訂閱下載的旅行指南。在訂閱結束後的30天內，旅行指南和全部書簽將被自動刪除。</string>
+	<string name="subscription_terms">確認購買後將向您的iTunes賬戶收費。除非在當前周期結束前至少24小時關閉自動續訂，訂購會自動延續。在當前周期結束前24小時內，我們會根據您的方案向您的賬戶收費。您能在購買後在Apple ID賬戶設置中隨時管理或關閉自動續訂。</string>
+	<string name="whatsnew_carplay_title">MAPS.ME 自動導航已被納入CarPlay系統中！</string>
+	<string name="whatsnew_carplay_message">可在無網絡的條件下使用標記、搜索、車速攝像頭和繞道設置</string>
+	<string name="whatsnew_subscription_title">訂閱我們的服務，探索新世界！</string>
+	<string name="whatsnew_subscription_message">無限次使用線路目錄比壹次性購買更劃算</string>
+	<string name="whatsnew_carnavi_fixes_for_android_title">導航更新</string>
+	<string name="whatsnew_carnavi_fixes_for_android_message">我們優化了距離道路較遠的目標地點的線路設置</string>
+	<string name="avoid_unpaved_carplay_1">無土路路段</string>
+	<string name="avoid_unpaved_carplay_2">無土路路段</string>
+	<string name="avoid_ferry_carplay_1">無渡船</string>
+	<string name="avoid_ferry_carplay_2">無渡船</string>
+	<string name="avoid_tolls_carplay_1">無付費路段</string>
+	<string name="avoid_tolls_carplay_2">無付費路段</string>
+	<string name="speedcams_alert_title_carplay_1">攝像頭</string>
+	<string name="speedcams_alert_title_carplay_2">攝像頭信息</string>
+	<string name="download_map_carplay">將MAPS.ME軟件中的地圖下載至個人設備中</string>
+	<string name="carplay_roundabout_exit">%s號坡道</string>
+	<!-- max. 10 symbols, both iOS and Android -->
+	<string name="sort">分類……</string>
+	<!-- Android, title, max 20-22 symbols -->
+	<string name="sort_bookmarks">分類標籤</string>
+	<!-- iOS -->
+	<string name="sort_default">默認排序</string>
+	<string name="sort_type">按類型排序</string>
+	<string name="sort_distance">按距離排序</string>
+	<string name="sort_date">按日期排序</string>
+	<!-- Android -->
+	<string name="by_default">默認情況下</string>
+	<!-- Android -->
+	<string name="by_type">按類型</string>
+	<!-- Android -->
+	<string name="by_distance">按距離</string>
+	<!-- Android -->
+	<string name="by_date">按時間</string>
+	<string name="week_ago_sorttype">一周前</string>
+	<string name="month_ago_sorttype">一月前</string>
+	<string name="moremonth_ago_sorttype">一個多月前</string>
+	<string name="moreyear_ago_sorttype">一年多以前</string>
+	<string name="near_me_sorttype">在我旁邊</string>
+	<string name="others_sorttype">其他</string>
+	<string name="food_places">美食</string>
+	<string name="tourist_places">名勝</string>
+	<string name="museums">博物館</string>
+	<string name="parks">公園</string>
+	<string name="swim_places">游泳</string>
+	<string name="mountains">山</string>
+	<string name="animals">動物</string>
+	<string name="hotels">酒店</string>
+	<string name="buildings">建築物</string>
+	<string name="money">貨幣</string>
+	<string name="shops">商店</string>
+	<string name="parkings">停車場</string>
+	<string name="fuel_places">加油站</string>
+	<string name="water">水</string>
+	<string name="medicine">醫療</string>
+	<string name="search_in_the_list">在列表中搜索</string>
+	<string name="view_on_map_bookmarks">在地圖上</string>
+	<string name="more_bookmarks">更多……</string>
+	<string name="no_items_found">未搜索到內容</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_edit_list">編輯</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_delete_list">刪除列表</string>
+	<string name="whatsnew_bookmarks_search_sort_title">標籤中的順序 – 便於旅行</string>
+	<string name="whatsnew_bookmarks_search_sort_message">請根據類別、添加時間和地理位置對您喜歡的地點進行排序，還可以按名稱快速查找具體的標籤</string>
+	<string name="popup_subscription_success_map_title">耶！您已訂閱！</string>
+	<string name="popup_subscription_success_map_message">現在在MAPS.ME畫冊中探索最佳的旅遊景點</string>
+	<string name="popup_subscription_success_map_start_button">瀏覽</string>
+	<string name="popup_subscription_success_map_not_now_button">不是現在</string>
+	<string name="religious_places">聖地</string>
+	<string name="subscription_terms_android">在確認購買時，將從您的Google Play帳戶付款。如果在本期訂閱結束前24小時內沒有取消自動續訂，續訂將自動延續。資金將在本期訂閱結束前24小時內根據續訂計劃從您的帳戶中扣除。您可以在購買後管理自動續訂或在賬戶設置中將其停用。您只能在有效期內使用訂閱下載的指南。訂閱結束30天后，指南將自動刪除。</string>
+	<string name="select_list">選擇列表</string>
+	<string name="pp_discovery_place_related_header">這是指南目錄中標記的位置</string>
+	<string name="pp_discovery_place_related_header_1">這個位置在指南中出現過</string>
+	<string name="pp_discovery_place_related_cta_button">查看</string>
+	<string name="pp_discovery_place_related_tag_header">指南和按標記 “%s”</string>
+	<string name="pp_discovery_place_related_tag_header_1">您會喜歡這樣的</string>
+	<string name="buy_btn_for_subscription_version_2">所有指南%s/月</string>
+	<string name="buy_btn_for_subscription_version_3">整個畫冊%s/月</string>
+	<string name="buy_btn_for_subscription_ios_only_mo_version_2">訪問畫冊%s/月</string>
+	<string name="buy_btn_for_subscription_ios_only_year_version_2">訪問畫冊%s/年</string>
+	<string name="subscription_screen_native_title_version_2">在地圖上訪問帶有標記的指南！</string>
+	<string name="subscription_screen_native_message_version_2">請為600多個城市和100多個國家的任何旅行做好準備</string>
+	<string name="catalog_no_internet_title">沒有網絡連接</string>
+	<string name="catalog_no_internet_button">請再試一次</string>
+	<string name="whatsnew_map_updates_title">地圖的超快更新</string>
+	<string name="whatsnew_map_updates_message">現在的數據更新速度提高了2倍</string>
+	<string name="new_onboarding_button">繼續</string>
+	<string name="new_onboarding_button_2">開始</string>
+	<string name="new_onboarding_step1_header_2">旅行中的萬能助手</string>
+	<string name="new_onboarding_step2_header">憧憬並付諸實踐</string>
+	<string name="new_onboarding_step2_message">超過7千萬個有趣的地方，指南目錄，從地圖上預定旅店-爲出行做好一切准備！</string>
+	<string name="new_onboarding_step3_message">周祥的離線地圖和離線導航在陌生的地方助你一臂之力！</string>
+	<string name="new_onboarding_step4_header">分享感受</string>
+	<string name="new_onboarding_step4_message">收藏喜歡的地方並分享給朋友們</string>
+	<string name="new_onboarding_step5.1_header">在開始前……</string>
+	<string name="new_onboarding_step5.1_message">不要忘記訪問我們新的線路，爲即將的出行找到離線導航！</string>
+	<string name="new_onboarding_step5.1_button">打開目錄</string>
+	<string name="new_onboarding_step5.2_message">在MAPS.ME 中訂閱指南目錄非常劃算。可訪問所有市內徒步旅行與休閑運動指南！</string>
+	<string name="new_onboarding_step5.2_button">查看條件</string>
+	<string name="new_onboarding_step5.3_message">下載或評論帶有 MAPS.ME免費編錄的市內旅行和休閑運動的線路！</string>
+	<string name="new_onboarding_step5.3_button">免費下載</string>
+	<string name="new_onboarding_additional_steps_later_button">稍後</string>
+	<string name="all_pass_subscription_header">訂閱目錄</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title">30000+\n指南\n和道路</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle"><b>無限離線下載</b>城市和戶外活動的路線</string>
+	<!-- \n - for a break between lines. Max. 17 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_2">互動\n高度剖面圖</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_2"><b>所有道路均已加載高度和路線基本信息</b></string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_3">默認\n地點，照片\n和推薦</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_3"><b>了解您準備前往的路線</b>，的所有信息</string>
+	<string name="sightseeing_subscription_header_subscription">訂閱指南</string>
+	<string name="sightseeing_subscription_message">超過700座城市和100個國家</string>
+	<string name="sightseeing_subscription_message_2">支持離線訪問</string>
+	<string name="sightseeing_subscription_message_3">照片與人行道路</string>
+	<string name="subscription_success_dialog_title_sightseeing_pass">感謝訂閱！</string>
+	<string name="subscription_success_dialog_message_sightseeing_pass">現在你可使用目錄中的全部城市指南</string>
+	<string name="downloader_main_gallery_header">地圖與指南</string>
+	<string name="downloader_main_gallery_message">在本單元中你不僅可以下載地圖，還可以爲即將到來的出行選擇指南</string>
+	<string name="downloader_main_1_element_gallery_header">所有指南</string>
+	<string name="downloader_main_1_element_gallery_message">超過100個國家</string>
+	<string name="downloader_country_1_element_gallery_header">%s 條線路</string>
+	<string name="downloader_country_no_guides_gallery_header">暫時沒有該國家的指南</string>
+	<string name="downloader_country_no_guides_gallery_message">了解其他100多個國家的城市與休閑活動線路</string>
+	<string name="dialog_pedestrian_route_is_long">步行到達交通工具處需要很長時間</string>
+	<string name="whatsnew_outdoor_guides_title">我們添加了超過15000條休閑運動道路！</string>
+	<string name="whatsnew_outdoor_guides_message">目錄中添加了Outdooractive 的冬季和夏季旅行線路！</string>
+	<string name="whatsnew_guides_galleries_title">與MAPS.ME共同規劃即將到來的旅行</string>
+	<string name="whatsnew_guides_galleries_message">現在你可在熱門城市與名勝古迹地圖上查找推薦的旅行指南</string>
+	<string name="new_onboarding_step3_header">去旅行吧</string>
+	<string name="all_pass_screen_best_value">優惠的價格</string>
+	<string name="buy_btn_for_subscription_3">整個畫冊%s/年</string>
+	<string name="transit_not_found">本區域的地鐵導航目前不可用</string>
+	<string name="dialog_pedestrian_route_is_long_header">地鐵路線圖未找到</string>
+	<string name="dialog_pedestrian_route_is_long_message">選擇地鐵站附近的起點和終點</string>
+	<!-- Failed planning SUBWAY route message in navigation view -->
+	<string name="routing_planning_error_subway_special">地鐵路線圖設計出錯</string>
+	<string name="whatsnew_isolines_title">戶外活動的新產品–離線高度線！</string>
+	<!-- as less symbols as possible -->
+	<string name="whatsnew_isolines_message">在山地中導航–使用屏幕左上角的按鈕打開圖層</string>
+	<string name="button_layer_isolines">高度</string>
+	<string name="tips_map_layers_title_countour">離線高度線在MAPS.ME中！</string>
+	<string name="tips_map_layers_message_countour">高度線可以幫您規劃通往大自然地區的路線，不會迷路</string>
+	<string name="isolines_activation_error_dialog">如需使用高度线，请更新或下载所需区域的地图</string>
+	<string name="isolines_location_error_dialog">暫時無法獲取該地區的高低線</string>
+	<string name="elevation_profile_diff_level">難度等級</string>
+	<string name="elevation_profile_diff_level_easy">容易</string>
+	<string name="elevation_profile_diff_level_moderate">中等</string>
+	<string name="elevation_profile_diff_level_hard">困難</string>
+	<string name="elevation_profile_ascent">上坡</string>
+	<string name="elevation_profile_descent">下坡</string>
+	<string name="elevation_profile_minaltitude">最小高度</string>
+	<string name="elevation_profile_maxaltitude">最大高度</string>
+	<string name="elevation_profile_m">米</string>
+	<string name="elevation_profile_difficulty">難度</string>
+	<string name="elevation_profile_distance">距離：</string>
+	<string name="elevation_profile_km">千米</string>
+	<string name="elevation_profile_time">在路上：</string>
+	<string name="elevation_profile_hours">小時</string>
+	<string name="elevation_profile_minutes">分鐘</string>
+	<!-- hide the full screen banner and continue working with the app -->
+	<string name="hide_screen_map_update">隱藏並繼續</string>
+	<string name="view_on_map_downloaded_error">該指南已從設備中刪除</string>
+	<string name="subscription">訂閱</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">纜車站</string>
 	<string name="type.aeroway.aerodrome">機場</string>
 	<string name="type.aeroway.aerodrome.international">機場</string>
 	<string name="type.aeroway.helipad">直升機停機坪</string>
+	<string name="type.amenity">基礎設施項目</string>
+	<string name="type.amenity.arts_centre">藝術中心</string>
 	<string name="type.amenity.atm">自動櫃員機</string>
 	<string name="type.amenity.bank">銀行</string>
 	<string name="type.amenity.bar">酒吧</string>
@@ -1534,14 +1834,15 @@
 	<string name="type.amenity.parking">停車場</string>
 	<string name="type.amenity.parking.fee">停車場</string>
 	<string name="type.amenity.parking.multi.storey">停車場</string>
-	<string name="type.amenity.parking.multi.storey.fee">停車場</string>
 	<string name="type.amenity.parking.no.access">停車場</string>
 	<string name="type.amenity.parking.park_and_ride">停車場</string>
 	<string name="type.amenity.parking.permissive">停車場</string>
-	<string name="type.amenity.parking.permissive.fee">停車場</string>
 	<string name="type.amenity.parking.private">停車場</string>
 	<string name="type.amenity.parking.underground">停車場</string>
-	<string name="type.amenity.parking.underground.fee">停車場</string>
+	<string name="type.amenity.parking_space">停車地點</string>
+	<string name="type.amenity.parking_space.permissive">停車地點</string>
+	<string name="type.amenity.parking_space.private">停車地點</string>
+	<string name="type.amenity.parking_space.underground">停車地點</string>
 	<string name="type.amenity.payment_terminal">付款終端</string>
 	<string name="type.amenity.pharmacy">藥局</string>
 	<string name="type.amenity.place_of_worship">寺廟</string>
@@ -1571,6 +1872,7 @@
 	<string name="type.amenity.vending_machine.cigarettes">香菸自動販賣機</string>
 	<string name="type.amenity.vending_machine.drinks">飲料自動販賣機</string>
 	<string name="type.amenity.vending_machine.parking_tickets">違規停車罰單繳費機</string>
+	<string name="type.amenity.vending_machine.public_transport_tickets">公共交通售票機</string>
 	<string name="type.amenity.veterinary">獸醫</string>
 	<string name="type.amenity.waste_basket">垃圾箱</string>
 	<string name="type.amenity.waste_disposal">垃圾</string>
@@ -1690,6 +1992,7 @@
 	<string name="type.emergency.phone">緊急電話</string>
 	<string name="type.entrance">入口</string>
 	<string name="type.highway.bus_stop">巴士站</string>
+	<string name="type.highway.construction">在建道路</string>
 	<string name="type.highway.footway">人行步道</string>
 	<string name="type.highway.footway.alpine_hiking">人行步道</string>
 	<string name="type.highway.footway.area">人行步道</string>
@@ -1752,9 +2055,6 @@
 	<string name="type.highway.service.area">路</string>
 	<string name="type.highway.service.bridge">路</string>
 	<string name="type.highway.service.driveway">路</string>
-	<string name="type.highway.service.driveway.area">路</string>
-	<string name="type.highway.service.driveway.bridge">路</string>
-	<string name="type.highway.service.driveway.tunnel">路</string>
 	<string name="type.highway.service.parking_aisle">路</string>
 	<string name="type.highway.service.tunnel">路</string>
 	<string name="type.highway.speed_camera">測速照相機</string>
@@ -1773,14 +2073,8 @@
 	<string name="type.highway.track.grade1">路</string>
 	<string name="type.highway.track.grade2">路</string>
 	<string name="type.highway.track.grade3">路</string>
-	<string name="type.highway.track.grade3.no.access">路</string>
-	<string name="type.highway.track.grade3.permissive">路</string>
 	<string name="type.highway.track.grade4">路</string>
-	<string name="type.highway.track.grade4.no.access">路</string>
-	<string name="type.highway.track.grade4.permissive">路</string>
 	<string name="type.highway.track.grade5">路</string>
-	<string name="type.highway.track.grade5.no.access">路</string>
-	<string name="type.highway.track.grade5.permissive">路</string>
 	<string name="type.highway.track.no.access">路</string>
 	<string name="type.highway.track.permissive">路</string>
 	<string name="type.highway.track.tunnel">路</string>
@@ -1812,11 +2106,17 @@
 	<string name="type.landuse.basin">水庫</string>
 	<string name="type.landuse.cemetery">墓地</string>
 	<string name="type.landuse.cemetery.christian">墓地</string>
+	<string name="type.landuse.churchyard">教堂庭院</string>
+	<string name="type.landuse.farmland">農業用地</string>
 	<string name="type.landuse.forest">樹林</string>
 	<string name="type.landuse.forest.coniferous">樹林</string>
 	<string name="type.landuse.forest.deciduous">樹林</string>
 	<string name="type.landuse.forest.mixed">樹林</string>
+	<string name="type.landuse.grass">草坪</string>
+	<string name="type.landuse.landfill">堆積場</string>
+	<string name="type.landuse.railway">鐵路設施</string>
 	<string name="type.landuse.reservoir">水庫</string>
+	<string name="type.leisure.dog_park">遛狗區</string>
 	<string name="type.leisure.fitness_centre">健身中心</string>
 	<string name="type.leisure.fitness_station">健身房</string>
 	<string name="type.leisure.garden">花園</string>
@@ -1827,9 +2127,7 @@
 	<string name="type.leisure.park.permissive">公園</string>
 	<string name="type.leisure.park.private">公園</string>
 	<string name="type.leisure.pitch">運動場</string>
-	<string name="type.leisure.pitch.tennis">運動場</string>
 	<string name="type.leisure.playground">遊樂場</string>
-	<string name="type.leisure.playground.tennis">遊樂場</string>
 	<string name="type.leisure.sauna">桑拿</string>
 	<string name="type.leisure.sports_centre">體育中心</string>
 	<string name="type.leisure.sports_centre.climbing">攀登中心</string>
@@ -1851,20 +2149,19 @@
 	<string name="type.natural.bay">海灣</string>
 	<string name="type.natural.beach">海灘</string>
 	<string name="type.natural.cape">海角</string>
-	<string name="type.natural.cave_entrance">洞穴入口</string>
+	<string name="type.natural.cave_entrance">洞穴</string>
 	<string name="type.natural.geyser">間歇泉</string>
 	<string name="type.natural.glacier">冰川</string>
+	<string name="type.natural.grassland">田野</string>
 	<string name="type.natural.lake">湖泊</string>
 	<string name="type.natural.peak">山峰</string>
 	<string name="type.natural.pond">潭</string>
+	<string name="type.natural.scrub">叢林</string>
 	<string name="type.natural.spring">泉水</string>
 	<string name="type.natural.tree">樹</string>
 	<string name="type.natural.volcano">火山</string>
 	<string name="type.natural.water">水庫</string>
-	<string name="type.natural.wood">樹林</string>
-	<string name="type.natural.wood.coniferous">樹林</string>
-	<string name="type.natural.wood.deciduous">樹林</string>
-	<string name="type.natural.wood.mixed">樹林</string>
+	<string name="type.natural.wetland">沼澤</string>
 	<string name="type.office">辦公室</string>
 	<string name="type.office.company">公司辦公室</string>
 	<string name="type.office.estate_agent">地產代理</string>
@@ -1905,6 +2202,9 @@
 	<string name="type.power.substation">變電所</string>
 	<string name="type.power.tower">電塔</string>
 	<string name="type.railway.halt">鐵道</string>
+	<string name="type.railway.level_crossing">鐵路道口</string>
+	<string name="type.railway.monorail">單軌鐵路</string>
+	<string name="type.railway.rail">鐵路</string>
 	<string name="type.railway.station">鐵道</string>
 	<string name="type.railway.station.light_rail">鐵道</string>
 	<string name="type.railway.station.monorail">鐵道</string>
@@ -1933,7 +2233,7 @@
 	<string name="type.railway.station.subway.spb">地鐵</string>
 	<string name="type.railway.station.subway.violet">地鐵</string>
 	<string name="type.railway.station.subway.yellow">地鐵</string>
-	<string name="type.railway.subway_entrance">地鐵</string>
+	<string name="type.railway.subway_entrance">地鐵入口</string>
 	<string name="type.railway.subway_entrance.barcelona">地鐵</string>
 	<string name="type.railway.subway_entrance.berlin">地鐵</string>
 	<string name="type.railway.subway_entrance.kiev">地鐵</string>
@@ -2012,6 +2312,10 @@
 	<string name="type.shop.variety_store">雜貨店</string>
 	<string name="type.shop.video">購物</string>
 	<string name="type.shop.wine">販酒處</string>
+	<string name="type.sport.athletics">田徑</string>
+	<string name="type.sport.basketball">籃球</string>
+	<string name="type.sport.equestrian">馬術運動</string>
+	<string name="type.sport.tennis">網球場</string>
 	<string name="type.tourism.alpine_hut">山上住宿</string>
 	<string name="type.tourism.apartment">公寓</string>
 	<string name="type.tourism.artwork">藝術品</string>
@@ -2053,4 +2357,8 @@
 	<string name="type.waterway.stream.intermittent">河流</string>
 	<string name="type.waterway.stream.tunnel">河流</string>
 	<string name="type.waterway.waterfall">瀑布</string>
+	<string name="type.wheelchair.limited">部分配備為殘疾人專用</string>
+	<string name="type.wheelchair.no">未配備殘疾人專用</string>
+	<string name="type.wheelchair.yes">配備殘疾人專用</string>
+	<string name="type.building_part">建築物</string>
 </resources>

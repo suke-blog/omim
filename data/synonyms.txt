@@ -52,7 +52,6 @@ West Virginia: WV
 Wisconsin: WI
 Wyoming: WY
 
-
 Alberta: AB
 British Columbia: BC
 Manitoba: MB
@@ -68,3 +67,37 @@ Saskatchewan: SK
 Yukon: YT
 
 Россия: РФ
+
+Китайская Народная Република: Китай, КНР
+Китай: КНР
+People's Republic of China: China, PRC
+China: PRC
+
+Australia: AU
+New South Wales: NSW
+Queensland: QLD
+South Australia: SA
+Tasmania: TAS
+Victoria: VIC
+Western Australia: WA
+Australian Capital Territory: ACT
+Jervis Bay Territory: JBT
+Northern Territory: NT
+
+New Zealand: NZ
+Auckland: AUK
+Bay of Plenty: BOP
+Canterbury: CAN
+Gisborne: GIS
+Hawke's Bay: HKB
+Marlborough: MBH
+Manawatu-Wanganui: MWT
+Nelson: NSN	
+Northland: NTL
+Otago: OTA
+Southland: STL	
+Taranaki: TKI	
+Waikato: WKO		
+Wellington: WGN	
+West Coast: WTC	
+Chatham Islands: CIT

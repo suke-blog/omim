@@ -24,7 +24,7 @@ public:
   ResultView(search::Result const & result, QWidget & parent);
   ResultView(search::Sample::Result const & result, QWidget & parent);
 
-  void SetEditor(Edits::Editor && editor);
+  void SetEditor(ResultsEdits::Editor && editor);
 
   void Update();
 
@@ -44,9 +44,10 @@ private:
   QLabel * m_type = nullptr;
   QLabel * m_address = nullptr;
 
+  QRadioButton * m_harmful = nullptr;
   QRadioButton * m_irrelevant = nullptr;
   QRadioButton * m_relevant = nullptr;
   QRadioButton * m_vital = nullptr;
 
-  std::unique_ptr<Edits::Editor> m_editor;
+  std::unique_ptr<ResultsEdits::Editor> m_editor;
 };

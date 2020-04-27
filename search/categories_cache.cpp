@@ -42,23 +42,39 @@ CBV CategoriesCache::Load(MwmContext const & context) const
   // but the interface of Retrieval forces us to make a choice.
   SearchTrieRequest<strings::UniStringDFA> request;
 
+  // m_categories usually has truncated types; add them together with their subtrees.
   m_categories.ForEach([&request, &c](uint32_t const type) {
-    request.m_categories.emplace_back(FeatureTypeToString(c.GetIndexForType(type)));
+    c.ForEachInSubtree(
+        [&](uint32_t descendantType) {
+          request.m_categories.emplace_back(FeatureTypeToString(c.GetIndexForType(descendantType)));
+        },
+        type);
   });
 
   Retrieval retrieval(context, m_cancellable);
-  return CBV(retrieval.RetrieveAddressFeatures(request));
+  return retrieval.RetrieveAddressFeatures(request).m_features;
 }
 
 // StreetsCache ------------------------------------------------------------------------------------
 StreetsCache::StreetsCache(base::Cancellable const & cancellable)
-  : CategoriesCache(ftypes::IsStreetChecker::Instance(), cancellable)
+  : CategoriesCache(ftypes::IsStreetOrSquareChecker::Instance(), cancellable)
 {
 }
 
+// SuburbsCache ------------------------------------------------------------------------------------
+SuburbsCache::SuburbsCache(base::Cancellable const & cancellable)
+  : CategoriesCache(ftypes::IsSuburbChecker::Instance(), cancellable)
+{
+}
 // VillagesCache -----------------------------------------------------------------------------------
 VillagesCache::VillagesCache(base::Cancellable const & cancellable)
   : CategoriesCache(ftypes::IsVillageChecker::Instance(), cancellable)
+{
+}
+
+// LocalitiesCache ----------------------------------------------------------------------------------
+LocalitiesCache::LocalitiesCache(base::Cancellable const & cancellable)
+  : CategoriesCache(ftypes::IsLocalityChecker::Instance(), cancellable)
 {
 }
 

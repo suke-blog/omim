@@ -7,17 +7,16 @@
 
 namespace feature
 {
-enum EGeomType
+enum class GeomType : int8_t
 {
-  GEOM_UNDEFINED = -1,
-  // Note! do not change this values. Should be equal with FeatureGeoType.
-  GEOM_POINT = 0,
-  GEOM_LINE = 1,
-  GEOM_AREA = 2
+  Undefined = -1,
+  Point = 0,
+  Line = 1,
+  Area = 2
 };
-}  // namespace feature
 
-std::string DebugPrint(feature::EGeomType type);
+std::string DebugPrint(GeomType type);
+}  // namespace feature
 
 struct FeatureID
 {

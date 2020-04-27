@@ -3,22 +3,9 @@
 #import "MWMTextToSpeech+CPP.h"
 #import "Statistics.h"
 #import "SwiftBridge.h"
-#import "WebViewController.h"
 
-#include "Framework.h"
+#include <CoreApi/Framework.h>
 #include "LocaleTranslator.h"
-
-#include "routing/speed_camera_manager.hpp"
-
-#include "map/routing_manager.hpp"
-
-#include "base/assert.hpp"
-#include "base/stl_helpers.hpp"
-
-#include <algorithm>
-#include <memory>
-#include <type_traits>
-#include <unordered_map>
 
 using namespace locale_translator;
 using namespace routing;
@@ -33,7 +20,6 @@ enum class Section
   VoiceInstructions,
   Language,
   SpeedCameras,
-  FAQ,
   Count
 };
 
@@ -155,7 +141,7 @@ struct CamerasCellStrategy : BaseCellStategy
 
     CHECK(title, ());
     [cell configWithTitle:title];
-    bool const isSelectedCell = base::Key(mode) == indexPath.row;
+    bool const isSelectedCell = base::Underlying(mode) == indexPath.row;
     if (isSelectedCell)
     {
       m_selectedCell = cell;
@@ -171,7 +157,7 @@ struct CamerasCellStrategy : BaseCellStategy
 
   size_t NumberOfRows(MWMTTSSettingsViewController * /* controller */) const override
   {
-    return base::Key(SpeedCameraManagerMode::MaxValue);
+    return base::Underlying(SpeedCameraManagerMode::MaxValue);
   }
 
   NSString * TitleForHeader() const override { return L(@"speedcams_alert_title"); }
@@ -200,36 +186,6 @@ struct CamerasCellStrategy : BaseCellStategy
 
   SettingsTableViewSelectableCell * m_selectedCell = nil;
 };
-
-struct FAQCellStrategy : BaseCellStategy
-{
-  UITableViewCell * BuildCell(UITableView * tableView, NSIndexPath * indexPath,
-                              MWMTTSSettingsViewController * /* controller */) override
-  {
-    Class cls = [SettingsTableViewLinkCell class];
-    auto cell = static_cast<SettingsTableViewLinkCell *>(
-        [tableView dequeueReusableCellWithCellClass:cls indexPath:indexPath]);
-    [cell configWithTitle:L(@"pref_tts_how_to_set_up_voice") info:nil];
-    return cell;
-  }
-
-  void SelectCell(UITableView * /* tableView */, NSIndexPath * /* indexPath */,
-                  MWMTTSSettingsViewController * controller) override
-  {
-    [Statistics logEvent:kStatEventName(kStatTTSSettings, kStatHelp)];
-    NSString * path = [NSBundle.mainBundle pathForResource:@"tts-how-to-set-up-voice"
-                                                    ofType:@"html"];
-    NSString * html = [[NSString alloc] initWithContentsOfFile:path
-                                                      encoding:NSUTF8StringEncoding
-                                                         error:nil];
-    NSURL * baseURL = [NSURL fileURLWithPath:path];
-    WebViewController * vc =
-        [[WebViewController alloc] initWithHtml:html
-                                        baseUrl:baseURL
-                                          title:L(@"pref_tts_how_to_set_up_voice")];
-    [controller.navigationController pushViewController:vc animated:YES];
-  };
-};
 }  // namespace
 
 @interface MWMTTSSettingsViewController ()<SettingsTableViewSwitchCellDelegate>
@@ -250,11 +206,10 @@ struct FAQCellStrategy : BaseCellStategy
   self = [super initWithCoder:aDecoder];
   if (self)
   {
-    using base::Key;
-    m_strategies.emplace(Key(Section::VoiceInstructions), make_unique<VoiceInstructionCellStrategy>());
-    m_strategies.emplace(Key(Section::Language), make_unique<LanguageCellStrategy>());
-    m_strategies.emplace(Key(Section::SpeedCameras), make_unique<CamerasCellStrategy>());
-    m_strategies.emplace(Key(Section::FAQ), make_unique<FAQCellStrategy>());
+    using base::Underlying;
+    m_strategies.emplace(Underlying(Section::VoiceInstructions), make_unique<VoiceInstructionCellStrategy>());
+    m_strategies.emplace(Underlying(Section::Language), make_unique<LanguageCellStrategy>());
+    m_strategies.emplace(Underlying(Section::SpeedCameras), make_unique<CamerasCellStrategy>());
   }
 
   return self;
@@ -264,7 +219,6 @@ struct FAQCellStrategy : BaseCellStategy
 {
   [super viewDidLoad];
   self.title = L(@"pref_tts_enable_title");
-  self.tableView.separatorColor = [UIColor blackDividers];
   MWMTextToSpeech * tts = [MWMTextToSpeech tts];
 
   m_languages.reserve(3);
@@ -350,7 +304,7 @@ struct FAQCellStrategy : BaseCellStategy
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-  return [MWMTextToSpeech isTTSEnabled] ? base::Key(Section::Count) : 1;
+  return [MWMTextToSpeech isTTSEnabled] ? base::Underlying(Section::Count) : 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -382,7 +336,7 @@ struct FAQCellStrategy : BaseCellStategy
 {
   [MWMTextToSpeech setTTSEnabled:value];
   auto indexSet = [NSIndexSet
-      indexSetWithIndexesInRange:{base::Key(Section::Language), base::Key(Section::Count) - 1}];
+      indexSetWithIndexesInRange:{base::Underlying(Section::Language), base::Underlying(Section::Count) - 1}];
   auto const animation = UITableViewRowAnimationFade;
   NSString * statValue = nil;
   if (value)

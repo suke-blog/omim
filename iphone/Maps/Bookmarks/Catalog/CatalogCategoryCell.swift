@@ -7,24 +7,9 @@ final class CatalogCategoryCell: MWMTableViewCell {
 
   weak var delegate: CatalogCategoryCellDelegate?
 
-  @IBOutlet weak var visibleCheckmark: Checkmark! {
-    didSet {
-      visibleCheckmark.offTintColor = .blackHintText()
-      visibleCheckmark.onTintColor = .linkBlue()
-    }
-  }
-  @IBOutlet weak var titleLabel: UILabel! {
-    didSet {
-      titleLabel.font = .regular16()
-      titleLabel.textColor = .blackPrimaryText()
-    }
-  }
-  @IBOutlet weak var subtitleLabel: UILabel! {
-    didSet {
-      subtitleLabel.font = .regular14()
-      subtitleLabel.textColor = .blackSecondaryText()
-    }
-  }
+  @IBOutlet weak var visibleCheckmark: Checkmark!
+  @IBOutlet weak var titleLabel: UILabel!
+  @IBOutlet weak var subtitleLabel: UILabel! 
   @IBOutlet weak var moreButton: UIButton!
 
   @IBAction func onVisibleChanged(_ sender: Checkmark) {
@@ -35,12 +20,12 @@ final class CatalogCategoryCell: MWMTableViewCell {
     delegate?.cell(self, didPress: sender)
   }
 
-  func update(with category: MWMCatalogCategory, delegate: CatalogCategoryCellDelegate?) {
+  func update(with category: MWMCategory, delegate: CatalogCategoryCellDelegate?) {
     titleLabel.text = category.title
-    let placesString = String(format: L("bookmarks_places"), category.bookmarksCount)
+    let placesString = category.placesCountTitle()
     let authorString = String(coreFormat: L("author_name_by_prefix"), arguments: [category.author])
     subtitleLabel.text = "\(placesString) • \(authorString)"
-    visibleCheckmark.isChecked = category.visible
+    visibleCheckmark.isChecked = category.isVisible
     self.delegate = delegate
   }
 }

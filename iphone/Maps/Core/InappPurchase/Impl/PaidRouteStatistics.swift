@@ -2,22 +2,29 @@ class PaidRouteStatistics: IPaidRouteStatistics {
   let serverId: String
   let productId: String
   let vendor: String
+  let testGroup: String
 
-  init(serverId: String, productId: String, vendor: String) {
+  init(serverId: String,
+       productId: String,
+       vendor: String,
+       testGroup: String) {
     self.serverId = serverId
     self.productId = productId
     self.vendor = vendor
+    self.testGroup = testGroup
   }
 
   func logPreviewShow() {
     logEvent(kStatInappShow, withParameters: [kStatVendor: vendor,
                                               kStatProduct: productId,
-                                              kStatPurchase: serverId])
+                                              kStatPurchase: serverId,
+                                              kStatTestGroup: testGroup],
+             withChannel: .realtime)
   }
 
   func logPay() {
-    logEvent(kStatInappSelect, withParameters: [kStatPurchase: serverId])
-    logEvent(kStatInappPay, withParameters: [kStatPurchase: serverId])
+    logEvent(kStatInappSelect, withParameters: [kStatPurchase: serverId, kStatProduct: productId])
+    logEvent(kStatInappPay, withParameters: [kStatPurchase: serverId], withChannel: .realtime)
   }
 
   func logCancel() {
@@ -41,8 +48,9 @@ class PaidRouteStatistics: IPaidRouteStatistics {
     logEvent(kStatInappValidationSuccess, withParameters: [kStatPurchase: serverId,
                                                            kStatErrorCode: code])
   }
-
-  private func logEvent(_ eventName: String, withParameters: [String: Any]) {
-    Statistics.logEvent(eventName, withParameters: withParameters)
+  
+  private func logEvent(_ eventName: String, withParameters: [String: Any],
+                        withChannel: StatisticsChannel = .default) {
+    Statistics.logEvent(eventName, withParameters: withParameters, with: withChannel)
   }
 }

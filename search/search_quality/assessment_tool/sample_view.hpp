@@ -6,6 +6,10 @@
 
 #include "geometry/point2d.hpp"
 
+#include "kml/type_utils.hpp"
+
+#include <optional>
+
 #include <QtCore/QMargins>
 #include <QtWidgets/QWidget>
 
@@ -25,21 +29,23 @@ public:
 
   SampleView(QWidget * parent, Framework & framework);
 
-  void SetContents(search::Sample const & sample, bool positionAvailable,
-                   m2::PointD const & position);
+  void SetContents(search::Sample const & sample, std::optional<m2::PointD> const & position);
   void OnSearchStarted();
   void OnSearchCompleted();
 
   void AddFoundResults(search::Results::ConstIter begin, search::Results::ConstIter end);
   void ShowNonFoundResults(std::vector<search::Sample::Result> const & results,
-                           std::vector<Edits::Entry> const & entries);
+                           std::vector<ResultsEdits::Entry> const & entries);
 
   void ShowFoundResultsMarks(search::Results::ConstIter begin, search::Results::ConstIter end);
   void ShowNonFoundResultsMarks(std::vector<search::Sample::Result> const & results,
-                                std::vector<Edits::Entry> const & entries);
+                                std::vector<ResultsEdits::Entry> const & entries);
   void ClearSearchResultMarks();
 
-  void SetEdits(Edits & resultsEdits, Edits & nonFoundResultsEdits);
+  void SetResultsEdits(ResultsEdits & resultsResultsEdits,
+                       ResultsEdits & nonFoundResultsResultsEdits);
+
+  void OnUselessnessChanged(bool isUseless);
 
   void Clear();
 
@@ -56,7 +62,7 @@ signals:
 
 private:
   void ClearAllResults();
-  void SetEdits(ResultsView & results, Edits & edits);
+  void SetResultsEdits(ResultsView & results, ResultsEdits & edits);
   void OnRemoveNonFoundResult(int row);
 
   void ShowUserPosition(m2::PointD const & position);
@@ -78,16 +84,20 @@ private:
   QPushButton * m_markAllAsRelevant = nullptr;
   QPushButton * m_markAllAsIrrelevant = nullptr;
 
+  QLabel * m_uselessnessLabel = nullptr;
+
   ResultsView * m_foundResults = nullptr;
   QWidget * m_foundResultsBox = nullptr;
 
   ResultsView * m_nonFoundResults = nullptr;
   QWidget * m_nonFoundResultsBox = nullptr;
 
-  Edits * m_nonFoundResultsEdits = nullptr;
+  ResultsEdits * m_nonFoundResultsEdits = nullptr;
 
   QMargins m_rightAreaMargins;
   QMargins m_defaultMargins;
 
-  bool m_positionAvailable = false;
+  kml::MarkId m_positionMarkId = kml::kInvalidMarkId;
+
+  std::optional<m2::PointD> m_position;
 };

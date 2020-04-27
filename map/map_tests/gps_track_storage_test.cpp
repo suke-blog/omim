@@ -4,15 +4,20 @@
 
 #include "platform/platform.hpp"
 
-#include "coding/file_name_utils.hpp"
 #include "coding/file_writer.hpp"
 
 #include "geometry/latlon.hpp"
 
+#include "base/file_name_utils.hpp"
 #include "base/logging.hpp"
 #include "base/scope_guard.hpp"
 
-#include "std/chrono.hpp"
+#include <chrono>
+#include <string>
+#include <vector>
+
+using namespace std;
+using namespace std::chrono;
 
 namespace
 {
@@ -22,15 +27,15 @@ location::GpsInfo Make(double timestamp, ms::LatLon const & ll, double speed)
   location::GpsInfo info;
   info.m_timestamp = timestamp;
   info.m_speedMpS = speed;
-  info.m_latitude = ll.lat;
-  info.m_longitude = ll.lon;
+  info.m_latitude = ll.m_lat;
+  info.m_longitude = ll.m_lon;
   info.m_source = location::EAndroidNative;
   return info;
 }
 
 inline string GetGpsTrackFilePath()
 {
-  return base::JoinFoldersToPath(GetPlatform().WritableDir(), "gpstrack_test.bin");
+  return base::JoinPath(GetPlatform().WritableDir(), "gpstrack_test.bin");
 }
 
 } // namespace

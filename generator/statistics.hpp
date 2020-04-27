@@ -4,18 +4,16 @@
 
 #include <cstdint>
 #include <map>
+#include <ostream>
 #include <string>
 
 namespace stats
 {
   struct GeneralInfo
   {
-    uint64_t m_count, m_size;
-    double m_length, m_area;
+    GeneralInfo() : m_count(0), m_size(0), m_names(0), m_length(0), m_area(0) {}
 
-    GeneralInfo() : m_count(0), m_size(0), m_length(0), m_area(0) {}
-
-    void Add(uint64_t szBytes, double len = 0, double area = 0)
+    void Add(uint64_t szBytes, double len = 0, double area = 0, bool hasName = false)
     {
       if (szBytes > 0)
       {
@@ -23,8 +21,16 @@ namespace stats
         m_size += szBytes;
         m_length += len;
         m_area += area;
+        if (hasName)
+          ++m_names;
       }
     }
+
+    uint64_t m_count;
+    uint64_t m_size;
+    uint64_t m_names;
+    double m_length;
+    double m_area;
   };
 
   template <class T, int Tag>
@@ -41,7 +47,7 @@ namespace stats
 
   struct MapInfo
   {
-    std::map<feature::EGeomType, GeneralInfo> m_byGeomType;
+    std::map<feature::GeomType, GeneralInfo> m_byGeomType;
     std::map<ClassifType, GeneralInfo> m_byClassifType;
     std::map<CountType, GeneralInfo> m_byPointsCount, m_byTrgCount;
     std::map<AreaType, GeneralInfo> m_byAreaSize;
@@ -49,9 +55,9 @@ namespace stats
     GeneralInfo m_inner[3];
   };
 
-  void FileContainerStatistic(std::string const & fPath);
+  void FileContainerStatistic(std::ostream & os, std::string const & fPath);
 
   void CalcStatistic(std::string const & fPath, MapInfo & info);
-  void PrintStatistic(MapInfo & info);
-  void PrintTypeStatistic(MapInfo & info);
+  void PrintStatistic(std::ostream & os, MapInfo & info);
+  void PrintTypeStatistic(std::ostream & os, MapInfo & info);
 }

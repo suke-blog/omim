@@ -1,7 +1,8 @@
 #include "coding/mmap_reader.hpp"
 
 #include "std/target_os.hpp"
-#include "std/cstring.hpp"
+
+#include <cstring>
 
 // @TODO we don't support windows at the moment
 #ifndef OMIM_OS_WINDOWS
@@ -15,6 +16,8 @@
   #endif
 #endif
 
+using namespace std;
+
 class MmapReader::MmapData
 {
   int m_fd;
@@ -23,7 +26,7 @@ public:
   uint8_t * m_memory;
   uint64_t m_size;
 
-  MmapData(string const & fileName)
+  explicit MmapData(string const & fileName)
   {
     // @TODO add windows support
 #ifndef OMIM_OS_WINDOWS
@@ -36,7 +39,8 @@ public:
       MYTHROW(OpenException, ("fstat failed for file", fileName));
     m_size = s.st_size;
 
-    m_memory = (uint8_t *)mmap(0, m_size, PROT_READ, MAP_SHARED, m_fd, 0);
+    m_memory = static_cast<uint8_t *>(
+        mmap(0, static_cast<size_t>(m_size), PROT_READ, MAP_SHARED, m_fd, 0));
     if (m_memory == MAP_FAILED)
     {
       close(m_fd);
@@ -49,7 +53,7 @@ public:
   {
     // @TODO add windows support
 #ifndef OMIM_OS_WINDOWS
-    munmap(m_memory, m_size);
+    munmap(m_memory, static_cast<size_t>(m_size));
     close(m_fd);
 #endif
   }

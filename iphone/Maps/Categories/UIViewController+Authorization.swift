@@ -1,6 +1,6 @@
 extension UIViewController {
-  func signup(anchor: UIView, onComplete: @escaping (Bool) -> Void) {
-    if MWMAuthorizationViewModel.isAuthenticated() {
+  @objc func signup(anchor: UIView, onComplete: @escaping (Bool) -> Void) {
+    if User.isAuthenticated() {
       onComplete(true)
     } else {
       let authVC = AuthorizationViewController(popoverSourceView: anchor,

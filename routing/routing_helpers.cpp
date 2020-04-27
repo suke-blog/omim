@@ -1,8 +1,11 @@
 #include "routing/routing_helpers.hpp"
+
 #include "routing/road_point.hpp"
 #include "routing/segment.hpp"
 
 #include "traffic/traffic_info.hpp"
+
+#include "geometry/point2d.hpp"
 
 #include "base/stl_helpers.hpp"
 
@@ -14,7 +17,8 @@ namespace routing
 using namespace std;
 using namespace traffic;
 
-void FillSegmentInfo(vector<Segment> const & segments, vector<Junction> const & junctions,
+void FillSegmentInfo(vector<Segment> const & segments,
+                     vector<geometry::PointWithAltitude> const & junctions,
                      Route::TTurns const & turns, Route::TStreets const & streets,
                      Route::TTimes const & times, shared_ptr<TrafficStash> const & trafficStash,
                      vector<RouteSegment> & routeSegment)
@@ -82,7 +86,7 @@ void FillSegmentInfo(vector<Segment> const & segments, vector<Junction> const & 
     }
 
     routeLengthMeters +=
-      MercatorBounds::DistanceOnEarth(junctions[i].GetPoint(), junctions[i + 1].GetPoint());
+      mercator::DistanceOnEarth(junctions[i].GetPoint(), junctions[i + 1].GetPoint());
     routeLengthMerc += junctions[i].GetPoint().Length(junctions[i + 1].GetPoint());
 
     routeSegment.emplace_back(
@@ -95,8 +99,9 @@ void FillSegmentInfo(vector<Segment> const & segments, vector<Junction> const & 
 
 void ReconstructRoute(IDirectionsEngine & engine, IndexRoadGraph const & graph,
                       shared_ptr<TrafficStash> const & trafficStash,
-                      base::Cancellable const & cancellable, vector<Junction> const & path,
-                      Route::TTimes && times, Route & route)
+                      base::Cancellable const & cancellable,
+                      vector<geometry::PointWithAltitude> const & path, Route::TTimes && times,
+                      Route & route)
 {
   if (path.empty())
   {
@@ -107,7 +112,7 @@ void ReconstructRoute(IDirectionsEngine & engine, IndexRoadGraph const & graph,
   CHECK_EQUAL(path.size(), times.size(), ());
 
   Route::TTurns turnsDir;
-  vector<Junction> junctions;
+  vector<geometry::PointWithAltitude> junctions;
   Route::TStreets streetNames;
   vector<Segment> segments;
 
@@ -145,44 +150,114 @@ void ReconstructRoute(IDirectionsEngine & engine, IndexRoadGraph const & graph,
 Segment ConvertEdgeToSegment(NumMwmIds const & numMwmIds, Edge const & edge)
 {
   if (edge.IsFake())
+  {
+    if (edge.HasRealPart())
+    {
+      return Segment(kFakeNumMwmId, FakeFeatureIds::kIndexGraphStarterId, edge.GetFakeSegmentId(),
+                     true /* forward */);
+    }
+
     return Segment();
+  }
 
   NumMwmId const numMwmId =
       numMwmIds.GetId(edge.GetFeatureId().m_mwmId.GetInfo()->GetLocalFile().GetCountryFile());
+
   return Segment(numMwmId, edge.GetFeatureId().m_index, edge.GetSegId(), edge.IsForward());
 }
 
-void CalculateMaxSpeedTimes(RoadGraphBase const & graph, vector<Junction> const & path,
-                            Route::TTimes & times)
+bool SegmentCrossesRect(m2::Segment2D const & segment, m2::RectD const & rect)
 {
-  times.clear();
-  if (path.empty())
-    return;
+  double constexpr kEps = 1e-6;
+  bool isSideIntersected = false;
+  rect.ForEachSide([&segment, &isSideIntersected](m2::PointD const & a, m2::PointD const & b) {
+    if (isSideIntersected)
+      return;
 
-  // graph.GetMaxSpeedKMpH() below is used on purpose.
-  // The idea is while pedestrian (bicycle) routing ways for pedestrians (cyclists) are preferred.
-  // At the same time routing along big roads is still possible but if there's
-  // a pedestrian (bicycle) alternative it's prefered. To implement it a small speed
-  // is set in pedestrian_model (bicycle_model) for big roads. On the other hand
-  // the most likely a pedestrian (a cyclist) will go along big roads with average
-  // speed (graph.GetMaxSpeedKMpH()).
-  // @TODO Eta part of speed should be used here.
-  double const speedMpS = KMPH2MPS(graph.GetMaxSpeedKMpH());
-  CHECK_GREATER(speedMpS, 0.0, ());
+    m2::Segment2D const rectSide(a, b);
+    isSideIntersected =
+        m2::Intersect(segment, rectSide, kEps).m_type != m2::IntersectionResult::Type::Zero;
+  });
 
-  times.reserve(path.size());
+  return isSideIntersected;
+}
 
-  double trackTimeSec = 0.0;
-  times.emplace_back(0, trackTimeSec);
+bool RectCoversPolyline(IRoadGraph::PointWithAltitudeVec const & junctions, m2::RectD const & rect)
+{
+  if (junctions.empty())
+    return false;
 
-  for (size_t i = 1; i < path.size(); ++i)
+  if (junctions.size() == 1)
+    return rect.IsPointInside(junctions.front().GetPoint());
+
+  for (auto const & junction : junctions)
   {
-    double const lengthM =
-        MercatorBounds::DistanceOnEarth(path[i - 1].GetPoint(), path[i].GetPoint());
-    trackTimeSec += lengthM / speedMpS;
-
-    times.emplace_back(i, trackTimeSec);
+    if (rect.IsPointInside(junction.GetPoint()))
+      return true;
   }
-  CHECK_EQUAL(times.size(), path.size(), ());
+
+  // No point of polyline |junctions| lays inside |rect| but may be segments of the polyline
+  // cross |rect| borders.
+  for (size_t i = 1; i < junctions.size(); ++i)
+  {
+    m2::Segment2D const polylineSegment(junctions[i - 1].GetPoint(), junctions[i].GetPoint());
+    if (SegmentCrossesRect(polylineSegment, rect))
+      return true;
+  }
+
+  return false;
+}
+
+bool CheckGraphConnectivity(Segment const & start, bool isOutgoing, bool useRoutingOptions,
+                            size_t limit, WorldGraph & graph, std::set<Segment> & marked)
+{
+  std::queue<Segment> q;
+  q.push(start);
+
+  marked.insert(start);
+
+  std::vector<SegmentEdge> edges;
+  while (!q.empty() && marked.size() < limit)
+  {
+    auto const u = q.front();
+    q.pop();
+
+    edges.clear();
+
+    // Note. If |isOutgoing| == true outgoing edges are looked for.
+    // If |isOutgoing| == false it's the finish. So ingoing edges are looked for.
+    graph.GetEdgeList(u, isOutgoing, useRoutingOptions, edges);
+    for (auto const & edge : edges)
+    {
+      auto const & v = edge.GetTarget();
+      if (marked.count(v) == 0)
+      {
+        q.push(v);
+        marked.insert(v);
+      }
+    }
+  }
+
+  return marked.size() >= limit;
+}
+
+// AStarLengthChecker ------------------------------------------------------------------------------
+
+AStarLengthChecker::AStarLengthChecker(IndexGraphStarter & starter) : m_starter(starter) {}
+
+bool AStarLengthChecker::operator()(RouteWeight const & weight) const
+{
+  return m_starter.CheckLength(weight);
+}
+
+// AdjustLengthChecker -----------------------------------------------------------------------------
+
+AdjustLengthChecker::AdjustLengthChecker(IndexGraphStarter & starter) : m_starter(starter) {}
+
+bool AdjustLengthChecker::operator()(RouteWeight const & weight) const
+{
+  // Limit of adjust in seconds.
+  double constexpr kAdjustLimitSec = 5 * 60;
+  return weight <= RouteWeight(kAdjustLimitSec) && m_starter.CheckLength(weight);
 }
 }  // namespace routing

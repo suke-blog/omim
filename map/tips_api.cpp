@@ -7,8 +7,8 @@
 #include "base/logging.hpp"
 #include "base/timer.hpp"
 
-#include <sstream>
 #include <type_traits>
+#include <unordered_set>
 #include <utility>
 
 using namespace eye;
@@ -28,16 +28,46 @@ size_t constexpr kActionClicksCountToDisable = 1;
 // If a user clicks 3 times on the button GOT IT the appropriate screen will never be shown again.
 size_t constexpr kGotitClicksCountToDisable = 3;
 
+std::unordered_set<std::string> const kIsolinesExceptedMwms =
+{
+  "Argentina_Buenos Aires_Buenos Aires",
+  "Australia_Melbourne",
+  "Australia_Sydney",
+  "Austria_Salzburg",
+  "Belarus_Minsk Region",
+  "China_Guizhou",
+  "China_Shanghai",
+  "Czech_Praha",
+  "Finland_Southern Finland_Helsinki",
+  "France_Ile-de-France_Paris",
+  "Germany_Berlin",
+  "Germany_Hamburg_main",
+  "Germany_Saxony_Leipzig",
+  "Germany_Saxony_Dresden",
+  "India_Delhi",
+  "Italy_Veneto_Venezia",
+  "Italy_Veneto_Verona",
+  "Netherlands_Utrecht_Utrecht",
+  "Netherlands_North Holland_Amsterdam",
+  "Russia_Moscow",
+  "Spain_Catalonia_Provincia de Barcelona",
+  "Spain_Community of Madrid",
+  "UK_England_Greater London",
+  "US_New York_New York",
+  "Russia_Saint Petersburg",
+  "US_Illinois_Chickago"
+};
+
 template <typename T, std::enable_if_t<std::is_enum<T>::value> * = nullptr>
 size_t ToIndex(T type)
 {
   return static_cast<size_t>(type);
 }
 
-boost::optional<eye::Tip::Type> GetTipImpl(TipsApi::Duration showAnyTipPeriod,
-                                           TipsApi::Duration showSameTipPeriod,
-                                           TipsApi::Delegate const & delegate,
-                                           TipsApi::Conditions const & conditions)
+std::optional<eye::Tip::Type> GetTipImpl(TipsApi::Duration showAnyTipPeriod,
+                                         TipsApi::Duration showSameTipPeriod,
+                                         TipsApi::Delegate const & delegate,
+                                         TipsApi::Conditions const & conditions)
 {
   auto const lastBackgroundTime = delegate.GetLastBackgroundTime();
   if (lastBackgroundTime != 0.0)
@@ -51,10 +81,6 @@ boost::optional<eye::Tip::Type> GetTipImpl(TipsApi::Duration showAnyTipPeriod,
   auto const info = Eye::Instance().GetInfo();
 
   CHECK(info, ("Eye info must be initialized"));
-  LOG(LINFO, ("Eye info ptr use count:", info.use_count(), "Info", *info, "Info::m_booking ref:",
-    &(info->m_booking), "Info::m_bookmarks ref:", &(info->m_bookmarks), "Info::m_discovery ref:",
-    &(info->m_discovery), "Info::m_layers ref:", &(info->m_layers), "Info::m_tips ref:",
-    &(info->m_tips)));
 
   auto const & tips = info->m_tips;
   auto constexpr totalTipsCount = static_cast<size_t>(Tip::Type::Count);
@@ -84,25 +110,11 @@ boost::optional<eye::Tip::Type> GetTipImpl(TipsApi::Duration showAnyTipPeriod,
       candidates[ToIndex(shownTip.m_type)].second = false;
     }
 
-    for (auto const & c : candidates)
+    // Iterates reversed because we need to show newest tip first.
+    for (auto c = candidates.crbegin(); c != candidates.crend(); ++c)
     {
-      if (c.second && conditions[ToIndex(c.first)](*info))
-      {
-        {
-          std::ostringstream os;
-          os << "Condition for tip " << DebugPrint(c.first)
-             << " returns true. Previously shown tips: [ ";
-          for (auto const & candidate : candidates)
-          {
-            if (!candidate.second)
-              os << DebugPrint(candidate.first) << " ";
-          }
-          os << "]";
-          LOG(LINFO, (os.str()));
-        }
-
-        return c.first;
-      }
+      if (c->second && conditions[ToIndex(c->first)](*info))
+        return c->first;
     }
   }
 
@@ -151,8 +163,8 @@ size_t TipsApi::GetGotitClicksCountToDisable()
   return kGotitClicksCountToDisable;
 }
 
-TipsApi::TipsApi(Delegate const & delegate)
-  : m_delegate(delegate)
+TipsApi::TipsApi(std::unique_ptr<Delegate> delegate)
+  : m_delegate(std::move(delegate))
 {
   m_conditions =
   {{
@@ -177,45 +189,66 @@ TipsApi::TipsApi(Delegate const & delegate)
           return false;
       }
 
-      auto const pos = m_delegate.GetCurrentPosition();
-      if (!pos.is_initialized())
+      auto const pos = m_delegate->GetCurrentPosition();
+      if (!pos)
         return false;
 
-      return m_delegate.IsCountryLoaded(pos.get());
+      return m_delegate->IsCountryLoaded(*pos);
     },
     // Condition for Tips::Type::PublicTransport type.
     [this] (eye::Info const & info)
     {
       for (auto const & layer : info.m_layers)
       {
-        if (layer.m_type == Layer::Type::PublicTransport)
+        if (layer.m_type == Layer::Type::PublicTransport &&
+            layer.m_lastTimeUsed.time_since_epoch().count() != 0)
         {
-          if (layer.m_lastTimeUsed.time_since_epoch().count() != 0)
-          {
-            return false;
-          }
+          return false;
         }
       }
 
-      auto const pos = m_delegate.GetCurrentPosition();
-      if (!pos.is_initialized())
+      auto const pos = m_delegate->GetCurrentPosition();
+      if (!pos)
         return false;
 
-      return m_delegate.HaveTransit(pos.get());
-    }
+      return m_delegate->HaveTransit(*pos);
+    },
+   // Condition for Tips::Type::Isolines type.
+   [this] (eye::Info const & info)
+   {
+     for (auto const & layer : info.m_layers)
+     {
+       if (layer.m_type == Layer::Type::Isolines &&
+           layer.m_lastTimeUsed.time_since_epoch().count() != 0)
+       {
+         return false;
+       }
+     }
+
+     auto const pos = m_delegate->GetViewportCenter();
+     auto const countryId = m_delegate->GetCountryId(pos);
+
+     if (countryId.empty())
+       return false;
+
+     if (kIsolinesExceptedMwms.find(countryId) != kIsolinesExceptedMwms.end())
+         return false;
+
+     return m_delegate->GetIsolinesQuality(countryId) == isolines::Quality::Normal;
+   },
   }};
 }
 
-boost::optional<eye::Tip::Type> TipsApi::GetTip() const
+std::optional<eye::Tip::Type> TipsApi::GetTip() const
 {
-  return GetTipImpl(GetShowAnyTipPeriod(), GetShowSameTipPeriod(), m_delegate, m_conditions);
+  return GetTipImpl(GetShowAnyTipPeriod(), GetShowSameTipPeriod(), *m_delegate, m_conditions);
 }
 
 // static
-boost::optional<eye::Tip::Type> TipsApi::GetTipForTesting(Duration showAnyTipPeriod,
-                                                          Duration showSameTipPeriod,
-                                                          TipsApi::Delegate const & delegate,
-                                                          Conditions const & triggers)
+std::optional<eye::Tip::Type> TipsApi::GetTipForTesting(Duration showAnyTipPeriod,
+                                                        Duration showSameTipPeriod,
+                                                        TipsApi::Delegate const & delegate,
+                                                        Conditions const & triggers)
 {
   return GetTipImpl(showAnyTipPeriod, showSameTipPeriod, delegate, triggers);
 }

@@ -3,11 +3,13 @@
 #include "coding/endianness.hpp"
 #include "coding/internal/file_data.hpp"
 
-#include "std/algorithm.hpp"
-#include "std/cstring.hpp"
-
 #include "base/assert.hpp"
 #include "base/logging.hpp"
+
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
 
 namespace
 {
@@ -125,7 +127,7 @@ GpsTrackStorage::GpsTrackStorage(string const & filePath, size_t maxItemCount)
       if (!m_stream.good())
         MYTHROW(OpenException, ("Seek to the end error.", m_filePath));
 
-      size_t const fileSize = m_stream.tellp();
+      auto const fileSize = static_cast<size_t>(m_stream.tellp());
 
       m_itemCount = GetItemCount(fileSize);
 

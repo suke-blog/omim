@@ -5,32 +5,27 @@
 #include "base/macros.hpp"
 
 #include "std/target_os.hpp"
-#include "std/set.hpp"
-#include "std/vector.hpp"
+
+#include <string>
+#include <vector>
+
+using namespace std;
 
 #if defined(OMIM_OS_MAC) || defined(OMIM_OS_IPHONE)
   #include <CoreFoundation/CFLocale.h>
   #include <CoreFoundation/CFString.h>
-
 #elif defined(OMIM_OS_WINDOWS)
   #include "std/windows.hpp"
   // for XP it's not defined
   #define MUI_LANGUAGE_NAME 0x8
-
 #elif defined(OMIM_OS_LINUX)
-  #include "std/cstdlib.hpp"
-
+  #include <cstdlib>
 #elif defined(OMIM_OS_ANDROID)
   /// Body for this function is inside android/jni sources
   string GetAndroidSystemLanguage();
-
-#elif defined(OMIM_OS_TIZEN)
-  #include "tizen_utils.hpp"
 #else
   #error "Define language preferences for your platform"
-
 #endif
-
 
 #ifdef OMIM_OS_WINDOWS
 struct MSLocale
@@ -45,7 +40,6 @@ static const MSLocale gLocales[] = {{0x1,"ar"},{0x2,"bg"},{0x3,"ca"},{0x4,"zh-Ha
 
 namespace languages
 {
-
 void GetSystemPreferred(vector<string> & languages)
 {
 #if defined(OMIM_OS_MAC) || defined(OMIM_OS_IPHONE) || defined(OMIM_OS_LINUX)
@@ -124,9 +118,6 @@ void GetSystemPreferred(vector<string> & languages)
 
 #elif defined(OMIM_OS_ANDROID)
   languages.push_back(GetAndroidSystemLanguage());
-
-#elif defined(OMIM_OS_TIZEN)
-  languages.push_back(GetTizenLocale());
 #else
   #error "Define language preferences for your platform"
 #endif
@@ -196,5 +187,4 @@ string GetCurrentTwine()
   // Use short (2 or 3 chars) versions for all other languages.
   return Normalize(lang);
 }
-
 }  // namespace languages

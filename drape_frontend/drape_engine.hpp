@@ -32,6 +32,7 @@
 #include <functional>
 #include <map>
 #include <mutex>
+#include <utility>
 #include <vector>
 
 namespace dp
@@ -58,10 +59,11 @@ public:
            double vs,
            double fontsScaleFactor,
            gui::TWidgetsInitInfo && info,
-           pair<location::EMyPositionMode, bool> const & initialMyPositionMode,
+           std::pair<location::EMyPositionMode, bool> const & initialMyPositionMode,
            location::TMyPositionModeChanged && myPositionModeChanged,
            bool allow3dBuildings,
            bool trafficEnabled,
+           bool isolinesEnabled,
            bool blockTapEvents,
            bool showChoosePositionMark,
            std::vector<m2::TriangleD> && boundAreaTriangles,
@@ -69,7 +71,8 @@ public:
            bool isAutozoomEnabled,
            bool simplifiedTrafficColors,
            OverlaysShowStatsCallback && overlaysShowStatsCallback,
-           TIsUGCFn && isUGCFn)
+           TIsUGCFn && isUGCFn,
+           OnGraphicsContextInitialized && onGraphicsContextInitialized)
       : m_apiVersion(apiVersion)
       , m_factory(factory)
       , m_viewport(viewport)
@@ -82,6 +85,7 @@ public:
       , m_myPositionModeChanged(std::move(myPositionModeChanged))
       , m_allow3dBuildings(allow3dBuildings)
       , m_trafficEnabled(trafficEnabled)
+      , m_isolinesEnabled(isolinesEnabled)
       , m_blockTapEvents(blockTapEvents)
       , m_showChoosePositionMark(showChoosePositionMark)
       , m_boundAreaTriangles(std::move(boundAreaTriangles))
@@ -90,6 +94,7 @@ public:
       , m_simplifiedTrafficColors(simplifiedTrafficColors)
       , m_overlaysShowStatsCallback(std::move(overlaysShowStatsCallback))
       , m_isUGCFn(std::move(isUGCFn))
+      , m_onGraphicsContextInitialized(std::move(onGraphicsContextInitialized))
     {}
 
     dp::ApiVersion m_apiVersion;
@@ -100,10 +105,11 @@ public:
     double m_vs;
     double m_fontsScaleFactor;
     gui::TWidgetsInitInfo m_info;
-    pair<location::EMyPositionMode, bool> m_initialMyPositionMode;
+    std::pair<location::EMyPositionMode, bool> m_initialMyPositionMode;
     location::TMyPositionModeChanged m_myPositionModeChanged;
     bool m_allow3dBuildings;
     bool m_trafficEnabled;
+    bool m_isolinesEnabled;
     bool m_blockTapEvents;
     bool m_showChoosePositionMark;
     std::vector<m2::TriangleD> m_boundAreaTriangles;
@@ -112,12 +118,13 @@ public:
     bool m_simplifiedTrafficColors;
     OverlaysShowStatsCallback m_overlaysShowStatsCallback;
     TIsUGCFn m_isUGCFn;
+    OnGraphicsContextInitialized m_onGraphicsContextInitialized;
   };
 
   DrapeEngine(Params && params);
   ~DrapeEngine();
 
-  void Update(int w, int h);
+  void RecoverSurface(int w, int h, bool recreateContextDependentResources);
 
   void Resize(int w, int h);
   void Invalidate();
@@ -126,15 +133,23 @@ public:
 
   void AddTouchEvent(TouchEvent const & event);
   void Scale(double factor, m2::PointD const & pxPoint, bool isAnim);
+  void Move(double factorX, double factorY, bool isAnim);
+  void Rotate(double azimuth, bool isAnim);
 
   // If zoom == -1 then current zoom will not be changed.
   void SetModelViewCenter(m2::PointD const & centerPt, int zoom, bool isAnim,
                           bool trackVisibleViewport);
-  void SetModelViewRect(m2::RectD const & rect, bool applyRotation, int zoom, bool isAnim);
-  void SetModelViewAnyRect(m2::AnyRectD const & rect, bool isAnim);
+  void SetModelViewRect(m2::RectD const & rect, bool applyRotation, int zoom, bool isAnim,
+                        bool useVisibleViewport);
+  void SetModelViewAnyRect(m2::AnyRectD const & rect, bool isAnim, bool useVisibleViewport);
 
-  using TModelViewListenerFn = FrontendRenderer::TModelViewChanged;
-  void SetModelViewListener(TModelViewListenerFn && fn);
+  using ModelViewChangedHandler = FrontendRenderer::ModelViewChangedHandler;
+  void SetModelViewListener(ModelViewChangedHandler && fn);
+
+#if defined(OMIM_OS_MAC) || defined(OMIM_OS_LINUX)
+  using GraphicsReadyHandler = FrontendRenderer::GraphicsReadyHandler;
+  void NotifyGraphicsReady(GraphicsReadyHandler const & fn, bool needInvalidate);
+#endif
 
   void ClearUserMarksGroup(kml::MarkGroupId groupId);
   void ChangeVisibilityUserMarksGroup(kml::MarkGroupId groupId, bool isVisible);
@@ -142,7 +157,7 @@ public:
   void InvalidateUserMarks();
 
   void SetRenderingEnabled(ref_ptr<dp::GraphicsContextFactory> contextFactory = nullptr);
-  void SetRenderingDisabled(bool const destroyContext);
+  void SetRenderingDisabled(bool const destroySurface);
   void InvalidateRect(m2::RectD const & rect);
   void UpdateMapStyle();
 
@@ -153,18 +168,21 @@ public:
   void LoseLocation();
   void StopLocationFollow();
 
-  using TTapEventInfoFn = FrontendRenderer::TTapEventInfoFn;
-  void SetTapEventInfoListener(TTapEventInfoFn && fn);
-  using TUserPositionChangedFn = FrontendRenderer::TUserPositionChangedFn;
-  void SetUserPositionListener(TUserPositionChangedFn && fn);
+  using TapEventInfoHandler = FrontendRenderer::TapEventInfoHandler;
+  void SetTapEventInfoListener(TapEventInfoHandler && fn);
+  using UserPositionChangedHandler = FrontendRenderer::UserPositionChangedHandler;
+  void SetUserPositionListener(UserPositionChangedHandler && fn);
+  using UserPositionPendingTimeoutHandler = FrontendRenderer::UserPositionPendingTimeoutHandler;
+  void SetUserPositionPendingTimeoutListener(UserPositionPendingTimeoutHandler && fn);
 
   void SelectObject(SelectionShape::ESelectedObject obj, m2::PointD const & pt,
-                    FeatureID const & featureID, bool isAnim);
+                    FeatureID const & featureID, bool isAnim, bool isGeometrySelectionAllowed);
   void DeselectObject();
   
   dp::DrapeID AddSubroute(SubrouteConstPtr subroute);
   void RemoveSubroute(dp::DrapeID subrouteId, bool deactivateFollowing);
-  void FollowRoute(int preferredZoomLevel, int preferredZoomLevel3d, bool enableAutoZoom);
+  void FollowRoute(int preferredZoomLevel, int preferredZoomLevel3d, bool enableAutoZoom,
+                   bool isArrowGlued);
   void DeactivateRouteFollowing();
   void SetSubrouteVisibility(dp::DrapeID subrouteId, bool isVisible);
   dp::DrapeID AddRoutePreviewSegment(m2::PointD const & startPt, m2::PointD const & finishPt);
@@ -207,6 +225,8 @@ public:
   void ClearTransitSchemeCache(MwmSet::MwmId const & mwmId);
   void ClearAllTransitSchemeCache();
 
+  void EnableIsolines(bool enable);
+
   void SetFontScaleFactor(double scaleFactor);
 
   void RunScenario(ScenarioManager::ScenarioData && scenarioData,
@@ -228,14 +248,17 @@ public:
 
   void ShowDebugInfo(bool shown);
 
+  void UpdateVisualScale(double vs, bool needStopRendering);
+  void UpdateMyPositionRoutingOffset(bool useDefault, int offsetY);
+
 private:
   void AddUserEvent(drape_ptr<UserEvent> && e);
   void PostUserEvent(drape_ptr<UserEvent> && e);
   void ModelViewChanged(ScreenBase const & screen);
-
   void MyPositionModeChanged(location::EMyPositionMode mode, bool routingActive);
   void TapEvent(TapInfo const & tapInfo);
   void UserPositionChanged(m2::PointD const & position, bool hasPosition);
+  void UserPositionPendingTimeout();
 
   void ResizeImpl(int w, int h);
   void RecacheGui(bool needResetOldGui);
@@ -256,9 +279,10 @@ private:
 
   dp::Viewport m_viewport;
 
-  TModelViewListenerFn m_modelViewChanged;
-  TUserPositionChangedFn m_userPositionChanged;
-  TTapEventInfoFn m_tapListener;
+  ModelViewChangedHandler m_modelViewChangedHandler;
+  TapEventInfoHandler m_tapEventInfoHandler;
+  UserPositionChangedHandler m_userPositionChangedHandler;
+  UserPositionPendingTimeoutHandler m_userPositionPendingTimeoutHandler;
 
   gui::TWidgetsInitInfo m_widgetsInfo;
   gui::TWidgetsLayoutInfo m_widgetsLayout;

@@ -4,8 +4,6 @@
 <!-- Language: vi -->
 <resources>
 	<!-- SECTION: Strings -->
-	<!-- About button text (should be short) -->
-	<string name="about">Giới thiệu</string>
 	<!-- Button text (should be short) -->
 	<string name="back">Quay lại</string>
 	<!-- Button text (should be short) -->
@@ -52,7 +50,6 @@
 	<string name="miles">Dặm</string>
 	<!-- View and button titles for accessibility -->
 	<string name="core_my_position">Vị trí của Tôi</string>
-	<string name="ok">OK</string>
 	<!-- Settings/Downloader - No free space dialog message -->
 	<string name="free_disk_space_for_country_x">Bạn vui lòng giải phóng dung lượng trên thiết bị của mình để có thể tải xuống %s</string>
 	<!-- Leave Review dialog - Not now button (remind me later) -->
@@ -71,8 +68,6 @@
 	<string name="touch_to_download">Chạm để tải xuống</string>
 	<!-- Settings/Downloader - 3G download warning dialog confirm button -->
 	<string name="use_cellular_data">Có</string>
-	<!-- Settings/Downloader - No internet connection dialog message -->
-	<string name="use_wifi_recommendation_text">Chúng tôi khuyên bạn nên sử dụng WiFi để tải xuống các bảnđồ lớn.</string>
 	<!-- Choose measurement on first launch alert - title -->
 	<string name="which_measurement_system">Bạn thích sử dụng hệ thống đo lường nào?</string>
 	<!-- Location services are disabled by user alert - message -->
@@ -254,8 +249,6 @@
 	<string name="my_position_share_sms">Này, hãy xem vị trí hiện tại của tôi tại MAPS.ME! %1$s hoặc %2$s Bạn không có bản đồ ngoại tuyến? Tải xuống tại đây: http://maps.me/get</string>
 	<!-- Subject for emailed bookmark -->
 	<string name="bookmark_share_email_subject">Này, hãy xem ghim của tôi tại MAPS.ME map</string>
-	<!-- Share one specific bookmark using EMail, %1$@ is bookmark's name, %2$@ is ge0:// link and %3$@ http://ge0.me -->
-	<string name="bookmark_share_email">Xin chào,\n\nI được gắn: %1$s tại MAPS.ME, bản đồ thế giới ngoại tuyến. Ấn vào đường dẫn này %2$s hoặc cái này %3$s để xem vị trí trên bản đồ.\n\nCám ơn nhiều.</string>
 	<!-- Subject for emailed position -->
 	<string name="my_position_share_email_subject">Này, hãy xem vị trí hiện tại của tôi tại MAPS.ME map!</string>
 	<!-- Share my position using EMail, %1$@ is ge0:// and %2$@ is http://ge0.me link WITHOUT NAME -->
@@ -358,12 +351,6 @@
 	<string name="route">Tuyến đường</string>
 	<!-- category title -->
 	<string name="routes">Tuyến đường</string>
-	<!-- Show on first launch. -->
-	<string name="maps_licence_info">Ứng dụng này sử dụng dữ liệu địa lý (bao gồm bản đồ, thông tin doanh nghiệp, các điểm lưu tâm, biên giới quốc gia và khu vực, v.v…) lấy từ dự án OpenStreetMap. Chúng tôi không đảm bảo bất kỳ sự nhất quán, chính xác, toàn vẹn hay phù hợp nào từ các dữ liệu OpenStreetMap.</string>
-	<!-- Show on first launch. -->
-	<string name="agree">Tôi đồng ý</string>
-	<!-- Show on first launch -->
-	<string name="disagree">Tôi không đồng ý</string>
 	<!-- text of notification -->
 	<string name="download_map_notification">Tải xuống bản đồ của vị trí của bạn</string>
 	<!-- Dialog for transferring maps from lite to pro. -->
@@ -558,6 +545,22 @@
 	<string name="brown">Nâu</string>
 	<!-- pink color -->
 	<string name="pink">Hồng</string>
+	<!-- deep purple color -->
+	<string name="deep_purple">Tía thẫm</string>
+	<!-- light blue color -->
+	<string name="light_blue">Xanh da trời</string>
+	<!-- cyan color -->
+	<string name="cyan">Xanh lơ</string>
+	<!-- teal color -->
+	<string name="teal">Lục bảo</string>
+	<!-- lime color -->
+	<string name="lime">Màu xanh chanh</string>
+	<!-- deep orange color -->
+	<string name="deep_orange">Cam đậm</string>
+	<!-- gray color -->
+	<string name="gray">Xám</string>
+	<!-- blue gray color -->
+	<string name="blue_gray">Xám xanh da trời</string>
 	<!-- Wi-Fi available -->
 	<string name="WiFi_available">Có</string>
 
@@ -791,8 +794,6 @@
 	<string name="onboarding_location_message">Để sử dụng tính năng dẫn đường và các tính năng khác, chúng tôi cần truy cập vị trí địa lý của bạn.</string>
 	<string name="onboarding_permissions_title">Cho phép MAPS.ME truy cập ổ lưu trữ và vị trí</string>
 	<string name="onboarding_permissions_message">Để bạn có thể tải về các bản đồ, xem các địa điểm và lưu lượng giao thông gần bạn và sử dụng điều hướng.</string>
-	<string name="onboarding_welcome_title">Chào mừng đến với MAPS.ME</string>
-	<string name="onboarding_welcome_first_subtitle">Các bản đồ hoàn toàn ngoại tuyến miễn phí, nhanh và chi tiết với điều hướng qua từng khúc quanh.</string>
 	<string name="onboarding_welcome_second_subtitle">Bằng cách khởi chạy ứng dụng, bạn đồng ý với &lt;a href="%1$s">Điều khoản Sử dụng&lt;/a> và &lt;a href="%2$s">Chính sách Riêng tư&lt;/a>.</string>
 	<string name="dialog_incorrect_feature_position">Thay đổi địa điểm</string>
 	<string name="message_invalid_feature_position">Một đối tượng không thể đặt được ở đây</string>
@@ -874,6 +875,7 @@
 	<string name="minute">phút</string>
 	<string name="placepage_place_description">Mô tả</string>
 	<string name="placepage_more_button">Bổ sung</string>
+	<string name="placepage_more_reviews_button">Thêm nhận xét</string>
 	<string name="book_button">Đặt trước</string>
 	<string name="placepage_call_button">Gọi</string>
 	<string name="placepage_edit_bookmark_button">Sửa Dấu Trang</string>
@@ -1027,8 +1029,6 @@
 	<string name="banner_geerbest_message">Tìm kiếm nhanh hơn 50.000 sản phẩm ở mức giá thấp.</string>
 	<string name="banner_rentalcars_title">Thuê ô tô trực tuyến</string>
 	<string name="banner_rentalcars_message">800 công ty thuê ô tô ở hơn 49.000 địa điểm thuê ô tô.</string>
-	<string name="banner_viator_title">Tìm kiếm tour trực tuyến</string>
-	<string name="banner_viator_message">Tìm hơn 50.000 trên toàn thế giới.</string>
 	<!-- december -->
 	<string name="whatsnew_traffic">Dữ liệu Giao thông tại 36 Quốc gia</string>
 	<!-- december -->
@@ -1070,8 +1070,6 @@
 	<string name="whatsnew_smaller_mwm_message">Giảm đến 20% kích cỡ của các bản đồ.</string>
 	<string name="whatsnew_waypoints_title">Điểm tọa độ trong Lộ trình</string>
 	<string name="whatsnew_waypoints_message">Chạm vào các điểm để thêm điểm tọa độ vào lộ trình của bạn.</string>
-	<string name="whatsnew_viator_title">Đặt tour du lịch</string>
-	<string name="whatsnew_viator_message">Chọn các tour phổ biến trong các thành phố du lịch trên toàn thế giới.</string>
 	<string name="whatsnew_driving_style_title">Phong cách Bản đồ Mới cho Lái xe</string>
 	<string name="whatsnew_driving_style_message">Chế độ điều hướng ô tô dễ sử dụng hơn.</string>
 	<string name="more_on_bookingcom">Xem thêm trên Booking.com</string>
@@ -1128,7 +1126,6 @@
 	<string name="settings_card_memory">Bộ nhớ thẻ</string>
 	<string name="settings_storage_available">%s trống</string>
 	<string name="toast_location_permission_denied">Quyền định vị của ứng dụng bị từ chối</string>
-	<string name="place_page_viator_title">Các điểm tham quan và du lịch</string>
 	<string name="button_use">Sử dụng</string>
 	<string name="planning_route_manage_route">Quản lý lộ trình</string>
 	<string name="button_plan">Kế hoạch</string>
@@ -1143,8 +1140,6 @@
 	<string name="add_my_position">Thêm vị trí của tôi</string>
 	<string name="choose_start_point">Chọn một điểm bắt đầu</string>
 	<string name="choose_destination">Chọn một điểm đến</string>
-	<string name="preloader_viator_title">Khám phá các tour và hoạt động khác lạ</string>
-	<string name="preloader_viator_message">Tour, hoạt động, ngắm cảnh, v.v…</string>
 	<string name="preloader_viator_button">Tìm hiểu thêm</string>
 	<string name="whats_new_title_route">Các lộ trình đạp xe đạp và lộ trình đi bộ đã được cải thiện</string>
 	<string name="whats_new_message_route">Chúng tôi đã khắc phục các lỗi, giúp cải thiện thời gian xây dựng lộ trình nhanh hơn một vài lần, và bổ sung các điểm dừng trung gian</string>
@@ -1155,9 +1150,6 @@
 	<string name="placepage_no_reviews">Không có đánh giá</string>
 	<string name="placepage_reviewed">Bạn đã đánh giá nơi này</string>
 	<string name="placepage_summary_rating">Điểm tóm tắt</string>
-	<plurals name="placepage_summary_rating_description">
-	  <item quantity="other">Dựa trên %d đánh giá</item>
-	</plurals>
 	<string name="placepage_rate_comment">Chạm để cho điểm và đánh giá nơi này.</string>
 	<string name="placepage_rate_horrible">Khủng khiếp</string>
 	<string name="placepage_rate_bad">Tồi tệ</string>
@@ -1200,8 +1192,6 @@
 	<string name="discovery_button_subtitle_attractions">Thắng cảnh</string>
 	<string name="discovery_button_subtitle_eat_and_drink">Ăn uống</string>
 	<string name="discovery_button_subtitle_local_guides">Hướng dẫn Địa phương</string>
-	<string name="discovery_button_viator_offline_title">Khám phá các tour du lịch và những điều lạ bạn có thể làm</string>
-	<string name="discovery_button_viator_offline_message">Tour du lịch, việc có thể làm, tour ngắm cảnh và nhiều hơn thế nữa.</string>
 	<string name="discovery_button_viator_error_title">Lỗi tải dữ liệu</string>
 	<string name="discovery_button_other_error_message">Lỗi tải dữ liệu</string>
 	<string name="discovery_button_other_loading_message">Dữ liệu đang tải</string>
@@ -1241,12 +1231,10 @@
 	<string name="downloader_percent">%1$s (%2$s / %3$s)</string>
 	<string name="downloader_process">Tải về %s...</string>
 	<string name="downloader_applying">Áp dụng %s...</string>
-	<string name="transit_not_found">Chưa có tính năng dẫn đường quá cảnh cho khu vực này</string>
 	<string name="whats_new_title_hotel_filter">Đã có bộ lọc khách sạn mới!</string>
 	<string name="whats_new_message_hotel_filter">Đặt các khách sạn còn phòng cho ngày của bạn! Sử dụng các bộ lọc nhận phòng và trả phòng</string>
 	<string name="whats_new_title_ugc_travel">Chia sẻ trải nghiệm của bạn với những du khách khác!</string>
 	<string name="whats_new_message_ugc_travel">Cho điểm và đánh giá những nơi bạn đã ghé thăm!</string>
-	<string name="dialog_pedestrian_route_is_long">Tuyến đường dành cho người đi bộ quá dài</string>
 	<string name="dialog_message_transit_not_found_connection">Xây dựng lộ trình trong một mạng chuyển tiếp</string>
 	<string name="bookmarks_error_message_share_general">Không thể chia sẻ do lỗi ứng dụng</string>
 	<string name="bookmarks_error_title_share_empty">Lỗi chia sẻ</string>
@@ -1347,8 +1335,8 @@
 	<string name="error_already_downloaded">Danh sách này đã được tải về</string>
 	<string name="guides">Hướng dẫn</string>
 	<string name="guide_downloaded_title">Hướng dẫn đã được tải xuống thành công</string>
-	<string name="download_guides">Tải xuống hướng dẫn</string>
-	<string name="cached_guides_placeholder_subtitle">Hướng dẫn ngoại tuyến chi tiết cho mọi cuộc hành trình. Chọn hướng dẫn phù hợp với bạn nhất và tải xuống trực tiếp vào bản đồ. Bạn sẽ cần kết nối internet để tải xuống các hướng dẫn.</string>
+	<!-- as few symbols as possible -->
+	<string name="download_guides">Tìm hướng dẫn</string>
 	<string name="guides_groups_cached">Đã tải xuống hướng dẫn</string>
 	<string name="subtitle_error_downloading_guide">Hướng dẫn đã không được tải xuống</string>
 	<string name="error_already_downloaded_guide">Hướng dẫn này đã được tải xuống</string>
@@ -1387,7 +1375,6 @@
 	<string name="restore_success_alert">Đăng ký đã được khôi phục thành công</string>
 	<string name="restore_error_alert">Đã xảy ra lỗi khi khôi phục đăng ký</string>
 	<string name="restore_no_subscription_alert">Không có đăng ký đang hoạt động</string>
-	<string name="subscription_terms">Thanh toán sẽ được tính vào tài khoản iTunes của bạn khi xác nhận mua. Đăng ký sẽ tự động gia hạn trừ khi tính năng tự động gia hạn được tắt ít nhất 24 giờ trước khi kết thúc kỳ đăng ký hiện tại. Tài khoản của bạn sẽ được tính phí theo gói gia hạn trong vòng 24 giờ trước khi kết thúc kỳ đăng ký hiện tại. Bạn có thể quản lý hoặc tắt tính năng tự động gia hạn trong cài đặt tài khoản Apple ID của mình bất kỳ lúc nào sau khi mua.</string>
 	<string name="subscriptions_title">Đăng ký</string>
 	<string name="manage_subscription">Quản lý đăng ký</string>
 	<string name="sharing_options">Chia sẻ lựa chọn</string>
@@ -1397,7 +1384,6 @@
 	<string name="hide_from_map">Ẩn từ bản đồ</string>
 	<string name="ugc_route_tags_screen_label">Chọn thẻ</string>
 	<string name="ugc_route_tags_progress_msg">Đang tải thẻ…</string>
-	<string name="ugc_route_tags_desc">Vui lòng chọn thẻ để giúp những khách du lịch khác tìm thấy hướng dẫn của bạn. Điều này là bắt buộc.</string>
 	<string name="public_access">Truy cập công khai</string>
 	<string name="limited_access">Truy cập hạn chế</string>
 	<string name="upload_and_publish_desc">Hướng dẫn này sẽ được tải lên danh mục MAPS.ME công khai và sẽ có sẵn cho những người dùng khác</string>
@@ -1420,7 +1406,7 @@
 	<string name="unable_upload_errorr_title">Tải tập tin lên không thành công</string>
 	<string name="unable_upload_error_subtitle_edited">Tập tin này đã được chỉnh sửa qua ứng dụng web</string>
 	<string name="unable_upload_error_subtitle_broken">Tập tin này bị hỏng và không thể tải lên được. Vui lòng tải lên một tập tin khác.</string>
-	<string name="buy_btn">Mua với %s</string>
+	<string name="buy_btn">Mua sách hướng dẫn với %s</string>
 	<string name="download_guide_progress">Đang tải xuống hướng dẫn của bạn…</string>
 	<string name="price_error_title">Không thể có được giá</string>
 	<string name="price_error_subtitle">Vui lòng thử lại trong vài phút</string>
@@ -1468,12 +1454,326 @@
 	<string name="whatsnew_paid_routes_title">Thêm nhiều trải nghiệm mới!</string>
 	<string name="whatsnew_paid_routes_message">Ngoài các tuyến đường miễn phí, chúng tôi đã thêm 3 danh mục tuyến đường có trả tiền vào danh mục của mình. Hơn 700 tuyến đường mới!</string>
 	<string name="whats_new_ugc_routes_title_android_only">Rất dễ để chia sẻ những sự ấn tượng của bạn</string>
+	<string name="ugc_thanks_message_auth">Ý kiến của bạn đã được bảo lưu</string>
+	<string name="ugc_thanks_message_not_auth">Hãy đăng ký để có thể để lại ý kiến nhận xét</string>
+	<string name="notification_leave_review_v2_title">Hãy để lại ý kiến nhận xét và giúp đỡ du khách!</string>
+	<string name="error_public_not_enought_title">Không đủ thẻ đánh dấu</string>
+	<string name="error_public_not_enought_subtitle">Trong hướng dẫn tuyến du lịch của bạn phải có ít nhất 3 thẻ đánh dấu để có thể tải lên công khai</string>
+	<string name="bookmark_public_upload_alert_title">Bạn chỉ cần thêm vài bước nữa là có thể chia sẻ hướng dẫn của mình với tất cả khách du lịch của MAPS.ME!</string>
+	<string name="bookmark_public_upload_alert_subtitle">Hãy chắc chắn rằng tuyến hướng dẫn của bạn có đầy đủ tên gọi, mô tả, và tất nhiên tất cả thẻ đánh dấu đều có thông tin về các địa điểm. Chính nhờ điều này, người dùng sẽ tìm được tuyến hướng dẫn và có thể áp dụng vào chuyến đi của mình.</string>
+	<string name="bookmark_public_upload_alert_ok_button">Vâng, tôi chắc chắn!</string>
+	<string name="name_title">Nhập tên gọi</string>
+	<string name="name_placeholder">ví dụ, Quán rượu London</string>
+	<string name="name_comment1">Hãy gọi tên tuyến hướng dẫn một cách cụ thể để người dùng có thể tìm chính xác được nó, ví dụ, \"Quán rượu London\"</string>
+	<string name="name_comment2">Tên gọi không được chứa những ký tự đặc biệt. Không đăng lên những tuyến hướng dẫn với tên gọi \"Các Địa chỉ của Tôi\"</string>
+	<string name="description_guide">Mô tả</string>
+	<string name="description_title">Hãy nhập thông tin mô tả hướng dẫn</string>
+	<string name="description_placeholder">Hãy mổ tả hướng dẫn của mình một cách cụ thể</string>
+	<string name="description_comment1">Phần mô tả phải chứa ít nhất 30 ký tự.</string>
+	<string name="ugc_route_tags_desc">Vui lòng lựa chọn thẻ tag để giúp những khách du lịch khác tìm được hướng dẫn của bạn. Điều này là bắt buộc. Không nhiều hơn %s thẻ tag.</string>
+	<string name="html_format_error_title">Hướng dẫn của bạn chương được đăng lên</string>
+	<string name="html_format_error_subtitle">Xin vui lòng kiểm trả chắc chắn để tên gọi và mô tả các thẻ đánh dấu trong hướng dẫn của bạn có định dạng đúng. Bạn có thể kiểm tra điều này trong phần sửa chữa bằng nút \"Chỉnh sửa trực tuyến\" ở dưới.</string>
+	<string name="web_editor_description">Tải lên hướng dẫn và nhận đường link để chỉnh sửa trên máy tính</string>
+	<string name="edit_on_web_confirm">Chỉnh sửa trực tuyến</string>
+	<string name="update_guide">Tải phiên bản mới</string>
+	<string name="direct_link_updating_text">Cập nhận tuyến hướng dẫn…</string>
+	<string name="direct_link_updating_success">Tuyến hướng dẫn đã được cập nhật</string>
+	<string name="unable_get_direct_link_desc">Bạn có thể chia sẻ hướng dẫn của mình bằng đường link công khai</string>
+	<string name="any_access_update_alert_title">Có thể bạn có bản hướng dẫn mới</string>
+	<string name="any_access_update_alert_message">Bạn muốn cập nhật thẻ đánh dấu? Bản mới sẽ truy cập được bằng chính đường link này.</string>
+	<string name="any_access_update_alert_update">Cập nhật</string>
+	<string name="public_or_limited_access_after_edit_online_error_title">Bạn đã chỉnh sửa tuyến hướng dẫn trực tuyến</string>
+	<string name="public_or_limited_access_after_edit_online_error_message">Trong tương lại hãy chỉnh sửa, đăng và chia sẻ hướng dẫn cùng bạn bè qua website của chúng tôi</string>
+	<string name="power_managment_title">Chế độ tiết kiệm năng lượng</string>
+	<string name="power_managment_description">Nếu chế độ tiết kiệm năng lượng được bật, ứng dụng sẽ tắt các chức năng tiêu thụ năng lượng tùy thuộc vào mức pin hiện tại của điện thoại</string>
+	<string name="power_managment_setting_never">Không bao giờ</string>
+	<string name="power_managment_setting_auto">Tự động</string>
+	<string name="power_managment_setting_manual_max">Tiết kiệm năng lượng tối đa</string>
+	<string name="enable_logging_warning_message">Tùy chọn này được kích hoạt để ghi nhật ký đăng nhập cho mục đích chẩn đoán. Điều này sẽ giúp nhóm chúng tôi làm rõ các vấn đề liên quan đến ứng dụng. Hãy bật tùy chọn này chỉ khi nào có yêu cầu hỗ trợ từ MAPS.ME.</string>
+	<string name="html_error_upload_message_try_again">Vui lòng kiểm tra kết nối internet và thử lại</string>
+	<string name="html_error_upload_title_try_again">Không có kết nối internet</string>
+	<string name="notification_leave_review_v2_android_short_title">Hãy để lại nhận xét và giúp khách du lịch!</string>
+	<string name="notifications_illegal_alert_disable_button">Tắt thông báo</string>
+	<string name="access_rules_author_only">Chỉnh sửa trực tuyến</string>
+	<string name="privacy_settings_menu">Cài đặt bảo mật</string>
+	<string name="gdpr_request_setting">Nhận ID cho yêu cầu GDPR</string>
+	<string name="gdpr_request_window_title">ID của bạn: %s.</string>
+	<string name="gdpr_request_window_message">Xin vui lòng sao chép nó và gửi yêu cầu tới địa chỉ support\@maps.me</string>
+	<string name="gdpr_request_window_copy">Sao chép ID</string>
+	<string name="unable_upadate_error_title">Cập nhận hướng dẫn không thành công</string>
+	<string name="unable_upadate_error_message">Xuất hiện lỗi khi cập nhật. Hãy kiểm tra lại những thay đổi và thử lại lần nữa</string>
+	<string name="whats_new_wiki_title">Địa điểm này là thế nào?</string>
+	<string name="whats_new_wiki_message">Chúng tôi đã thêm các bài viết về những điểm thu hút khách du lịch phổ biến nhất từ Wikipedia.org vào các trang. Những bài viết này đều có thể truy cập ngoại tuyến</string>
+	<string name="driving_options_title">Thiết lập đi vòng</string>
+	<string name="driving_options_subheader">Tránh trên mỗi tuyến</string>
+	<string name="avoid_tolls">Đường trả phí</string>
+	<string name="avoid_unpaved">Đường đất</string>
+	<string name="avoid_ferry">Bến phà</string>
+	<string name="avoid_motorways">Đường cao tốc</string>
+	<string name="unable_to_calc_alert_title">Không thể tạo tuyến đường</string>
+	<string name="unable_to_calc_alert_subtitle">Rất tiếc, chúng không thể tạo tuyến đường với những tùy chọn đã chọn. Hãy thay đổi thiết lập và thử lại</string>
+	<string name="define_to_avoid_btn">Thiết lập đường đi vòng</string>
+	<string name="change_driving_options_btn">Thiết lập đường đi tránh đã được bật</string>
+	<string name="toll_road">Đường trả phí</string>
+	<string name="unpaved_road">Đường đất</string>
+	<string name="ferry_crossing">Bến phà</string>
+	<string name="operated_by">Tạo được \"%s\"</string>
+	<string name="avoid_toll_roads_placepage">Tránh đường trả phí</string>
+	<string name="avoid_unpaved_roads_placepage">Tránh đường đất</string>
+	<string name="avoid_ferry_crossing_placepage">Tránh bến phà</string>
+	<string name="cached_guides_placeholder_subtitle">Sách hướng dẫn sẵn có trong MAPS.ME – là những điểm được lựa chọn cùng với hình ảnh và mô tả, chúng được hiển thị trên bản đồ và cho phép truy cập ngoại tuyến.</string>
+	<string name="guides_catalogue_title">Danh mục sách hướng dẫn</string>
+	<string name="download_guides_button">Chuyển tới danh mục</string>
+	<plurals name="placepage_summary_rating_description">
+	  <item quantity="one">Căn cứ vào %d nhận xét</item>
+	  <item quantity="other">Căn cứ vào %d những nhận xét</item>
+	</plurals>
+	<string name="type.cuisine.uzbek">Ẩm thực của Uzbekistan</string>
+	<string name="onboarding_welcome_title">Hãy lên kế hoạch và đi du lịch cùng với MAPS.ME</string>
+	<string name="onboarding_welcome_first_subtitle">Hãy lưu lại những địa chỉ hấp dẫn, đặt phòng khách sạn và xây dựng lộ trình đi ngoại tuyến</string>
+	<string name="onboarding_guide_direct_download_title">Sác hướng dẫn đã sẵn sàng cho phép tải xuống</string>
+	<string name="onboarding_guide_direct_download_subtitle">Nó hiển thị trên bản đồ và sẽ hoạt động ngoại tuyến</string>
+	<string name="onboarding_guide_direct_download_button">Tải về</string>
+	<string name="onboarding_bydeeplink_guide_title">Sác hướng dẫn sẵn có trong MAPS.ME</string>
+	<string name="onboarding_bydeeplink_guide_subtitle">Những địa điểm đã lựa chọn cùng hình ảnh và mô tả được hiển thị trên bản đồ và cho phép truy cập ngoại tuyến.</string>
+	<string name="whats_new_auto_update_bydeeplink_title">Trước khi chuyển sang hướng dẫn…</string>
+	<string name="whats_new_auto_update_bydeeplink_message">Hãy cập nhật bản đồ để nhận được những thông tin mới nhất về các đối tượng, chủ thể!</string>
+	<string name="whats_new_auto_update_and_proceed_button_size">Cập nhận được (%s) và tiếp tục</string>
+	<string name="whatsnew_toll_unpaved_title">Hãy xây dựng tuyến đường có tính đến tất cả các loại đường</string>
+	<string name="whatsnew_toll_unpaved_message">Hãy lựa chọn những đường vòng qua đường thu phí, đường đất và các bến phà</string>
+	<string name="whatsnew_new_catalogue_title">Những trang đã được cập nhật của danh sách</string>
+	<string name="whatsnew_new_catalogue_message">Chúng tôi đã bổ sung thông tin cụ thể về các sách hướng dẫn đồng hành để việc lựa chọn tuyến đường trở nên đơn giản và thuận tiên</string>
+	<string name="purchase_please_wait_toast">Vui lòng đừng rời bỏ màn hình đến khi hoàn tất việc mua</string>
+	<string name="trip_start">Đi nào</string>
+	<string name="pick_destination">Mục đích</string>
+	<string name="follow_my_position">Định tâm</string>
+	<string name="search_results">Kết quả tìm kiếm</string>
+	<string name="then_turn">Sau đó</string>
+	<string name="redirect_route_alert">Bạn có muốn tạo lại tuyến không?</string>
+	<string name="redirect_route_yes">Có</string>
+	<string name="redirect_route_no">Không</string>
+	<string name="trip_finished">Bạn đã tới nơi!</string>
+	<string name="keyboard_availability_alert">Bàn phím không khả dụng trong thời gian di chuyển</string>
+	<string name="dialog_routing_change_start_carplay">Không thể tạo tuyến đường từ địa điểm hiển tại</string>
+	<string name="dialog_routing_change_end_carplay">Không thể tạo tuyến đường tới điểm kết cuối. Hãy chọn điểm khác</string>
+	<string name="dialog_routing_check_gps_carplay">Không có tín hiệu GPS. Hãy đến vị trí có không gian mở</string>
+	<string name="dialog_routing_unable_locate_route_carplay">Không thể tạo tuyến đường. Hãy chọn những điểm khác cho tuyến đường</string>
+	<string name="dialog_routing_download_files_carplay">Để tạo tuyến đường, hãy tải xuống các bản đồ còn thiếu về thiết bị</string>
+	<string name="dialog_routing_system_error_carplay">Đã xảy ra lỗi. Khởi động lại ứng dụng</string>
+	<string name="dialog_routing_rebuild_from_current_location_carplay">Tuyến đường sẽ được tạo lại từ vị trí hiện tại của bạn</string>
+	<string name="dialog_routing_rebuild_for_vehicle_carplay">Tuyến đường sẽ được thay đổi thành tuyến dành cho xe ô tô</string>
+	<string name="ok">Ok</string>
+	<string name="booking_button_toolbar">Lựa chọn khách sạn trên bản đồ</string>
+	<string name="popup_booking_download_guides_title">Đặt phòng khách sạn?</string>
+	<string name="popup_booking_download_guides_message">Lên kế hoạch chô lộ trình du lịch cùng với những sách hướng dẫn sẵn có từ MAPS.ME</string>
+	<string name="popup_mwm_download_guides_title">Hướng dẫn ngoại tuyến</string>
+	<string name="popup_mwm_download_guides_cta">Lựa chọn</string>
+	<string name="popup_mwm_download_guides_cta_1">Xem</string>
+	<string name="gallery_pp_download_guides_offline_title">Lên kết hoạch nghỉ ngơi cùng MAPS.ME!</string>
+	<string name="gallery_pp_download_guides_offline_subtitle">Đừng bỏ lỡ những thứ quan trọng cùng với các tuyến được những du khách có kinh nghiệm đề xuất</string>
+	<string name="gallery_pp_download_guides_offline_cta">Bật kết nối Internet</string>
+	<string name="gallery_pp_download_guides_title">Sách hướng dẫn</string>
+	<string name="native_screen_subscription_title">Truy cập đầy đủ tới 2000+ sách hướng dẫn!</string>
+	<string name="native_screen_subscription_message">Một kỳ nghỉ đáng nhớ, ở đâu và cùng với ai bạn sẽ không đi du lịch</string>
+	<string name="annual_subscription_title">Một năm</string>
+	<string name="montly_subscription_title">Một tháng</string>
+	<string name="annual_subscription_message">12 tháng truy cập không giới hạn</string>
+	<string name="montly_subscription_message">1 tháng truy cập không giới hạn</string>
+	<string name="subscription_success_dialog_title">Cảm ơn vì đã đăng ký!</string>
+	<string name="subscription_success_dialog_message">Giờ thì bạn đã có thể truy cập không giới hạn vào danh mục sách hướng dẫn</string>
+	<string name="renewal_screen_title">Thời hạn đăng ký đã hết</string>
+	<string name="renewal_screen_message">Tất cả những sách hướng dẫn đã tải về khi đăng ký sẽ bị xóa hết. Bạn có muốn khôi phục việc đăng ký và lưu chúng lại không?</string>
+	<string name="renewal_screen_button_restore">Có, khôi phục</string>
+	<string name="renewal_screen_button_cancel">Không, xóa sách hướng dẫn</string>
+	<string name="subscription_error_ping_title">Mua không thành công</string>
+	<string name="subscription_error_message">Hiện tại server không khả dụng tại khu vực của bạn. Xin vui lòng thử lại sau</string>
+	<string name="subscription_error_button">Đã hiểu</string>
+	<string name="timeout_error_title">Rất tiếc, đã hết giờ!</string>
+	<string name="timeout_error_message">Máy chủ của chúng tôi không hồi đáp. Xin vui lòng kiểm tra lại kết nối internet và thử lại.</string>
+	<string name="per_month">/tháng.</string>
+	<string name="per_year">/năm</string>
+	<string name="buy_btn_for_subscription">Truy cập toàn bộ từ %s</string>
+	<string name="buy_btn_for_subscription_1">Mua TẤT CẢ sách hướng dẫn với %s</string>
+	<string name="buy_btn_for_subscription_ios_only_mo">Truy cập toàn với %s/tháng</string>
+	<string name="buy_btn_for_subscription_ios_only_year">Truy cập toàn với %s/năm</string>
+	<string name="subscription_terms_guides">Thanh toán sẽ được thực hiện từ tài khoản iTunes khi xác nhận mua. Việc đăng ký sẽ tự động gia hạn nếu như tự động gia hạn không bị tắt ít nhất 24h trước khi kết thúc kỳ đăng ký hiện tại. Tiền sẽ được trừ từ tài khoản của bạn tương ứng với gói dịch vụ bạn chọn và kéo dài trong 24h đồng hồ đến khi kết thúc kỳ đăng ký hiện tại. Bạn cũng có thể điều chỉnh việc tự động gia hạn hoặc tắt nó đi trong phần cài đặt tài khoản Apple ID vào bất cứ thời gian nào sau khi mua. Bạn chỉ có thể sử dụng các sách hướng dẫn đã tải khi đăng ký trong thời gian chúng có hiệu lực. Sau thời hạn 30 ngày kể từ khi kết thúc việc đăng ký, các sách hướng dẫn cùng với phần đánh dấu trang sẽ được xóa một cách tự động.</string>
+	<string name="subscription_terms">Thanh toán sẽ được tính vào tài khoản iTunes của bạn khi xác nhận mua. Đăng ký sẽ tự động gia hạn trừ khi tính năng tự động gia hạn được tắt ít nhất 24 giờ trước khi kết thúc kỳ đăng ký hiện tại. Tài khoản của bạn sẽ được tính phí theo gói gia hạn trong vòng 24 giờ trước khi kết thúc kỳ đăng ký hiện tại. Bạn có thể quản lý hoặc tắt tính năng tự động gia hạn trong cài đặt tài khoản Apple ID của mình bất kỳ lúc nào sau khi mua.</string>
+	<string name="whatsnew_carplay_title">Điều hướng tự động MAPS.ME trong CarPlay!</string>
+	<string name="whatsnew_carplay_message">Đánh dấu, tìm kiếm, camera tốc độ và thiết lập đi vòng, đường tránh – tất cả đều hoạt động mà không cần Internet</string>
+	<string name="whatsnew_subscription_title">Hãy mở cánh cửa thế giới bằng cách đăng ký!</string>
+	<string name="whatsnew_subscription_message">Truy cập không giới hạn tới cả danh mục các tuyến đường có lợi hơn là mua từng tuyến một</string>
+	<string name="whatsnew_carnavi_fixes_for_android_title">Cập nhận định hướng</string>
+	<string name="whatsnew_carnavi_fixes_for_android_message">Chúng tôi đã cải thiện việc xây dựng các tuyến đường tới cả những điểm ở xa các thành phố</string>
+	<string name="avoid_unpaved_carplay_1">Trừ đườg đất</string>
+	<string name="avoid_unpaved_carplay_2">Trừ khôg trnhựa</string>
+	<string name="avoid_ferry_carplay_1">Không có phà</string>
+	<string name="avoid_ferry_carplay_2">Trừ phà</string>
+	<string name="avoid_tolls_carplay_1">Khôg đgcóphí</string>
+	<string name="avoid_tolls_carplay_2">Trừ đg có phí</string>
+	<string name="speedcams_alert_title_carplay_1">Сam tốc độ</string>
+	<string name="speedcams_alert_title_carplay_2">Cảnh báo tốc độ</string>
+	<string name="download_map_carplay">Vui lòng tải xuống bản đồ trong ứng dụng MAPS.ME trên thiết bị của bạn</string>
+	<string name="carplay_roundabout_exit">Lối ra %s của vòng xuyến</string>
+	<!-- max. 10 symbols, both iOS and Android -->
+	<string name="sort">Sắp xếp…</string>
+	<!-- Android, title, max 20-22 symbols -->
+	<string name="sort_bookmarks">Sắp xếp dấu trang</string>
+	<!-- iOS -->
+	<string name="sort_default">Sắp xếp theo mặc định</string>
+	<string name="sort_type">Sắp xếp theo kiểu</string>
+	<string name="sort_distance">Sắp xếp theo khoảng cách</string>
+	<string name="sort_date">Sắp xếp theo ngày</string>
+	<!-- Android -->
+	<string name="by_default">Theo mặc định</string>
+	<!-- Android -->
+	<string name="by_type">Theo kiểu</string>
+	<!-- Android -->
+	<string name="by_distance">Theo khoảng cách</string>
+	<!-- Android -->
+	<string name="by_date">Theo ngày</string>
+	<string name="week_ago_sorttype">Tuần trước</string>
+	<string name="month_ago_sorttype">Tháng trước</string>
+	<string name="moremonth_ago_sorttype">Hơn một tháng trước</string>
+	<string name="moreyear_ago_sorttype">Hơn một năm trước</string>
+	<string name="near_me_sorttype">Ở gần tôi</string>
+	<string name="others_sorttype">Khác</string>
+	<string name="food_places">Đồ ăn</string>
+	<string name="tourist_places">Danh lam thắng cảnh</string>
+	<string name="museums">Bảo tàng</string>
+	<string name="parks">Công viên</string>
+	<string name="swim_places">Bơi lội</string>
+	<string name="mountains">Núi non</string>
+	<string name="animals">Động vật</string>
+	<string name="hotels">Khách sạn</string>
+	<string name="buildings">Tòa nhà</string>
+	<string name="money">Tiền</string>
+	<string name="shops">Cửa hàng</string>
+	<string name="parkings">Bãi đậu xe</string>
+	<string name="fuel_places">Trạm xăng dầu</string>
+	<string name="water">Nước</string>
+	<string name="medicine">Y tế</string>
+	<string name="search_in_the_list">Tìm trong danh sách</string>
+	<string name="view_on_map_bookmarks">Trên bản đồ</string>
+	<string name="more_bookmarks">Thêm…</string>
+	<string name="no_items_found">Không tìm thấy gì cả</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_edit_list">Chỉnh sửa</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_delete_list">Xóa dánh sách</string>
+	<string name="whatsnew_bookmarks_search_sort_title">Trật tự trong các dấu trang – đó là sự tiện nghi, thoải mái cho chuyến du lịch</string>
+	<string name="whatsnew_bookmarks_search_sort_message">Hãy sắp xếp các địa điểm yêu thích theo thể loại, thời gian thêm vào và vị trí địa lý, đồng thời bạn cũng sẽ nhanh chóng tìm thấy các dấu trang cụ thể theo tên gọi</string>
+	<string name="popup_subscription_success_map_title">Ura! Bạn đã đăng ký mua!</string>
+	<string name="popup_subscription_success_map_message">Bây giờ hãy khám phá những điểm du lịch tốt nhất trong danh mục của MAPS.ME</string>
+	<string name="popup_subscription_success_map_start_button">Xem xét</string>
+	<string name="popup_subscription_success_map_not_now_button">Không phải bây giờ</string>
+	<string name="religious_places">Những nơi tôn nghiêm</string>
+	<string name="subscription_terms_android">Việc thanh toán sẽ được thực hiện từ tài khoản Google Play của bạn sau khi xác nhận mua. Việc đăng ký mua sẽ được tự động tiếp tục nếu chế độ tự động gia hạn không bị tắt trong thời gian ít nhất 24h trước khi kết thúc kỳ hiện tại. Tiền sẽ được trừ vào tài khoản của bạn tương ứng với gói cước gia hạn đã định trong thời gian 24h trước khi kết thúc kỳ hiện tại. Bạn có thể điều chỉnh tự động gia hạn hoặc tắt chế độ này trong phần thiết lập tài khoản sau khi mua. Bạn chỉ có thể sử dụng hướng dẫn đã tải theo gói cước đã mua trong thời gian nó còn hiệu lực. Sau 30 ngày khi kết thúc đăng ký mua, các hướng dẫn sẽ tự động bị xóa bỏ.</string>
+	<string name="select_list">Chọn danh sách</string>
+	<string name="pp_discovery_place_related_header">Địa điểm này trong danh mục hướng dẫn</string>
+	<string name="pp_discovery_place_related_header_1">Địa điểm này có trong hướng dẫn</string>
+	<string name="pp_discovery_place_related_cta_button">Xem</string>
+	<string name="pp_discovery_place_related_tag_header">Hướng dẫn theo thẻ \"%s\"</string>
+	<string name="pp_discovery_place_related_tag_header_1">Bạn có thể cũng sẽ thích</string>
+	<string name="buy_btn_for_subscription_version_2">TẤT CẢ hướng dẫn chỉ với %s/tháng</string>
+	<string name="buy_btn_for_subscription_version_3">Cả danh mục chỉ với %s/tháng</string>
+	<string name="buy_btn_for_subscription_ios_only_mo_version_2">Truy cập vào danh mục với %s/tháng</string>
+	<string name="buy_btn_for_subscription_ios_only_year_version_2">Truy cập vào danh mục với %s/năm</string>
+	<string name="subscription_screen_native_title_version_2">Truy cập vào các hướng dẫn cùng với dấu trang trên bản đồ!</string>
+	<string name="subscription_screen_native_message_version_2">Hãy sẵn sàng cho mọi chuyến đi tới hơn 600 thành phố và hơn 100 quốc gia</string>
+	<string name="catalog_no_internet_title">Không có kết nối internet</string>
+	<string name="catalog_no_internet_button">Thử lại</string>
+	<string name="whatsnew_map_updates_title">Cập nhật bản đồ siêu nhanh</string>
+	<string name="whatsnew_map_updates_message">Giờ thì dữ liệu sẽ được cập nhật nhanh hơn gấp 2 lần</string>
+	<string name="new_onboarding_button">Tiếp theo</string>
+	<string name="new_onboarding_button_2">Bắt đầu</string>
+	<string name="new_onboarding_step1_header_2">Người trợ lý độc đáo cho các chuyến du lịch</string>
+	<string name="new_onboarding_step2_header">Hãy mơ ước và lên kế hoạch nào</string>
+	<string name="new_onboarding_step2_message">Hơn 70 triệu địa điểm hấp dẫn, danh sách các hướng dẫn đã được chuẩn bị sẵn và đặt phòng khách sạn từ bản đồ – bạn đã sẵn sàng để đi du lịch rồi!</string>
+	<string name="new_onboarding_step3_message">Bản đồ và điều hướng ngoại tuyến chi tiết sẽ giúp bạn không hề bị lạc ở những nơi xa lạ!</string>
+	<string name="new_onboarding_step4_header">Hãy chia sẻ cảm tưởng của bạn</string>
+	<string name="new_onboarding_step4_message">Lưu lại những địa điểm yêu thích và gửi chúng cho bạn bè của mình</string>
+	<string name="new_onboarding_step5.1_header">Trước khi bắt đầu…</string>
+	<string name="new_onboarding_step5.1_message">Đừng quên truy cập danh mục tuyến đường mới của chúng tôi để tìm hướng dẫn ngoại tuyến cho chuyến đi tiếp theo của bạn!</string>
+	<string name="new_onboarding_step5.1_button">Mở danh sách</string>
+	<string name="new_onboarding_step5.2_message">Việc đăng ký vào thư mục hướng dẫn trong MAPS.ME là một điều có lợi. Người đăng ký nhận được quyền truy cập đầy đủ tới những hướng dẫn cho các chuyến đi ở các thành phố và các hoạt động ngoài trời!</string>
+	<string name="new_onboarding_step5.2_button">Xem các điều khoản</string>
+	<string name="new_onboarding_step5.3_message">Tải xuống và đánh giá các tuyến đường cho các chuyến đi trong thành phố và các hoạt động ngoài trời với lựa chọn MAPS.ME miễn phí!</string>
+	<string name="new_onboarding_step5.3_button">Tải miễn phí</string>
+	<string name="new_onboarding_additional_steps_later_button">Không phải bây giờ</string>
+	<string name="all_pass_subscription_header">ĐĂNG KÝ DANH SÁCH</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title">30000+\nhướng dẫn\nvà đường mòn</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle"><b>Tải xuống không giới hạn</b> các tuyến di chuyển trong thành phố và cho các hoạt động ngoài trời sang <b>chế độ ngoại tuyến</b></string>
+	<!-- \n - for a break between lines. Max. 17 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_2">Hồ sơ độ cao\ntương tác</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_2">Tất cả các đường mòn đang được tải có <b>bao gồm độ cao và thông tin chính về tuyến di chuyển</b></string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_3">Lựa chọn\nđ.điểm, h.ảnh\nvà các đề xuất</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_3"><b>Tìm hiểu về tất cả các tuyến</b> mà bạn dự định đi qua</string>
+	<string name="sightseeing_subscription_header_subscription">Đăng ký hướng dẫn</string>
+	<string name="sightseeing_subscription_message">Hơn 700 thành phố và hơn 100 quốc gia</string>
+	<string name="sightseeing_subscription_message_2">Truy cập ngoại tuyến</string>
+	<string name="sightseeing_subscription_message_3">Ảnh và lối qua đường</string>
+	<string name="subscription_success_dialog_title_sightseeing_pass">Cảm ơn vì đã đăng ký!</string>
+	<string name="subscription_success_dialog_message_sightseeing_pass">Giờ thì bạn có thể truy cập vào tất cả hướng dẫn của các thành phố trong danh sách</string>
+	<string name="downloader_main_gallery_header">Bản đồ và hướng dẫn</string>
+	<string name="downloader_main_gallery_message">Bây giờ, trong mục này ngoài việc tải bản đồ xuống, bạn còn có thể lựa chọn các hướng dẫn cho những chuyến đi sắp tới</string>
+	<string name="downloader_main_1_element_gallery_header">Tất cả các hướng dẫn</string>
+	<string name="downloader_main_1_element_gallery_message">ở hơn 100 quốc gia</string>
+	<string name="downloader_country_1_element_gallery_header">%s tuyến đường</string>
+	<string name="downloader_country_no_guides_gallery_header">Tạm thời không có hướng dẫn tại quốc gia này</string>
+	<string name="downloader_country_no_guides_gallery_message">Hãy tìm hiểu các tuyến đường khác ở hơn 100 quốc gia dùng cho khu vực đường phố hay hoạt động ngoài trời</string>
+	<string name="dialog_pedestrian_route_is_long">ĐI bộ đến phương tiện quá lâu</string>
+	<string name="whatsnew_outdoor_guides_title">Chúng tôi đã bổ sung hơn 15000 đường mòn cho các hoạt động ngoài trời!</string>
+	<string name="whatsnew_outdoor_guides_message">Các tuyến đường từ Outdooractive cho kỳ nghỉ mùa đông, mùa hè đang chờ đón bạn trong danh sách!</string>
+	<string name="whatsnew_guides_galleries_title">Hãy lên kế hoạch cho chuyến đi sắp tới cùng với MAPS.ME</string>
+	<string name="whatsnew_guides_galleries_message">Bây giờ bạn có thể tìm thấy hướng dẫn được đề xuất trong các thẻ của các thành phố và điểm tham quan nổi tiếng</string>
+	<string name="new_onboarding_step3_header">Đi du lịch nào</string>
+	<string name="all_pass_screen_best_value">Giá tốt</string>
+	<string name="buy_btn_for_subscription_3">Cả danh mục chỉ với %s/năm</string>
+	<string name="transit_not_found">Điều hướng đến Metro hiện chưa khả dụng cho khu vực này</string>
+	<string name="dialog_pedestrian_route_is_long_header">Không tìm thấy tuyến Metro</string>
+	<string name="dialog_pedestrian_route_is_long_message">Hãy chọn điểm đầu hoặc điểm cuối của tuyến gần với bến Metro</string>
+	<!-- Failed planning SUBWAY route message in navigation view -->
+	<string name="routing_planning_error_subway_special">Lỗi xây dựng tuyến Metro</string>
+	<string name="whatsnew_isolines_title">Tính năng mới cho kỳ nghỉ năng động – đường chỉ độ cao ngoại tuyến!</string>
+	<!-- as less symbols as possible -->
+	<string name="whatsnew_isolines_message">Xác định phương hướng ở vùng đồi núi – hãy bật nút chỉ lớp ở góc trái trên màn hình</string>
+	<string name="button_layer_isolines">Độ cao</string>
+	<string name="tips_map_layers_title_countour">Đường độ cao ngoại tuyến trong MAPS.ME!</string>
+	<string name="tips_map_layers_message_countour">Đường độ cao giúp lên kế hoạch du lịch hòa mình với thiên nhiên và không bị lạc khi di chuyển</string>
+	<string name="isolines_activation_error_dialog">Để sử dụng các đường chỉ độ cao, hãy cập nhật hoặc tải xuống bản đồ của khu vực bạn mong muốn</string>
+	<string name="isolines_location_error_dialog">Đường hiển thị độ cao hiện chưa khả dụng tại khu vực này</string>
+	<string name="elevation_profile_diff_level">Mức độ phức tạp</string>
+	<string name="elevation_profile_diff_level_easy">Dễ</string>
+	<string name="elevation_profile_diff_level_moderate">Trung bình</string>
+	<string name="elevation_profile_diff_level_hard">Khó</string>
+	<string name="elevation_profile_ascent">Đi lên</string>
+	<string name="elevation_profile_descent">Đi xuống</string>
+	<string name="elevation_profile_minaltitude">Độ cao tối thiểu</string>
+	<string name="elevation_profile_maxaltitude">Độ cao tối đa</string>
+	<string name="elevation_profile_m">m</string>
+	<string name="elevation_profile_difficulty">Độ khó</string>
+	<string name="elevation_profile_distance">Khoảng cách</string>
+	<string name="elevation_profile_km">km</string>
+	<string name="elevation_profile_time">Giờ:</string>
+	<string name="elevation_profile_hours">h.</string>
+	<string name="elevation_profile_minutes">ph</string>
+	<!-- hide the full screen banner and continue working with the app -->
+	<string name="hide_screen_map_update">Thu gọn và tiếp tục thao tác với ứng dụng</string>
+	<string name="view_on_map_downloaded_error">Hướng dẫn này đã được xóa khỏi thiết bị</string>
+	<string name="subscription">Đăng ký</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aerialway.station">Trạm Cáp Treo</string>
 	<string name="type.aeroway.aerodrome">Sân bay</string>
 	<string name="type.aeroway.aerodrome.international">Sân bay</string>
 	<string name="type.aeroway.helipad">Bãi đỗ trực thăng</string>
+	<string name="type.amenity">Công trình cơ sở hạ tầng</string>
+	<string name="type.amenity.arts_centre">Trung tâm nghệ thuật</string>
 	<string name="type.amenity.bank">Ngân hàng</string>
 	<string name="type.amenity.bar">Quán bar</string>
 	<string name="type.amenity.bbq">Điểm cắm trại</string>
@@ -1521,14 +1821,15 @@
 	<string name="type.amenity.parking">đỗ xe</string>
 	<string name="type.amenity.parking.fee">đỗ xe</string>
 	<string name="type.amenity.parking.multi.storey">đỗ xe</string>
-	<string name="type.amenity.parking.multi.storey.fee">đỗ xe</string>
 	<string name="type.amenity.parking.no.access">đỗ xe</string>
 	<string name="type.amenity.parking.park_and_ride">đỗ xe</string>
 	<string name="type.amenity.parking.permissive">đỗ xe</string>
-	<string name="type.amenity.parking.permissive.fee">đỗ xe</string>
 	<string name="type.amenity.parking.private">đỗ xe</string>
 	<string name="type.amenity.parking.underground">đỗ xe</string>
-	<string name="type.amenity.parking.underground.fee">đỗ xe</string>
+	<string name="type.amenity.parking_space">Chỗ để xe</string>
+	<string name="type.amenity.parking_space.permissive">Chỗ để xe</string>
+	<string name="type.amenity.parking_space.private">Chỗ để xe</string>
+	<string name="type.amenity.parking_space.underground">Chỗ để xe</string>
 	<string name="type.amenity.payment_terminal">Thiết bị thanh toán</string>
 	<string name="type.amenity.pharmacy">3Hiệu thuốc</string>
 	<string name="type.amenity.place_of_worship">Chùa</string>
@@ -1541,7 +1842,7 @@
 	<string name="type.amenity.place_of_worship.taoist">Đền</string>
 	<string name="type.amenity.police">Cảnh sát</string>
 	<string name="type.amenity.post_box">Hòm thư</string>
-	<string name="type.amenity.post_office">Bưu điện</string>
+	<string name="type.amenity.post_office">Bưu cục</string>
 	<string name="type.amenity.pub">Quán rượu</string>
 	<string name="type.amenity.public_bookcase">Kệ sách</string>
 	<string name="type.amenity.recycling">Trung tâm tái sinh</string>
@@ -1557,6 +1858,7 @@
 	<string name="type.amenity.vending_machine.cigarettes">Máy bán thuốc lá</string>
 	<string name="type.amenity.vending_machine.drinks">Máy bán thức uống</string>
 	<string name="type.amenity.vending_machine.parking_tickets">Máy trả tiền vé đậu xe</string>
+	<string name="type.amenity.vending_machine.public_transport_tickets">Máy bán vé phương tiện công cộng tự động</string>
 	<string name="type.amenity.veterinary">Bác sĩ Thú y</string>
 	<string name="type.amenity.waste_basket">Thùng rác</string>
 	<string name="type.amenity.waste_disposal">Xử lý chất thải</string>
@@ -1676,6 +1978,7 @@
 	<string name="type.emergency.phone">Điện thoại khẩn cấp</string>
 	<string name="type.entrance">Lối vào</string>
 	<string name="type.highway.bus_stop">Bến xe buýt</string>
+	<string name="type.highway.construction">Đường đang thi công</string>
 	<string name="type.highway.footway">Đường</string>
 	<string name="type.highway.footway.alpine_hiking">Đường</string>
 	<string name="type.highway.footway.area">Đường</string>
@@ -1738,9 +2041,6 @@
 	<string name="type.highway.service.area">Phố</string>
 	<string name="type.highway.service.bridge">Phố</string>
 	<string name="type.highway.service.driveway">Phố</string>
-	<string name="type.highway.service.driveway.area">Phố</string>
-	<string name="type.highway.service.driveway.bridge">Phố</string>
-	<string name="type.highway.service.driveway.tunnel">Phố</string>
 	<string name="type.highway.service.parking_aisle">Phố</string>
 	<string name="type.highway.service.tunnel">Phố</string>
 	<string name="type.highway.speed_camera">Camera bắn tốc độ</string>
@@ -1759,14 +2059,8 @@
 	<string name="type.highway.track.grade1">Phố</string>
 	<string name="type.highway.track.grade2">Phố</string>
 	<string name="type.highway.track.grade3">Phố</string>
-	<string name="type.highway.track.grade3.no.access">Phố</string>
-	<string name="type.highway.track.grade3.permissive">Phố</string>
 	<string name="type.highway.track.grade4">Phố</string>
-	<string name="type.highway.track.grade4.no.access">Phố</string>
-	<string name="type.highway.track.grade4.permissive">Phố</string>
 	<string name="type.highway.track.grade5">Phố</string>
-	<string name="type.highway.track.grade5.no.access">Phố</string>
-	<string name="type.highway.track.grade5.permissive">Phố</string>
 	<string name="type.highway.track.no.access">Phố</string>
 	<string name="type.highway.track.permissive">Phố</string>
 	<string name="type.highway.track.tunnel">Phố</string>
@@ -1796,11 +2090,17 @@
 	<string name="type.landuse.basin">Nước</string>
 	<string name="type.landuse.cemetery">Bãi tha ma</string>
 	<string name="type.landuse.cemetery.christian">Bãi tha ma</string>
+	<string name="type.landuse.churchyard">Nhà thờ</string>
+	<string name="type.landuse.farmland">Đất nông nghiệp</string>
 	<string name="type.landuse.forest">Rừng</string>
 	<string name="type.landuse.forest.coniferous">Rừng</string>
 	<string name="type.landuse.forest.deciduous">Rừng</string>
 	<string name="type.landuse.forest.mixed">Rừng</string>
+	<string name="type.landuse.grass">Thảm cỏ</string>
+	<string name="type.landuse.landfill">Bãi rác</string>
+	<string name="type.landuse.railway">Cơ sở đường sắt</string>
 	<string name="type.landuse.reservoir">Nước</string>
+	<string name="type.leisure.dog_park">Nơi cho chó đi dạo</string>
 	<string name="type.leisure.fitness_centre">Phòng Tập</string>
 	<string name="type.leisure.fitness_station">Trạm tập thể hình</string>
 	<string name="type.leisure.garden">Điểm khảo cổ</string>
@@ -1811,10 +2111,8 @@
 	<string name="type.leisure.park.permissive">Công viên</string>
 	<string name="type.leisure.park.private">Công viên</string>
 	<string name="type.leisure.pitch">Sân vận động</string>
-	<string name="type.leisure.pitch.tennis">Sân vận động</string>
 	<string name="type.leisure.playground">Sân chơi</string>
-	<string name="type.leisure.playground.tennis">Sân chơi</string>
-	<string name="type.leisure.sauna">Phòng xông hơi</string>
+	<string name="type.leisure.sauna">Sauna</string>
 	<string name="type.leisure.sports_centre">Thể thao</string>
 	<string name="type.leisure.sports_centre.climbing">Trung tâm leo núi</string>
 	<string name="type.leisure.sports_centre.shooting">Nơi bắn súng</string>
@@ -1835,20 +2133,19 @@
 	<string name="type.natural.bay">Vịnh</string>
 	<string name="type.natural.beach">Bãi biển</string>
 	<string name="type.natural.cape">Áo choàng</string>
-	<string name="type.natural.cave_entrance">Cửa Hang</string>
+	<string name="type.natural.cave_entrance">Hang động</string>
 	<string name="type.natural.geyser">Suối nước nóng</string>
 	<string name="type.natural.glacier">Sông băng</string>
+	<string name="type.natural.grassland">Cánh đồng</string>
 	<string name="type.natural.lake">Hồ</string>
 	<string name="type.natural.peak">Đỉnh</string>
 	<string name="type.natural.pond">Ao</string>
+	<string name="type.natural.scrub">Bụi rậm</string>
 	<string name="type.natural.spring">Suối</string>
 	<string name="type.natural.tree">Cây</string>
 	<string name="type.natural.volcano">Núi lửa</string>
 	<string name="type.natural.water">Nước</string>
-	<string name="type.natural.wood">Rừng</string>
-	<string name="type.natural.wood.coniferous">Rừng</string>
-	<string name="type.natural.wood.deciduous">Rừng</string>
-	<string name="type.natural.wood.mixed">Rừng</string>
+	<string name="type.natural.wetland">Khu vực đầm lầy</string>
 	<string name="type.office">Văn phòng</string>
 	<string name="type.office.company">Văn phòng công ty</string>
 	<string name="type.office.estate_agent">Đại Lý Bất Động Sản</string>
@@ -1889,6 +2186,9 @@
 	<string name="type.power.substation">Trạm biến áp</string>
 	<string name="type.power.tower">Trụ Điện</string>
 	<string name="type.railway.halt">Đường tàu hỏa</string>
+	<string name="type.railway.level_crossing">Chỗ qua đường sắt</string>
+	<string name="type.railway.monorail">Đường sắt một chiều</string>
+	<string name="type.railway.rail">Đường sắt</string>
 	<string name="type.railway.station">Đường tàu hỏa</string>
 	<string name="type.railway.station.light_rail">Đường tàu hỏa</string>
 	<string name="type.railway.station.monorail">Đường tàu hỏa</string>
@@ -1917,7 +2217,7 @@
 	<string name="type.railway.station.subway.spb">Ngầm</string>
 	<string name="type.railway.station.subway.violet">Ngầm</string>
 	<string name="type.railway.station.subway.yellow">Ngầm</string>
-	<string name="type.railway.subway_entrance">Ngầm</string>
+	<string name="type.railway.subway_entrance">Lỗi vào Metro</string>
 	<string name="type.railway.subway_entrance.barcelona">Ngầm</string>
 	<string name="type.railway.subway_entrance.berlin">Ngầm</string>
 	<string name="type.railway.subway_entrance.kiev">Ngầm</string>
@@ -1996,6 +2296,10 @@
 	<string name="type.shop.variety_store">Cửa hàng tiện lợi</string>
 	<string name="type.shop.video">Cửa hàng</string>
 	<string name="type.shop.wine">Rượu</string>
+	<string name="type.sport.athletics">Điền kinh</string>
+	<string name="type.sport.basketball">Bóng rổ</string>
+	<string name="type.sport.equestrian">Thể thao cưỡi ngựa</string>
+	<string name="type.sport.tennis">Sân tenis</string>
 	<string name="type.tourism.alpine_hut">Nhà ở trên núi</string>
 	<string name="type.tourism.apartment">Căn hộ</string>
 	<string name="type.tourism.artwork">Du lịch</string>
@@ -2037,4 +2341,8 @@
 	<string name="type.waterway.stream.intermittent">Sông</string>
 	<string name="type.waterway.stream.tunnel">Sông</string>
 	<string name="type.waterway.waterfall">Thác nước</string>
+	<string name="type.wheelchair.limited">Được trang bị một phần cho người khuyết tật</string>
+	<string name="type.wheelchair.no">Không trang bị cho người khuyết tật</string>
+	<string name="type.wheelchair.yes">Được trang bị cho người khuyết tật</string>
+	<string name="type.building_part">Tòa nhà</string>
 </resources>

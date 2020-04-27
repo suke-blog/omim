@@ -1,15 +1,22 @@
 package com.mapswithme.maps.tips;
 
-import android.support.annotation.NonNull;
-
+import androidx.annotation.NonNull;
 import com.mapswithme.maps.MwmActivity;
 import com.mapswithme.maps.R;
 import com.mapswithme.maps.bookmarks.BookmarkCategoriesActivity;
 import com.mapswithme.maps.bookmarks.BookmarksCatalogActivity;
+import com.mapswithme.maps.bookmarks.data.BookmarkManager;
 import com.mapswithme.maps.maplayer.Mode;
+import com.mapswithme.util.UTM;
 
 class ClickInterceptorFactory
 {
+  @NonNull
+  static ClickInterceptor createActivateIsolinesLayerListener()
+  {
+    return new ActivateIsolinesLayer();
+  }
+
   @NonNull
   static ClickInterceptor createActivateSubwayLayerListener()
   {
@@ -38,23 +45,40 @@ class ClickInterceptorFactory
   {
     OpenBookmarksCatalog()
     {
-      super(TipsApi.BOOKMARKS);
+      super(Tutorial.BOOKMARKS);
     }
 
     @Override
     public void onInterceptClickInternal(@NonNull MwmActivity activity)
     {
+      String catalogUrl = BookmarkManager.INSTANCE.getCatalogFrontendUrl(UTM.UTM_TIPS_AND_TRICKS);
       BookmarksCatalogActivity.startForResult(activity,
                                               BookmarkCategoriesActivity
-                                                  .REQ_CODE_DOWNLOAD_BOOKMARK_CATEGORY);
+                                                  .REQ_CODE_DOWNLOAD_BOOKMARK_CATEGORY, catalogUrl);
+    }
+  }
+
+  static class ActivateIsolinesLayer extends AbstractClickInterceptor
+  {
+    ActivateIsolinesLayer()
+    {
+      super(Tutorial.ISOLINES);
+    }
+
+    @Override
+    public void onInterceptClickInternal(@NonNull MwmActivity activity)
+    {
+      Mode.ISOLINES.setEnabled(activity, true);
+      activity.onIsolinesLayerSelected();
     }
   }
 
   static class ActivateSubwayLayer extends AbstractClickInterceptor
   {
+
     ActivateSubwayLayer()
     {
-      super(TipsApi.MAP_LAYERS);
+      super(Tutorial.SUBWAY);
     }
 
     @Override
@@ -69,7 +93,7 @@ class ClickInterceptorFactory
   {
     SearchHotels()
     {
-      super(TipsApi.SEARCH);
+      super(Tutorial.SEARCH);
     }
 
     @Override
@@ -83,7 +107,7 @@ class ClickInterceptorFactory
   {
     OpenDiscoveryScreen()
     {
-      super(TipsApi.DISCOVERY);
+      super(Tutorial.DISCOVERY);
     }
 
     @Override

@@ -1,10 +1,8 @@
 #import "MWMAlert+CPP.h"
 #import "MWMAlertViewController.h"
-#import "MWMCommon.h"
 #import "MWMDefaultAlert.h"
 #import "MWMDownloadTransitMapAlert.h"
 #import "MWMEditorViralAlert.h"
-#import "MWMFacebookAlert.h"
 #import "MWMLocationAlert.h"
 #import "MWMOsmAuthAlert.h"
 #import "MWMPlaceDoesntExistAlert.h"
@@ -16,8 +14,10 @@
 @implementation MWMAlert
 
 + (MWMAlert *)rateAlert { return [MWMRateAlert alert]; }
-+ (MWMAlert *)locationAlert { return [MWMLocationAlert alert]; }
-+ (MWMAlert *)facebookAlert { return [MWMFacebookAlert alert]; }
++ (MWMAlert *)locationAlertWithCancelBlock:(MWMVoidBlock)cancelBlock {
+  return [MWMLocationAlert alertWithCancelBlock:cancelBlock];
+}
+
 + (MWMAlert *)point2PointAlertWithOkBlock:(MWMVoidBlock)block needToRebuild:(BOOL)needToRebuild
 {
   return [MWMDefaultAlert point2PointAlertWithOkBlock:block needToRebuild:needToRebuild];
@@ -29,13 +29,12 @@
 }
 
 + (MWMAlert *)disabledLocationAlert { return [MWMDefaultAlert disabledLocationAlert]; }
-+ (MWMAlert *)noWiFiAlertWithOkBlock:(MWMVoidBlock)okBlock
++ (MWMAlert *)noWiFiAlertWithOkBlock:(MWMVoidBlock)okBlock andCancelBlock:(MWMVoidBlock)cancelBlock
 {
-  return [MWMDefaultAlert noWiFiAlertWithOkBlock:okBlock];
+  return [MWMDefaultAlert noWiFiAlertWithOkBlock:okBlock andCancelBlock:cancelBlock];
 }
 
 + (MWMAlert *)noConnectionAlert { return [MWMDefaultAlert noConnectionAlert]; }
-+ (MWMAlert *)migrationProhibitedAlert { return [MWMDefaultAlert migrationProhibitedAlert]; }
 + (MWMAlert *)deleteMapProhibitedAlert { return [MWMDefaultAlert deleteMapProhibitedAlert]; }
 + (MWMAlert *)unsavedEditsAlertWithOkBlock:(MWMVoidBlock)okBlock
 {
@@ -47,12 +46,7 @@
   return [MWMDefaultAlert locationServiceNotSupportedAlert];
 }
 
-+ (MWMAlert *)routingMigrationAlertWithOkBlock:(MWMVoidBlock)okBlock
-{
-  return [MWMDefaultAlert routingMigrationAlertWithOkBlock:okBlock];
-}
-
-+ (MWMAlert *)downloaderAlertWithAbsentCountries:(storage::TCountriesVec const &)countries
++ (MWMAlert *)downloaderAlertWithAbsentCountries:(storage::CountriesSet const &)countries
                                             code:(routing::RouterResultCode)code
                                      cancelBlock:(MWMVoidBlock)cancelBlock
                                    downloadBlock:(MWMDownloadBlock)downloadBlock
@@ -83,6 +77,7 @@
   case routing::RouterResultCode::InternalError: return [MWMDefaultAlert internalRoutingErrorAlert];
   case routing::RouterResultCode::Cancelled:
   case routing::RouterResultCode::NoError:
+  case routing::RouterResultCode::HasWarnings:
   case routing::RouterResultCode::NeedMoreMaps: return nil;
   case routing::RouterResultCode::IntermediatePointNotFound: return [MWMDefaultAlert intermediatePointNotFoundAlert];
   }

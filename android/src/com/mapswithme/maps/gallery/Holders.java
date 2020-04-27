@@ -3,12 +3,9 @@ package com.mapswithme.maps.gallery;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v7.widget.RecyclerView;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
+import android.net.Uri;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,85 +13,47 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.mapswithme.HotelUtils;
 import com.mapswithme.maps.R;
+import com.mapswithme.maps.guides.GuidesGallery;
+import com.mapswithme.maps.promo.PromoCityGallery;
+import com.mapswithme.maps.promo.PromoEntity;
 import com.mapswithme.maps.search.Popularity;
 import com.mapswithme.maps.ugc.Impress;
 import com.mapswithme.maps.ugc.UGC;
 import com.mapswithme.maps.widget.RatingView;
+import com.mapswithme.util.ConnectionState;
+import com.mapswithme.util.NetworkPolicy;
+import com.mapswithme.util.ThemeUtils;
 import com.mapswithme.util.UiUtils;
 import com.mapswithme.util.Utils;
 
 import java.util.List;
 
-import static com.mapswithme.maps.gallery.Items.ViatorItem;
-
 public class Holders
 {
-  public static final class ViatorProductViewHolder
-      extends BaseViewHolder<ViatorItem>
-  {
-    @NonNull
-    ImageView mImage;
-    @NonNull
-    TextView mDuration;
-    @NonNull
-    RatingView mRating;
-    @NonNull
-    TextView mPrice;
-
-    @NonNull
-    Context mContext;
-
-    public ViatorProductViewHolder(@NonNull View itemView, @NonNull List<ViatorItem> items,
-                                   @NonNull GalleryAdapter<?, ViatorItem> adapter)
-    {
-      super(itemView, items, adapter);
-      mContext = itemView.getContext();
-      mImage = (ImageView) itemView.findViewById(R.id.iv__image);
-      mDuration = (TextView) itemView.findViewById(R.id.tv__duration);
-      mRating = (RatingView) itemView.findViewById(R.id.ratingView);
-      mPrice = (TextView) itemView.findViewById(R.id.tv__price);
-    }
-
-    @Override
-    public void bind(@NonNull ViatorItem item)
-    {
-      super.bind(item);
-
-      if (item.mPhotoUrl != null)
-      {
-        Glide.with(mContext)
-             .load(item.mPhotoUrl)
-             .centerCrop()
-             .into(mImage);
-      }
-
-      UiUtils.setTextAndHideIfEmpty(mDuration, item.mDuration);
-      UiUtils.setTextAndHideIfEmpty(mPrice, mContext.getString(R.string.place_page_starting_from,
-                                                               item.mPrice));
-      float rating = (float) item.mRating;
-      Impress impress = Impress.values()[UGC.nativeToImpress(rating)];
-      mRating.setRating(impress, String.valueOf(rating));
-    }
-  }
-
   public static class GenericMoreHolder<T extends RegularAdapterStrategy.Item>
       extends BaseViewHolder<T>
   {
 
-    public GenericMoreHolder(@NonNull View itemView, @NonNull List<T> items, @NonNull GalleryAdapter<?, T>
-        adapter)
+    public GenericMoreHolder(@NonNull View itemView, @NonNull List<T> items,
+                             @Nullable ItemSelectedListener<T> listener)
     {
-      super(itemView, items, adapter);
+      super(itemView, items, listener);
     }
 
     @Override
     protected void onItemSelected(@NonNull T item, int position)
     {
-      ItemSelectedListener<T> listener = mAdapter.getListener();
+      ItemSelectedListener<T> listener = getListener();
       if (listener == null || TextUtils.isEmpty(item.getUrl()))
         return;
 
@@ -106,15 +65,15 @@ public class Holders
   {
 
     public SearchMoreHolder(@NonNull View itemView, @NonNull List<Items.SearchItem> items,
-                            @NonNull GalleryAdapter<?, Items.SearchItem> adapter)
+                            @Nullable ItemSelectedListener<Items.SearchItem> listener)
     {
-      super(itemView, items, adapter);
+      super(itemView, items, listener);
     }
 
     @Override
     protected void onItemSelected(@NonNull Items.SearchItem item, int position)
     {
-      ItemSelectedListener<Items.SearchItem> listener = mAdapter.getListener();
+      ItemSelectedListener<Items.SearchItem> listener = getListener();
       if (listener != null)
         listener.onMoreItemSelected(item);
     }
@@ -130,10 +89,9 @@ public class Holders
     private final TextView mButton;
 
     public LocalExpertViewHolder(@NonNull View itemView, @NonNull List<Items.LocalExpertItem> items,
-                                 @NonNull GalleryAdapter<?, Items.LocalExpertItem> adapter)
+                                 @Nullable ItemSelectedListener<Items.LocalExpertItem> listener)
     {
-      super(itemView, items, adapter);
-      mTitle = (TextView) itemView.findViewById(R.id.name);
+      super(itemView, items, listener);
       mAvatar = (ImageView) itemView.findViewById(R.id.avatar);
       mRating = (RatingView) itemView.findViewById(R.id.ratingView);
       mButton = (TextView) itemView.findViewById(R.id.button);
@@ -187,10 +145,10 @@ public class Holders
     @NonNull
     private final TextView mButton;
 
-    ActionButtonViewHolder(@NonNull View itemView, @NonNull List<T> items, @NonNull
-        GalleryAdapter<?, T> adapter)
+    ActionButtonViewHolder(@NonNull View itemView, @NonNull List<T> items,
+                           @Nullable ItemSelectedListener<T> listener)
     {
-      super(itemView, items, adapter);
+      super(itemView, items, listener);
       mButton = itemView.findViewById(R.id.button);
       mButton.setOnClickListener(this);
       itemView.findViewById(R.id.infoLayout).setOnClickListener(this);
@@ -204,7 +162,7 @@ public class Holders
       if (position == RecyclerView.NO_POSITION || mItems.isEmpty())
         return;
 
-      ItemSelectedListener<T> listener = mAdapter.getListener();
+      ItemSelectedListener<T> listener = getListener();
       if (listener == null)
         return;
 
@@ -233,10 +191,9 @@ public class Holders
     private final RatingView mPopularTagRating;
 
     public SearchViewHolder(@NonNull View itemView, @NonNull List<Items.SearchItem> items,
-                            @NonNull GalleryAdapter<?, Items.SearchItem> adapter)
+                            @Nullable ItemSelectedListener<Items.SearchItem> adapter)
     {
       super(itemView, items, adapter);
-      mTitle = itemView.findViewById(R.id.title);
       mSubtitle = itemView.findViewById(R.id.subtitle);
       mDistance = itemView.findViewById(R.id.distance);
       mNumberRating = itemView.findViewById(R.id.counter_rating_view);
@@ -252,7 +209,7 @@ public class Holders
       String localizedType = Utils.getLocalizedFeatureType(mSubtitle.getContext(), featureType);
       String title = TextUtils.isEmpty(item.getTitle()) ? localizedType : item.getTitle();
 
-      UiUtils.setTextAndHideIfEmpty(mTitle, title);
+      UiUtils.setTextAndHideIfEmpty(getTitle(), title);
       UiUtils.setTextAndHideIfEmpty(mSubtitle, localizedType);
       UiUtils.setTextAndHideIfEmpty(mDistance, item.getDistance());
       UiUtils.showIf(item.getPopularity().getType() == Popularity.Type.POPULAR, mPopularTagRating);
@@ -274,10 +231,10 @@ public class Holders
     @NonNull
     private final TextView mDistance;
 
-    public HotelViewHolder(@NonNull View itemView, @NonNull List<Items.SearchItem> items, @NonNull
-        GalleryAdapter<?, Items.SearchItem> adapter)
+    public HotelViewHolder(@NonNull View itemView, @NonNull List<Items.SearchItem> items, @Nullable
+        ItemSelectedListener<Items.SearchItem> listener)
     {
-      super(itemView, items, adapter);
+      super(itemView, items, listener);
       mTitle = itemView.findViewById(R.id.title);
       mSubtitle = itemView.findViewById(R.id.subtitle);
       mRatingView = itemView.findViewById(R.id.ratingView);
@@ -328,20 +285,20 @@ public class Holders
       implements View.OnClickListener
   {
     @NonNull
-    TextView mTitle;
+    private final TextView mTitle;
+    @Nullable
+    private final ItemSelectedListener<I> mListener;
     @NonNull
     protected final List<I> mItems;
-    @NonNull
-    final GalleryAdapter<?, I> mAdapter;
 
-    BaseViewHolder(@NonNull View itemView, @NonNull List<I> items,
-                             @NonNull GalleryAdapter<?, I> adapter)
+    public BaseViewHolder(@NonNull View itemView, @NonNull List<I> items,
+                          @Nullable ItemSelectedListener<I> listener)
     {
       super(itemView);
-      mTitle = itemView.findViewById(R.id.tv__title);
+      mTitle = itemView.findViewById(R.id.title);
+      mListener = listener;
       itemView.setOnClickListener(this);
       mItems = items;
-      mAdapter = adapter;
     }
 
     public void bind(@NonNull I item)
@@ -359,13 +316,25 @@ public class Holders
       onItemSelected(mItems.get(position), position);
     }
 
+    @NonNull
+    protected TextView getTitle()
+    {
+      return mTitle;
+    }
+
     protected void onItemSelected(@NonNull I item, int position)
     {
-      ItemSelectedListener<I> listener = mAdapter.getListener();
+      ItemSelectedListener<I> listener = getListener();
       if (listener == null || TextUtils.isEmpty(item.getUrl()))
         return;
 
       listener.onItemSelected(item, position);
+    }
+
+    @Nullable
+    protected ItemSelectedListener<I> getListener()
+    {
+      return mListener;
     }
   }
 
@@ -373,19 +342,16 @@ public class Holders
       implements View.OnClickListener
   {
     @NonNull
-    ProgressBar mProgressBar;
+    final ProgressBar mProgressBar;
     @NonNull
-    TextView mSubtitle;
-    @NonNull
-    TextView mMore;
+    final TextView mSubtitle;
 
     LoadingViewHolder(@NonNull View itemView, @NonNull List<Items.Item> items,
-                      @NonNull GalleryAdapter<?, Items.Item> adapter)
+                      @Nullable ItemSelectedListener<Items.Item> listener)
     {
-      super(itemView, items, adapter);
+      super(itemView, items, listener);
       mProgressBar = (ProgressBar) itemView.findViewById(R.id.pb__progress);
       mSubtitle = (TextView) itemView.findViewById(R.id.tv__subtitle);
-      mMore = (TextView) itemView.findViewById(R.id.button);
     }
 
     @CallSuper
@@ -409,20 +375,19 @@ public class Holders
     @Override
     protected void onItemSelected(@NonNull Items.Item item, int position)
     {
-      if (mAdapter.getListener() == null || TextUtils.isEmpty(item.getUrl()))
+      if (getListener() == null || TextUtils.isEmpty(item.getUrl()))
         return;
 
-      mAdapter.getListener().onActionButtonSelected(item, position);
+      getListener().onActionButtonSelected(item, position);
     }
   }
 
   public static class SimpleViewHolder extends BaseViewHolder<Items.Item>
   {
     public SimpleViewHolder(@NonNull View itemView, @NonNull List<Items.Item> items,
-                            @NonNull GalleryAdapter<?, Items.Item> adapter)
+                            @Nullable ItemSelectedListener<Items.Item> listener)
     {
-      super(itemView, items, adapter);
-      mTitle = (TextView) itemView.findViewById(R.id.message);
+      super(itemView, items, listener);
     }
   }
 
@@ -430,9 +395,9 @@ public class Holders
   {
 
     ErrorViewHolder(@NonNull View itemView, @NonNull List<Items.Item> items,
-                    @NonNull GalleryAdapter<?, Items.Item> adapter)
+                    @Nullable ItemSelectedListener<Items.Item> listener)
     {
-      super(itemView, items, adapter);
+      super(itemView, items, listener);
       UiUtils.hide(mProgressBar);
     }
   }
@@ -440,9 +405,9 @@ public class Holders
   public static class OfflineViewHolder extends LoadingViewHolder
   {
     OfflineViewHolder(@NonNull View itemView, @NonNull List<Items.Item> items,
-                      @NonNull GalleryAdapter<?, Items.Item> adapter)
+                      @Nullable ItemSelectedListener<Items.Item> listener)
     {
-      super(itemView, items, adapter);
+      super(itemView, items, listener);
       UiUtils.hide(mProgressBar);
     }
 
@@ -457,10 +422,165 @@ public class Holders
     @Override
     protected void onItemSelected(@NonNull Items.Item item, int position)
     {
-      if (mAdapter.getListener() == null)
+
+    }
+  }
+
+
+  public static class CatalogPromoHolder extends BaseViewHolder<PromoEntity>
+  {
+    @NonNull
+    private final ImageView mImage;
+
+    @NonNull
+    private final TextView mSubTitle;
+
+    @NonNull
+    private final TextView mProLabel;
+
+    public CatalogPromoHolder(@NonNull View itemView,
+                              @NonNull List<PromoEntity> items,
+                              @Nullable ItemSelectedListener<PromoEntity> listener)
+    {
+      super(itemView, items, listener);
+      mImage = itemView.findViewById(R.id.image);
+      mSubTitle = itemView.findViewById(R.id.subtitle);
+      mProLabel = itemView.findViewById(R.id.label);
+    }
+
+    @Override
+    public void bind(@NonNull PromoEntity item)
+    {
+      super.bind(item);
+
+      bindProLabel(item);
+      bindSubTitle(item);
+      bindImage(item);
+    }
+
+    private void bindSubTitle(@NonNull PromoEntity item)
+    {
+      mSubTitle.setText(item.getSubtitle());
+    }
+
+    private void bindImage(@NonNull PromoEntity item)
+    {
+      Glide.with(itemView.getContext())
+           .load(Uri.parse(item.getImageUrl()))
+           .placeholder(R.drawable.img_guides_gallery_placeholder)
+           .into(mImage);
+    }
+
+    private void bindProLabel(@NonNull PromoEntity item)
+    {
+      PromoCityGallery.LuxCategory category = item.getCategory();
+      UiUtils.showIf(category != null && !TextUtils.isEmpty(category.getName()), mProLabel);
+      if (item.getCategory() == null)
         return;
 
-      mAdapter.getListener().onActionButtonSelected(item, position);
+      mProLabel.setText(item.getCategory().getName());
+      ShapeDrawable shapeDrawable = new ShapeDrawable(new RectShape());
+      shapeDrawable.getPaint().setColor(item.getCategory().getColor());
+      mProLabel.setBackgroundDrawable(shapeDrawable);
+    }
+  }
+
+  public static class CrossPromoLoadingHolder extends SimpleViewHolder
+  {
+    @NonNull
+    private final TextView mSubTitle;
+
+    @NonNull
+    private final TextView mButton;
+
+    public CrossPromoLoadingHolder(@NonNull View itemView, @NonNull List<Items.Item> items,
+                                   @Nullable ItemSelectedListener<Items.Item> listener)
+    {
+      super(itemView, items, listener);
+      mSubTitle = itemView.findViewById(R.id.subtitle);
+      mButton = itemView.findViewById(R.id.button);
+    }
+
+    @NonNull
+    protected TextView getButton()
+    {
+      return mButton;
+    }
+
+    @Override
+    public void bind(@NonNull Items.Item item)
+    {
+      super.bind(item);
+      getTitle().setText(R.string.gallery_pp_download_guides_offline_title);
+      mSubTitle.setText(R.string.gallery_pp_download_guides_offline_subtitle);
+      UiUtils.invisible(getButton());
+    }
+  }
+
+  public static class CatalogErrorHolder extends CrossPromoLoadingHolder
+  {
+    public CatalogErrorHolder(@NonNull View itemView, @NonNull List<Items.Item> items,
+                              @Nullable ItemSelectedListener<Items.Item> listener)
+    {
+      super(itemView, items, listener);
+      View progress = itemView.findViewById(R.id.progress);
+      UiUtils.invisible(progress);
+    }
+
+    public void bind(@NonNull Items.Item item)
+    {
+      super.bind(item);
+      getButton().setText(R.string.gallery_pp_download_guides_offline_cta);
+      boolean isBtnInvisible = ConnectionState.isConnected() &&
+                               NetworkPolicy.newInstance(NetworkPolicy.getCurrentNetworkUsageStatus()).canUseNetwork();
+
+      if (isBtnInvisible)
+        UiUtils.invisible(getButton());
+      else
+        UiUtils.show(getButton());
+    }
+
+    @Override
+    protected void onItemSelected(@NonNull Items.Item item, int position)
+    {
+      ItemSelectedListener<Items.Item> listener = getListener();
+      if (listener == null)
+        return;
+
+      listener.onItemSelected(item, position);
+    }
+  }
+
+  public static class GuideHodler extends BaseViewHolder<GuidesGallery.Item>
+  {
+    @NonNull
+    private final ImageView mImage;
+    @NonNull
+    private final TextView mSubtitle;
+    // TODO: handle city and outdoor content properly.
+/*    @NonNull
+    private final View mCityContent;
+    @NonNull
+    private final View mOutdoorContent;*/
+    public GuideHodler(@NonNull View itemView, @NonNull List<GuidesGallery.Item> items, @Nullable ItemSelectedListener<GuidesGallery.Item> listener)
+    {
+      super(itemView, items, listener);
+      mImage = itemView.findViewById(R.id.image);
+      mSubtitle = itemView.findViewById(R.id.subtitle);
+    }
+
+    @Override
+    public void bind(@NonNull GuidesGallery.Item item)
+    {
+      super.bind(item);
+      Glide.with(mImage.getContext())
+           .load(item.getImageUrl())
+           .asBitmap()
+           .placeholder(ThemeUtils.getResource(mImage.getContext(), R.attr.guidesPlaceholder))
+           .centerCrop()
+           .into(mImage);
+      mSubtitle.setText(item.getSubtitle());
+      // TODO: another fields comming soon;
     }
   }
 }

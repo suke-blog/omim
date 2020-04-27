@@ -87,7 +87,7 @@ public:
   }
 
   template <typename T>
-  void operator()(vector<T> const & vs, char const * /* name */ = nullptr)
+  void operator()(std::vector<T> const & vs, char const * /* name */ = nullptr)
   {
     VisitVarUint(static_cast<uint32_t>(vs.size()));
     for (auto const & v : vs)
@@ -110,7 +110,7 @@ public:
 private:
   Sink & m_sink;
   std::vector<TranslationKey> const & m_keys;
-  vector<Text> const & m_texts;
+  std::vector<Text> const & m_texts;
   uint64_t m_textsFrom = 0;
 };
 
@@ -162,7 +162,7 @@ public:
   void operator()(Text & text, char const * /* name */ = nullptr)
   {
     (*this)(text.m_lang, "lang");
-    text.m_text = m_texts.ExtractString(m_textsReader, m_currText);
+    text.m_text = m_texts.ExtractString(m_textsReader, static_cast<size_t>(m_currText));
     ++m_currText;
   }
 

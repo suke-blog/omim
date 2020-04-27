@@ -66,15 +66,16 @@ public:
         end = KeyEnd();
       --end;  // end is inclusive in ForEachImpl().
       ForEachNode(f, beg, end, m_Header.m_Levels, 0,
-                  m_LevelOffsets[m_Header.m_Levels + 1] - m_LevelOffsets[m_Header.m_Levels]);
+                  m_LevelOffsets[m_Header.m_Levels + 1] - m_LevelOffsets[m_Header.m_Levels],
+                  0 /* started keyBase */);
     }
   }
 
 private:
-
   template <typename F>
   void ForEachLeaf(F const & f, uint64_t const beg, uint64_t const end,
-                   uint32_t const offset, uint32_t const size) const
+      uint32_t const offset, uint32_t const size,
+      uint64_t keyBase /* discarded part of object key value in the parent nodes*/) const
   {
     buffer_vector<uint8_t, 1024> data;
     data.resize_no_init(size);
@@ -93,19 +94,20 @@ private:
         break;
       value += ReadVarInt<int64_t>(src);
       if (key >= beg)
-        f(value);
+        f(keyBase + key, value);
     }
   }
 
   template <typename F>
   void ForEachNode(F const & f, uint64_t beg, uint64_t end, int level,
-                   uint32_t offset, uint32_t size) const
+      uint32_t offset, uint32_t size,
+      uint64_t keyBase /* discarded part of object key value in the parent nodes */) const
   {
     offset += m_LevelOffsets[level];
 
     if (level == 0)
     {
-      ForEachLeaf(f, beg, end, offset, size);
+      ForEachLeaf(f, beg, end, offset, size, keyBase);
       return;
     }
 
@@ -139,7 +141,7 @@ private:
           {
             uint64_t const beg1 = (i == beg0) ? (beg & levelBytesFF) : 0;
             uint64_t const end1 = (i == end0) ? (end & levelBytesFF) : levelBytesFF;
-            ForEachNode(f, beg1, end1, level - 1, childOffset, childSize);
+            ForEachNode(f, beg1, end1, level - 1, childOffset, childSize, keyBase + (uint64_t{i} << skipBits));
           }
           childOffset += childSize;
         }
@@ -161,7 +163,7 @@ private:
         {
           uint64_t const beg1 = (i == beg0) ? (beg & levelBytesFF) : 0;
           uint64_t const end1 = (i == end0) ? (end & levelBytesFF) : levelBytesFF;
-          ForEachNode(f, beg1, end1, level - 1, childOffset, childSize);
+          ForEachNode(f, beg1, end1, level - 1, childOffset, childSize, keyBase + (uint64_t{i} << skipBits));
         }
         childOffset += childSize;
       }

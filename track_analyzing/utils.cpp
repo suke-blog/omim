@@ -6,9 +6,9 @@
 
 #include "platform/platform.hpp"
 
-#include "coding/file_name_utils.hpp"
+#include "base/file_name_utils.hpp"
 
-#include "geometry/mercator.hpp"
+#include "geometry/distance_on_sphere.hpp"
 
 #include <cstdint>
 
@@ -29,7 +29,8 @@ double CalcSubtrackLength(MatchedTrack::const_iterator begin, MatchedTrack::cons
     Segment const & segment = point.GetSegment();
     if (segment != prevSegment)
     {
-      length += MercatorBounds::DistanceOnEarth(
+      length +=
+          ms::DistanceOnEarth(
           geometry.GetPoint(segment.GetRoadPoint(false /* front */)),
           geometry.GetPoint(segment.GetRoadPoint(true /* front */)));
       prevSegment = segment;

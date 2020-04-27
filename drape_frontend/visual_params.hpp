@@ -12,6 +12,8 @@
 
 namespace df
 {
+double constexpr kBoundingBoxScale = 1.2;
+
 class VisualParams
 {
 public:
@@ -53,6 +55,9 @@ public:
   uint32_t GetGlyphBaseSize() const;
   double GetFontScale() const;
   void SetFontScale(double fontScale);
+
+  // This method can be called ONLY if rendering is disabled.
+  void SetVisualScale(double visualScale);
 
 private:
   VisualParams();

@@ -3,7 +3,9 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#include "Framework.h"
+#include <CoreApi/Framework.h>
+
+#include "platform/downloader_defines.hpp"
 
 @implementation MWMCustomFacebookEvents
 
@@ -80,21 +82,22 @@ static int gStorageSubscriptionId = kNotSubscribed;
     {
       if (gStorageSubscriptionId == kNotSubscribed)
       {
-        gStorageSubscriptionId = GetFramework().GetStorage().Subscribe([](storage::TCountryId const &)
-        {
-          if (GetFramework().GetStorage().GetDownloadedFilesCount() >= 2)
-          {
-            [FBSDKAppEvents logEvent:kDownloadedSecondMapEvent];
-            [MWMCustomFacebookEvents markEventAsAlreadyFired:kDownloadedSecondMapEvent];
-            // We can't unsubscribe from this callback immediately now, it will crash Storage's observers notification.
-            dispatch_async(dispatch_get_main_queue(),
-            ^{
-              GetFramework().GetStorage().Unsubscribe(gStorageSubscriptionId);
-              gStorageSubscriptionId = kNotSubscribed;
-            });
-            [Alohalytics logEvent:kDownloadedSecondMapEvent];
-          }
-        }, [](storage::TCountryId const &, storage::MapFilesDownloader::TProgress const &){});
+        gStorageSubscriptionId = GetFramework().GetStorage().Subscribe(
+            [](storage::CountryId const &) {
+              if (GetFramework().GetStorage().GetDownloadedFilesCount() >= 2)
+              {
+                [FBSDKAppEvents logEvent:kDownloadedSecondMapEvent];
+                [MWMCustomFacebookEvents markEventAsAlreadyFired:kDownloadedSecondMapEvent];
+                // We can't unsubscribe from this callback immediately now, it will crash Storage's
+                // observers notification.
+                dispatch_async(dispatch_get_main_queue(), ^{
+                  GetFramework().GetStorage().Unsubscribe(gStorageSubscriptionId);
+                  gStorageSubscriptionId = kNotSubscribed;
+                });
+                [Alohalytics logEvent:kDownloadedSecondMapEvent];
+              }
+            },
+            [](storage::CountryId const &, downloader::Progress const &) {});
       }
     }
   }

@@ -5,10 +5,12 @@
 #include "geometry/latlon.hpp"
 #include "geometry/mercator.hpp"
 
+#include "base/assert.hpp"
 #include "base/logging.hpp"
 
 #include <functional>
 
+using namespace std::chrono;
 using namespace std;
 
 namespace search
@@ -23,6 +25,8 @@ TestSearchRequest::TestSearchRequest(TestSearchEngine & engine, string const & q
   m_params.m_inputLocale = locale;
   m_params.m_viewport = viewport;
   m_params.m_mode = mode;
+  m_params.m_streetSearchRadiusM = kDefaultTestStreetSearchRadiusM;
+  m_params.m_villageSearchRadiusM = kDefaultTestVillageSearchRadiusM;
   SetUpCallbacks();
   SetUpResultParams();
 }
@@ -45,6 +49,8 @@ TestSearchRequest::TestSearchRequest(TestSearchEngine & engine, string const & q
   m_params.m_mode = mode;
   m_params.m_onStarted = onStarted;
   m_params.m_onResults = onResults;
+  m_params.m_streetSearchRadiusM = kDefaultTestStreetSearchRadiusM;
+  m_params.m_villageSearchRadiusM = kDefaultTestVillageSearchRadiusM;
   SetUpResultParams();
 }
 
@@ -114,15 +120,12 @@ void TestSearchRequest::OnStarted()
 void TestSearchRequest::OnResults(search::Results const & results)
 {
   lock_guard<mutex> lock(m_mu);
+  m_results.assign(results.begin(), results.end());
   if (results.IsEndMarker())
   {
     m_done = true;
     m_endTime = m_timer.TimeElapsed();
     m_cv.notify_one();
-  }
-  else
-  {
-    m_results.assign(results.begin(), results.end());
   }
 }
 

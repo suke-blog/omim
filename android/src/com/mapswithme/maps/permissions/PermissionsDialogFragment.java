@@ -1,18 +1,24 @@
 package com.mapswithme.maps.permissions;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
+import android.os.Bundle;
+import android.view.View;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.mapswithme.maps.R;
+import com.mapswithme.maps.news.OnboardingStep;
+import com.mapswithme.util.statistics.Statistics;
 
 public class PermissionsDialogFragment extends BasePermissionsDialogFragment
 {
@@ -36,7 +42,7 @@ public class PermissionsDialogFragment extends BasePermissionsDialogFragment
   @Override
   protected int getImageRes()
   {
-    return R.drawable.img_permissions;
+    return R.drawable.img_welcome;
   }
 
   @StringRes
@@ -64,20 +70,32 @@ public class PermissionsDialogFragment extends BasePermissionsDialogFragment
   @Override
   protected int getFirstActionButton()
   {
-    return R.id.btn__learn_more;
+    return R.id.decline_btn;
   }
 
   @Override
   protected void onFirstActionClick()
   {
     PermissionsDetailDialogFragment.show(getActivity(), getRequestCode());
+    sendStatistics(Statistics.EventName.ONBOARDING_SCREEN_DECLINE);
   }
 
   @IdRes
   @Override
   protected int getContinueActionButton()
   {
-    return R.id.btn__continue;
+    return R.id.accept_btn;
+  }
+
+  @NonNull
+  @Override
+  public Dialog onCreateDialog(Bundle savedInstanceState)
+  {
+    Dialog dialog = super.onCreateDialog(savedInstanceState);
+    if (savedInstanceState == null)
+      sendStatistics(Statistics.EventName.ONBOARDING_SCREEN_SHOW);
+
+    return dialog;
   }
 
   @Override
@@ -94,5 +112,19 @@ public class PermissionsDialogFragment extends BasePermissionsDialogFragment
   {
     super.onCancel(dialog);
     getActivity().finish();
+  }
+
+  @Override
+  protected void onContinueBtnClicked(View v)
+  {
+    super.onContinueBtnClicked(v);
+    sendStatistics(Statistics.EventName.ONBOARDING_SCREEN_ACCEPT);
+  }
+
+  private void sendStatistics(@NonNull String event)
+  {
+    String value =  OnboardingStep.PERMISSION_EXPLANATION.toStatisticValue();
+    Statistics.ParameterBuilder builder = Statistics.params().add(Statistics.EventParam.TYPE, value);
+    Statistics.INSTANCE.trackEvent(event, builder);
   }
 }

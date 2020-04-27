@@ -1,9 +1,9 @@
 package com.mapswithme.maps.editor;
 
 import android.os.Bundle;
-import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +38,7 @@ public class ReportFragment extends BaseMwmToolbarFragment implements View.OnCli
     super.onViewCreated(view, savedInstanceState);
     getToolbarController().setTitle(R.string.editor_report_problem_title);
 
-    mSave = getToolbarController().findViewById(R.id.save);
+    mSave = getToolbarController().getToolbar().findViewById(R.id.save);
     mSave.setOnClickListener(this);
     mSimpleProblems = view.findViewById(R.id.ll__problems);
     mSimpleProblems.findViewById(R.id.problem_not_exist).setOnClickListener(this);

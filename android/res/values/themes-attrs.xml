@@ -65,6 +65,7 @@
     <attr name="navigationTheme" format="reference"/>
 
     <attr name="fabAdd" format="reference"/>
+    <attr name="fabViewOnMap" format="reference"/>
 
     <attr name="routingButtonHint" format="color"/>
     <attr name="routingButtonPressedHint" format="color"/>
@@ -94,7 +95,8 @@
     <attr name="sponsoredGalleryMore" format="reference"/>
 
     <attr name="luggageLogo" format="reference"/>
-    <attr name="viatorLogo" format="reference" />
+
+    <attr name="drivingOptionsViewBg" format="color"/>
 
     <attr name="ratingButtonBackground" format="reference"/>
     <attr name="reviewButtonBackground" format="reference"/>
@@ -108,11 +110,20 @@
     <attr name="tipsBgColor" format="color"/>
     <attr name="tipsPrimaryTextColor" format="color"/>
     <attr name="tipsSecondaryTextColor" format="color"/>
+    <attr name="bgCrown" format="reference"/>
+    <attr name="bgDogBtn" format="reference"/>
+    <attr name="guidesTime" format="reference"></attr>
+    <attr name="guidesAltitude" format="reference"></attr>
+    <attr name="guidesSight" format="reference"></attr>
+    <attr name="guidesPlaceholder" format="reference"></attr>
+    <attr name="guidesDistance" format="reference"></attr>
+    <attr name="bgRectangleView" format="reference"></attr>
   </declare-styleable>
 
   <declare-styleable name="ThemeAttrs.NavButtons">
     <attr name="nav_background" format="reference"/>
     <attr name="nav_bg_subway" format="reference"/>
+    <attr name="nav_bg_isolines" format="reference"/>
   </declare-styleable>
 
   <declare-styleable name="ThemeAttrs.Downloader">
@@ -127,5 +138,31 @@
   <declare-styleable name="ThemeAttrs.Navigation">
     <attr name="newsMarker" format="reference"/>
     <attr name="searchLayoutBackground" format="reference"/>
+  </declare-styleable>
+
+  <declare-styleable name="ThemeAttrs.BookmarksSubscription">
+    <attr name="subscriptionTitleColor" format="color"/>
+    <attr name="subscriptionSubtitleColor" format="color"/>
+  </declare-styleable>
+
+  <declare-styleable name="ThemeAttrs.ElevationProfile">
+    <attr name="elevationProfileColor" format="color"/>
+    <attr name="elevationProfilePropertyBg" format="reference" />
+    <attr name="elevationProfilePropIconTint" format="color" />
+    <attr name="altitudeBg" format="reference"/>
+    <attr name="elevationProfileAxisLabelColor" format="color"/>
+    <attr name="elevationProfileYourLocationPinBg" format="reference"/>
+    <attr name="elevationProfileSelectedPointBg" format="reference"/>
+    <attr name="elevationProfileSelectedPointTriangle" format="reference"/>
+    <attr name="elevationProfileFloatingTriangle" format="reference"/>
+  </declare-styleable>
+  
+  <declare-styleable name="ThemeAttrs.Fonts">
+    <attr name="fontHeadline1" format="reference"/>
+    <attr name="fontHeadline2" format="reference"/>
+    <attr name="fontHeadline3" format="reference"/>
+    <attr name="fontHeadline4" format="reference"/>
+    <attr name="fontHeadline5" format="reference"/>
+    <attr name="fontHeadline6" format="reference"/>
   </declare-styleable>
 </resources>

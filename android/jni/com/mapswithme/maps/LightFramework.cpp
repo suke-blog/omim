@@ -1,26 +1,50 @@
 #include "map/framework_light.hpp"
+#include "map/framework_light_delegate.hpp"
 #include "map/local_ads_manager.hpp"
 
 #include "base/assert.hpp"
 
-#include "com/mapswithme/core/jni_helper.hpp"
+#include "com/mapswithme/maps/Framework.hpp"
 
-using namespace lightweight;
+#include "com/mapswithme/core/jni_helper.hpp"
 
 extern "C"
 {
 JNIEXPORT jboolean JNICALL
 Java_com_mapswithme_maps_LightFramework_nativeIsAuthenticated(JNIEnv * env, jclass clazz)
 {
-  Framework const framework(REQUEST_TYPE_USER_AUTH_STATUS);
+  lightweight::Framework const framework(lightweight::REQUEST_TYPE_USER_AUTH_STATUS);
   return static_cast<jboolean>(framework.IsUserAuthenticated());
 }
 
 JNIEXPORT jint JNICALL
 Java_com_mapswithme_maps_LightFramework_nativeGetNumberUnsentUGC(JNIEnv * env, jclass clazz)
 {
-  Framework const framework(REQUEST_TYPE_NUMBER_OF_UNSENT_UGC);
+  lightweight::Framework const framework(lightweight::REQUEST_TYPE_NUMBER_OF_UNSENT_UGC);
   return static_cast<jint>(framework.GetNumberOfUnsentUGC());
+}
+
+jobject CreateFeatureId(JNIEnv * env, CampaignFeature const & data)
+{
+  static jmethodID const featureCtorId =
+    jni::GetConstructorID(env, g_featureIdClazz, "(Ljava/lang/String;JI)V");
+
+  jni::TScopedLocalRef const countryId(env, jni::ToJavaString(env, data.m_countryId));
+  return env->NewObject(g_featureIdClazz, featureCtorId, countryId.get(),
+                        static_cast<jlong>(data.m_mwmVersion),
+                        static_cast<jint>(data.m_featureIndex));
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_mapswithme_maps_LightFramework_nativeMakeFeatureId(JNIEnv * env, jclass clazz,
+                                                            jstring mwmName, jlong mwmVersion,
+                                                            jint featureIndex)
+{
+  auto const featureId = lightweight::FeatureParamsToString(
+    static_cast<int64_t>(mwmVersion), jni::ToNativeString(env, mwmName),
+    static_cast<uint32_t>(featureIndex));
+
+  return jni::ToJavaString(env, featureId);
 }
 
 JNIEXPORT jobjectArray JNICALL
@@ -29,24 +53,22 @@ Java_com_mapswithme_maps_LightFramework_nativeGetLocalAdsFeatures(JNIEnv * env, 
                                                                   jdouble radiusInMeters,
                                                                   jint maxCount)
 {
-  Framework framework(REQUEST_TYPE_LOCAL_ADS_FEATURES);
+  lightweight::Framework framework(lightweight::REQUEST_TYPE_LOCAL_ADS_FEATURES);
   auto const features = framework.GetLocalAdsFeatures(lat, lon, radiusInMeters, maxCount);
 
   static jclass const geoFenceFeatureClazz =
           jni::GetGlobalClassRef(env, "com/mapswithme/maps/geofence/GeoFenceFeature");
-  // Java signature : GeoFenceFeature(long mwmVersion, String countryId, int featureIndex,
+  // Java signature : GeoFenceFeature(FeatureId featureId,
   //                                  double latitude, double longitude)
   static jmethodID const geoFenceFeatureConstructor =
-          jni::GetConstructorID(env, geoFenceFeatureClazz, "(JLjava/lang/String;IDD)V");
+          jni::GetConstructorID(env, geoFenceFeatureClazz, "(Lcom/mapswithme/maps/bookmarks/data/FeatureId;DD)V");
 
   return jni::ToJavaArray(env, geoFenceFeatureClazz, features, [&](JNIEnv * jEnv,
                                                                    CampaignFeature const & data)
   {
-      jni::TScopedLocalRef const countryId(env, jni::ToJavaString(env, data.m_countryId));
+      jni::TScopedLocalRef const featureId(env, CreateFeatureId(env, data));
       return env->NewObject(geoFenceFeatureClazz, geoFenceFeatureConstructor,
-                            static_cast<jlong>(data.m_mwmVersion),
-                            countryId.get(),
-                            static_cast<jint>(data.m_featureIndex),
+                            featureId.get(),
                             static_cast<jdouble>(data.m_lat),
                             static_cast<jdouble>(data.m_lon));
   });
@@ -59,7 +81,7 @@ Java_com_mapswithme_maps_LightFramework_nativeLogLocalAdsEvent(JNIEnv * env, jcl
                                                                jlong mwmVersion, jstring countryId,
                                                                jint featureIndex)
 {
-  Framework framework(REQUEST_TYPE_LOCAL_ADS_STATISTICS);
+  lightweight::Framework framework(lightweight::REQUEST_TYPE_LOCAL_ADS_STATISTICS);
   local_ads::Event event(static_cast<local_ads::EventType>(type), static_cast<long>(mwmVersion),
                          jni::ToNativeString(env, countryId), static_cast<uint32_t>(featureIndex),
                          static_cast<uint8_t>(1) /* zoom level */, local_ads::Clock::now(),
@@ -71,32 +93,29 @@ Java_com_mapswithme_maps_LightFramework_nativeLogLocalAdsEvent(JNIEnv * env, jcl
 JNIEXPORT jobject JNICALL
 Java_com_mapswithme_maps_LightFramework_nativeGetNotification(JNIEnv * env, jclass clazz)
 {
-  Framework framework(REQUEST_TYPE_NOTIFICATION);
+  lightweight::Framework framework(lightweight::REQUEST_TYPE_NOTIFICATION);
+  if (g_framework)
+    framework.SetDelegate(std::make_unique<FrameworkLightDelegate>(*g_framework->NativeFramework()));
   auto const notification = framework.GetNotification();
 
   if (!notification)
     return nullptr;
 
+  auto const & n = *notification;
   // Type::UgcReview is only supported.
-  CHECK_EQUAL(notification.get().m_type, notifications::NotificationCandidate::Type::UgcReview, ());
+  CHECK_EQUAL(n.GetType(), notifications::NotificationCandidate::Type::UgcReview, ());
 
   static jclass const candidateId =
-      jni::GetGlobalClassRef(env, "com/mapswithme/maps/background/NotificationCandidate");
-  static jclass const mapObjectId =
-      jni::GetGlobalClassRef(env, "com/mapswithme/maps/background/NotificationCandidate$MapObject");
+      jni::GetGlobalClassRef(env, "com/mapswithme/maps/background/NotificationCandidate$UgcReview");
   static jmethodID const candidateCtor = jni::GetConstructorID(
-      env, candidateId, "(ILcom/mapswithme/maps/background/NotificationCandidate$MapObject;)V");
-  static jmethodID const mapObjectCtor = jni::GetConstructorID(
-      env, mapObjectId, "(DDLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+      env, candidateId,
+      "(DDLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
 
-  auto const & srcObject = notification.get().m_mapObject;
-  ASSERT(srcObject, ());
-  auto const readableName = jni::ToJavaString(env, srcObject->GetReadableName());
-  auto const defaultName = jni::ToJavaString(env, srcObject->GetDefaultName());
-  auto const type = jni::ToJavaString(env, srcObject->GetBestType());
-  auto const mapObject = env->NewObject(mapObjectId, mapObjectCtor, srcObject->GetPos().x,
-                                        srcObject->GetPos().y, readableName, defaultName, type);
-  return env->NewObject(candidateId, candidateCtor, static_cast<jint>(notification.get().m_type),
-                        mapObject);
+  auto const readableName = jni::ToJavaString(env, n.GetReadableName());
+  auto const defaultName = jni::ToJavaString(env, n.GetDefaultName());
+  auto const type = jni::ToJavaString(env, n.GetBestFeatureType());
+  auto const address = jni::ToJavaString(env, n.GetAddress());
+  return env->NewObject(candidateId, candidateCtor, n.GetPos().x, n.GetPos().y, readableName,
+                        defaultName, type, address);
 }
 }  // extern "C"

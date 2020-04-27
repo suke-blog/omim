@@ -4,9 +4,13 @@
 #include "drape_frontend/gui/skin.hpp"
 #include "drape_frontend/user_event_stream.hpp"
 
-#include "kml/type_utils.hpp"
+#include "search/reverse_geocoder.hpp"
 
 #include "qt/qt_common/qtoglcontextfactory.hpp"
+
+#include "kml/type_utils.hpp"
+
+#include "indexer/feature.hpp"
 
 #include <QtCore/QTimer>
 #include <QtWidgets/QOpenGLWidget>
@@ -32,7 +36,7 @@ class MapWidget : public QOpenGLWidget
   Q_OBJECT
 
 public:
-  MapWidget(Framework & framework, bool apiOpenGLES3, QWidget * parent);
+  MapWidget(Framework & framework, bool apiOpenGLES3, bool isScreenshotMode, QWidget * parent);
   ~MapWidget() override;
 
   void BindHotkeys(QWidget & parent);
@@ -73,6 +77,9 @@ protected:
 
   void UpdateScaleControl();
   void Build();
+  void ShowInfoPopup(QMouseEvent * e, m2::PointD const & pt);
+
+  void OnViewportChanged(ScreenBase const & screen);
 
   // QOpenGLWidget overrides:
   void initializeGL() override;
@@ -87,6 +94,7 @@ protected:
 
   Framework & m_framework;
   bool m_apiOpenGLES3;
+  bool m_screenshotMode;
   ScaleSlider * m_slider;
   SliderState m_sliderState;
   kml::MarkGroupId m_bookmarksCategoryId = 0;
@@ -97,9 +105,12 @@ protected:
 
   std::unique_ptr<QTimer> m_updateTimer;
 
-  unique_ptr<QOpenGLShaderProgram> m_program;
-  unique_ptr<QOpenGLVertexArrayObject> m_vao;
-  unique_ptr<QOpenGLBuffer> m_vbo;
+  std::unique_ptr<QOpenGLShaderProgram> m_program;
+  std::unique_ptr<QOpenGLVertexArrayObject> m_vao;
+  std::unique_ptr<QOpenGLBuffer> m_vbo;
 };
+
+search::ReverseGeocoder::Address GetFeatureAddressInfo(Framework const & framework,
+                                                       FeatureType & ft);
 }  // namespace common
 }  // namespace qt

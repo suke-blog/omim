@@ -1,7 +1,9 @@
 #include "map/bookmark.hpp"
 #include "map/bookmark_helpers.hpp"
 
-#include "coding/url_encode.hpp"
+#include "coding/url.hpp"
+
+#include "base/string_utils.hpp"
 
 #include <sstream>
 
@@ -36,12 +38,20 @@ std::string GetBookmarkIconType(kml::BookmarkIcon const & icon)
   case kml::BookmarkIcon::Sights: return "sights";
   case kml::BookmarkIcon::Swim: return "swim";
   case kml::BookmarkIcon::Water: return "water";
+  case kml::BookmarkIcon::Bar: return "bar";
+  case kml::BookmarkIcon::Transport: return "transport";
+  case kml::BookmarkIcon::Viewpoint: return "viewpoint";
+  case kml::BookmarkIcon::Sport: return "sport";
+  case kml::BookmarkIcon::Start: return "start";
+  case kml::BookmarkIcon::Finish: return "finish";
   case kml::BookmarkIcon::Count:
     ASSERT(false, ("Invalid bookmark icon type"));
     return {};
   }
   UNREACHABLE();
 }
+
+std::string const kCustomImageProperty = "CustomImage";
 }  // namespace
 
 Bookmark::Bookmark(m2::PointD const & ptOrg)
@@ -71,6 +81,17 @@ kml::BookmarkData const & Bookmark::GetData() const
   return m_data;
 }
 
+search::ReverseGeocoder::RegionAddress const & Bookmark::GetAddress() const
+{
+  return m_address;
+}
+
+void Bookmark::SetAddress(search::ReverseGeocoder::RegionAddress const & address)
+{
+  SetDirty();
+  m_address = address;
+}
+
 dp::Anchor Bookmark::GetAnchor() const
 {
   return dp::Bottom;
@@ -78,12 +99,41 @@ dp::Anchor Bookmark::GetAnchor() const
 
 drape_ptr<df::UserPointMark::SymbolNameZoomInfo> Bookmark::GetSymbolNames() const
 {
-  auto symbol = make_unique_dp<SymbolNameZoomInfo>();
-  symbol->insert(std::make_pair(1 /* zoomLevel */, "bookmark-default-xs"));
-  symbol->insert(std::make_pair(8 /* zoomLevel */, "bookmark-default-s"));
+  auto symbolNames = GetCustomSymbolNames();
+  if (symbolNames != nullptr)
+    return symbolNames;
+
+  symbolNames = make_unique_dp<SymbolNameZoomInfo>();
+
+  symbolNames->insert(std::make_pair(1 /* zoomLevel */, "bookmark-default-xs"));
+  symbolNames->insert(std::make_pair(8 /* zoomLevel */, "bookmark-default-s"));
   auto const iconType = GetBookmarkIconType(m_data.m_icon);
-  symbol->insert(std::make_pair(14 /* zoomLevel */, "bookmark-" + iconType + "-m"));
-  return symbol;
+  symbolNames->insert(std::make_pair(14 /* zoomLevel */, "bookmark-" + iconType + "-m"));
+  return symbolNames;
+}
+
+drape_ptr<df::UserPointMark::SymbolNameZoomInfo> Bookmark::GetCustomSymbolNames() const
+{
+  auto const it = m_data.m_properties.find(kCustomImageProperty);
+  if (it == m_data.m_properties.end())
+    return nullptr;
+
+  auto symbolNames = make_unique_dp<SymbolNameZoomInfo>();
+  strings::Tokenize(it->second, ";", [&](std::string const & token)
+  {
+    int zoomLevel = 1;
+    std::string name = token;
+    auto pos = token.find(',');
+    if (pos != std::string::npos && strings::to_int(token.substr(0, pos), zoomLevel))
+      name = token.substr(pos + 1);
+    if (!name.empty() && zoomLevel >= 1 && zoomLevel <= 18)
+      symbolNames->insert(std::make_pair(zoomLevel, name));
+  });
+
+  if (symbolNames->empty())
+    return nullptr;
+
+  return symbolNames;
 }
 
 df::ColorConstant Bookmark::GetColorConstant() const
@@ -106,6 +156,22 @@ df::ColorConstant Bookmark::GetColorConstant() const
       return "BookmarkGreen";
     case kml::PredefinedColor::Orange:
       return "BookmarkOrange";
+    case kml::PredefinedColor::DeepPurple:
+      return "BookmarkDeepPurple";
+    case kml::PredefinedColor::LightBlue:
+      return "BookmarkLightBlue";
+    case kml::PredefinedColor::Cyan:
+      return "BookmarkCyan";
+    case kml::PredefinedColor::Teal:
+      return "BookmarkTeal";
+    case kml::PredefinedColor::Lime:
+      return "BookmarkLime";
+    case kml::PredefinedColor::DeepOrange:
+      return "BookmarkDeepOrange";
+    case kml::PredefinedColor::Gray:
+      return "BookmarkGray";
+    case kml::PredefinedColor::BlueGray:
+      return "BookmarkBlueGray";
     case kml::PredefinedColor::None:
     case kml::PredefinedColor::Count:
       return "BookmarkRed";
@@ -294,7 +360,17 @@ std::string BookmarkCategory::GetCatalogDeeplink() const
     return {};
 
   std::ostringstream ss;
-  ss << kDeepLinkUrl << "catalogue?id=" << m_serverId << "&name=" << UrlEncode(GetName());
+  ss << kDeepLinkUrl << "catalogue?id=" << m_serverId << "&name=" << url::UrlEncode(GetName());
+  return ss.str();
+}
+
+std::string BookmarkCategory::GetCatalogPublicLink() const
+{
+  if (kDeepLinkUrl.empty())
+    return {};
+
+  std::ostringstream ss;
+  ss << kDeepLinkUrl << "guides_page?url=route%2F" << m_serverId;
   return ss.str();
 }
 

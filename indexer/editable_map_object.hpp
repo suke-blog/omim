@@ -11,6 +11,7 @@
 #include "coding/string_utf8_multilang.hpp"
 
 #include <cstdint>
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -20,19 +21,18 @@ namespace osm
 struct EditableProperties
 {
   EditableProperties() = default;
-  EditableProperties(std::vector<feature::Metadata::EType> const & metadata,
-                     bool name, bool address)
-      : m_name(name),
-        m_address(address),
-        m_metadata(metadata)
+  EditableProperties(std::vector<feature::Metadata::EType> const & metadata, bool name,
+                     bool address, bool cuisine)
+    : m_name(name), m_address(address), m_cuisine(cuisine), m_metadata(metadata)
   {
   }
 
   bool m_name = false;
-  /// If true, enables editing of house number, street address and post code.
+  /// If true, enables editing of house number, street address and postcode.
   bool m_address = false;
+  bool m_cuisine = false;
   std::vector<feature::Metadata::EType> m_metadata;
-  bool IsEditable() const { return m_name || m_address || !m_metadata.empty(); }
+  bool IsEditable() const { return m_name || m_address || m_cuisine || !m_metadata.empty(); }
 };
 
 struct LocalizedName
@@ -103,14 +103,16 @@ public:
   // TODO(AlexZ): Remove this method and use GetEditableProperties() in UI.
   std::vector<feature::Metadata::EType> const & GetEditableFields() const;
 
-  StringUtf8Multilang const & GetName() const;
   /// See comment for NamesDataSource class.
   NamesDataSource GetNamesDataSource(bool addFakes = true);
   LocalizedStreet const & GetStreet() const;
   std::vector<LocalizedStreet> const & GetNearbyStreets() const;
-  std::string const & GetHouseNumber() const;
   std::string GetPostcode() const;
   std::string GetWikipedia() const;
+
+  void ForEachMetadataItem(
+      bool skipSponsored,
+      std::function<void(std::string const & tag, std::string const & value)> const & fn) const;
 
   // These two methods should only be used in tests.
   uint64_t GetTestId() const;
@@ -122,12 +124,13 @@ public:
   void SetName(std::string name, int8_t langCode = StringUtf8Multilang::kDefaultCode);
   void SetMercator(m2::PointD const & center);
   void SetType(uint32_t featureType);
+  void SetTypes(feature::TypesHolder const & types);
   void SetID(FeatureID const & fid);
 
-  //  void SetTypes(feature::TypesHolder const & types);
   void SetStreet(LocalizedStreet const & st);
   void SetNearbyStreets(std::vector<LocalizedStreet> && streets);
   void SetHouseNumber(std::string const & houseNumber);
+  bool UpdateMetadataValue(std::string const & key, std::string const & value);
   void SetPostcode(std::string const & postcode);
   void SetPhone(std::string const & phone);
   void SetFax(std::string const & fax);
@@ -146,7 +149,7 @@ public:
   void SetBuildingLevels(std::string const & buildingLevels);
   void SetLevel(std::string const & level);
   /// @param[in] cuisine is a vector of osm cuisine ids.
-  void SetCuisines(std::vector<std::string> const & cuisine);
+  void SetCuisines(std::vector<std::string> const & cuisines);
   void SetOpeningHours(std::string const & openingHours);
 
   /// Special mark that it's a point feature, not area or line.
@@ -180,7 +183,6 @@ public:
   static void RemoveFakeNames(FakeNames const & fakeNames, StringUtf8Multilang & name);
 
 private:
-  std::string m_houseNumber;
   LocalizedStreet m_street;
   std::vector<LocalizedStreet> m_nearbyStreets;
   EditableProperties m_editableProperties;

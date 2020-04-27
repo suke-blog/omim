@@ -1,11 +1,12 @@
 #include "indexer/feature.hpp"
 
 #include "indexer/classificator.hpp"
-#include "indexer/editable_map_object.hpp"
 #include "indexer/feature_algo.hpp"
 #include "indexer/feature_impl.hpp"
 #include "indexer/feature_utils.hpp"
 #include "indexer/feature_visibility.hpp"
+#include "indexer/map_object.hpp"
+#include "indexer/postcodes.hpp"
 #include "indexer/scales.hpp"
 #include "indexer/shared_load_info.hpp"
 
@@ -108,13 +109,17 @@ int GetScaleIndex(SharedLoadInfo const & loadInfo, int scale,
   return -1;
 }
 
-uint32_t CalcOffset(ArrayByteSource const & source, FeatureType::Buffer const data)
+uint32_t CalcOffset(ArrayByteSource const & source, uint8_t const * start)
 {
-  ASSERT_GREATER_OR_EQUAL(source.PtrC(), data, ());
-  return static_cast<uint32_t>(source.PtrC() - data);
+  ASSERT_GREATER_OR_EQUAL(source.PtrUint8(), start, ());
+  return static_cast<uint32_t>(distance(start, source.PtrUint8()));
 }
 
-uint8_t Header(FeatureType::Buffer const data) { return static_cast<uint8_t>(*data); }
+uint8_t Header(vector<uint8_t> const & data)
+{
+ CHECK(!data.empty(), ());
+ return data[0];
+}
 
 void ReadOffsets(SharedLoadInfo const & loadInfo, ArrayByteSource & src, uint8_t mask,
                  FeatureType::GeometryOffsets & offsets)
@@ -137,11 +142,11 @@ void ReadOffsets(SharedLoadInfo const & loadInfo, ArrayByteSource & src, uint8_t
 
 class BitSource
 {
-  char const * m_ptr;
+  uint8_t const * m_ptr;
   uint8_t m_pos;
 
 public:
-  BitSource(char const * p) : m_ptr(p), m_pos(0) {}
+  explicit BitSource(uint8_t const * p) : m_ptr(p), m_pos(0) {}
 
   uint8_t Read(uint8_t count)
   {
@@ -162,7 +167,7 @@ public:
     return v;
   }
 
-  char const * RoundPtr()
+  uint8_t const * RoundPtr()
   {
     if (m_pos > 0)
     {
@@ -180,39 +185,83 @@ uint8_t ReadByte(TSource & src)
 }
 }  // namespace
 
-void FeatureType::Deserialize(SharedLoadInfo const * loadInfo, Buffer buffer)
+FeatureType::FeatureType(SharedLoadInfo const * loadInfo, vector<uint8_t> && buffer,
+                         MetadataIndex const * metadataIndex)
+  : m_loadInfo(loadInfo), m_data(buffer), m_metadataIndex(metadataIndex)
 {
   CHECK(loadInfo, ());
-  m_loadInfo = loadInfo;
-  m_data = buffer;
+  ASSERT(m_loadInfo->GetMWMFormat() < version::Format::v10 || m_metadataIndex,
+         (m_loadInfo->GetMWMFormat()));
+
   m_header = Header(m_data);
-
-  m_offsets.Reset();
-  m_ptsSimpMask = 0;
-  m_limitRect = m2::RectD::GetEmptyRect();
-  m_parsed.Reset();
-  m_innerStats.MakeZero();
 }
 
-feature::EGeomType FeatureType::GetFeatureType() const
+FeatureType::FeatureType(osm::MapObject const & emo)
 {
-  switch (m_header & HEADER_GEOTYPE_MASK)
+  HeaderGeomType headerGeomType = HeaderGeomType::Point;
+  m_limitRect.MakeEmpty();
+
+  switch (emo.GetGeomType())
   {
-  case HEADER_GEOM_LINE: return GEOM_LINE;
-  case HEADER_GEOM_AREA: return GEOM_AREA;
-  default: return GEOM_POINT;
+  case feature::GeomType::Undefined:
+    // It is not possible because of FeatureType::GetGeomType() never returns GeomType::Undefined.
+    UNREACHABLE();
+  case feature::GeomType::Point:
+    headerGeomType = HeaderGeomType::Point;
+    m_center = emo.GetMercator();
+    m_limitRect.Add(m_center);
+    break;
+  case feature::GeomType::Line:
+    headerGeomType = HeaderGeomType::Line;
+    m_points = Points(emo.GetPoints().begin(), emo.GetPoints().end());
+    for (auto const & p : m_points)
+      m_limitRect.Add(p);
+    break;
+  case feature::GeomType::Area:
+    headerGeomType = HeaderGeomType::Area;
+    m_triangles = Points(emo.GetTriangesAsPoints().begin(), emo.GetTriangesAsPoints().end());
+    for (auto const & p : m_triangles)
+      m_limitRect.Add(p);
+    break;
   }
+
+  m_parsed.m_points = m_parsed.m_triangles = true;
+
+  m_params.name = emo.GetNameMultilang();
+  string const & house = emo.GetHouseNumber();
+  if (house.empty())
+    m_params.house.Clear();
+  else
+    m_params.house.Set(house);
+  m_parsed.m_common = true;
+
+  m_postcode = emo.GetPostcode();
+  m_parsed.m_postcode = true;
+
+  m_metadata = emo.GetMetadata();
+  m_parsed.m_metadata = true;
+
+  CHECK_LESS_OR_EQUAL(emo.GetTypes().Size(), feature::kMaxTypesCount, ());
+  copy(emo.GetTypes().begin(), emo.GetTypes().end(), m_types.begin());
+
+  m_parsed.m_types = true;
+  m_header = CalculateHeader(emo.GetTypes().Size(), headerGeomType, m_params);
+  m_parsed.m_header2 = true;
+
+  m_id = emo.GetID();
 }
 
-void FeatureType::SetTypes(array<uint32_t, feature::kMaxTypesCount> const & types, uint32_t count)
+feature::GeomType FeatureType::GetGeomType() const
 {
-  ASSERT_GREATER_OR_EQUAL(count, 1, ("Must be one type at least."));
-  ASSERT_LESS(count, feature::kMaxTypesCount, ("Too many types for feature"));
-  count = min(count, static_cast<uint32_t>(feature::kMaxTypesCount - 1));
-  m_types.fill(0);
-  copy_n(begin(types), count, begin(m_types));
-  auto value = static_cast<uint8_t>((count - 1) & feature::HEADER_TYPE_MASK);
-  m_header = (m_header & (~feature::HEADER_TYPE_MASK)) | value;
+  // FeatureType::FeatureType(osm::MapObject const & emo) expects
+  // that GeomType::Undefined is never returned.
+  auto const headerGeomType = static_cast<HeaderGeomType>(m_header & HEADER_MASK_GEOMTYPE);
+  switch (headerGeomType)
+  {
+  case HeaderGeomType::Line: return GeomType::Line;
+  case HeaderGeomType::Area: return GeomType::Area;
+  default: return GeomType::Point;
+  }
 }
 
 void FeatureType::ParseTypes()
@@ -222,7 +271,7 @@ void FeatureType::ParseTypes()
 
   auto const typesOffset = sizeof(m_header);
   Classificator & c = classif();
-  ArrayByteSource source(m_data + typesOffset);
+  ArrayByteSource source(m_data.data() + typesOffset);
 
   size_t const count = GetTypesCount();
   uint32_t index = 0;
@@ -242,7 +291,7 @@ void FeatureType::ParseTypes()
     throw;
   }
 
-  m_offsets.m_common = CalcOffset(source, m_data);
+  m_offsets.m_common = CalcOffset(source, m_data.data());
   m_parsed.m_types = true;
 }
 
@@ -254,81 +303,34 @@ void FeatureType::ParseCommon()
   CHECK(m_loadInfo, ());
   ParseTypes();
 
-  ArrayByteSource source(m_data + m_offsets.m_common);
+  ArrayByteSource source(m_data.data() + m_offsets.m_common);
   uint8_t const h = Header(m_data);
   m_params.Read(source, h);
 
-  if (GetFeatureType() == GEOM_POINT)
+  if (GetGeomType() == GeomType::Point)
   {
     m_center = serial::LoadPoint(source, m_loadInfo->GetDefGeometryCodingParams());
     m_limitRect.Add(m_center);
   }
 
-  m_offsets.m_header2 = CalcOffset(source, m_data);
+  m_offsets.m_header2 = CalcOffset(source, m_data.data());
   m_parsed.m_common = true;
 }
 
 m2::PointD FeatureType::GetCenter()
 {
-  ASSERT_EQUAL(GetFeatureType(), feature::GEOM_POINT, ());
+  ASSERT_EQUAL(GetGeomType(), feature::GeomType::Point, ());
   ParseCommon();
   return m_center;
 }
 
 int8_t FeatureType::GetLayer()
 {
-  if ((m_header & feature::HEADER_HAS_LAYER) == 0)
+  if ((m_header & feature::HEADER_MASK_HAS_LAYER) == 0)
     return 0;
 
   ParseCommon();
   return m_params.layer;
-}
-
-void FeatureType::ReplaceBy(osm::EditableMapObject const & emo)
-{
-  uint8_t geoType;
-  if (emo.IsPointType())
-  {
-    // We are here for existing point features and for newly created point features.
-    m_center = emo.GetMercator();
-    m_limitRect.MakeEmpty();
-    m_limitRect.Add(m_center);
-    m_parsed.m_points = m_parsed.m_triangles = true;
-    geoType = feature::GEOM_POINT;
-  }
-  else
-  {
-    geoType = m_header & HEADER_GEOTYPE_MASK;
-  }
-
-  m_params.name = emo.GetName();
-  string const & house = emo.GetHouseNumber();
-  if (house.empty())
-    m_params.house.Clear();
-  else
-    m_params.house.Set(house);
-  m_parsed.m_common = true;
-
-  m_metadata = emo.GetMetadata();
-  m_parsed.m_metadata = true;
-
-  uint32_t typesCount = 0;
-  for (uint32_t const type : emo.GetTypes())
-    m_types[typesCount++] = type;
-  m_parsed.m_types = true;
-  m_header = CalculateHeader(typesCount, geoType, m_params);
-  m_parsed.m_header2 = true;
-
-  m_id = emo.GetID();
-}
-
-void FeatureType::ParseEverything()
-{
-  // Also calls ParseCommon() and ParseTypes().
-  ParseHeader2();
-  ParseGeometry(FeatureType::BEST_GEOMETRY);
-  ParseTriangles(FeatureType::BEST_GEOMETRY);
-  ParseMetadata();
 }
 
 void FeatureType::ParseHeader2()
@@ -340,10 +342,10 @@ void FeatureType::ParseHeader2()
   ParseCommon();
 
   uint8_t ptsCount = 0, ptsMask = 0, trgCount = 0, trgMask = 0;
-  BitSource bitSource(m_data + m_offsets.m_header2);
-  uint8_t const typeMask = Header(m_data) & HEADER_GEOTYPE_MASK;
+  BitSource bitSource(m_data.data() + m_offsets.m_header2);
+  auto const headerGeomType = static_cast<HeaderGeomType>(Header(m_data) & HEADER_MASK_GEOMTYPE);
 
-  if (typeMask == HEADER_GEOM_LINE)
+  if (headerGeomType == HeaderGeomType::Line)
   {
     ptsCount = bitSource.Read(4);
     if (ptsCount == 0)
@@ -351,7 +353,7 @@ void FeatureType::ParseHeader2()
     else
       ASSERT_GREATER(ptsCount, 1, ());
   }
-  else if (typeMask == HEADER_GEOM_AREA)
+  else if (headerGeomType == HeaderGeomType::Area)
   {
     trgCount = bitSource.Read(4);
     if (trgCount == 0)
@@ -361,7 +363,7 @@ void FeatureType::ParseHeader2()
   ArrayByteSource src(bitSource.RoundPtr());
   serial::GeometryCodingParams const & cp = m_loadInfo->GetDefGeometryCodingParams();
 
-  if (typeMask == HEADER_GEOM_LINE)
+  if (headerGeomType == HeaderGeomType::Line)
   {
     if (ptsCount > 0)
     {
@@ -374,9 +376,9 @@ void FeatureType::ParseHeader2()
         m_ptsSimpMask += (mask << (i << 3));
       }
 
-      char const * start = src.PtrC();
+      auto const * start = src.PtrUint8();
       src = ArrayByteSource(serial::LoadInnerPath(start, ptsCount, cp, m_points));
-      m_innerStats.m_points = static_cast<uint32_t>(src.PtrC() - start);
+      m_innerStats.m_points = static_cast<uint32_t>(src.PtrUint8() - start);
     }
     else
     {
@@ -384,13 +386,13 @@ void FeatureType::ParseHeader2()
       ReadOffsets(*m_loadInfo, src, ptsMask, m_offsets.m_pts);
     }
   }
-  else if (typeMask == HEADER_GEOM_AREA)
+  else if (headerGeomType == HeaderGeomType::Area)
   {
     if (trgCount > 0)
     {
       trgCount += 2;
 
-      char const * start = static_cast<char const *>(src.PtrC());
+      auto const * start = src.PtrUint8();
       src = ArrayByteSource(serial::LoadInnerTriangles(start, trgCount, cp, m_triangles));
       m_innerStats.m_strips = CalcOffset(src, start);
     }
@@ -399,16 +401,20 @@ void FeatureType::ParseHeader2()
       ReadOffsets(*m_loadInfo, src, trgMask, m_offsets.m_trg);
     }
   }
-  m_innerStats.m_size = CalcOffset(src, m_data);
+  m_innerStats.m_size = CalcOffset(src, m_data.data());
   m_parsed.m_header2 = true;
 }
 
 void FeatureType::ResetGeometry()
 {
+  // Do not reset geometry for features created from MapObjects.
+  if (!m_loadInfo)
+    return;
+
   m_points.clear();
   m_triangles.clear();
 
-  if (GetFeatureType() != GEOM_POINT)
+  if (GetGeomType() != GeomType::Point)
     m_limitRect = m2::RectD();
 
   m_parsed.m_header2 = m_parsed.m_points = m_parsed.m_triangles = false;
@@ -425,7 +431,8 @@ uint32_t FeatureType::ParseGeometry(int scale)
     CHECK(m_loadInfo, ());
     ParseHeader2();
 
-    if ((Header(m_data) & HEADER_GEOTYPE_MASK) == HEADER_GEOM_LINE)
+    auto const headerGeomType = static_cast<HeaderGeomType>(Header(m_data) & HEADER_MASK_GEOMTYPE);
+    if (headerGeomType == HeaderGeomType::Line)
     {
       size_t const count = m_points.size();
       if (count < 2)
@@ -483,7 +490,8 @@ uint32_t FeatureType::ParseTriangles(int scale)
     CHECK(m_loadInfo, ());
     ParseHeader2();
 
-    if ((Header(m_data) & HEADER_GEOTYPE_MASK) == HEADER_GEOM_AREA)
+    auto const headerGeomType = static_cast<HeaderGeomType>(Header(m_data) & HEADER_MASK_GEOMTYPE);
+    if (headerGeomType == HeaderGeomType::Area)
     {
       if (m_triangles.empty())
       {
@@ -513,28 +521,40 @@ void FeatureType::ParseMetadata()
   CHECK(m_loadInfo, ());
   try
   {
-    struct TMetadataIndexEntry
+    auto const format = m_loadInfo->GetMWMFormat();
+    if (format >= version::Format::v10)
     {
-      uint32_t key;
-      uint32_t value;
-    };
-    DDVector<TMetadataIndexEntry, FilesContainerR::TReader> idx(
-        m_loadInfo->GetMetadataIndexReader());
-
-    auto it = lower_bound(idx.begin(), idx.end(),
-                          TMetadataIndexEntry{static_cast<uint32_t>(m_id.m_index), 0},
-                          [](TMetadataIndexEntry const & v1, TMetadataIndexEntry const & v2) {
-                            return v1.key < v2.key;
-                          });
-
-    if (it != idx.end() && m_id.m_index == it->key)
-    {
-      ReaderSource<FilesContainerR::TReader> src(m_loadInfo->GetMetadataReader());
-      src.Skip(it->value);
-      if (m_loadInfo->GetMWMFormat() >= version::Format::v8)
+      uint32_t offset;
+      CHECK(m_metadataIndex, ("metadata index should be set for mwm format >= v10"));
+      if (m_metadataIndex->Get(m_id.m_index, offset))
+      {
+        ReaderSource<FilesContainerR::TReader> src(m_loadInfo->GetMetadataReader());
+        src.Skip(offset);
         m_metadata.Deserialize(src);
-      else
-        m_metadata.DeserializeFromMWMv7OrLower(src);
+      }
+    }
+    else
+    {
+      struct MetadataIndexEntry
+      {
+        uint32_t key;
+        uint32_t value;
+      };
+      DDVector<MetadataIndexEntry, FilesContainerR::TReader> idx(
+          m_loadInfo->GetMetadataIndexReader());
+
+      auto it = lower_bound(idx.begin(), idx.end(), m_id.m_index,
+                            [](auto const & idx, auto val) { return idx.key < val; });
+
+      if (it != idx.end() && m_id.m_index == it->key)
+      {
+        ReaderSource<FilesContainerR::TReader> src(m_loadInfo->GetMetadataReader());
+        src.Skip(it->value);
+        if (m_loadInfo->GetMWMFormat() >= version::Format::v8)
+          m_metadata.Deserialize(src);
+        else
+          m_metadata.DeserializeFromMWMv7OrLower(src);
+      }
     }
   }
   catch (Reader::OpenException const &)
@@ -545,78 +565,33 @@ void FeatureType::ParseMetadata()
   m_parsed.m_metadata = true;
 }
 
+void FeatureType::ParsePostcode()
+{
+  if (m_parsed.m_postcode)
+    return;
+
+  auto postcodesReader = m_loadInfo->GetPostcodesReader();
+  if (postcodesReader)
+  {
+    auto postcodes = indexer::Postcodes::Load(*postcodesReader->GetPtr());
+    CHECK(postcodes, ());
+    auto const havePostcode = postcodes->Get(m_id.m_index, m_postcode);
+    CHECK(!havePostcode || !m_postcode.empty(), (havePostcode, m_postcode));
+  }
+  else
+  {
+    // Old data compatibility.
+    ParseMetadata();
+    m_postcode = m_metadata.Get(feature::Metadata::FMD_POSTCODE);
+  }
+
+  m_parsed.m_postcode = true;
+}
+
 StringUtf8Multilang const & FeatureType::GetNames()
 {
   ParseCommon();
   return m_params.name;
-}
-
-void FeatureType::SetNames(StringUtf8Multilang const & newNames)
-{
-  m_params.name.Clear();
-  // Validate passed string to clean up empty names (if any).
-  newNames.ForEach([this](int8_t langCode, string const & name) {
-    if (!name.empty())
-      m_params.name.AddString(langCode, name);
-  });
-
-  if (m_params.name.IsEmpty())
-    m_header = m_header & ~feature::HEADER_HAS_NAME;
-  else
-    m_header = m_header | feature::HEADER_HAS_NAME;
-}
-
-void FeatureType::SetMetadata(feature::Metadata const & newMetadata)
-{
-  m_parsed.m_metadata = true;
-  m_metadata = newMetadata;
-}
-
-void FeatureType::UpdateHeader(bool commonParsed, bool metadataParsed)
-{
-  feature::EHeaderTypeMask geomType =
-      static_cast<feature::EHeaderTypeMask>(m_header & feature::HEADER_GEOTYPE_MASK);
-  if (!geomType)
-  {
-    geomType = m_params.house.IsEmpty() && !m_params.ref.empty() ? feature::HEADER_GEOM_POINT
-                                                                 : feature::HEADER_GEOM_POINT_EX;
-  }
-
-  m_header = feature::CalculateHeader(GetTypesCount(), geomType, m_params);
-  m_parsed.m_header2 = true;
-  m_parsed.m_types = true;
-
-  m_parsed.m_common = commonParsed;
-  m_parsed.m_metadata = metadataParsed;
-}
-
-bool FeatureType::UpdateMetadataValue(string const & key, string const & value)
-{
-  feature::Metadata::EType mdType;
-  if (!feature::Metadata::TypeFromString(key, mdType))
-    return false;
-  m_metadata.Set(mdType, value);
-  return true;
-}
-
-void FeatureType::ForEachMetadataItem(
-    bool skipSponsored, function<void(string const & tag, string const & value)> const & fn) const
-{
-  for (auto const type : m_metadata.GetPresentTypes())
-  {
-    if (skipSponsored && m_metadata.IsSponsoredType(static_cast<feature::Metadata::EType>(type)))
-      continue;
-    auto const attributeName = ToString(static_cast<feature::Metadata::EType>(type));
-    fn(attributeName, m_metadata.Get(type));
-  }
-}
-
-void FeatureType::SetCenter(m2::PointD const & pt)
-{
-  ASSERT_EQUAL(GetFeatureType(), GEOM_POINT, ("Only for point feature."));
-  m_center = pt;
-  m_limitRect.Add(m_center);
-  m_parsed.m_points = m_parsed.m_triangles = true;
 }
 
 namespace
@@ -643,21 +618,21 @@ string FeatureType::DebugString(int scale)
   res += m_params.DebugString();
 
   ParseGeometryAndTriangles(scale);
-  switch (GetFeatureType())
+  switch (GetGeomType())
   {
-  case GEOM_POINT: res += (" Center:" + DebugPrint(m_center)); break;
+  case GeomType::Point: res += (" Center:" + DebugPrint(m_center)); break;
 
-  case GEOM_LINE:
+  case GeomType::Line:
     res += " Points:";
     Points2String(res, m_points);
     break;
 
-  case GEOM_AREA:
+  case GeomType::Area:
     res += " Triangles:";
     Points2String(res, m_triangles);
     break;
 
-  case GEOM_UNDEFINED:
+  case GeomType::Undefined:
     ASSERT(false, ("Assume that we have valid feature always"));
     break;
   }
@@ -669,7 +644,7 @@ m2::RectD FeatureType::GetLimitRect(int scale)
 {
   ParseGeometryAndTriangles(scale);
 
-  if (m_triangles.empty() && m_points.empty() && (GetFeatureType() != GEOM_POINT))
+  if (m_triangles.empty() && m_points.empty() && (GetGeomType() != GeomType::Point))
   {
     // This function is called during indexing, when we need
     // to check visibility according to feature sizes.
@@ -684,10 +659,10 @@ bool FeatureType::IsEmptyGeometry(int scale)
 {
   ParseGeometryAndTriangles(scale);
 
-  switch (GetFeatureType())
+  switch (GetGeomType())
   {
-  case GEOM_AREA: return m_triangles.empty();
-  case GEOM_LINE: return m_points.empty();
+  case GeomType::Area: return m_triangles.empty();
+  case GeomType::Line: return m_points.empty();
   default: return false;
   }
 }
@@ -705,7 +680,7 @@ m2::PointD const & FeatureType::GetPoint(size_t i) const
   return m_points[i];
 }
 
-vector<m2::PointD> FeatureType::GetTriangesAsPoints(int scale)
+vector<m2::PointD> FeatureType::GetTrianglesAsPoints(int scale)
 {
   ParseTriangles(scale);
   return {m_triangles.begin(), m_triangles.end()};
@@ -807,14 +782,6 @@ string FeatureType::GetHouseNumber()
   return m_params.house.Get();
 }
 
-void FeatureType::SetHouseNumber(string const & number)
-{
-  if (number.empty())
-    m_params.house.Clear();
-  else
-    m_params.house.Set(number);
-}
-
 bool FeatureType::GetName(int8_t lang, string & name)
 {
   if (!HasName())
@@ -836,6 +803,12 @@ string FeatureType::GetRoadNumber()
 {
   ParseCommon();
   return m_params.ref;
+}
+
+string const & FeatureType::GetPostcode()
+{
+  ParsePostcode();
+  return m_postcode;
 }
 
 feature::Metadata & FeatureType::GetMetadata()

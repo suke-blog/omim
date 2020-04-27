@@ -513,3 +513,205 @@ PARTNERS_CALCULATE_BY_COORDS = """
   "PriceString": "244.00 ₽"
 }
 """
+
+PROMO_GALLERY_CITY = """
+{
+    "data": [
+        {
+            "url": "bundle/73af3f02-b8e3-4f60-8ef0-1c3c5cff43ca",
+            "name": "По Виа Рипетта до мавзолея Августа и Алтаря мира",
+            "author": {
+                "key_id": "00000000-0000-0000-0000-000000000000",
+                "name": "The Village"
+            },
+            "image_url": "http://localhost:8000/images/73af3f02-b8e3-4f60-8ef0-1c3c5cff43ca.jpg",
+            "access": "public",
+            "lux_category": {
+                "name": "LUX",
+                "color": "666666"
+            },
+            "tier": "price.tier"
+        },
+        {
+            "url": "bundle/73af3f02-b8e3-4f60-8ef0-1c3c5cff43ca",
+            "name": "Полеты в метро",
+            "author": {
+                "key_id": "00000000-0000-0000-0000-000000000000",
+                "name": "Bmj"
+            },
+            "access": "public",
+            "lux_category": {
+                "color": "000000"
+            }
+        }
+    ],
+    "errors": [],
+    "meta": {
+        "more": "search?city=888"
+    }
+}
+"""
+
+PROMO_GALLERY_CITY_SINGLE_EMPTY = """
+{
+    "data": [
+        {
+            "url": "bundle/73af3f02-b8e3-4f60-8ef0-1c3c5cff43ca",
+            "name": "По Виа Рипетта до мавзолея Августа и Алтаря мира",
+            "author": {
+                "key_id": "00000000-0000-0000-0000-000000000000",
+                "name": "The Village"
+            },
+            "image_url": "http://localhost:8000/images/73af3f02-b8e3-4f60-8ef0-1c3c5cff43ca.jpg",
+            "access": "public",
+            "lux_category": {
+                "name": "LUX",
+                "color": "666666"
+            },
+            "tier": "price.tier"
+        }
+    ],
+    "errors": [],
+    "meta": {
+        "more": "search?city=888"
+    }
+}
+"""
+
+PROMO_GALLERY_CITY_SINGLE = """
+{
+    "data": [
+        {
+            "url": "bundle/73af3f02-b8e3-4f60-8ef0-1c3c5cff43ca",
+            "name": "По Виа Рипетта до мавзолея Августа и Алтаря мира",
+            "author": {
+                "key_id": "00000000-0000-0000-0000-000000000000",
+                "name": "The Village"
+            },
+            "image_url": "http://localhost:8000/images/73af3f02-b8e3-4f60-8ef0-1c3c5cff43ca.jpg",
+            "access": "public",
+            "lux_category": {
+                "name": "LUX",
+                "color": "666666"
+            },
+            "tier": "price.tier",
+            "place": {
+                "name": "Bookmark name",
+                "description": "Bookmark description"
+            }
+        }
+    ],
+    "errors": [],
+    "meta": {
+        "more": "search?city=888"
+    }
+}
+"""
+
+FREENOW_AUTH_TOKEN = """
+{
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXV",
+  "token_type": "bearer",
+  "expires_in": 600,
+  "scope": "service-types"
+}
+"""
+
+FREENOW_SERVICE_TYPES = """
+{
+  "serviceTypes": [
+    {
+      "id": "TAXI",
+      "type": "TAXI",
+      "displayName": "Taxi",
+      "eta": {
+        "value": 0,
+        "displayValue": "0 Minutes"
+      },
+      "fare": {
+        "type": "FIXED",
+        "value": 5000,
+        "currencyCode": "GBP",
+        "displayValue": "5000GBP"
+      },
+      "availablePaymentMethodTypes": [
+        "BUSINESS_ACCOUNT",
+        "CREDIT_CARD",
+        "PAYPAL",
+        "CASH"
+      ],
+      "seats": {
+        "max": 4,
+        "values": [],
+        "displayValue": "4"
+      },
+      "availableBookingOptions": [
+        {
+          "name": "COMMENT",
+          "displayName": "COMMENT",
+          "type": "TEXT"
+        },
+        {
+          "name": "MERCEDES",
+          "displayName": "MERCEDES",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "FAVORITE_DRIVER",
+          "displayName": "FAVORITE_DRIVER",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "FIVE_STARS",
+          "displayName": "FIVE_STARS",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "SMALL_ANIMAL",
+          "displayName": "SMALL_ANIMAL",
+          "type": "BOOLEAN"
+        }
+      ]
+    }
+  ]
+}
+"""
+
+GUIDES_ON_MAP_GALLERY = """
+{
+  "data": [
+    {
+      "point": {
+        "lat": 12.345678,
+        "lon": 91.234567
+      },
+      "bundle_counts": {
+        "sights": 1,
+        "outdoor": 0
+      },
+      "extra": {
+        "server_id": "120-3957012735012rffasfaf",
+        "name": "hello",
+        "image_url": "world",
+        "tag": "tag",
+        "bookmarks_count": 100,
+        "has_track": true,
+        "tracks_length": 1234.11,
+        "tour_duration": 870.4,
+        "ascent": -300
+      }
+    },
+    {
+      "point": {
+        "lat": 91.234567,
+        "lon": 12.345678
+      },
+      "bundle_counts": {
+        "sights": 1,
+        "outdoor": 8
+      },
+      "extra": null
+    }
+  ]
+}
+"""

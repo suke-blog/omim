@@ -75,7 +75,7 @@ struct HouseProjection : public ProjectionOnStreet
   class EqualHouse
   {
   public:
-    EqualHouse(House const * h) : m_house(h) {}
+    explicit EqualHouse(House const * h) : m_house(h) {}
     bool operator() (HouseProjection const * p) const { return m_house == p->m_house; }
 
   private:
@@ -212,7 +212,7 @@ public:
 
   static int const DEFAULT_OFFSET_M = 200;
 
-  HouseDetector(DataSource const & dataSource);
+  explicit HouseDetector(DataSource const & dataSource);
   ~HouseDetector();
 
   int LoadStreets(std::vector<FeatureID> const & ids);
@@ -245,12 +245,12 @@ private:
   StreetMap m_id2st;
   HouseMap m_id2house;
 
-  std::vector<pair<m2::PointD, Street *>> m_end2st;
+  std::vector<std::pair<m2::PointD, Street *>> m_end2st;
   std::vector<MergedStreet> m_streets;
 
-  double m_metersToMercator;
-  int m_streetNum;
-  double m_houseOffsetM;
+  double m_metersToMercator = 0.0;
+  int m_streetNum = 0;
+  double m_houseOffsetM = 0.0;
 };
 
 std::string DebugPrint(HouseProjection const & p);

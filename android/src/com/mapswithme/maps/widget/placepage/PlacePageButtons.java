@@ -1,8 +1,8 @@
 package com.mapswithme.maps.widget.placepage;
 
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -139,6 +139,9 @@ public final class PlacePageButtons
     ROUTE_TO,
     ROUTE_ADD,
     ROUTE_REMOVE,
+    ROUTE_AVOID_TOLL,
+    ROUTE_AVOID_FERRY,
+    ROUTE_AVOID_UNPAVED,
     SHARE,
     MORE,
     CALL
@@ -320,6 +323,21 @@ public final class PlacePageButtons
         R.string.placepage_remove_stop,
         new ImageResources(R.drawable.ic_route_remove),
         ButtonType.ROUTE_REMOVE),
+
+    ROUTE_AVOID_TOLL(
+        R.string.avoid_toll_roads_placepage,
+        new ImageResources(R.drawable.ic_avoid_tolls),
+        ButtonType.ROUTE_AVOID_TOLL),
+
+    ROUTE_AVOID_UNPAVED(
+        R.string.avoid_unpaved_roads_placepage,
+        new ImageResources(R.drawable.ic_avoid_unpaved),
+        ButtonType.ROUTE_AVOID_UNPAVED),
+
+    ROUTE_AVOID_FERRY(
+        R.string.avoid_ferry_crossing_placepage,
+        new ImageResources(R.drawable.ic_avoid_ferry),
+        ButtonType.ROUTE_AVOID_FERRY),
 
     SHARE(
         R.string.share,

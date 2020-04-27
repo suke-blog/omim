@@ -14,42 +14,8 @@
 
 using namespace std;
 
-namespace
-{
-vector<strings::UniString> const kAllowedMisprints = {
-    strings::MakeUniString("ckq"),
-    strings::MakeUniString("eyjiu"),
-    strings::MakeUniString("gh"),
-    strings::MakeUniString("pf"),
-    strings::MakeUniString("vw"),
-    strings::MakeUniString("ао"),
-    strings::MakeUniString("еиэ"),
-    strings::MakeUniString("шщ"),
-};
-}  // namespace
-
 namespace search
 {
-size_t GetMaxErrorsForToken(strings::UniString const & token)
-{
-  bool const digitsOnly = all_of(token.begin(), token.end(), ::isdigit);
-  if (digitsOnly)
-    return 0;
-  if (token.size() < 4)
-    return 0;
-  if (token.size() < 8)
-    return 1;
-  return 2;
-}
-
-strings::LevenshteinDFA BuildLevenshteinDFA(strings::UniString const & s)
-{
-  // In search we use LevenshteinDFAs for fuzzy matching. But due to
-  // performance reasons, we limit prefix misprints to fixed set of substitutions defined in
-  // kAllowedMisprints and skipped letters.
-  return strings::LevenshteinDFA(s, 1 /* prefixSize */, kAllowedMisprints, GetMaxErrorsForToken(s));
-}
-
 vector<uint32_t> GetCategoryTypes(string const & name, string const & locale,
                                   CategoriesHolder const & categories)
 {
@@ -60,36 +26,14 @@ vector<uint32_t> GetCategoryTypes(string const & name, string const & locale,
   locales.Insert(static_cast<uint64_t>(code));
 
   vector<strings::UniString> tokens;
-  SplitUniString(search::NormalizeAndSimplifyString(name), base::MakeBackInsertFunctor(tokens),
-                 search::Delimiters());
+  SplitUniString(NormalizeAndSimplifyString(name), base::MakeBackInsertFunctor(tokens),
+                 Delimiters());
 
   FillCategories(QuerySliceOnRawStrings<vector<strings::UniString>>(tokens, {} /* prefix */),
                  locales, categories, types);
 
   base::SortUnique(types);
   return types;
-}
-
-MwmSet::MwmHandle FindWorld(DataSource const & dataSource,
-                            vector<shared_ptr<MwmInfo>> const & infos)
-{
-  MwmSet::MwmHandle handle;
-  for (auto const & info : infos)
-  {
-    if (info->GetType() == MwmInfo::WORLD)
-    {
-      handle = dataSource.GetMwmHandleById(MwmSet::MwmId(info));
-      break;
-    }
-  }
-  return handle;
-}
-
-MwmSet::MwmHandle FindWorld(DataSource const & dataSource)
-{
-  vector<shared_ptr<MwmInfo>> infos;
-  dataSource.GetMwmsInfo(infos);
-  return FindWorld(dataSource, infos);
 }
 
 void ForEachOfTypesInRect(DataSource const & dataSource, vector<uint32_t> const & types,
@@ -109,7 +53,7 @@ void ForEachOfTypesInRect(DataSource const & dataSource, vector<uint32_t> const 
       continue;
 
     auto handle = dataSource.GetMwmHandleById(MwmSet::MwmId(info));
-    auto & value = *handle.GetValue<MwmValue>();
+    auto & value = *handle.GetValue();
     if (!value.HasSearchIndex())
       continue;
 
@@ -124,5 +68,50 @@ void ForEachOfTypesInRect(DataSource const & dataSource, vector<uint32_t> const 
       fn(FeatureID(mwmId, base::asserted_cast<uint32_t>(bit)));
     });
   }
+}
+
+bool IsCategorialRequestFuzzy(string const & query, string const & categoryName)
+{
+  auto const & catHolder = GetDefaultCategories();
+  auto const types = GetCategoryTypes(categoryName, "en", catHolder);
+
+  vector<QueryParams::String> queryTokens;
+  SplitUniString(NormalizeAndSimplifyString(query), base::MakeBackInsertFunctor(queryTokens),
+                 Delimiters());
+
+  bool isCategorialRequest = false;
+  for (auto const type : types)
+  {
+    if (isCategorialRequest)
+      return true;
+
+    catHolder.ForEachNameByType(
+        type, [&](CategoriesHolder::Category::Name const & categorySynonym) {
+          if (isCategorialRequest)
+            return;
+          vector<QueryParams::String> categoryTokens;
+          SplitUniString(NormalizeAndSimplifyString(categorySynonym.m_name),
+                         base::MakeBackInsertFunctor(categoryTokens), Delimiters());
+          for (size_t start = 0; start < queryTokens.size(); ++start)
+          {
+            bool found = true;
+            for (size_t i = 0; i < categoryTokens.size() && start + i < queryTokens.size(); ++i)
+            {
+              if (queryTokens[start + i] != categoryTokens[i])
+              {
+                found = false;
+                break;
+              }
+            }
+            if (found)
+            {
+              isCategorialRequest = true;
+              break;
+            }
+          }
+        });
+  }
+
+  return isCategorialRequest;
 }
 }  // namespace search

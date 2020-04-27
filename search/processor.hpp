@@ -9,7 +9,6 @@
 #include "search/emitter.hpp"
 #include "search/geocoder.hpp"
 #include "search/pre_ranker.hpp"
-#include "search/rank_table_cache.hpp"
 #include "search/ranker.hpp"
 #include "search/search_params.hpp"
 #include "search/search_trie.hpp"
@@ -28,11 +27,10 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 #include <string>
 #include <utility>
 #include <vector>
-
-#include <boost/optional.hpp>
 
 class FeatureType;
 class CategoriesHolder;
@@ -78,25 +76,40 @@ public:
   void SearchCoordinates();
   // Tries to parse a plus code from |m_query| and generate a (lat, lon) result.
   void SearchPlusCode();
+  // Tries to parse a postcode from |m_query| and generate a (lat, lon) result based on
+  // POSTCODE_POINTS section.
+  void SearchPostcode();
 
-  void SearchBookmarks() const;
+  void SearchBookmarks(bookmarks::GroupId const & groupId);
 
   void InitParams(QueryParams & params) const;
 
-  void InitGeocoder(Geocoder::Params &geocoderParams,
-                    SearchParams const &searchParams);
-  void InitPreRanker(Geocoder::Params const &geocoderParams,
-                     SearchParams const &searchParams);
+  void InitGeocoder(Geocoder::Params & geocoderParams, SearchParams const & searchParams);
+  void InitPreRanker(Geocoder::Params const & geocoderParams, SearchParams const & searchParams);
   void InitRanker(Geocoder::Params const & geocoderParams, SearchParams const & searchParams);
   void InitEmitter(SearchParams const & searchParams);
 
   void ClearCaches();
+  void CacheWorldLocalities();
   void LoadCitiesBoundaries();
   void LoadCountriesTree();
+
+  void EnableIndexingOfBookmarksDescriptions(bool enable);
+  void EnableIndexingOfBookmarkGroup(bookmarks::GroupId const & groupId, bool enable);
+
+  void ResetBookmarks();
 
   void OnBookmarksCreated(std::vector<std::pair<bookmarks::Id, bookmarks::Doc>> const & marks);
   void OnBookmarksUpdated(std::vector<std::pair<bookmarks::Id, bookmarks::Doc>> const & marks);
   void OnBookmarksDeleted(std::vector<bookmarks::Id> const & marks);
+  void OnBookmarksAttachedToGroup(bookmarks::GroupId const & groupId,
+                                  std::vector<bookmarks::Id> const & marks);
+  void OnBookmarksDetachedFromGroup(bookmarks::GroupId const & groupId,
+                                    std::vector<bookmarks::Id> const & marks);
+
+  // base::Cancellable overrides:
+  void Reset() override;
+  bool IsCancelled() const override;
 
 protected:
   Locales GetCategoryLocales() const;
@@ -124,13 +137,18 @@ protected:
   std::vector<uint32_t> m_cuisineTypes;
 
   m2::RectD m_viewport;
-  boost::optional<m2::PointD> m_position;
+  std::optional<m2::PointD> m_position;
+
+  bool m_lastUpdate = false;
 
   // Suggestions language code, not the same as we use in mwm data
   int8_t m_inputLocaleCode = StringUtf8Multilang::kUnsupportedLanguageCode;
   int8_t m_currentLocaleCode = StringUtf8Multilang::kUnsupportedLanguageCode;
 
+  DataSource const & m_dataSource;
+
   VillagesCache m_villagesCache;
+  LocalitiesCache m_localitiesCache;
   CitiesBoundariesTable m_citiesBoundaries;
 
   KeywordLangMatcher m_keywordsScorer;

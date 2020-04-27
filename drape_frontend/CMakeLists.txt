@@ -53,6 +53,7 @@ set(
   backend_renderer.hpp
   base_renderer.cpp
   base_renderer.hpp
+  batcher_bucket.hpp
   batchers_pool.hpp
   circles_pack_shape.cpp
   circles_pack_shape.hpp
@@ -179,6 +180,8 @@ set(
   screen_quad_renderer.hpp
   selection_shape.cpp
   selection_shape.hpp
+  selection_shape_generator.cpp
+  selection_shape_generator.hpp
   shape_view_params.hpp
   stylist.cpp
   stylist.hpp

@@ -13,15 +13,24 @@ namespace
 {
 void RegisterEventIfPossible(eye::MapObject::Event::Type const type)
 {
-  auto & info = g_framework->GetPlacePageInfo();
+  ::Framework * frm = g_framework->NativeFramework();
+  if (!frm->HasPlacePageInfo())
+    return;
 
+  auto & info = g_framework->GetPlacePageInfo();
   auto const userPos = g_framework->NativeFramework()->GetCurrentPosition();
-  if (userPos)
-  {
-    auto const mapObject = utils::MakeEyeMapObject(info);
-    if (!mapObject.IsEmpty())
-      eye::Eye::Event::MapObjectEvent(mapObject, type, userPos.get());
-  }
+
+  utils::RegisterEyeEventIfPossible(type, userPos, info);
+}
+
+void RegisterTransitionToBooking()
+{
+  ::Framework * frm = g_framework->NativeFramework();
+  if (!frm->HasPlacePageInfo())
+    return;
+
+  auto & info = g_framework->GetPlacePageInfo();
+  eye::Eye::Event::TransitionToBooking(info.GetMercator());
 }
 }  // namespace
 
@@ -79,5 +88,36 @@ JNIEXPORT void JNICALL
 Java_com_mapswithme_maps_metrics_UserActionsLogger_nativeUgcSaved(JNIEnv *, jclass)
 {
   RegisterEventIfPossible(eye::MapObject::Event::Type::UgcSaved);
+}
+
+JNIEXPORT void JNICALL
+Java_com_mapswithme_maps_metrics_UserActionsLogger_nativeBookingBookClicked(JNIEnv *, jclass)
+{
+  RegisterTransitionToBooking();
+}
+
+JNIEXPORT void JNICALL
+Java_com_mapswithme_maps_metrics_UserActionsLogger_nativeBookingMoreClicked(JNIEnv *, jclass)
+{
+  RegisterTransitionToBooking();
+}
+
+JNIEXPORT void JNICALL
+Java_com_mapswithme_maps_metrics_UserActionsLogger_nativeBookingReviewsClicked(JNIEnv *, jclass)
+{
+  RegisterTransitionToBooking();
+}
+
+JNIEXPORT void JNICALL
+Java_com_mapswithme_maps_metrics_UserActionsLogger_nativeBookingDetailsClicked(JNIEnv *, jclass)
+{
+  RegisterTransitionToBooking();
+}
+
+JNIEXPORT void JNICALL
+Java_com_mapswithme_maps_metrics_UserActionsLogger_nativePromoAfterBookingShown(JNIEnv * env,
+                                                                                jclass, jstring id)
+{
+  eye::Eye::Event::PromoAfterBookingShown(jni::ToNativeString(env, id));
 }
 }

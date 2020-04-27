@@ -68,7 +68,7 @@ void ReadTransitTask::Do()
     m_success = false;
     return;
   }
-  MwmValue const & mwmValue = *handle.GetValue<MwmValue>();
+  MwmValue const & mwmValue = *handle.GetValue();
   if (!m_loadSubset && !mwmValue.m_cont.IsExist(TRANSIT_FILE_TAG))
   {
     m_success = true;
@@ -158,7 +158,7 @@ void TransitReadManager::Start()
 
   using namespace placeholders;
   uint8_t constexpr kThreadsCount = 1;
-  m_threadsPool = make_unique<threads::ThreadPool>(
+  m_threadsPool = make_unique<base::thread_pool::routine::ThreadPool>(
       kThreadsCount, bind(&TransitReadManager::OnTaskCompleted, this, _1));
 }
 
@@ -409,6 +409,11 @@ void TransitReadManager::OnTaskCompleted(threads::IRoutine * task)
 
   if (--m_tasksGroups[t->GetId()] == 0)
     m_event.notify_all();
+}
+
+TransitReadManager::TransitSchemeState TransitReadManager::GetState() const
+{
+  return m_state;
 }
 
 void TransitReadManager::SetStateListener(TransitStateChangedFn const & onStateChangedFn)

@@ -29,14 +29,18 @@ std::string DebugPrint(Message::Type msgType)
   case Message::Type::GuiLayerRecached: return "GuiLayerRecached";
   case Message::Type::GuiRecache: return "GuiRecache";
   case Message::Type::GuiLayerLayout: return "GuiLayerLayout";
+  case Message::Type::UpdateMyPositionRoutingOffset: return "UpdateMyPositionRoutingOffset";
   case Message::Type::MapShapesRecache: return "MapShapesRecache";
   case Message::Type::MapShapes: return "MapShapes";
   case Message::Type::ChangeMyPositionMode: return "ChangeMyPositionMode";
   case Message::Type::CompassInfo: return "CompassInfo";
   case Message::Type::GpsInfo: return "GpsInfo";
   case Message::Type::SelectObject: return "SelectObject";
+  case Message::Type::CheckSelectionGeometry: return "CheckSelectionGeometry";
+  case Message::Type::FlushSelectionGeometry: return "FlushSelectionGeometry";
   case Message::Type::AddSubroute: return "AddSubroute";
   case Message::Type::RemoveSubroute: return "RemoveSubroute";
+  case Message::Type::PrepareSubrouteArrows: return "PrepareSubrouteArrows";
   case Message::Type::CacheSubrouteArrows: return "CacheSubrouteArrows";
   case Message::Type::FlushSubroute: return "FlushSubroute";
   case Message::Type::FlushSubrouteArrows: return "FlushSubrouteArrows";
@@ -64,7 +68,7 @@ std::string DebugPrint(Message::Type msgType)
   case Message::Type::SetDisplacementMode: return "SetDisplacementMode";
   case Message::Type::AllowAutoZoom: return "AllowAutoZoom";
   case Message::Type::RequestSymbolsSize: return "RequestSymbolsSize";
-  case Message::Type::RecoverGLResources: return "RecoverGLResources";
+  case Message::Type::RecoverContextDependentResources: return "RecoverContextDependentResources";
   case Message::Type::SetVisibleViewport: return "SetVisibleViewport";
   case Message::Type::EnableTraffic: return "EnableTraffic";
   case Message::Type::FlushTrafficGeometry: return "FlushTrafficGeometry";
@@ -85,6 +89,7 @@ std::string DebugPrint(Message::Type msgType)
   case Message::Type::UpdateMetalines: return "UpdateMetalines";
   case Message::Type::PostUserEvent: return "PostUserEvent";
   case Message::Type::FinishTexturesInitialization: return "FinishTexturesInitialization";
+  case Message::Type::CleanupTextures: return "CleanupTextures";
   case Message::Type::EnableUGCRendering: return "EnableUGCRendering";
   case Message::Type::EnableDebugRectRendering: return "EnableDebugRectRendering";
   case Message::Type::EnableTransitScheme: return "EnableTransitScheme";
@@ -95,6 +100,8 @@ std::string DebugPrint(Message::Type msgType)
   case Message::Type::FlushTransitScheme: return "FlushTransitScheme";
   case Message::Type::ShowDebugInfo: return "ShowDebugInfo";
   case Message::Type::NotifyRenderThread: return "NotifyRenderThread";
+  case Message::Type::NotifyGraphicsReady: return "NotifyGraphicsReady";
+  case Message::Type::EnableIsolines: return "EnableIsolines";
   }
   ASSERT(false, ("Unknown message type."));
   return "Unknown type";

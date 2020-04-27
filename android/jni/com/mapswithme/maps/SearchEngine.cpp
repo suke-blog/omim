@@ -293,9 +293,9 @@ jobject ToJavaResult(Result & result, search::ProductInfo const & productInfo, b
                      double lat, double lon)
 {
   JNIEnv * env = jni::GetEnv();
-  ::Framework * fr = g_framework->NativeFramework();
 
-  jni::TScopedLocalIntArrayRef ranges(env, env->NewIntArray(result.GetHighlightRangesCount() * 2));
+  jni::TScopedLocalIntArrayRef ranges(
+      env, env->NewIntArray(static_cast<jsize>(result.GetHighlightRangesCount() * 2)));
   jint * rawArr = env->GetIntArrayElements(ranges, nullptr);
   for (int i = 0; i < result.GetHighlightRangesCount(); i++)
   {
@@ -312,12 +312,12 @@ jobject ToJavaResult(Result & result, search::ProductInfo const & productInfo, b
   if (result.HasPoint())
   {
     auto const center = result.GetFeatureCenter();
-    ll = MercatorBounds::ToLatLon(center);
+    ll = mercator::ToLatLon(center);
     if (hasPosition)
     {
       distanceInMeters = ms::DistanceOnEarth(lat, lon,
-                                             MercatorBounds::YToLat(center.y),
-                                             MercatorBounds::XToLon(center.x));
+                                             mercator::YToLat(center.y),
+                                             mercator::XToLon(center.x));
       measurement_utils::FormatDistance(distanceInMeters, distance);
     }
   }
@@ -328,7 +328,7 @@ jobject ToJavaResult(Result & result, search::ProductInfo const & productInfo, b
   {
     jni::TScopedLocalRef name(env, jni::ToJavaString(env, result.GetString()));
     jni::TScopedLocalRef suggest(env, jni::ToJavaString(env, result.GetSuggestionString()));
-    jobject ret = env->NewObject(g_resultClass, g_suggestConstructor, name.get(), suggest.get(), ll.lat, ll.lon, ranges.get());
+    jobject ret = env->NewObject(g_resultClass, g_suggestConstructor, name.get(), suggest.get(), ll.m_lat, ll.m_lon, ranges.get());
     ASSERT(ret, ());
     return ret;
   }
@@ -345,6 +345,7 @@ jobject ToJavaResult(Result & result, search::ProductInfo const & productInfo, b
   jni::TScopedLocalRef cuisine(env, jni::ToJavaString(env, result.GetCuisine()));
   jni::TScopedLocalRef brand(env, jni::ToJavaString(env, result.GetBrand()));
   jni::TScopedLocalRef airportIata(env, jni::ToJavaString(env, result.GetAirportIata()));
+  jni::TScopedLocalRef roadShields(env, jni::ToJavaString(env, result.GetRoadShields()));
   jni::TScopedLocalRef pricing(env, jni::ToJavaString(env, result.GetHotelApproximatePricing()));
 
 
@@ -356,7 +357,7 @@ jobject ToJavaResult(Result & result, search::ProductInfo const & productInfo, b
   jni::TScopedLocalRef desc(env, env->NewObject(g_descriptionClass, g_descriptionConstructor,
                                                 featureId.get(), featureType.get(), address.get(),
                                                 dist.get(), cuisine.get(), brand.get(), airportIata.get(),
-                                                pricing.get(), rating,
+                                                roadShields.get(), pricing.get(), rating,
                                                 result.GetStarsCount(),
                                                 static_cast<jint>(result.IsOpenNow()),
                                                 static_cast<jboolean>(popularityHasHigherPriority)));
@@ -366,7 +367,7 @@ jobject ToJavaResult(Result & result, search::ProductInfo const & productInfo, b
                                                       g_popularityConstructor,
                                                       static_cast<jint>(result.GetRankingInfo().m_popularity)));
   jobject ret =
-      env->NewObject(g_resultClass, g_resultConstructor, name.get(), desc.get(), ll.lat, ll.lon,
+      env->NewObject(g_resultClass, g_resultConstructor, name.get(), desc.get(), ll.m_lat, ll.m_lon,
                      ranges.get(), result.IsHotel(), productInfo.m_isLocalAdsCustomer,
                      popularity.get());
   ASSERT(ret, ());
@@ -395,7 +396,7 @@ void OnResults(Results const & results, vector<search::ProductInfo> const & prod
   {
     env->CallVoidMethod(g_javaListener, g_endResultsId, static_cast<jlong>(timestamp));
     if (isMapAndTable && results.IsEndedNormal())
-      g_framework->NativeFramework()->PokeSearchInViewport();
+      g_framework->NativeFramework()->GetSearchAPI().PokeSearchInViewport();
   }
 }
 
@@ -403,9 +404,9 @@ jobjectArray BuildJavaMapResults(vector<storage::DownloaderSearchResult> const &
 {
   JNIEnv * env = jni::GetEnv();
 
-  int const count = results.size();
+  auto const count = static_cast<jsize>(results.size());
   jobjectArray const res = env->NewObjectArray(count, g_mapResultClass, nullptr);
-  for (int i = 0; i < count; i++)
+  for (jsize i = 0; i < count; i++)
   {
     jni::TScopedLocalRef country(env, jni::ToJavaString(env, results[i].m_countryId));
     jni::TScopedLocalRef matched(env, jni::ToJavaString(env, results[i].m_matchedName));
@@ -442,9 +443,12 @@ void OnBookmarksSearchResults(search::BookmarksSearchParams::Results const & res
 
   JNIEnv * env = jni::GetEnv();
 
-  jni::ScopedLocalRef<jlongArray> jResults(env, env->NewLongArray(results.size()));
-  vector<jlong> const tmp(results.cbegin(), results.cend());
-  env->SetLongArrayRegion(jResults.get(), 0, tmp.size(), tmp.data());
+  auto filteredResults = results;
+  g_framework->NativeFramework()->GetBookmarkManager().FilterInvalidBookmarks(filteredResults);
+  jni::ScopedLocalRef<jlongArray> jResults(
+      env, env->NewLongArray(static_cast<jsize>(filteredResults.size())));
+  vector<jlong> const tmp(filteredResults.cbegin(), filteredResults.cend());
+  env->SetLongArrayRegion(jResults.get(), 0, static_cast<jsize>(tmp.size()), tmp.data());
 
   auto const method = (status == search::BookmarksSearchParams::Status::InProgress) ?
                       g_updateBookmarksResultsId : g_endBookmarksResultsId;
@@ -524,10 +528,12 @@ public:
       return result;
 
     jlong const jcheckin = env->GetLongField(bookingFilterParams, m_checkinMillisecId) / 1000;
-    result.m_checkin = booking::AvailabilityParams::Clock::from_time_t(jcheckin);
+    result.m_checkin =
+        booking::AvailabilityParams::Clock::from_time_t(static_cast<time_t>(jcheckin));
 
     jlong const jcheckout = env->GetLongField(bookingFilterParams, m_checkoutMillisecId) / 1000;
-    result.m_checkout = booking::AvailabilityParams::Clock::from_time_t(jcheckout);
+    result.m_checkout =
+        booking::AvailabilityParams::Clock::from_time_t(static_cast<time_t>(jcheckout));
 
     jobjectArray const jrooms =
         static_cast<jobjectArray>(env->GetObjectField(bookingFilterParams, m_roomsId));
@@ -537,7 +543,7 @@ public:
     result.m_rooms.resize(length);
     for (size_t i = 0; i < length; ++i)
     {
-      jobject jroom = env->GetObjectArrayElement(jrooms, i);
+      jobject jroom = env->GetObjectArrayElement(jrooms, static_cast<jsize>(i));
 
       booking::AvailabilityParams::Room room;
       room.SetAdultsCount(static_cast<uint8_t>(env->GetIntField(jroom, m_roomAdultsCountId)));
@@ -618,10 +624,10 @@ jobjectArray BuildSearchResults(Results const & results,
 
   g_results = results;
 
-  int const count = g_results.GetCount();
+  auto const count = static_cast<jsize>(g_results.GetCount());
   jobjectArray const jResults = env->NewObjectArray(count, g_resultClass, nullptr);
 
-  for (int i = 0; i < count; i++)
+  for (jsize i = 0; i < count; i++)
   {
     jni::TScopedLocalRef jRes(env,
                               ToJavaResult(g_results[i], productInfo[i], hasPosition, lat, lon));
@@ -650,7 +656,7 @@ extern "C"
                                                      "(Lcom/mapswithme/maps/bookmarks/data/FeatureId;"
                                                      "Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;"
                                                      "Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;"
-                                                     "Ljava/lang/String;FIIZ)V");
+                                                     "Ljava/lang/String;Ljava/lang/String;FIIZ)V");
 
     g_popularityClass = jni::GetGlobalClassRef(env, "com/mapswithme/maps/search/Popularity");
     g_popularityConstructor = jni::GetConstructorID(env, g_popularityClass, "(I)V");
@@ -661,9 +667,9 @@ extern "C"
     g_mapResultCtor = jni::GetConstructorID(env, g_mapResultClass, "(Ljava/lang/String;Ljava/lang/String;)V");
 
     g_updateBookmarksResultsId =
-      jni::GetMethodID(env, g_javaListener, "onBookmarksResultsUpdate", "([JJ)V");
+      jni::GetMethodID(env, g_javaListener, "onBookmarkSearchResultsUpdate", "([JJ)V");
     g_endBookmarksResultsId =
-      jni::GetMethodID(env, g_javaListener, "onBookmarksResultsEnd", "([JJ)V");
+      jni::GetMethodID(env, g_javaListener, "onBookmarkSearchResultsEnd", "([JJ)V");
 
     g_onFilterHotels = jni::GetMethodID(env, g_javaListener, "onFilterHotels",
                                                    "(I[Lcom/mapswithme/maps/bookmarks/data/FeatureId;)V");
@@ -685,7 +691,7 @@ extern "C"
     params.m_bookingFilterTasks = g_bookingBuilder.BuildTasks(env, bookingFilterParams);
 
     g_lastBookingFilterTasks = params.m_bookingFilterTasks;
-    bool const searchStarted = g_framework->NativeFramework()->SearchEverywhere(params);
+    bool const searchStarted = g_framework->NativeFramework()->GetSearchAPI().SearchEverywhere(params);
     if (searchStarted)
       g_queryTimestamp = timestamp;
     return searchStarted;
@@ -705,7 +711,7 @@ extern "C"
 
     // TODO (@alexzatsepin): set up vparams.m_onCompleted here and use
     // HotelsClassifier for hotel queries detection.
-    g_framework->NativeFramework()->SearchInViewport(vparams);
+    g_framework->NativeFramework()->GetSearchAPI().SearchInViewport(vparams);
 
     if (isMapAndTable)
     {
@@ -717,7 +723,7 @@ extern "C"
       eparams.m_hotelsFilter = vparams.m_hotelsFilter;
       eparams.m_bookingFilterTasks = g_lastBookingFilterTasks;
 
-      if (g_framework->NativeFramework()->SearchEverywhere(eparams))
+      if (g_framework->NativeFramework()->GetSearchAPI().SearchEverywhere(eparams))
         g_queryTimestamp = timestamp;
     }
   }
@@ -730,20 +736,23 @@ extern "C"
     params.m_inputLocale = jni::ToNativeString(env, lang);
     params.m_onResults = bind(&OnMapSearchResults, _1, timestamp);
 
-    if (g_framework->NativeFramework()->SearchInDownloader(params))
+    if (g_framework->NativeFramework()->GetSearchAPI().SearchInDownloader(params))
       g_queryTimestamp = timestamp;
   }
 
-  JNIEXPORT void JNICALL Java_com_mapswithme_maps_search_SearchEngine_nativeRunSearchInBookmarks(
-      JNIEnv * env, jclass clazz, jbyteArray query, jlong timestamp)
+  JNIEXPORT jboolean JNICALL Java_com_mapswithme_maps_search_SearchEngine_nativeRunSearchInBookmarks(
+      JNIEnv * env, jclass clazz, jbyteArray query, jlong catId, jlong timestamp)
   {
     search::BookmarksSearchParams params;
     params.m_query = jni::ToNativeString(env, query);
+    params.m_groupId = static_cast<kml::MarkGroupId>(catId);
     params.m_onStarted = bind(&OnBookmarksSearchStarted);
     params.m_onResults = bind(&OnBookmarksSearchResults, _1, _2, timestamp);
 
-    if (g_framework->NativeFramework()->SearchInBookmarks(params))
+    bool const searchStarted = g_framework->NativeFramework()->GetSearchAPI().SearchInBookmarks(params);
+    if (searchStarted)
       g_queryTimestamp = timestamp;
+    return searchStarted;
   }
 
   JNIEXPORT void JNICALL
@@ -755,19 +764,19 @@ extern "C"
   JNIEXPORT void JNICALL
   Java_com_mapswithme_maps_search_SearchEngine_nativeCancelInteractiveSearch(JNIEnv * env, jclass clazz)
   {
-    g_framework->NativeFramework()->CancelSearch(search::Mode::Viewport);
+    g_framework->NativeFramework()->GetSearchAPI().CancelSearch(search::Mode::Viewport);
   }
 
   JNIEXPORT void JNICALL
   Java_com_mapswithme_maps_search_SearchEngine_nativeCancelEverywhereSearch(JNIEnv * env, jclass clazz)
   {
-    g_framework->NativeFramework()->CancelSearch(search::Mode::Everywhere);
+    g_framework->NativeFramework()->GetSearchAPI().CancelSearch(search::Mode::Everywhere);
   }
 
   JNIEXPORT void JNICALL
   Java_com_mapswithme_maps_search_SearchEngine_nativeCancelAllSearches(JNIEnv * env, jclass clazz)
   {
-    g_framework->NativeFramework()->CancelAllSearches();
+    g_framework->NativeFramework()->GetSearchAPI().CancelAllSearches();
   }
 
   JNIEXPORT jobjectArray JNICALL

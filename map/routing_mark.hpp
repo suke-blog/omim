@@ -2,6 +2,7 @@
 
 #include "map/bookmark_manager.hpp"
 
+#include <functional>
 #include <string>
 
 enum class RouteMarkType : uint8_t
@@ -31,7 +32,7 @@ public:
   virtual ~RouteMarkPoint() {}
 
   bool IsVisible() const override { return m_markData.m_isVisible; }
-  void SetIsVisible(bool isVisible) { m_markData.m_isVisible = isVisible; }
+  void SetIsVisible(bool isVisible);
 
   dp::Anchor GetAnchor() const override;
   df::DepthLayer GetDepthLayer() const override;
@@ -62,7 +63,8 @@ public:
 
   drape_ptr<TitlesInfo> GetTitleDecl() const override;
 
-  bool HasSymbolShapes() const override { return false; }
+  drape_ptr<ColoredSymbolZoomInfo> GetColoredSymbols() const override;
+
   bool HasTitlePriority() const override { return true; }
   df::SpecialDisplacement GetDisplacement() const override { return df::SpecialDisplacement::SpecialModeUserMark; }
 
@@ -96,7 +98,7 @@ public:
   void SetFollowingMode(bool enabled);
 
 private:
-  using TRoutePointCallback = function<void (RouteMarkPoint * mark)>;
+  using TRoutePointCallback = std::function<void (RouteMarkPoint * mark)>;
   void ForEachIntermediatePoint(TRoutePointCallback const & fn);
 
   BookmarkManager & m_manager;
@@ -108,9 +110,9 @@ class TransitMark : public UserMark
 public:
   explicit TransitMark(m2::PointD const & ptOrg);
 
-  df::DepthLayer GetDepthLayer() const override { return df::DepthLayer::TransitMarkLayer; }
+  df::DepthLayer GetDepthLayer() const override { return df::DepthLayer::RoutingBottomMarkLayer; }
 
-  bool HasSymbolShapes() const override { return !m_symbolNames.empty() || !m_coloredSymbols.m_zoomInfo.empty(); }
+  bool SymbolIsPOI() const override { return true; }
   bool HasTitlePriority() const override { return true; }
   df::SpecialDisplacement GetDisplacement() const override { return df::SpecialDisplacement::SpecialModeUserMark; }
 
@@ -173,7 +175,7 @@ public:
   uint32_t GetIndex() const override { return m_index; }
 
   df::DepthLayer GetDepthLayer() const override { return df::DepthLayer::RoutingMarkLayer; }
-  bool HasSymbolShapes() const override { return true; }
+  bool SymbolIsPOI() const override { return true; }
   bool HasTitlePriority() const override { return true; }
   uint16_t GetPriority() const override { return static_cast<uint16_t>(Priority::SpeedCamera); }
   df::SpecialDisplacement GetDisplacement() const override { return df::SpecialDisplacement::SpecialModeUserMark; }
@@ -193,3 +195,48 @@ private:
   std::string m_title;
   dp::TitleDecl m_titleDecl;
 };
+
+enum class RoadWarningMarkType : uint8_t
+{
+  // Do not change the order, it uses in platforms.
+  Toll = 0,
+  Ferry = 1,
+  Dirty = 2,
+  Count = 3
+};
+
+class RoadWarningMark : public UserMark
+{
+public:
+  explicit RoadWarningMark(m2::PointD const & ptOrg);
+
+  bool SymbolIsPOI() const override { return true; }
+  dp::Anchor GetAnchor() const override { return dp::Anchor::Bottom; }
+  df::DepthLayer GetDepthLayer() const override { return df::DepthLayer::RoutingBottomMarkLayer; }
+  uint16_t GetPriority() const override;
+  df::SpecialDisplacement GetDisplacement() const override { return df::SpecialDisplacement::SpecialModeUserMark; }
+
+  void SetIndex(uint32_t index);
+  uint32_t GetIndex() const override { return m_index; }
+
+  void SetRoadWarningType(RoadWarningMarkType type);
+  RoadWarningMarkType GetRoadWarningType() const { return m_type; }
+
+  void SetFeatureId(FeatureID const & featureId);
+  FeatureID GetFeatureID() const override { return m_featureId; }
+
+  void SetDistance(std::string const & distance);
+  std::string GetDistance() const { return m_distance; }
+
+  drape_ptr<SymbolNameZoomInfo> GetSymbolNames() const override;
+
+  static std::string GetLocalizedRoadWarningType(RoadWarningMarkType type);
+
+private:
+  RoadWarningMarkType m_type = RoadWarningMarkType::Count;
+  FeatureID m_featureId;
+  uint32_t m_index = 0;
+  std::string m_distance;
+};
+
+std::string DebugPrint(RoadWarningMarkType type);

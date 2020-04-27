@@ -11,6 +11,8 @@ omim_add_test(${PROJECT_NAME} ${SRC})
 omim_link_libraries(
   ${PROJECT_NAME}
   map
+  ge0
+  web_api
   search
   storage
   kml
@@ -32,6 +34,7 @@ omim_link_libraries(
   succinct
   pugixml
   stats_client
+  oauthcpp
   ${LIBZ}
 )
 

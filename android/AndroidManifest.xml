@@ -50,6 +50,7 @@
       android:protectionLevel="signature"/>
 
   <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE"/>
+  <uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove"/>
 
   <!-- -->
   <supports-screens
@@ -59,7 +60,7 @@
   <application
       android:name=".MwmApplication"
       android:allowBackup="true"
-      android:icon="@drawable/ic_launcher"
+      android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
       android:theme="@style/MwmTheme"
       android:supportsRtl="false"
@@ -86,14 +87,6 @@
     <meta-data
         android:name="${PW_PROJECT_ID_KEY}"
         android:value="@string/pw_project_id"/>
-
-    <meta-data
-      android:name="ru.mail.libnotify.application_name"
-      android:value="${LIBNOTIFY_APP_ID}"/>
-
-    <meta-data
-      android:name="ru.mail.libnotify.server_id"
-      android:value="${LIBNOTIFY_PROJECT_ID}"/>
 
     <!--meta-data
         android:name="PW_LOG_LEVEL"
@@ -249,7 +242,7 @@
     <activity
       android:name="com.mapswithme.maps.bookmarks.BookmarksCatalogActivity"
       android:configChanges="orientation|screenLayout|screenSize"
-      android:label="@string/guides"/>
+      android:label="@string/guides_catalogue_title"/>
 
     <activity-alias
       android:name="com.mapswithme.maps.DownloadResourcesActivity"
@@ -329,7 +322,6 @@
         android:name="com.mapswithme.maps.editor.EditorActivity"
         android:configChanges="orientation|screenLayout|screenSize"
         android:label="@string/edit_place"
-        android:theme="@style/MwmTheme.EditorActivity"
         android:parentActivityName="com.mapswithme.maps.MwmActivity">
       <!-- The meta-data element is needed for versions lower than 4.1 -->
       <meta-data
@@ -461,8 +453,29 @@
       android:name="com.mapswithme.maps.ugc.routes.UgcRoutePropertiesActivity"
       android:label="@string/select_properties"/>
     <activity
-      android:name="com.mapswithme.maps.bookmarks.PlaceDescriptionActivity"
+      android:name="com.mapswithme.maps.widget.placepage.PlaceDescriptionActivity"
       android:label="@string/place_description_title"/>
+    <activity
+      android:name="com.mapswithme.maps.ugc.routes.EditCategoryNameActivity"
+      android:label="@string/name"/>
+    <activity
+      android:name="com.mapswithme.maps.ugc.routes.EditCategoryDescriptionActivity"
+      android:label="@string/description_guide"/>
+    <activity
+      android:name="com.mapswithme.maps.settings.DrivingOptionsActivity"
+      android:label="@string/driving_options_title"/>
+    <activity
+      android:name="com.mapswithme.maps.purchase.BookmarkSubscriptionActivity"
+      android:screenOrientation="portrait"
+      android:configChanges="orientation|screenLayout|screenSize|keyboardHidden"/>
+    <activity
+      android:name="com.mapswithme.maps.purchase.BookmarksAllSubscriptionActivity"
+      android:screenOrientation="portrait"
+      android:configChanges="orientation|screenLayout|screenSize|keyboardHidden"/>
+    <activity
+      android:name="com.mapswithme.maps.purchase.BookmarksSightsSubscriptionActivity"
+      android:screenOrientation="portrait"
+      android:configChanges="orientation|screenLayout|screenSize|keyboardHidden"/>
     <service
       android:name="com.mapswithme.maps.background.WorkerService"
       android:permission="android.permission.BIND_JOB_SERVICE"
@@ -569,7 +582,7 @@
     <service
       android:name="com.mapswithme.maps.geofence.GeofenceTransitionsIntentService"
       android:permission="android.permission.BIND_JOB_SERVICE"
-      android:exported="true"/>
+      android:exported="false"/>
     <receiver
       android:name="com.mapswithme.maps.geofence.GeofenceReceiver"
       android:enabled="true"
@@ -582,7 +595,7 @@
       </intent-filter>
     </receiver>
     <provider
-      android:name="android.support.v4.content.FileProvider"
+      android:name="androidx.core.content.FileProvider"
       android:authorities="${FILE_PROVIDER_PLACEHOLDER}"
       android:exported="false"
       android:grantUriPermissions="true">

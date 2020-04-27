@@ -4,8 +4,6 @@
 <!-- Language: fa -->
 <resources>
 	<!-- SECTION: Strings -->
-	<!-- About button text (should be short) -->
-	<string name="about">درباره‌ی</string>
 	<!-- Button text (should be short) -->
 	<string name="back">بازگشت</string>
 	<!-- Button text (should be short) -->
@@ -51,7 +49,6 @@
 	<string name="miles">مایل</string>
 	<!-- View and button titles for accessibility -->
 	<string name="core_my_position">مکان من</string>
-	<string name="ok">موافقم</string>
 	<!-- Settings/Downloader - No free space dialog message -->
 	<string name="free_disk_space_for_country_x">لطفا مقداری از فضای ذخیره سازی تلفن همراهتان را جهت دانلود خالی نمایید %s</string>
 	<!-- Leave Review dialog - Not now button (remind me later) -->
@@ -70,8 +67,6 @@
 	<string name="touch_to_download">برای دانلود لمس کنید</string>
 	<!-- Settings/Downloader - 3G download warning dialog confirm button -->
 	<string name="use_cellular_data">بله</string>
-	<!-- Settings/Downloader - No internet connection dialog message -->
-	<string name="use_wifi_recommendation_text">اکیداً توصیه می کنیم برای دانلود نقشه های حجیم از اینترنت وای فای استفاده نمایید</string>
 	<!-- Choose measurement on first launch alert - title -->
 	<string name="which_measurement_system">کدام واحد اندازه گیری را ترجیح می دهید؟</string>
 	<!-- Location services are disabled by user alert - message -->
@@ -337,10 +332,6 @@
 	<string name="route">مسیر</string>
 	<!-- category title -->
 	<string name="routes">مسیر ها</string>
-	<!-- Show on first launch. -->
-	<string name="agree">موافقم</string>
-	<!-- Show on first launch -->
-	<string name="disagree">مخالفم</string>
 	<!-- text of notification -->
 	<string name="download_map_notification">دانلود نقشه جایی که هستید</string>
 	<!-- text of notification -->
@@ -531,6 +522,22 @@
 	<string name="brown">قهوای</string>
 	<!-- pink color -->
 	<string name="pink">صورتی</string>
+	<!-- deep purple color -->
+	<string name="deep_purple">ارغوانی سیر</string>
+	<!-- light blue color -->
+	<string name="light_blue">آبی کمرنگ</string>
+	<!-- cyan color -->
+	<string name="cyan">فیروزه ای</string>
+	<!-- teal color -->
+	<string name="teal">آبی سیر</string>
+	<!-- lime color -->
+	<string name="lime">زرد لیویی</string>
+	<!-- deep orange color -->
+	<string name="deep_orange">نارنجی سیر</string>
+	<!-- gray color -->
+	<string name="gray">خاکستری</string>
+	<!-- blue gray color -->
+	<string name="blue_gray">خاکستری کبود</string>
 	<!-- Wi-Fi available -->
 	<string name="WiFi_available">بلی</string>
 
@@ -762,8 +769,6 @@
 	<string name="onboarding_location_message">به منظور استفاده شما از ناوبری و دیگر ویژگی های این اپلیکیشن MAPS.ME نیازمند دسترسی به موقعیت مکانی تان است.</string>
 	<string name="onboarding_permissions_title">به MAPS.ME اجازه دسترسی به محل ذخیره سازی و موقعیت مکانی خود را بدهید.</string>
 	<string name="onboarding_permissions_message">خب شما می تونید نقشه رو دانلود کنید و مکان های دور اطراف را به همراه حجم ترافیک دوروبرتان ببینید و از مسیر یابی استفاده کنید.</string>
-	<string name="onboarding_welcome_title">به MAPS.ME خوش امدید</string>
-	<string name="onboarding_welcome_first_subtitle">رایگان,سریع,با جزئیات و با نقشه هایی کامل افلاین به همراه مسیر یابی پیچ به پیچ.</string>
 	<string name="onboarding_welcome_second_subtitle">با اجرای این اپلیکیشن, شما موافقت خود را با  &lt;a href="%1$s">Terms of Use&lt;/a> و &lt;a href="%2$s">Privacy Policy&lt;/a>اعلام می کنید.</string>
 	<string name="dialog_incorrect_feature_position">تغییر موقعیت</string>
 	<string name="message_invalid_feature_position">نمی توان شی ای در این مکان باشد</string>
@@ -838,7 +843,7 @@
 	<string name="minute">دقیقه</string>
 	<string name="placepage_place_description">توضیحات</string>
 	<string name="placepage_more_button">بیشتر</string>
-	<string name="placepage_more_reviews_button">بازخورد های بیشتر</string>
+	<string name="placepage_more_reviews_button">نقدهای دیگر</string>
 	<string name="book_button">رزرو</string>
 	<string name="placepage_call_button">تماس</string>
 	<string name="placepage_edit_bookmark_button">ویرایش نشانه ها</string>
@@ -977,8 +982,6 @@
 	<string name="banner_geerbest_message">جستجوی سریع در بیش از 50،000 مورد با قیمت پایین.</string>
 	<string name="banner_rentalcars_title">اجاره اتومبیل ها آنلاین</string>
 	<string name="banner_rentalcars_message">شرکت کرایه ماشین در بیش از 49،000 مکان اجاره ماشین.</string>
-	<string name="banner_viator_title">جستجوی آنلاین تور</string>
-	<string name="banner_viator_message">جستجو در بیش از 50،000 تور در سراسر جهان.</string>
 	<!-- december -->
 	<string name="whatsnew_traffic">اطلاعات ترافیکی در 36 کشور</string>
 	<!-- december -->
@@ -1020,8 +1023,6 @@
 	<string name="whatsnew_smaller_mwm_message">نقشه ها نیاز به ذخیره سازی 20٪ کمتر دارند.</string>
 	<string name="whatsnew_waypoints_title">مسیرهای مسیریابی</string>
 	<string name="whatsnew_waypoints_message">مکان ها را برای افزودن ایستگاه های راه به مسیر خود ضربه بزنید.</string>
-	<string name="whatsnew_viator_title">رزرو تور</string>
-	<string name="whatsnew_viator_message">تورهای محبوب را در شهرهای توریستی در سراسر جهان انتخاب کنید.</string>
 	<string name="whatsnew_driving_style_title">نقشه جدید برای رانندگی</string>
 	<string name="whatsnew_driving_style_message">حالت ناوبری خودرو برای استفاده آسان تر شد.</string>
 	<string name="more_on_bookingcom">بیشتر در Booking.com</string>
@@ -1078,7 +1079,6 @@
 	<string name="settings_card_memory">کارت حافظه</string>
 	<string name="settings_storage_available">%s موجود</string>
 	<string name="toast_location_permission_denied">مجوز مکان برنامه صادر نشد</string>
-	<string name="place_page_viator_title">جاذبه ها و تورها</string>
 	<string name="button_use">استفاده</string>
 	<string name="planning_route_manage_route">مدیریت مسیر</string>
 	<string name="button_plan">برنامه</string>
@@ -1093,8 +1093,6 @@
 	<string name="add_my_position">موقعیت من را اضافه کنید</string>
 	<string name="choose_start_point">نقطه شروع را انتخاب کنید</string>
 	<string name="choose_destination">یک مقصد را انتخاب کنید</string>
-	<string name="preloader_viator_title">تور و فعالیت های غیر معمول را کشف کنید</string>
-	<string name="preloader_viator_message">تور، فعالیت ها، گشت و گذار و ...</string>
 	<string name="preloader_viator_button">بیشتر بدانید</string>
 	<string name="whats_new_title_route">مسیرهای دوچرخه و مسیرهای پیاده روی بهبود یافته است</string>
 	<string name="whats_new_message_route">ما خطاهایی را برطرف کردیم، محاسبه مسیر چندین بار سریعتر  شده و ایستگاه‌های بین راهی اضافه شد</string>
@@ -1105,9 +1103,6 @@
 	<string name="placepage_no_reviews">بررسی موجود نیست</string>
 	<string name="placepage_reviewed">شما در حال حاضر روی این مکان ارزیابی ثبت کرده اید</string>
 	<string name="placepage_summary_rating">خلاصه ای از ارزیابی</string>
-	<plurals name="placepage_summary_rating_description">
-	  <item quantity="other">براساس %d ارزیابی</item>
-	</plurals>
 	<string name="placepage_rate_comment">برای رای دادن و ارزیابی این مکان ضربه بزنید.</string>
 	<string name="placepage_rate_horrible">ناگوار</string>
 	<string name="placepage_rate_bad">ضعیف</string>
@@ -1150,8 +1145,6 @@
 	<string name="discovery_button_subtitle_attractions">جاذبه ها</string>
 	<string name="discovery_button_subtitle_eat_and_drink">خوردن و آشامیدن</string>
 	<string name="discovery_button_subtitle_local_guides">راهنماهای محلی</string>
-	<string name="discovery_button_viator_offline_title">تورها را پیدا کنید و چیزهای غیر معمول را انجام دهید</string>
-	<string name="discovery_button_viator_offline_message">تور، چیزهایی که باید انجام شود، تورهای گشت و گذار و بیشتر.</string>
 	<string name="discovery_button_viator_error_title">خطای بارگذاری داده</string>
 	<string name="discovery_button_404_error_title">یافت نشد</string>
 	<string name="discovery_button_404_error_message">متأسفیم، ما چیزی جالب در اطراف پیدا نکردیم.</string>
@@ -1190,12 +1183,10 @@
 	<string name="downloader_percent">%1$s (%2$s از %3$s)</string>
 	<string name="downloader_process">در حال دانلود %s...</string>
 	<string name="downloader_applying">اعمال %s...</string>
-	<string name="transit_not_found">ناوبری حمل و نقل در این منطقه هنوز در دسترس نیست</string>
 	<string name="whats_new_title_hotel_filter">فیلترهای جدید هتل در دسترس است!</string>
 	<string name="whats_new_message_hotel_filter">رزرو هتل در دسترس برای تاریخ خود را! از چک کردن استفاده کنید و فیلتر کنید</string>
 	<string name="whats_new_title_ugc_travel">تجربه خود را با مسافران دیگر به اشتراک بگذارید!</string>
 	<string name="whats_new_message_ugc_travel">مکانهایی را که بازدید کرده اید رتبه بندی کنید و بررسی کنید</string>
-	<string name="dialog_pedestrian_route_is_long">مسیر عابر پیاده خیلی طولانی است</string>
 	<string name="dialog_message_transit_not_found_connection">یک مسیر را در یک شبکه حمل و نقل برنامه ریزی کنید</string>
 	<string name="bookmarks_error_message_share_general">با توجه به خطای برنامه، امکان اشتراک گذاری وجود ندارد</string>
 	<string name="bookmarks_error_title_share_empty">خطای اشتراک</string>
@@ -1308,8 +1299,8 @@
 	<string name="bookmarks_downloaded_subtitle">\'نمایش بر روی نقشه\' را فشار دهید تا مکان های جدید را از لیست کاوش کنید</string>
 	<string name="guides">راهنما</string>
 	<string name="guide_downloaded_title">راهنمای با موفقیت دانلود شده است</string>
-	<string name="download_guides">دانلود راهنما</string>
-	<string name="cached_guides_placeholder_subtitle">راهنماهای آفلاین مفصل برای هر نوع سفر. یکی از بهترین ها را انتخاب کنید و آن را به طور مستقیم به نقشه دانلود کنید. برای دریافت راهنماها به اتصال اینترنت نیاز دارید.</string>
+	<!-- as few symbols as possible -->
+	<string name="download_guides">جستجوی راهنما</string>
 	<string name="guides_groups_cached">راهنما‌های دانلود شده</string>
 	<string name="subtitle_error_downloading_guide">راهنما دانلود نشد</string>
 	<string name="error_already_downloaded_guide">این راهنمای قبلا دانلود شده است</string>
@@ -1351,7 +1342,6 @@
 	<string name="hide_from_map">پنهان کردن از نقشه</string>
 	<string name="ugc_route_tags_screen_label">انتخاب برچسبها</string>
 	<string name="ugc_route_tags_progress_msg">درحال بارگیری برچسبها…</string>
-	<string name="ugc_route_tags_desc">لطفا برچسبها را برای کمک به مسافران دیگر برای یافتن راهنمای شما، انتخاب نمایید. این الزامی است.</string>
 	<string name="public_access">دسترسی عمومی</string>
 	<string name="limited_access">دسترسی محدود</string>
 	<string name="upload_and_publish_desc">این راهنما به کاتالوگ عمومی MAPS.ME ارسال خواهد شد و برای کاربران دیگر در دسترس خواهد بود</string>
@@ -1374,7 +1364,7 @@
 	<string name="unable_upload_errorr_title">بارگذاری فایل انجام نشد</string>
 	<string name="unable_upload_error_subtitle_edited">این فایل از طریق برنامه وب ویرایش شده است</string>
 	<string name="unable_upload_error_subtitle_broken">این فایل آسیب دیده است و امکان بارگذاری آن وجود ندارد. لطفا فایل دیگری را بارگذاری نمایید.</string>
-	<string name="buy_btn">با s% خرید نمایید</string>
+	<string name="buy_btn">این را با %s بخرید</string>
 	<string name="price_error_title">نمی توان قیمت را دریافت کرد</string>
 	<string name="price_error_subtitle">لطفا چند دقیقه دیگر دوباره امتحان کنید</string>
 	<string name="edit_your_guide_email_body">راهنمای خود را به سادگی بر روی وب با استفاده از کامپیوتر خود ویرایش نمایید: توضیحاتی اضافه نمایید، تصاویر را بارگذاری کرده و نشانه گذاریها را با خطوط متصل نمایید.</string>
@@ -1416,11 +1406,323 @@
 	<string name="whatsnew_pro_guides_message">بسیار دقیق، با توضیحات مفصلی از مکان ها و توانایی محاسبه فاصله و زمان سفر</string>
 	<string name="whatsnew_paid_routes_title">تجارب جدید بیشتر!</string>
 	<string name="whatsnew_paid_routes_message">علاوه بر مسیرهای رایگان، سه دسته مسیر پولی نیز به فهرست ما افزوده شده است. بیش از ۷۰۰ مسیر جدید!</string>
+	<string name="ugc_thanks_message_auth">نظر شما ذخیره شده‌است</string>
+	<string name="ugc_thanks_message_not_auth">لطفا برای ثبت نظر وارد حساب کاربری شوید</string>
+	<string name="notification_leave_review_v2_title">با ارزیابی یک محل بازدید شده به مسافران کمک کنید!</string>
+	<string name="error_public_not_enought_title">نشان شده‌ها کافی نیست</string>
+	<string name="error_public_not_enought_subtitle">شما باید حداقل 3 نشان‌ شده داشته باشید تا راهنمای خود را به کاتالوگ عمومی ارسال کنید</string>
+	<string name="bookmark_public_upload_alert_title">چند گام تا اشتراک گذاری نشان شده‌های خود با تمام مسافران MAPS.ME فاصله دارید!</string>
+	<string name="bookmark_public_upload_alert_subtitle">لطفا اطمینان حاصل کنید نام و توضیح مشخصی برای فهرست خود داشته باشید و تمام نشان شده‌ها دارای اطلاعاتی راجع به مکان‌ها هستند. به این ترتیب لیست شما می‌تواند توسط دیگران یافت استفاده شود.</string>
+	<string name="bookmark_public_upload_alert_ok_button">بله، اطمینان دارم!</string>
+	<string name="name_title">نام راهنمای خود را وارد کنید</string>
+	<string name="name_placeholder">برای مثال، بارهای لندن</string>
+	<string name="name_comment1">لطفا راهنمای خود را آنگونه نام گذاری کنید که مسافران به آسانی آن را پیدا کنند: برای مثال، \"بارهای لندن\"</string>
+	<string name="name_comment2">نام انتخابی نباید شامل حروف قام خاص باشد. نام انتخابی نباید \"مکان‌های من\" باشد</string>
+	<string name="description_guide">توضیحات</string>
+	<string name="description_title">توضیحات راهنمای خود را وارد کنید</string>
+	<string name="description_placeholder">راهنمای خود را با جزئیات توضیح دهید</string>
+	<string name="description_comment1">توضیحات راهنما باید شامل حداقل 30 حرف باشد.</string>
+	<string name="ugc_route_tags_desc">لطفاً برای کمک به سایر مسافران جهت یافتن راهنمای شما برچسب انتخاب کنید. این الزامی است. %s بیشترین برچسب‌ها.</string>
+	<string name="html_format_error_title">راهنمای شما منتشر نشده‌است</string>
+	<string name="html_format_error_subtitle">لطفاً اطمینان حاصل کنید که نام و توضیحات تمام نشان شده‌های شما دارای فرمت معتبر است. می‌توانید آن را با کلیک روی گزینه \"ویرایش آنلاین\" از طریق مرورگر کامپیوتر بررسی کنید.</string>
+	<string name="web_editor_description">راهنمای خود را ارسال و لینک ویرایش را از کامپیوتر دریافت کنید</string>
+	<string name="edit_on_web_confirm">ویرایش آنلاین</string>
+	<string name="update_guide">به روز رسانی را ارسال کنید</string>
+	<string name="direct_link_updating_text">به روز رسانی فایل شما…</string>
+	<string name="direct_link_updating_success">راهنمای شما به روز شد</string>
+	<string name="unable_get_direct_link_desc">راهنمای خود را طریق لینک عمومی به اشتراک گذارید</string>
+	<string name="any_access_update_alert_title">برخی از تغییرات ممکن است رخ داده باشد</string>
+	<string name="any_access_update_alert_message">آیا می خواهید نشان شده های خود را به روز کنید؟ نسخه جدید از طریق همان لینک دردسترس خواهد بود.</string>
+	<string name="any_access_update_alert_update">به روز رسانی</string>
+	<string name="public_or_limited_access_after_edit_online_error_title">شما نشان شده های خود را آنلاین ویرایش کرده‌اید</string>
+	<string name="public_or_limited_access_after_edit_online_error_message">در آینده، لطفاً راهنما را ویرایش، منتشر یا با دوستان خود از طریق وب سایت ما به اشتراک گذارید</string>
+	<string name="power_managment_title">حالت ذخیره انرژی</string>
+	<string name="power_managment_description">هنگامی که حالت خودکار انتخاب شده‌باشد، برنامه با توجه میزان شارژ باتری شما، ویژگی‌های تخلیه کننده باتری را غیر فعال می‌کند</string>
+	<string name="power_managment_setting_never">هرگز</string>
+	<string name="power_managment_setting_auto">خودکار</string>
+	<string name="power_managment_setting_manual_max">حداکثر ذخیره انرژی</string>
+	<string name="enable_logging_warning_message">این گزینه ثبت گزارش را برای اهداف تشخیصی فعال می‌کند. برای کارکنان بخش پشتیبانی که مشکلات برنامه را عیب یابی می‌کنند، مفید باشد. این گزینه را تنها در صورت درخواست پشتیبانی MAPS.ME فعال کنید.</string>
+	<string name="html_error_upload_message_try_again">لطفاً تنظیمات شبکه را بررسی و مجدد تلاش کنید</string>
+	<string name="html_error_upload_title_try_again">ارتباط اینترنت برقرار نیست</string>
+	<string name="notification_leave_review_v2_android_short_title">نظر خود را بیان و به مسافران کمک کنید!</string>
+	<string name="notifications_illegal_alert_disable_button">خاموش کردن اعلان‌ها</string>
+	<string name="access_rules_author_only">ویرایش آنلاین</string>
+	<string name="privacy_settings_menu">تنظیمات حریم خصوصی</string>
+	<string name="gdpr_request_setting">دریافت شناسه برای درخواست GDPR</string>
+	<string name="gdpr_request_window_title">شناسه شما: %s.</string>
+	<string name="gdpr_request_window_message">لطفاً آن را کپی کرده و درخواست را به support\@maps.me ارسال کنید</string>
+	<string name="gdpr_request_window_copy">شناسه را کپی کنید</string>
+	<string name="unable_upadate_error_title">به روز رسانی فایل ناموفق بود</string>
+	<string name="unable_upadate_error_message">هنگام به روز رسانی برخی اشتباهات رخ داده است. لطفاً تغییرات را بررسی و مجدد تلاش کنید</string>
+	<string name="whats_new_wiki_title">آن محل چیست؟</string>
+	<string name="whats_new_wiki_message">ما مقالات Wikipedia.org را به صفحات جذاب‌ترین جاذبه‌های توریستی اضافه کرده‌ایم. آن‌ها به طور آفلاین دردسترس می‌باشد</string>
+	<string name="driving_options_title">گزینه های رانندگی</string>
+	<string name="driving_options_subheader">اجتناب از تمامی مسیرها</string>
+	<string name="avoid_tolls">جاده های دارای عوارض</string>
+	<string name="avoid_unpaved">جاده های آسفالت نشده</string>
+	<string name="avoid_ferry">گذرگاه های جاده ای</string>
+	<string name="avoid_motorways">بزرگراه ها</string>
+	<string name="unable_to_calc_alert_title">امکان محاسبه مسیر نیست</string>
+	<string name="unable_to_calc_alert_subtitle">متأسفانه، احتمالاً به دلیل گزینه های تعریف شده شما، مسیری پیدا نشد. لطفاً تنظیمات را تغییر داده و مجدد تلاش کنید</string>
+	<string name="define_to_avoid_btn">جاده های لغو شده را تعریف نمایید</string>
+	<string name="change_driving_options_btn">گزینه های مسیریابی فعال شد</string>
+	<string name="toll_road">جاده دارای عوارض</string>
+	<string name="unpaved_road">جاده آسفالت نشده</string>
+	<string name="ferry_crossing">گذرگاه جاده ای</string>
+	<string name="operated_by">اجرا توسط \"%s\"</string>
+	<string name="avoid_toll_roads_placepage">اجتناب از جاده های دارای عوارض</string>
+	<string name="avoid_unpaved_roads_placepage">اجتناب از جاده های آسفالت نشده</string>
+	<string name="avoid_ferry_crossing_placepage">اجتناب از گذرگاه های کشتی</string>
+	<string name="cached_guides_placeholder_subtitle">MAPS.ME راهنمایی های آماده برای مکان های انتخاب شده همراه عکس و توضیحات ارائه می دهد که بر روی نقشه نمایش داده می شوند و در حالت آفلاین در دسترس هستند.</string>
+	<string name="guides_catalogue_title">کاتالوگراهنماها</string>
+	<string name="download_guides_button">به کاتالوگ</string>
+	<plurals name="placepage_summary_rating_description">
+	  <item quantity="one">بر اساس نظر %d</item>
+	  <item quantity="other">بر اساس نظرات %d</item>
+	</plurals>
+	<string name="type.cuisine.uzbek">غذای ازبکستانی</string>
+	<string name="onboarding_welcome_title">برنامه ریزی و سفر با MAPS.ME</string>
+	<string name="onboarding_welcome_first_subtitle">مکان های جالب را نشان دار کنید ، هتل رزرو کنید، مسیرها را به صورت آفلاین محاسبه کنید</string>
+	<string name="onboarding_guide_direct_download_title">راهنما آماده دریافت است</string>
+	<string name="onboarding_guide_direct_download_subtitle">بر روی نقشه نمایش داده می شود و به صورت آفلاین کار می کند</string>
+	<string name="onboarding_guide_direct_download_button">دریافت</string>
+	<string name="onboarding_bydeeplink_guide_title">راهنماهای آماده استفاده در MAPS.ME</string>
+	<string name="onboarding_bydeeplink_guide_subtitle">بهترین مکان ها برای بازدید روی نقشه با عکس و توضیحات نمایش داده شده است. آفلاین اجرا می شود.</string>
+	<string name="whats_new_auto_update_bydeeplink_title">پیش از رفتن به راهنماها…</string>
+	<string name="whats_new_auto_update_bydeeplink_message">برای به روز نگه داشتن مناظر نقشه ها را به روز رسانی کنید!</string>
+	<string name="whats_new_auto_update_and_proceed_button_size">به روز رسانی (%s) و ادامه</string>
+	<string name="whatsnew_toll_unpaved_title">مسیرهای خودرویی را با توجه به انواع جاده ها تنظیم کنید</string>
+	<string name="whatsnew_toll_unpaved_message">مسیرهای فرعی از طریق مسیرهای دارای عوارض، جاده های خاکی و گذرگاه های جاده ای انتخاب کنید</string>
+	<string name="whatsnew_new_catalogue_title">صفحات کاتالوگ به روز شد</string>
+	<string name="whatsnew_new_catalogue_message">اطلاعات دقیق در مورد راهنماهای همکار اضافه شده است تا انتخاب مسیر آسان و راحت باشد</string>
+	<string name="purchase_please_wait_toast">لطفاً این صفحه را پیش از اتمام خرید ترک نکنید</string>
+	<string name="trip_start">برویم</string>
+	<string name="pick_destination">مقصد</string>
+	<string name="follow_my_position">نشان دادن مجدد در مرکز</string>
+	<string name="search_results">نتایج جستجو</string>
+	<string name="then_turn">سپس</string>
+	<string name="redirect_route_alert">آیا می خواهید مسیر را دوباره ایجاد کنید?</string>
+	<string name="redirect_route_yes">بله</string>
+	<string name="redirect_route_no">خیر</string>
+	<string name="trip_finished">شما به مقصد رسیدید!</string>
+	<string name="keyboard_availability_alert">صفحه کلید در هنگام رانندگی در دسترس نیست</string>
+	<string name="dialog_routing_change_start_carplay">امکان ایجاد مسیر از مکان فعلی شما نیست</string>
+	<string name="dialog_routing_change_end_carplay">امکان ایجاد مسیر به مقصد شما نیست. لطفاً نقطه دیگری را انتخاب کنید</string>
+	<string name="dialog_routing_check_gps_carplay">سیگنال GPS وجود ندارد. لطفاً به فضای باز بروید</string>
+	<string name="dialog_routing_unable_locate_route_carplay">امکان ایجاد مسیر نیست. لطفاً نقاط مسیر دیگری را مشخص کنید</string>
+	<string name="dialog_routing_download_files_carplay">برای ایجاد مسیر، نقشه های ناقص را روی دستگاه خود را دانلود کنید</string>
+	<string name="dialog_routing_system_error_carplay">خطایی رخ داد. لطفاً برنامه را دوباره اجرا کنید</string>
+	<string name="dialog_routing_rebuild_from_current_location_carplay">مسیر از مکان فعلی شما بازسازی خواهد شد</string>
+	<string name="dialog_routing_rebuild_for_vehicle_carplay">مسیر به مسیر خودرویی تغییر خواهد کرد</string>
+	<string name="ok">موافقت کردن</string>
+	<string name="booking_button_toolbar">یک هتل را بر روی نقشه انتخاب کنید</string>
+	<string name="popup_booking_download_guides_title">هتل رزرو کرده‌اید؟</string>
+	<string name="popup_booking_download_guides_message">مسیر خود را با راهنماهای آماده MAPS.ME برنامه ریزی کنید</string>
+	<string name="popup_mwm_download_guides_title">راهنماهای آفلاین شهر</string>
+	<string name="popup_mwm_download_guides_cta">یکی را انتخاب کنید</string>
+	<string name="popup_mwm_download_guides_cta_1">نگاهی کنید</string>
+	<string name="gallery_pp_download_guides_offline_title">تعطیلات خود را با MAPS.ME برنامه ریزی کنید!</string>
+	<string name="gallery_pp_download_guides_offline_subtitle">با استفاده از راهنماهای تهیه شده توسط مسافران با تجربه، هیچ چیز را از دست ندهید</string>
+	<string name="gallery_pp_download_guides_offline_cta">اینترنت را متصل کنید</string>
+	<string name="gallery_pp_download_guides_title">راهنماها</string>
+	<string name="native_screen_subscription_title">دسترسی نامحدود به بیش از 2000 راهنمای سفر!</string>
+	<string name="native_screen_subscription_message">تعطیلات به یاد ماندنی در هر کجا و با هر کسی که سفر می کنید</string>
+	<string name="annual_subscription_title">سالانه</string>
+	<string name="montly_subscription_title">ماهانه</string>
+	<string name="annual_subscription_message">12 ماه دسترسی نامحدود</string>
+	<string name="montly_subscription_message">1 ماه دسترسی نامحدود</string>
+	<string name="subscription_success_dialog_title">با تشکر برای اشتراک!</string>
+	<string name="subscription_success_dialog_message">اکنون شما به تمام کاتالوگ راهنما دسترسی نامحدود دارید</string>
+	<string name="renewal_screen_title">اشتراک شما به پایان رسیده است</string>
+	<string name="renewal_screen_message">تمام راهنماهای دانلود شده با اشتراک حذف خواهند شد. آیا تمایل به ادامه اشتراک و حفظ آنها دارید؟</string>
+	<string name="renewal_screen_button_restore">بله، تمدید کن</string>
+	<string name="renewal_screen_button_cancel">نه، حذف راهنماها</string>
+	<string name="subscription_error_ping_title">خرید ناموفق بود</string>
+	<string name="subscription_error_message">این سرویس در حال حاضر در منطقه شما در دسترس نیست. لطفا بعداً دوباره امتحان کنید</string>
+	<string name="subscription_error_button">متوجه شدم</string>
+	<string name="timeout_error_title">اوه، زمان به پایان رسید!</string>
+	<string name="timeout_error_message">سرورهای ما پاسخ نمی دهند. لطفا اتصال اینترنت را بررسی و دوباره امتحان کنید.</string>
+	<string name="per_month">ماه/</string>
+	<string name="per_year">سال/</string>
+	<string name="buy_btn_for_subscription">دسترسی نامحدود از %s</string>
+	<string name="buy_btn_for_subscription_1">تمامی راهنماها را با %s بخرید</string>
+	<string name="buy_btn_for_subscription_ios_only_mo">دسترسی نامحدود %s\ماه</string>
+	<string name="buy_btn_for_subscription_ios_only_year">دسترسی نامحدود %s\سال</string>
+	<string name="subscription_terms_guides">پس از تأیید خرید پرداخت از طریق حساب iTunes انجام خواهد شد. اشتراک به صورت خودکار تمدید خواهد شد مگر اینکه ویژگی تمدید خودکار حداقل 24 ساعت قبل از پایان دوره فعلی غیر فعال شود. با توجه به طرح تمدیدی شما، 24 ساعت پیش از اتمام دوره اشتراک، هزینه از حساب شما کسر می شود. شما می توانید در هر زمانی ویژگی تمدید خودکار را در تنظیمات حساب Apple ID خود مدیریت یا غیر فعال کنید. شما می توانید راهنماهای دانلود شده توسط اشتراک را تنها تا تاریخ انقضا استفاده کنید. 30 روز پس از تاریخ اتمام اشتراک، راهنما ها با بوک مارک ها به طور خودکار حذف خواهند شد.</string>
+	<string name="whatsnew_carplay_title">مسیر یابی خودرو MAPS.ME در CarPlay!</string>
+	<string name="whatsnew_carplay_message">نشانه ها، جستجو، دوربین های سرعت و گزینه های رانندگی در حالت آفلاین در دسترس هستند</string>
+	<string name="whatsnew_subscription_title">تمام جهان با اشتراک!</string>
+	<string name="whatsnew_subscription_message">دسترسی نامحدود به تمام کاتالوگ راهنما به صرفه تر از خرید یک بار مصرف است</string>
+	<string name="whatsnew_carnavi_fixes_for_android_title">به روز رسانی مسیریابی</string>
+	<string name="whatsnew_carnavi_fixes_for_android_message">مسیر برنامه ریزی به نقاطی دور از جاده‌ها بهبود داده ایم</string>
+	<string name="avoid_unpaved_carplay_1">بی جاده خاکی</string>
+	<string name="avoid_unpaved_carplay_2">پرهیز از خاکی</string>
+	<string name="avoid_ferry_carplay_1">بدون بزرگراه</string>
+	<string name="avoid_ferry_carplay_2">پرهیز از اتوبان</string>
+	<string name="avoid_tolls_carplay_1">بدون عوارضی</string>
+	<string name="avoid_tolls_carplay_2">اجتناب از عوارض</string>
+	<string name="speedcams_alert_title_carplay_1">دوربین سرعت</string>
+	<string name="speedcams_alert_title_carplay_2">هشدارهای سرعت</string>
+	<string name="download_map_carplay">لطفا نقشه ها را در نرم افزار MAPS.ME روی دستگاه خود دانلود کنید</string>
+	<string name="carplay_roundabout_exit">خروجی %s</string>
+	<!-- max. 10 symbols, both iOS and Android -->
+	<string name="sort">مرتب سازی…</string>
+	<!-- Android, title, max 20-22 symbols -->
+	<string name="sort_bookmarks">مرتب سازی نشانهها</string>
+	<!-- iOS -->
+	<string name="sort_default">مرتب سازی بر اساس پیش فرض</string>
+	<string name="sort_type">مرتب سازی بر اساس نوع</string>
+	<string name="sort_distance">مرتب سازی بر اساس فاصله</string>
+	<string name="sort_date">مرتب سازی بر اساس تاریخ</string>
+	<!-- Android -->
+	<string name="by_default">به صورت پیش فرض</string>
+	<!-- Android -->
+	<string name="by_type">بر اساس تاریخ</string>
+	<!-- Android -->
+	<string name="by_distance">بر اساس فاصله</string>
+	<!-- Android -->
+	<string name="by_date">بر اساس تاریخ</string>
+	<string name="week_ago_sorttype">یک هفته قبل</string>
+	<string name="month_ago_sorttype">یک ماه قبل</string>
+	<string name="moremonth_ago_sorttype">بیش از یک ماه قبل</string>
+	<string name="moreyear_ago_sorttype">بیش از یک سال قبل</string>
+	<string name="near_me_sorttype">نزدیک من</string>
+	<string name="others_sorttype">دیگران</string>
+	<string name="food_places">غذا</string>
+	<string name="tourist_places">مناظر</string>
+	<string name="museums">موزهها</string>
+	<string name="parks">پارکها</string>
+	<string name="swim_places">شنا</string>
+	<string name="mountains">کوهها</string>
+	<string name="animals">حیوانات</string>
+	<string name="hotels">هتلها</string>
+	<string name="buildings">ساختمانها</string>
+	<string name="money">پول</string>
+	<string name="shops">مراکز خرید</string>
+	<string name="parkings">پارکینگها</string>
+	<string name="fuel_places">پمپ بنزین</string>
+	<string name="water">آب</string>
+	<string name="medicine">پزشکی</string>
+	<string name="search_in_the_list">جستجو در لیست</string>
+	<string name="view_on_map_bookmarks">روی نقشه</string>
+	<string name="more_bookmarks">بیشتر…</string>
+	<string name="no_items_found">هیچ موردی یافت نشد</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_edit_list">ویرایش فهرست</string>
+	<!-- Android, max 18 symbols -->
+	<string name="bookmarks_delete_list">حذف همه</string>
+	<string name="whatsnew_bookmarks_search_sort_title">سفارش در نشانهها سفری آسوده را رقم می زند</string>
+	<string name="whatsnew_bookmarks_search_sort_message">مکانهای مورد علاقه را بر اساس طبقه بندی ، موقعیت مکانی و ترتیب زمانی مرتب کنید، همچنین نشانههای خاص را به سرعت از روی نام بیابید</string>
+	<string name="popup_subscription_success_map_title">هورا، شما مشترک شدید!</string>
+	<string name="popup_subscription_success_map_message">اکنون بهترین مکان های برجسته گردشگری را در کاتالوگ MAPS.ME کشف کنید</string>
+	<string name="popup_subscription_success_map_start_button">شروع جستجو</string>
+	<string name="popup_subscription_success_map_not_now_button">حالا نه</string>
+	<string name="religious_places">اماکن مقدس</string>
+	<string name="subscription_terms_android">هنگامی که خرید را تأیید کنید، هزینه آن از حساب Google Play شما پرداخت می شود. اشتراک به طور خودکار تمدید خواهد شد مگر اینکه ویژگی تمدید خودکار حداقل 24 ساعت قبل از پایان دوره فعلی خاموش باشد. حساب شما طبق برنامه تمدید، 24 ساعت پیش از پایان دوره جاری، شارژ می شود. شما می توانید ویژگی تمدید خودکار را در تنظیمات حساب پس از خرید مدیریت یا غیر فعال کنید. شما مجاز به استفاده از راهنماهای دانلود شده با اشتراک تنها تا تاریخ انقضا آن هستید. 30 روز پس از تاریخ انقضای اشتراک، راهنماهای دانلود شده به طور خودکار حذف خواهند</string>
+	<string name="select_list">انتخاب فهرست</string>
+	<string name="pp_discovery_place_related_header">این مکان در کاتالوگ راهنماها موجود است</string>
+	<string name="pp_discovery_place_related_header_1">این مکان در راهنما متمایز است</string>
+	<string name="pp_discovery_place_related_cta_button">مشاهده</string>
+	<string name="pp_discovery_place_related_tag_header">به راهنماهایی با برچسب \"%s\"</string>
+	<string name="pp_discovery_place_related_tag_header_1">همچنین ممکن است شما،</string>
+	<string name="buy_btn_for_subscription_version_2">تمامی راهنماها تنها با %s د</string>
+	<string name="buy_btn_for_subscription_version_3">کلیه کاتالوگ ها با %s در ماه</string>
+	<string name="buy_btn_for_subscription_ios_only_mo_version_2">دسترسی به کاتالوگ با %s در ماه</string>
+	<string name="buy_btn_for_subscription_ios_only_year_version_2">دسترسی به کاتالوگ با %s در سال</string>
+	<string name="subscription_screen_native_message_version_2">برای هر سفر به بیش از 600 شهر و بیش از 100 کشور آماده باش</string>
+	<string name="catalog_no_internet_title">اتصال به اینترنت برقرار نیست</string>
+	<string name="catalog_no_internet_button">تلاش مجدد</string>
+	<string name="whatsnew_map_updates_title">بروزرسانی بسیار سریع ن</string>
+	<string name="whatsnew_map_updates_message">از این پس سرعت بروزرسانی اطلاعات دو برابر است</string>
+	<string name="new_onboarding_button">بعدی</string>
+	<string name="new_onboarding_button_2">شروع کنید</string>
+	<string name="new_onboarding_step1_header_2">همه چیز دریک سفر دوست من</string>
+	<string name="new_onboarding_step2_header">رویاپردازی و برایش برنامهریزی کنید</string>
+	<string name="new_onboarding_step2_message">70+ میلیون مکان، راهنمای آماده و رزرو هتل درست از روی نقشه – آمادهی سفر هستید!</string>
+	<string name="new_onboarding_step3_message">محال است با نقشهی دقیق و جهتیابی یک کشور گم شوید– کلیه خدمات به صورت آفلاین ارائه می</string>
+	<string name="new_onboarding_step4_header">حال و احساستان را به اشتراک بگذارید</string>
+	<string name="new_onboarding_step4_message">نشانکهایی بر روی مکانهای مورد علاقه خود بگذارید و آنها را برای دوستانتان بفرستید</string>
+	<string name="new_onboarding_step5.1_header">نکتهای دیگر قبل از شروع…</string>
+	<string name="new_onboarding_step5.1_message">فراموش نکنید کاتالوگ راهنمای جدید و برند ما را ملاحظه کنید تا برای سفر آتی خود راهنمای آفلاین پیدا کنید!</string>
+	<string name="new_onboarding_step5.1_button">کاتالوگ را باز کنید</string>
+	<string name="new_onboarding_step5.2_message">اشتراک در کاتالوگ راهنمای MAPS.ME بسیار با ارزش است. به راهنمای شهرها و فضای باز سراسر جهان دسترسی مییابید!</string>
+	<string name="new_onboarding_step5.2_button">شرایط را چک کنید</string>
+	<string name="new_onboarding_step5.3_message">با گزینش رایگان MAPS.ME نمونههای رایگان مسیرهای آماده شهرها و فضاهای باز را چک کنید!</string>
+	<string name="new_onboarding_step5.3_button">دانلود رایگان</string>
+	<string name="new_onboarding_additional_steps_later_button">بعداً</string>
+	<string name="all_pass_subscription_header">اشتراک کاتالوگ</string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title">30000+\nراهنما و مسیرها</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle"><b>دانلود نامحدود</b>مسیرهای شهری و فضای باز<b>در حالت آفلاین</b></string>
+	<!-- \n - for a break between lines. Max. 17 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_2">پروفایل ارتفاع\nتعاملی</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_2">هر مسیر شامل<b>ارتفاع و اطلاعات اصلی مسیر است</b></string>
+	<!-- \n - for a break between lines. Max. 15 characters per 1 line. -->
+	<string name="all_pass_subscription_message_title_3">نشانه ها،\nتصاویر و\nتوصیهها</string>
+	<!-- <b> & </b> tag to make a part of the line bold -->
+	<string name="all_pass_subscription_message_subtitle_3"><b>دانستن همه چیز درباره مسیری</b>که قرار است طی کنید</string>
+	<string name="sightseeing_subscription_header_subscription">اشتراک راهنماها</string>
+	<string name="sightseeing_subscription_message">700+ شهر و 100+ کشور</string>
+	<string name="sightseeing_subscription_message_2">دسترسی آفلاین</string>
+	<string name="sightseeing_subscription_message_3">تصاویر و مسیرهای پیاده‎روی</string>
+	<string name="subscription_success_dialog_title_sightseeing_pass">با تشکر از اشتراک شما!</string>
+	<string name="subscription_success_dialog_message_sightseeing_pass">حال به تمامی اطلاعات راهنمای گردشگری موجود در کاتالوگ دسترسی دار</string>
+	<string name="downloader_main_gallery_header">نقشه‎ها و راهنماها</string>
+	<string name="downloader_main_gallery_message">حال در این بخش نه تنها قادر به دانلود نقشهها خواهید بود، بلکه همچنین میتوانید راهنماها را برای سفر آتی خود چک کنید</string>
+	<string name="downloader_main_1_element_gallery_header">تمامی راهنماها</string>
+	<string name="downloader_main_1_element_gallery_message">در +100 کشور</string>
+	<string name="downloader_country_1_element_gallery_header">%s راهن</string>
+	<string name="downloader_country_no_guides_gallery_header">هیچ راهنمایی دربارهی این کشور وجود ندارد</string>
+	<string name="downloader_country_no_guides_gallery_message">میتوانید سایر راهنماهای آفلاین را برای فعالیتهای شهری و فضای باز +100 کشور چک کنید</string>
+	<string name="dialog_pedestrian_route_is_long">مسیر عابر پیاده تا نقطه حمل و انتقال بسیار طولانی است</string>
+	<string name="whatsnew_outdoor_guides_title">15000+ مسیر فضای باز اضافه کردهایم!</string>
+	<string name="whatsnew_outdoor_guides_message">مسیرهای Outdooractive برای سفرهای زمستانی و تابستانی در کاتالوگ در حال انتظار هستند!</string>
+	<string name="whatsnew_guides_galleries_title">سفر آتی خود را با MAPS.ME برنامهریزی کنید</string>
+	<string name="whatsnew_guides_galleries_message">حال میتوانید توصیههای پیشنهادی را در صفحه مربوط به مکان شهرها و مکان‎های توریستی مشهور مشاهده کنید</string>
+	<string name="new_onboarding_step3_header">تجربه کنید</string>
+	<string name="all_pass_screen_best_value">بهترین ارزش</string>
+	<string name="buy_btn_for_subscription_3">کلیه کاتالوگ ها با %s در سال</string>
+	<string name="transit_not_found">راهنمای مترو در این منطقه هنوز دردسترس نیست</string>
+	<string name="dialog_pedestrian_route_is_long_header">مسیر مترو یافت نشد</string>
+	<string name="dialog_pedestrian_route_is_long_message">لطفا نقطه آغاز و پایان نزدیک تری به ایستگاه مترو انتخاب کنید</string>
+	<!-- Failed planning SUBWAY route message in navigation view -->
+	<string name="routing_planning_error_subway_special">برنامه ریزی مسیر مترو ناموفق ماند</string>
+	<string name="whatsnew_isolines_title">تازه های فضای باز: لایه توپوگرافی آفلاین!</string>
+	<!-- as less symbols as possible -->
+	<string name="whatsnew_isolines_message">در مناطق کوهستانی خاطر جمع باشید. فقط لایه را در قسمت بالا سمت چپ روشن کنید</string>
+	<string name="button_layer_isolines">ایزومپ</string>
+	<string name="tips_map_layers_title_countour">تازه ها در MAPS.ME: لایه توپوگرافی آفلاین!</string>
+	<string name="tips_map_layers_message_countour">با اطمینان از این که همه چیز را در مورد منطقه می دانید طبیعت گردی خود را برنامه ریزی کنید و لذت ببرید</string>
+	<string name="isolines_activation_error_dialog">برای فعال سازی و استفاده از لایه توپوگرافی نقشه منطقه را به روزرسانی یا دانلود کنید</string>
+	<string name="isolines_location_error_dialog">لایه توپوگرافی هنوز برای این منطقه در دسترس نیست</string>
+	<string name="elevation_profile_diff_level">سطح دشواری</string>
+	<string name="elevation_profile_diff_level_easy">آسان</string>
+	<string name="elevation_profile_diff_level_moderate">متوسط</string>
+	<string name="elevation_profile_diff_level_hard">دشوار</string>
+	<string name="elevation_profile_ascent">بالا رفتن</string>
+	<string name="elevation_profile_descent">پایین آمدن</string>
+	<string name="elevation_profile_minaltitude">کمینه ارتفاع</string>
+	<string name="elevation_profile_maxaltitude">بیشینه ارتفاع</string>
+	<string name="elevation_profile_m">متر</string>
+	<string name="elevation_profile_difficulty">دشواری</string>
+	<string name="elevation_profile_distance">مسافت</string>
+	<string name="elevation_profile_km">کیلومتر</string>
+	<string name="elevation_profile_time">زمان:</string>
+	<string name="elevation_profile_hours">ساعت</string>
+	<string name="elevation_profile_minutes">دقیقه</string>
+	<!-- hide the full screen banner and continue working with the app -->
+	<string name="hide_screen_map_update">پنهان کردن و ادامه دادن</string>
+	<string name="view_on_map_downloaded_error">راهنما از این دستگاه پاک شده است</string>
+	<string name="subscription">عضویت</string>
 
 	<!-- SECTION: Types -->
 	<string name="type.aeroway.aerodrome">فرودگاه</string>
 	<string name="type.aeroway.aerodrome.international">فرودگاه</string>
 	<string name="type.aeroway.helipad">پد فرود بالگرد</string>
+	<string name="type.amenity">زیر ساخت</string>
+	<string name="type.amenity.arts_centre">مرکز هنری</string>
 	<string name="type.amenity.atm">خودپرداز</string>
 	<string name="type.amenity.bank">بانک</string>
 	<string name="type.amenity.bar">میکده</string>
@@ -1468,14 +1770,16 @@
 	<string name="type.amenity.parking">پارکینگ</string>
 	<string name="type.amenity.parking.fee">پارکینگ</string>
 	<string name="type.amenity.parking.multi.storey">پارکینگ</string>
-	<string name="type.amenity.parking.multi.storey.fee">پارکینگ</string>
 	<string name="type.amenity.parking.no.access">پارکینگ</string>
 	<string name="type.amenity.parking.park_and_ride">پارکینگ</string>
 	<string name="type.amenity.parking.permissive">پارکینگ</string>
-	<string name="type.amenity.parking.permissive.fee">پارکینگ</string>
 	<string name="type.amenity.parking.private">پارکینگ</string>
 	<string name="type.amenity.parking.underground">پارکینگ</string>
-	<string name="type.amenity.parking.underground.fee">پارکینگ</string>
+	<string name="type.amenity.parking_space">جای پارک</string>
+	<string name="type.amenity.parking_space.permissive">جای پارک</string>
+	<string name="type.amenity.parking_space.private">جای پارک</string>
+	<string name="type.amenity.parking_space.underground">جای پارک</string>
+	<string name="type.amenity.payment_terminal">دستگاه کارتخوان</string>
 	<string name="type.amenity.pharmacy">داروخانه</string>
 	<string name="type.amenity.place_of_worship">گردشگری</string>
 	<string name="type.amenity.place_of_worship.buddhist">گردشگری</string>
@@ -1487,7 +1791,7 @@
 	<string name="type.amenity.place_of_worship.taoist">گردشگری</string>
 	<string name="type.amenity.police">کلانتری</string>
 	<string name="type.amenity.post_box">صندوق پست</string>
-	<string name="type.amenity.post_office">پست</string>
+	<string name="type.amenity.post_office">دفتر پست</string>
 	<string name="type.amenity.pub">میکده</string>
 	<string name="type.amenity.recycling">مرکز بازیافت</string>
 	<string name="type.amenity.restaurant">غذا</string>
@@ -1503,9 +1807,11 @@
 	<string name="type.amenity.vending_machine.cigarettes">ماشین سیگار فروشی</string>
 	<string name="type.amenity.vending_machine.drinks">ماشین فروش نوشیدنی</string>
 	<string name="type.amenity.vending_machine.parking_tickets">پارکو متر</string>
+	<string name="type.amenity.vending_machine.public_transport_tickets">دستگاه فروش خودکار بلیط های حمل و نقل عمومی</string>
 	<string name="type.amenity.veterinary">دامپزشکی</string>
 	<string name="type.amenity.waste_basket">سطل زباله</string>
 	<string name="type.amenity.waste_disposal">زباله دانی</string>
+	<string name="type.amenity.water_point">شیر آب قابل شرب</string>
 	<string name="type.barrier.block">بلوک</string>
 	<string name="type.barrier.bollard">ستون</string>
 	<string name="type.barrier.border_control">کنترل مرزی</string>
@@ -1531,10 +1837,11 @@
 	<string name="type.craft.shoemaker">کفاش</string>
 	<string name="type.craft.tailor">خیاطی</string>
 	<string name="type.emergency.defibrillator">دستگاه شوک</string>
-	<string name="type.emergency.fire_hydrant">شیراتش نشانی</string>
+	<string name="type.emergency.fire_hydrant">شیر آتش‌نشانی</string>
 	<string name="type.emergency.phone">تلفن اضطراری</string>
 	<string name="type.entrance">ورودی</string>
 	<string name="type.highway.bus_stop">حمل و نقل</string>
+	<string name="type.highway.construction">جاده در دست ساخت است</string>
 	<string name="type.highway.footway">مسیر</string>
 	<string name="type.highway.footway.alpine_hiking">مسیر</string>
 	<string name="type.highway.footway.area">مسیر</string>
@@ -1596,9 +1903,6 @@
 	<string name="type.highway.service.area">جاده</string>
 	<string name="type.highway.service.bridge">جاده</string>
 	<string name="type.highway.service.driveway">جاده</string>
-	<string name="type.highway.service.driveway.area">جاده</string>
-	<string name="type.highway.service.driveway.bridge">جاده</string>
-	<string name="type.highway.service.driveway.tunnel">جاده</string>
 	<string name="type.highway.service.parking_aisle">جاده</string>
 	<string name="type.highway.service.tunnel">جاده</string>
 	<string name="type.highway.speed_camera">دوربین سرعت سنج</string>
@@ -1617,14 +1921,8 @@
 	<string name="type.highway.track.grade1">جاده</string>
 	<string name="type.highway.track.grade2">جاده</string>
 	<string name="type.highway.track.grade3">جاده</string>
-	<string name="type.highway.track.grade3.no.access">جاده</string>
-	<string name="type.highway.track.grade3.permissive">جاده</string>
 	<string name="type.highway.track.grade4">جاده</string>
-	<string name="type.highway.track.grade4.no.access">جاده</string>
-	<string name="type.highway.track.grade4.permissive">جاده</string>
 	<string name="type.highway.track.grade5">جاده</string>
-	<string name="type.highway.track.grade5.no.access">جاده</string>
-	<string name="type.highway.track.grade5.permissive">جاده</string>
 	<string name="type.highway.track.no.access">جاده</string>
 	<string name="type.highway.track.permissive">جاده</string>
 	<string name="type.highway.track.tunnel">جاده</string>
@@ -1656,23 +1954,27 @@
 	<string name="type.landuse.basin">اب</string>
 	<string name="type.landuse.cemetery">قبرستان</string>
 	<string name="type.landuse.cemetery.christian">قبرستان</string>
+	<string name="type.landuse.churchyard">حیاط کلیسا</string>
+	<string name="type.landuse.farmland">زمین کشاورزی</string>
 	<string name="type.landuse.forest">جنگل</string>
 	<string name="type.landuse.forest.coniferous">جنگل</string>
 	<string name="type.landuse.forest.deciduous">جنگل</string>
 	<string name="type.landuse.forest.mixed">جنگل</string>
+	<string name="type.landuse.grass">چمن زار</string>
+	<string name="type.landuse.landfill">دفن گاه زباله</string>
+	<string name="type.landuse.railway">محدوده راه آهن</string>
 	<string name="type.landuse.reservoir">اب</string>
+	<string name="type.leisure.dog_park">محدوده مخصوص سگ</string>
 	<string name="type.leisure.fitness_centre">باشگاه بدنسازی</string>
 	<string name="type.leisure.fitness_station">پارک سلامت</string>
 	<string name="type.leisure.garden">گردشگری</string>
 	<string name="type.leisure.golf_course">زمین گلف</string>
-	<string name="type.leisure.park">گردشگری</string>
-	<string name="type.leisure.park.no.access">گردشگری</string>
-	<string name="type.leisure.park.permissive">گردشگری</string>
-	<string name="type.leisure.park.private">گردشگری</string>
+	<string name="type.leisure.park">پارک</string>
+	<string name="type.leisure.park.no.access">پارک</string>
+	<string name="type.leisure.park.permissive">پارک</string>
+	<string name="type.leisure.park.private">پارک</string>
 	<string name="type.leisure.pitch">زمین ورزشی</string>
-	<string name="type.leisure.pitch.tennis">زمین ورزشی</string>
 	<string name="type.leisure.playground">زمین بازی</string>
-	<string name="type.leisure.playground.tennis">زمین بازی</string>
 	<string name="type.leisure.sauna">سونا</string>
 	<string name="type.leisure.sports_centre">مرکزورزشی</string>
 	<string name="type.leisure.sports_centre.climbing">مرکز صعود</string>
@@ -1693,20 +1995,19 @@
 	<string name="type.natural.bay">خلیج</string>
 	<string name="type.natural.beach">ساحل</string>
 	<string name="type.natural.cape">دماغه</string>
-	<string name="type.natural.cave_entrance">ورودی غار</string>
+	<string name="type.natural.cave_entrance">غار</string>
 	<string name="type.natural.geyser">چشمه آب گرم</string>
 	<string name="type.natural.glacier">یخچال طبیعی</string>
+	<string name="type.natural.grassland">کشتزار</string>
 	<string name="type.natural.lake">دریاچه</string>
 	<string name="type.natural.peak">قله</string>
 	<string name="type.natural.pond">تالاب</string>
+	<string name="type.natural.scrub">بوته زار</string>
 	<string name="type.natural.spring">چشمه</string>
 	<string name="type.natural.tree">درخت</string>
 	<string name="type.natural.volcano">اتشفشان</string>
 	<string name="type.natural.water">اب</string>
-	<string name="type.natural.wood">جنگل</string>
-	<string name="type.natural.wood.coniferous">جنگل</string>
-	<string name="type.natural.wood.deciduous">جنگل</string>
-	<string name="type.natural.wood.mixed">جنگل</string>
+	<string name="type.natural.wetland">ناحیه تالابی</string>
 	<string name="type.office">اداره</string>
 	<string name="type.office.company">دفتر شرکت</string>
 	<string name="type.office.estate_agent">بنگاه معاملات ملکی</string>
@@ -1746,7 +2047,9 @@
 	<string name="type.power.pole">برج قدرت</string>
 	<string name="type.power.tower">برج قدرت</string>
 	<string name="type.railway.halt">ایستگاه قطار</string>
-	<string name="type.railway.level_crossing">تقاطع هم سطح با راه اهن</string>
+	<string name="type.railway.level_crossing">تقاطع راه آهن</string>
+	<string name="type.railway.monorail">مونوریل</string>
+	<string name="type.railway.rail">راه آهن</string>
 	<string name="type.railway.station">ایستگاه قطار</string>
 	<string name="type.railway.station.light_rail">ایستگاه قطار</string>
 	<string name="type.railway.station.monorail">ایستگاه قطار</string>
@@ -1775,7 +2078,7 @@
 	<string name="type.railway.station.subway.spb">حمل و نقل</string>
 	<string name="type.railway.station.subway.violet">حمل و نقل</string>
 	<string name="type.railway.station.subway.yellow">حمل و نقل</string>
-	<string name="type.railway.subway_entrance">حمل و نقل</string>
+	<string name="type.railway.subway_entrance">ورودی مترو</string>
 	<string name="type.railway.subway_entrance.barcelona">حمل و نقل</string>
 	<string name="type.railway.subway_entrance.berlin">حمل و نقل</string>
 	<string name="type.railway.subway_entrance.kiev">حمل و نقل</string>
@@ -1817,6 +2120,7 @@
 	<string name="type.shop.erotic">فروشگاه</string>
 	<string name="type.shop.fabric">فروشگاه</string>
 	<string name="type.shop.florist">فروشگاه</string>
+	<string name="type.shop.funeral_directors">مسئول تشییع جنازه</string>
 	<string name="type.shop.furniture">فروشگاه</string>
 	<string name="type.shop.garden_centre">فروشگاه</string>
 	<string name="type.shop.gift">فروشگاه</string>
@@ -1836,6 +2140,7 @@
 	<string name="type.shop.newsagent">فروشگاه</string>
 	<string name="type.shop.optician">فروشگاه</string>
 	<string name="type.shop.outdoor">فروشگاه</string>
+	<string name="type.shop.pawnbroker">عتیقه فروشی</string>
 	<string name="type.shop.pet">فروشگاه</string>
 	<string name="type.shop.photo">فروشگاه</string>
 	<string name="type.shop.seafood">فروشگاه</string>
@@ -1852,7 +2157,10 @@
 	<string name="type.shop.variety_store">فروشگاه</string>
 	<string name="type.shop.video">فروشگاه</string>
 	<string name="type.shop.wine">فروشگاه</string>
+	<string name="type.sport.athletics">ورزش</string>
 	<string name="type.sport.basketball">بسکتبال</string>
+	<string name="type.sport.equestrian">ورزش های سوارکاری</string>
+	<string name="type.sport.tennis">زمین تنیس</string>
 	<string name="type.tourism.apartment">اپارتمان</string>
 	<string name="type.tourism.artwork">گردشگری</string>
 	<string name="type.tourism.artwork.architecture">گردشگری</string>
@@ -1864,7 +2172,7 @@
 	<string name="type.tourism.attraction.specified">گردشگری</string>
 	<string name="type.tourism.camp_site">محل چادر زنی</string>
 	<string name="type.tourism.chalet">هتل</string>
-	<string name="type.tourism.gallery">گردشگری</string>
+	<string name="type.tourism.gallery">گالری</string>
 	<string name="type.tourism.guest_house">هتل</string>
 	<string name="type.tourism.hostel">هتل</string>
 	<string name="type.tourism.hotel">هتل</string>
@@ -1879,7 +2187,7 @@
 	<string name="type.tourism.resort">هتل</string>
 	<string name="type.tourism.theme_park">گردشگری</string>
 	<string name="type.tourism.viewpoint">گردشگری</string>
-	<string name="type.tourism.wilderness_hut">هتل</string>
+	<string name="type.tourism.wilderness_hut">کلبه‌ی صحرایی</string>
 	<string name="type.tourism.zoo">گردشگری</string>
 	<string name="type.waterway.canal">کانال اب</string>
 	<string name="type.waterway.canal.tunnel">کانال اب</string>
@@ -1891,4 +2199,8 @@
 	<string name="type.waterway.stream.intermittent">رودخانه</string>
 	<string name="type.waterway.stream.tunnel">رودخانه</string>
 	<string name="type.waterway.waterfall">گردشگری</string>
+	<string name="type.wheelchair.limited">دسترسی محدود با صندلی چرخ دار</string>
+	<string name="type.wheelchair.no">بدون دسترسی با صندلی چرخ دار</string>
+	<string name="type.wheelchair.yes">دسترسی کامل با صندلی چرخ دار</string>
+	<string name="type.building_part">ساختما</string>
 </resources>
